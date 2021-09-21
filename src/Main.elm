@@ -1,6 +1,5 @@
 module Main exposing (main)
 
-import Html exposing (text)
 import Html.Attributes exposing (style)
 import Random exposing (Generator)
 import Svg
@@ -11,19 +10,18 @@ import TypedSvg.Types as TT
 
 
 main =
-    Svg.svg [ style "font-size" "20px" ]
-        [ Svg.text_
-            [ Px.x 10
-            , Px.y 10
-            ]
-            [ text "hi" ]
-        , Svg.g [ SA.opacity "0" ]
-            [ drawLine_V1 ( 10, 10 ) ( 50, 50 ) "0.1"
-            , drawLine_V1 ( 50, 50 ) ( 150, 10 ) "0.1"
-            , Random.step randomWalk (Random.initialSeed 0)
-                |> (\( pts, _ ) -> drawLines [] pts)
-            ]
-        , Svg.g [ TA.transform [ TT.Translate 50 50 ] ]
+    let
+        ( hw, hh ) =
+            ( 200, 300 )
+
+        ( w, h ) =
+            ( hw * 2, hh * 2 )
+    in
+    Svg.svg
+        [ style "font-size" "20px"
+        , TA.viewBox -hw -hh w h
+        ]
+        [ Svg.g [ TA.transform [ TT.Translate 50 50 ] ]
             [ drawWalk 0 "blue"
             , drawWalk 1 "green"
             , drawWalk 2 "red"
@@ -73,15 +71,6 @@ randomAngle =
     Random.float 0 (turns 1)
 
 
-randomWalk : Generator (List Point)
-randomWalk =
-    let
-        rp =
-            Random.map2 Tuple.pair (Random.float 0 100) (Random.float 0 100)
-    in
-    Random.list 10 rp
-
-
 drawLines attrs pts =
     let
         len =
@@ -101,14 +90,5 @@ drawLine_V2 a b o =
     Svg.polyline
         [ TA.points [ a, b ]
         , TA.opacity (TT.Opacity o)
-        ]
-        []
-
-
-drawLine_V1 a b o =
-    Svg.polyline
-        [ TA.points [ a, b ]
-        , SA.stroke "black"
-        , SA.opacity o
         ]
         []
