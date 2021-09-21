@@ -21,11 +21,41 @@ main =
         , drawLine_V1 ( 50, 50 ) ( 150, 10 ) "0.1"
         , Random.step randomWalk (Random.initialSeed 0)
             |> (\( pts, _ ) -> drawLines pts)
+        , Random.step randomWalk_V2 (Random.initialSeed 0)
+            |> (\( pts, _ ) -> drawLines pts)
         ]
 
 
 type alias Point =
     ( Float, Float )
+
+
+randomWalk_V2 : Generator (List Point)
+randomWalk_V2 =
+    let
+        anglesToWalk ls =
+            List.foldl
+                (\a ( pt, pts ) ->
+                    ( shiftByRTheta 50 a pt, pt :: pts )
+                )
+                ( ( 0, 0 ), [] )
+                ls
+                |> Tuple.second
+    in
+    Random.list 10 randomAngle
+        |> Random.map anglesToWalk
+
+
+shiftByRTheta r theta ( x, y ) =
+    let
+        ( dx, dy ) =
+            fromPolar ( r, theta )
+    in
+    ( x + dx, y + dy )
+
+
+randomAngle =
+    Random.float 0 (turns 1)
 
 
 randomWalk : Generator (List Point)
