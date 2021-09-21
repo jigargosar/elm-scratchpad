@@ -42,10 +42,13 @@ type alias Point =
 randomWalk_V2 : Generator (List Point)
 randomWalk_V2 =
     let
+        r =
+            50
+
         anglesToWalk ls =
             List.foldl
                 (\a ( pt, pts ) ->
-                    ( shiftByRTheta 50 a pt, pt :: pts )
+                    ( shiftByRTheta r a pt, pt :: pts )
                 )
                 ( ( 0, 0 ), [] )
                 ls
