@@ -17,13 +17,22 @@ main =
             , Px.y 10
             ]
             [ text "hi" ]
-        , drawLine_V1 ( 10, 10 ) ( 50, 50 ) "0.1"
-        , drawLine_V1 ( 50, 50 ) ( 150, 10 ) "0.1"
-        , Random.step randomWalk (Random.initialSeed 0)
-            |> (\( pts, _ ) -> drawLines [] pts)
+        , Svg.g [ SA.opacity "0" ]
+            [ drawLine_V1 ( 10, 10 ) ( 50, 50 ) "0.1"
+            , drawLine_V1 ( 50, 50 ) ( 150, 10 ) "0.1"
+            , Random.step randomWalk (Random.initialSeed 0)
+                |> (\( pts, _ ) -> drawLines [] pts)
+            ]
         , Random.step randomWalk_V2 (Random.initialSeed 0)
             |> (\( pts, _ ) -> drawLines [ SA.stroke "blue" ] pts)
+        , drawWalk 1 "green"
+        , drawWalk 2 "red"
         ]
+
+
+drawWalk i c =
+    Random.step randomWalk_V2 (Random.initialSeed i)
+        |> (\( pts, _ ) -> drawLines [ SA.stroke c ] pts)
 
 
 type alias Point =
