@@ -17,18 +17,8 @@ main =
             , Px.y 10
             ]
             [ text "hi" ]
-        , drawLine ( 10, 10 ) ( 50, 50 ) "0.1"
-        , drawLine ( 50, 50 ) ( 150, 10 ) "0.1"
-        , drawLines
-            [ ( 10, 10 )
-            , ( 50, 50 )
-            , ( 50, 10 )
-            , ( 60, 50 )
-            , ( 70, 10 )
-            , ( 80, 50 )
-            , ( 90, 10 )
-            , ( 100, 50 )
-            ]
+        , drawLine_V1 ( 10, 10 ) ( 50, 50 ) "0.1"
+        , drawLine_V1 ( 50, 50 ) ( 150, 10 ) "0.1"
         , Random.step randomWalk (Random.initialSeed 0)
             |> (\( pts, _ ) -> drawLines pts)
         ]
@@ -40,7 +30,16 @@ type alias Point =
 
 randomWalk : Generator (List Point)
 randomWalk =
-    Debug.todo "impl"
+    Random.constant
+        [ ( 10, 10 )
+        , ( 50, 50 )
+        , ( 50, 10 )
+        , ( 60, 50 )
+        , ( 70, 10 )
+        , ( 80, 50 )
+        , ( 90, 10 )
+        , ( 100, 50 )
+        ]
 
 
 drawLines pts =
@@ -55,19 +54,18 @@ drawLines pts =
             List.map2 Tuple.pair pts (List.drop 1 pts)
                 |> List.indexedMap foo
     in
-    Svg.g [] lines
+    Svg.g [ SA.strokeWidth "3", SA.stroke "black" ] lines
 
 
 drawLine_V2 a b o =
     Svg.polyline
         [ TA.points [ a, b ]
-        , SA.stroke "black"
         , TA.opacity (TT.Opacity o)
         ]
         []
 
 
-drawLine a b o =
+drawLine_V1 a b o =
     Svg.polyline
         [ TA.points [ a, b ]
         , SA.stroke "black"
