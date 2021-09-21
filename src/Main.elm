@@ -30,16 +30,21 @@ type alias Point =
 
 randomWalk : Generator (List Point)
 randomWalk =
-    Random.constant
-        [ ( 10, 10 )
-        , ( 50, 50 )
-        , ( 50, 10 )
-        , ( 60, 50 )
-        , ( 70, 10 )
-        , ( 80, 50 )
-        , ( 90, 10 )
-        , ( 100, 50 )
-        ]
+    let
+        rp =
+            Random.map2 Tuple.pair (Random.float 0 100) (Random.float 0 100)
+    in
+    --Random.constant
+    --    [ ( 10, 10 )
+    --    , ( 50, 50 )
+    --    , ( 50, 10 )
+    --    , ( 60, 50 )
+    --    , ( 70, 10 )
+    --    , ( 80, 50 )
+    --    , ( 90, 10 )
+    --    , ( 100, 50 )
+    --    ]
+    Random.list 10 rp
 
 
 drawLines pts =
