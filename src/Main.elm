@@ -20,9 +20,9 @@ main =
         , drawLine_V1 ( 10, 10 ) ( 50, 50 ) "0.1"
         , drawLine_V1 ( 50, 50 ) ( 150, 10 ) "0.1"
         , Random.step randomWalk (Random.initialSeed 0)
-            |> (\( pts, _ ) -> drawLines pts)
+            |> (\( pts, _ ) -> drawLines [] pts)
         , Random.step randomWalk_V2 (Random.initialSeed 0)
-            |> (\( pts, _ ) -> drawLines pts)
+            |> (\( pts, _ ) -> drawLines [ SA.stroke "blue" ] pts)
         ]
 
 
@@ -67,7 +67,7 @@ randomWalk =
     Random.list 10 rp
 
 
-drawLines pts =
+drawLines attrs pts =
     let
         len =
             toFloat (List.length pts)
@@ -79,7 +79,7 @@ drawLines pts =
             List.map2 Tuple.pair pts (List.drop 1 pts)
                 |> List.indexedMap foo
     in
-    Svg.g [ SA.strokeWidth "3", SA.stroke "black" ] lines
+    Svg.g (SA.strokeWidth "3" :: SA.stroke "black" :: attrs) lines
 
 
 drawLine_V2 a b o =
