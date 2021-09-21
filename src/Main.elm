@@ -23,10 +23,12 @@ main =
             , Random.step randomWalk (Random.initialSeed 0)
                 |> (\( pts, _ ) -> drawLines [] pts)
             ]
-        , drawWalk 0 "blue"
-        , drawWalk 1 "green"
-        , drawWalk 2 "red"
-        , drawWalk 3 "purple"
+        , Svg.g [ TA.transform [ TT.Translate 50 50 ] ]
+            [ drawWalk 0 "blue"
+            , drawWalk 1 "green"
+            , drawWalk 2 "red"
+            , drawWalk 3 "purple"
+            ]
         ]
 
 
