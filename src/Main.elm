@@ -15,9 +15,14 @@ main =
             , Px.y 10
             ]
             [ text "hi" ]
-        , Svg.polyline
-            [ TA.points [ ( 10, 10 ), ( 50, 50 ) ]
-            , SA.stroke "black"
-            ]
-            []
+        , drawLine ( 10, 10 ) ( 50, 50 )
+        , drawLine ( 50, 50 ) ( 150, 10 )
         ]
+
+
+drawLine a b =
+    Svg.polyline
+        [ TA.points [ a, b ]
+        , SA.stroke "black"
+        ]
+        []
