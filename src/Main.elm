@@ -6,6 +6,7 @@ import Svg
 import Svg.Attributes as SA
 import TypedSvg.Attributes as TA
 import TypedSvg.Attributes.InPx as Px
+import TypedSvg.Types as TT
 
 
 main =
@@ -17,12 +18,41 @@ main =
             [ text "hi" ]
         , drawLine ( 10, 10 ) ( 50, 50 ) "0.1"
         , drawLine ( 50, 50 ) ( 150, 10 ) "0.1"
-        , drawLines [ ( 10, 10 ), ( 50, 50 ), ( 150, 10 ) ]
+        , drawLines
+            [ ( 10, 10 )
+            , ( 50, 50 )
+            , ( 50, 10 )
+            , ( 60, 50 )
+            , ( 70, 10 )
+            , ( 80, 50 )
+            , ( 90, 10 )
+            , ( 100, 50 )
+            ]
         ]
 
 
 drawLines pts =
-    Svg.g [] []
+    let
+        len =
+            toFloat (List.length pts)
+
+        foo i ( a, b ) =
+            drawLine_V2 a b ((toFloat i + 1) / len)
+
+        lines =
+            List.map2 Tuple.pair pts (List.drop 1 pts)
+                |> List.indexedMap foo
+    in
+    Svg.g [] lines
+
+
+drawLine_V2 a b o =
+    Svg.polyline
+        [ TA.points [ a, b ]
+        , SA.stroke "black"
+        , TA.opacity (TT.Opacity o)
+        ]
+        []
 
 
 drawLine a b o =
