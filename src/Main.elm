@@ -17,7 +17,12 @@ main =
             [ text "hi" ]
         , drawLine ( 10, 10 ) ( 50, 50 ) "0.1"
         , drawLine ( 50, 50 ) ( 150, 10 ) "0.1"
+        , drawLines [ ( 10, 10 ), ( 50, 50 ), ( 150, 10 ) ]
         ]
+
+
+drawLines pts =
+    Svg.g [] []
 
 
 drawLine a b o =
