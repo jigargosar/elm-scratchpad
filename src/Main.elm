@@ -12,7 +12,7 @@ import TypedSvg.Types as TT
 main =
     let
         ( hw, hh ) =
-            ( 200, 300 )
+            ( 250, 300 )
 
         ( w, h ) =
             ( hw * 2, hh * 2 )
