@@ -2,6 +2,7 @@ module Main exposing (main)
 
 import Html exposing (text)
 import Html.Attributes exposing (style)
+import Random exposing (Generator)
 import Svg
 import Svg.Attributes as SA
 import TypedSvg.Attributes as TA
@@ -28,7 +29,18 @@ main =
             , ( 90, 10 )
             , ( 100, 50 )
             ]
+        , Random.step randomWalk (Random.initialSeed 0)
+            |> (\( pts, _ ) -> drawLines pts)
         ]
+
+
+type alias Point =
+    ( Float, Float )
+
+
+randomWalk : Generator (List Point)
+randomWalk =
+    Debug.todo "impl"
 
 
 drawLines pts =
