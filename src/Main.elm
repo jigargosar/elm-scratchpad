@@ -23,10 +23,10 @@ main =
             , Random.step randomWalk (Random.initialSeed 0)
                 |> (\( pts, _ ) -> drawLines [] pts)
             ]
-        , Random.step randomWalk_V2 (Random.initialSeed 0)
-            |> (\( pts, _ ) -> drawLines [ SA.stroke "blue" ] pts)
+        , drawWalk 0 "blue"
         , drawWalk 1 "green"
         , drawWalk 2 "red"
+        , drawWalk 3 "purple"
         ]
 
 
