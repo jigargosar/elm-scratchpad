@@ -28,6 +28,7 @@ main =
             , drawWalk 1 "green"
             , drawWalk 2 "red"
             , drawWalk 3 "purple"
+            , Svg.circle [ Px.r 5 ] []
             ]
         ]
 
