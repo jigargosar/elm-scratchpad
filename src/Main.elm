@@ -57,7 +57,7 @@ randomWalk_V2 =
                 ls
                 |> Tuple.second
     in
-    Random.list 10 randomAngle
+    Random.list 100 randomAngle
         |> Random.map anglesToWalk
 
 
