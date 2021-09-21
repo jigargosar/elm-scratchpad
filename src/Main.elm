@@ -15,14 +15,15 @@ main =
             , Px.y 10
             ]
             [ text "hi" ]
-        , Svg.g [ SA.opacity "0.1" ] [ drawLine ( 10, 10 ) ( 50, 50 ) ]
-        , Svg.g [ SA.opacity "0.5" ] [ drawLine ( 50, 50 ) ( 150, 10 ) ]
+        , drawLine ( 10, 10 ) ( 50, 50 ) "0.1"
+        , drawLine ( 50, 50 ) ( 150, 10 ) "0.1"
         ]
 
 
-drawLine a b =
+drawLine a b o =
     Svg.polyline
         [ TA.points [ a, b ]
         , SA.stroke "black"
+        , SA.opacity o
         ]
         []
