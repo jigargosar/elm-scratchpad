@@ -16,7 +16,7 @@ main =
         { init = init
         , update = update
         , view = view
-        , subscriptions = \_ -> Time.every 10 (\_ -> OnTick)
+        , subscriptions = \_ -> Time.every stepRateInMilli (\_ -> OnTick)
         }
 
 
@@ -34,6 +34,10 @@ maxSegments =
 
 motionRange =
     6
+
+
+stepRateInMilli =
+    30
 
 
 type alias Point =
