@@ -2,7 +2,7 @@ module Main exposing (main)
 
 import Browser
 import Html.Attributes exposing (style)
-import Random exposing (Generator)
+import Random exposing (Generator, Seed)
 import Svg
 import Svg.Attributes as SA
 import Time
@@ -20,8 +20,20 @@ main =
         }
 
 
-wc =
-    { w = 500, h = 500 }
+width =
+    500
+
+
+height =
+    500
+
+
+maxSegments =
+    2000
+
+
+motionRange =
+    6
 
 
 type alias Point =
@@ -41,11 +53,11 @@ type alias Model =
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { current = ( wc.w / 2, wc.h / 2 )
+    ( { current = ( width / 2, height / 2 )
       , history = []
       , seed = Random.initialSeed 0
       }
-    , Cmd.none
+    , Random.generate Init Random.independentSeed
     )
 
 
@@ -53,7 +65,7 @@ step : Model -> Model
 step model =
     let
         motionGenerator =
-            Random.float -6 6
+            Random.float -motionRange motionRange
 
         ( ( dx, dy ), seed ) =
             Random.step
@@ -64,8 +76,8 @@ step model =
             model.current
 
         next =
-            ( clamp 0 wc.w (x + dx)
-            , clamp 0 wc.h (y + dy)
+            ( clamp 0 width (x + dx)
+            , clamp 0 height (y + dy)
             )
     in
     { model
@@ -74,7 +86,7 @@ step model =
         , history =
             ( next, model.current )
                 :: model.history
-                |> List.take 2000
+                |> List.take maxSegments
     }
 
 
@@ -89,23 +101,29 @@ makeNMoves n model =
 
 type Msg
     = OnTick
+    | Init Seed
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    ( model |> step, Cmd.none )
+    case msg of
+        OnTick ->
+            ( model |> step, Cmd.none )
+
+        Init seed ->
+            ( { model | seed = seed }, Cmd.none )
 
 
 view model =
     Svg.svg
         [ style "font-size" "20px"
         , style "background-color" "#333"
-        , SA.width <| String.fromFloat wc.w
-        , SA.height <| String.fromFloat wc.h
+        , SA.width <| String.fromFloat width
+        , SA.height <| String.fromFloat height
         , SA.stroke "white"
         ]
         (List.indexedMap
-            (\i -> drawSeg (1 - toFloat i / 2000))
+            (\i -> drawSeg (1 - toFloat i / maxSegments))
             model.history
         )
 
