@@ -100,14 +100,9 @@ view model =
         , style "background-color" "#333"
         , SA.width <| String.fromFloat wc.w
         , SA.height <| String.fromFloat wc.h
+        , SA.stroke "white"
         ]
-        [ viewMotion model
-        ]
-
-
-viewMotion model =
-    List.indexedMap (\i ( a, b ) -> drawLine_V2 a b 0.5) model.history
-        |> Svg.g [ SA.stroke "white" ]
+        (List.indexedMap (\i ( a, b ) -> drawLine_V2 a b 0.5) model.history)
 
 
 drawLine_V2 a b o =
