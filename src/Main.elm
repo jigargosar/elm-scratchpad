@@ -102,10 +102,13 @@ view model =
         , SA.height <| String.fromFloat wc.h
         , SA.stroke "white"
         ]
-        (List.indexedMap (\i ( a, b ) -> drawLine_V2 a b 0.5) model.history)
+        (List.indexedMap
+            (\i seg -> drawSeg seg 0.5)
+            model.history
+        )
 
 
-drawLine_V2 a b o =
+drawSeg ( a, b ) o =
     Svg.polyline
         [ TA.points [ a, b ]
         , TA.opacity (TT.Opacity o)
