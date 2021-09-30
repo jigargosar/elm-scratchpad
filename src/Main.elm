@@ -76,13 +76,10 @@ step model =
                 (Random.pair motionGenerator motionGenerator)
                 model.seed
 
-        ( x, y ) =
-            model.current
-
         next =
-            ( clamp 0 width (x + dx)
-            , clamp 0 height (y + dy)
-            )
+            model.current
+                |> movePoint dx dy
+                |> clampPointInScreen
     in
     { model
         | current = next
@@ -99,27 +96,26 @@ nextPointGenerator current =
     let
         motionGenerator =
             Random.float -motionRange motionRange
-
-        ( x, y ) =
-            current
     in
     Random.map2
         (\dx dy ->
-            ( clamp 0 width (x + dx)
-            , clamp 0 height (y + dy)
-            )
+            current
+                |> movePoint dx dy
+                |> clampPointInScreen
         )
         motionGenerator
         motionGenerator
 
 
-makeNMoves : Int -> Model -> Model
-makeNMoves n model =
-    if n <= 0 then
-        model
+movePoint dx dy ( x, y ) =
+    ( x + dx, y + dy )
 
-    else
-        makeNMoves (n - 1) (step model)
+
+clampPointInScreen : Point -> Point
+clampPointInScreen ( x, y ) =
+    ( clamp 0 width x
+    , clamp 0 height y
+    )
 
 
 type Msg
@@ -134,18 +130,7 @@ update msg model =
             ( step model, Cmd.none )
 
         Init seed ->
-            ( { model | seed = seed }
-                |> applyN 0 step
-            , Cmd.none
-            )
-
-
-applyN n fn x =
-    if n <= 0 then
-        x
-
-    else
-        applyN (n - 1) fn (fn x)
+            ( { model | seed = seed }, Cmd.none )
 
 
 view model =
