@@ -9,17 +9,15 @@ import TypedSvg.Attributes.InPx as Px
 import TypedSvg.Types as TT
 
 
-main =
-    let
-        ( hw, hh ) =
-            ( 250, 300 )
+wc =
+    { w = 710, h = 400 }
 
-        ( w, h ) =
-            ( hw * 2, hh * 2 )
-    in
+
+main =
     Svg.svg
         [ style "font-size" "20px"
-        , TA.viewBox -hw -hh w h
+        , SA.width <| String.fromFloat wc.w
+        , SA.height <| String.fromFloat wc.h
         ]
         [ Svg.g [ TA.transform [ TT.Translate 50 50 ] ]
             [ drawWalk 0 "blue"
