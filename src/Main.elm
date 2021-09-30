@@ -1,9 +1,10 @@
 module Main exposing (main)
 
 import Browser
+import Html exposing (Html)
 import Html.Attributes exposing (style)
 import Random exposing (Generator, Seed)
-import Svg
+import Svg exposing (Svg)
 import Svg.Attributes as SA
 import Svg.Events as SE
 import Time
@@ -123,6 +124,7 @@ update msg model =
             ( { model | current = ( width / 2, height / 2 ), history = [] }, Cmd.none )
 
 
+view : Model -> Html Msg
 view model =
     Svg.svg
         [ style "font-size" "20px"
@@ -133,11 +135,16 @@ view model =
         , SE.onClick OnClick
         ]
         (List.indexedMap
-            (\i -> drawSeg (1 - toFloat i / maxSegments))
+            (\i -> drawSeg (segOpacityAtIndex i))
             model.history
         )
 
 
+segOpacityAtIndex i =
+    1 - toFloat i / maxSegments
+
+
+drawSeg : Float -> Seg -> Svg msg
 drawSeg o ( a, b ) =
     Svg.polyline
         [ TA.points [ a, b ]
