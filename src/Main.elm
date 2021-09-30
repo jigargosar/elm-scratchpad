@@ -13,7 +13,7 @@ import TypedSvg.Types as TT
 main : Program () Model Msg
 main =
     Browser.element
-        { init = \() -> ( initialModel, Cmd.none )
+        { init = init
         , update = update
         , view = view
         , subscriptions = \_ -> Time.every 10 (\_ -> OnTick)
@@ -39,12 +39,14 @@ type alias Model =
     }
 
 
-initialModel : Model
-initialModel =
-    { current = ( wc.w / 2, wc.h / 2 )
-    , history = []
-    , seed = Random.initialSeed 0
-    }
+init : () -> ( Model, Cmd Msg )
+init () =
+    ( { current = ( wc.w / 2, wc.h / 2 )
+      , history = []
+      , seed = Random.initialSeed 0
+      }
+    , Cmd.none
+    )
 
 
 step : Model -> Model
