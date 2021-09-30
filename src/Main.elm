@@ -5,6 +5,7 @@ import Html.Attributes exposing (style)
 import Random exposing (Generator, Seed)
 import Svg
 import Svg.Attributes as SA
+import Svg.Events as SE
 import Time
 import TypedSvg.Attributes as TA
 import TypedSvg.Types as TT
@@ -106,6 +107,7 @@ clampPointInScreen ( x, y ) =
 type Msg
     = Init Seed
     | OnTick
+    | OnClick
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -117,6 +119,9 @@ update msg model =
         OnTick ->
             ( step model, Cmd.none )
 
+        OnClick ->
+            ( { model | current = ( width / 2, height / 2 ), history = [] }, Cmd.none )
+
 
 view model =
     Svg.svg
@@ -125,6 +130,7 @@ view model =
         , SA.width <| String.fromFloat width
         , SA.height <| String.fromFloat height
         , SA.stroke "white"
+        , SE.onClick OnClick
         ]
         (List.indexedMap
             (\i -> drawSeg (1 - toFloat i / maxSegments))
