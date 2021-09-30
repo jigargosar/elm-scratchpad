@@ -13,6 +13,10 @@ wc =
     { w = 710, h = 400 }
 
 
+type alias Point =
+    ( Float, Float )
+
+
 type alias Model =
     { current : ( Float, Float )
     , history : List ( Point, Point )
@@ -76,74 +80,12 @@ main =
         , SA.height <| String.fromFloat wc.h
         ]
         [ viewMotion model
-        , Svg.g [ TA.transform [ TT.Translate 50 50 ] ]
-            [ drawWalk 0 "blue"
-            , drawWalk 1 "green"
-            , drawWalk 2 "red"
-            , drawWalk 3 "purple"
-            , Svg.circle [ Px.r 5 ] []
-            ]
         ]
 
 
 viewMotion model =
     List.indexedMap (\i ( a, b ) -> drawLine_V2 a b 0.5) model.history
         |> Svg.g [ SA.stroke "white" ]
-
-
-drawWalk i c =
-    Random.step randomWalk_V2 (Random.initialSeed i)
-        |> (\( pts, _ ) -> drawLines [ SA.stroke c ] pts)
-
-
-type alias Point =
-    ( Float, Float )
-
-
-randomWalk_V2 : Generator (List Point)
-randomWalk_V2 =
-    let
-        r =
-            50
-
-        anglesToWalk ls =
-            List.foldl
-                (\a ( pt, pts ) ->
-                    ( shiftByRTheta r a pt, pt :: pts )
-                )
-                ( ( 0, 0 ), [] )
-                ls
-                |> Tuple.second
-    in
-    Random.list 100 randomAngle
-        |> Random.map anglesToWalk
-
-
-shiftByRTheta r theta ( x, y ) =
-    let
-        ( dx, dy ) =
-            fromPolar ( r, theta )
-    in
-    ( x + dx, y + dy )
-
-
-randomAngle =
-    Random.float 0 (turns 1)
-
-
-drawLines attrs pts =
-    let
-        len =
-            toFloat (List.length pts)
-
-        foo i ( a, b ) =
-            drawLine_V2 a b ((toFloat i + 1) / len)
-
-        lines =
-            List.map2 Tuple.pair pts (List.drop 1 pts)
-                |> List.indexedMap foo
-    in
-    Svg.g (SA.strokeWidth "3" :: SA.stroke "black" :: attrs) lines
 
 
 drawLine_V2 a b o =
