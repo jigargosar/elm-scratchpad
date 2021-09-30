@@ -49,7 +49,7 @@ type alias Seg =
 
 
 type alias Model =
-    { current : ( Float, Float )
+    { current : Point
     , history : List Seg
     , seed : Random.Seed
     }
@@ -61,7 +61,7 @@ init () =
       , history = []
       , seed = Random.initialSeed 0
       }
-    , Random.generate Init Random.independentSeed
+    , Random.generate ResetSeed Random.independentSeed
     )
 
 
@@ -105,7 +105,7 @@ clampPointInScreen ( x, y ) =
 
 type Msg
     = OnTick
-    | Init Seed
+    | ResetSeed Seed
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -114,7 +114,7 @@ update msg model =
         OnTick ->
             ( step model, Cmd.none )
 
-        Init seed ->
+        ResetSeed seed ->
             ( { model | seed = seed }, Cmd.none )
 
 
