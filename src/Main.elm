@@ -16,7 +16,7 @@ main =
         { init = \() -> ( initialModel, Cmd.none )
         , update = update
         , view = view
-        , subscriptions = \_ -> Time.every 100 (\_ -> OnTick)
+        , subscriptions = \_ -> Time.every 10 (\_ -> OnTick)
         }
 
 
@@ -69,7 +69,10 @@ step model =
     { model
         | current = next
         , seed = seed
-        , history = ( next, model.current ) :: model.history
+        , history =
+            ( next, model.current )
+                :: model.history
+                |> List.take 2000
     }
 
 
