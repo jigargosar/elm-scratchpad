@@ -111,11 +111,11 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        OnTick ->
-            ( step model, Cmd.none )
-
         Init seed ->
             ( { model | seed = seed }, Cmd.none )
+
+        OnTick ->
+            ( step model, Cmd.none )
 
 
 view model =
