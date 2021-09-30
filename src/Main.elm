@@ -29,7 +29,7 @@ height =
 
 
 maxSegments =
-    2000
+    3000
 
 
 motionRange =
@@ -115,7 +115,18 @@ update msg model =
             ( model |> step, Cmd.none )
 
         Init seed ->
-            ( { model | seed = seed }, Cmd.none )
+            ( { model | seed = seed }
+                |> applyN 0 step
+            , Cmd.none
+            )
+
+
+applyN n fn x =
+    if n <= 0 then
+        x
+
+    else
+        applyN (n - 1) fn (fn x)
 
 
 view model =
