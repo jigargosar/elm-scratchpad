@@ -29,7 +29,7 @@ height =
 
 
 maxSegments =
-    3000
+    2000
 
 
 motionRange =
@@ -112,7 +112,7 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         OnTick ->
-            ( model |> step, Cmd.none )
+            ( step model, Cmd.none )
 
         Init seed ->
             ( { model | seed = seed }
