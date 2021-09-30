@@ -61,12 +61,8 @@ init () =
       , history = []
       , seed = Random.initialSeed 0
       }
-    , resetSeedCmd
+    , Random.generate Init Random.independentSeed
     )
-
-
-resetSeedCmd =
-    Random.generate ResetSeed Random.independentSeed
 
 
 step : Model -> Model
@@ -108,7 +104,7 @@ clampPointInScreen ( x, y ) =
 
 
 type Msg
-    = ResetSeed Seed
+    = Init Seed
     | OnTick
 
 
@@ -118,7 +114,7 @@ update msg model =
         OnTick ->
             ( step model, Cmd.none )
 
-        ResetSeed seed ->
+        Init seed ->
             ( { model | seed = seed }, Cmd.none )
 
 
