@@ -94,6 +94,25 @@ step model =
     }
 
 
+nextPointGenerator : Point -> Generator Point
+nextPointGenerator current =
+    let
+        motionGenerator =
+            Random.float -motionRange motionRange
+
+        ( x, y ) =
+            current
+    in
+    Random.map2
+        (\dx dy ->
+            ( clamp 0 width (x + dx)
+            , clamp 0 height (y + dy)
+            )
+        )
+        motionGenerator
+        motionGenerator
+
+
 makeNMoves : Int -> Model -> Model
 makeNMoves n model =
     if n <= 0 then
