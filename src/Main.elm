@@ -28,9 +28,13 @@ type alias Point =
     ( Float, Float )
 
 
+type alias Seg =
+    ( Point, Point )
+
+
 type alias Model =
     { current : ( Float, Float )
-    , history : List ( Point, Point )
+    , history : List Seg
     , seed : Random.Seed
     }
 
@@ -43,8 +47,8 @@ initialModel =
     }
 
 
-makeMove : Model -> Model
-makeMove model =
+step : Model -> Model
+step model =
     let
         motionGenerator =
             Random.float -6 6
@@ -75,7 +79,7 @@ makeNMoves n model =
         model
 
     else
-        makeNMoves (n - 1) (makeMove model)
+        makeNMoves (n - 1) (step model)
 
 
 type Msg
@@ -84,15 +88,10 @@ type Msg
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    ( model, Cmd.none )
+    ( model |> step, Cmd.none )
 
 
-view _ =
-    let
-        model =
-            initialModel
-                |> makeNMoves 2000
-    in
+view model =
     Svg.svg
         [ style "font-size" "20px"
         , style "background-color" "#333"
