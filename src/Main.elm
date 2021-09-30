@@ -91,6 +91,7 @@ step model =
     }
 
 
+movePoint : Float -> Float -> Point -> Point
 movePoint dx dy ( x, y ) =
     ( x + dx, y + dy )
 
