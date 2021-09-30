@@ -1,12 +1,23 @@
 module Main exposing (main)
 
+import Browser
 import Html.Attributes exposing (style)
 import Random exposing (Generator)
 import Svg
 import Svg.Attributes as SA
+import Time
 import TypedSvg.Attributes as TA
-import TypedSvg.Attributes.InPx as Px
 import TypedSvg.Types as TT
+
+
+main : Program () Model Msg
+main =
+    Browser.element
+        { init = \() -> ( initialModel, Cmd.none )
+        , update = update
+        , view = view
+        , subscriptions = \_ -> Time.every 100 (\_ -> OnTick)
+        }
 
 
 wc =
@@ -67,7 +78,16 @@ makeNMoves n model =
         makeNMoves (n - 1) (makeMove model)
 
 
-main =
+type Msg
+    = OnTick
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    ( model, Cmd.none )
+
+
+view _ =
     let
         model =
             initialModel
