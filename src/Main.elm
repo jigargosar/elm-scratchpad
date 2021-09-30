@@ -21,7 +21,7 @@ main =
 
 
 wc =
-    { w = 710, h = 400 }
+    { w = 500, h = 500 }
 
 
 type alias Point =
