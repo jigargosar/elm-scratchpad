@@ -91,22 +91,6 @@ step model =
     }
 
 
-nextPointGenerator : Point -> Generator Point
-nextPointGenerator current =
-    let
-        motionGenerator =
-            Random.float -motionRange motionRange
-    in
-    Random.map2
-        (\dx dy ->
-            current
-                |> movePoint dx dy
-                |> clampPointInScreen
-        )
-        motionGenerator
-        motionGenerator
-
-
 movePoint dx dy ( x, y ) =
     ( x + dx, y + dy )
 
