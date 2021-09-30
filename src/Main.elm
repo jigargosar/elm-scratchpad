@@ -103,12 +103,12 @@ view model =
         , SA.stroke "white"
         ]
         (List.indexedMap
-            (\i seg -> drawSeg seg 0.5)
+            (\i -> drawSeg (1 - toFloat i / 2000))
             model.history
         )
 
 
-drawSeg ( a, b ) o =
+drawSeg o ( a, b ) =
     Svg.polyline
         [ TA.points [ a, b ]
         , TA.opacity (TT.Opacity o)
