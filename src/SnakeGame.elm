@@ -1,7 +1,7 @@
 module SnakeGame exposing (main)
 
 import Browser
-import Browser.Events
+import Browser.Events as BE
 import Html exposing (Html)
 import Html.Attributes exposing (style)
 import Json.Decode as JD exposing (Decoder)
@@ -224,7 +224,7 @@ init () =
 
 type Msg
     = OnTick
-    | OnKeyNoRepeat String
+    | OnKeyDown String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -239,7 +239,7 @@ update msg model =
             , Cmd.none
             )
 
-        OnKeyNoRepeat key ->
+        OnKeyDown key ->
             ( case keyToDirection key of
                 Just dir ->
                     changeSnakeDirection dir model
@@ -272,21 +272,8 @@ keyToDirection key =
 subscriptions _ =
     Sub.batch
         [ Time.every stepDurationInMillis (\_ -> OnTick)
-        , Browser.Events.onKeyDown (JD.map OnKeyNoRepeat noRepeatKeyDecoder)
+        , BE.onKeyDown (JD.map OnKeyDown (JD.field "key" JD.string))
         ]
-
-
-noRepeatKeyDecoder : Decoder String
-noRepeatKeyDecoder =
-    JD.field "repeat" JD.bool
-        |> JD.andThen
-            (\repeat ->
-                if repeat then
-                    JD.fail "ignoring repeat key"
-
-                else
-                    JD.field "key" JD.string
-            )
 
 
 view : Model -> Html Msg
