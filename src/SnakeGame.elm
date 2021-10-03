@@ -45,12 +45,16 @@ type alias Seg =
 
 
 type alias Model =
-    { seed : Seed }
+    { seed : Seed
+    , snake : Snake
+    }
 
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { seed = Random.initialSeed 0 }
+    ( { seed = Random.initialSeed 0
+      , snake = initialSnake
+      }
     , Cmd.none
     )
 
@@ -63,11 +67,11 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         OnTick ->
-            ( model, Cmd.none )
+            ( { model | snake = moveSnake model.snake }, Cmd.none )
 
 
 view : Model -> Html Msg
-view _ =
+view model =
     Svg.svg
         [ style "font-size" "20px"
         , style "background-color" "#333"
@@ -77,20 +81,10 @@ view _ =
         ]
         [ Svg.polyline
             [ SA.strokeWidth (String.fromFloat cellSize)
-            , TA.points snakePoints
+            , TA.points (snakeToPoints model.snake)
             ]
             []
         ]
-
-
-snakePoints : List Point
-snakePoints =
-    --List.range 5 10
-    --    |> List.map (\ix -> ( toFloat ix * cellSize, 10 * cellSize ))
-    initialSnake
-        |> applyN 10 moveAndExtendSnake
-        |> applyN 1 moveSnake
-        |> snakeToPoints
 
 
 applyN n fn x =
@@ -116,12 +110,19 @@ type Direction
     = Right
 
 
-initialSnake : Snake
-initialSnake =
+emptySnake : Snake
+emptySnake =
     { head = ( 0, 10 )
     , tail = []
     , direction = Right
     }
+
+
+initialSnake : Snake
+initialSnake =
+    emptySnake
+        |> applyN 10 moveAndExtendSnake
+        |> applyN 1 moveSnake
 
 
 moveAndExtendSnake : Snake -> Snake
