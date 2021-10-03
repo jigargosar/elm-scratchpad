@@ -280,10 +280,22 @@ view model =
         ]
         [ viewSnake model
         , viewFruit model.fruit
-        , Svg.text_ [ TA.transform [ TT.Translate 20 30 ], SA.fill "white" ]
+        , Svg.text_
+            [ TA.transform [ TT.Translate 10 10 ]
+            , TA.textAnchor TT.AnchorStart
+            , TA.dominantBaseline TT.DominantBaselineHanging
+            , SA.fill "white"
+            ]
             [ Svg.text
                 ("Score: " ++ String.fromInt model.score)
             ]
+        , Svg.text_
+            [ TA.transform [ TT.Translate (width / 2) (height / 2) ]
+            , TA.textAnchor TT.AnchorMiddle
+            , TA.dominantBaseline TT.DominantBaselineCentral
+            , SA.fill "white"
+            ]
+            [ Svg.text "Game Over" ]
         ]
 
 
