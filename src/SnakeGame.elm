@@ -10,6 +10,7 @@ import Svg exposing (Svg)
 import Svg.Attributes as SA
 import Time
 import TypedSvg.Attributes as TA
+import TypedSvg.Attributes.InPx as Px
 
 
 main : Program () Model Msg
@@ -35,7 +36,7 @@ stepDurationInMillis =
 
 
 stepsPerSecond =
-    15
+    1
 
 
 type alias Point =
@@ -133,11 +134,9 @@ view model =
         , SA.height <| String.fromFloat height
         , SA.stroke "white"
         ]
-        [ Svg.polyline
-            [ SA.strokeWidth (String.fromFloat cellSize)
-            , TA.points (snakeToPoints model.snake)
-            ]
-            []
+        [ snakeToPoints model.snake
+            |> List.map (\( x, y ) -> Svg.circle [ Px.cx x, Px.cy y, Px.r (cellSize / 2) ] [])
+            |> Svg.g [ SA.stroke "none", SA.fill "white" ]
         ]
 
 
@@ -220,7 +219,7 @@ moveSnake snake =
                     ( 0, 1 )
 
         nextHead =
-            ( hx + dx, hy + dy )
+            ( modBy (width // cellSize) (hx + dx), modBy (height // cellSize) (hy + dy) )
     in
     { snake | head = nextHead, tail = snake.head :: snake.tail |> dropLast }
 
