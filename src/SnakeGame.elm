@@ -113,45 +113,36 @@ step model =
             model.head
                 |> moveGridPointInDirection model.nextDirection
                 |> warpGridPoint
-
-        hitsSelf =
-            List.any (\tt -> tt == nextHead) model.tail
     in
-    if hitsSelf then
+    if listContains nextHead model.tail then
+        -- hitsSelf
         { model | gameOver = True }
 
-    else
+    else if nextHead == model.fruit then
+        -- hits fruit
         let
-            hitsFruit =
-                nextHead == model.fruit
-
             ( nextFruit, nextSeed ) =
-                if hitsFruit then
-                    Random.step randomFruit model.seed
-
-                else
-                    ( model.fruit, model.seed )
+                Random.step randomFruit model.seed
         in
         { model
             | head = nextHead
-            , tail =
-                model.head
-                    :: (if hitsFruit then
-                            model.tail
-
-                        else
-                            model.tail |> dropLast
-                       )
             , direction = model.nextDirection
+            , tail = model.head :: model.tail
             , fruit = nextFruit
             , seed = nextSeed
-            , score =
-                if hitsFruit then
-                    model.score + 1
-
-                else
-                    model.score
+            , score = model.score + 1
         }
+
+    else
+        { model
+            | head = nextHead
+            , direction = model.nextDirection
+            , tail = model.head :: dropLast model.tail
+        }
+
+
+listContains x xs =
+    List.any (\y -> y == x) xs
 
 
 randomFruit : Generator GridPoint
