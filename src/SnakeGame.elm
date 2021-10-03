@@ -1,8 +1,10 @@
 module SnakeGame exposing (main)
 
 import Browser
+import Browser.Events
 import Html exposing (Html)
 import Html.Attributes exposing (style)
+import Json.Decode as JD exposing (Decoder)
 import Random exposing (Generator, Seed)
 import Svg exposing (Svg)
 import Svg.Attributes as SA
@@ -16,7 +18,7 @@ main =
         { init = init
         , update = update
         , view = view
-        , subscriptions = \_ -> Time.every stepDurationInMillis (\_ -> OnTick)
+        , subscriptions = subscriptions
         }
 
 
@@ -61,6 +63,7 @@ init () =
 
 type Msg
     = OnTick
+    | OnKeyNoRepeat String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -68,6 +71,33 @@ update msg model =
     case msg of
         OnTick ->
             ( { model | snake = moveSnake model.snake }, Cmd.none )
+
+        OnKeyNoRepeat key ->
+            let
+                _ =
+                    Debug.log key
+            in
+            ( model, Cmd.none )
+
+
+subscriptions _ =
+    Sub.batch
+        [ Time.every stepDurationInMillis (\_ -> OnTick)
+        , Browser.Events.onKeyDown (JD.map OnKeyNoRepeat noRepeatKeyDecoder)
+        ]
+
+
+noRepeatKeyDecoder : Decoder String
+noRepeatKeyDecoder =
+    JD.field "repeat" JD.bool
+        |> JD.andThen
+            (\repeat ->
+                if repeat then
+                    JD.fail "ignoring repeat key"
+
+                else
+                    JD.field "key" JD.string
+            )
 
 
 view : Model -> Html Msg
