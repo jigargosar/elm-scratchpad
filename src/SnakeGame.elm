@@ -30,6 +30,20 @@ height =
     500
 
 
+cellSizeInPx =
+    10
+
+
+gridWidth : Int
+gridWidth =
+    width // cellSizeInPx
+
+
+gridHeight : Int
+gridHeight =
+    height // cellSizeInPx
+
+
 stepDurationInMillis =
     1000 / stepsPerSecond
 
@@ -42,8 +56,115 @@ type alias Point =
     ( Float, Float )
 
 
-type alias Seg =
-    ( Point, Point )
+type alias GridPoint =
+    ( Int, Int )
+
+
+type alias Snake =
+    { head : GridPoint
+    , tail : List GridPoint
+    , direction : Direction
+    }
+
+
+type Direction
+    = Right
+    | Left
+    | Up
+    | Down
+
+
+emptySnake : Snake
+emptySnake =
+    { head = ( 0, 10 )
+    , tail = []
+    , direction = Right
+    }
+
+
+initialSnake : Snake
+initialSnake =
+    emptySnake
+        |> applyN 10 moveAndExtendSnake
+        |> applyN 1 moveSnake
+
+
+applyN n fn x =
+    if n <= 0 then
+        x
+
+    else
+        applyN (n - 1) fn (fn x)
+
+
+changeSnakeDir : Direction -> Snake -> Snake
+changeSnakeDir dir snake =
+    { snake | direction = dir }
+
+
+moveAndExtendSnake : Snake -> Snake
+moveAndExtendSnake snake =
+    let
+        ( hx, hy ) =
+            snake.head
+
+        nextHead =
+            ( hx + 1, hy )
+    in
+    { snake | head = nextHead, tail = snake.head :: snake.tail }
+
+
+moveSnake : Snake -> Snake
+moveSnake snake =
+    let
+        nextHead =
+            snake.head
+                |> moveGridPointInDirection snake.direction
+                |> warpGridPoint
+    in
+    { snake | head = nextHead, tail = snake.head :: snake.tail |> dropLast }
+
+
+warpGridPoint : GridPoint -> GridPoint
+warpGridPoint =
+    Tuple.mapBoth (modBy gridWidth) (modBy gridHeight)
+
+
+moveGridPointInDirection : Direction -> GridPoint -> GridPoint
+moveGridPointInDirection direction ( x, y ) =
+    let
+        ( dx, dy ) =
+            case direction of
+                Right ->
+                    ( 1, 0 )
+
+                Left ->
+                    ( -1, 0 )
+
+                Up ->
+                    ( 0, -1 )
+
+                Down ->
+                    ( 0, 1 )
+    in
+    ( x + dx, y + dy )
+
+
+dropLast : List a -> List a
+dropLast =
+    List.reverse >> List.drop 1 >> List.reverse
+
+
+snakeToPoints : Snake -> List Point
+snakeToPoints snake =
+    snake.head
+        :: snake.tail
+        |> List.map gridPointToPoint
+
+
+gridPointToPoint : GridPoint -> Point
+gridPointToPoint ( x, y ) =
+    ( toFloat x * cellSizeInPx, toFloat y * cellSizeInPx )
 
 
 type alias Model =
@@ -132,111 +253,6 @@ view model =
         , SA.stroke "white"
         ]
         [ snakeToPoints model.snake
-            |> List.map (\( x, y ) -> Svg.circle [ Px.cx x, Px.cy y, Px.r (cellSize / 2) ] [])
+            |> List.map (\( x, y ) -> Svg.circle [ Px.cx x, Px.cy y, Px.r (cellSizeInPx / 2) ] [])
             |> Svg.g [ SA.stroke "none", SA.fill "white" ]
         ]
-
-
-applyN n fn x =
-    if n <= 0 then
-        x
-
-    else
-        applyN (n - 1) fn (fn x)
-
-
-type alias GridPoint =
-    ( Int, Int )
-
-
-type alias Snake =
-    { head : GridPoint
-    , tail : List GridPoint
-    , direction : Direction
-    }
-
-
-type Direction
-    = Right
-    | Left
-    | Up
-    | Down
-
-
-emptySnake : Snake
-emptySnake =
-    { head = ( 0, 10 )
-    , tail = []
-    , direction = Right
-    }
-
-
-initialSnake : Snake
-initialSnake =
-    emptySnake
-        |> applyN 10 moveAndExtendSnake
-        |> applyN 1 moveSnake
-
-
-changeSnakeDir : Direction -> Snake -> Snake
-changeSnakeDir dir snake =
-    { snake | direction = dir }
-
-
-moveAndExtendSnake : Snake -> Snake
-moveAndExtendSnake snake =
-    let
-        ( hx, hy ) =
-            snake.head
-
-        nextHead =
-            ( hx + 1, hy )
-    in
-    { snake | head = nextHead, tail = snake.head :: snake.tail }
-
-
-moveSnake : Snake -> Snake
-moveSnake snake =
-    let
-        ( hx, hy ) =
-            snake.head
-
-        ( dx, dy ) =
-            case snake.direction of
-                Right ->
-                    ( 1, 0 )
-
-                Left ->
-                    ( -1, 0 )
-
-                Up ->
-                    ( 0, -1 )
-
-                Down ->
-                    ( 0, 1 )
-
-        nextHead =
-            ( modBy (width // cellSize) (hx + dx), modBy (height // cellSize) (hy + dy) )
-    in
-    { snake | head = nextHead, tail = snake.head :: snake.tail |> dropLast }
-
-
-dropLast : List a -> List a
-dropLast =
-    List.reverse >> List.drop 1 >> List.reverse
-
-
-snakeToPoints : Snake -> List Point
-snakeToPoints snake =
-    snake.head
-        :: snake.tail
-        |> List.map gridPointToPoint
-
-
-gridPointToPoint : GridPoint -> Point
-gridPointToPoint ( x, y ) =
-    ( toFloat x * cellSize, toFloat y * cellSize )
-
-
-cellSize =
-    10
