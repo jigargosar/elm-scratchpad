@@ -9,7 +9,9 @@ import Random exposing (Generator, Seed)
 import Svg exposing (Svg)
 import Svg.Attributes as SA
 import Time
+import TypedSvg.Attributes as TA
 import TypedSvg.Attributes.InPx as Px
+import TypedSvg.Types as TT
 
 
 main : Program () Model Msg
@@ -135,6 +137,12 @@ step model =
         , direction = model.nextDirection
         , fruit = nextFruit
         , seed = nextSeed
+        , score =
+            if hitsFruit then
+                model.score + 1
+
+            else
+                model.score
     }
 
 
@@ -282,6 +290,10 @@ view model =
         ]
         [ viewSnake model
         , viewFruit model.fruit
+        , Svg.text_ [ TA.transform [ TT.Translate 20 30 ], SA.fill "white" ]
+            [ Svg.text
+                ("Score: " ++ String.fromInt model.score)
+            ]
         ]
 
 
