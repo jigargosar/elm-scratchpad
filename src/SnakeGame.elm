@@ -60,34 +60,11 @@ type alias GridPoint =
     ( Int, Int )
 
 
-type alias Snake =
-    { head : GridPoint
-    , tail : List GridPoint
-    , direction : Direction
-    , nextDirection : Direction
-    , fruit : GridPoint
-    }
-
-
 type Direction
     = Right
     | Left
     | Up
     | Down
-
-
-initialSnake : Snake
-initialSnake =
-    let
-        head =
-            ( 0, 10 )
-    in
-    { head = head
-    , tail = List.repeat 10 head
-    , direction = Right
-    , nextDirection = Right
-    , fruit = ( 10, 10 )
-    }
 
 
 applyN n fn x =
@@ -98,13 +75,13 @@ applyN n fn x =
         applyN (n - 1) fn (fn x)
 
 
-changeSnakeDirection : Direction -> Snake -> Snake
-changeSnakeDirection nextDirection snake =
-    if areOpposingDirection nextDirection snake.direction then
-        snake
+changeSnakeDirection : Direction -> Model -> Model
+changeSnakeDirection nextDirection model =
+    if areOpposingDirection nextDirection model.direction then
+        model
 
     else
-        { snake | nextDirection = nextDirection }
+        { model | nextDirection = nextDirection }
 
 
 areOpposingDirection : Direction -> Direction -> Bool
@@ -127,18 +104,28 @@ areOpposingDirection d1 d2 =
     d1 == getOpposite d2
 
 
-moveSnake : Snake -> Snake
-moveSnake snake =
+step : Model -> Model
+step model =
     let
         nextHead =
-            snake.head
-                |> moveGridPointInDirection snake.nextDirection
+            model.head
+                |> moveGridPointInDirection model.nextDirection
                 |> warpGridPoint
+
+        hitsFruit =
+            nextHead == model.fruit
     in
-    { snake
+    { model
         | head = nextHead
-        , tail = snake.head :: snake.tail |> dropLast
-        , direction = snake.nextDirection
+        , tail =
+            model.head
+                :: (if hitsFruit then
+                        model.tail
+
+                    else
+                        model.tail |> dropLast
+                   )
+        , direction = model.nextDirection
     }
 
 
@@ -172,28 +159,33 @@ dropLast =
     List.reverse >> List.drop 1 >> List.reverse
 
 
-snakeToPoints : Snake -> List Point
-snakeToPoints snake =
-    snake.head
-        :: snake.tail
-        |> List.map gridPointToPoint
-
-
-gridPointToPoint : GridPoint -> Point
-gridPointToPoint ( x, y ) =
+gridPointToScreenPoint : GridPoint -> Point
+gridPointToScreenPoint ( x, y ) =
     ( toFloat x * cellSizeInPx, toFloat y * cellSizeInPx )
 
 
 type alias Model =
     { seed : Seed
-    , snake : Snake
+    , head : GridPoint
+    , tail : List GridPoint
+    , direction : Direction
+    , nextDirection : Direction
+    , fruit : GridPoint
     }
 
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { seed = Random.initialSeed 0
-      , snake = initialSnake
+    ( let
+        head =
+            ( 0, 10 )
+      in
+      { head = head
+      , tail = List.repeat 10 head
+      , direction = Right
+      , nextDirection = Right
+      , fruit = ( 10, 10 )
+      , seed = Random.initialSeed 0
       }
     , Cmd.none
     )
@@ -208,12 +200,12 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         OnTick ->
-            ( { model | snake = moveSnake model.snake }, Cmd.none )
+            ( step model, Cmd.none )
 
         OnKeyNoRepeat key ->
             ( case keyToDirection key of
                 Just dir ->
-                    { model | snake = changeSnakeDirection dir model.snake }
+                    changeSnakeDirection dir model
 
                 Nothing ->
                     model
@@ -267,9 +259,34 @@ view model =
         , style "background-color" "#333"
         , SA.width <| String.fromFloat width
         , SA.height <| String.fromFloat height
-        , SA.stroke "white"
+        , SA.stroke "none"
+        , SA.fill "none"
         ]
-        [ snakeToPoints model.snake
-            |> List.map (\( x, y ) -> Svg.circle [ Px.cx x, Px.cy y, Px.r (cellSizeInPx / 2) ] [])
-            |> Svg.g [ SA.stroke "none", SA.fill "white" ]
+        [ viewSnake model
+        , viewFruit model.fruit
         ]
+
+
+viewSnake : Model -> Svg msg
+viewSnake model =
+    model.head
+        :: model.tail
+        |> List.map gridPointToScreenPoint
+        |> List.map (\( x, y ) -> Svg.circle [ Px.cx x, Px.cy y, Px.r (cellSizeInPx / 2) ] [])
+        |> Svg.g [ SA.stroke "none", SA.fill "white" ]
+
+
+viewFruit : GridPoint -> Svg msg
+viewFruit gp =
+    let
+        ( x, y ) =
+            gridPointToScreenPoint gp
+    in
+    Svg.circle
+        [ Px.cx x
+        , Px.cy y
+        , Px.r (cellSizeInPx / 2)
+        , SA.stroke "none"
+        , SA.fill "red"
+        ]
+        []
