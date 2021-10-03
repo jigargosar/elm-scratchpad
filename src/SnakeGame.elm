@@ -64,6 +64,7 @@ type alias Snake =
     { head : GridPoint
     , tail : List GridPoint
     , direction : Direction
+    , nextDirection : Direction
     }
 
 
@@ -79,6 +80,7 @@ emptySnake =
     { head = ( 0, 10 )
     , tail = []
     , direction = Right
+    , nextDirection = Right
     }
 
 
@@ -97,9 +99,33 @@ applyN n fn x =
         applyN (n - 1) fn (fn x)
 
 
-changeSnakeDir : Direction -> Snake -> Snake
-changeSnakeDir dir snake =
-    { snake | direction = dir }
+changeSnakeDirection : Direction -> Snake -> Snake
+changeSnakeDirection nextDirection snake =
+    if areOpposite nextDirection snake.direction then
+        snake
+
+    else
+        { snake | nextDirection = nextDirection }
+
+
+areOpposite : Direction -> Direction -> Bool
+areOpposite d1 d2 =
+    let
+        getOpposite dir =
+            case dir of
+                Left ->
+                    Right
+
+                Right ->
+                    Left
+
+                Up ->
+                    Down
+
+                Down ->
+                    Up
+    in
+    d1 == getOpposite d2
 
 
 moveAndExtendSnake : Snake -> Snake
@@ -119,10 +145,14 @@ moveSnake snake =
     let
         nextHead =
             snake.head
-                |> moveGridPointInDirection snake.direction
+                |> moveGridPointInDirection snake.nextDirection
                 |> warpGridPoint
     in
-    { snake | head = nextHead, tail = snake.head :: snake.tail |> dropLast }
+    { snake
+        | head = nextHead
+        , tail = snake.head :: snake.tail |> dropLast
+        , direction = snake.nextDirection
+    }
 
 
 warpGridPoint : GridPoint -> GridPoint
@@ -196,7 +226,7 @@ update msg model =
         OnKeyNoRepeat key ->
             ( case keyToDirection key of
                 Just dir ->
-                    { model | snake = changeSnakeDir dir model.snake }
+                    { model | snake = changeSnakeDirection dir model.snake }
 
                 Nothing ->
                     model
