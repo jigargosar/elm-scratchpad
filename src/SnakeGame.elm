@@ -80,16 +80,12 @@ initialSnake =
     let
         head =
             ( 0, 10 )
-
-        tailLength =
-            10
     in
     { head = head
-    , tail = List.repeat tailLength ( 0, 10 )
+    , tail = List.repeat 10 head
     , direction = Right
     , nextDirection = Right
     }
-        |> applyN (tailLength + 1) moveSnake
 
 
 applyN n fn x =
