@@ -114,36 +114,44 @@ step model =
                 |> moveGridPointInDirection model.nextDirection
                 |> warpGridPoint
 
-        hitsFruit =
-            nextHead == model.fruit
-
-        ( nextFruit, nextSeed ) =
-            if hitsFruit then
-                Random.step randomFruit model.seed
-
-            else
-                ( model.fruit, model.seed )
+        hitsSelf =
+            List.any (\tt -> tt == nextHead) model.tail
     in
-    { model
-        | head = nextHead
-        , tail =
-            model.head
-                :: (if hitsFruit then
-                        model.tail
+    if hitsSelf then
+        { model | gameOver = True }
 
-                    else
-                        model.tail |> dropLast
-                   )
-        , direction = model.nextDirection
-        , fruit = nextFruit
-        , seed = nextSeed
-        , score =
-            if hitsFruit then
-                model.score + 1
+    else
+        let
+            hitsFruit =
+                nextHead == model.fruit
 
-            else
-                model.score
-    }
+            ( nextFruit, nextSeed ) =
+                if hitsFruit then
+                    Random.step randomFruit model.seed
+
+                else
+                    ( model.fruit, model.seed )
+        in
+        { model
+            | head = nextHead
+            , tail =
+                model.head
+                    :: (if hitsFruit then
+                            model.tail
+
+                        else
+                            model.tail |> dropLast
+                       )
+            , direction = model.nextDirection
+            , fruit = nextFruit
+            , seed = nextSeed
+            , score =
+                if hitsFruit then
+                    model.score + 1
+
+                else
+                    model.score
+        }
 
 
 randomFruit : Generator GridPoint
@@ -200,6 +208,7 @@ type alias Model =
     , nextDirection : Direction
     , fruit : GridPoint
     , score : Int
+    , gameOver : Bool
     }
 
 
@@ -216,6 +225,7 @@ init () =
       , fruit = ( 10, 10 )
       , seed = Random.initialSeed 0
       , score = 0
+      , gameOver = False
       }
     , Cmd.none
     )
@@ -230,7 +240,13 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         OnTick ->
-            ( step model, Cmd.none )
+            ( if not model.gameOver then
+                step model
+
+              else
+                model
+            , Cmd.none
+            )
 
         OnKeyNoRepeat key ->
             ( case keyToDirection key of
