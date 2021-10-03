@@ -75,7 +75,7 @@ update msg model =
         OnKeyNoRepeat key ->
             let
                 _ =
-                    Debug.log key
+                    Debug.log "key" key
             in
             ( model, Cmd.none )
 
