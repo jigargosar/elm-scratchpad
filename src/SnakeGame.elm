@@ -69,14 +69,6 @@ type Direction
     | Down
 
 
-applyN n fn x =
-    if n <= 0 then
-        x
-
-    else
-        applyN (n - 1) fn (fn x)
-
-
 changeSnakeDirection : Direction -> Model -> Model
 changeSnakeDirection nextDirection model =
     if areOpposingDirection nextDirection model.direction then
@@ -149,7 +141,7 @@ randomFruit : Generator GridPoint
 randomFruit =
     let
         offset =
-            5
+            3
     in
     Random.pair
         (Random.int offset (gridWidth - 1 - offset))
