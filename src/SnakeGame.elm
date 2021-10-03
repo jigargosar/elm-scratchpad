@@ -30,14 +30,6 @@ height =
     500
 
 
-maxSegments =
-    2000
-
-
-motionRange =
-    6
-
-
 stepRateInMilli =
     30
 
@@ -81,4 +73,18 @@ view model =
         , SA.height <| String.fromFloat height
         , SA.stroke "white"
         ]
-        []
+        [ Svg.polyline
+            [ SA.strokeWidth (String.fromFloat cellSize)
+            , TA.points snakePoints
+            ]
+            []
+        ]
+
+
+cellSize =
+    10
+
+
+snakePoints =
+    List.range 5 10
+        |> List.map (\ix -> ( toFloat ix * cellSize, 10 * cellSize ))
