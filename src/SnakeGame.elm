@@ -9,7 +9,6 @@ import Random exposing (Generator, Seed)
 import Svg exposing (Svg)
 import Svg.Attributes as SA
 import Time
-import TypedSvg.Attributes as TA
 import TypedSvg.Attributes.InPx as Px
 
 
