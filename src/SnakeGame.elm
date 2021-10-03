@@ -114,6 +114,13 @@ step model =
 
         hitsFruit =
             nextHead == model.fruit
+
+        ( nextFruit, nextSeed ) =
+            if hitsFruit then
+                Random.step randomFruit model.seed
+
+            else
+                ( model.fruit, model.seed )
     in
     { model
         | head = nextHead
@@ -126,7 +133,16 @@ step model =
                         model.tail |> dropLast
                    )
         , direction = model.nextDirection
+        , fruit = nextFruit
+        , seed = nextSeed
     }
+
+
+randomFruit : Generator GridPoint
+randomFruit =
+    Random.pair
+        (Random.int 0 (gridWidth - 1))
+        (Random.int 0 (gridHeight - 1))
 
 
 warpGridPoint : GridPoint -> GridPoint
