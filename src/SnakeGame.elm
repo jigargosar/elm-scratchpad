@@ -76,8 +76,32 @@ update msg model =
             let
                 _ =
                     Debug.log "key" key
+
+                maybeKeyDir =
+                    case key of
+                        "ArrowRight" ->
+                            Just Right
+
+                        "ArrowLeft" ->
+                            Just Left
+
+                        "ArrowUp" ->
+                            Just Up
+
+                        "ArrowDown" ->
+                            Just Down
+
+                        _ ->
+                            Nothing
             in
-            ( model, Cmd.none )
+            ( case maybeKeyDir of
+                Just dir ->
+                    { model | snake = changeSnakeDir dir model.snake }
+
+                Nothing ->
+                    model
+            , Cmd.none
+            )
 
 
 subscriptions _ =
@@ -156,6 +180,11 @@ initialSnake =
     emptySnake
         |> applyN 10 moveAndExtendSnake
         |> applyN 1 moveSnake
+
+
+changeSnakeDir : Direction -> Snake -> Snake
+changeSnakeDir dir snake =
+    { snake | direction = dir }
 
 
 moveAndExtendSnake : Snake -> Snake
