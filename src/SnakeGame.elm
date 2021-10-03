@@ -100,15 +100,15 @@ applyN n fn x =
 
 changeSnakeDirection : Direction -> Snake -> Snake
 changeSnakeDirection nextDirection snake =
-    if areOpposite nextDirection snake.direction then
+    if areOpposingDirection nextDirection snake.direction then
         snake
 
     else
         { snake | nextDirection = nextDirection }
 
 
-areOpposite : Direction -> Direction -> Bool
-areOpposite d1 d2 =
+areOpposingDirection : Direction -> Direction -> Bool
+areOpposingDirection d1 d2 =
     let
         getOpposite dir =
             case dir of
