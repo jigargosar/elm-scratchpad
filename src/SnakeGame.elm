@@ -187,6 +187,7 @@ type alias Model =
     , direction : Direction
     , nextDirection : Direction
     , fruit : GridPoint
+    , score : Int
     }
 
 
@@ -202,6 +203,7 @@ init () =
       , nextDirection = Right
       , fruit = ( 10, 10 )
       , seed = Random.initialSeed 0
+      , score = 0
       }
     , Cmd.none
     )
