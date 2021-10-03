@@ -85,7 +85,7 @@ snakePoints =
     --    |> List.map (\ix -> ( toFloat ix * cellSize, 10 * cellSize ))
     initialSnake
         |> applyN 10 moveAndExtendSnake
-        |> applyN 10 moveSnake
+        |> applyN 1 moveSnake
         |> snakeToPoints
 
 
@@ -114,7 +114,7 @@ type Direction
 
 initialSnake : Snake
 initialSnake =
-    { head = ( 10, 10 )
+    { head = ( 0, 10 )
     , tail = []
     , direction = Right
     }
