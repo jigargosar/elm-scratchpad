@@ -33,7 +33,7 @@ height =
 
 
 cellSizeInPx =
-    10
+    15
 
 
 gridWidth : Int
@@ -148,9 +148,13 @@ step model =
 
 randomFruit : Generator GridPoint
 randomFruit =
+    let
+        offset =
+            5
+    in
     Random.pair
-        (Random.int 0 (gridWidth - 1))
-        (Random.int 0 (gridHeight - 1))
+        (Random.int offset (gridWidth - 1 - offset))
+        (Random.int offset (gridHeight - 1 - offset))
 
 
 warpGridPoint : GridPoint -> GridPoint
