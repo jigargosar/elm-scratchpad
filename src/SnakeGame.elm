@@ -35,7 +35,7 @@ stepDurationInMillis =
 
 
 stepsPerSecond =
-    1
+    15
 
 
 type alias Point =
@@ -73,28 +73,7 @@ update msg model =
             ( { model | snake = moveSnake model.snake }, Cmd.none )
 
         OnKeyNoRepeat key ->
-            let
-                _ =
-                    Debug.log "key" key
-
-                maybeKeyDir =
-                    case key of
-                        "ArrowRight" ->
-                            Just Right
-
-                        "ArrowLeft" ->
-                            Just Left
-
-                        "ArrowUp" ->
-                            Just Up
-
-                        "ArrowDown" ->
-                            Just Down
-
-                        _ ->
-                            Nothing
-            in
-            ( case maybeKeyDir of
+            ( case keyToDirection key of
                 Just dir ->
                     { model | snake = changeSnakeDir dir model.snake }
 
@@ -102,6 +81,25 @@ update msg model =
                     model
             , Cmd.none
             )
+
+
+keyToDirection : String -> Maybe Direction
+keyToDirection key =
+    case key of
+        "ArrowRight" ->
+            Just Right
+
+        "ArrowLeft" ->
+            Just Left
+
+        "ArrowUp" ->
+            Just Up
+
+        "ArrowDown" ->
+            Just Down
+
+        _ ->
+            Nothing
 
 
 subscriptions _ =
