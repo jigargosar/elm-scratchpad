@@ -16,7 +16,7 @@ main =
         { init = init
         , update = update
         , view = view
-        , subscriptions = \_ -> Time.every stepRateInMilli (\_ -> OnTick)
+        , subscriptions = \_ -> Time.every stepDurationInMillis (\_ -> OnTick)
         }
 
 
@@ -28,8 +28,12 @@ height =
     500
 
 
-stepRateInMilli =
-    30
+stepDurationInMillis =
+    1000 / stepsPerSecond
+
+
+stepsPerSecond =
+    15
 
 
 type alias Point =
