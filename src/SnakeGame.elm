@@ -138,6 +138,9 @@ type alias Snake =
 
 type Direction
     = Right
+    | Left
+    | Up
+    | Down
 
 
 emptySnake : Snake
@@ -173,8 +176,22 @@ moveSnake snake =
         ( hx, hy ) =
             snake.head
 
+        ( dx, dy ) =
+            case snake.direction of
+                Right ->
+                    ( 1, 0 )
+
+                Left ->
+                    ( -1, 0 )
+
+                Up ->
+                    ( 0, -1 )
+
+                Down ->
+                    ( 0, 1 )
+
         nextHead =
-            ( hx + 1, hy )
+            ( hx + dx, hy + dy )
     in
     { snake | head = nextHead, tail = snake.head :: snake.tail |> dropLast }
 
