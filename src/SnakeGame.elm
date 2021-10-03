@@ -75,20 +75,21 @@ type Direction
     | Down
 
 
-emptySnake : Snake
-emptySnake =
-    { head = ( 0, 10 )
-    , tail = []
+initialSnake : Snake
+initialSnake =
+    let
+        head =
+            ( 0, 10 )
+
+        tailLength =
+            10
+    in
+    { head = head
+    , tail = List.repeat tailLength ( 0, 10 )
     , direction = Right
     , nextDirection = Right
     }
-
-
-initialSnake : Snake
-initialSnake =
-    emptySnake
-        |> applyN 10 moveAndExtendSnake
-        |> applyN 1 moveSnake
+        |> applyN (tailLength + 1) moveSnake
 
 
 applyN n fn x =
@@ -126,18 +127,6 @@ areOpposite d1 d2 =
                     Up
     in
     d1 == getOpposite d2
-
-
-moveAndExtendSnake : Snake -> Snake
-moveAndExtendSnake snake =
-    let
-        ( hx, hy ) =
-            snake.head
-
-        nextHead =
-            ( hx + 1, hy )
-    in
-    { snake | head = nextHead, tail = snake.head :: snake.tail }
 
 
 moveSnake : Snake -> Snake
