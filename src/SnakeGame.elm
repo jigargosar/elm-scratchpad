@@ -65,6 +65,7 @@ type alias Snake =
     , tail : List GridPoint
     , direction : Direction
     , nextDirection : Direction
+    , fruit : GridPoint
     }
 
 
@@ -85,6 +86,7 @@ initialSnake =
     , tail = List.repeat 10 head
     , direction = Right
     , nextDirection = Right
+    , fruit = ( 10, 10 )
     }
 
 
