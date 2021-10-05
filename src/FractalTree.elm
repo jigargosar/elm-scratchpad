@@ -2,8 +2,10 @@ module FractalTree exposing (..)
 
 import Browser
 import Html exposing (Html)
+import Html.Attributes exposing (style)
 import Random exposing (Seed)
 import Svg
+import Svg.Attributes as SA
 
 
 main : Program () Model Msg
@@ -59,5 +61,12 @@ view _ =
         _ =
             []
     in
-    Svg.svg []
+    Svg.svg
+        [ style "font-size" "20px"
+        , style "background-color" "#333"
+        , SA.width <| String.fromFloat width
+        , SA.height <| String.fromFloat height
+        , SA.stroke "none"
+        , SA.fill "none"
+        ]
         []
