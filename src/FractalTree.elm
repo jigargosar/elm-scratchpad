@@ -6,6 +6,8 @@ import Html.Attributes exposing (style)
 import Random exposing (Seed)
 import Svg
 import Svg.Attributes as SA
+import TypedSvg.Attributes as TA exposing (points)
+import TypedSvg.Types as TT
 
 
 main : Program () Model Msg
@@ -69,21 +71,44 @@ view _ =
         , SA.stroke "none"
         , SA.fill "none"
         ]
+        [ tree (degrees 75) 160
+            |> List.map viewSegment
+            |> Svg.g [ TA.transform [ TT.Translate (width / 2) height ] ]
+        ]
+
+
+viewSegment ( a, b ) =
+    Svg.polyline [ points [ a, b ], SA.stroke "white" ]
         []
 
 
-angleOffset =
-    turns 0.2
+tree angleOffset baseBranchHeight =
+    let
+        trunkEnd =
+            moveByRTheta baseBranchHeight (degrees -90) ( 0, 0 )
+    in
+    ( ( 0, 0 ), trunkEnd )
+        :: branchHelper
+            angleOffset
+            (baseBranchHeight * 0.66)
+            (degrees -90)
+            trunkEnd
+            []
+            []
 
 
-branchHelper branchHeight baseAngle rootPoint pending segmentsAcc =
+branch angleOffset baseBranchHeight =
+    branchHelper angleOffset baseBranchHeight (degrees -90) ( 0, 0 ) [] []
+
+
+branchHelper angleOffset branchHeight baseAngle rootPoint pending segmentsAcc =
     if branchHeight < 2 then
         case pending of
             [] ->
                 segmentsAcc
 
             ( bh, ba, rp ) :: p ->
-                branchHelper bh ba rp p segmentsAcc
+                branchHelper angleOffset bh ba rp p segmentsAcc
 
     else
         let
@@ -93,9 +118,12 @@ branchHelper branchHeight baseAngle rootPoint pending segmentsAcc =
                 )
 
             ( leftEndPoint, rightEndPoint ) =
-                moveByRTheta branchHeight rightAngle rootPoint
+                ( moveByRTheta branchHeight leftAngle rootPoint
+                , moveByRTheta branchHeight rightAngle rootPoint
+                )
         in
         branchHelper
+            angleOffset
             (branchHeight * 0.66)
             leftAngle
             leftEndPoint
