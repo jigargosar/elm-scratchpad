@@ -64,8 +64,8 @@ subscriptions _ =
 view : Model -> Html Msg
 view model =
     let
-        _ =
-            []
+        offsetAngle =
+            rangeMap ( 0, width ) ( 0, degrees 90 ) model.mouseX
     in
     Svg.svg
         [ style "font-size" "20px"
@@ -80,11 +80,7 @@ view model =
                 (JD.field "offsetY" JD.float)
             )
         ]
-        [ let
-            offsetAngle =
-                rangeMap ( 0, width ) ( 0, degrees 90 ) model.mouseX
-          in
-          tree offsetAngle 160
+        [ tree offsetAngle 160
             |> List.map viewSegment
             |> Svg.g [ TA.transform [ TT.Translate (width / 2) height ] ]
         ]
