@@ -9,7 +9,6 @@ import Svg
 import Svg.Attributes as SA
 import Svg.Events as SE
 import TypedSvg.Attributes as TA exposing (points)
-import TypedSvg.Events as TE
 import TypedSvg.Types as TT
 
 
@@ -33,12 +32,14 @@ height =
 
 type alias Model =
     { seed : Seed
+    , mouseX : Float
     }
 
 
 init : () -> ( Model, Cmd Msg )
 init () =
     ( { seed = Random.initialSeed 0
+      , mouseX = width / 3
       }
     , Cmd.none
     )
@@ -51,8 +52,8 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        OnMouseMove _ _ ->
-            ( model, Cmd.none )
+        OnMouseMove x _ ->
+            ( { model | mouseX = x }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
@@ -61,7 +62,7 @@ subscriptions _ =
 
 
 view : Model -> Html Msg
-view _ =
+view model =
     let
         _ =
             []
@@ -76,13 +77,29 @@ view _ =
         , SE.on "mousemove"
             (JD.map2 OnMouseMove
                 (JD.field "offsetX" JD.float)
-                (JD.field "offsetX" JD.float)
+                (JD.field "offsetY" JD.float)
             )
         ]
-        [ tree (degrees 75) 160
+        [ let
+            offsetAngle =
+                rangeMap ( 0, width ) ( 0, degrees 90 ) model.mouseX
+          in
+          tree offsetAngle 160
             |> List.map viewSegment
             |> Svg.g [ TA.transform [ TT.Translate (width / 2) height ] ]
         ]
+
+
+rangeMap ( a, b ) ( c, d ) x =
+    norm a b x |> lerp c d
+
+
+lerp a b x =
+    (x * (b - a)) + a
+
+
+norm a b x =
+    (x - a) / (b - a)
 
 
 viewSegment ( a, b ) =
