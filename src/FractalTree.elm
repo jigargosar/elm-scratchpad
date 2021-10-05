@@ -96,11 +96,15 @@ tree angleOffset branchHeight =
     ( trunkStart, trunkEnd )
         :: branchHelper
             angleOffset
-            (branchHeight * 0.66)
+            (nextBranchHeight branchHeight)
             baseAngle
             trunkEnd
             []
             []
+
+
+nextBranchHeight branchHeight =
+    branchHeight * 0.66
 
 
 branchHelper angleOffset branchHeight baseAngle rootPoint pending segmentsAcc =
@@ -126,10 +130,10 @@ branchHelper angleOffset branchHeight baseAngle rootPoint pending segmentsAcc =
         in
         branchHelper
             angleOffset
-            (branchHeight * 0.66)
+            (nextBranchHeight branchHeight)
             leftAngle
             leftEndPoint
-            (( branchHeight * 0.66
+            (( nextBranchHeight branchHeight
              , rightAngle
              , rightEndPoint
              )
