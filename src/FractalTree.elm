@@ -3,10 +3,13 @@ module FractalTree exposing (..)
 import Browser
 import Html exposing (Html)
 import Html.Attributes exposing (style)
+import Json.Decode as JD
 import Random exposing (Seed)
 import Svg
 import Svg.Attributes as SA
+import Svg.Events as SE
 import TypedSvg.Attributes as TA exposing (points)
+import TypedSvg.Events as TE
 import TypedSvg.Types as TT
 
 
@@ -42,13 +45,13 @@ init () =
 
 
 type Msg
-    = Msg
+    = OnMouseMove Float Float
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Msg ->
+        OnMouseMove _ _ ->
             ( model, Cmd.none )
 
 
@@ -70,6 +73,11 @@ view _ =
         , SA.height <| String.fromFloat height
         , SA.stroke "none"
         , SA.fill "none"
+        , SE.on "mousemove"
+            (JD.map2 OnMouseMove
+                (JD.field "offsetX" JD.float)
+                (JD.field "offsetX" JD.float)
+            )
         ]
         [ tree (degrees 75) 160
             |> List.map viewSegment
