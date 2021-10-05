@@ -76,7 +76,7 @@ angleOffset =
     turns 0.2
 
 
-branch branchHeight startPoint theta segments =
+branch branchHeight theta startPoint segments =
     if branchHeight < 2 then
         segments
 
@@ -87,8 +87,8 @@ branch branchHeight startPoint theta segments =
         in
         branch
             (branchHeight * 0.66)
-            endPoint
             (theta + angleOffset)
+            endPoint
             (( startPoint, endPoint )
                 :: segments
             )
