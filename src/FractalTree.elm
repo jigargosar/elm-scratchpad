@@ -82,23 +82,25 @@ viewSegment ( a, b ) =
         []
 
 
-tree angleOffset baseBranchHeight =
+tree angleOffset branchHeight =
     let
+        baseAngle =
+            degrees -90
+
+        trunkStart =
+            ( 0, 0 )
+
         trunkEnd =
-            moveByRTheta baseBranchHeight (degrees -90) ( 0, 0 )
+            moveByRTheta branchHeight baseAngle trunkStart
     in
-    ( ( 0, 0 ), trunkEnd )
+    ( trunkStart, trunkEnd )
         :: branchHelper
             angleOffset
-            (baseBranchHeight * 0.66)
-            (degrees -90)
+            (branchHeight * 0.66)
+            baseAngle
             trunkEnd
             []
             []
-
-
-branch angleOffset baseBranchHeight =
-    branchHelper angleOffset baseBranchHeight (degrees -90) ( 0, 0 ) [] []
 
 
 branchHelper angleOffset branchHeight baseAngle rootPoint pending segmentsAcc =
