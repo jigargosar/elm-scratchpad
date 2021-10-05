@@ -76,21 +76,38 @@ angleOffset =
     turns 0.2
 
 
-branch branchHeight theta startPoint segments =
+branchHelper branchHeight baseAngle rootPoint pending segmentsAcc =
     if branchHeight < 2 then
-        segments
+        case pending of
+            [] ->
+                segmentsAcc
+
+            ( bh, ba, rp ) :: p ->
+                branchHelper bh ba rp p segmentsAcc
 
     else
         let
-            endPoint =
-                moveByRTheta branchHeight theta startPoint
+            ( leftAngle, rightAngle ) =
+                ( baseAngle - angleOffset
+                , baseAngle + angleOffset
+                )
+
+            ( leftEndPoint, rightEndPoint ) =
+                moveByRTheta branchHeight rightAngle rootPoint
         in
-        branch
+        branchHelper
             (branchHeight * 0.66)
-            (theta + angleOffset)
-            endPoint
-            (( startPoint, endPoint )
-                :: segments
+            leftAngle
+            leftEndPoint
+            (( branchHeight * 0.66
+             , rightAngle
+             , rightEndPoint
+             )
+                :: pending
+            )
+            (( rootPoint, leftEndPoint )
+                :: ( rootPoint, rightEndPoint )
+                :: segmentsAcc
             )
 
 
