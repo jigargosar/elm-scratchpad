@@ -70,3 +70,33 @@ view _ =
         , SA.fill "none"
         ]
         []
+
+
+angleOffset =
+    turns 0.2
+
+
+branch branchHeight startPoint theta segments =
+    if branchHeight < 2 then
+        segments
+
+    else
+        let
+            endPoint =
+                moveByRTheta branchHeight theta startPoint
+        in
+        branch
+            (branchHeight * 0.66)
+            endPoint
+            (theta + angleOffset)
+            (( startPoint, endPoint )
+                :: segments
+            )
+
+
+moveByRTheta r theta ( x, y ) =
+    let
+        ( dx, dy ) =
+            fromPolar ( r, theta )
+    in
+    ( x + dx, y + dy )
