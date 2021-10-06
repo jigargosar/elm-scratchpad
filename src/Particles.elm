@@ -162,8 +162,8 @@ createConnectionsHelp a =
         pointA =
             ( a.x, a.y )
 
-        maxDistanceSquared =
-            85 ^ 2
+        maxDistance =
+            85
     in
     List.filterMap
         (\b ->
@@ -171,10 +171,12 @@ createConnectionsHelp a =
                 pointB =
                     ( b.x, b.y )
 
-                distSquared =
-                    ((b.x - a.x) ^ 2) + ((b.y - a.y) ^ 2)
+                dist =
+                    ((b.x - a.x) ^ 2)
+                        + ((b.y - a.y) ^ 2)
+                        |> sqrt
             in
-            if distSquared < maxDistanceSquared then
+            if dist < maxDistance then
                 Just ( pointA, pointB )
 
             else
