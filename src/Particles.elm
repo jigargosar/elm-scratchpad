@@ -2,9 +2,11 @@ module Particles exposing (..)
 
 import Browser
 import Html exposing (Html)
-import Svg
+import Html.Attributes exposing (style)
+import Svg exposing (Svg)
 import Svg.Attributes as SA
 import Time
+import TypedSvg.Attributes.InPx as Px
 
 
 main : Program () Model Msg
@@ -69,5 +71,20 @@ view model =
         , SA.height (String.fromFloat height)
         , SA.fill "none"
         , SA.stroke "none"
+        , style "background-color" "#eee"
+        ]
+        [ model.particles
+            |> List.map viewParticle
+            |> Svg.g []
+        ]
+
+
+viewParticle : Particle -> Svg msg
+viewParticle { x, y, r } =
+    Svg.circle
+        [ Px.cx x
+        , Px.cy y
+        , Px.r r
+        , SA.fill "white"
         ]
         []
