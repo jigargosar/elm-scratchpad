@@ -117,7 +117,7 @@ view model =
         , SA.height (String.fromFloat height)
         , SA.fill "none"
         , SA.stroke "none"
-        , style "background-color" "black"
+        , style "background-color" "red"
         ]
         [ List.range 0 (ceiling (width / barWidth))
             |> List.map viewBarAtIndex
