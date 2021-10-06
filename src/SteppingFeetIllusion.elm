@@ -120,8 +120,7 @@ view model =
         , style "background-color" "black"
         ]
         [ List.range 0 (ceiling (width / barWidth))
-            |> List.filter isEven
-            |> List.map viewBar
+            |> List.map viewBarAtIndex
             |> Svg.g []
         , model.bricks
             |> List.map viewBrick
@@ -129,21 +128,20 @@ view model =
         ]
 
 
-isEven i =
-    modBy 2 i == 0
-
-
-viewBar i =
-    let
-        x =
-            toFloat i * barWidth
-    in
+viewBarAtIndex : Int -> Svg msg
+viewBarAtIndex i =
     Svg.rect
-        [ Px.x x
+        [ Px.x (toFloat i * barWidth)
         , Px.y 0
         , Px.width barWidth
         , Px.height height
-        , SA.fill "white"
+        , SA.fill
+            (if modBy 2 i == 0 then
+                "white"
+
+             else
+                "black"
+            )
         ]
         []
 
