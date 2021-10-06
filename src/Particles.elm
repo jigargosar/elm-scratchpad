@@ -134,6 +134,29 @@ view model =
         ]
 
 
+type alias Point =
+    ( Float, Float )
+
+
+type alias Seg =
+    ( Point, Point )
+
+
+createConnections : List Particle -> List Seg -> List Seg
+createConnections pendingParticles connections =
+    case pendingParticles of
+        [] ->
+            connections
+
+        p :: ps ->
+            createConnections ps (createConnectionsHelp p ps ++ connections)
+
+
+createConnectionsHelp : Particle -> List Particle -> List Seg
+createConnectionsHelp p ps =
+    Debug.todo "impl"
+
+
 viewParticle : Particle -> Svg msg
 viewParticle { x, y, r } =
     Svg.circle
