@@ -7,6 +7,7 @@ import Svg exposing (Svg)
 import Svg.Attributes as SA
 import Time
 import TypedSvg.Attributes.InPx as Px
+import TypedSvg.Events as TE
 
 
 width =
@@ -93,6 +94,8 @@ init () =
 
 type Msg
     = OnTick
+    | ShowBars
+    | HideBars
 
 
 subscriptions : Model -> Sub Msg
@@ -112,6 +115,12 @@ update msg model =
             , Cmd.none
             )
 
+        ShowBars ->
+            ( { model | showBars = True }, Cmd.none )
+
+        HideBars ->
+            ( { model | showBars = False }, Cmd.none )
+
 
 view : Model -> Html Msg
 view model =
@@ -121,6 +130,8 @@ view model =
         , SA.fill "none"
         , SA.stroke "none"
         , style "background-color" "#333"
+        , TE.onMouseDown HideBars
+        , TE.onMouseUp ShowBars
         ]
         [ if model.showBars then
             List.range 0 (ceiling (width / barWidth))
