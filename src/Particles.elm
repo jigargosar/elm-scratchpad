@@ -38,7 +38,8 @@ randomParticle =
     Random.map5 Particle
         (Random.float 0 width)
         (Random.float 0 height)
-        (Random.float 1 8)
+        --(Random.float 1 8)
+        (Random.float 1 4)
         (Random.float -2 2)
         (Random.float -1 1.5)
 
@@ -89,6 +90,7 @@ view model =
         , SA.fill "none"
         , SA.stroke "none"
         , style "background-color" "#333"
+        , style "background-color" "#0f0f0f"
         ]
         [ model.particles
             |> List.map viewParticle
@@ -103,5 +105,6 @@ viewParticle { x, y, r } =
         , Px.cy y
         , Px.r r
         , SA.fill "white"
+        , SA.fill "rgba(200,169,169,0.5)"
         ]
         []
