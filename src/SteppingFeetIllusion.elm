@@ -98,6 +98,10 @@ brickWidth =
     width / 8
 
 
+barWidth =
+    brickWidth / 8
+
+
 height =
     500
 
@@ -113,13 +117,35 @@ view model =
         , SA.height (String.fromFloat height)
         , SA.fill "none"
         , SA.stroke "none"
-        , style "background-color" "#333"
-        , style "background-color" "#0f0f0f"
+        , style "background-color" "black"
         ]
         [ model.bricks
             |> List.map viewBrick
             |> Svg.g []
+        , List.range 0 (ceiling (width / barWidth))
+            |> List.filter isEven
+            |> List.map viewBar
+            |> Svg.g []
         ]
+
+
+isEven i =
+    modBy 2 i == 0
+
+
+viewBar i =
+    let
+        x =
+            toFloat i * barWidth
+    in
+    Svg.rect
+        [ Px.x x
+        , Px.y 0
+        , Px.width barWidth
+        , Px.height height
+        , SA.fill "white"
+        ]
+        []
 
 
 viewBrick : Brick -> Svg msg
