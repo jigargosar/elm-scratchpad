@@ -52,8 +52,16 @@ type alias Model =
 init : () -> ( Model, Cmd Msg )
 init () =
     ( { bricks =
-            [ Brick 0 ((height / 3) - brickHeight / 2) "white" 1
-            , Brick 0 ((height * 2 / 3) - brickHeight / 2) "black" 1
+            [ { x = 0
+              , y = (height / 3) - brickHeight / 2
+              , vx = 1
+              , color = "white"
+              }
+            , { x = 0
+              , y = (height * 2 / 3) - brickHeight / 2
+              , vx = 1
+              , color = "black"
+              }
             ]
       }
     , Cmd.none
