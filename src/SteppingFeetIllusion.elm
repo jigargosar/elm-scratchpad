@@ -6,7 +6,6 @@ import Html.Attributes exposing (style)
 import Svg exposing (Svg)
 import Svg.Attributes as SA
 import Time
-import TypedSvg.Attributes as TA
 import TypedSvg.Attributes.InPx as Px
 
 
@@ -112,56 +111,7 @@ view model =
         [ model.bricks
             |> List.map viewBrick
             |> Svg.g []
-        , createConnections model.bricks []
-            |> List.map viewSegment
-            |> Svg.g []
         ]
-
-
-type alias Point =
-    ( Float, Float )
-
-
-type alias Seg =
-    ( Point, Point )
-
-
-createConnections : List Brick -> List Seg -> List Seg
-createConnections pendingParticles connections =
-    case pendingParticles of
-        [] ->
-            connections
-
-        p :: ps ->
-            createConnections ps (createConnectionsHelp p ps ++ connections)
-
-
-createConnectionsHelp : Brick -> List Brick -> List Seg
-createConnectionsHelp a =
-    let
-        pointA =
-            ( a.x, a.y )
-
-        maxDistance =
-            85
-    in
-    List.filterMap
-        (\b ->
-            let
-                pointB =
-                    ( b.x, b.y )
-
-                dist =
-                    ((b.x - a.x) ^ 2)
-                        + ((b.y - a.y) ^ 2)
-                        |> sqrt
-            in
-            if dist < maxDistance then
-                Just ( pointA, pointB )
-
-            else
-                Nothing
-        )
 
 
 viewBrick : Brick -> Svg msg
@@ -172,14 +122,5 @@ viewBrick { x, y, color } =
         , Px.width brickWidth
         , Px.height brickHeight
         , SA.fill color
-        ]
-        []
-
-
-viewSegment : Seg -> Svg msg
-viewSegment ( a, b ) =
-    Svg.polyline
-        [ TA.points [ a, b ]
-        , SA.stroke "rgba(255,255,255,0.05)"
         ]
         []
