@@ -45,7 +45,13 @@ randomParticle =
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { particles = []
+    let
+        ( particles, _ ) =
+            Random.step
+                (Random.list (width // 10) randomParticle)
+                (Random.initialSeed 0)
+    in
+    ( { particles = particles
       }
     , Cmd.none
     )
