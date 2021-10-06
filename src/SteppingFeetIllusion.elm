@@ -66,7 +66,9 @@ bounceAgainstScreenEdge ({ x, vx } as b) =
 
 
 type alias Model =
-    { bricks : List Brick }
+    { bricks : List Brick
+    , showBars : Bool
+    }
 
 
 init : () -> ( Model, Cmd Msg )
@@ -83,6 +85,7 @@ init () =
               , color = "black"
               }
             ]
+      , showBars = True
       }
     , Cmd.none
     )
@@ -117,11 +120,15 @@ view model =
         , SA.height (String.fromFloat height)
         , SA.fill "none"
         , SA.stroke "none"
-        , style "background-color" "red"
+        , style "background-color" "#333"
         ]
-        [ List.range 0 (ceiling (width / barWidth))
-            |> List.map viewBarAtIndex
-            |> Svg.g []
+        [ if model.showBars then
+            List.range 0 (ceiling (width / barWidth))
+                |> List.map viewBarAtIndex
+                |> Svg.g []
+
+          else
+            Svg.text ""
         , model.bricks
             |> List.map viewBrick
             |> Svg.g []
