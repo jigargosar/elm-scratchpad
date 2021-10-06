@@ -71,7 +71,7 @@ view model =
         , SA.height (String.fromFloat height)
         , SA.fill "none"
         , SA.stroke "none"
-        , style "background-color" "#eee"
+        , style "background-color" "#333"
         ]
         [ model.particles
             |> List.map viewParticle
