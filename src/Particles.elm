@@ -3,6 +3,7 @@ module Particles exposing (..)
 import Browser
 import Html exposing (Html)
 import Html.Attributes exposing (style)
+import Random exposing (Generator)
 import Svg exposing (Svg)
 import Svg.Attributes as SA
 import Time
@@ -30,6 +31,16 @@ type alias Particle =
 
 type alias Model =
     { particles : List Particle }
+
+
+randomParticle : Generator Particle
+randomParticle =
+    Random.map5 Particle
+        (Random.float 0 width)
+        (Random.float 0 height)
+        (Random.float 1 8)
+        (Random.float -2 2)
+        (Random.float -1 1.5)
 
 
 init : () -> ( Model, Cmd Msg )
