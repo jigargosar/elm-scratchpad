@@ -53,12 +53,12 @@ init : () -> ( Model, Cmd Msg )
 init () =
     ( { bricks =
             [ { x = 0
-              , y = (height / 3) - brickHeight / 2
+              , y = (height / 3) - brickHeight
               , vx = 1
               , color = "white"
               }
             , { x = 0
-              , y = (height * 2 / 3) - brickHeight / 2
+              , y = (height * 2 / 3) - brickHeight
               , vx = 1
               , color = "black"
               }
