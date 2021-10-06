@@ -9,6 +9,26 @@ import Time
 import TypedSvg.Attributes.InPx as Px
 
 
+width =
+    500
+
+
+brickWidth =
+    width / 4
+
+
+barWidth =
+    brickWidth / 4
+
+
+height =
+    500
+
+
+brickHeight =
+    brickWidth / 2
+
+
 main : Program () Model Msg
 main =
     Browser.element
@@ -88,26 +108,6 @@ update msg model =
               }
             , Cmd.none
             )
-
-
-width =
-    500
-
-
-brickWidth =
-    width / 8
-
-
-barWidth =
-    brickWidth / 8
-
-
-height =
-    500
-
-
-brickHeight =
-    brickWidth / 2
 
 
 view : Model -> Html Msg
