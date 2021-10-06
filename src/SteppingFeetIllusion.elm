@@ -119,12 +119,12 @@ view model =
         , SA.stroke "none"
         , style "background-color" "black"
         ]
-        [ model.bricks
-            |> List.map viewBrick
-            |> Svg.g []
-        , List.range 0 (ceiling (width / barWidth))
+        [ List.range 0 (ceiling (width / barWidth))
             |> List.filter isEven
             |> List.map viewBar
+            |> Svg.g []
+        , model.bricks
+            |> List.map viewBrick
             |> Svg.g []
         ]
 
