@@ -29,10 +29,6 @@ type alias Particle =
     }
 
 
-type alias Model =
-    { particles : List Particle }
-
-
 randomParticle : Generator Particle
 randomParticle =
     Random.map5 Particle
@@ -42,6 +38,40 @@ randomParticle =
         (Random.float 1 4)
         (Random.float -2 2)
         (Random.float -1 1.5)
+
+
+updateParticle : Particle -> Particle
+updateParticle =
+    moveByVelocity >> bounceAgainstScreenEdge
+
+
+moveByVelocity : Particle -> Particle
+moveByVelocity ({ x, y, vx, vy } as p) =
+    { p | x = x + vx, y = y + vy }
+
+
+bounceAgainstScreenEdge : Particle -> Particle
+bounceAgainstScreenEdge ({ x, y, vx, vy } as p) =
+    { p
+        | x = clamp 0 width x
+        , y = clamp 0 height y
+        , vx =
+            if x < 0 || x > width then
+                negate vx
+
+            else
+                vx
+        , vy =
+            if y < 0 || y > height then
+                negate vy
+
+            else
+                vy
+    }
+
+
+type alias Model =
+    { particles : List Particle }
 
 
 init : () -> ( Model, Cmd Msg )
@@ -71,7 +101,13 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         OnTick ->
-            ( model, Cmd.none )
+            ( { model
+                | particles =
+                    model.particles
+                        |> List.map updateParticle
+              }
+            , Cmd.none
+            )
 
 
 width =
