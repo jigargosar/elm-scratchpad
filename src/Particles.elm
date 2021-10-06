@@ -198,6 +198,6 @@ viewSegment : Seg -> Svg msg
 viewSegment ( a, b ) =
     Svg.polyline
         [ TA.points [ a, b ]
-        , SA.stroke "rgba(255,255,255,0.04)"
+        , SA.stroke "rgba(255,255,255,0.05)"
         ]
         []
