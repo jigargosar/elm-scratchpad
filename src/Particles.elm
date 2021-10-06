@@ -7,6 +7,7 @@ import Random exposing (Generator)
 import Svg exposing (Svg)
 import Svg.Attributes as SA
 import Time
+import TypedSvg.Attributes as TA
 import TypedSvg.Attributes.InPx as Px
 
 
@@ -131,6 +132,9 @@ view model =
         [ model.particles
             |> List.map viewParticle
             |> Svg.g []
+        , createConnections model.particles []
+            |> List.map viewSegment
+            |> Svg.g []
         ]
 
 
@@ -153,8 +157,29 @@ createConnections pendingParticles connections =
 
 
 createConnectionsHelp : Particle -> List Particle -> List Seg
-createConnectionsHelp p ps =
-    Debug.todo "impl"
+createConnectionsHelp a =
+    let
+        pointA =
+            ( a.x, a.y )
+
+        maxDistanceSquared =
+            85 ^ 2
+    in
+    List.filterMap
+        (\b ->
+            let
+                pointB =
+                    ( b.x, b.y )
+
+                distSquared =
+                    ((b.x - a.x) ^ 2) + ((b.y - a.y) ^ 2)
+            in
+            if distSquared < maxDistanceSquared then
+                Just ( pointA, pointB )
+
+            else
+                Nothing
+        )
 
 
 viewParticle : Particle -> Svg msg
@@ -165,5 +190,14 @@ viewParticle { x, y, r } =
         , Px.r r
         , SA.fill "white"
         , SA.fill "rgba(200,169,169,0.5)"
+        ]
+        []
+
+
+viewSegment : Seg -> Svg msg
+viewSegment ( a, b ) =
+    Svg.polyline
+        [ TA.points [ a, b ]
+        , SA.stroke "rgba(255,255,255,0.04)"
         ]
         []
