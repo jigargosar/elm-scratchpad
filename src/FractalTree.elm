@@ -8,6 +8,8 @@ import Random exposing (Seed)
 import Svg
 import Svg.Attributes as SA
 import Svg.Events as SE
+import Task
+import Time exposing (Posix)
 import TypedSvg.Attributes as TA exposing (points)
 import TypedSvg.Types as TT
 
@@ -33,6 +35,7 @@ height =
 type alias Model =
     { seed : Seed
     , mouseX : Float
+    , updatedAt : Int
     }
 
 
@@ -40,20 +43,30 @@ init : () -> ( Model, Cmd Msg )
 init () =
     ( { seed = Random.initialSeed 0
       , mouseX = width / 3
+      , updatedAt = 0
       }
     , Cmd.none
     )
 
 
 type Msg
-    = OnMouseMove Float Float
+    = MouseXMoved Float
+    | MouseXMovedWithNow Float Int
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        OnMouseMove x _ ->
-            ( { model | mouseX = x }, Cmd.none )
+        MouseXMoved x ->
+            --( { model | mouseX = x }, Cmd.none )
+            ( model, Time.now |> Task.map Time.posixToMillis |> Task.perform (MouseXMovedWithNow x) )
+
+        MouseXMovedWithNow x now ->
+            if now - model.updatedAt > 200 then
+                ( { model | mouseX = x, updatedAt = now }, Cmd.none )
+
+            else
+                ( model, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
@@ -75,9 +88,8 @@ view model =
         , SA.stroke "none"
         , SA.fill "none"
         , SE.on "mousemove"
-            (JD.map2 OnMouseMove
+            (JD.map MouseXMoved
                 (JD.field "offsetX" JD.float)
-                (JD.field "offsetY" JD.float)
             )
         ]
         [ tree offsetAngle 160
