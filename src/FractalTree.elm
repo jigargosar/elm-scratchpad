@@ -4,12 +4,9 @@ import Browser
 import Html exposing (Html)
 import Html.Attributes exposing (style)
 import Json.Decode as JD
-import Random exposing (Seed)
 import Svg
 import Svg.Attributes as SA
 import Svg.Events as SE
-import Task
-import Time exposing (Posix)
 import TypedSvg.Attributes as TA exposing (points)
 import TypedSvg.Types as TT
 
@@ -33,40 +30,24 @@ height =
 
 
 type alias Model =
-    { seed : Seed
-    , mouseX : Float
-    , updatedAt : Int
+    { mouseX : Float
     }
 
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { seed = Random.initialSeed 0
-      , mouseX = width / 3
-      , updatedAt = 0
-      }
-    , Cmd.none
-    )
+    ( { mouseX = width / 3 }, Cmd.none )
 
 
 type Msg
     = MouseXMoved Float
-    | MouseXMovedWithNow Float Int
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         MouseXMoved x ->
-            --( { model | mouseX = x }, Cmd.none )
-            ( model, Time.now |> Task.map Time.posixToMillis |> Task.perform (MouseXMovedWithNow x) )
-
-        MouseXMovedWithNow x now ->
-            if now - model.updatedAt > 200 then
-                ( { model | mouseX = x, updatedAt = now }, Cmd.none )
-
-            else
-                ( model, Cmd.none )
+            ( { model | mouseX = x }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
