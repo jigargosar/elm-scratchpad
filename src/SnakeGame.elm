@@ -300,11 +300,10 @@ viewEmpty =
 
 viewGameOverMessage =
     Svg.text_
-        [ TA.transform [ TT.Translate (width / 2) (height / 2) ]
+        [ TA.transform [ TT.Translate (width / 2) (height / 2), TT.Scale 2 2 ]
         , TA.textAnchor TT.AnchorMiddle
         , TA.dominantBaseline TT.DominantBaselineCentral
         , SA.fill "white"
-        , SA.scale "2"
         ]
         [ Svg.text "Game Over: Press Space Bar" ]
 
