@@ -232,14 +232,19 @@ update msg model =
             )
 
         OnKeyDown key ->
-            ( case keyToDirection key of
-                Just dir ->
-                    changeSnakeDirection dir model
+            if model.gameOver && key == " " then
+                init ()
+                    |> Tuple.mapFirst (\m -> { m | seed = model.seed })
 
-                Nothing ->
-                    model
-            , Cmd.none
-            )
+            else
+                ( case keyToDirection key of
+                    Just dir ->
+                        changeSnakeDirection dir model
+
+                    Nothing ->
+                        model
+                , Cmd.none
+                )
 
 
 keyToDirection : String -> Maybe Direction
