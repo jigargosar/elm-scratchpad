@@ -249,17 +249,17 @@ update msg model =
 
 keyToDirection : String -> Maybe Direction
 keyToDirection key =
-    case key of
-        "ArrowRight" ->
+    case String.toLower key of
+        "d" ->
             Just Right
 
-        "ArrowLeft" ->
+        "a" ->
             Just Left
 
-        "ArrowUp" ->
+        "w" ->
             Just Up
 
-        "ArrowDown" ->
+        "s" ->
             Just Down
 
         _ ->
