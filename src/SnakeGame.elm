@@ -304,8 +304,9 @@ viewGameOverMessage =
         , TA.textAnchor TT.AnchorMiddle
         , TA.dominantBaseline TT.DominantBaselineCentral
         , SA.fill "white"
+        , SA.scale "2"
         ]
-        [ Svg.text "Game Over" ]
+        [ Svg.text "Game Over: Press Space Bar" ]
 
 
 viewScore score =
