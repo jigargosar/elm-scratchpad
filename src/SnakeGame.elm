@@ -75,7 +75,7 @@ changeSnakeDirection nextDirection model =
         model
 
     else
-        { model | nextDirection = nextDirection }
+        { model | requestedDirection = nextDirection }
 
 
 areOpposingDirection : Direction -> Direction -> Bool
@@ -103,7 +103,7 @@ step model =
     let
         nextHead =
             model.head
-                |> moveGridPointInDirection model.nextDirection
+                |> moveGridPointInDirection model.requestedDirection
                 |> warpGridPoint
     in
     if listContains nextHead model.tail then
@@ -118,7 +118,7 @@ step model =
         in
         { model
             | head = nextHead
-            , direction = model.nextDirection
+            , direction = model.requestedDirection
             , tail = model.head :: model.tail
             , fruit = nextFruit
             , seed = nextSeed
@@ -128,7 +128,7 @@ step model =
     else
         { model
             | head = nextHead
-            , direction = model.nextDirection
+            , direction = model.requestedDirection
             , tail = model.head :: dropLast model.tail
         }
 
@@ -188,7 +188,7 @@ type alias Model =
     , head : GridPoint
     , tail : List GridPoint
     , direction : Direction
-    , nextDirection : Direction
+    , requestedDirection : Direction
     , fruit : GridPoint
     , score : Int
     , gameOver : Bool
@@ -204,7 +204,7 @@ init () =
       { head = head
       , tail = List.repeat 10 head
       , direction = Right
-      , nextDirection = Right
+      , requestedDirection = Right
       , fruit = ( 10, 10 )
       , seed = Random.initialSeed 0
       , score = 0
