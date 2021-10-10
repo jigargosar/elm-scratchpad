@@ -232,19 +232,19 @@ update msg model =
             )
 
         OnKeyDown key ->
-            if model.gameOver && key == " " then
-                init ()
-                    |> Tuple.mapFirst (\m -> { m | seed = model.seed })
+            --if model.gameOver && key == " " then
+            --    init ()
+            --        |> Tuple.mapFirst (\m -> { m | seed = model.seed })
+            --
+            --else
+            ( case keyToDirection key of
+                Just dir ->
+                    changeSnakeDirection dir model
 
-            else
-                ( case keyToDirection key of
-                    Just dir ->
-                        changeSnakeDirection dir model
-
-                    Nothing ->
-                        model
-                , Cmd.none
-                )
+                Nothing ->
+                    model
+            , Cmd.none
+            )
 
 
 keyToDirection : String -> Maybe Direction
@@ -305,7 +305,7 @@ viewGameOverMessage =
         , TA.dominantBaseline TT.DominantBaselineCentral
         , SA.fill "white"
         ]
-        [ Svg.text "Game Over: Press Space Bar" ]
+        [ Svg.text "Game Over" ]
 
 
 viewScore score =
