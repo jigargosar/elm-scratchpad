@@ -17,7 +17,7 @@ main =
 
 type Strainer
     = StrainerEmpty
-    | StrainerWithCoffee
+    | StrainerWithCoffeePowder
     | StrainerWithWaste
 
 
@@ -55,7 +55,7 @@ init =
 
 type Msg
     = StrainerHolderAClicked
-    | CPDClicked
+    | CoffeePowderDispenserClicked
     | TrashClicked
 
 
@@ -63,10 +63,26 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         StrainerHolderAClicked ->
-            model
+            case ( model.hands, model.strainerHolderA ) of
+                ( Nothing, Just strainer ) ->
+                    { model | hands = Just (HH_Strainer strainer), strainerHolderA = Nothing }
 
-        CPDClicked ->
-            model
+                ( Just (HH_Strainer strainer), Nothing ) ->
+                    { model | hands = Nothing, strainerHolderA = Just strainer }
+
+                ( _, _ ) ->
+                    model
+
+        CoffeePowderDispenserClicked ->
+            case ( model.hands, model.coffeePowderDispenser ) of
+                ( Nothing, Just strainer ) ->
+                    { model | hands = Just (HH_Strainer strainer), coffeePowderDispenser = Nothing }
+
+                ( Just (HH_Strainer StrainerEmpty), Nothing ) ->
+                    { model | hands = Nothing, coffeePowderDispenser = Just StrainerWithCoffeePowder }
+
+                ( _, _ ) ->
+                    model
 
         TrashClicked ->
             model
@@ -88,7 +104,7 @@ view model =
                 , divText [] (Debug.toString model.strainerHolderA)
                 ]
             , div
-                [ onClick CPDClicked
+                [ onClick CoffeePowderDispenserClicked
                 , class "flex-row gap1"
                 ]
                 [ divText [] "coffeePowderDispenser"
