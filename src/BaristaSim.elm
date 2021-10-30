@@ -44,13 +44,18 @@ type Holder
 type alias Model =
     { strainerHolderA : Maybe Strainer
     , coffeePowderDispenser : Maybe Strainer
+    , coffeeMaker : ( Maybe Strainer, Maybe CoffeeCup )
     , hands : Maybe HandHoldable
     }
 
 
 init : Model
 init =
-    Model (Just StrainerEmpty) Nothing Nothing
+    { strainerHolderA = Just StrainerEmpty
+    , coffeePowderDispenser = Nothing
+    , coffeeMaker = ( Nothing, Nothing )
+    , hands = Nothing
+    }
 
 
 type Msg
