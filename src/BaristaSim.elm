@@ -75,6 +75,7 @@ type Msg
     | TrashClicked
     | CoffeeCupStackClicked
     | DesktopHolderClicked Int
+    | CheckoutHolderClicked Int
 
 
 update : Msg -> Model -> Model
@@ -125,6 +126,23 @@ update msg model =
                     { model
                         | hands = Nothing
                         , desktopHolders = Dict.insert i (DH_CoffeeCup cup) model.desktopHolders
+                    }
+
+                _ ->
+                    model
+
+        CheckoutHolderClicked i ->
+            case ( model.hands, Dict.get i model.checkoutHolders ) of
+                ( Nothing, Just (CH_CoffeeCup cup) ) ->
+                    { model
+                        | hands = Just (HH_CoffeeCup cup)
+                        , checkoutHolders = Dict.remove i model.checkoutHolders
+                    }
+
+                ( Just (HH_CoffeeCup cup), Nothing ) ->
+                    { model
+                        | hands = Nothing
+                        , checkoutHolders = Dict.insert i (CH_CoffeeCup cup) model.checkoutHolders
                     }
 
                 _ ->
@@ -190,7 +208,21 @@ view model =
             [ style "padding" "1.5rem"
             , class "flex-column gap1"
             ]
-            [ div [ onClick StrainerHolderAClicked, class "flex-row gap1" ]
+            [ div
+                [ class "flex-column gap1" ]
+                (List.range 0 2
+                    |> List.map
+                        (\i ->
+                            div
+                                [ class "flex-row gap1"
+                                , onClick (CheckoutHolderClicked i)
+                                ]
+                                [ divText [] (Debug.toString (i + 1))
+                                , divText [] (Debug.toString (Dict.get i model.checkoutHolders))
+                                ]
+                        )
+                )
+            , div [ onClick StrainerHolderAClicked, class "flex-row gap1" ]
                 [ divText [] "strainerHolderA"
                 , divText [] (Debug.toString model.strainerHolderA)
                 ]
