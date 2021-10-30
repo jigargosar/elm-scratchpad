@@ -30,6 +30,7 @@ type HandHoldable
 
 type CoffeeCup
     = CoffeeCupEmpty
+    | CoffeeCupWithEspresso
 
 
 type Holder
@@ -41,10 +42,14 @@ type Holder
     | CoffeeCupStack
 
 
+type alias CoffeeMaker =
+    ( Maybe Strainer, Maybe CoffeeCup )
+
+
 type alias Model =
     { strainerHolderA : Maybe Strainer
     , coffeePowderDispenser : Maybe Strainer
-    , coffeeMaker : ( Maybe Strainer, Maybe CoffeeCup )
+    , coffeeMaker : CoffeeMaker
     , hands : Maybe HandHoldable
     }
 
@@ -61,7 +66,8 @@ init =
 type Msg
     = StrainerHolderAClicked
     | CoffeePowderDispenserClicked
-    | CoffeeMakerClicked
+    | CoffeeMakerStrainerHolderClicked
+    | CoffeeMakerCupHolderClicked
     | TrashClicked
     | CoffeeCupStackClicked
 
@@ -96,13 +102,37 @@ update msg model =
                 Just (HH_Strainer _) ->
                     { model | hands = Just (HH_Strainer StrainerEmpty) }
 
+                Just (HH_CoffeeCup _) ->
+                    { model | hands = Nothing }
+
                 _ ->
                     model
 
-        CoffeeMakerClicked ->
+        CoffeeMakerStrainerHolderClicked ->
             case ( model.hands, model.coffeeMaker ) of
                 ( Just (HH_Strainer StrainerWithCoffeePowder), ( Nothing, cup ) ) ->
-                    { model | hands = Nothing, coffeeMaker = ( Just StrainerWithCoffeePowder, cup ) }
+                    { model
+                        | hands = Nothing
+                        , coffeeMaker =
+                            ( Just StrainerWithCoffeePowder, cup )
+                                |> tryToMakeCoffee
+                    }
+
+                _ ->
+                    model
+
+        CoffeeMakerCupHolderClicked ->
+            case ( model.hands, model.coffeeMaker ) of
+                ( Just (HH_CoffeeCup cup), ( strainer, Nothing ) ) ->
+                    { model
+                        | hands = Nothing
+                        , coffeeMaker =
+                            ( strainer, Just cup )
+                                |> tryToMakeCoffee
+                    }
+
+                ( Nothing, ( strainer, Just cup ) ) ->
+                    { model | hands = Just (HH_CoffeeCup cup), coffeeMaker = ( strainer, Nothing ) }
 
                 _ ->
                     model
@@ -114,6 +144,16 @@ update msg model =
 
                 _ ->
                     model
+
+
+tryToMakeCoffee : CoffeeMaker -> CoffeeMaker
+tryToMakeCoffee coffeeMaker =
+    case coffeeMaker of
+        ( Just StrainerWithCoffeePowder, Just CoffeeCupEmpty ) ->
+            ( Just StrainerWithWaste, Just CoffeeCupWithEspresso )
+
+        _ ->
+            coffeeMaker
 
 
 view : Model -> Html Msg
@@ -138,9 +178,13 @@ view model =
                 [ divText [] "coffeePowderDispenser"
                 , divText [] (Debug.toString model.coffeePowderDispenser)
                 ]
-            , div [ onClick CoffeeMakerClicked, class "flex-row gap1" ]
-                [ divText [] "coffeeMaker"
-                , divText [] (Debug.toString model.coffeeMaker)
+            , div [ onClick CoffeeMakerStrainerHolderClicked, class "flex-row gap1" ]
+                [ divText [] "coffeeMakerStrainerHolder"
+                , divText [] (Debug.toString (Tuple.first model.coffeeMaker))
+                ]
+            , div [ onClick CoffeeMakerCupHolderClicked, class "flex-row gap1" ]
+                [ divText [] "coffeeMakerCupHolder"
+                , divText [] (Debug.toString (Tuple.second model.coffeeMaker))
                 ]
             , div [ onClick TrashClicked, class "flex-row gap1" ]
                 [ divText [] "Trash"
