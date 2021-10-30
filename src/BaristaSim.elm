@@ -68,6 +68,7 @@ type Msg
     | CoffeeMakerCupHolderClicked
     | TrashClicked
     | CoffeeCupStackClicked
+    | DesktopHolderClicked Int
 
 
 update : Msg -> Model -> Model
@@ -102,6 +103,23 @@ update msg model =
 
                 Just (HH_CoffeeCup _) ->
                     { model | hands = Nothing }
+
+                _ ->
+                    model
+
+        DesktopHolderClicked i ->
+            case ( model.hands, Dict.get i model.desktopHolders ) of
+                ( Nothing, Just (DH_CoffeeCup cup) ) ->
+                    { model
+                        | hands = Just (HH_CoffeeCup cup)
+                        , desktopHolders = Dict.remove i model.desktopHolders
+                    }
+
+                ( Just (HH_CoffeeCup cup), Nothing ) ->
+                    { model
+                        | hands = Nothing
+                        , desktopHolders = Dict.insert i (DH_CoffeeCup cup) model.desktopHolders
+                    }
 
                 _ ->
                     model
@@ -196,9 +214,17 @@ view model =
                 , divText [] (Debug.toString model.hands)
                 ]
             , div
-                [ onClick TrashClicked, class "flex-row gap1" ]
+                [ class "flex-row gap1" ]
                 (List.range 0 5
-                    |> List.map (\i -> divText [ style "flex" "1 1 auto", style "text-align" "center" ] (Debug.toString (i + 1)))
+                    |> List.map
+                        (\i ->
+                            divText
+                                [ style "flex" "1 1 auto"
+                                , style "text-align" "center"
+                                , onClick (DesktopHolderClicked i)
+                                ]
+                                (Debug.toString (i + 1))
+                        )
                 )
             ]
         ]
