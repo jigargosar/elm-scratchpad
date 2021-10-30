@@ -1,0 +1,25 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: hsl(0, 0%, 90%);
+    font-size: 24px;
+}
+
+.debug  .flex-row, .debug .flex-column {
+    outline-offset: -2.5px;
+    outline: hsla(240, 75%, 50%, 0.2) solid 5px;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.gap1 {
+    gap: 1.5rem;
+}
