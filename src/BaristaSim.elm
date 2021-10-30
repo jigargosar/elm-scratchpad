@@ -23,7 +23,7 @@ type Strainer
 
 type HandHoldable
     = HH_Strainer Strainer
-    | HH_CoffeeCup
+    | HH_CoffeeCup CoffeeCup
     | HH_MilkCarton
     | HH_MilkJar
 
@@ -110,7 +110,7 @@ update msg model =
         CoffeeCupStackClicked ->
             case model.hands of
                 Nothing ->
-                    { model | hands = Just HH_CoffeeCup }
+                    { model | hands = Just (HH_CoffeeCup CoffeeCupEmpty) }
 
                 _ ->
                     model
