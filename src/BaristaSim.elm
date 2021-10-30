@@ -214,16 +214,17 @@ view model =
             [ style "padding" "1.5rem"
             , class "flex-column gap1"
             ]
-            [ div
-                [ class "flex-column gap1" ]
+            [ div [ class "flex-row gap1" ]
                 (List.range 0 2
                     |> List.map
                         (\i ->
                             div
-                                [ class "flex-row gap1"
+                                [ class "flex-column gap1"
+                                , style "flex" "auto"
                                 , onClick (CheckoutHolderClicked i)
                                 ]
                                 [ divText [] (Debug.toString (i + 1))
+                                , divText [] (Debug.toString (Dict.get i model.orders))
                                 , divText [] (Debug.toString (Dict.get i model.checkoutHolders))
                                 ]
                         )
