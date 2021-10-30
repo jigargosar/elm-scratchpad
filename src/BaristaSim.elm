@@ -215,7 +215,7 @@ view model =
                 ]
             , div
                 [ class "flex-row gap1" ]
-                (List.range 0 5
+                (List.range 0 4
                     |> List.map
                         (\i ->
                             divText
