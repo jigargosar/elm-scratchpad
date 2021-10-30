@@ -61,6 +61,7 @@ init =
 type Msg
     = StrainerHolderAClicked
     | CoffeePowderDispenserClicked
+    | CoffeeMakerClicked
     | TrashClicked
 
 
@@ -97,6 +98,14 @@ update msg model =
                 _ ->
                     model
 
+        CoffeeMakerClicked ->
+            case ( model.hands, model.coffeeMaker ) of
+                ( Just (HH_Strainer StrainerWithCoffeePowder), ( Nothing, cup ) ) ->
+                    { model | hands = Nothing, coffeeMaker = ( Just StrainerWithCoffeePowder, cup ) }
+
+                _ ->
+                    model
+
 
 view : Model -> Html Msg
 view model =
@@ -113,17 +122,15 @@ view model =
                 [ divText [] "strainerHolderA"
                 , divText [] (Debug.toString model.strainerHolderA)
                 ]
-            , div
-                [ onClick CoffeePowderDispenserClicked
-                , class "flex-row gap1"
-                ]
+            , div [ onClick CoffeePowderDispenserClicked, class "flex-row gap1" ]
                 [ divText [] "coffeePowderDispenser"
                 , divText [] (Debug.toString model.coffeePowderDispenser)
                 ]
-            , div
-                [ onClick TrashClicked
-                , class "flex-row gap1"
+            , div [ onClick CoffeeMakerClicked, class "flex-row gap1" ]
+                [ divText [] "coffeeMaker"
+                , divText [] (Debug.toString model.coffeeMaker)
                 ]
+            , div [ onClick TrashClicked, class "flex-row gap1" ]
                 [ divText [] "Trash"
                 ]
             , div [ class "flex-row gap1" ]
