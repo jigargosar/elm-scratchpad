@@ -69,7 +69,7 @@ init =
     , hands = Nothing
     , desktopHolders = Dict.empty
     , checkoutHolders = Dict.empty
-    , orders = Dict.empty
+    , orders = Dict.fromList [ ( 0, Espresso ) ]
     }
 
 
@@ -150,6 +150,7 @@ update msg model =
                         | hands = Nothing
                         , checkoutHolders = Dict.insert i (CH_CoffeeCup cup) model.checkoutHolders
                     }
+                        |> checkOutOrderNum i
 
                 _ ->
                     model
@@ -204,6 +205,16 @@ tryToMakeCoffee coffeeMaker =
 
         _ ->
             coffeeMaker
+
+
+checkOutOrderNum : Int -> Model -> Model
+checkOutOrderNum i model =
+    case ( Dict.get i model.orders, Dict.get i model.checkoutHolders ) of
+        ( Just Espresso, Just (CH_CoffeeCup CoffeeCupWithEspresso) ) ->
+            { model | checkoutHolders = Dict.remove i model.checkoutHolders }
+
+        _ ->
+            model
 
 
 view : Model -> Html Msg
