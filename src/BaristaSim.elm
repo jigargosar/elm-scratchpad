@@ -113,9 +113,13 @@ update msg model =
                 ( Just (HH_Strainer StrainerWithCoffeePowder), ( Nothing, cup ) ) ->
                     { model
                         | hands = Nothing
-                        , coffeeMaker =
-                            ( Just StrainerWithCoffeePowder, cup )
-                                |> tryToMakeCoffee
+                        , coffeeMaker = ( Just StrainerWithCoffeePowder, cup ) |> tryToMakeCoffee
+                    }
+
+                ( Nothing, ( Just (StrainerWithWaste as strainer), cup ) ) ->
+                    { model
+                        | hands = Just (HH_Strainer strainer)
+                        , coffeeMaker = ( Nothing, cup ) |> tryToMakeCoffee
                     }
 
                 _ ->
