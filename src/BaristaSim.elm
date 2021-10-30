@@ -38,6 +38,10 @@ type DesktopHolder
     = DH_CoffeeCup CoffeeCup
 
 
+type CheckoutHolder
+    = CH_CoffeeCup CoffeeCup
+
+
 type alias CoffeeMaker =
     ( Maybe Strainer, Maybe CoffeeCup )
 
@@ -48,6 +52,7 @@ type alias Model =
     , coffeeMaker : CoffeeMaker
     , hands : Maybe HandHoldable
     , desktopHolders : Dict Int DesktopHolder
+    , checkoutHolders : Dict Int CheckoutHolder
     }
 
 
@@ -58,6 +63,7 @@ init =
     , coffeeMaker = ( Nothing, Nothing )
     , hands = Nothing
     , desktopHolders = Dict.empty
+    , checkoutHolders = Dict.empty
     }
 
 
@@ -184,10 +190,7 @@ view model =
             [ style "padding" "1.5rem"
             , class "flex-column gap1"
             ]
-            [ div
-                [ onClick StrainerHolderAClicked
-                , class "flex-row gap1"
-                ]
+            [ div [ onClick StrainerHolderAClicked, class "flex-row gap1" ]
                 [ divText [] "strainerHolderA"
                 , divText [] (Debug.toString model.strainerHolderA)
                 ]
@@ -219,9 +222,7 @@ view model =
                     |> List.map
                         (\i ->
                             div
-                                [ --style "flex" "1 1 auto"
-                                  --, style "text-align" "center"
-                                  class "flex-row gap1"
+                                [ class "flex-row gap1"
                                 , onClick (DesktopHolderClicked i)
                                 ]
                                 [ divText [] (Debug.toString (i + 1))
