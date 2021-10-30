@@ -1,6 +1,7 @@
 module BaristaSim exposing (..)
 
 import Browser
+import Dict exposing (Dict)
 import Html exposing (Html, div, text)
 import Html.Attributes exposing (class, href, rel, style)
 import Html.Events exposing (onClick)
@@ -33,13 +34,8 @@ type CoffeeCup
     | CoffeeCupWithEspresso
 
 
-type Holder
-    = StrainerHolder (Maybe Strainer)
-    | CoffeePowderDispenser (Maybe Strainer)
-    | CoffeeMaker (Maybe Strainer) (Maybe CoffeeCup) (Maybe CoffeeCup)
-    | SteamDispenser
-    | Trash
-    | CoffeeCupStack
+type DesktopHolder
+    = DH_CoffeeCup CoffeeCup
 
 
 type alias CoffeeMaker =
@@ -51,6 +47,7 @@ type alias Model =
     , coffeePowderDispenser : Maybe Strainer
     , coffeeMaker : CoffeeMaker
     , hands : Maybe HandHoldable
+    , desktopHolders : Dict Int DesktopHolder
     }
 
 
@@ -60,6 +57,7 @@ init =
     , coffeePowderDispenser = Nothing
     , coffeeMaker = ( Nothing, Nothing )
     , hands = Nothing
+    , desktopHolders = Dict.empty
     }
 
 
