@@ -85,7 +85,12 @@ update msg model =
                     model
 
         TrashClicked ->
-            model
+            case model.hands of
+                Just (HH_Strainer _) ->
+                    { model | hands = Just (HH_Strainer StrainerEmpty) }
+
+                _ ->
+                    model
 
 
 view : Model -> Html Msg
