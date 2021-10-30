@@ -214,16 +214,19 @@ view model =
                 , divText [] (Debug.toString model.hands)
                 ]
             , div
-                [ class "flex-row gap1" ]
+                [ class "flex-column gap1" ]
                 (List.range 0 4
                     |> List.map
                         (\i ->
-                            divText
-                                [ style "flex" "1 1 auto"
-                                , style "text-align" "center"
+                            div
+                                [ --style "flex" "1 1 auto"
+                                  --, style "text-align" "center"
+                                  class "flex-row gap1"
                                 , onClick (DesktopHolderClicked i)
                                 ]
-                                (Debug.toString (i + 1))
+                                [ divText [] (Debug.toString (i + 1))
+                                , divText [] (Debug.toString (Dict.get i model.desktopHolders))
+                                ]
                         )
                 )
             ]
