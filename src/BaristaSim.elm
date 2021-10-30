@@ -63,6 +63,7 @@ type Msg
     | CoffeePowderDispenserClicked
     | CoffeeMakerClicked
     | TrashClicked
+    | CoffeeCupStackClicked
 
 
 update : Msg -> Model -> Model
@@ -106,6 +107,14 @@ update msg model =
                 _ ->
                     model
 
+        CoffeeCupStackClicked ->
+            case model.hands of
+                Nothing ->
+                    { model | hands = Just HH_CoffeeCup }
+
+                _ ->
+                    model
+
 
 view : Model -> Html Msg
 view model =
@@ -121,6 +130,9 @@ view model =
                 ]
                 [ divText [] "strainerHolderA"
                 , divText [] (Debug.toString model.strainerHolderA)
+                ]
+            , div [ onClick CoffeeCupStackClicked, class "flex-row gap1" ]
+                [ divText [] "Coffee Cups Stack"
                 ]
             , div [ onClick CoffeePowderDispenserClicked, class "flex-row gap1" ]
                 [ divText [] "coffeePowderDispenser"
