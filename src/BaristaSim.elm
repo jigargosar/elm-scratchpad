@@ -231,7 +231,7 @@ view model =
                         (\i ->
                             div
                                 [ class "flex-column gap1"
-                                , style "flex" "auto"
+                                , style "flex" "1 0 0"
                                 , onClick (CheckoutHolderClicked i)
                                 ]
                                 [ divText [] (Debug.toString (i + 1))
