@@ -195,6 +195,11 @@ view model =
                 [ divText [] "Hands"
                 , divText [] (Debug.toString model.hands)
                 ]
+            , div
+                [ onClick TrashClicked, class "flex-row gap1" ]
+                (List.range 0 5
+                    |> List.map (\i -> divText [ style "flex" "1 1 auto", style "text-align" "center" ] (Debug.toString (i + 1)))
+                )
             ]
         ]
 
