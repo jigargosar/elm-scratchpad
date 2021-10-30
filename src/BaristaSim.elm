@@ -34,6 +34,10 @@ type CoffeeCup
     | CoffeeCupWithEspresso
 
 
+type Order
+    = Espresso
+
+
 type DesktopHolder
     = DH_CoffeeCup CoffeeCup
 
@@ -53,6 +57,7 @@ type alias Model =
     , hands : Maybe HandHoldable
     , desktopHolders : Dict Int DesktopHolder
     , checkoutHolders : Dict Int CheckoutHolder
+    , orders : Dict Int Order
     }
 
 
@@ -64,6 +69,7 @@ init =
     , hands = Nothing
     , desktopHolders = Dict.empty
     , checkoutHolders = Dict.empty
+    , orders = Dict.empty
     }
 
 
