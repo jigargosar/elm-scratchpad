@@ -3,7 +3,7 @@ module BaristaSim exposing (..)
 import Browser
 import Dict exposing (Dict)
 import Html exposing (Html, div, text)
-import Html.Attributes exposing (class, href, rel, style)
+import Html.Attributes exposing (class, href, rel, style, title)
 import Html.Events exposing (onClick)
 
 
@@ -25,8 +25,11 @@ type Strainer
 type HandHoldable
     = HH_Strainer Strainer
     | HH_CoffeeCup CoffeeCup
-    | HH_MilkCarton
-    | HH_MilkJar
+
+
+
+--| HH_MilkCarton
+--| HH_MilkJar
 
 
 type CoffeeCup
@@ -46,14 +49,14 @@ type CheckoutHolder
     = CH_CoffeeCup CoffeeCup
 
 
-type alias CoffeeMaker =
+type alias EspressoMaker =
     ( Maybe Strainer, Maybe CoffeeCup )
 
 
 type alias Model =
     { strainerHolderA : Maybe Strainer
     , coffeePowderDispenser : Maybe Strainer
-    , coffeeMaker : CoffeeMaker
+    , coffeeMaker : EspressoMaker
     , hands : Maybe HandHoldable
     , desktopHolders : Dict Int DesktopHolder
     , checkoutHolders : Dict Int CheckoutHolder
@@ -197,7 +200,7 @@ update msg model =
                     model
 
 
-tryToMakeCoffee : CoffeeMaker -> CoffeeMaker
+tryToMakeCoffee : EspressoMaker -> EspressoMaker
 tryToMakeCoffee coffeeMaker =
     case coffeeMaker of
         ( Just StrainerWithCoffeePowder, Just CoffeeCupEmpty ) ->
@@ -234,65 +237,50 @@ view model =
                                 , style "flex" "1 0 0"
                                 , onClick (CheckoutHolderClicked i)
                                 ]
-                                [ divText [] (Debug.toString (i + 1))
-                                , divText [] (Debug.toString (Dict.get i model.orders))
-                                , divText [] (Debug.toString (Dict.get i model.checkoutHolders))
+                                [ textEl [] (Debug.toString (i + 1))
+                                , textEl [] (Debug.toString (Dict.get i model.orders))
+                                , textEl [] (Debug.toString (Dict.get i model.checkoutHolders))
                                 ]
                         )
                 )
             , div [ onClick StrainerHolderAClicked, class "flex-row gap1" ]
-                [ divText [] "strainerHolderA"
-                , divText [] (Debug.toString model.strainerHolderA)
+                [ textEl [] "strainerHolderA"
+                , textEl [] (Debug.toString model.strainerHolderA)
                 ]
             , div [ onClick CoffeeCupStackClicked, class "flex-row gap1" ]
-                [ divText [] "Coffee Cups Stack"
+                [ textEl [] "Coffee Cups Stack"
                 ]
             , div [ onClick CoffeePowderDispenserClicked, class "flex-row gap1" ]
-                [ divText [] "coffeePowderDispenser"
-                , divText [] (Debug.toString model.coffeePowderDispenser)
+                [ textEl [] "coffeePowderDispenser"
+                , textEl [] (Debug.toString model.coffeePowderDispenser)
                 ]
-            , div [ class "flex-column tac", style "max-width" "20ch" ]
-                [ divText [ class "flex100" ] "Espresso Maker"
-                , div [ class "flex-column flex100 tac" ]
-                    [ div [ class "flex100", onClick CoffeeMakerStrainerHolderClicked ]
-                        [ text
-                            (case Tuple.first model.coffeeMaker of
-                                Just _ ->
-                                    "Strainer"
+            , fCol [ class "tac", maxW "20ch" ]
+                [ textEl [] "Coffee Dispenser"
+                , textEl []
+                    (case model.coffeePowderDispenser of
+                        Just _ ->
+                            "Strainer"
 
-                                Nothing ->
-                                    "|---|"
-                            )
-                        ]
-                    , div [ onClick CoffeeMakerCupHolderClicked, class "flex-row" ]
-                        [ div [ class "flex100" ]
-                            [ text
-                                (case Tuple.second model.coffeeMaker of
-                                    Just _ ->
-                                        "Cup"
+                        Nothing ->
+                            "|---|"
+                    )
+                ]
+            , viewEspressoMaker model.coffeeMaker
 
-                                    Nothing ->
-                                        "|---|"
-                                )
-                            ]
-                        , div [ class "flex100" ] [ text "|---|" ]
-                        ]
-                    ]
-                ]
-            , div [ onClick CoffeeMakerStrainerHolderClicked, class "flex-row gap1" ]
-                [ divText [] "coffeeMakerStrainerHolder"
-                , divText [] (Debug.toString (Tuple.first model.coffeeMaker))
-                ]
-            , div [ onClick CoffeeMakerCupHolderClicked, class "flex-row gap1" ]
-                [ divText [] "coffeeMakerCupHolder"
-                , divText [] (Debug.toString (Tuple.second model.coffeeMaker))
-                ]
+            --, div [ onClick CoffeeMakerStrainerHolderClicked, class "flex-row gap1" ]
+            --    [ divText [] "coffeeMakerStrainerHolder"
+            --    , divText [] (Debug.toString (Tuple.first model.coffeeMaker))
+            --    ]
+            --, div [ onClick CoffeeMakerCupHolderClicked, class "flex-row gap1" ]
+            --    [ divText [] "coffeeMakerCupHolder"
+            --    , divText [] (Debug.toString (Tuple.second model.coffeeMaker))
+            --    ]
             , div [ onClick TrashClicked, class "flex-row gap1" ]
-                [ divText [] "Trash"
+                [ textEl [] "Trash"
                 ]
             , div [ class "flex-row gap1" ]
-                [ divText [] "Hands"
-                , divText [] (Debug.toString model.hands)
+                [ textEl [] "Hands"
+                , textEl [] (Debug.toString model.hands)
                 ]
             , div
                 [ class "flex-column gap1" ]
@@ -303,8 +291,8 @@ view model =
                                 [ class "flex-row gap1"
                                 , onClick (DesktopHolderClicked i)
                                 ]
-                                [ divText [] (Debug.toString (i + 1))
-                                , divText [] (Debug.toString (Dict.get i model.desktopHolders))
+                                [ textEl [] (Debug.toString (i + 1))
+                                , textEl [] (Debug.toString (Dict.get i model.desktopHolders))
                                 ]
                         )
                 )
@@ -312,5 +300,53 @@ view model =
         ]
 
 
-divText attrs string =
+viewEspressoMaker : EspressoMaker -> Html Msg
+viewEspressoMaker ( mbStrainer, mbCup ) =
+    div [ class "flex-column tac", maxW "20ch" ]
+        [ textEl [ class "flex100" ] "Espresso Maker"
+        , div [ class "flex-column flex100 tac" ]
+            [ div
+                [ class "flex100"
+                , onClick CoffeeMakerStrainerHolderClicked
+                , title (Debug.toString mbStrainer)
+                ]
+                [ text
+                    (case mbStrainer of
+                        Just _ ->
+                            "Strainer"
+
+                        Nothing ->
+                            "|---|"
+                    )
+                ]
+            , div [ onClick CoffeeMakerCupHolderClicked, class "flex-row" ]
+                [ div [ class "flex100", title (Debug.toString mbCup) ]
+                    [ text
+                        (case mbCup of
+                            Just _ ->
+                                "Cup"
+
+                            Nothing ->
+                                "|---|"
+                        )
+                    ]
+                , div [ class "flex100" ] [ text "|---|" ]
+                ]
+            ]
+        ]
+
+
+textEl attrs string =
     div attrs [ text string ]
+
+
+fRow attrs =
+    div (class "flex-row" :: attrs)
+
+
+fCol attrs =
+    div (class "flex-column" :: attrs)
+
+
+maxW =
+    style "max-width"
