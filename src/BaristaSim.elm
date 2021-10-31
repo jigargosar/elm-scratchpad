@@ -250,22 +250,10 @@ view model =
             , div [ onClick CoffeeCupStackClicked, class "flex-row gap1" ]
                 [ textEl [] "Coffee Cups Stack"
                 ]
-            , div [ onClick CoffeePowderDispenserClicked, class "flex-row gap1" ]
-                [ textEl [] "coffeePowderDispenser"
-                , textEl [] (Debug.toString model.coffeePowderDispenser)
+            , fRow [ class "gap1" ]
+                [ viewEspressoMaker model.coffeeMaker
+                , viewCoffeePowderDispenser model.coffeePowderDispenser
                 ]
-            , fCol [ class "tac", maxW "20ch" ]
-                [ textEl [] "Coffee Dispenser"
-                , textEl []
-                    (case model.coffeePowderDispenser of
-                        Just _ ->
-                            "Strainer"
-
-                        Nothing ->
-                            "|---|"
-                    )
-                ]
-            , viewEspressoMaker model.coffeeMaker
 
             --, div [ onClick CoffeeMakerStrainerHolderClicked, class "flex-row gap1" ]
             --    [ divText [] "coffeeMakerStrainerHolder"
@@ -297,6 +285,26 @@ view model =
                         )
                 )
             ]
+        ]
+
+
+viewCoffeePowderDispenser : Maybe Strainer -> Html Msg
+viewCoffeePowderDispenser mbStrainer =
+    gCol
+        [ class "tac debug"
+        , maxW "20ch"
+        , title <| Debug.toString mbStrainer
+        , onClick CoffeePowderDispenserClicked
+        ]
+        [ textEl [] "Coffee Dispenser"
+        , textEl []
+            (case mbStrainer of
+                Just _ ->
+                    "Strainer"
+
+                Nothing ->
+                    "|---|"
+            )
         ]
 
 
@@ -342,6 +350,10 @@ fRow attrs =
 
 fCol attrs =
     div (class "flex-column" :: attrs)
+
+
+gCol attrs =
+    div (style "display" "grid" :: style "grid-auto-flow" "row" :: attrs)
 
 
 maxW =

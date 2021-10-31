@@ -6,7 +6,7 @@ body {
     word-break: break-word;
 }
 
-.debug  .flex-row, .debug .flex-column {
+.debug  .flex-row, .debug .flex-column , .debug {
     outline-offset: -2.5px;
     outline: hsla(240, 75%, 50%, 0.2) solid 5px;
 }
