@@ -250,7 +250,13 @@ view model =
             , div [ onClick CoffeeCupStackClicked, class "flex-row gap1" ]
                 [ textEl [] "Coffee Cups Stack"
                 ]
-            , fRow [ class "gap1" ]
+            , div
+                [ style "display" "grid"
+                , style "grid-auto-flow" "column"
+                , class "gap1"
+
+                --, style "padding" "1.5rem"
+                ]
                 [ viewEspressoMaker model.coffeeMaker
                 , viewCoffeePowderDispenser model.coffeePowderDispenser
                 ]
@@ -292,7 +298,6 @@ viewCoffeePowderDispenser : Maybe Strainer -> Html Msg
 viewCoffeePowderDispenser mbStrainer =
     gCol
         [ class "tac debug"
-        , maxW "20ch"
         , title <| Debug.toString mbStrainer
         , onClick CoffeePowderDispenserClicked
         ]
@@ -310,7 +315,7 @@ viewCoffeePowderDispenser mbStrainer =
 
 viewEspressoMaker : EspressoMaker -> Html Msg
 viewEspressoMaker ( mbStrainer, mbCup ) =
-    fCol [ class "tac", maxW "20ch" ]
+    fCol [ class "tac" ]
         [ textEl [] "Espresso Maker"
         , textEl
             [ onClick CoffeeMakerStrainerHolderClicked
