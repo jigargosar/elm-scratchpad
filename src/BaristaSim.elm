@@ -251,6 +251,34 @@ view model =
                 [ divText [] "coffeePowderDispenser"
                 , divText [] (Debug.toString model.coffeePowderDispenser)
                 ]
+            , div [ class "flex-column tac", style "max-width" "20ch" ]
+                [ divText [ class "flex100" ] "Espresso Maker"
+                , div [ class "flex-column flex100 tac" ]
+                    [ div [ class "flex100", onClick CoffeeMakerStrainerHolderClicked ]
+                        [ text
+                            (case Tuple.first model.coffeeMaker of
+                                Just _ ->
+                                    "Strainer"
+
+                                Nothing ->
+                                    "|---|"
+                            )
+                        ]
+                    , div [ onClick CoffeeMakerCupHolderClicked, class "flex-row" ]
+                        [ div [ class "flex100" ]
+                            [ text
+                                (case Tuple.second model.coffeeMaker of
+                                    Just _ ->
+                                        "Cup"
+
+                                    Nothing ->
+                                        "|---|"
+                                )
+                            ]
+                        , div [ class "flex100" ] [ text "|---|" ]
+                        ]
+                    ]
+                ]
             , div [ onClick CoffeeMakerStrainerHolderClicked, class "flex-row gap1" ]
                 [ divText [] "coffeeMakerStrainerHolder"
                 , divText [] (Debug.toString (Tuple.first model.coffeeMaker))

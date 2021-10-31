@@ -24,3 +24,11 @@ body {
 .gap1 {
     gap: 1.5rem;
 }
+
+.tac{
+    text-align: center;
+}
+
+.flex100{
+    flex:1 0 0;
+}
