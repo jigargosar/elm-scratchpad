@@ -302,36 +302,32 @@ view model =
 
 viewEspressoMaker : EspressoMaker -> Html Msg
 viewEspressoMaker ( mbStrainer, mbCup ) =
-    div [ class "flex-column tac", maxW "20ch" ]
-        [ textEl [ class "flex100" ] "Espresso Maker"
-        , div [ class "flex-column flex100 tac" ]
-            [ div
+    fCol [ class "tac", maxW "20ch" ]
+        [ textEl [] "Espresso Maker"
+        , textEl
+            [ onClick CoffeeMakerStrainerHolderClicked
+            , title (Debug.toString mbStrainer)
+            ]
+            (case mbStrainer of
+                Just _ ->
+                    "Strainer"
+
+                Nothing ->
+                    "|---|"
+            )
+        , fRow [ onClick CoffeeMakerCupHolderClicked ]
+            [ textEl
                 [ class "flex100"
-                , onClick CoffeeMakerStrainerHolderClicked
-                , title (Debug.toString mbStrainer)
+                , title (Debug.toString mbCup)
                 ]
-                [ text
-                    (case mbStrainer of
-                        Just _ ->
-                            "Strainer"
+                (case mbCup of
+                    Just _ ->
+                        "Cup"
 
-                        Nothing ->
-                            "|---|"
-                    )
-                ]
-            , div [ onClick CoffeeMakerCupHolderClicked, class "flex-row" ]
-                [ div [ class "flex100", title (Debug.toString mbCup) ]
-                    [ text
-                        (case mbCup of
-                            Just _ ->
-                                "Cup"
-
-                            Nothing ->
-                                "|---|"
-                        )
-                    ]
-                , div [ class "flex100" ] [ text "|---|" ]
-                ]
+                    Nothing ->
+                        "|---|"
+                )
+            , div [ class "flex100" ] [ text "|---|" ]
             ]
         ]
 
