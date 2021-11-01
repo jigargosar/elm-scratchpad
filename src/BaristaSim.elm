@@ -227,13 +227,14 @@ checkOutOrderNum i model =
 
 view : Model -> Html Msg
 view model =
-    div [ class "debug" ]
+    div []
         [ Html.node "link" [ rel "stylesheet", href "barista.css" ] []
         , div
             [ style "padding" "1.5rem"
             , class "flex-column gap1"
+            , class "debug debug-c"
             ]
-            [ div [ class "flex-row gap1" ]
+            [ gRow [ class "flex-row gap1" ]
                 (List.range 0 2
                     |> List.map
                         (\i ->
@@ -406,11 +407,23 @@ fCol attrs =
 
 
 gCol attrs =
-    div (style "display" "grid" :: style "grid-auto-flow" "row" :: attrs)
+    div
+        (style "display" "grid"
+            :: style "grid-auto-flow" "row"
+            :: style "grid-auto-rows" "1fr"
+            :: style "grid-auto-columns" "1fr"
+            :: attrs
+        )
 
 
 gRow attrs =
-    div (style "display" "grid" :: style "grid-auto-flow" "column" :: attrs)
+    div
+        (style "display" "grid"
+            :: style "grid-auto-flow" "column"
+            :: style "grid-auto-rows" "1fr"
+            :: style "grid-auto-columns" "1fr"
+            :: attrs
+        )
 
 
 
