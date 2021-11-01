@@ -11,8 +11,8 @@ body {
 .debug .flex-column,
 .debug,
 .debug-c > *{
-    outline-offset: -2.5px;
-    outline: hsla(240, 75%, 50%, 0.2) solid 5px;
+    outline-offset: -1.5px;
+    outline: hsla(240, 75%, 50%, 0.2) solid 3px;
 }
 
 .flex-row {
