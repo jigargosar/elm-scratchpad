@@ -242,19 +242,26 @@ view model =
                                 [ class ""
                                 , onClick (CheckoutHolderClicked i)
                                 ]
-                                [ textEl [] (Debug.toString (i + 1))
-                                , textEl [] (Debug.toString (Dict.get i model.orders))
-                                , textEl [] (Debug.toString (Dict.get i model.checkoutHolders))
+                                [ textCentered [] (Debug.toString (i + 1))
+                                , textCentered [] (Debug.toString (Dict.get i model.orders))
+                                , textCentered [] (Debug.toString (Dict.get i model.checkoutHolders))
                                 ]
                         )
                 )
-            , fCol [ onClick StrainerHolderAClicked, class "" ]
-                [ textEl [] "strainerHolderA"
-                , div [ title <| Debug.toString model.strainerHolderA ]
-                    [ viewMaybeStrainer model.strainerHolderA ]
+            , gridAutoCols1fr [ class "tac" ]
+                [ fCol [ onClick StrainerHolderAClicked, class "" ]
+                    [ textCentered [] "strainerHolderA"
+                    , div [ title <| Debug.toString model.strainerHolderA ]
+                        [ viewMaybeStrainer model.strainerHolderA ]
+                    ]
+                , fCol [ onClick StrainerHolderAClicked, class "" ]
+                    [ textCentered [] "strainerHolderA"
+                    , div [ title <| Debug.toString model.strainerHolderA ]
+                        [ viewMaybeStrainer model.strainerHolderA ]
+                    ]
                 ]
             , div [ onClick CoffeeCupStackClicked, class "flex-row gap1" ]
-                [ textEl [] "Coffee Cups Stack"
+                [ textCentered [] "Coffee Cups Stack"
                 ]
             , gridAutoCols1fr
                 [ class "gap1 debug-c"
@@ -263,11 +270,11 @@ view model =
                 , viewCoffeePowderDispenser model.coffeePowderDispenser
                 ]
             , div [ onClick TrashClicked, class "flex-row gap1" ]
-                [ textEl [] "Trash"
+                [ textCentered [] "Trash"
                 ]
             , div [ class "flex-row gap1" ]
-                [ textEl [] "Hands"
-                , textEl [] (Debug.toString model.hands)
+                [ textCentered [] "Hands"
+                , textCentered [] (Debug.toString model.hands)
                 ]
             , div
                 [ class "flex-column gap1" ]
@@ -278,8 +285,8 @@ view model =
                                 [ class "flex-row gap1"
                                 , onClick (DesktopHolderClicked i)
                                 ]
-                                [ textEl [] (Debug.toString (i + 1))
-                                , textEl [] (Debug.toString (Dict.get i model.desktopHolders))
+                                [ textCentered [] (Debug.toString (i + 1))
+                                , textCentered [] (Debug.toString (Dict.get i model.desktopHolders))
                                 ]
                         )
                 )
@@ -302,9 +309,9 @@ viewCoffeePowderDispenser mbStrainer =
         , title <| Debug.toString mbStrainer
         , onClick CoffeePowderDispenserClicked
         ]
-        [ textEl [] "Coffee Dispenser"
+        [ textCentered [] "Coffee Dispenser"
         , div [] [ viewMaybeStrainer mbStrainer ]
-        , textEl []
+        , textCentered []
             (case mbStrainer of
                 Just _ ->
                     "Strainer"
@@ -358,14 +365,14 @@ viewMaybeStrainer mbStrainer =
 viewEspressoMaker : EspressoMaker -> Html Msg
 viewEspressoMaker ( mbStrainer, mbCup ) =
     columnStretchChildren [ class "tac debug-c" ]
-        [ textEl [] "Espresso Maker"
+        [ textCentered [] "Espresso Maker"
         , div
             [ onClick CoffeeMakerStrainerHolderClicked
             , title (Debug.toString mbStrainer)
             ]
             [ viewMaybeStrainer mbStrainer
             ]
-        , textEl
+        , textCentered
             [ onClick CoffeeMakerStrainerHolderClicked
             , title (Debug.toString mbStrainer)
             ]
@@ -377,7 +384,7 @@ viewEspressoMaker ( mbStrainer, mbCup ) =
                     "|---|"
             )
         , fRow [ onClick CoffeeMakerCupHolderClicked ]
-            [ textEl
+            [ textCentered
                 [ class "flex100"
                 , title (Debug.toString mbCup)
                 ]
@@ -393,8 +400,14 @@ viewEspressoMaker ( mbStrainer, mbCup ) =
         ]
 
 
-textEl attrs string =
-    div attrs [ text string ]
+textCentered attrs string =
+    div
+        (style "display" "grid"
+            :: style "place-content" "center"
+            :: style "text-align" "center"
+            :: attrs
+        )
+        [ text string ]
 
 
 fRow attrs =
@@ -408,11 +421,7 @@ fCol attrs =
 columnStretchChildren attrs =
     div
         (style "display" "grid"
-            :: style "flex-direction" "column"
-            --:: style "place-content" "stretch"
             :: style "grid-auto-flow" "row"
-            --:: style "grid-auto-rows" "1fr"
-            :: style "grid-auto-columns" "1fr"
             :: attrs
         )
 
