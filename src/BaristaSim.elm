@@ -234,13 +234,12 @@ view model =
             , class "flex-column gap1"
             , class "debug debug-c"
             ]
-            [ gRow [ class "flex-row gap1" ]
+            [ gridAutoCols1fr [ class "gap1" ]
                 (List.range 0 2
                     |> List.map
                         (\i ->
-                            div
-                                [ class "flex-column gap1"
-                                , style "flex" "1 0 0"
+                            columnStretchChildren
+                                [ class ""
                                 , onClick (CheckoutHolderClicked i)
                                 ]
                                 [ textEl [] (Debug.toString (i + 1))
@@ -257,7 +256,7 @@ view model =
             , div [ onClick CoffeeCupStackClicked, class "flex-row gap1" ]
                 [ textEl [] "Coffee Cups Stack"
                 ]
-            , gRow
+            , gridAutoCols1fr
                 [ class "gap1 debug-c"
                 ]
                 [ viewEspressoMaker model.coffeeMaker
@@ -298,7 +297,7 @@ viewBox2 w h =
 
 viewCoffeePowderDispenser : Maybe Strainer -> Html Msg
 viewCoffeePowderDispenser mbStrainer =
-    gCol
+    columnStretchChildren
         [ class "tac debug-c"
         , title <| Debug.toString mbStrainer
         , onClick CoffeePowderDispenserClicked
@@ -358,7 +357,7 @@ viewMaybeStrainer mbStrainer =
 
 viewEspressoMaker : EspressoMaker -> Html Msg
 viewEspressoMaker ( mbStrainer, mbCup ) =
-    gCol [ class "tac debug-c" ]
+    columnStretchChildren [ class "tac debug-c" ]
         [ textEl [] "Espresso Maker"
         , div
             [ onClick CoffeeMakerStrainerHolderClicked
@@ -406,21 +405,22 @@ fCol attrs =
     div (class "flex-column" :: attrs)
 
 
-gCol attrs =
+columnStretchChildren attrs =
     div
         (style "display" "grid"
+            :: style "flex-direction" "column"
+            --:: style "place-content" "stretch"
             :: style "grid-auto-flow" "row"
-            :: style "grid-auto-rows" "1fr"
+            --:: style "grid-auto-rows" "1fr"
             :: style "grid-auto-columns" "1fr"
             :: attrs
         )
 
 
-gRow attrs =
+gridAutoCols1fr attrs =
     div
         (style "display" "grid"
             :: style "grid-auto-flow" "column"
-            :: style "grid-auto-rows" "1fr"
             :: style "grid-auto-columns" "1fr"
             :: attrs
         )
