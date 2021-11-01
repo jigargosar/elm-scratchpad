@@ -234,12 +234,12 @@ view model =
             , class "flex-column gap1"
             , class "debug debug-c"
             ]
-            [ rowGrid [ class "gap1" ]
+            [ gRow [ class "gap1" ]
                 (List.range 0 2
                     |> List.map
                         (\i ->
                             col
-                                [ class "gap1"
+                                [ class "gap05"
                                 , onClick (CheckoutHolderClicked i)
                                 ]
                                 [ txt [] (Debug.toString (i + 1))
@@ -248,7 +248,7 @@ view model =
                                 ]
                         )
                 )
-            , rowGrid [ class "tac" ]
+            , gRow [ class "tac" ]
                 [ fCol [ onClick StrainerHolderAClicked, class "" ]
                     [ txt [] "strainerHolderA"
                     , div [ title <| Debug.toString model.strainerHolderA ]
@@ -263,7 +263,7 @@ view model =
             , fCol [ onClick CoffeeCupStackClicked ]
                 [ txt [] "Coffee Cups Stack"
                 ]
-            , rowGrid
+            , gRow
                 [ class "gap1"
                 ]
                 [ viewEspressoMaker model.coffeeMaker
@@ -383,7 +383,7 @@ viewEspressoMaker ( mbStrainer, mbCup ) =
                 Nothing ->
                     "|---|"
             )
-        , rowGrid [ onClick CoffeeMakerCupHolderClicked ]
+        , gRow [ onClick CoffeeMakerCupHolderClicked ]
             [ txt [ title (Debug.toString mbCup) ]
                 (case mbCup of
                     Just _ ->
@@ -431,7 +431,7 @@ gridAutoRow attrs =
         )
 
 
-rowGrid =
+gRow =
     gridAutoCols1fr
 
 
