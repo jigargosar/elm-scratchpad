@@ -239,7 +239,7 @@ view model =
                     |> List.map
                         (\i ->
                             columnStretchChildren
-                                [ class ""
+                                [ class "gap1"
                                 , onClick (CheckoutHolderClicked i)
                                 ]
                                 [ textCentered [] (Debug.toString (i + 1))
