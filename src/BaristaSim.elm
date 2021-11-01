@@ -358,7 +358,7 @@ viewMaybeStrainer mbStrainer =
 
 viewEspressoMaker : EspressoMaker -> Html Msg
 viewEspressoMaker ( mbStrainer, mbCup ) =
-    fCol [ class "tac" ]
+    gCol [ class "tac" ]
         [ textEl [] "Espresso Maker"
         , textEl
             [ onClick CoffeeMakerStrainerHolderClicked
