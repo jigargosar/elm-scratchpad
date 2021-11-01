@@ -264,7 +264,7 @@ view model =
                 [ txt [] "Coffee Cups Stack"
                 ]
             , rowGrid
-                [ class "gap1 debug-c"
+                [ class "gap1"
                 ]
                 [ viewEspressoMaker model.coffeeMaker
                 , viewCoffeePowderDispenser model.coffeePowderDispenser
@@ -305,7 +305,7 @@ viewBox2 w h =
 viewCoffeePowderDispenser : Maybe Strainer -> Html Msg
 viewCoffeePowderDispenser mbStrainer =
     col
-        [ class "tac debug-c"
+        [ class "debug-c"
         , title <| Debug.toString mbStrainer
         , onClick CoffeePowderDispenserClicked
         ]
@@ -364,7 +364,7 @@ viewMaybeStrainer mbStrainer =
 
 viewEspressoMaker : EspressoMaker -> Html Msg
 viewEspressoMaker ( mbStrainer, mbCup ) =
-    col [ class "tac debug-c" ]
+    col [ class " debug-c" ]
         [ txt [] "Espresso Maker"
         , div
             [ onClick CoffeeMakerStrainerHolderClicked
@@ -383,11 +383,8 @@ viewEspressoMaker ( mbStrainer, mbCup ) =
                 Nothing ->
                     "|---|"
             )
-        , fRow [ onClick CoffeeMakerCupHolderClicked ]
-            [ txt
-                [ class "flex100"
-                , title (Debug.toString mbCup)
-                ]
+        , rowGrid [ onClick CoffeeMakerCupHolderClicked ]
+            [ txt [ title (Debug.toString mbCup) ]
                 (case mbCup of
                     Just _ ->
                         "Cup"
@@ -395,7 +392,7 @@ viewEspressoMaker ( mbStrainer, mbCup ) =
                     Nothing ->
                         "|---|"
                 )
-            , div [ class "flex100" ] [ text "|---|" ]
+            , txt [] "|---|"
             ]
         ]
 
