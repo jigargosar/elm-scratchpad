@@ -260,7 +260,7 @@ view model =
                         [ viewMaybeStrainer model.strainerHolderA ]
                     ]
                 ]
-            , div [ onClick CoffeeCupStackClicked, class "flex-row gap1" ]
+            , fCol [ onClick CoffeeCupStackClicked ]
                 [ txt [] "Coffee Cups Stack"
                 ]
             , rowGrid
