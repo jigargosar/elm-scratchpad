@@ -248,9 +248,10 @@ view model =
                                 ]
                         )
                 )
-            , div [ onClick StrainerHolderAClicked, class "flex-row gap1" ]
+            , gCol [ onClick StrainerHolderAClicked, class "" ]
                 [ textEl [] "strainerHolderA"
-                , textEl [] (Debug.toString model.strainerHolderA)
+                , div [ title <| Debug.toString model.strainerHolderA ]
+                    [ viewMaybeStrainer model.strainerHolderA ]
                 ]
             , div [ onClick CoffeeCupStackClicked, class "flex-row gap1" ]
                 [ textEl [] "Coffee Cups Stack"
