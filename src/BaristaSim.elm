@@ -249,7 +249,7 @@ view model =
                                 ]
                         )
                 )
-            , gCol [ onClick StrainerHolderAClicked, class "" ]
+            , fCol [ onClick StrainerHolderAClicked, class "" ]
                 [ textEl [] "strainerHolderA"
                 , div [ title <| Debug.toString model.strainerHolderA ]
                     [ viewMaybeStrainer model.strainerHolderA ]
@@ -299,7 +299,7 @@ viewBox2 w h =
 viewCoffeePowderDispenser : Maybe Strainer -> Html Msg
 viewCoffeePowderDispenser mbStrainer =
     gCol
-        [ class "tac debug"
+        [ class "tac debug-c"
         , title <| Debug.toString mbStrainer
         , onClick CoffeePowderDispenserClicked
         ]
@@ -358,7 +358,7 @@ viewMaybeStrainer mbStrainer =
 
 viewEspressoMaker : EspressoMaker -> Html Msg
 viewEspressoMaker ( mbStrainer, mbCup ) =
-    gCol [ class "tac" ]
+    gCol [ class "tac debug-c" ]
         [ textEl [] "Espresso Maker"
         , div
             [ onClick CoffeeMakerStrainerHolderClicked
