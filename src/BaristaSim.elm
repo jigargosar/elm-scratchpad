@@ -254,8 +254,6 @@ view model =
                 [ style "display" "grid"
                 , style "grid-auto-flow" "column"
                 , class "gap1"
-
-                --, style "padding" "1.5rem"
                 ]
                 [ viewEspressoMaker model.coffeeMaker
                 , viewCoffeePowderDispenser model.coffeePowderDispenser
