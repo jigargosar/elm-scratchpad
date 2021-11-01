@@ -3,6 +3,7 @@ body {
     padding: 0;
     background-color: hsl(0, 0%, 90%);
     font-size: 24px;
+    line-height: 1.5rem;
     word-break: break-word;
 }
 
@@ -27,6 +28,10 @@ body {
 
 .gap1 {
     gap: 1.5rem;
+}
+
+.gap05 {
+    gap: 0.75rem;
 }
 
 .tac {

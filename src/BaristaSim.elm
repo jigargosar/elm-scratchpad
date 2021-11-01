@@ -276,13 +276,13 @@ view model =
                 [ txt [] "Hands"
                 , txt [] (Debug.toString model.hands)
                 ]
-            , div
-                [ class "flex-column gap1" ]
+            , fCol
+                [ class "gap05" ]
                 (List.range 0 4
                     |> List.map
                         (\i ->
-                            div
-                                [ class "flex-row gap1"
+                            fRow
+                                [ class "gap1"
                                 , onClick (DesktopHolderClicked i)
                                 ]
                                 [ txt [] (Debug.toString (i + 1))
@@ -398,11 +398,11 @@ viewEspressoMaker ( mbStrainer, mbCup ) =
 
 
 fRow attrs =
-    div (class "flex-row" :: attrs)
+    div (style "display" "flex" :: style "flex-direction" "row" :: attrs)
 
 
 fCol attrs =
-    div (class "flex-column" :: attrs)
+    div (style "display" "flex" :: style "flex-direction" "column" :: attrs)
 
 
 txt =
