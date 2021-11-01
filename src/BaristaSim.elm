@@ -295,12 +295,15 @@ viewCoffeePowderDispenser mbStrainer =
         , onClick CoffeePowderDispenserClicked
         ]
         [ textEl [] "Coffee Dispenser"
-        , Svg.svg
-            [ TA.viewBox -64 -64 128 128
-            , SA.fill "hsl(0.55turn 70% 50% / 1)"
-            , SA.stroke "none"
-            ]
-            [ Svg.circle [ Px.r 32 ] []
+        , div []
+            [ Svg.svg
+                [ TA.viewBox -64 -64 128 128
+                , Px.width 128
+                , SA.fill "hsl(0.55turn 70% 50% / 1)"
+                , SA.stroke "none"
+                ]
+                [ Svg.circle [ Px.r 16 ] []
+                ]
             ]
         , textEl [] "Drawing"
         , textEl []
