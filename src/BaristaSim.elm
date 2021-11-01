@@ -234,11 +234,11 @@ view model =
             , class "flex-column gap1"
             , class "debug debug-c"
             ]
-            [ gridAutoCols1fr [ class "gap1" ]
+            [ rowGrid [ class "gap1" ]
                 (List.range 0 2
                     |> List.map
                         (\i ->
-                            columnStretchChildren
+                            col
                                 [ class "gap1"
                                 , onClick (CheckoutHolderClicked i)
                                 ]
@@ -248,7 +248,7 @@ view model =
                                 ]
                         )
                 )
-            , gridAutoCols1fr [ class "tac" ]
+            , rowGrid [ class "tac" ]
                 [ fCol [ onClick StrainerHolderAClicked, class "" ]
                     [ txt [] "strainerHolderA"
                     , div [ title <| Debug.toString model.strainerHolderA ]
@@ -263,7 +263,7 @@ view model =
             , div [ onClick CoffeeCupStackClicked, class "flex-row gap1" ]
                 [ txt [] "Coffee Cups Stack"
                 ]
-            , gridAutoCols1fr
+            , rowGrid
                 [ class "gap1 debug-c"
                 ]
                 [ viewEspressoMaker model.coffeeMaker
@@ -304,7 +304,7 @@ viewBox2 w h =
 
 viewCoffeePowderDispenser : Maybe Strainer -> Html Msg
 viewCoffeePowderDispenser mbStrainer =
-    columnStretchChildren
+    col
         [ class "tac debug-c"
         , title <| Debug.toString mbStrainer
         , onClick CoffeePowderDispenserClicked
@@ -364,7 +364,7 @@ viewMaybeStrainer mbStrainer =
 
 viewEspressoMaker : EspressoMaker -> Html Msg
 viewEspressoMaker ( mbStrainer, mbCup ) =
-    columnStretchChildren [ class "tac debug-c" ]
+    col [ class "tac debug-c" ]
         [ txt [] "Espresso Maker"
         , div
             [ onClick CoffeeMakerStrainerHolderClicked
@@ -408,7 +408,11 @@ fCol attrs =
     div (class "flex-column" :: attrs)
 
 
-txt attrs string =
+txt =
+    textCentered
+
+
+textCentered attrs string =
     div
         (style "display" "grid"
             :: style "place-content" "center"
@@ -418,12 +422,20 @@ txt attrs string =
         [ text string ]
 
 
-columnStretchChildren attrs =
+col =
+    gridAutoRow
+
+
+gridAutoRow attrs =
     div
         (style "display" "grid"
             :: style "grid-auto-flow" "row"
             :: attrs
         )
+
+
+rowGrid =
+    gridAutoCols1fr
 
 
 gridAutoCols1fr attrs =
