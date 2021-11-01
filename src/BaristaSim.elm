@@ -358,7 +358,7 @@ viewMaybeStrainer mbStrainer =
 
 viewEspressoMaker : EspressoMaker -> Html Msg
 viewEspressoMaker ( mbStrainer, mbCup ) =
-    col [ class " debug-c" ]
+    col [ class "debug-c" ]
         [ txt [] "Espresso Maker"
         , div
             [ onClick CoffeeMakerStrainerHolderClicked
