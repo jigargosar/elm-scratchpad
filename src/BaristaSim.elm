@@ -281,12 +281,11 @@ view model =
                 (List.range 0 4
                     |> List.map
                         (\i ->
-                            fRow
+                            div
                                 [ class "gap1"
                                 , onClick (DesktopHolderClicked i)
                                 ]
-                                [ txt [] (Debug.toString (i + 1))
-                                , txt [] (Debug.toString (Dict.get i model.desktopHolders))
+                                [ txt [] (Debug.toString (Dict.get i model.desktopHolders))
                                 ]
                         )
                 )
