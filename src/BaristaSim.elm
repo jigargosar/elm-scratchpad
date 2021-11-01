@@ -9,6 +9,7 @@ import Svg
 import Svg.Attributes as SA
 import TypedSvg.Attributes as TA
 import TypedSvg.Attributes.InPx as Px
+import TypedSvg.Types as TT
 
 
 main : Program () Model Msg
@@ -287,6 +288,14 @@ view model =
         ]
 
 
+rect w h xs =
+    Svg.rect (Px.x (-w / 2) :: Px.y (-h / 2) :: Px.width w :: Px.height h :: xs) []
+
+
+viewBox2 w h =
+    TA.viewBox (-w / 2) (-h / 2) w h
+
+
 viewCoffeePowderDispenser : Maybe Strainer -> Html Msg
 viewCoffeePowderDispenser mbStrainer =
     gCol
@@ -295,17 +304,7 @@ viewCoffeePowderDispenser mbStrainer =
         , onClick CoffeePowderDispenserClicked
         ]
         [ textEl [] "Coffee Dispenser"
-        , div []
-            [ Svg.svg
-                [ TA.viewBox -64 -64 128 128
-                , Px.width 128
-                , SA.fill "hsl(0.55turn 70% 50% / 1)"
-                , SA.stroke "none"
-                ]
-                [ Svg.circle [ Px.r 16 ] []
-                ]
-            ]
-        , textEl [] "Drawing"
+        , div [] [ viewMaybeStrainer mbStrainer ]
         , textEl []
             (case mbStrainer of
                 Just _ ->
@@ -315,6 +314,46 @@ viewCoffeePowderDispenser mbStrainer =
                     "|---|"
             )
         ]
+
+
+viewMaybeStrainer mbStrainer =
+    Svg.svg
+        [ viewBox2 128 64
+        , Px.width 128
+        , SA.fill "none"
+        , SA.stroke "none"
+
+        --, SA.class "debug"
+        ]
+        (case mbStrainer of
+            Nothing ->
+                []
+
+            Just strainer ->
+                let
+                    fillC =
+                        case strainer of
+                            StrainerEmpty ->
+                                "#fff"
+
+                            StrainerWithCoffeePowder ->
+                                "brown"
+
+                            StrainerWithWaste ->
+                                "#000"
+                in
+                [ Svg.circle
+                    [ SA.stroke "#000"
+                    , Px.strokeWidth 4
+                    , SA.fill "hsl(0.55turn 70% 50% / 1)"
+                    , SA.fill fillC
+                    , Px.r 16
+                    , TA.transform [ TT.Translate -16 0 ]
+                    ]
+                    []
+                , rect 32 16 [ SA.fill "#000", TA.transform [ TT.Translate 16 0 ] ]
+                ]
+        )
 
 
 viewEspressoMaker : EspressoMaker -> Html Msg
