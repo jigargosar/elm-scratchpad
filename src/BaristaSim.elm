@@ -248,16 +248,23 @@ view model =
                         )
                 )
             , gRow [ class "tac" ]
-                [ col [ onClick StrainerHolderAClicked, class "" ]
+                [ col
+                    [ onClick StrainerHolderAClicked
+                    , title <| Debug.toString model.strainerHolderA
+                    ]
                     [ txt [] "strainerHolderA"
-                    , div [ title <| Debug.toString model.strainerHolderA ]
+                    , div []
                         [ viewMaybeStrainer model.strainerHolderA ]
                     ]
-                , col [ onClick StrainerHolderAClicked, class "" ]
+                , col
+                    [ onClick StrainerHolderAClicked
+                    , title <| Debug.toString model.strainerHolderA
+                    ]
                     [ txt [] "strainerHolderA"
-                    , div [ title <| Debug.toString model.strainerHolderA ]
+                    , div []
                         [ viewMaybeStrainer model.strainerHolderA ]
                     ]
+                , txt [ onClick TrashClicked ] "Trash"
                 ]
             , col [ onClick CoffeeCupStackClicked ]
                 [ txt [] "Coffee Cups Stack"
@@ -267,9 +274,6 @@ view model =
                 ]
                 [ viewEspressoMaker model.coffeeMaker
                 , viewCoffeePowderDispenser model.coffeePowderDispenser
-                ]
-            , div [ onClick TrashClicked, class "flex-row gap1" ]
-                [ txt [] "Trash"
                 ]
             , div [ class "flex-row gap1" ]
                 [ txt [] "Hands"
