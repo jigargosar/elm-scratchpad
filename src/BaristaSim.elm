@@ -256,10 +256,8 @@ view model =
             , div [ onClick CoffeeCupStackClicked, class "flex-row gap1" ]
                 [ textEl [] "Coffee Cups Stack"
                 ]
-            , div
-                [ style "display" "grid"
-                , style "grid-auto-flow" "column"
-                , class "gap1"
+            , gRow
+                [ class "gap1 debug-c"
                 ]
                 [ viewEspressoMaker model.coffeeMaker
                 , viewCoffeePowderDispenser model.coffeePowderDispenser
@@ -409,6 +407,10 @@ fCol attrs =
 
 gCol attrs =
     div (style "display" "grid" :: style "grid-auto-flow" "row" :: attrs)
+
+
+gRow attrs =
+    div (style "display" "grid" :: style "grid-auto-flow" "column" :: attrs)
 
 
 
