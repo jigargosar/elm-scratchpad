@@ -260,15 +260,6 @@ view model =
                 [ viewEspressoMaker model.coffeeMaker
                 , viewCoffeePowderDispenser model.coffeePowderDispenser
                 ]
-
-            --, div [ onClick CoffeeMakerStrainerHolderClicked, class "flex-row gap1" ]
-            --    [ divText [] "coffeeMakerStrainerHolder"
-            --    , divText [] (Debug.toString (Tuple.first model.coffeeMaker))
-            --    ]
-            --, div [ onClick CoffeeMakerCupHolderClicked, class "flex-row gap1" ]
-            --    [ divText [] "coffeeMakerCupHolder"
-            --    , divText [] (Debug.toString (Tuple.second model.coffeeMaker))
-            --    ]
             , div [ onClick TrashClicked, class "flex-row gap1" ]
                 [ textEl [] "Trash"
                 ]
