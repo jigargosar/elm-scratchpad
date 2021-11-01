@@ -5,6 +5,10 @@ import Dict exposing (Dict)
 import Html exposing (Html, div, text)
 import Html.Attributes exposing (class, href, rel, style, title)
 import Html.Events exposing (onClick)
+import Svg
+import Svg.Attributes as SA
+import TypedSvg.Attributes as TA
+import TypedSvg.Attributes.InPx as Px
 
 
 main : Program () Model Msg
@@ -291,6 +295,14 @@ viewCoffeePowderDispenser mbStrainer =
         , onClick CoffeePowderDispenserClicked
         ]
         [ textEl [] "Coffee Dispenser"
+        , Svg.svg
+            [ TA.viewBox -64 -64 128 128
+            , SA.fill "hsl(0.55turn 70% 50% / 1)"
+            , SA.stroke "none"
+            ]
+            [ Svg.circle [ Px.r 32 ] []
+            ]
+        , textEl [] "Drawing"
         , textEl []
             (case mbStrainer of
                 Just _ ->
