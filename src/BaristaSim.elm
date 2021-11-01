@@ -360,6 +360,12 @@ viewEspressoMaker : EspressoMaker -> Html Msg
 viewEspressoMaker ( mbStrainer, mbCup ) =
     gCol [ class "tac" ]
         [ textEl [] "Espresso Maker"
+        , div
+            [ onClick CoffeeMakerStrainerHolderClicked
+            , title (Debug.toString mbStrainer)
+            ]
+            [ viewMaybeStrainer mbStrainer
+            ]
         , textEl
             [ onClick CoffeeMakerStrainerHolderClicked
             , title (Debug.toString mbStrainer)
