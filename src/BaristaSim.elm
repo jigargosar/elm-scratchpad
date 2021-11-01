@@ -242,25 +242,24 @@ view model =
                                 [ class "gap05"
                                 , onClick (CheckoutHolderClicked i)
                                 ]
-                                [ txt [] (Debug.toString (i + 1))
-                                , txt [] (Debug.toString (Dict.get i model.orders))
+                                [ txt [] (Debug.toString (Dict.get i model.orders))
                                 , txt [] (Debug.toString (Dict.get i model.checkoutHolders))
                                 ]
                         )
                 )
             , gRow [ class "tac" ]
-                [ fCol [ onClick StrainerHolderAClicked, class "" ]
+                [ col [ onClick StrainerHolderAClicked, class "" ]
                     [ txt [] "strainerHolderA"
                     , div [ title <| Debug.toString model.strainerHolderA ]
                         [ viewMaybeStrainer model.strainerHolderA ]
                     ]
-                , fCol [ onClick StrainerHolderAClicked, class "" ]
+                , col [ onClick StrainerHolderAClicked, class "" ]
                     [ txt [] "strainerHolderA"
                     , div [ title <| Debug.toString model.strainerHolderA ]
                         [ viewMaybeStrainer model.strainerHolderA ]
                     ]
                 ]
-            , fCol [ onClick CoffeeCupStackClicked ]
+            , col [ onClick CoffeeCupStackClicked ]
                 [ txt [] "Coffee Cups Stack"
                 ]
             , gRow
@@ -276,7 +275,7 @@ view model =
                 [ txt [] "Hands"
                 , txt [] (Debug.toString model.hands)
                 ]
-            , fCol
+            , col
                 [ class "gap05" ]
                 (List.range 0 4
                     |> List.map
@@ -392,8 +391,16 @@ viewEspressoMaker ( mbStrainer, mbCup ) =
         ]
 
 
+
+--noinspection ElmUnusedSymbol
+
+
 fRow attrs =
     div (style "display" "flex" :: style "flex-direction" "row" :: attrs)
+
+
+
+--noinspection ElmUnusedSymbol
 
 
 fCol attrs =
