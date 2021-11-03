@@ -306,12 +306,13 @@ viewCoffeePowderDispenser mbStrainer =
 
 viewMaybeCoffeeCup : Maybe CoffeeCup -> Html msg
 viewMaybeCoffeeCup mbCoffeeCup =
-    case mbCoffeeCup of
-        Just cc ->
-            drawCoffeeCupShape (coffeeCupToFill cc) []
+    elCentered [] <|
+        case mbCoffeeCup of
+            Just cc ->
+                drawCoffeeCupShape (coffeeCupToFill cc) []
 
-        Nothing ->
-            drawCoffeeCupShape "lightsteelblue" [ SA.opacity "0.2" ]
+            Nothing ->
+                drawCoffeeCupShape "lightsteelblue" [ SA.opacity "0.2" ]
 
 
 coffeeCupToFill : CoffeeCup -> String
