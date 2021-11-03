@@ -234,7 +234,7 @@ view model =
             , class "flex-column gap1"
             , class "debug debug-c"
             ]
-            [ gRow [ class "gap1" ]
+            [ gRow [ class "" ]
                 (List.range 0 2
                     |> List.map
                         (\i ->
