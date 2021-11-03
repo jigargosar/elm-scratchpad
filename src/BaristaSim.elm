@@ -323,7 +323,7 @@ viewMaybeStrainer mbStrainer =
         ]
         (case mbStrainer of
             Nothing ->
-                []
+                [ drawStrainerShape "#fff" [ SA.opacity "0.1" ] ]
 
             Just strainer ->
                 let
@@ -338,17 +338,17 @@ viewMaybeStrainer mbStrainer =
                             StrainerWithWaste ->
                                 "#000"
                 in
-                [ drawStrainerShape fillC ]
+                [ drawStrainerShape fillC [] ]
         )
 
 
-drawStrainerShape fillC =
-    group []
+drawStrainerShape contentFill attrs =
+    group attrs
         [ Svg.circle
             [ SA.stroke "#000"
             , Px.strokeWidth 4
             , SA.fill "hsl(0.55turn 70% 50% / 1)"
-            , SA.fill fillC
+            , SA.fill contentFill
             , Px.r 16
             , TA.transform [ TT.Translate -16 0 ]
             ]
