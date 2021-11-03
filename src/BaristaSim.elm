@@ -304,9 +304,9 @@ viewCoffeePowderDispenser mbStrainer =
         ]
 
 
-viewMaybeCoffeeCup : Maybe CoffeeCup -> Html msg
-viewMaybeCoffeeCup mbCoffeeCup =
-    elCentered [] <|
+viewMaybeCoffeeCup : List (Attribute msg) -> Maybe CoffeeCup -> Html msg
+viewMaybeCoffeeCup attrs mbCoffeeCup =
+    elCentered attrs <|
         case mbCoffeeCup of
             Just cc ->
                 drawCoffeeCupShape (coffeeCupToFill cc) []
@@ -406,16 +406,17 @@ viewEspressoMaker ( mbStrainer, mbCup ) =
             , title (Debug.toString mbStrainer)
             ]
             mbStrainer
-        , gRow [ onClick CoffeeMakerCupHolderClicked ]
-            [ txt [ title (Debug.toString mbCup) ]
-                (case mbCup of
-                    Just _ ->
-                        "Cup"
-
-                    Nothing ->
-                        "|---|"
-                )
-            , viewMaybeCoffeeCup mbCup
+        , gRow []
+            [ viewMaybeCoffeeCup
+                [ title (Debug.toString mbCup)
+                , onClick CoffeeMakerCupHolderClicked
+                ]
+                mbCup
+            , viewMaybeCoffeeCup
+                [ title (Debug.toString mbCup)
+                , onClick CoffeeMakerCupHolderClicked
+                ]
+                mbCup
             ]
         ]
 
