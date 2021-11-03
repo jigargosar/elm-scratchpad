@@ -267,6 +267,9 @@ view model =
             , col [ onClick CoffeeCupStackClicked ]
                 [ txt [] "Coffee Cups Stack"
                 ]
+            , gRow [ onClick CoffeeCupStackClicked ]
+                [ txt [] "Coffee Cups Stack"
+                ]
             , gRow
                 [ class "gap1"
                 ]
@@ -473,10 +476,10 @@ elCentered attrs singleElement =
 
 
 col =
-    gridAutoRow
+    gridAutoFlowRow
 
 
-gridAutoRow attrs =
+gridAutoFlowRow attrs =
     div
         (style "display" "grid"
             :: style "grid-auto-flow" "row"
