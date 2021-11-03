@@ -264,7 +264,7 @@ view model =
                     ]
                 , txt [ onClick TrashClicked ] "Trash"
                 ]
-            , fRow [ onClick CoffeeCupStackClicked, contentCentered ]
+            , fRowWrap [ onClick CoffeeCupStackClicked, contentCentered ]
                 (List.repeat 4 (viewMaybeCoffeeCup [] (Just CoffeeCupEmpty)))
             , gRow
                 [ class "gap1"
@@ -441,7 +441,19 @@ viewBox2 w h =
 
 
 fRow attrs =
-    div (style "display" "flex" :: style "flex-direction" "row" :: attrs)
+    div
+        (style "display" "flex"
+            :: style "flex-flow" "row nowrap"
+            :: attrs
+        )
+
+
+fRowWrap attrs =
+    div
+        (style "display" "flex"
+            :: style "flex-flow" "row wrap"
+            :: attrs
+        )
 
 
 
