@@ -61,7 +61,7 @@ type alias EspressoMaker =
 type alias Model =
     { strainerHolderA : Maybe Strainer
     , coffeePowderDispenser : Maybe Strainer
-    , coffeeMaker : EspressoMaker
+    , espressoMaker : EspressoMaker
     , hands : Maybe HandHoldable
     , desktopHolders : Dict Int DesktopHolder
     , checkoutHolders : Dict Int CheckoutHolder
@@ -73,7 +73,7 @@ init : Model
 init =
     { strainerHolderA = Just StrainerEmpty
     , coffeePowderDispenser = Nothing
-    , coffeeMaker = ( Nothing, Nothing )
+    , espressoMaker = ( Nothing, Just CoffeeCupEmpty )
     , hands = Nothing
     , desktopHolders = Dict.empty
     , checkoutHolders = Dict.empty
@@ -164,34 +164,34 @@ update msg model =
                     model
 
         CoffeeMakerStrainerHolderClicked ->
-            case ( model.hands, model.coffeeMaker ) of
+            case ( model.hands, model.espressoMaker ) of
                 ( Just (HH_Strainer StrainerWithCoffeePowder), ( Nothing, cup ) ) ->
                     { model
                         | hands = Nothing
-                        , coffeeMaker = ( Just StrainerWithCoffeePowder, cup ) |> tryToMakeCoffee
+                        , espressoMaker = ( Just StrainerWithCoffeePowder, cup ) |> tryToMakeCoffee
                     }
 
                 ( Nothing, ( Just (StrainerWithWaste as strainer), cup ) ) ->
                     { model
                         | hands = Just (HH_Strainer strainer)
-                        , coffeeMaker = ( Nothing, cup ) |> tryToMakeCoffee
+                        , espressoMaker = ( Nothing, cup ) |> tryToMakeCoffee
                     }
 
                 _ ->
                     model
 
         CoffeeMakerCupHolderClicked ->
-            case ( model.hands, model.coffeeMaker ) of
+            case ( model.hands, model.espressoMaker ) of
                 ( Just (HH_CoffeeCup cup), ( strainer, Nothing ) ) ->
                     { model
                         | hands = Nothing
-                        , coffeeMaker =
+                        , espressoMaker =
                             ( strainer, Just cup )
                                 |> tryToMakeCoffee
                     }
 
                 ( Nothing, ( strainer, Just cup ) ) ->
-                    { model | hands = Just (HH_CoffeeCup cup), coffeeMaker = ( strainer, Nothing ) }
+                    { model | hands = Just (HH_CoffeeCup cup), espressoMaker = ( strainer, Nothing ) }
 
                 _ ->
                     model
@@ -270,7 +270,7 @@ view model =
             , gRow
                 [ class "gap1"
                 ]
-                [ viewEspressoMaker model.coffeeMaker
+                [ viewEspressoMaker model.espressoMaker
                 , viewCoffeePowderDispenser model.coffeePowderDispenser
                 ]
             , div [ class "flex-row gap1" ]
@@ -318,13 +318,14 @@ drawCoffeeCupShape : String -> List (Attribute msg) -> Html msg
 drawCoffeeCupShape contentFill attrs =
     Svg.svg
         [ viewBox2 64 64
-        , Px.width 128
+        , Px.width 64
         , SA.fill "none"
         , SA.stroke "none"
         , SA.class "debug"
         ]
         [ group attrs
-            [ Svg.circle
+            [ rect 16 8 [ SA.fill "#000", TA.transform [ TT.Translate 16 0 ] ]
+            , Svg.circle
                 [ SA.stroke "#000"
                 , Px.strokeWidth 4
                 , SA.fill "hsl(0.55turn 70% 50% / 1)"
@@ -334,7 +335,6 @@ drawCoffeeCupShape contentFill attrs =
                 --, TA.transform [ TT.Translate -16 0 ]
                 ]
                 []
-            , rect 16 8 [ SA.fill "#000", TA.transform [ TT.Translate 16 0 ] ]
             ]
         ]
 
