@@ -243,13 +243,19 @@ view model =
                                 , onClick (CheckoutHolderClicked i)
                                 ]
                                 [ txt [] (Debug.toString (Dict.get i model.orders))
-                                , txt [] (Debug.toString (Dict.get i model.checkoutHolders))
-                                , case Dict.get i model.checkoutHolders of
+                                , let
+                                    ch =
+                                        Dict.get i model.checkoutHolders
+
+                                    debugTitle =
+                                        title <| Debug.toString ch
+                                  in
+                                  case ch of
                                     Nothing ->
-                                        viewMaybeCoffeeCup [] Nothing
+                                        viewMaybeCoffeeCup [ debugTitle ] Nothing
 
                                     Just (CH_CoffeeCup cc) ->
-                                        viewMaybeCoffeeCup [] (Just cc)
+                                        viewMaybeCoffeeCup [ debugTitle ] (Just cc)
                                 ]
                         )
                 )
