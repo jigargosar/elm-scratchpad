@@ -488,10 +488,10 @@ gridAutoFlowRow attrs =
 
 
 gRow =
-    gridAutoCols1fr
+    gridAutoFlowColumns1fr
 
 
-gridAutoCols1fr attrs =
+gridAutoFlowColumns1fr attrs =
     div
         (style "display" "grid"
             :: style "grid-auto-flow" "column"
