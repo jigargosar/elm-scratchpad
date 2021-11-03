@@ -244,6 +244,12 @@ view model =
                                 ]
                                 [ txt [] (Debug.toString (Dict.get i model.orders))
                                 , txt [] (Debug.toString (Dict.get i model.checkoutHolders))
+                                , case Dict.get i model.checkoutHolders of
+                                    Nothing ->
+                                        viewMaybeCoffeeCup [] Nothing
+
+                                    Just (CH_CoffeeCup cc) ->
+                                        viewMaybeCoffeeCup [] (Just cc)
                                 ]
                         )
                 )
