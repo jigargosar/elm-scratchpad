@@ -304,6 +304,41 @@ viewCoffeePowderDispenser mbStrainer =
         ]
 
 
+viewCoffeeCup : CoffeeCup -> Html msg
+viewCoffeeCup coffeeCup =
+    case coffeeCup of
+        CoffeeCupEmpty ->
+            drawCoffeeCupShape "lightsteelblue" []
+
+        CoffeeCupWithEspresso ->
+            drawCoffeeCupShape "coffee" []
+
+
+drawCoffeeCupShape : String -> List (Attribute msg) -> Html msg
+drawCoffeeCupShape contentFill attrs =
+    Svg.svg
+        [ viewBox2 64 64
+        , Px.width 128
+        , SA.fill "none"
+        , SA.stroke "none"
+        , SA.class "debug"
+        ]
+        [ group attrs
+            [ Svg.circle
+                [ SA.stroke "#000"
+                , Px.strokeWidth 4
+                , SA.fill "hsl(0.55turn 70% 50% / 1)"
+                , SA.fill contentFill
+                , Px.r 16
+
+                --, TA.transform [ TT.Translate -16 0 ]
+                ]
+                []
+            , rect 16 8 [ SA.fill "#000", TA.transform [ TT.Translate 16 0 ] ]
+            ]
+        ]
+
+
 viewMaybeStrainer attrs mbStrainer =
     elCentered attrs <|
         case mbStrainer of
@@ -369,7 +404,12 @@ viewEspressoMaker ( mbStrainer, mbCup ) =
                     Nothing ->
                         "|---|"
                 )
-            , txt [] "|---|"
+            , case mbCup of
+                Just cc ->
+                    viewCoffeeCup cc
+
+                Nothing ->
+                    text "|---|"
             ]
         ]
 
