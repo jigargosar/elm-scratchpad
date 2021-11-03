@@ -253,16 +253,14 @@ view model =
                     , title <| Debug.toString model.strainerHolderA
                     ]
                     [ txt [] "strainerHolderA"
-                    , div []
-                        [ viewMaybeStrainer model.strainerHolderA ]
+                    , viewMaybeStrainer [] model.strainerHolderA
                     ]
                 , col
                     [ onClick StrainerHolderAClicked
                     , title <| Debug.toString model.strainerHolderA
                     ]
                     [ txt [] "strainerHolderA"
-                    , div []
-                        [ viewMaybeStrainer model.strainerHolderA ]
+                    , viewMaybeStrainer [] model.strainerHolderA
                     ]
                 , txt [ onClick TrashClicked ] "Trash"
                 ]
@@ -296,30 +294,24 @@ viewCoffeePowderDispenser : Maybe Strainer -> Html Msg
 viewCoffeePowderDispenser mbStrainer =
     col
         [ class "debug-c"
+
+        --, style "height" "200px"
         , title <| Debug.toString mbStrainer
         , onClick CoffeePowderDispenserClicked
         ]
         [ txt [] "Coffee Dispenser"
-        , div [] [ viewMaybeStrainer mbStrainer ]
-        , txt []
-            (case mbStrainer of
-                Just _ ->
-                    "Strainer"
-
-                Nothing ->
-                    "|---|"
-            )
+        , viewMaybeStrainer [] mbStrainer
         ]
 
 
-viewMaybeStrainer : Maybe Strainer -> Html msg
-viewMaybeStrainer mbStrainer =
-    case mbStrainer of
-        Nothing ->
-            drawStrainerShape (strainerToContentFill StrainerEmpty) [ SA.opacity "0.1" ]
+viewMaybeStrainer attrs mbStrainer =
+    elCentered attrs <|
+        case mbStrainer of
+            Nothing ->
+                drawStrainerShape (strainerToContentFill StrainerEmpty) [ SA.opacity "0.1" ]
 
-        Just strainer ->
-            drawStrainerShape (strainerToContentFill strainer) []
+            Just strainer ->
+                drawStrainerShape (strainerToContentFill strainer) []
 
 
 strainerToContentFill : Strainer -> String
@@ -363,23 +355,11 @@ viewEspressoMaker : EspressoMaker -> Html Msg
 viewEspressoMaker ( mbStrainer, mbCup ) =
     col [ class "debug-c" ]
         [ txt [] "Espresso Maker"
-        , div
+        , viewMaybeStrainer
             [ onClick CoffeeMakerStrainerHolderClicked
             , title (Debug.toString mbStrainer)
             ]
-            [ viewMaybeStrainer mbStrainer
-            ]
-        , txt
-            [ onClick CoffeeMakerStrainerHolderClicked
-            , title (Debug.toString mbStrainer)
-            ]
-            (case mbStrainer of
-                Just _ ->
-                    "Strainer"
-
-                Nothing ->
-                    "|---|"
-            )
+            mbStrainer
         , gRow [ onClick CoffeeMakerCupHolderClicked ]
             [ txt [ title (Debug.toString mbCup) ]
                 (case mbCup of
@@ -432,13 +412,17 @@ txt =
 
 
 textCentered attrs string =
+    elCentered attrs <| text string
+
+
+elCentered attrs singleElement =
     div
         (style "display" "grid"
             :: style "place-content" "center"
             :: style "text-align" "center"
             :: attrs
         )
-        [ text string ]
+        [ singleElement ]
 
 
 col =
