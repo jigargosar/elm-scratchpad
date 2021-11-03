@@ -73,7 +73,7 @@ init : Model
 init =
     { strainerHolderA = Just StrainerEmpty
     , coffeePowderDispenser = Nothing
-    , espressoMaker = ( Nothing, Just CoffeeCupEmpty )
+    , espressoMaker = ( Nothing, Just CoffeeCupWithEspresso )
     , hands = Nothing
     , desktopHolders = Dict.empty
     , checkoutHolders = Dict.empty
@@ -311,7 +311,7 @@ viewCoffeeCup coffeeCup =
             drawCoffeeCupShape "lightsteelblue" []
 
         CoffeeCupWithEspresso ->
-            drawCoffeeCupShape "coffee" []
+            drawCoffeeCupShape "brown" []
 
 
 drawCoffeeCupShape : String -> List (Attribute msg) -> Html msg
