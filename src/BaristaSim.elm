@@ -304,14 +304,24 @@ viewCoffeePowderDispenser mbStrainer =
         ]
 
 
-viewCoffeeCup : CoffeeCup -> Html msg
-viewCoffeeCup coffeeCup =
+viewMaybeCoffeeCup : Maybe CoffeeCup -> Html msg
+viewMaybeCoffeeCup mbCoffeeCup =
+    case mbCoffeeCup of
+        Just cc ->
+            drawCoffeeCupShape (coffeeCupToFill cc) []
+
+        Nothing ->
+            drawCoffeeCupShape "lightsteelblue" [ SA.opacity "0.2" ]
+
+
+coffeeCupToFill : CoffeeCup -> String
+coffeeCupToFill coffeeCup =
     case coffeeCup of
         CoffeeCupEmpty ->
-            drawCoffeeCupShape "lightsteelblue" []
+            "lightsteelblue"
 
         CoffeeCupWithEspresso ->
-            drawCoffeeCupShape "brown" []
+            "brown"
 
 
 drawCoffeeCupShape : String -> List (Attribute msg) -> Html msg
@@ -404,12 +414,7 @@ viewEspressoMaker ( mbStrainer, mbCup ) =
                     Nothing ->
                         "|---|"
                 )
-            , case mbCup of
-                Just cc ->
-                    viewCoffeeCup cc
-
-                Nothing ->
-                    text "|---|"
+            , viewMaybeCoffeeCup mbCup
             ]
         ]
 
