@@ -287,23 +287,41 @@ view model =
                     ]
                 , txt [ onClick TrashClicked ] "Trash"
                 ]
-            , col
-                [ class "gap05" ]
-                (List.range 0 4
-                    |> List.map
-                        (\i ->
-                            txt [ onClick (DesktopHolderClicked i) ]
-                                (Debug.toString (Dict.get i model.desktopHolders))
-                        )
-                )
+            , gRow []
+                (List.range 0 3 |> List.map (viewDesktopHolder model.desktopHolders))
+            , gRow []
+                (List.range 3 6 |> List.map (viewDesktopHolder model.desktopHolders))
             ]
         ]
+
+
+viewDesktopHolder : Dict Int DesktopHolder -> Int -> Html Msg
+viewDesktopHolder dict i =
+    let
+        mbDH =
+            Dict.get i dict
+
+        debugTitle =
+            title (Debug.toString mbDH)
+
+        clickAttr =
+            onClick (DesktopHolderClicked i)
+
+        attrs =
+            [ debugTitle, clickAttr ]
+    in
+    case mbDH of
+        Nothing ->
+            viewMaybeCoffeeCup attrs <| Nothing
+
+        Just (DH_CoffeeCup cc) ->
+            viewMaybeCoffeeCup attrs <| Just cc
 
 
 viewCoffeePowderDispenser : Maybe Strainer -> Html Msg
 viewCoffeePowderDispenser mbStrainer =
     col
-        [ class "debug-c"
+        [ class "debug"
 
         --, style "height" "200px"
         , title <| Debug.toString mbStrainer
@@ -408,7 +426,7 @@ drawStrainerShape contentFill attrs =
 
 viewEspressoMaker : EspressoMaker -> Html Msg
 viewEspressoMaker ( mbStrainer, mbCup ) =
-    col [ class "debug-c" ]
+    col [ class "debug" ]
         [ txt [] "Espresso Maker"
         , viewMaybeStrainer
             [ onClick CoffeeMakerStrainerHolderClicked
