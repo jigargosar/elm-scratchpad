@@ -259,23 +259,6 @@ view model =
                                 ]
                         )
                 )
-            , gRow [ class "tac" ]
-                [ col
-                    [ onClick StrainerHolderAClicked
-                    , title <| Debug.toString model.strainerHolderA
-                    ]
-                    [ txt [] "strainerHolderA"
-                    , viewMaybeStrainer [] model.strainerHolderA
-                    ]
-                , col
-                    [ onClick StrainerHolderAClicked
-                    , title <| Debug.toString model.strainerHolderA
-                    ]
-                    [ txt [] "strainerHolderA"
-                    , viewMaybeStrainer [] model.strainerHolderA
-                    ]
-                , txt [ onClick TrashClicked ] "Trash"
-                ]
             , fRowWrap [ onClick CoffeeCupStackClicked, contentCentered ]
                 (List.repeat 4 (viewMaybeCoffeeCup [] (Just CoffeeCupEmpty)))
             , gRow
@@ -283,18 +266,26 @@ view model =
                 ]
                 [ viewEspressoMaker model.espressoMaker
                 , viewCoffeePowderDispenser model.coffeePowderDispenser
+                , viewMaybeStrainer
+                    [ onClick StrainerHolderAClicked
+                    , title <| Debug.toString model.strainerHolderA
+                    ]
+                    model.strainerHolderA
                 ]
-            , col [ class "", title (Debug.toString model.hands) ]
-                [ txt [] "Hands"
-                , case model.hands of
-                    Nothing ->
-                        viewMaybeCoffeeCup [] Nothing
+            , gRow []
+                [ col [ class "", title (Debug.toString model.hands) ]
+                    [ txt [] "Hands"
+                    , case model.hands of
+                        Nothing ->
+                            viewMaybeCoffeeCup [] Nothing
 
-                    Just (HH_CoffeeCup cc) ->
-                        viewMaybeCoffeeCup [] (Just cc)
+                        Just (HH_CoffeeCup cc) ->
+                            viewMaybeCoffeeCup [] (Just cc)
 
-                    Just (HH_Strainer s) ->
-                        viewMaybeStrainer [] (Just s)
+                        Just (HH_Strainer s) ->
+                            viewMaybeStrainer [] (Just s)
+                    ]
+                , txt [ onClick TrashClicked ] "Trash"
                 ]
             , col
                 [ class "gap05" ]
