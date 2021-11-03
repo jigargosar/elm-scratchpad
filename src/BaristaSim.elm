@@ -292,14 +292,6 @@ view model =
         ]
 
 
-rect w h xs =
-    Svg.rect (Px.x (-w / 2) :: Px.y (-h / 2) :: Px.width w :: Px.height h :: xs) []
-
-
-viewBox2 w h =
-    TA.viewBox (-w / 2) (-h / 2) w h
-
-
 viewCoffeePowderDispenser : Maybe Strainer -> Html Msg
 viewCoffeePowderDispenser mbStrainer =
     col
@@ -346,18 +338,23 @@ viewMaybeStrainer mbStrainer =
                             StrainerWithWaste ->
                                 "#000"
                 in
-                [ Svg.circle
-                    [ SA.stroke "#000"
-                    , Px.strokeWidth 4
-                    , SA.fill "hsl(0.55turn 70% 50% / 1)"
-                    , SA.fill fillC
-                    , Px.r 16
-                    , TA.transform [ TT.Translate -16 0 ]
-                    ]
-                    []
-                , rect 32 16 [ SA.fill "#000", TA.transform [ TT.Translate 16 0 ] ]
-                ]
+                [ drawStrainerShape fillC ]
         )
+
+
+drawStrainerShape fillC =
+    group []
+        [ Svg.circle
+            [ SA.stroke "#000"
+            , Px.strokeWidth 4
+            , SA.fill "hsl(0.55turn 70% 50% / 1)"
+            , SA.fill fillC
+            , Px.r 16
+            , TA.transform [ TT.Translate -16 0 ]
+            ]
+            []
+        , rect 32 16 [ SA.fill "#000", TA.transform [ TT.Translate 16 0 ] ]
+        ]
 
 
 viewEspressoMaker : EspressoMaker -> Html Msg
@@ -396,6 +393,23 @@ viewEspressoMaker ( mbStrainer, mbCup ) =
 
 
 
+-- SVG UTILS
+
+
+group =
+    Svg.g
+
+
+rect w h xs =
+    Svg.rect (Px.x (-w / 2) :: Px.y (-h / 2) :: Px.width w :: Px.height h :: xs) []
+
+
+viewBox2 w h =
+    TA.viewBox (-w / 2) (-h / 2) w h
+
+
+
+-- HTML UTILS
 --noinspection ElmUnusedSymbol
 
 
