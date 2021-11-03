@@ -312,21 +312,14 @@ viewCoffeePowderDispenser mbStrainer =
         ]
 
 
+viewMaybeStrainer : Maybe Strainer -> Html msg
 viewMaybeStrainer mbStrainer =
-    Svg.svg
-        [ viewBox2 128 64
-        , Px.width 128
-        , SA.fill "none"
-        , SA.stroke "none"
-        , SA.class "debug"
-        ]
-        (case mbStrainer of
-            Nothing ->
-                [ drawStrainerShape (strainerToContentFill StrainerEmpty) [ SA.opacity "0.1" ] ]
+    case mbStrainer of
+        Nothing ->
+            drawStrainerShape (strainerToContentFill StrainerEmpty) [ SA.opacity "0.1" ]
 
-            Just strainer ->
-                [ drawStrainerShape (strainerToContentFill strainer) [] ]
-        )
+        Just strainer ->
+            drawStrainerShape (strainerToContentFill strainer) []
 
 
 strainerToContentFill : Strainer -> String
@@ -343,17 +336,25 @@ strainerToContentFill strainer =
 
 
 drawStrainerShape contentFill attrs =
-    group attrs
-        [ Svg.circle
-            [ SA.stroke "#000"
-            , Px.strokeWidth 4
-            , SA.fill "hsl(0.55turn 70% 50% / 1)"
-            , SA.fill contentFill
-            , Px.r 16
-            , TA.transform [ TT.Translate -16 0 ]
+    Svg.svg
+        [ viewBox2 128 64
+        , Px.width 128
+        , SA.fill "none"
+        , SA.stroke "none"
+        , SA.class "debug"
+        ]
+        [ group attrs
+            [ Svg.circle
+                [ SA.stroke "#000"
+                , Px.strokeWidth 4
+                , SA.fill "hsl(0.55turn 70% 50% / 1)"
+                , SA.fill contentFill
+                , Px.r 16
+                , TA.transform [ TT.Translate -16 0 ]
+                ]
+                []
+            , rect 32 16 [ SA.fill "#000", TA.transform [ TT.Translate 16 0 ] ]
             ]
-            []
-        , rect 32 16 [ SA.fill "#000", TA.transform [ TT.Translate 16 0 ] ]
         ]
 
 
