@@ -329,6 +329,7 @@ viewMaybeStrainer mbStrainer =
         )
 
 
+strainerToContentFill : Strainer -> String
 strainerToContentFill strainer =
     case strainer of
         StrainerEmpty ->
