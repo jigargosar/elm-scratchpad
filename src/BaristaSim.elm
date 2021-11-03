@@ -2,7 +2,7 @@ module BaristaSim exposing (..)
 
 import Browser
 import Dict exposing (Dict)
-import Html exposing (Html, div, text)
+import Html exposing (Attribute, Html, div, text)
 import Html.Attributes exposing (class, href, rel, style, title)
 import Html.Events exposing (onClick)
 import Svg
@@ -335,6 +335,7 @@ strainerToContentFill strainer =
             "#000"
 
 
+drawStrainerShape : String -> List (Attribute msg) -> Html msg
 drawStrainerShape contentFill attrs =
     Svg.svg
         [ viewBox2 128 64
