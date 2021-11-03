@@ -322,14 +322,14 @@ viewMaybeStrainer mbStrainer =
         ]
         (case mbStrainer of
             Nothing ->
-                [ drawStrainerShape "#fff" [ SA.opacity "0.1" ] ]
+                [ drawStrainerShape "steelblue" [ SA.opacity "0.1" ] ]
 
             Just strainer ->
                 let
                     fillC =
                         case strainer of
                             StrainerEmpty ->
-                                "#fff"
+                                "steelblue"
 
                             StrainerWithCoffeePowder ->
                                 "brown"
