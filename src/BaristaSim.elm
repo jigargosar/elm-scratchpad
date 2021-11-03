@@ -314,8 +314,8 @@ viewCoffeePowderDispenser mbStrainer =
 
 viewMaybeStrainer mbStrainer =
     Svg.svg
-        [ viewBox2 64 64
-        , Px.width 64
+        [ viewBox2 128 64
+        , Px.width 128
         , SA.fill "none"
         , SA.stroke "none"
         , SA.class "debug"
