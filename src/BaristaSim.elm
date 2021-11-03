@@ -264,12 +264,8 @@ view model =
                     ]
                 , txt [ onClick TrashClicked ] "Trash"
                 ]
-            , col [ onClick CoffeeCupStackClicked ]
-                [ txt [] "Coffee Cups Stack"
-                ]
-            , gRow [ onClick CoffeeCupStackClicked ]
-                [ txt [] "Coffee Cups Stack"
-                ]
+            , fRow [ onClick CoffeeCupStackClicked, contentCentered ]
+                (List.repeat 4 (viewMaybeCoffeeCup [] (Just CoffeeCupEmpty)))
             , gRow
                 [ class "gap1"
                 ]
@@ -335,7 +331,6 @@ drawCoffeeCupShape contentFill attrs =
         , Px.width 64
         , SA.fill "none"
         , SA.stroke "none"
-        , SA.class "debug"
         ]
         [ group attrs
             [ rect 16 8 [ SA.fill "#000", TA.transform [ TT.Translate 16 0 ] ]
@@ -468,7 +463,7 @@ textCentered attrs string =
 elCentered attrs singleElement =
     div
         (style "display" "grid"
-            :: style "place-content" "center"
+            :: contentCentered
             :: style "text-align" "center"
             :: attrs
         )
@@ -506,3 +501,7 @@ gridAutoFlowColumns1fr attrs =
 
 maxW =
     style "max-width"
+
+
+contentCentered =
+    style "place-content" "center"
