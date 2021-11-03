@@ -272,9 +272,17 @@ view model =
                 [ viewEspressoMaker model.espressoMaker
                 , viewCoffeePowderDispenser model.coffeePowderDispenser
                 ]
-            , div [ class "flex-row gap1" ]
+            , col [ class "", title (Debug.toString model.hands) ]
                 [ txt [] "Hands"
-                , txt [] (Debug.toString model.hands)
+                , case model.hands of
+                    Nothing ->
+                        viewMaybeCoffeeCup [] Nothing
+
+                    Just (HH_CoffeeCup cc) ->
+                        viewMaybeCoffeeCup [] (Just cc)
+
+                    Just (HH_Strainer s) ->
+                        viewMaybeStrainer [] (Just s)
                 ]
             , col
                 [ class "gap05" ]
