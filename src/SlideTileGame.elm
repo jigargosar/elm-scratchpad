@@ -83,7 +83,6 @@ view model =
         , bgc gray
         ]
         (gps
-            |> List.take (gw * gh - 1)
             |> List.indexedMap Tuple.pair
             |> List.map viewTile
         )
@@ -91,6 +90,7 @@ view model =
 
 gps =
     rangeWH gw gh
+        |> List.take (gw * gh - 1)
 
 
 type alias Tile =
