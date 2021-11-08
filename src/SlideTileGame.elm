@@ -47,12 +47,12 @@ gpToWorld =
 
 
 type alias Model =
-    {}
+    { tiles : List Tile }
 
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( {}
+    ( { tiles = initialTiles }
     , Cmd.none
     )
 
@@ -82,19 +82,22 @@ view model =
         , noStroke
         , bgc gray
         ]
-        (gps
-            |> List.indexedMap Tuple.pair
-            |> List.map viewTile
-        )
-
-
-gps =
-    rangeWH gw gh
-        |> List.take (gw * gh - 1)
+        (model.tiles |> List.map viewTile)
 
 
 type alias Tile =
     ( Int, GPos )
+
+
+initialTiles : List Tile
+initialTiles =
+    let
+        gps =
+            rangeWH gw gh
+                |> List.take (gw * gh - 1)
+    in
+    gps
+        |> List.indexedMap Tuple.pair
 
 
 viewTile : Tile -> Html Msg
