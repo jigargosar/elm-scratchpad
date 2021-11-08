@@ -57,9 +57,6 @@ type alias Model =
 init : () -> ( Model, Cmd Msg )
 init () =
     ( { tiles = initialTiles }
-        |> onGPClick ( 0, 0 )
-        |> onGPClick ( 2, 3 )
-        |> onGPClick ( 3, 3 )
     , Cmd.none
     )
 
@@ -96,17 +93,20 @@ view model =
         ]
         [ model.tiles
             |> Dict.toList
-            |> List.map viewTile
+            |> List.map viewTile3
             |> group []
-        , group
-            [ stroke "aqua"
-            , SA.strokeWidth "20"
-            , SA.opacity "0.7"
-            , xf [ mv2 (width / 2) (height / 2) ]
-            ]
-            [ circle (cz * 1.3) [ xf [ mv2 0 (cz / 2) ] ]
-            , circle (cz * 0.3) [ xf [ mv2 0 (-height * 0.5 + cz * 0.5) ] ]
-            ]
+        ]
+
+
+viewCircles =
+    group
+        [ stroke "aqua"
+        , SA.strokeWidth "20"
+        , SA.opacity "0.7"
+        , xf [ mv2 (width / 2) (height / 2) ]
+        ]
+        [ circle (cz * 1.3) [ xf [ mv2 0 (cz / 2) ] ]
+        , circle (cz * 0.3) [ xf [ mv2 0 (-height * 0.5 + cz * 0.5) ] ]
         ]
 
 
@@ -127,10 +127,12 @@ initialTiles =
     let
         gps =
             rangeWH gw gh
-                |> List.take (gw * gh - 1)
+
+        --|> List.take (gw * gh - 1)
     in
     gps
         |> List.indexedMap (\i gp -> ( gp, ( i, gp ) ))
+        |> List.filter (\( _, ( i, _ ) ) -> i /= (8 - 1))
         |> Dict.fromList
 
 
@@ -166,7 +168,7 @@ onGPClick gp model =
 
 viewTile : ( GPos, Tile ) -> Html Msg
 viewTile ( gp, ( i, _ ) ) =
-    group [ SE.onClick (GPClicked gp), xf [ mv (gpToWorld gp) ] ]
+    group [ xf [ mv (gpToWorld gp) ] ]
         [ square cz [ fillTransparent ]
         , words
             [ fill white
@@ -174,3 +176,19 @@ viewTile ( gp, ( i, _ ) ) =
             ]
             (String.fromInt (i + 1))
         ]
+
+
+viewTile2 : ( GPos, Tile ) -> Html Msg
+viewTile2 ( ( gx, gy ), ( _, ( ogx, ogy ) ) ) =
+    Svg.svg
+        [ saWidth cz
+        , saHeight cz
+        , TA.viewBox (toFloat ogx * cz) (toFloat ogy * cz) cz cz
+        ]
+        [ viewCircles ]
+        |> List.singleton
+        |> group [ xf [ mv2 (toFloat gx * cz) (toFloat gy * cz) ] ]
+
+
+viewTile3 (( gp, _ ) as x) =
+    group [ SE.onClick (GPClicked gp) ] [ viewTile x, viewTile2 x ]
