@@ -181,6 +181,11 @@ rect w h xs =
         []
 
 
+square : Float -> List (Attribute msg) -> Svg msg
+square sz =
+    rect sz sz
+
+
 words : List (Attribute msg) -> String -> Svg msg
 words xs str =
     Svg.text_

@@ -150,7 +150,7 @@ onGPClick gp model =
 viewTile : ( GPos, Tile ) -> Html Msg
 viewTile ( gp, ( i, _ ) ) =
     group [ SE.onClick (GPClicked gp), xf [ mv (gpToWorld gp) ] ]
-        [ rect cz cz [ fillTransparent ]
+        [ square cz [ fillTransparent ]
         , words
             [ fill white
             , xf [ scale 3 ]
