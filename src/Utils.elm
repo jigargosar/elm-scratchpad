@@ -156,6 +156,10 @@ fontSize =
     style "font-size"
 
 
+noUserSelect =
+    style "user-select" "none"
+
+
 words : List (Attribute msg) -> String -> Svg msg
 words xs str =
     Svg.text_

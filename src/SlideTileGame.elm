@@ -91,6 +91,7 @@ view model =
         , noFill
         , noStroke
         , bgc gray
+        , noUserSelect
         ]
         (model.tiles |> Dict.toList |> List.map viewTile)
 
