@@ -61,10 +61,11 @@ view model =
     Svg.svg
         [ saWidth width
         , saHeight height
-        , fill "none"
-        , stroke "none"
-        , style "background-color" "#333"
-        , style "background-color" "#0f0f0f"
+        , noFill
+        , noStroke
+        , bgc "#333"
+
+        --, bgc "#0f0f0f"
         ]
         ([ ( 1, ( 0, 0 ) ) ]
             |> List.map viewTile

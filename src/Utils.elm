@@ -10,6 +10,18 @@ import TypedSvg.Attributes as TA
 import TypedSvg.Types as TT
 
 
+bgc =
+    style "background-color"
+
+
+noFill =
+    fill "none"
+
+
+noStroke =
+    stroke "none"
+
+
 saWidth =
     SA.width << String.fromFloat
 
