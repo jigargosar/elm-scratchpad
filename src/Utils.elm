@@ -11,12 +11,23 @@ import TypedSvg.Attributes as TA
 import TypedSvg.Types as TT
 
 
-type alias Vec =
-    { x : Float, y : Float }
-
-
 type alias GPos =
     ( Int, Int )
+
+
+rangeWH : Int -> Int -> List GPos
+rangeWH w h =
+    rangeN h
+        |> List.concatMap (\y -> rangeN w |> List.map (\x -> ( x, y )))
+
+
+rangeN : Int -> List Int
+rangeN n =
+    List.range 0 (n - 1)
+
+
+type alias Vec =
+    { x : Float, y : Float }
 
 
 vFromGP : GPos -> Vec

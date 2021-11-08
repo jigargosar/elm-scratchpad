@@ -29,13 +29,21 @@ height =
     width
 
 
-cw =
-    50
+gw =
+    4
+
+
+gh =
+    4
+
+
+cz =
+    width / min gw gh
 
 
 gpToWorld : GPos -> Vec
 gpToWorld =
-    vFromGP >> vScale cw >> vAdd1 (cw / 2)
+    vFromGP >> vScale cz >> vAdd1 (cz / 2)
 
 
 type alias Model =
@@ -74,7 +82,8 @@ view model =
         , noStroke
         , bgc gray
         ]
-        ([ ( 1, ( 0, 0 ) ) ]
+        (rangeWH gw gh
+            |> List.indexedMap Tuple.pair
             |> List.map viewTile
         )
 
