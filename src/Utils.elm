@@ -8,6 +8,7 @@ import Svg exposing (Svg)
 import Svg.Attributes as SA
 import Time
 import TypedSvg.Attributes as TA
+import TypedSvg.Attributes.InPx as Px
 import TypedSvg.Types as TT
 
 
@@ -166,6 +167,18 @@ fontSize =
 
 noUserSelect =
     style "user-select" "none"
+
+
+rect : Float -> Float -> List (Attribute msg) -> Svg msg
+rect w h xs =
+    Svg.rect
+        (saWidth w
+            :: saHeight h
+            :: Px.x (w / -2)
+            :: Px.y (h / -2)
+            :: xs
+        )
+        []
 
 
 words : List (Attribute msg) -> String -> Svg msg

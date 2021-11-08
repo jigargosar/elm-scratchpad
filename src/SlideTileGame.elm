@@ -150,14 +150,7 @@ onGPClick gp model =
 viewTile : ( GPos, Tile ) -> Html Msg
 viewTile ( gp, ( i, _ ) ) =
     group [ SE.onClick (GPClicked gp), xf [ mv (gpToWorld gp) ] ]
-        [ Svg.rect
-            [ saWidth cz
-            , saHeight cz
-            , Px.x (cz / -2)
-            , Px.y (cz / -2)
-            , fillTransparent
-            ]
-            []
+        [ rect cz cz [ fillTransparent ]
         , words
             [ fill white
             , xf [ scale 3 ]
