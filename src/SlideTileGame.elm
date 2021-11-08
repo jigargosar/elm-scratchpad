@@ -1,6 +1,7 @@
 module SlideTileGame exposing (..)
 
 import Browser
+import Dict exposing (Dict)
 import Html exposing (Attribute, Html)
 import Html.Attributes exposing (style)
 import Svg exposing (Svg)
@@ -47,7 +48,7 @@ gpToWorld =
 
 
 type alias Model =
-    { tiles : List Tile }
+    { tiles : Dict GPos Tile }
 
 
 init : () -> ( Model, Cmd Msg )
@@ -82,14 +83,14 @@ view model =
         , noStroke
         , bgc gray
         ]
-        (model.tiles |> List.map viewTile)
+        (model.tiles |> Dict.toList |> List.map viewTile)
 
 
 type alias Tile =
     ( Int, GPos )
 
 
-initialTiles : List Tile
+initialTiles : Dict GPos Tile
 initialTiles =
     let
         gps =
@@ -97,11 +98,33 @@ initialTiles =
                 |> List.take (gw * gh - 1)
     in
     gps
-        |> List.indexedMap Tuple.pair
+        |> List.indexedMap (\i gp -> ( gp, ( i, gp ) ))
+        |> Dict.fromList
 
 
-viewTile : Tile -> Html Msg
-viewTile ( i, gp ) =
+onTileClick : GPos -> Model -> Model
+onTileClick gp model =
+    let
+        adjGPS : List GPos
+        adjGPS =
+            Debug.todo "todo"
+
+        updatedTiles =
+            Maybe.map2
+                (\emptyGP gpTile ->
+                    model.tiles
+                        |> Dict.remove gp
+                        |> Dict.insert emptyGP gpTile
+                )
+                (List.filter (\k -> Dict.member k model.tiles |> not) adjGPS |> List.head)
+                (Dict.get gp model.tiles)
+                |> Maybe.withDefault model.tiles
+    in
+    { model | tiles = updatedTiles }
+
+
+viewTile : ( GPos, Tile ) -> Html Msg
+viewTile ( gp, ( i, _ ) ) =
     words
         [ fill white
         , xf [ mv (gpToWorld gp), scale 3 ]
