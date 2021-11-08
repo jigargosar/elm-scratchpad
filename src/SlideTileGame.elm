@@ -54,7 +54,7 @@ type alias Model =
 init : () -> ( Model, Cmd Msg )
 init () =
     ( { tiles = initialTiles }
-        |> onTileClick ( 0, 0 )
+        |> onTileClick ( 2, 3 )
     , Cmd.none
     )
 
