@@ -63,6 +63,10 @@ mv2 =
     TT.Translate
 
 
+scale s =
+    TT.Scale s s
+
+
 mv { x, y } =
     mv2 x y
 

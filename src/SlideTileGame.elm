@@ -96,6 +96,6 @@ viewTile : Tile -> Html Msg
 viewTile ( i, gp ) =
     words
         [ fill white
-        , xf [ mv (gpToWorld gp) ]
+        , xf [ mv (gpToWorld gp), scale 3 ]
         ]
         (String.fromInt i)
