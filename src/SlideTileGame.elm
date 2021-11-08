@@ -57,6 +57,7 @@ init () =
     ( { tiles = initialTiles }
         |> onTileClick ( 0, 0 )
         |> onTileClick ( 2, 3 )
+        |> onTileClick ( 3, 3 )
     , Cmd.none
     )
 
