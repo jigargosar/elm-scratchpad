@@ -25,15 +25,15 @@ main =
 
 
 width =
-    480
+    gw * cz
 
 
 height =
-    width
+    gh * cz
 
 
 gw =
-    4
+    3
 
 
 gh =
@@ -41,7 +41,7 @@ gh =
 
 
 cz =
-    width / min gw gh
+    160
 
 
 gpToWorld : GPos -> Vec
@@ -94,7 +94,24 @@ view model =
         , bgc gray
         , noUserSelect
         ]
-        (model.tiles |> Dict.toList |> List.map viewTile)
+        [ model.tiles
+            |> Dict.toList
+            |> List.map viewTile
+            |> group []
+        , group
+            [ stroke "aqua"
+            , SA.strokeWidth "10"
+            , SA.opacity "0.7"
+            , xf [ mv2 (width / 2) (height / 2) ]
+            ]
+            [ circle (height * 0.3) [ xf [ mv2 0 (cz / 2) ] ]
+            , circle (cz / 2) []
+            ]
+        ]
+
+
+circle r xs =
+    Svg.circle (Px.r r :: xs) []
 
 
 type alias Tile =
