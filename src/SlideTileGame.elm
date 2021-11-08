@@ -63,9 +63,7 @@ view model =
         , saHeight height
         , noFill
         , noStroke
-        , bgc "#333"
-
-        --, bgc "#0f0f0f"
+        , bgc gray
         ]
         ([ ( 1, ( 0, 0 ) ) ]
             |> List.map viewTile
@@ -82,4 +80,4 @@ type alias GPos =
 
 viewTile : Tile -> Html Msg
 viewTile ( i, ( gx, gy ) ) =
-    words [ fill "white" ] "A AA AA AA AA AA AA AA AA AA A"
+    words [ fill white ] "A AA AA AA AA AA AA AA AA AA A"
