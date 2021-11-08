@@ -126,22 +126,6 @@ getEmptyGP td =
 onTileClick : GPos -> Model -> Model
 onTileClick gp model =
     let
-        --adjGPS : List GPos
-        --adjGPS =
-        --    adjacentGPSInGridOf gw gh gp
-        --mbEmptyAdjGPS =
-        --    List.filter (\k -> Dict.member k model.tiles |> not) adjGPS
-        --        |> List.head
-        --updatedTiles1 =
-        --    Maybe.map2
-        --        (\emptyGP gpTile ->
-        --            model.tiles
-        --                |> Dict.remove gp
-        --                |> Dict.insert emptyGP gpTile
-        --        )
-        --        mbEmptyAdjGPS
-        --        (Dict.get gp model.tiles)
-        --        |> Maybe.withDefault model.tiles
         updatedTiles =
             case ( Dict.get gp model.tiles, areAdjacent gp (getEmptyGP model.tiles) ) of
                 ( Just gpTile, True ) ->
