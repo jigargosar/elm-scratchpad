@@ -136,6 +136,10 @@ noFill =
     fill "none"
 
 
+fillTransparent =
+    fill "transparent"
+
+
 noStroke =
     stroke "none"
 

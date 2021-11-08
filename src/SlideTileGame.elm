@@ -155,7 +155,7 @@ viewTile ( gp, ( i, _ ) ) =
             , saHeight cz
             , Px.x (cz / -2)
             , Px.y (cz / -2)
-            , fill "transparent"
+            , fillTransparent
             ]
             []
         , words
