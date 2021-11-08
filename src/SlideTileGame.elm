@@ -54,6 +54,7 @@ type alias Model =
 init : () -> ( Model, Cmd Msg )
 init () =
     ( { tiles = initialTiles }
+        |> onTileClick ( 0, 0 )
     , Cmd.none
     )
 
@@ -102,12 +103,29 @@ initialTiles =
         |> Dict.fromList
 
 
+adjacentGPS w h gp =
+    let
+        adjacentOffsets =
+            [ ( 1, 0 ), ( 0, 1 ), ( -1, 0 ), ( 0, -1 ) ]
+
+        gpAdd : GPos -> GPos -> GPos
+        gpAdd ( a, b ) ( c, d ) =
+            ( a + c, b + d )
+
+        validateGP m =
+            rangeWH w h |> List.member m
+    in
+    adjacentOffsets
+        |> List.map (gpAdd gp)
+        |> List.filter validateGP
+
+
 onTileClick : GPos -> Model -> Model
 onTileClick gp model =
     let
         adjGPS : List GPos
         adjGPS =
-            Debug.todo "todo"
+            adjacentGPS gw gh gp
 
         updatedTiles =
             Maybe.map2
