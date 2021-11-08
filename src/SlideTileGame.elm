@@ -9,6 +9,7 @@ import Svg.Attributes as SA
 import Svg.Events as SE
 import Time
 import TypedSvg.Attributes as TA
+import TypedSvg.Attributes.InPx as Px
 import TypedSvg.Types as TT
 import Utils exposing (..)
 
@@ -148,9 +149,18 @@ onGPClick gp model =
 
 viewTile : ( GPos, Tile ) -> Html Msg
 viewTile ( gp, ( i, _ ) ) =
-    words
-        [ fill white
-        , xf [ mv (gpToWorld gp), scale 3 ]
-        , SE.onClick (GPClicked gp)
+    group [ SE.onClick (GPClicked gp), xf [ mv (gpToWorld gp) ] ]
+        [ Svg.rect
+            [ saWidth cz
+            , saHeight cz
+            , Px.x (cz / -2)
+            , Px.y (cz / -2)
+            , fill "transparent"
+            ]
+            []
+        , words
+            [ fill white
+            , xf [ scale 3 ]
+            ]
+            (String.fromInt (i + 1))
         ]
-        (String.fromInt (i + 1))
