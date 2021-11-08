@@ -98,4 +98,4 @@ viewTile ( i, gp ) =
         [ fill white
         , xf [ mv (gpToWorld gp), scale 3 ]
         ]
-        (String.fromInt i)
+        (String.fromInt (i + 1))
