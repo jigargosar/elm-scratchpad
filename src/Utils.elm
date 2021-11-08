@@ -15,8 +15,8 @@ type alias GPos =
     ( Int, Int )
 
 
-adjacentGPS : Int -> Int -> GPos -> List GPos
-adjacentGPS w h gp =
+adjacentGPSInGridOf : Int -> Int -> GPos -> List GPos
+adjacentGPSInGridOf w h gp =
     let
         adjacentOffsets =
             [ ( 1, 0 ), ( 0, 1 ), ( -1, 0 ), ( 0, -1 ) ]
@@ -31,6 +31,21 @@ adjacentGPS w h gp =
     adjacentOffsets
         |> List.map (gpAdd gp)
         |> List.filter validateGP
+
+
+areAdjacent : GPos -> GPos -> Bool
+areAdjacent gp1 gp2 =
+    let
+        adjacentOffsets =
+            [ ( 1, 0 ), ( 0, 1 ), ( -1, 0 ), ( 0, -1 ) ]
+
+        gpAdd : GPos -> GPos -> GPos
+        gpAdd ( a, b ) ( c, d ) =
+            ( a + c, b + d )
+    in
+    adjacentOffsets
+        |> List.map (gpAdd gp1)
+        |> List.member gp2
 
 
 rangeWH : Int -> Int -> List GPos
