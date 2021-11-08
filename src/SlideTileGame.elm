@@ -6,6 +6,7 @@ import Html exposing (Attribute, Html)
 import Html.Attributes exposing (style)
 import Svg exposing (Svg)
 import Svg.Attributes as SA
+import Svg.Events as SE
 import Time
 import TypedSvg.Attributes as TA
 import TypedSvg.Types as TT
@@ -55,15 +56,16 @@ type alias Model =
 init : () -> ( Model, Cmd Msg )
 init () =
     ( { tiles = initialTiles }
-        |> onTileClick ( 0, 0 )
-        |> onTileClick ( 2, 3 )
-        |> onTileClick ( 3, 3 )
+        |> onGPClick ( 0, 0 )
+        |> onGPClick ( 2, 3 )
+        |> onGPClick ( 3, 3 )
     , Cmd.none
     )
 
 
 type Msg
     = OnTick
+    | GPClicked GPos
 
 
 subscriptions : Model -> Sub Msg
@@ -76,6 +78,9 @@ update msg model =
     case msg of
         OnTick ->
             ( model, Cmd.none )
+
+        GPClicked gp ->
+            ( onGPClick gp model, Cmd.none )
 
 
 view : Model -> Html Msg
@@ -124,8 +129,8 @@ getEmptyGP td =
             gp
 
 
-onTileClick : GPos -> Model -> Model
-onTileClick gp model =
+onGPClick : GPos -> Model -> Model
+onGPClick gp model =
     let
         updatedTiles =
             case ( Dict.get gp model.tiles, areAdjacent gp (getEmptyGP model.tiles) ) of
@@ -145,5 +150,6 @@ viewTile ( gp, ( i, _ ) ) =
     words
         [ fill white
         , xf [ mv (gpToWorld gp), scale 3 ]
+        , SE.onClick (GPClicked gp)
         ]
         (String.fromInt (i + 1))
