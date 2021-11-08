@@ -21,6 +21,23 @@ main =
         }
 
 
+width =
+    480
+
+
+height =
+    width
+
+
+cw =
+    50
+
+
+gpToWorld : GPos -> Vec
+gpToWorld =
+    vFromGP >> vScale cw >> vAdd1 (cw / 2)
+
+
 type alias Model =
     {}
 
@@ -48,14 +65,6 @@ update msg model =
             ( model, Cmd.none )
 
 
-width =
-    480
-
-
-height =
-    width
-
-
 view : Model -> Html Msg
 view model =
     Svg.svg
@@ -72,15 +81,6 @@ view model =
 
 type alias Tile =
     ( Int, GPos )
-
-
-cw =
-    50
-
-
-gpToWorld : GPos -> Vec
-gpToWorld =
-    vFromGP >> vScale cw >> vAdd1 (cw / 2)
 
 
 viewTile : Tile -> Html Msg
