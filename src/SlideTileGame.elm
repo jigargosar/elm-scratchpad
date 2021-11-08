@@ -1,11 +1,13 @@
 module SlideTileGame exposing (..)
 
 import Browser
-import Html exposing (Html)
+import Html exposing (Attribute, Html)
 import Html.Attributes exposing (style)
-import Svg
+import Svg exposing (Svg)
 import Svg.Attributes as SA
 import Time
+import TypedSvg.Attributes as TA
+import TypedSvg.Types as TT
 
 
 main : Program () Model Msg
@@ -63,4 +65,36 @@ view model =
         , style "background-color" "#333"
         , style "background-color" "#0f0f0f"
         ]
-        []
+        ([ ( 1, ( 0, 0 ) ) ]
+            |> List.map viewTile
+        )
+
+
+type alias Tile =
+    ( Int, GPos )
+
+
+type alias GPos =
+    ( Int, Int )
+
+
+viewTile : Tile -> Html Msg
+viewTile ( i, ( gx, gy ) ) =
+    Svg.text_
+        [ SA.fill "white"
+        , style "font-size" "30px"
+        , style "transform" "scale(2) translateY(0px)"
+        , SA.textAnchor "middle"
+        , SA.dominantBaseline "central"
+        ]
+        [ Svg.text "A AA AA AA AA AA AA AA AA AA A" ]
+
+
+words : List (Attribute msg) -> String -> Svg msg
+words xs str =
+    Svg.text_
+        (SA.textAnchor "middle"
+            :: SA.dominantBaseline "central"
+            :: xs
+        )
+        [ Svg.text str ]
