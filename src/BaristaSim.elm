@@ -407,7 +407,8 @@ drawStrainerShape contentFill attrs =
         , Px.width 128
         , SA.fill "none"
         , SA.stroke "none"
-        , SA.class "debug"
+
+        --, SA.class "debug"
         ]
         [ group attrs
             [ Svg.circle
