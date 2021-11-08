@@ -85,5 +85,8 @@ gpToWorld =
 
 viewTile : Tile -> Html Msg
 viewTile ( i, gp ) =
-    words [ fill white, xf [ mv <| gpToWorld gp ] ] <|
-        String.fromInt i
+    words
+        [ fill white
+        , xf [ mv (gpToWorld gp) ]
+        ]
+        (String.fromInt i)
