@@ -78,12 +78,12 @@ cw =
     50
 
 
-gPosToWorld : GPos -> Vec
-gPosToWorld =
+gpToWorld : GPos -> Vec
+gpToWorld =
     vFromGP >> vScale cw >> vAdd1 (cw / 2)
 
 
 viewTile : Tile -> Html Msg
 viewTile ( i, gp ) =
-    words [ fill white, xf [ mv <| gPosToWorld gp ] ] <|
+    words [ fill white, xf [ mv <| gpToWorld gp ] ] <|
         String.fromInt i
