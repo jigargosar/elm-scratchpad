@@ -48,7 +48,7 @@ gpToWorld =
 
 
 type alias Model =
-    { tiles : Dict GPos Tile
+    { tiles : TilesDict
     }
 
 
@@ -92,7 +92,11 @@ type alias Tile =
     ( Int, GPos )
 
 
-initialTiles : Dict GPos Tile
+type alias TilesDict =
+    Dict GPos Tile
+
+
+initialTiles : TilesDict
 initialTiles =
     let
         gps =
@@ -104,9 +108,18 @@ initialTiles =
         |> Dict.fromList
 
 
-isEmptyGP : Model -> GPos -> Bool
-isEmptyGP model gp =
-    Debug.todo "todo"
+getEmptyGP : TilesDict -> GPos
+getEmptyGP td =
+    case
+        rangeWH gw gh
+            |> List.filter (\k -> Dict.member k td |> not)
+            |> List.head
+    of
+        Nothing ->
+            Debug.todo "this should never happen"
+
+        Just gp ->
+            gp
 
 
 onTileClick : GPos -> Model -> Model
@@ -120,7 +133,7 @@ onTileClick gp model =
             List.filter (\k -> Dict.member k model.tiles |> not) adjGPS
                 |> List.head
 
-        updatedTiles =
+        updatedTiles1 =
             Maybe.map2
                 (\emptyGP gpTile ->
                     model.tiles
@@ -130,6 +143,16 @@ onTileClick gp model =
                 mbEmptyAdjGPS
                 (Dict.get gp model.tiles)
                 |> Maybe.withDefault model.tiles
+
+        updatedTiles =
+            case Dict.get gp model.tiles of
+                Nothing ->
+                    model.tiles
+
+                Just gpTile ->
+                    model.tiles
+                        |> Dict.remove gp
+                        |> Dict.insert (getEmptyGP model.tiles) gpTile
     in
     { model | tiles = updatedTiles }
 
