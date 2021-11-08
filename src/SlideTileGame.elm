@@ -55,6 +55,7 @@ type alias Model =
 init : () -> ( Model, Cmd Msg )
 init () =
     ( { tiles = initialTiles }
+        |> onTileClick ( 0, 0 )
         |> onTileClick ( 2, 3 )
     , Cmd.none
     )
@@ -142,14 +143,14 @@ onTileClick gp model =
         --        (Dict.get gp model.tiles)
         --        |> Maybe.withDefault model.tiles
         updatedTiles =
-            case Dict.get gp model.tiles of
-                Nothing ->
-                    model.tiles
-
-                Just gpTile ->
+            case ( Dict.get gp model.tiles, areAdjacent gp (getEmptyGP model.tiles) ) of
+                ( Just gpTile, True ) ->
                     model.tiles
                         |> Dict.remove gp
                         |> Dict.insert (getEmptyGP model.tiles) gpTile
+
+                _ ->
+                    model.tiles
     in
     { model | tiles = updatedTiles }
 
