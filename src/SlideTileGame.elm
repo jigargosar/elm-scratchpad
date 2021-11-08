@@ -80,4 +80,5 @@ type alias GPos =
 
 viewTile : Tile -> Html Msg
 viewTile ( i, ( gx, gy ) ) =
-    words [ fill white ] "A AA AA AA AA AA AA AA AA AA A"
+    words [ fill white, xf [ mv2 10 10 ] ] <|
+        String.fromInt i
