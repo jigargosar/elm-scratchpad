@@ -8,6 +8,7 @@ import Svg.Attributes as SA
 import Time
 import TypedSvg.Attributes as TA
 import TypedSvg.Types as TT
+import Utils exposing (..)
 
 
 main : Program () Model Msg
@@ -58,10 +59,10 @@ height =
 view : Model -> Html Msg
 view model =
     Svg.svg
-        [ SA.width (String.fromFloat width)
-        , SA.height (String.fromFloat height)
-        , SA.fill "none"
-        , SA.stroke "none"
+        [ saWidth width
+        , saHeight height
+        , fill "none"
+        , stroke "none"
         , style "background-color" "#333"
         , style "background-color" "#0f0f0f"
         ]
@@ -80,21 +81,4 @@ type alias GPos =
 
 viewTile : Tile -> Html Msg
 viewTile ( i, ( gx, gy ) ) =
-    Svg.text_
-        [ SA.fill "white"
-        , style "font-size" "30px"
-        , style "transform" "scale(2) translateY(0px)"
-        , SA.textAnchor "middle"
-        , SA.dominantBaseline "central"
-        ]
-        [ Svg.text "A AA AA AA AA AA AA AA AA AA A" ]
-
-
-words : List (Attribute msg) -> String -> Svg msg
-words xs str =
-    Svg.text_
-        (SA.textAnchor "middle"
-            :: SA.dominantBaseline "central"
-            :: xs
-        )
-        [ Svg.text str ]
+    words [ fill "white" ] "A AA AA AA AA AA AA AA AA AA A"
