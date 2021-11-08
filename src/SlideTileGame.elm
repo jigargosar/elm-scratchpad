@@ -83,6 +83,7 @@ view model =
         , bgc gray
         ]
         (rangeWH gw gh
+            |> List.take (gw * gh - 1)
             |> List.indexedMap Tuple.pair
             |> List.map viewTile
         )
