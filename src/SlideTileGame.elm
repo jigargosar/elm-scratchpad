@@ -74,11 +74,16 @@ type alias Tile =
     ( Int, GPos )
 
 
-type alias GPos =
-    ( Int, Int )
+cw =
+    50
+
+
+gPosToWorld : GPos -> Vec
+gPosToWorld =
+    vFromGP >> vScale cw >> vAdd1 (cw / 2)
 
 
 viewTile : Tile -> Html Msg
-viewTile ( i, ( gx, gy ) ) =
-    words [ fill white, xf [ mv2 10 10 ] ] <|
+viewTile ( i, gp ) =
+    words [ fill white, xf [ mv <| gPosToWorld gp ] ] <|
         String.fromInt i

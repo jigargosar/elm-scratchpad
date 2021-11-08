@@ -11,12 +11,49 @@ import TypedSvg.Attributes as TA
 import TypedSvg.Types as TT
 
 
+type alias Vec =
+    { x : Float, y : Float }
+
+
+type alias GPos =
+    ( Int, Int )
+
+
+vFromGP : GPos -> Vec
+vFromGP ( gx, gy ) =
+    vec (toFloat gx) (toFloat gy)
+
+
+vec : Float -> Float -> Vec
+vec =
+    Vec
+
+
+vScale : Float -> Vec -> Vec
+vScale s { x, y } =
+    vec (s * x) (s * y)
+
+
+vSub1 : Float -> Vec -> Vec
+vSub1 a { x, y } =
+    vec (x - a) (y - a)
+
+
+vAdd1 : Float -> Vec -> Vec
+vAdd1 a { x, y } =
+    vec (x + a) (y + a)
+
+
 xf =
     TA.transform
 
 
 mv2 =
     TT.Translate
+
+
+mv { x, y } =
+    mv2 x y
 
 
 black =
