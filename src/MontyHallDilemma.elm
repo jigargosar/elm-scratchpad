@@ -132,13 +132,9 @@ viewSummary games =
                 |> mul 0.01
     in
     div []
-        [ [ "Won: "
-                ++ String.fromInt won
-          , "Total: "
-                ++ String.fromInt total
-          , "Win Pct: "
-                ++ String.fromFloat winPct
-                ++ "%"
+        [ [ "Won: " ++ String.fromInt won
+          , "Total: " ++ String.fromInt total
+          , "Win Pct: " ++ String.fromFloat winPct ++ "%"
           ]
             |> String.join " "
             |> text
