@@ -125,13 +125,18 @@ viewSummary games =
 
         won =
             List.filter didWin games |> List.length
+
+        winPct =
+            toFloat won / toFloat total * 100
     in
     div []
         [ text "Won: "
         , String.fromInt won |> text
         , text " "
         , text "Total: "
-        , String.fromInt total |> text
+        , text " "
+        , text "Win Pct: "
+        , String.fromFloat winPct |> text
         ]
 
 
