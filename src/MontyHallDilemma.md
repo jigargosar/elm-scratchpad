@@ -3,9 +3,10 @@
 ## The Problem Statement: 
 * In a game show:
 * The player is offered to choose one of three closed doors.
-* Hidden from the player only one of the door contains a car, while other two are empty.
+* With their content being hidden from the player.
+* Only one door hides a car, while the other two hide one sheep each.
 * After player makes the initial choice, the host opens one of the other two doors.
-* The content of which are always empty.
+* The content of which is always a sheep.
 * The player is then offered to, either stick with their initial choice, or switch.
 * What strategy, if any, can increase their odds of choosing the door with car hidden behind it.
 
