@@ -86,7 +86,8 @@ type alias Game =
 
 
 type SwapState
-    = SwapState
+    = NoSwap
+    | SwappedFrom Int
 
 
 didWin : Game -> Bool
@@ -96,7 +97,7 @@ didWin { car, selection } =
 
 randomGameStick : Generator Game
 randomGameStick =
-    Random.map2 (Game SwapState)
+    Random.map2 (Game NoSwap)
         (Random.uniform 1 [ 2, 3 ])
         (Random.uniform 1 [ 2, 3 ])
 
@@ -129,7 +130,7 @@ revealAndSwapSelection game =
                 |> List.head
                 |> Maybe.withDefault 1
     in
-    { game | selection = newSelection }
+    { game | selection = newSelection, swapState = SwappedFrom game.selection }
 
 
 view : Model -> Html Msg
