@@ -2,7 +2,7 @@
 
 ## Game Show:
 * There are three doors, with their contents hidden from the player.
-* Only one of the door has car hidden behind it.
+* Only one of the door has car hidden behind it, while other two are empty.
 * The host offers the player to choose one of the three doors.
 * After player makes the initial choice, the host opens one of the remaining two doors.
 * The content of which are always empty.
