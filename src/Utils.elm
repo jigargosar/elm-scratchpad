@@ -169,6 +169,11 @@ noUserSelect =
     style "user-select" "none"
 
 
+circle : Float -> List (Attribute msg) -> Svg msg
+circle r xs =
+    Svg.circle (Px.r r :: xs) []
+
+
 rect : Float -> Float -> List (Attribute msg) -> Svg msg
 rect w h xs =
     Svg.rect
