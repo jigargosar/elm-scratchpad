@@ -82,6 +82,11 @@ type alias Game =
     { car : Int, selection : Int }
 
 
+didWin : Game -> Bool
+didWin { car, selection } =
+    car == selection
+
+
 initGame : Game
 initGame =
     { car = 0, selection = 0 }
@@ -102,18 +107,39 @@ randomGames n =
 view : Model -> Html Msg
 view _ =
     let
-        ls =
+        games =
             Random.step (randomGames 10) (Random.initialSeed 0)
                 |> first
     in
-    div [] (ls |> List.map viewGame)
+    div []
+        [ viewSummary games
+        , div [] (games |> List.map viewGame)
+        ]
+
+
+viewSummary : List Game -> Html msg
+viewSummary games =
+    let
+        total =
+            List.length games
+
+        won =
+            List.filter didWin games |> List.length
+    in
+    div []
+        [ text "Won: "
+        , String.fromInt won |> text
+        , text " "
+        , text "Total: "
+        , String.fromInt total |> text
+        ]
 
 
 viewGame : Game -> Html msg
-viewGame ({ car, selection } as game) =
+viewGame game =
     let
         txt =
-            if car == selection then
+            if didWin game then
                 "Win"
 
             else
