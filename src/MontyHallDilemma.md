@@ -11,3 +11,6 @@
   
   
 
+# Other Thoughts
+* The only interesting thing about mathematics is the subject of probability.
+  * Or how did a young student, who hated maths, ended up independently deriving Bayes Theorem.
