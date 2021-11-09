@@ -9,6 +9,7 @@ import Svg exposing (Svg)
 import Svg.Attributes as SA
 import Svg.Events as SE
 import Time
+import Tuple exposing (first)
 import TypedSvg.Attributes as TA
 import TypedSvg.Attributes.InPx as Px
 import TypedSvg.Types as TT
@@ -93,13 +94,38 @@ randomGame =
         (Random.uniform 1 [ 2, 3 ])
 
 
+randomGames : Int -> Generator (List Game)
+randomGames n =
+    Random.list n randomGame
+
+
 view : Model -> Html Msg
 view _ =
     let
-        _ =
-            1
+        ls =
+            Random.step (randomGames 10) (Random.initialSeed 0)
+                |> first
     in
-    div [] [ text "" ]
+    div [] (ls |> List.map viewGame)
+
+
+viewGame : Game -> Html msg
+viewGame ({ car, selection } as game) =
+    let
+        txt =
+            if car == selection then
+                "Win"
+
+            else
+                "Loss"
+    in
+    div []
+        [ div []
+            [ Debug.toString game |> text
+            , text ": "
+            , text txt
+            ]
+        ]
 
 
 
