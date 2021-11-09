@@ -9,7 +9,7 @@
 * Once again, the player is offered to choose one of the two closed doors.
 * Now, the player has two options:
 * Either to stick with their initial choice, or switch.
-* What strategy, if any, can help player increase their odds of winning the car?
+* What strategy, if any, can help player increase their odds of choosing the door with car hidden behind it.
   
   
   
