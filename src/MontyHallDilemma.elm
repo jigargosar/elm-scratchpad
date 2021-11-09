@@ -76,6 +76,10 @@ update msg model =
             ( model, Cmd.none )
 
 
+type alias Game =
+    { car : Int, selection : Int }
+
+
 view : Model -> Html Msg
 view _ =
     let
