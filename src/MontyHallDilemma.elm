@@ -108,17 +108,10 @@ revealAndSwapSelection game =
 
         revealedDoor : Int
         revealedDoor =
-            if game.selection /= game.car then
-                [ 2, 3 ]
-                    |> List.filter (isCarOrSelected >> not)
-                    |> List.head
-                    |> Maybe.withDefault 1
-
-            else
-                [ 2, 3 ]
-                    |> List.filter (isCarOrSelected >> not)
-                    |> List.head
-                    |> Maybe.withDefault 1
+            [ 2, 3 ]
+                |> List.filter (isCarOrSelected >> not)
+                |> List.head
+                |> Maybe.withDefault 1
 
         isSelectedOrRevealed : Int -> Bool
         isSelectedOrRevealed i =
