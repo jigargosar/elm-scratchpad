@@ -87,23 +87,56 @@ didWin { car, selection } =
     car == selection
 
 
-randomGame : Generator Game
-randomGame =
+randomGameStick : Generator Game
+randomGameStick =
     Random.map2 Game
         (Random.uniform 1 [ 2, 3 ])
         (Random.uniform 1 [ 2, 3 ])
 
 
-randomGames : Int -> Generator (List Game)
-randomGames n =
-    Random.list n randomGame
+randomGameSwap : Generator Game
+randomGameSwap =
+    randomGameStick
+        |> Random.map revealAndSwapSelection
+
+
+revealAndSwapSelection : Game -> Game
+revealAndSwapSelection game =
+    let
+        isCarOrSelected i =
+            i == game.car || i == game.selection
+
+        revealedDoor : Int
+        revealedDoor =
+            if game.selection /= game.car then
+                [ 2, 3 ]
+                    |> List.filter (isCarOrSelected >> not)
+                    |> List.head
+                    |> Maybe.withDefault 1
+
+            else
+                [ 2, 3 ]
+                    |> List.filter (isCarOrSelected >> not)
+                    |> List.head
+                    |> Maybe.withDefault 1
+
+        isSelectedOrRevealed : Int -> Bool
+        isSelectedOrRevealed i =
+            i == game.selection || i == revealedDoor
+
+        newSelection =
+            List.filter (isSelectedOrRevealed >> not) [ 2, 3 ]
+                |> List.head
+                |> Maybe.withDefault 1
+    in
+    { game | selection = newSelection }
 
 
 view : Model -> Html Msg
 view _ =
     let
         games =
-            Random.step (randomGames maxGames)
+            Random.step (Random.list maxGames randomGameSwap)
                 (Random.initialSeed 0)
                 |> first
 
