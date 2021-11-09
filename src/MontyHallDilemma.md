@@ -3,8 +3,7 @@
 ## The Problem Statement: 
 * In a game show:
 * The player is offered to choose one of three closed doors.
-* With their content being hidden from the player.
-* Only one door hides a car, while the other two hide one sheep each.
+* Only one door hides a car, while the other two hide a sheep each.
 * After player makes the initial choice:
 * The host opens one of the other two doors, always revealing a sheep.
 * The player is then offered to, either stick with their initial choice, or switch.
