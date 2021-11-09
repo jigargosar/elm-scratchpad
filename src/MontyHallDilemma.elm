@@ -4,6 +4,7 @@ import Browser
 import Dict exposing (Dict)
 import Html exposing (Attribute, Html, div, text)
 import Html.Attributes exposing (style)
+import Random exposing (Generator)
 import Svg exposing (Svg)
 import Svg.Attributes as SA
 import Svg.Events as SE
@@ -78,6 +79,18 @@ update msg model =
 
 type alias Game =
     { car : Int, selection : Int }
+
+
+initGame : Game
+initGame =
+    { car = 0, selection = 0 }
+
+
+randomGame : Generator Game
+randomGame =
+    Random.map2 Game
+        (Random.uniform 1 [ 2, 3 ])
+        (Random.uniform 1 [ 2, 3 ])
 
 
 view : Model -> Html Msg
