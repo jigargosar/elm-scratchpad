@@ -126,7 +126,8 @@ viewSummary games =
             List.filter didWin games |> List.length
 
         winPct =
-            (toFloat won / toFloat total * 100 * 100)
+            (toFloat won / toFloat total * 100)
+                |> mul 100
                 |> round
                 |> toFloat
                 |> mul 0.01
