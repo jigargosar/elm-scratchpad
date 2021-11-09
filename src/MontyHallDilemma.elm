@@ -2,7 +2,7 @@ module MontyHallDilemma exposing (..)
 
 import Browser
 import Dict exposing (Dict)
-import Html exposing (Attribute, Html)
+import Html exposing (Attribute, Html, div, text)
 import Html.Attributes exposing (style)
 import Svg exposing (Svg)
 import Svg.Attributes as SA
@@ -77,13 +77,23 @@ update msg model =
 
 
 view : Model -> Html Msg
-view model =
-    Svg.svg
-        [ saWidth width
-        , saHeight height
-        , noFill
-        , noStroke
-        , bgc gray
-        , noUserSelect
-        ]
-        []
+view _ =
+    let
+        _ =
+            1
+    in
+    div [] [ text "" ]
+
+
+
+--view : Model -> Html Msg
+--view model =
+--    Svg.svg
+--        [ saWidth width
+--        , saHeight height
+--        , noFill
+--        , noStroke
+--        , bgc gray
+--        , noUserSelect
+--        ]
+--        []
