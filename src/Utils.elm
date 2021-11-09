@@ -199,3 +199,15 @@ words xs str =
             :: xs
         )
         [ Svg.text str ]
+
+
+
+-- BASICS
+
+
+fdiv =
+    (/)
+
+
+mul =
+    (*)
