@@ -108,8 +108,12 @@ view : Model -> Html Msg
 view _ =
     let
         games =
-            Random.step (randomGames 10) (Random.initialSeed 0)
+            Random.step (randomGames maxGames)
+                (Random.initialSeed 0)
                 |> first
+
+        maxGames =
+            1000
     in
     div []
         [ viewSummary games
@@ -134,6 +138,8 @@ viewSummary games =
         , String.fromInt won |> text
         , text " "
         , text "Total: "
+        , text " "
+        , String.fromInt total |> text
         , text " "
         , text "Win Pct: "
         , String.fromFloat winPct |> text
