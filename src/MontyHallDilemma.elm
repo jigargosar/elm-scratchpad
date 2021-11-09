@@ -141,6 +141,7 @@ viewSummary games =
         , text " "
         , text "Win Pct: "
         , String.fromFloat winPct |> text
+        , text "%"
         ]
 
 
