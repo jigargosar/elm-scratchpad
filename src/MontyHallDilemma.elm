@@ -139,9 +139,10 @@ viewSummary games =
         , text " "
         , String.fromInt total |> text
         , text " "
-        , text "Win Pct: "
-        , String.fromFloat winPct |> text
-        , text "%"
+        , "Win Pct: "
+            ++ String.fromFloat winPct
+            ++ "%"
+            |> text
         ]
 
 
