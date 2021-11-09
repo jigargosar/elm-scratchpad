@@ -79,7 +79,14 @@ update msg model =
 
 
 type alias Game =
-    { car : Int, selection : Int }
+    { swapState : SwapState
+    , car : Int
+    , selection : Int
+    }
+
+
+type SwapState
+    = SwapState
 
 
 didWin : Game -> Bool
@@ -89,7 +96,7 @@ didWin { car, selection } =
 
 randomGameStick : Generator Game
 randomGameStick =
-    Random.map2 Game
+    Random.map2 (Game SwapState)
         (Random.uniform 1 [ 2, 3 ])
         (Random.uniform 1 [ 2, 3 ])
 
