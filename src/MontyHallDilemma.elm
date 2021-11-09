@@ -87,11 +87,6 @@ didWin { car, selection } =
     car == selection
 
 
-initGame : Game
-initGame =
-    { car = 0, selection = 0 }
-
-
 randomGame : Generator Game
 randomGame =
     Random.map2 Game
