@@ -87,7 +87,26 @@ update msg model =
             ( { model | sim = updateSim simMsg model.sim }, Cmd.none )
 
         DoorClicked d ->
-            ( { model | sim = updateSim (InitialDoorSelected d) model.sim }, Cmd.none )
+            ( { model | sim = updateSim (doorClickedToSimMessage model.sim d) model.sim }, Cmd.none )
+
+
+doorClickedToSimMessage : Sim -> Int -> SimMsg
+doorClickedToSimMessage sim d =
+    case sim.phase of
+        Initial ->
+            InitialDoorSelected d
+
+        FirstSelection record ->
+            InitialDoorSelected d
+
+        SheepRevealed record ->
+            InitialDoorSelected d
+
+        SecondSelection record ->
+            InitialDoorSelected d
+
+        End record ->
+            InitialDoorSelected d
 
 
 type alias GameData =
