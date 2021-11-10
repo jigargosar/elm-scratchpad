@@ -4,6 +4,7 @@ import Browser
 import Dict exposing (Dict)
 import Html exposing (Attribute, Html, div, text)
 import Html.Attributes exposing (style)
+import Html.Events exposing (onClick)
 import Random exposing (Generator)
 import Svg exposing (Svg)
 import Svg.Attributes as SA
@@ -68,6 +69,7 @@ init () =
 type Msg
     = OnTick
     | SimMsgReceived SimMsg
+    | DoorClicked Int
 
 
 subscriptions : Model -> Sub Msg
@@ -83,6 +85,9 @@ update msg model =
 
         SimMsgReceived simMsg ->
             ( { model | sim = updateSim simMsg model.sim }, Cmd.none )
+
+        DoorClicked d ->
+            ( { model | sim = updateSim (InitialDoorSelected d) model.sim }, Cmd.none )
 
 
 type alias GameData =
@@ -146,9 +151,10 @@ revealAndSwapSelection game =
 
 
 view : Model -> Html Msg
-view _ =
+view { sim } =
     div [ fontMono, fontSize "20px" ]
-        [ viewSim4
+        [ viewSim sim
+        , viewSim4
         , viewSim2
         , viewSim1
         ]
@@ -244,10 +250,17 @@ randomSim =
 viewSim : Sim -> Html Msg
 viewSim sim =
     div []
-        [ div [] [ text <| Debug.toString sim.phase ]
+        [ div [ tac ] [ text <| Debug.toString sim.phase ]
         , div [ dFlex, contentCenter, itemsCenter ]
             (simToDoorsViewModel sim
-                |> List.indexedMap (\_ string -> div [ pAll "10px" ] [ text string ])
+                |> List.indexedMap
+                    (\i string ->
+                        div
+                            [ onClick (DoorClicked <| i + 1)
+                            , pAll "10px"
+                            ]
+                            [ text string ]
+                    )
                 |> List.intersperse (div [] [ text " | " ])
             )
         ]
