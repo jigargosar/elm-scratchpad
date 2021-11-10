@@ -78,53 +78,6 @@ update msg model =
             ( model, Cmd.none )
 
 
-type Door
-    = D1
-    | D2
-    | D3
-
-
-type Game
-    = Initial
-    | FirstSection { s : Door }
-    | DoorOpened { s : Door, o : Door }
-    | SecondSelection { s : Door, ss : Door, o : Door }
-
-
-type alias Sim =
-    { c : Door, g : Game }
-
-
-initialSim : Sim
-initialSim =
-    Sim D1 Initial
-
-
-makeFirstSelection : Door -> Sim -> Sim
-makeFirstSelection door sim =
-    case sim.g of
-        Initial ->
-            { sim | g = FirstSection { s = door } }
-
-        _ ->
-            sim
-
-
-openDoor : Sim -> Sim
-openDoor =
-    Debug.todo "todo"
-
-
-type SelectionStrategy
-    = Stick
-    | Switch
-
-
-makeSecondSelection : SelectionStrategy -> Sim -> Sim
-makeSecondSelection =
-    Debug.todo "todo"
-
-
 type alias GameResult =
     { swapState : SwapState
     , car : Int
