@@ -163,7 +163,7 @@ type SimPhase
 
 
 type alias Sim =
-    { c : Int, p : SimPhase, g : GameData }
+    { car : Int, p : SimPhase, g : GameData }
 
 
 type SimMsg
@@ -175,17 +175,29 @@ type SimMsg
 
 
 updateSim : SimMsg -> Sim -> Sim
-updateSim msg ({ g, p } as sim) =
+updateSim msg ({ car, g, p } as sim) =
     case ( msg, p ) of
         ( InitialDoorSelected d, Initial ) ->
             { sim
                 | g = { g | selection = clamp 1 3 d }
-                , p = PlayerMadeInitialSelection { ps = 0 }
+                , p = PlayerMadeInitialSelection { ps = clamp 1 3 d }
             }
 
-        ( RevealFirstSheep, PlayerMadeInitialSelection _ ) ->
+        ( RevealFirstSheep, PlayerMadeInitialSelection { ps } ) ->
+            let
+                isCarOrSelected i =
+                    i == car || i == ps
+            in
             { sim
-                | p = HostRevealedSheep { ps = 0, rs = 0 }
+                | p =
+                    HostRevealedSheep
+                        { ps = ps
+                        , rs =
+                            [ 2, 3 ]
+                                |> List.filter (isCarOrSelected >> not)
+                                |> List.head
+                                |> Maybe.withDefault 1
+                        }
             }
 
         ( PlayerSticksToSelection, HostRevealedSheep _ ) ->
@@ -211,7 +223,7 @@ updateSim msg ({ g, p } as sim) =
 randomSim : Generator Sim
 randomSim =
     randomGameStick
-        |> Random.map (\g -> { c = g.car, g = g, p = Initial })
+        |> Random.map (\g -> { car = g.car, g = g, p = Initial })
 
 
 viewSim : Sim -> Html Msg
@@ -277,7 +289,7 @@ simToDoorsViewModel sim =
             List.range 1 3
                 |> List.map
                     (\i ->
-                        if i == sim.c then
+                        if i == sim.car then
                             carRevealed
 
                         else
