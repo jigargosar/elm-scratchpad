@@ -157,7 +157,7 @@ viewSim2 =
                 , div [] [ text state ]
                 ]
     in
-    sims |> List.map vs |> div []
+    sims |> List.map vs |> div [ tac, dFlex, fDCol, gap "20px", pAll "20px" ]
 
 
 viewSim1 =

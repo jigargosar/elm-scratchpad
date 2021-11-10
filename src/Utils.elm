@@ -169,6 +169,26 @@ fontMono =
     style "font-family" "monospace"
 
 
+tac =
+    style "text-align" "center"
+
+
+gap =
+    style "gap"
+
+
+pAll =
+    style "padding"
+
+
+dFlex =
+    style "display" "flex"
+
+
+fDCol =
+    style "flex-direction" "column"
+
+
 noUserSelect =
     style "user-select" "none"
 
