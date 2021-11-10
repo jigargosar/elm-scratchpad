@@ -296,6 +296,13 @@ viewSim sim =
         ]
 
 
+type DoorView
+    = Closed
+    | Sheep
+    | Car
+    | Selected
+
+
 simToDoorsStringViewModel : Sim -> List String
 simToDoorsStringViewModel sim =
     case sim.phase of
