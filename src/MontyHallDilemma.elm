@@ -86,7 +86,7 @@ type alias GameData =
 
 
 type SwapState
-    = NoSwap
+    = Stick
     | SwappedFrom Int
 
 
@@ -97,7 +97,7 @@ didWin { car, selection } =
 
 randomGameStick : Generator GameData
 randomGameStick =
-    Random.map2 (GameData NoSwap)
+    Random.map2 (GameData Stick)
         (Random.uniform 1 [ 2, 3 ])
         (Random.uniform 1 [ 2, 3 ])
 
