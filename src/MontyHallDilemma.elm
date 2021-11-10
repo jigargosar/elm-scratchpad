@@ -67,6 +67,7 @@ init () =
 
 type Msg
     = OnTick
+    | SimMsgReceived SimMsg
 
 
 subscriptions : Model -> Sub Msg
@@ -79,6 +80,9 @@ update msg model =
     case msg of
         OnTick ->
             ( model, Cmd.none )
+
+        SimMsgReceived simMsg ->
+            ( { model | sim = updateSim simMsg model.sim }, Cmd.none )
 
 
 type alias GameData =
