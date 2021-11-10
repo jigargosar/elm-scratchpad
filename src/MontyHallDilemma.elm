@@ -237,8 +237,8 @@ updateSim msg ({ car, phase } as sim) =
 
 randomSim : Generator Sim
 randomSim =
-    randomGameStick
-        |> Random.map (\g -> { car = g.car, phase = Initial })
+    Random.uniform 1 [ 2, 3 ]
+        |> Random.map (\car -> { car = car, phase = Initial })
 
 
 viewSim : Sim -> Html Msg
