@@ -135,10 +135,31 @@ revealAndSwapSelection game =
 
 view : Model -> Html Msg
 view _ =
-    div []
-        [ viewSim2
+    div [ fontMono, fontSize "20px" ]
+        [ viewSim3
+        , viewSim2
         , viewSim1
         ]
+
+
+fontMono =
+    style "font-family" "monospace"
+
+
+viewSim3 =
+    let
+        sims =
+            [ "--|--|--"
+            , "PP|ss|--"
+            , "PP|ss|--"
+            , "--|ss|PP"
+            , "cc|ss|ss"
+            ]
+
+        vs t =
+            div [] [ text t ]
+    in
+    sims |> List.map vs |> div []
 
 
 viewSim2 =
