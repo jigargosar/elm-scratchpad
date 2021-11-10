@@ -108,10 +108,11 @@ randomGameSwap =
         |> Random.map revealAndSwapSelection
 
 
-randomGame : Generator GameData
-randomGame =
-    Random.uniform randomGameStick [ randomGameSwap ]
-        |> Random.andThen identity
+
+--randomGame : Generator GameData
+--randomGame =
+--    Random.uniform randomGameStick [ randomGameSwap ]
+--        |> Random.andThen identity
 
 
 getRevealedDoor : GameData -> Int
@@ -170,17 +171,31 @@ type alias Sim =
     { g : GameData, p : GamePhase }
 
 
+randomSim : Generator Sim
+randomSim =
+    randomGameStick
+        |> Random.map (\g -> Sim g Initial)
+
+
 viewSim3 =
     let
-        gd : GameData
-        gd =
-            Random.step randomGame (Random.initialSeed 0)
+        sim : Sim
+        sim =
+            Random.step randomSim (Random.initialSeed 0)
                 |> first
 
         sims : List Sim
         sims =
             gamePhases
-                |> List.map (Sim gd)
+                |> List.map
+                    (\p ->
+                        case p of
+                            PlayerSwaps ->
+                                { sim | g = revealAndSwapSelection sim.g, p = p }
+
+                            _ ->
+                                { sim | p = p }
+                    )
 
         vs { g, p } =
             div []
