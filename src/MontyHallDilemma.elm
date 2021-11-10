@@ -162,10 +162,6 @@ type GamePhase
     | End
 
 
-gamePhases =
-    [ Initial, PlayerInitialSelection, HostSelectsSheep, PlayerSecondSelection, End ]
-
-
 type alias Sim =
     { g : GameData, p : GamePhase }
 
@@ -193,7 +189,12 @@ viewSim3 =
 
         sims : List Sim
         sims =
-            gamePhases
+            [ Initial
+            , PlayerInitialSelection
+            , HostSelectsSheep
+            , PlayerSecondSelection
+            , End
+            ]
                 |> List.map
                     (\p ->
                         case p of
