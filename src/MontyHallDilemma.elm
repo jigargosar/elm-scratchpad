@@ -247,8 +247,8 @@ viewSim sim =
         [ div [] [ text <| Debug.toString sim.phase ]
         , div [ dFlex, style "justify-content" "center" ]
             (simToDoorsViewModel sim
-                |> List.map text
-                |> List.intersperse (text " | ")
+                |> List.indexedMap (\_ string -> div [] [ text string ])
+                |> List.intersperse (div [] [ text " | " ])
             )
         ]
 
