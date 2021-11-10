@@ -87,7 +87,15 @@ update msg model =
             ( { model | sim = updateSim simMsg model.sim }, Cmd.none )
 
         DoorClicked d ->
-            ( { model | sim = updateSim (doorClickedToSimMessage model.sim d) model.sim }, Cmd.none )
+            let
+                simMsg =
+                    doorClickedToSimMessage model.sim d
+            in
+            ( { model
+                | sim = updateSim simMsg model.sim
+              }
+            , Cmd.none
+            )
 
 
 doorClickedToSimMessage : Sim -> Int -> SimMsg
