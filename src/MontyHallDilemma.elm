@@ -96,16 +96,23 @@ doorClickedToSimMessage sim d =
         Initial ->
             InitialDoorSelected d
 
-        FirstSelection record ->
-            InitialDoorSelected d
+        FirstSelection _ ->
+            RevealFirstSheep
 
-        SheepRevealed record ->
-            InitialDoorSelected d
+        SheepRevealed { ps, rs } ->
+            if d == ps then
+                PlayerSticksToSelection
 
-        SecondSelection record ->
-            InitialDoorSelected d
+            else if d /= rs then
+                PlayerSwapsSection
 
-        End record ->
+            else
+                InitialDoorSelected d
+
+        SecondSelection _ ->
+            OpenAllDoors
+
+        End _ ->
             InitialDoorSelected d
 
 
