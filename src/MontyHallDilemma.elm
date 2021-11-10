@@ -100,6 +100,16 @@ initialSim =
     Sim D1 Initial
 
 
+makeFirstSelection : Door -> Sim -> Sim
+makeFirstSelection door sim =
+    case sim.g of
+        Initial ->
+            { sim | g = FirstSection { s = door } }
+
+        _ ->
+            sim
+
+
 type alias GameResult =
     { swapState : SwapState
     , car : Int
