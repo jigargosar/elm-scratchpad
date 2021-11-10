@@ -303,6 +303,63 @@ type DoorView
     | Selected
 
 
+simToDoorsViewModel : Sim -> List DoorView
+simToDoorsViewModel sim =
+    case sim.phase of
+        Initial ->
+            [ Closed, Closed, Closed ]
+
+        FirstSelection { ps } ->
+            List.range 1 3
+                |> List.map
+                    (\i ->
+                        if i == ps then
+                            Selected
+
+                        else
+                            Closed
+                    )
+
+        SheepRevealed { ps, rs } ->
+            List.range 1 3
+                |> List.map
+                    (\i ->
+                        if i == ps then
+                            Selected
+
+                        else if i == rs then
+                            Sheep
+
+                        else
+                            Closed
+                    )
+
+        SecondSelection { rs, ps2 } ->
+            List.range 1 3
+                |> List.map
+                    (\i ->
+                        if i == ps2 then
+                            Selected
+
+                        else if i == rs then
+                            Sheep
+
+                        else
+                            Closed
+                    )
+
+        End _ ->
+            List.range 1 3
+                |> List.map
+                    (\i ->
+                        if i == sim.car then
+                            Car
+
+                        else
+                            Sheep
+                    )
+
+
 simToDoorsStringViewModel : Sim -> List String
 simToDoorsStringViewModel sim =
     case sim.phase of
