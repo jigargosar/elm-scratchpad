@@ -9,7 +9,7 @@ import Svg exposing (Svg)
 import Svg.Attributes as SA
 import Svg.Events as SE
 import Time
-import Tuple exposing (first)
+import Tuple exposing (first, pair)
 import TypedSvg.Attributes as TA
 import TypedSvg.Attributes.InPx as Px
 import TypedSvg.Types as TT
@@ -108,6 +108,12 @@ randomGameSwap =
         |> Random.map revealAndSwapSelection
 
 
+randomGame : Generator GameData
+randomGame =
+    Random.uniform randomGameStick [ randomGameSwap ]
+        |> Random.andThen identity
+
+
 revealAndSwapSelection : GameData -> GameData
 revealAndSwapSelection game =
     let
@@ -136,7 +142,8 @@ revealAndSwapSelection game =
 view : Model -> Html Msg
 view _ =
     div [ fontMono, fontSize "20px" ]
-        [ viewSim2
+        [ viewSim3
+        , viewSim2
         , viewSim1
         ]
 
@@ -150,8 +157,40 @@ type GamePhase
     | End
 
 
+gamePhases =
+    [ Initial, PlayerInitialSelection, HostSelectsSheep, PlayerSwaps, PlayerSticks, End ]
+
+
 type alias Sim =
     { g : GameData, p : GamePhase }
+
+
+viewSim3 =
+    let
+        gd : GameData
+        gd =
+            Random.step randomGame (Random.initialSeed 0)
+                |> first
+
+        sims : List Sim
+        sims =
+            gamePhases
+                |> List.map (Sim gd)
+
+        vs { g, p } =
+            div []
+                [ div [] [ text <| Debug.toString p ]
+                , div [] [ text <| Debug.toString g ]
+                ]
+    in
+    div
+        [ tac
+        , dFlex
+        , fDCol
+        , gap "20px"
+        , pAll "20px"
+        ]
+        (List.map vs sims)
 
 
 viewSim2 =
