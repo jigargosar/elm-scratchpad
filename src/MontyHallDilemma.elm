@@ -114,18 +114,23 @@ randomGame =
         |> Random.andThen identity
 
 
-revealAndSwapSelection : GameData -> GameData
-revealAndSwapSelection game =
+getRevealedDoor : GameData -> Int
+getRevealedDoor game =
     let
         isCarOrSelected i =
             i == game.car || i == game.selection
+    in
+    [ 2, 3 ]
+        |> List.filter (isCarOrSelected >> not)
+        |> List.head
+        |> Maybe.withDefault 1
 
-        revealedDoor : Int
+
+revealAndSwapSelection : GameData -> GameData
+revealAndSwapSelection game =
+    let
         revealedDoor =
-            [ 2, 3 ]
-                |> List.filter (isCarOrSelected >> not)
-                |> List.head
-                |> Maybe.withDefault 1
+            getRevealedDoor game
 
         isSelectedOrRevealed : Int -> Bool
         isSelectedOrRevealed i =
