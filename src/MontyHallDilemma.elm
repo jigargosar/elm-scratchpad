@@ -230,9 +230,8 @@ viewSim4 =
 
         foo : Sim -> List Sim
         foo sim =
-            [ InitialDoorSelected 0
+            [ InitialDoorSelected 2
             , RevealFirstSheep
-            , PlayerSticksToSelection
             , PlayerSwapsSection
             , OpenAllDoors
             ]
