@@ -177,6 +177,14 @@ gap =
     style "gap"
 
 
+contentCenter =
+    style "justify-content" "center"
+
+
+itemsCenter =
+    style "align-items" "center"
+
+
 pAll =
     style "padding"
 
