@@ -162,7 +162,7 @@ view _ =
         ]
 
 
-type GamePhase
+type SimPhase
     = Initial
     | PlayerMadeInitialSelection
     | HostRevealedSheep
@@ -171,7 +171,7 @@ type GamePhase
 
 
 type alias Sim =
-    { g : GameData, p : GamePhase }
+    { g : GameData, p : SimPhase }
 
 
 type SimMsg
