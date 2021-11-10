@@ -68,7 +68,6 @@ init () =
 
 type Msg
     = OnTick
-    | SimMsgReceived SimMsg
     | DoorClicked Int
 
 
@@ -82,9 +81,6 @@ update msg model =
     case msg of
         OnTick ->
             ( model, Cmd.none )
-
-        SimMsgReceived simMsg ->
-            ( { model | sim = updateSim simMsg model.sim }, Cmd.none )
 
         DoorClicked d ->
             let
