@@ -148,7 +148,8 @@ revealAndSwapSelection game =
 view : Model -> Html Msg
 view _ =
     div [ fontMono, fontSize "20px" ]
-        [ viewSim3
+        [ viewSim4
+        , viewSim3
         , viewSim2
         , viewSim1
         ]
@@ -220,6 +221,27 @@ viewSim { g, p } =
         [ div [] [ text <| Debug.toString p ]
         , div [] [ text <| Debug.toString g ]
         ]
+
+
+viewSim4 =
+    let
+        sim : Sim
+        sim =
+            Random.step randomSim (Random.initialSeed 0)
+                |> first
+
+        sims : List Sim
+        sims =
+            []
+    in
+    div
+        [ tac
+        , dFlex
+        , fDCol
+        , gap "20px"
+        , pAll "20px"
+        ]
+        (List.map viewSim sims)
 
 
 viewSim3 =
