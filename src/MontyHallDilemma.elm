@@ -78,6 +78,28 @@ update msg model =
             ( model, Cmd.none )
 
 
+type Door
+    = D1
+    | D2
+    | D3
+
+
+type Game
+    = Initial
+    | FirstSection { s : Door }
+    | DoorOpened { s : Door, o : Door }
+    | SecondSelection { s : Door, ss : Door, o : Door }
+
+
+type alias Sim =
+    { c : Door, g : Game }
+
+
+initialSim : Sim
+initialSim =
+    Sim D1 Initial
+
+
 type alias GameResult =
     { swapState : SwapState
     , car : Int
