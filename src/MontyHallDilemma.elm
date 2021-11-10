@@ -110,6 +110,21 @@ makeFirstSelection door sim =
             sim
 
 
+openDoor : Sim -> Sim
+openDoor =
+    Debug.todo "todo"
+
+
+type SelectionStrategy
+    = Stick
+    | Switch
+
+
+makeSecondSelection : SelectionStrategy -> Sim -> Sim
+makeSecondSelection =
+    Debug.todo "todo"
+
+
 type alias GameResult =
     { swapState : SwapState
     , car : Int
