@@ -261,10 +261,26 @@ simToDoorsViewModel sim =
                     )
 
         PlayerMadeSecondSelection ->
-            [ closedDoor, closedDoor, closedDoor ]
+            List.range 1 3
+                |> List.map
+                    (\i ->
+                        if i == sim.g.selection then
+                            selectedDoor
+
+                        else
+                            closedDoor
+                    )
 
         End ->
-            [ closedDoor, closedDoor, closedDoor ]
+            List.range 1 3
+                |> List.map
+                    (\i ->
+                        if i == sim.g.car then
+                            carRevealed
+
+                        else
+                            sheepRevealed
+                    )
 
 
 closedDoor =
