@@ -78,7 +78,7 @@ update msg model =
             ( model, Cmd.none )
 
 
-type alias Game =
+type alias GameResult =
     { swapState : SwapState
     , car : Int
     , selection : Int
@@ -90,25 +90,25 @@ type SwapState
     | SwappedFrom Int
 
 
-didWin : Game -> Bool
+didWin : GameResult -> Bool
 didWin { car, selection } =
     car == selection
 
 
-randomGameStick : Generator Game
+randomGameStick : Generator GameResult
 randomGameStick =
-    Random.map2 (Game NoSwap)
+    Random.map2 (GameResult NoSwap)
         (Random.uniform 1 [ 2, 3 ])
         (Random.uniform 1 [ 2, 3 ])
 
 
-randomGameSwap : Generator Game
+randomGameSwap : Generator GameResult
 randomGameSwap =
     randomGameStick
         |> Random.map revealAndSwapSelection
 
 
-revealAndSwapSelection : Game -> Game
+revealAndSwapSelection : GameResult -> GameResult
 revealAndSwapSelection game =
     let
         isCarOrSelected i =
@@ -150,7 +150,7 @@ view _ =
         ]
 
 
-viewSummary : List Game -> Html msg
+viewSummary : List GameResult -> Html msg
 viewSummary games =
     let
         total =
@@ -176,7 +176,7 @@ viewSummary games =
         ]
 
 
-viewGame : Game -> Html msg
+viewGame : GameResult -> Html msg
 viewGame game =
     let
         txt =
