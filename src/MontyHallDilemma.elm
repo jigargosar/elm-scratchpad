@@ -187,33 +187,46 @@ updateSim msg ({ car, g, p } as sim) =
             let
                 isCarOrSelected i =
                     i == car || i == ps
+
+                rs =
+                    [ 2, 3 ]
+                        |> List.filter (isCarOrSelected >> not)
+                        |> List.head
+                        |> Maybe.withDefault 1
             in
             { sim
                 | p =
                     HostRevealedSheep
                         { ps = ps
-                        , rs =
-                            [ 2, 3 ]
-                                |> List.filter (isCarOrSelected >> not)
-                                |> List.head
-                                |> Maybe.withDefault 1
+                        , rs = rs
                         }
             }
 
-        ( PlayerSticksToSelection, HostRevealedSheep _ ) ->
+        ( PlayerSticksToSelection, HostRevealedSheep { ps, rs } ) ->
             { sim
-                | p = PlayerMadeSecondSelection { ps = 0, rs = 0, ps2 = 0 }
+                | p = PlayerMadeSecondSelection { ps = ps, rs = rs, ps2 = ps }
             }
 
-        ( PlayerSwapsSection, HostRevealedSheep _ ) ->
+        ( PlayerSwapsSection, HostRevealedSheep { ps, rs } ) ->
+            let
+                isSelectedOrRevealed : Int -> Bool
+                isSelectedOrRevealed i =
+                    i == ps || i == rs
+
+                ps2 =
+                    [ 2, 3 ]
+                        |> List.filter (isSelectedOrRevealed >> not)
+                        |> List.head
+                        |> Maybe.withDefault 1
+            in
             { sim
                 | g = revealAndSwapSelection g
-                , p = PlayerMadeSecondSelection { ps = 0, rs = 0, ps2 = 0 }
+                , p = PlayerMadeSecondSelection { ps = ps, rs = rs, ps2 = ps2 }
             }
 
-        ( OpenAllDoors, PlayerMadeSecondSelection _ ) ->
+        ( OpenAllDoors, PlayerMadeSecondSelection rec ) ->
             { sim
-                | p = End { ps = 0, rs = 0, ps2 = 0 }
+                | p = End rec
             }
 
         _ ->
@@ -323,6 +336,7 @@ viewSim4 =
             [ InitialDoorSelected 2
             , RevealFirstSheep
             , PlayerSwapsSection
+            , PlayerSticksToSelection
             , OpenAllDoors
             ]
                 |> List.foldl fn ( sim, [] )
