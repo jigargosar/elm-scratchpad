@@ -158,13 +158,12 @@ type GamePhase
     = Initial
     | PlayerInitialSelection
     | HostSelectsSheep
-    | PlayerSwaps
-    | PlayerSticks
+    | PlayerSecondSelection
     | End
 
 
 gamePhases =
-    [ Initial, PlayerInitialSelection, HostSelectsSheep, PlayerSwaps, PlayerSticks, End ]
+    [ Initial, PlayerInitialSelection, HostSelectsSheep, PlayerSecondSelection, End ]
 
 
 type alias Sim =
@@ -190,7 +189,7 @@ viewSim3 =
                 |> List.map
                     (\p ->
                         case p of
-                            PlayerSwaps ->
+                            PlayerSecondSelection ->
                                 { sim | g = revealAndSwapSelection sim.g, p = p }
 
                             _ ->
