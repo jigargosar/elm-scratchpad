@@ -154,16 +154,16 @@ view _ =
         ]
 
 
+type alias Sim =
+    { car : Int, phase : SimPhase }
+
+
 type SimPhase
     = Initial
     | PlayerMadeInitialSelection { ps : Int }
     | HostRevealedSheep { ps : Int, rs : Int }
     | PlayerMadeSecondSelection { ps : Int, rs : Int, ps2 : Int }
     | End { ps : Int, rs : Int, ps2 : Int }
-
-
-type alias Sim =
-    { car : Int, p : SimPhase, g : GameData }
 
 
 type SimMsg
@@ -175,12 +175,11 @@ type SimMsg
 
 
 updateSim : SimMsg -> Sim -> Sim
-updateSim msg ({ car, g, p } as sim) =
-    case ( msg, p ) of
+updateSim msg ({ car, phase } as sim) =
+    case ( msg, phase ) of
         ( InitialDoorSelected d, Initial ) ->
             { sim
-                | g = { g | selection = clamp 1 3 d }
-                , p = PlayerMadeInitialSelection { ps = clamp 1 3 d }
+                | phase = PlayerMadeInitialSelection { ps = clamp 1 3 d }
             }
 
         ( RevealFirstSheep, PlayerMadeInitialSelection { ps } ) ->
@@ -195,7 +194,7 @@ updateSim msg ({ car, g, p } as sim) =
                         |> Maybe.withDefault 1
             in
             { sim
-                | p =
+                | phase =
                     HostRevealedSheep
                         { ps = ps
                         , rs = rs
@@ -204,7 +203,7 @@ updateSim msg ({ car, g, p } as sim) =
 
         ( PlayerSticksToSelection, HostRevealedSheep { ps, rs } ) ->
             { sim
-                | p = PlayerMadeSecondSelection { ps = ps, rs = rs, ps2 = ps }
+                | phase = PlayerMadeSecondSelection { ps = ps, rs = rs, ps2 = ps }
             }
 
         ( PlayerSwapsSection, HostRevealedSheep { ps, rs } ) ->
@@ -220,13 +219,12 @@ updateSim msg ({ car, g, p } as sim) =
                         |> Maybe.withDefault 1
             in
             { sim
-                | g = revealAndSwapSelection g
-                , p = PlayerMadeSecondSelection { ps = ps, rs = rs, ps2 = ps2 }
+                | phase = PlayerMadeSecondSelection { ps = ps, rs = rs, ps2 = ps2 }
             }
 
         ( OpenAllDoors, PlayerMadeSecondSelection rec ) ->
             { sim
-                | p = End rec
+                | phase = End rec
             }
 
         _ ->
@@ -236,14 +234,13 @@ updateSim msg ({ car, g, p } as sim) =
 randomSim : Generator Sim
 randomSim =
     randomGameStick
-        |> Random.map (\g -> { car = g.car, g = g, p = Initial })
+        |> Random.map (\g -> { car = g.car, phase = Initial })
 
 
 viewSim : Sim -> Html Msg
-viewSim ({ g, p } as sim) =
+viewSim sim =
     div []
-        [ div [] [ text <| Debug.toString p ]
-        , div [] [ text <| Debug.toString g ]
+        [ div [] [ text <| Debug.toString sim.phase ]
         , div []
             (simToDoorsViewModel sim
                 |> String.join " | "
@@ -255,7 +252,7 @@ viewSim ({ g, p } as sim) =
 
 simToDoorsViewModel : Sim -> List String
 simToDoorsViewModel sim =
-    case sim.p of
+    case sim.phase of
         Initial ->
             [ closedDoor, closedDoor, closedDoor ]
 
