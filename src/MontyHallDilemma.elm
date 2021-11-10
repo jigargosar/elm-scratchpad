@@ -115,13 +115,6 @@ randomGameSwap =
         |> Random.map revealAndSwapSelection
 
 
-
---randomGame : Generator GameData
---randomGame =
---    Random.uniform randomGameStick [ randomGameSwap ]
---        |> Random.andThen identity
-
-
 getRevealedDoor : GameData -> Int
 getRevealedDoor game =
     let
