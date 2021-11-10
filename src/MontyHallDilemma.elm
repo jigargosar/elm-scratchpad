@@ -267,6 +267,9 @@ simToDoorsViewModel sim =
                         if i == sim.g.selection then
                             selectedDoor
 
+                        else if i == getRevealedDoor sim.g then
+                            sheepRevealed
+
                         else
                             closedDoor
                     )
