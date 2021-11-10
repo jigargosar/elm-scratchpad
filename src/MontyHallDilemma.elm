@@ -216,20 +216,36 @@ randomSim =
 
 
 viewSim : Sim -> Html Msg
-viewSim { g, p } =
+viewSim ({ g, p } as sim) =
     div []
         [ div [] [ text <| Debug.toString p ]
         , div [] [ text <| Debug.toString g ]
         , div []
-            ([ closedDoor
-             , closedDoor
-             , closedDoor
-             ]
+            (simToDoorsViewModel sim
                 |> String.join " | "
                 |> text
                 |> List.singleton
             )
         ]
+
+
+simToDoorsViewModel : Sim -> List String
+simToDoorsViewModel sim =
+    case sim.p of
+        Initial ->
+            [ closedDoor, closedDoor, closedDoor ]
+
+        PlayerMadeInitialSelection ->
+            [ closedDoor, closedDoor, closedDoor ]
+
+        HostRevealedSheep ->
+            [ closedDoor, closedDoor, closedDoor ]
+
+        PlayerMadeSecondSelection ->
+            [ closedDoor, closedDoor, closedDoor ]
+
+        End ->
+            [ closedDoor, closedDoor, closedDoor ]
 
 
 closedDoor =
