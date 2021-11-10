@@ -232,7 +232,7 @@ viewSim4 =
 
         sims : List Sim
         sims =
-            []
+            [ sim ]
     in
     div
         [ tac
