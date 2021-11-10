@@ -164,7 +164,7 @@ type SimPhase
 
 
 type alias Sim =
-    { c : Int, g : GameData, p : SimPhase }
+    { c : Int, p : SimPhase, g : GameData }
 
 
 type SimMsg
