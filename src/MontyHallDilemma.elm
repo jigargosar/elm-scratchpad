@@ -164,7 +164,7 @@ type SimPhase
 
 
 type alias Sim =
-    { g : GameData, p : SimPhase }
+    { c : Int, g : GameData, p : SimPhase }
 
 
 type SimMsg
@@ -212,7 +212,7 @@ updateSim msg ({ g, p } as sim) =
 randomSim : Generator Sim
 randomSim =
     randomGameStick
-        |> Random.map (\g -> Sim g Initial)
+        |> Random.map (\g -> { c = g.car, g = g, p = Initial })
 
 
 viewSim : Sim -> Html Msg
