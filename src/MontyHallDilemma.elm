@@ -9,7 +9,7 @@ import Svg exposing (Svg)
 import Svg.Attributes as SA
 import Svg.Events as SE
 import Time
-import Tuple exposing (first, pair)
+import Tuple exposing (first, pair, second)
 import TypedSvg.Attributes as TA
 import TypedSvg.Attributes.InPx as Px
 import TypedSvg.Types as TT
@@ -225,6 +225,21 @@ viewSim { g, p } =
 
 viewSim4 =
     let
+        fn msg ( sim, acc ) =
+            ( updateSim msg sim, sim :: acc )
+
+        foo : Sim -> List Sim
+        foo sim =
+            [ InitialDoorSelected 0
+            , RevealFirstSheep
+            , PlayerSticksToSelection
+            , PlayerSwapsSection
+            , OpenAllDoors
+            ]
+                |> List.foldl fn ( sim, [] )
+                |> (\( x, xs ) -> x :: xs |> List.reverse)
+    in
+    let
         sim : Sim
         sim =
             Random.step randomSim (Random.initialSeed 0)
@@ -232,7 +247,7 @@ viewSim4 =
 
         sims : List Sim
         sims =
-            [ sim ]
+            foo sim
     in
     div
         [ tac
