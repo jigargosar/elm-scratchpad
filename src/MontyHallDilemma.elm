@@ -149,7 +149,6 @@ view : Model -> Html Msg
 view _ =
     div [ fontMono, fontSize "20px" ]
         [ viewSim4
-        , viewSim3
         , viewSim2
         , viewSim1
         ]
@@ -157,10 +156,10 @@ view _ =
 
 type SimPhase
     = Initial
-    | PlayerMadeInitialSelection
-    | HostRevealedSheep
-    | PlayerMadeSecondSelection
-    | End
+    | PlayerMadeInitialSelection { ps : Int }
+    | HostRevealedSheep { ps : Int, rs : Int }
+    | PlayerMadeSecondSelection { ps : Int, rs : Int, ps2 : Int }
+    | End { ps : Int, rs : Int, ps2 : Int }
 
 
 type alias Sim =
@@ -181,28 +180,28 @@ updateSim msg ({ g, p } as sim) =
         ( InitialDoorSelected d, Initial ) ->
             { sim
                 | g = { g | selection = clamp 1 3 d }
-                , p = PlayerMadeInitialSelection
+                , p = PlayerMadeInitialSelection { ps = 0 }
             }
 
-        ( RevealFirstSheep, PlayerMadeInitialSelection ) ->
+        ( RevealFirstSheep, PlayerMadeInitialSelection _ ) ->
             { sim
-                | p = HostRevealedSheep
+                | p = HostRevealedSheep { ps = 0, rs = 0 }
             }
 
-        ( PlayerSticksToSelection, HostRevealedSheep ) ->
+        ( PlayerSticksToSelection, HostRevealedSheep _ ) ->
             { sim
-                | p = PlayerMadeSecondSelection
+                | p = PlayerMadeSecondSelection { ps = 0, rs = 0, ps2 = 0 }
             }
 
-        ( PlayerSwapsSection, HostRevealedSheep ) ->
+        ( PlayerSwapsSection, HostRevealedSheep _ ) ->
             { sim
                 | g = revealAndSwapSelection g
-                , p = PlayerMadeSecondSelection
+                , p = PlayerMadeSecondSelection { ps = 0, rs = 0, ps2 = 0 }
             }
 
-        ( OpenAllDoors, PlayerMadeSecondSelection ) ->
+        ( OpenAllDoors, PlayerMadeSecondSelection _ ) ->
             { sim
-                | p = End
+                | p = End { ps = 0, rs = 0, ps2 = 0 }
             }
 
         _ ->
@@ -235,7 +234,7 @@ simToDoorsViewModel sim =
         Initial ->
             [ closedDoor, closedDoor, closedDoor ]
 
-        PlayerMadeInitialSelection ->
+        PlayerMadeInitialSelection _ ->
             List.range 1 3
                 |> List.map
                     (\i ->
@@ -246,21 +245,7 @@ simToDoorsViewModel sim =
                             closedDoor
                     )
 
-        HostRevealedSheep ->
-            List.range 1 3
-                |> List.map
-                    (\i ->
-                        if i == sim.g.selection then
-                            selectedDoor
-
-                        else if i == getRevealedDoor sim.g then
-                            sheepRevealed
-
-                        else
-                            closedDoor
-                    )
-
-        PlayerMadeSecondSelection ->
+        HostRevealedSheep _ ->
             List.range 1 3
                 |> List.map
                     (\i ->
@@ -274,7 +259,21 @@ simToDoorsViewModel sim =
                             closedDoor
                     )
 
-        End ->
+        PlayerMadeSecondSelection _ ->
+            List.range 1 3
+                |> List.map
+                    (\i ->
+                        if i == sim.g.selection then
+                            selectedDoor
+
+                        else if i == getRevealedDoor sim.g then
+                            sheepRevealed
+
+                        else
+                            closedDoor
+                    )
+
+        End _ ->
             List.range 1 3
                 |> List.map
                     (\i ->
@@ -326,41 +325,6 @@ viewSim4 =
         sims : List Sim
         sims =
             foo sim
-    in
-    div
-        [ tac
-        , dFlex
-        , fDCol
-        , gap "20px"
-        , pAll "20px"
-        ]
-        (List.map viewSim sims)
-
-
-viewSim3 =
-    let
-        sim : Sim
-        sim =
-            Random.step randomSim (Random.initialSeed 0)
-                |> first
-
-        sims : List Sim
-        sims =
-            [ Initial
-            , PlayerMadeInitialSelection
-            , HostRevealedSheep
-            , PlayerMadeSecondSelection
-            , End
-            ]
-                |> List.map
-                    (\p ->
-                        case p of
-                            PlayerMadeSecondSelection ->
-                                { sim | g = revealAndSwapSelection sim.g, p = p }
-
-                            _ ->
-                                { sim | p = p }
-                    )
     in
     div
         [ tac
