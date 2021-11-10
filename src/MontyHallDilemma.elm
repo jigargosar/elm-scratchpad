@@ -184,13 +184,20 @@ updateSim msg ({ g, p } as sim) =
             }
 
         ( RevealFirstSheep, PlayerInitialSelection ) ->
-            sim
+            { sim
+                | p = HostReaveledSheep
+            }
 
         ( PlayerSticksToSelection, HostReaveledSheep ) ->
-            sim
+            { sim
+                | p = PlayerSecondSelection
+            }
 
         ( PlayerSwapsSection, HostReaveledSheep ) ->
-            sim
+            { sim
+                | g = revealAndSwapSelection g
+                , p = PlayerSecondSelection
+            }
 
         ( OpenAllDoors, PlayerSecondSelection ) ->
             sim
