@@ -220,7 +220,36 @@ viewSim { g, p } =
     div []
         [ div [] [ text <| Debug.toString p ]
         , div [] [ text <| Debug.toString g ]
+        , div []
+            ([ closedDoor
+             , closedDoor
+             , closedDoor
+             ]
+                |> String.join " | "
+                |> text
+                |> List.singleton
+            )
         ]
+
+
+closedDoor =
+    "--"
+
+
+selectedDoor =
+    "PP"
+
+
+sheepRevealed =
+    "ss"
+
+
+carRevealed =
+    "cc"
+
+
+viewClosedDoor =
+    text "--"
 
 
 viewSim4 =
