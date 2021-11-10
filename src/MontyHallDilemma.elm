@@ -142,10 +142,6 @@ view _ =
         ]
 
 
-fontMono =
-    style "font-family" "monospace"
-
-
 viewSim3 =
     let
         sims =

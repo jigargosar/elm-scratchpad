@@ -165,6 +165,10 @@ fontSize =
     style "font-size"
 
 
+fontMono =
+    style "font-family" "monospace"
+
+
 noUserSelect =
     style "user-select" "none"
 
