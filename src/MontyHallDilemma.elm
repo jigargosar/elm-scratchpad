@@ -135,6 +135,29 @@ revealAndSwapSelection game =
 
 view : Model -> Html Msg
 view _ =
+    div []
+        [ viewSim2
+        , viewSim1
+        ]
+
+
+viewSim2 =
+    let
+        sims =
+            [ "1: Select Door"
+            , "2: Reveal Sheep"
+            , "3.1: Stick"
+            , "3.2: Swap"
+            , "4: Final Reveal"
+            ]
+
+        vs t =
+            div [] [ text t ]
+    in
+    sims |> List.map vs |> div []
+
+
+viewSim1 =
     let
         games =
             Random.step (Random.list maxGames randomGameSwap)
