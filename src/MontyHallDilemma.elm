@@ -52,12 +52,15 @@ gpToWorld =
 
 
 type alias Model =
-    {}
+    { sim : Sim }
 
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( {}
+    ( { sim =
+            Random.step randomSim (Random.initialSeed 0)
+                |> first
+      }
     , Cmd.none
     )
 
