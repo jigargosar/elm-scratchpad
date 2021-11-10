@@ -176,6 +176,14 @@ randomSim =
         |> Random.map (\g -> Sim g Initial)
 
 
+viewSim : Sim -> Html Msg
+viewSim { g, p } =
+    div []
+        [ div [] [ text <| Debug.toString p ]
+        , div [] [ text <| Debug.toString g ]
+        ]
+
+
 viewSim3 =
     let
         sim : Sim
@@ -195,12 +203,6 @@ viewSim3 =
                             _ ->
                                 { sim | p = p }
                     )
-
-        vs { g, p } =
-            div []
-                [ div [] [ text <| Debug.toString p ]
-                , div [] [ text <| Debug.toString g ]
-                ]
     in
     div
         [ tac
@@ -209,7 +211,7 @@ viewSim3 =
         , gap "20px"
         , pAll "20px"
         ]
-        (List.map vs sims)
+        (List.map viewSim sims)
 
 
 viewSim2 =
