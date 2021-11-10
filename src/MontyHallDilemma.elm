@@ -164,9 +164,9 @@ view _ =
 
 type GamePhase
     = Initial
-    | PlayerInitialSelection
+    | PlayerMadeInitialSelection
     | HostRevealedSheep
-    | PlayerSecondSelection
+    | PlayerMadeSecondSelection
     | End
 
 
@@ -188,26 +188,26 @@ updateSim msg ({ g, p } as sim) =
         ( InitialDoorSelected d, Initial ) ->
             { sim
                 | g = { g | selection = clamp 1 3 d }
-                , p = PlayerInitialSelection
+                , p = PlayerMadeInitialSelection
             }
 
-        ( RevealFirstSheep, PlayerInitialSelection ) ->
+        ( RevealFirstSheep, PlayerMadeInitialSelection ) ->
             { sim
                 | p = HostRevealedSheep
             }
 
         ( PlayerSticksToSelection, HostRevealedSheep ) ->
             { sim
-                | p = PlayerSecondSelection
+                | p = PlayerMadeSecondSelection
             }
 
         ( PlayerSwapsSection, HostRevealedSheep ) ->
             { sim
                 | g = revealAndSwapSelection g
-                , p = PlayerSecondSelection
+                , p = PlayerMadeSecondSelection
             }
 
-        ( OpenAllDoors, PlayerSecondSelection ) ->
+        ( OpenAllDoors, PlayerMadeSecondSelection ) ->
             { sim
                 | p = End
             }
@@ -275,15 +275,15 @@ viewSim3 =
         sims : List Sim
         sims =
             [ Initial
-            , PlayerInitialSelection
+            , PlayerMadeInitialSelection
             , HostRevealedSheep
-            , PlayerSecondSelection
+            , PlayerMadeSecondSelection
             , End
             ]
                 |> List.map
                     (\p ->
                         case p of
-                            PlayerSecondSelection ->
+                            PlayerMadeSecondSelection ->
                                 { sim | g = revealAndSwapSelection sim.g, p = p }
 
                             _ ->
