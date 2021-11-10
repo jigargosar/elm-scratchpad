@@ -165,7 +165,7 @@ view _ =
 type GamePhase
     = Initial
     | PlayerInitialSelection
-    | HostReaveledSheep
+    | HostRevealedSheep
     | PlayerSecondSelection
     | End
 
@@ -193,15 +193,15 @@ updateSim msg ({ g, p } as sim) =
 
         ( RevealFirstSheep, PlayerInitialSelection ) ->
             { sim
-                | p = HostReaveledSheep
+                | p = HostRevealedSheep
             }
 
-        ( PlayerSticksToSelection, HostReaveledSheep ) ->
+        ( PlayerSticksToSelection, HostRevealedSheep ) ->
             { sim
                 | p = PlayerSecondSelection
             }
 
-        ( PlayerSwapsSection, HostReaveledSheep ) ->
+        ( PlayerSwapsSection, HostRevealedSheep ) ->
             { sim
                 | g = revealAndSwapSelection g
                 , p = PlayerSecondSelection
@@ -276,7 +276,7 @@ viewSim3 =
         sims =
             [ Initial
             , PlayerInitialSelection
-            , HostReaveledSheep
+            , HostRevealedSheep
             , PlayerSecondSelection
             , End
             ]
