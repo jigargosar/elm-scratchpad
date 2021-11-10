@@ -157,13 +157,46 @@ view _ =
 type GamePhase
     = Initial
     | PlayerInitialSelection
-    | HostSelectsSheep
+    | HostReaveledSheep
     | PlayerSecondSelection
     | End
 
 
 type alias Sim =
     { g : GameData, p : GamePhase }
+
+
+type SimMsg
+    = InitialDoorSelected Int
+    | RevealFirstSheep
+    | PlayerSticksToSelection
+    | PlayerSwapsSection
+    | OpenAllDoors
+
+
+updateSim : SimMsg -> Sim -> Sim
+updateSim msg ({ g, p } as sim) =
+    case ( msg, p ) of
+        ( InitialDoorSelected d, Initial ) ->
+            { sim
+                | g = { g | selection = clamp 1 3 d }
+                , p = PlayerInitialSelection
+            }
+
+        ( RevealFirstSheep, PlayerInitialSelection ) ->
+            sim
+
+        ( PlayerSticksToSelection, HostReaveledSheep ) ->
+            sim
+
+        ( PlayerSwapsSection, HostReaveledSheep ) ->
+            sim
+
+        ( OpenAllDoors, PlayerSecondSelection ) ->
+            sim
+
+        _ ->
+            sim
 
 
 randomSim : Generator Sim
@@ -191,7 +224,7 @@ viewSim3 =
         sims =
             [ Initial
             , PlayerInitialSelection
-            , HostSelectsSheep
+            , HostReaveledSheep
             , PlayerSecondSelection
             , End
             ]
