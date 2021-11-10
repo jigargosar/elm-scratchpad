@@ -245,7 +245,7 @@ viewSim : Sim -> Html Msg
 viewSim sim =
     div []
         [ div [] [ text <| Debug.toString sim.phase ]
-        , div []
+        , div [ dFlex, style "justify-content" "center" ]
             (simToDoorsViewModel sim
                 |> List.map text
                 |> List.intersperse (text " | ")
