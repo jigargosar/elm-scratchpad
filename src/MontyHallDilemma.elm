@@ -302,10 +302,6 @@ carRevealed =
     "cc"
 
 
-viewClosedDoor =
-    text "--"
-
-
 viewSim4 =
     let
         fn msg ( sim, acc ) =
