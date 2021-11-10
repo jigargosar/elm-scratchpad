@@ -200,7 +200,9 @@ updateSim msg ({ g, p } as sim) =
             }
 
         ( OpenAllDoors, PlayerSecondSelection ) ->
-            sim
+            { sim
+                | p = End
+            }
 
         _ ->
             sim
