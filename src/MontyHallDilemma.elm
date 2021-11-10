@@ -234,39 +234,39 @@ simToDoorsViewModel sim =
         Initial ->
             [ closedDoor, closedDoor, closedDoor ]
 
-        PlayerMadeInitialSelection _ ->
+        PlayerMadeInitialSelection { ps } ->
             List.range 1 3
                 |> List.map
                     (\i ->
-                        if i == sim.g.selection then
+                        if i == ps then
                             selectedDoor
 
                         else
                             closedDoor
                     )
 
-        HostRevealedSheep _ ->
+        HostRevealedSheep { ps, rs } ->
             List.range 1 3
                 |> List.map
                     (\i ->
-                        if i == sim.g.selection then
+                        if i == ps then
                             selectedDoor
 
-                        else if i == getRevealedDoor sim.g then
+                        else if i == rs then
                             sheepRevealed
 
                         else
                             closedDoor
                     )
 
-        PlayerMadeSecondSelection _ ->
+        PlayerMadeSecondSelection { rs, ps2 } ->
             List.range 1 3
                 |> List.map
                     (\i ->
-                        if i == sim.g.selection then
+                        if i == ps2 then
                             selectedDoor
 
-                        else if i == getRevealedDoor sim.g then
+                        else if i == rs then
                             sheepRevealed
 
                         else
@@ -277,7 +277,7 @@ simToDoorsViewModel sim =
             List.range 1 3
                 |> List.map
                     (\i ->
-                        if i == sim.g.car then
+                        if i == sim.c then
                             carRevealed
 
                         else
