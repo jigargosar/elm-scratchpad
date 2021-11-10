@@ -282,7 +282,7 @@ viewSim sim =
     div []
         [ div [ tac ] [ text <| Debug.toString sim.phase ]
         , div [ dFlex, contentCenter, itemsCenter ]
-            (simToDoorsViewModel sim
+            (simToDoorsStringViewModel sim
                 |> List.indexedMap
                     (\i string ->
                         div
@@ -296,8 +296,8 @@ viewSim sim =
         ]
 
 
-simToDoorsViewModel : Sim -> List String
-simToDoorsViewModel sim =
+simToDoorsStringViewModel : Sim -> List String
+simToDoorsStringViewModel sim =
     case sim.phase of
         Initial ->
             [ closedDoor, closedDoor, closedDoor ]
