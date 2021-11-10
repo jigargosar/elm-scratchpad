@@ -247,9 +247,8 @@ viewSim sim =
         [ div [] [ text <| Debug.toString sim.phase ]
         , div []
             (simToDoorsViewModel sim
-                |> String.join " | "
-                |> text
-                |> List.singleton
+                |> List.map text
+                |> List.intersperse (text " | ")
             )
         ]
 
