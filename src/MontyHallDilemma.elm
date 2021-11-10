@@ -144,11 +144,11 @@ view _ =
 viewSim2 =
     let
         sims =
-            [ ( "--|--|--", "Select Door" )
+            [ ( "--|--|--", "Player: Select Door" )
             , ( "PP|--|--", "Host: Select Sheep to Reveal" )
-            , ( "PP|sh|--", "First Sheep Revealed" )
-            , ( "--|sh|PP", "Swap Selection" )
-            , ( "cc|sh|sh", "Final Reveal" )
+            , ( "PP|sh|--", "Player: Stick or Swap" )
+            , ( "--|sh|PP", "Host: Open All" )
+            , ( "cc|sh|sh", "==Over==" )
             ]
 
         vs ( state, title ) =
@@ -157,7 +157,14 @@ viewSim2 =
                 , div [] [ text state ]
                 ]
     in
-    sims |> List.map vs |> div [ tac, dFlex, fDCol, gap "20px", pAll "20px" ]
+    div
+        [ tac
+        , dFlex
+        , fDCol
+        , gap "20px"
+        , pAll "20px"
+        ]
+        (List.map vs sims)
 
 
 viewSim1 =
