@@ -145,15 +145,15 @@ view _ =
 viewSim3 =
     let
         sims =
-            [ "--|--|--"
-            , "PP|ss|--"
-            , "PP|ss|--"
-            , "--|ss|PP"
-            , "cc|ss|ss"
+            [ ( "--|--|--", "Select Door" )
+            , ( "PP|--|--", "Host: Select Sheep to Reveal" )
+            , ( "PP|sh|--", "First Sheep Revealed" )
+            , ( "--|sh|PP", "Swap Selection" )
+            , ( "cc|sh|sh", "Final Reveal" )
             ]
 
-        vs t =
-            div [] [ text t ]
+        vs ( state, title ) =
+            div [] [ text state, text " : ", text title ]
     in
     sims |> List.map vs |> div []
 
