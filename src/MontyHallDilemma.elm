@@ -178,9 +178,13 @@ updateSim : SimMsg -> Sim -> Sim
 updateSim msg ({ car, phase } as sim) =
     case ( msg, phase ) of
         ( InitialDoorSelected d, Initial ) ->
-            { sim
-                | phase = PlayerMadeInitialSelection { ps = clamp 1 3 d }
-            }
+            if clamp 1 3 d /= d then
+                sim
+
+            else
+                { sim
+                    | phase = PlayerMadeInitialSelection { ps = clamp 1 3 d }
+                }
 
         ( RevealFirstSheep, PlayerMadeInitialSelection { ps } ) ->
             let
