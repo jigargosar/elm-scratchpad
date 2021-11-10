@@ -136,13 +136,12 @@ revealAndSwapSelection game =
 view : Model -> Html Msg
 view _ =
     div [ fontMono, fontSize "20px" ]
-        [ viewSim3
-        , viewSim2
+        [ viewSim2
         , viewSim1
         ]
 
 
-viewSim3 =
+viewSim2 =
     let
         sims =
             [ ( "--|--|--", "Select Door" )
@@ -152,30 +151,11 @@ viewSim3 =
             , ( "cc|sh|sh", "Final Reveal" )
             ]
 
-        vs1 ( state, title ) =
-            div [] [ text state, text " : ", text title ]
-
         vs ( state, title ) =
             div []
                 [ div [] [ text title ]
                 , div [] [ text state ]
                 ]
-    in
-    sims |> List.map vs |> div []
-
-
-viewSim2 =
-    let
-        sims =
-            [ "1: Select Door"
-            , "2: Reveal Sheep"
-            , "3.1: Stick"
-            , "3.2: Swap"
-            , "4: Final Reveal"
-            ]
-
-        vs t =
-            div [] [ text t ]
     in
     sims |> List.map vs |> div []
 
