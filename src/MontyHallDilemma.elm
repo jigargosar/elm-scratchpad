@@ -152,8 +152,14 @@ viewSim3 =
             , ( "cc|sh|sh", "Final Reveal" )
             ]
 
-        vs ( state, title ) =
+        vs1 ( state, title ) =
             div [] [ text state, text " : ", text title ]
+
+        vs ( state, title ) =
+            div []
+                [ div [] [ text title ]
+                , div [] [ text state ]
+                ]
     in
     sims |> List.map vs |> div []
 
