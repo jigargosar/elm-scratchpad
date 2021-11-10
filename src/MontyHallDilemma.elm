@@ -183,7 +183,8 @@ revealAndSwapSelection game =
 view : Model -> Html Msg
 view { sim } =
     div [ fontMono, fontSize "20px" ]
-        [ viewSim sim
+        [ viewDoors (simToDoorsViewModel sim)
+        , viewSim sim
         , viewSim4
         , viewSim2
         , viewSim1
@@ -294,6 +295,39 @@ viewSim sim =
                 |> List.intersperse (div [] [ text " | " ])
             )
         ]
+
+
+viewDoors : List DoorView -> Html Msg
+viewDoors doors =
+    div [ dFlex, contentCenter, itemsCenter ]
+        (doors
+            |> List.indexedMap
+                (\i door ->
+                    div
+                        [ onClick (DoorClicked <| i + 1)
+                        , pAll "10px"
+                        ]
+                        [ viewDoor door ]
+                )
+            |> List.intersperse (div [] [ text " | " ])
+        )
+
+
+viewDoor : DoorView -> Html msg
+viewDoor door =
+    text <|
+        case door of
+            Closed ->
+                "--"
+
+            Sheep ->
+                "ss"
+
+            Car ->
+                "cc"
+
+            Selected ->
+                "PP"
 
 
 type DoorView
