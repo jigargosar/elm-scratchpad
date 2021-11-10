@@ -160,9 +160,9 @@ type alias Sim =
 
 type SimPhase
     = Initial
-    | PlayerMadeInitialSelection { ps : Int }
-    | HostRevealedSheep { ps : Int, rs : Int }
-    | PlayerMadeSecondSelection { ps : Int, rs : Int, ps2 : Int }
+    | FirstSelection { ps : Int }
+    | SheepRevealed { ps : Int, rs : Int }
+    | SecondSelection { ps : Int, rs : Int, ps2 : Int }
     | End { ps : Int, rs : Int, ps2 : Int }
 
 
@@ -183,10 +183,10 @@ updateSim msg ({ car, phase } as sim) =
 
             else
                 { sim
-                    | phase = PlayerMadeInitialSelection { ps = clamp 1 3 d }
+                    | phase = FirstSelection { ps = clamp 1 3 d }
                 }
 
-        ( RevealFirstSheep, PlayerMadeInitialSelection { ps } ) ->
+        ( RevealFirstSheep, FirstSelection { ps } ) ->
             let
                 isCarOrSelected i =
                     i == car || i == ps
@@ -199,18 +199,18 @@ updateSim msg ({ car, phase } as sim) =
             in
             { sim
                 | phase =
-                    HostRevealedSheep
+                    SheepRevealed
                         { ps = ps
                         , rs = rs
                         }
             }
 
-        ( PlayerSticksToSelection, HostRevealedSheep { ps, rs } ) ->
+        ( PlayerSticksToSelection, SheepRevealed { ps, rs } ) ->
             { sim
-                | phase = PlayerMadeSecondSelection { ps = ps, rs = rs, ps2 = ps }
+                | phase = SecondSelection { ps = ps, rs = rs, ps2 = ps }
             }
 
-        ( PlayerSwapsSection, HostRevealedSheep { ps, rs } ) ->
+        ( PlayerSwapsSection, SheepRevealed { ps, rs } ) ->
             let
                 isSelectedOrRevealed : Int -> Bool
                 isSelectedOrRevealed i =
@@ -223,10 +223,10 @@ updateSim msg ({ car, phase } as sim) =
                         |> Maybe.withDefault 1
             in
             { sim
-                | phase = PlayerMadeSecondSelection { ps = ps, rs = rs, ps2 = ps2 }
+                | phase = SecondSelection { ps = ps, rs = rs, ps2 = ps2 }
             }
 
-        ( OpenAllDoors, PlayerMadeSecondSelection rec ) ->
+        ( OpenAllDoors, SecondSelection rec ) ->
             { sim
                 | phase = End rec
             }
@@ -260,7 +260,7 @@ simToDoorsViewModel sim =
         Initial ->
             [ closedDoor, closedDoor, closedDoor ]
 
-        PlayerMadeInitialSelection { ps } ->
+        FirstSelection { ps } ->
             List.range 1 3
                 |> List.map
                     (\i ->
@@ -271,7 +271,7 @@ simToDoorsViewModel sim =
                             closedDoor
                     )
 
-        HostRevealedSheep { ps, rs } ->
+        SheepRevealed { ps, rs } ->
             List.range 1 3
                 |> List.map
                     (\i ->
@@ -285,7 +285,7 @@ simToDoorsViewModel sim =
                             closedDoor
                     )
 
-        PlayerMadeSecondSelection { rs, ps2 } ->
+        SecondSelection { rs, ps2 } ->
             List.range 1 3
                 |> List.map
                     (\i ->
