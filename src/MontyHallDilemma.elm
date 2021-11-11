@@ -331,7 +331,29 @@ viewSim2 sim =
         [ div [ tac ] [ text <| Debug.toString sim.phase ]
         , simToDoorsViewModel2 sim |> viewDoorContents
         , simToDoorsViewModel2 sim |> viewDoorMarkers
+        , simToDoorsViewModel2 sim |> viewDoors2
         ]
+
+
+viewDoors2 : List DoorView2 -> Html Msg
+viewDoors2 doors =
+    div [ dFlex, contentCenter, itemsCenter ]
+        (doors
+            |> List.indexedMap
+                (\i door ->
+                    div
+                        [ onClick (DoorClicked <| i + 1)
+                        , pAll "10px"
+                        , dFlex
+                        , fDCol
+                        , gap "10px"
+                        ]
+                        [ div [] [ viewDoorContent door ]
+                        , div [] [ viewDoorMarker door ]
+                        ]
+                )
+            |> List.intersperse (div [] [ text " | " ])
+        )
 
 
 viewDoorContents : List DoorView2 -> Html Msg
