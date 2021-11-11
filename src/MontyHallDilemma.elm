@@ -73,6 +73,7 @@ init () =
 type Msg
     = OnTick
     | DoorClicked Int
+    | Nop
 
 
 subscriptions : Model -> Sub Msg
@@ -95,6 +96,9 @@ update msg model =
                     model
             , Cmd.none
             )
+
+        Nop ->
+            ( model, Cmd.none )
 
 
 doorClickedToSimMessage : Sim -> Int -> Maybe SimMsg
@@ -190,6 +194,7 @@ view { sim } =
         , viewAllEmulatedSimStates
         , viewGameResults
         ]
+        |> Html.map (always Nop)
 
 
 type alias Sim =
