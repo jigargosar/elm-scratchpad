@@ -191,10 +191,9 @@ view : Model -> Html Msg
 view { sim } =
     div [ ffMonospace, fontSize "20px", pAll "20px" ]
         [ viewSim sim
-        , viewAllEmulatedSimStates
-        , viewGameResults
+        , viewAllEmulatedSimStates |> Html.map (always Nop)
+        , viewGameResults |> Html.map (always Nop)
         ]
-        |> Html.map (always Nop)
 
 
 type alias Sim =
