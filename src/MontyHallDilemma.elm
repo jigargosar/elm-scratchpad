@@ -190,7 +190,7 @@ revealAndSwapSelection game =
 view : Model -> Html Msg
 view { sim } =
     div [ ffMonospace, fontSize "20px", pAll "20px" ]
-        [ viewSim2 sim
+        [ viewSim sim
         , viewSim sim
         , viewAllEmulatedSimStates |> Html.map (always Nop)
         , viewGameResults |> Html.map (always Nop)
@@ -292,51 +292,8 @@ viewSim sim =
         ]
 
 
-viewDoors : List DoorView -> Html Msg
+viewDoors : List DoorView2 -> Html Msg
 viewDoors doors =
-    div [ dFlex, contentCenter, itemsCenter ]
-        (doors
-            |> List.indexedMap
-                (\i door ->
-                    div
-                        [ onClick (DoorClicked <| i + 1)
-                        , pAll "10px"
-                        ]
-                        [ viewDoor door ]
-                )
-            |> List.intersperse (div [] [ text " | " ])
-        )
-
-
-viewDoor : DoorView -> Html msg
-viewDoor door =
-    text <|
-        case door of
-            Closed ->
-                "--"
-
-            Sheep ->
-                "ss"
-
-            Car ->
-                "cc"
-
-            Selected ->
-                "PP"
-
-
-viewSim2 : Sim -> Html Msg
-viewSim2 sim =
-    div []
-        [ div [ tac ] [ text <| Debug.toString sim.phase ]
-        , simToDoorsViewModel2 sim |> viewDoorContents
-        , simToDoorsViewModel2 sim |> viewDoorMarkers
-        , simToDoorsViewModel2 sim |> viewDoors2
-        ]
-
-
-viewDoors2 : List DoorView2 -> Html Msg
-viewDoors2 doors =
     div [ dFlex, contentCenter, itemsCenter ]
         (doors
             |> List.indexedMap
@@ -351,38 +308,6 @@ viewDoors2 doors =
                         [ div [] [ viewDoorContent door ]
                         , div [] [ viewDoorMarker door ]
                         ]
-                )
-            |> List.intersperse (div [] [ text " | " ])
-        )
-
-
-viewDoorContents : List DoorView2 -> Html Msg
-viewDoorContents doors =
-    div [ dFlex, contentCenter, itemsCenter ]
-        (doors
-            |> List.indexedMap
-                (\i door ->
-                    div
-                        [ onClick (DoorClicked <| i + 1)
-                        , pAll "10px"
-                        ]
-                        [ viewDoorContent door ]
-                )
-            |> List.intersperse (div [] [ text " | " ])
-        )
-
-
-viewDoorMarkers : List DoorView2 -> Html Msg
-viewDoorMarkers doors =
-    div [ dFlex, contentCenter, itemsCenter ]
-        (doors
-            |> List.indexedMap
-                (\i door ->
-                    div
-                        [ onClick (DoorClicked <| i + 1)
-                        , pAll "10px"
-                        ]
-                        [ viewDoorMarker door ]
                 )
             |> List.intersperse (div [] [ text " | " ])
         )
@@ -465,15 +390,8 @@ type DoorContent
     | DC_Car
 
 
-type DoorView
-    = Closed
-    | Sheep
-    | Car
-    | Selected
-
-
-simToDoorsViewModel2 : Sim -> List DoorView2
-simToDoorsViewModel2 sim =
+simToDoorsViewModel : Sim -> List DoorView2
+simToDoorsViewModel sim =
     case sim.phase of
         AllClosed ->
             List.repeat 3 closedDoor
@@ -526,63 +444,6 @@ simToDoorsViewModel2 sim =
 
                         else
                             openedDoorWithSheep
-                    )
-
-
-simToDoorsViewModel : Sim -> List DoorView
-simToDoorsViewModel sim =
-    case sim.phase of
-        AllClosed ->
-            [ Closed, Closed, Closed ]
-
-        Selected1 { ps } ->
-            List.range 1 3
-                |> List.map
-                    (\i ->
-                        if i == ps then
-                            Selected
-
-                        else
-                            Closed
-                    )
-
-        SheepRevealed { ps, rs } ->
-            List.range 1 3
-                |> List.map
-                    (\i ->
-                        if i == ps then
-                            Selected
-
-                        else if i == rs then
-                            Sheep
-
-                        else
-                            Closed
-                    )
-
-        Selected2 { rs, ps2 } ->
-            List.range 1 3
-                |> List.map
-                    (\i ->
-                        if i == ps2 then
-                            Selected
-
-                        else if i == rs then
-                            Sheep
-
-                        else
-                            Closed
-                    )
-
-        AllOpen _ ->
-            List.range 1 3
-                |> List.map
-                    (\i ->
-                        if i == sim.car then
-                            Car
-
-                        else
-                            Sheep
                     )
 
 
