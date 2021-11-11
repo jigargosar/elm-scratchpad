@@ -186,7 +186,6 @@ view { sim } =
         [ viewDoors (simToDoorsViewModel sim)
         , viewSim sim
         , viewSim4
-        , viewSim2
         , viewGameResults
         ]
 
@@ -501,32 +500,6 @@ viewSim4 =
         , pAll "20px"
         ]
         (List.map viewSim sims)
-
-
-viewSim2 =
-    let
-        sims =
-            [ ( "--|--|--", "Player: Select Door" )
-            , ( "PP|--|--", "Host: Select Sheep to Reveal" )
-            , ( "PP|sh|--", "Player: Stick or Swap" )
-            , ( "--|sh|PP", "Host: Open All" )
-            , ( "cc|sh|sh", "==Over==" )
-            ]
-
-        vs ( state, title ) =
-            div []
-                [ div [] [ text title ]
-                , div [] [ text state ]
-                ]
-    in
-    div
-        [ tac
-        , dFlex
-        , fDCol
-        , gap "20px"
-        , pAll "20px"
-        ]
-        (List.map vs sims)
 
 
 viewGameResults : Html msg
