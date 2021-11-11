@@ -88,8 +88,8 @@ update msg model =
 
         DoorClicked doorNum ->
             ( case doorClickedToSimMessage model.sim doorNum of
-                Just m ->
-                    { model | sim = updateSim m model.sim }
+                Just sMsg ->
+                    { model | sim = updateSim sMsg model.sim }
 
                 Nothing ->
                     model
