@@ -350,6 +350,10 @@ openedDoorWithSheep =
     DoorViewModel (Just DC_Sheep) Nothing
 
 
+closedDoorWithPlayerMarker =
+    closedDoor |> withPlayerMarker
+
+
 withPlayerMarker : DoorViewModel -> DoorViewModel
 withPlayerMarker dvm =
     { dvm | marker = Just PlayerMarker }
@@ -383,7 +387,7 @@ simToDoorsViewModel2 sim =
                 |> List.map
                     (\i ->
                         if i == ps then
-                            closedDoor |> withPlayerMarker
+                            closedDoorWithPlayerMarker
 
                         else
                             closedDoor
@@ -394,7 +398,7 @@ simToDoorsViewModel2 sim =
                 |> List.map
                     (\i ->
                         if i == ps then
-                            closedDoor |> withPlayerMarker
+                            closedDoorWithPlayerMarker
 
                         else if i == rs then
                             openedDoorWithHostMarker
@@ -408,7 +412,7 @@ simToDoorsViewModel2 sim =
                 |> List.map
                     (\i ->
                         if i == ps2 then
-                            closedDoor |> withPlayerMarker
+                            closedDoorWithPlayerMarker
 
                         else if i == rs then
                             openedDoorWithHostMarker
