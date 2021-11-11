@@ -111,7 +111,7 @@ doorClickedToSimMessage sim d =
                 Just PlayerSticksToSelection
 
             else if d /= rs then
-                Just PlayerSwapsSection
+                Just PlayerSwapsSelection
 
             else
                 Nothing
@@ -209,7 +209,7 @@ type SimMsg
     = InitialDoorSelected Int
     | RevealFirstSheep
     | PlayerSticksToSelection
-    | PlayerSwapsSection
+    | PlayerSwapsSelection
     | OpenAllDoors
 
 
@@ -249,7 +249,7 @@ updateSim msg ({ car, phase } as sim) =
                 | phase = Selected2 { ps = ps, rs = rs, ps2 = ps }
             }
 
-        ( PlayerSwapsSection, SheepRevealed { ps, rs } ) ->
+        ( PlayerSwapsSelection, SheepRevealed { ps, rs } ) ->
             let
                 isSelectedOrRevealed : Int -> Bool
                 isSelectedOrRevealed i =
@@ -395,7 +395,7 @@ viewAllEmulatedSimStates =
         foo sim =
             [ InitialDoorSelected 2
             , RevealFirstSheep
-            , PlayerSwapsSection
+            , PlayerSwapsSelection
             , PlayerSticksToSelection
             , OpenAllDoors
             ]
