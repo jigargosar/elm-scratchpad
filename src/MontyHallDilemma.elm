@@ -292,7 +292,7 @@ viewSim sim =
         ]
 
 
-viewDoors : List DoorView2 -> Html Msg
+viewDoors : List DoorView -> Html Msg
 viewDoors doors =
     div [ dFlex, contentCenter, itemsCenter ]
         (doors
@@ -313,7 +313,7 @@ viewDoors doors =
         )
 
 
-viewDoorContent : DoorView2 -> Html msg
+viewDoorContent : DoorView -> Html msg
 viewDoorContent door =
     text <|
         case door.content of
@@ -329,7 +329,7 @@ viewDoorContent door =
                 "--"
 
 
-viewDoorMarker : DoorView2 -> Html msg
+viewDoorMarker : DoorView -> Html msg
 viewDoorMarker door =
     text <|
         case door.marker of
@@ -345,37 +345,37 @@ viewDoorMarker door =
                 "--"
 
 
-type alias DoorView2 =
+type alias DoorView =
     { content : Maybe DoorContent
     , marker : Maybe Marker
     }
 
 
-closedDoor : DoorView2
+closedDoor : DoorView
 closedDoor =
-    DoorView2 Nothing Nothing
+    DoorView Nothing Nothing
 
 
-openedDoorWithHostMarker : DoorView2
+openedDoorWithHostMarker : DoorView
 openedDoorWithHostMarker =
-    DoorView2 (Just DC_Sheep) (Just HostMarker)
+    DoorView (Just DC_Sheep) (Just HostMarker)
 
 
-openedDoorWithCar : DoorView2
+openedDoorWithCar : DoorView
 openedDoorWithCar =
-    DoorView2 (Just DC_Car) Nothing
+    DoorView (Just DC_Car) Nothing
 
 
-openedDoorWithSheep : DoorView2
+openedDoorWithSheep : DoorView
 openedDoorWithSheep =
-    DoorView2 (Just DC_Sheep) Nothing
+    DoorView (Just DC_Sheep) Nothing
 
 
 closedDoorWithPlayerMarker =
     closedDoor |> withPlayerMarker
 
 
-withPlayerMarker : DoorView2 -> DoorView2
+withPlayerMarker : DoorView -> DoorView
 withPlayerMarker dvm =
     { dvm | marker = Just PlayerMarker }
 
@@ -390,7 +390,7 @@ type DoorContent
     | DC_Car
 
 
-simToDoorsViewModel : Sim -> List DoorView2
+simToDoorsViewModel : Sim -> List DoorView
 simToDoorsViewModel sim =
     case sim.phase of
         AllClosed ->
