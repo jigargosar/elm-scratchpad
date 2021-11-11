@@ -330,6 +330,31 @@ type alias DoorViewModel =
     }
 
 
+closedDoor : DoorViewModel
+closedDoor =
+    DoorViewModel Nothing Nothing
+
+
+openedDoorWithHostMarker : DoorViewModel
+openedDoorWithHostMarker =
+    DoorViewModel (Just DC_Sheep) (Just HostMarker)
+
+
+openedDoorWithCar : DoorViewModel
+openedDoorWithCar =
+    DoorViewModel (Just DC_Car) Nothing
+
+
+openedDoorWithSheep : DoorViewModel
+openedDoorWithSheep =
+    DoorViewModel (Just DC_Sheep) Nothing
+
+
+withPlayerMarker : DoorViewModel -> DoorViewModel
+withPlayerMarker dvm =
+    { dvm | marker = Just PlayerMarker }
+
+
 type Marker
     = PlayerMarker
     | HostMarker
@@ -345,6 +370,63 @@ type DoorView
     | Sheep
     | Car
     | Selected
+
+
+simToDoorsViewModel2 : Sim -> List DoorViewModel
+simToDoorsViewModel2 sim =
+    case sim.phase of
+        AllClosed ->
+            List.repeat 3 closedDoor
+
+        Selected1 { ps } ->
+            List.range 1 3
+                |> List.map
+                    (\i ->
+                        if i == ps then
+                            closedDoor |> withPlayerMarker
+
+                        else
+                            closedDoor
+                    )
+
+        SheepRevealed { ps, rs } ->
+            List.range 1 3
+                |> List.map
+                    (\i ->
+                        if i == ps then
+                            closedDoor |> withPlayerMarker
+
+                        else if i == rs then
+                            openedDoorWithHostMarker
+
+                        else
+                            closedDoor
+                    )
+
+        Selected2 { rs, ps2 } ->
+            List.range 1 3
+                |> List.map
+                    (\i ->
+                        if i == ps2 then
+                            closedDoor |> withPlayerMarker
+
+                        else if i == rs then
+                            openedDoorWithHostMarker
+
+                        else
+                            closedDoor
+                    )
+
+        AllOpen _ ->
+            List.range 1 3
+                |> List.map
+                    (\i ->
+                        if i == sim.car then
+                            openedDoorWithCar
+
+                        else
+                            openedDoorWithSheep
+                    )
 
 
 simToDoorsViewModel : Sim -> List DoorView
