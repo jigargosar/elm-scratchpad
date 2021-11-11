@@ -185,7 +185,7 @@ revealAndSwapSelection game =
 
 view : Model -> Html Msg
 view { sim } =
-    div [ fontMono, fontSize "20px" ]
+    div [ ffMonospace, fontSize "20px" ]
         [ viewSim sim
         , viewAllEmulatedSimStates
         , viewGameResults

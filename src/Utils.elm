@@ -165,7 +165,7 @@ fontSize =
     style "font-size"
 
 
-fontMono =
+ffMonospace =
     style "font-family" "monospace"
 
 
