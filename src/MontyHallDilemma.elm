@@ -191,7 +191,6 @@ view : Model -> Html Msg
 view { sim } =
     div [ ffMonospace, fontSize "20px", pAll "20px" ]
         [ viewSim sim
-        , viewSim sim
         , viewAllEmulatedSimStates |> Html.map (always Nop)
         , viewGameResults |> Html.map (always Nop)
         ]
