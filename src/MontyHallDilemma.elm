@@ -324,6 +324,22 @@ viewDoor door =
                 "PP"
 
 
+type alias DoorViewModel =
+    { content : Maybe DoorContent
+    , marker : Maybe Marker
+    }
+
+
+type Marker
+    = PlayerMarker
+    | HostMarker
+
+
+type DoorContent
+    = DC_Sheep
+    | DC_Car
+
+
 type DoorView
     = Closed
     | Sheep
