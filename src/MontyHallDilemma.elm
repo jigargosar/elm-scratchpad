@@ -319,10 +319,10 @@ viewDoorContent door =
         case door.content of
             Just a ->
                 case a of
-                    DC_Sheep ->
+                    SheepContent ->
                         "ss"
 
-                    DC_Car ->
+                    CarContent ->
                         "cc"
 
             Nothing ->
@@ -358,17 +358,17 @@ closedDoor =
 
 openedDoorWithHostMarker : DoorView
 openedDoorWithHostMarker =
-    DoorView (Just DC_Sheep) (Just HostMarker)
+    DoorView (Just SheepContent) (Just HostMarker)
 
 
 openedDoorWithCar : DoorView
 openedDoorWithCar =
-    DoorView (Just DC_Car) Nothing
+    DoorView (Just CarContent) Nothing
 
 
 openedDoorWithSheep : DoorView
 openedDoorWithSheep =
-    DoorView (Just DC_Sheep) Nothing
+    DoorView (Just SheepContent) Nothing
 
 
 closedDoorWithPlayerMarker =
@@ -386,8 +386,8 @@ type Marker
 
 
 type DoorContent
-    = DC_Sheep
-    | DC_Car
+    = SheepContent
+    | CarContent
 
 
 simToDoorsViewModel : Sim -> List DoorView
