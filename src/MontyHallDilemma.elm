@@ -440,15 +440,27 @@ simToDoorsViewModel sim =
                             closedDoor
                     )
 
-        AllOpen _ ->
+        AllOpen { ps, rs, ps2 } ->
             List.range 1 3
                 |> List.map
                     (\i ->
                         if i == sim.car then
                             openedDoorWithCar
+                                |> (if i == ps2 then
+                                        withPlayerMarker
+
+                                    else
+                                        identity
+                                   )
 
                         else
                             openedDoorWithSheep
+                                |> (if i == rs then
+                                        withHostMarker
+
+                                    else
+                                        identity
+                                   )
                     )
 
 
