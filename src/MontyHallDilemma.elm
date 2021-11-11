@@ -110,11 +110,11 @@ doorClickedToSimMessage sim d =
         Selected1 _ ->
             Just RevealFirstSheep
 
-        SheepRevealed { ps, rs } ->
+        SheepRevealed { ps, hs } ->
             if d == ps then
                 Just PlayerSticksToSelection
 
-            else if d /= rs then
+            else if d /= hs then
                 Just PlayerSwapsSelection
 
             else
@@ -203,7 +203,7 @@ type alias Sim =
 type SimPhase
     = AllClosed
     | Selected1 { ps : Int }
-    | SheepRevealed { ps : Int, rs : Int }
+    | SheepRevealed { ps : Int, hs : Int }
     | Selected2 { ps : Int, hs : Int, ps2 : Int }
     | AllOpen { ps : Int, hs : Int, ps2 : Int }
 
@@ -243,20 +243,20 @@ updateSim msg ({ car, phase } as sim) =
                 | phase =
                     SheepRevealed
                         { ps = ps
-                        , rs = rs
+                        , hs = rs
                         }
             }
 
-        ( PlayerSticksToSelection, SheepRevealed { ps, rs } ) ->
+        ( PlayerSticksToSelection, SheepRevealed { ps, hs } ) ->
             { sim
-                | phase = Selected2 { ps = ps, hs = rs, ps2 = ps }
+                | phase = Selected2 { ps = ps, hs = hs, ps2 = ps }
             }
 
-        ( PlayerSwapsSelection, SheepRevealed { ps, rs } ) ->
+        ( PlayerSwapsSelection, SheepRevealed { ps, hs } ) ->
             let
                 isSelectedOrRevealed : Int -> Bool
                 isSelectedOrRevealed i =
-                    i == ps || i == rs
+                    i == ps || i == hs
 
                 ps2 =
                     [ 2, 3 ]
@@ -265,7 +265,7 @@ updateSim msg ({ car, phase } as sim) =
                         |> Maybe.withDefault 1
             in
             { sim
-                | phase = Selected2 { ps = ps, hs = rs, ps2 = ps2 }
+                | phase = Selected2 { ps = ps, hs = hs, ps2 = ps2 }
             }
 
         ( OpenAllDoors, Selected2 rec ) ->
@@ -412,14 +412,14 @@ simToDoorsViewModel sim =
                             closedDoor
                     )
 
-        SheepRevealed { ps, rs } ->
+        SheepRevealed { ps, hs } ->
             List.range 1 3
                 |> List.map
                     (\i ->
                         if i == ps then
                             closedDoorWithPlayerMarker
 
-                        else if i == rs then
+                        else if i == hs then
                             openedDoorWithHostMarker
 
                         else
