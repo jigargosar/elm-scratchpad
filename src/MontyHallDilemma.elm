@@ -205,7 +205,7 @@ type SimPhase
     | Selected1 { ps : Int }
     | SheepRevealed { ps : Int, rs : Int }
     | Selected2 { ps : Int, rs : Int, ps2 : Int }
-    | AllOpen { ps : Int, rs : Int, ps2 : Int }
+    | AllOpen { ps : Int, hs : Int, ps2 : Int }
 
 
 type SimMsg
@@ -440,7 +440,7 @@ simToDoorsViewModel sim =
                             closedDoor
                     )
 
-        AllOpen { ps, rs, ps2 } ->
+        AllOpen { ps, hs, ps2 } ->
             List.range 1 3
                 |> List.map
                     (\i ->
@@ -455,7 +455,7 @@ simToDoorsViewModel sim =
 
                         else
                             openedDoorWithSheep
-                                |> (if i == rs then
+                                |> (if i == hs then
                                         withHostMarker
 
                                     else
