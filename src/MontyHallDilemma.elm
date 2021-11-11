@@ -381,6 +381,11 @@ withPlayerMarker dvm =
     { dvm | marker = Just PlayerMarker }
 
 
+withHostMarker : DoorView -> DoorView
+withHostMarker dvm =
+    { dvm | marker = Just HostMarker }
+
+
 type Marker
     = PlayerMarker
     | HostMarker
