@@ -358,7 +358,7 @@ closedDoor =
 
 openedDoorWithHostMarker : DoorView
 openedDoorWithHostMarker =
-    DoorView (Just SheepContent) (Just HostMarker)
+    openedDoorWithSheep |> withHostMarker
 
 
 openedDoorWithCar : DoorView
