@@ -233,7 +233,7 @@ updateSim msg ({ car, phase } as sim) =
                 isCarOrSelected i =
                     i == car || i == ps
 
-                rs =
+                hs =
                     [ 2, 3 ]
                         |> List.filter (isCarOrSelected >> not)
                         |> List.head
@@ -243,7 +243,7 @@ updateSim msg ({ car, phase } as sim) =
                 | phase =
                     SheepRevealed
                         { ps = ps
-                        , hs = rs
+                        , hs = hs
                         }
             }
 
