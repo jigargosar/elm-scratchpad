@@ -87,41 +87,40 @@ update msg model =
             ( model, Cmd.none )
 
         DoorClicked d ->
-            let
-                simMsg =
-                    doorClickedToSimMessage model.sim d
-            in
-            ( { model
-                | sim = updateSim simMsg model.sim
-              }
+            ( case doorClickedToSimMessage model.sim d of
+                Just m ->
+                    { model | sim = updateSim m model.sim }
+
+                Nothing ->
+                    model
             , Cmd.none
             )
 
 
-doorClickedToSimMessage : Sim -> Int -> SimMsg
+doorClickedToSimMessage : Sim -> Int -> Maybe SimMsg
 doorClickedToSimMessage sim d =
     case sim.phase of
         AllClosed ->
-            InitialDoorSelected d
+            Just <| InitialDoorSelected d
 
         Selected1 _ ->
-            RevealFirstSheep
+            Just RevealFirstSheep
 
         SheepRevealed { ps, rs } ->
             if d == ps then
-                PlayerSticksToSelection
+                Just PlayerSticksToSelection
 
             else if d /= rs then
-                PlayerSwapsSection
+                Just PlayerSwapsSection
 
             else
-                InitialDoorSelected d
+                Nothing
 
         Selected2 _ ->
-            OpenAllDoors
+            Just OpenAllDoors
 
         AllOpen _ ->
-            InitialDoorSelected d
+            Nothing
 
 
 type alias GameData =
