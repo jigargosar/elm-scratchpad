@@ -86,8 +86,8 @@ update msg model =
         OnTick ->
             ( model, Cmd.none )
 
-        DoorClicked d ->
-            ( case doorClickedToSimMessage model.sim d of
+        DoorClicked doorNum ->
+            ( case doorClickedToSimMessage model.sim doorNum of
                 Just m ->
                     { model | sim = updateSim m model.sim }
 
