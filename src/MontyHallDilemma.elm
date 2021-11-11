@@ -185,7 +185,7 @@ view { sim } =
     div [ fontMono, fontSize "20px" ]
         [ viewDoors (simToDoorsViewModel sim)
         , viewSim sim
-        , viewSim4
+        , viewAllEmulatedSimStates
         , viewGameResults
         ]
 
@@ -466,7 +466,8 @@ carRevealed =
     "cc"
 
 
-viewSim4 =
+viewAllEmulatedSimStates : Html Msg
+viewAllEmulatedSimStates =
     let
         fn msg ( sim, acc ) =
             ( updateSim msg sim, sim :: acc )
