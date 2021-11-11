@@ -371,6 +371,7 @@ openedDoorWithSheep =
     DoorView (Just SheepContent) Nothing
 
 
+closedDoorWithPlayerMarker : DoorView
 closedDoorWithPlayerMarker =
     closedDoor |> withPlayerMarker
 
