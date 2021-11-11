@@ -1,19 +1,11 @@
 module MontyHallDilemma exposing (..)
 
 import Browser
-import Dict exposing (Dict)
 import Html exposing (Attribute, Html, div, text)
-import Html.Attributes exposing (style)
 import Html.Events exposing (onClick)
 import Random exposing (Generator)
-import Svg exposing (Svg)
-import Svg.Attributes as SA
-import Svg.Events as SE
 import Time
-import Tuple exposing (first, pair, second)
-import TypedSvg.Attributes as TA
-import TypedSvg.Attributes.InPx as Px
-import TypedSvg.Types as TT
+import Tuple exposing (first)
 import Utils exposing (..)
 
 
@@ -27,8 +19,16 @@ main =
         }
 
 
+
+--noinspection ElmUnusedSymbol
+
+
 width =
     gw * cz
+
+
+
+--noinspection ElmUnusedSymbol
 
 
 height =
@@ -45,6 +45,10 @@ gh =
 
 cz =
     160
+
+
+
+--noinspection ElmUnusedSymbol
 
 
 gpToWorld : GPos -> Vec
@@ -281,18 +285,7 @@ viewSim : Sim -> Html Msg
 viewSim sim =
     div []
         [ div [ tac ] [ text <| Debug.toString sim.phase ]
-        , div [ dFlex, contentCenter, itemsCenter ]
-            (simToDoorsStringViewModel sim
-                |> List.indexedMap
-                    (\i string ->
-                        div
-                            [ onClick (DoorClicked <| i + 1)
-                            , pAll "10px"
-                            ]
-                            [ text string ]
-                    )
-                |> List.intersperse (div [] [ text " | " ])
-            )
+        , simToDoorsViewModel sim |> viewDoors
         ]
 
 
@@ -391,79 +384,6 @@ simToDoorsViewModel sim =
                         else
                             Sheep
                     )
-
-
-simToDoorsStringViewModel : Sim -> List String
-simToDoorsStringViewModel sim =
-    case sim.phase of
-        AllClosed ->
-            [ closedDoor, closedDoor, closedDoor ]
-
-        Selected1 { ps } ->
-            List.range 1 3
-                |> List.map
-                    (\i ->
-                        if i == ps then
-                            selectedDoor
-
-                        else
-                            closedDoor
-                    )
-
-        SheepRevealed { ps, rs } ->
-            List.range 1 3
-                |> List.map
-                    (\i ->
-                        if i == ps then
-                            selectedDoor
-
-                        else if i == rs then
-                            sheepRevealed
-
-                        else
-                            closedDoor
-                    )
-
-        Selected2 { rs, ps2 } ->
-            List.range 1 3
-                |> List.map
-                    (\i ->
-                        if i == ps2 then
-                            selectedDoor
-
-                        else if i == rs then
-                            sheepRevealed
-
-                        else
-                            closedDoor
-                    )
-
-        AllOpen _ ->
-            List.range 1 3
-                |> List.map
-                    (\i ->
-                        if i == sim.car then
-                            carRevealed
-
-                        else
-                            sheepRevealed
-                    )
-
-
-closedDoor =
-    "--"
-
-
-selectedDoor =
-    "PP"
-
-
-sheepRevealed =
-    "ss"
-
-
-carRevealed =
-    "cc"
 
 
 viewAllEmulatedSimStates : Html Msg
