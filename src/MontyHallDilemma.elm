@@ -204,7 +204,7 @@ type SimPhase
     = AllClosed
     | Selected1 { ps : Int }
     | SheepRevealed { ps : Int, rs : Int }
-    | Selected2 { ps : Int, rs : Int, ps2 : Int }
+    | Selected2 { ps : Int, hs : Int, ps2 : Int }
     | AllOpen { ps : Int, hs : Int, ps2 : Int }
 
 
@@ -249,7 +249,7 @@ updateSim msg ({ car, phase } as sim) =
 
         ( PlayerSticksToSelection, SheepRevealed { ps, rs } ) ->
             { sim
-                | phase = Selected2 { ps = ps, rs = rs, ps2 = ps }
+                | phase = Selected2 { ps = ps, hs = rs, ps2 = ps }
             }
 
         ( PlayerSwapsSelection, SheepRevealed { ps, rs } ) ->
@@ -265,7 +265,7 @@ updateSim msg ({ car, phase } as sim) =
                         |> Maybe.withDefault 1
             in
             { sim
-                | phase = Selected2 { ps = ps, rs = rs, ps2 = ps2 }
+                | phase = Selected2 { ps = ps, hs = rs, ps2 = ps2 }
             }
 
         ( OpenAllDoors, Selected2 rec ) ->
@@ -426,14 +426,14 @@ simToDoorsViewModel sim =
                             closedDoor
                     )
 
-        Selected2 { rs, ps2 } ->
+        Selected2 { hs, ps2 } ->
             List.range 1 3
                 |> List.map
                     (\i ->
                         if i == ps2 then
                             closedDoorWithPlayerMarker
 
-                        else if i == rs then
+                        else if i == hs then
                             openedDoorWithHostMarker
 
                         else
