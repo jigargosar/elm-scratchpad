@@ -187,7 +187,7 @@ view { sim } =
         , viewSim sim
         , viewSim4
         , viewSim2
-        , viewSim1
+        , viewGameResults
         ]
 
 
@@ -529,8 +529,10 @@ viewSim2 =
         (List.map vs sims)
 
 
-viewSim1 =
+viewGameResults : Html msg
+viewGameResults =
     let
+        games : List GameData
         games =
             Random.step (Random.list maxGames randomGameSwap)
                 (Random.initialSeed 0)
