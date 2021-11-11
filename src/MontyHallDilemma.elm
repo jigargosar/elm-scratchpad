@@ -97,10 +97,10 @@ update msg model =
 doorClickedToSimMessage : Sim -> Int -> SimMsg
 doorClickedToSimMessage sim d =
     case sim.phase of
-        Initial ->
+        AllClosed ->
             InitialDoorSelected d
 
-        FirstSelection _ ->
+        Selected1 _ ->
             RevealFirstSheep
 
         SheepRevealed { ps, rs } ->
@@ -113,10 +113,10 @@ doorClickedToSimMessage sim d =
             else
                 InitialDoorSelected d
 
-        SecondSelection _ ->
+        Selected2 _ ->
             OpenAllDoors
 
-        End _ ->
+        AllOpen _ ->
             InitialDoorSelected d
 
 
@@ -196,11 +196,11 @@ type alias Sim =
 
 
 type SimPhase
-    = Initial
-    | FirstSelection { ps : Int }
+    = AllClosed
+    | Selected1 { ps : Int }
     | SheepRevealed { ps : Int, rs : Int }
-    | SecondSelection { ps : Int, rs : Int, ps2 : Int }
-    | End { ps : Int, rs : Int, ps2 : Int }
+    | Selected2 { ps : Int, rs : Int, ps2 : Int }
+    | AllOpen { ps : Int, rs : Int, ps2 : Int }
 
 
 type SimMsg
@@ -214,16 +214,16 @@ type SimMsg
 updateSim : SimMsg -> Sim -> Sim
 updateSim msg ({ car, phase } as sim) =
     case ( msg, phase ) of
-        ( InitialDoorSelected d, Initial ) ->
+        ( InitialDoorSelected d, AllClosed ) ->
             if clamp 1 3 d /= d then
                 sim
 
             else
                 { sim
-                    | phase = FirstSelection { ps = clamp 1 3 d }
+                    | phase = Selected1 { ps = clamp 1 3 d }
                 }
 
-        ( RevealFirstSheep, FirstSelection { ps } ) ->
+        ( RevealFirstSheep, Selected1 { ps } ) ->
             let
                 isCarOrSelected i =
                     i == car || i == ps
@@ -244,7 +244,7 @@ updateSim msg ({ car, phase } as sim) =
 
         ( PlayerSticksToSelection, SheepRevealed { ps, rs } ) ->
             { sim
-                | phase = SecondSelection { ps = ps, rs = rs, ps2 = ps }
+                | phase = Selected2 { ps = ps, rs = rs, ps2 = ps }
             }
 
         ( PlayerSwapsSection, SheepRevealed { ps, rs } ) ->
@@ -260,12 +260,12 @@ updateSim msg ({ car, phase } as sim) =
                         |> Maybe.withDefault 1
             in
             { sim
-                | phase = SecondSelection { ps = ps, rs = rs, ps2 = ps2 }
+                | phase = Selected2 { ps = ps, rs = rs, ps2 = ps2 }
             }
 
-        ( OpenAllDoors, SecondSelection rec ) ->
+        ( OpenAllDoors, Selected2 rec ) ->
             { sim
-                | phase = End rec
+                | phase = AllOpen rec
             }
 
         _ ->
@@ -275,7 +275,7 @@ updateSim msg ({ car, phase } as sim) =
 randomSim : Generator Sim
 randomSim =
     Random.uniform 1 [ 2, 3 ]
-        |> Random.map (\car -> { car = car, phase = Initial })
+        |> Random.map (\car -> { car = car, phase = AllClosed })
 
 
 viewSim : Sim -> Html Msg
@@ -340,10 +340,10 @@ type DoorView
 simToDoorsViewModel : Sim -> List DoorView
 simToDoorsViewModel sim =
     case sim.phase of
-        Initial ->
+        AllClosed ->
             [ Closed, Closed, Closed ]
 
-        FirstSelection { ps } ->
+        Selected1 { ps } ->
             List.range 1 3
                 |> List.map
                     (\i ->
@@ -368,7 +368,7 @@ simToDoorsViewModel sim =
                             Closed
                     )
 
-        SecondSelection { rs, ps2 } ->
+        Selected2 { rs, ps2 } ->
             List.range 1 3
                 |> List.map
                     (\i ->
@@ -382,7 +382,7 @@ simToDoorsViewModel sim =
                             Closed
                     )
 
-        End _ ->
+        AllOpen _ ->
             List.range 1 3
                 |> List.map
                     (\i ->
@@ -397,10 +397,10 @@ simToDoorsViewModel sim =
 simToDoorsStringViewModel : Sim -> List String
 simToDoorsStringViewModel sim =
     case sim.phase of
-        Initial ->
+        AllClosed ->
             [ closedDoor, closedDoor, closedDoor ]
 
-        FirstSelection { ps } ->
+        Selected1 { ps } ->
             List.range 1 3
                 |> List.map
                     (\i ->
@@ -425,7 +425,7 @@ simToDoorsStringViewModel sim =
                             closedDoor
                     )
 
-        SecondSelection { rs, ps2 } ->
+        Selected2 { rs, ps2 } ->
             List.range 1 3
                 |> List.map
                     (\i ->
@@ -439,7 +439,7 @@ simToDoorsStringViewModel sim =
                             closedDoor
                     )
 
-        End _ ->
+        AllOpen _ ->
             List.range 1 3
                 |> List.map
                     (\i ->
