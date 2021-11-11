@@ -190,7 +190,8 @@ revealAndSwapSelection game =
 view : Model -> Html Msg
 view { sim } =
     div [ ffMonospace, fontSize "20px", pAll "20px" ]
-        [ viewSim sim
+        [ viewSim2 sim
+        , viewSim sim
         , viewAllEmulatedSimStates |> Html.map (always Nop)
         , viewGameResults |> Html.map (always Nop)
         ]
@@ -324,37 +325,110 @@ viewDoor door =
                 "PP"
 
 
-type alias DoorViewModel =
+viewSim2 : Sim -> Html Msg
+viewSim2 sim =
+    div []
+        [ div [ tac ] [ text <| Debug.toString sim.phase ]
+        , simToDoorsViewModel2 sim |> viewDoorContents
+        , simToDoorsViewModel2 sim |> viewDoorMarkers
+        ]
+
+
+viewDoorContents : List DoorView2 -> Html Msg
+viewDoorContents doors =
+    div [ dFlex, contentCenter, itemsCenter ]
+        (doors
+            |> List.indexedMap
+                (\i door ->
+                    div
+                        [ onClick (DoorClicked <| i + 1)
+                        , pAll "10px"
+                        ]
+                        [ viewDoorContent door ]
+                )
+            |> List.intersperse (div [] [ text " | " ])
+        )
+
+
+viewDoorMarkers : List DoorView2 -> Html Msg
+viewDoorMarkers doors =
+    div [ dFlex, contentCenter, itemsCenter ]
+        (doors
+            |> List.indexedMap
+                (\i door ->
+                    div
+                        [ onClick (DoorClicked <| i + 1)
+                        , pAll "10px"
+                        ]
+                        [ viewDoorMarker door ]
+                )
+            |> List.intersperse (div [] [ text " | " ])
+        )
+
+
+viewDoorContent : DoorView2 -> Html msg
+viewDoorContent door =
+    text <|
+        case door.content of
+            Just a ->
+                case a of
+                    DC_Sheep ->
+                        "ss"
+
+                    DC_Car ->
+                        "cc"
+
+            Nothing ->
+                "--"
+
+
+viewDoorMarker : DoorView2 -> Html msg
+viewDoorMarker door =
+    text <|
+        case door.marker of
+            Just a ->
+                case a of
+                    PlayerMarker ->
+                        "PP"
+
+                    HostMarker ->
+                        "HH"
+
+            Nothing ->
+                "--"
+
+
+type alias DoorView2 =
     { content : Maybe DoorContent
     , marker : Maybe Marker
     }
 
 
-closedDoor : DoorViewModel
+closedDoor : DoorView2
 closedDoor =
-    DoorViewModel Nothing Nothing
+    DoorView2 Nothing Nothing
 
 
-openedDoorWithHostMarker : DoorViewModel
+openedDoorWithHostMarker : DoorView2
 openedDoorWithHostMarker =
-    DoorViewModel (Just DC_Sheep) (Just HostMarker)
+    DoorView2 (Just DC_Sheep) (Just HostMarker)
 
 
-openedDoorWithCar : DoorViewModel
+openedDoorWithCar : DoorView2
 openedDoorWithCar =
-    DoorViewModel (Just DC_Car) Nothing
+    DoorView2 (Just DC_Car) Nothing
 
 
-openedDoorWithSheep : DoorViewModel
+openedDoorWithSheep : DoorView2
 openedDoorWithSheep =
-    DoorViewModel (Just DC_Sheep) Nothing
+    DoorView2 (Just DC_Sheep) Nothing
 
 
 closedDoorWithPlayerMarker =
     closedDoor |> withPlayerMarker
 
 
-withPlayerMarker : DoorViewModel -> DoorViewModel
+withPlayerMarker : DoorView2 -> DoorView2
 withPlayerMarker dvm =
     { dvm | marker = Just PlayerMarker }
 
@@ -376,7 +450,7 @@ type DoorView
     | Selected
 
 
-simToDoorsViewModel2 : Sim -> List DoorViewModel
+simToDoorsViewModel2 : Sim -> List DoorView2
 simToDoorsViewModel2 sim =
     case sim.phase of
         AllClosed ->
