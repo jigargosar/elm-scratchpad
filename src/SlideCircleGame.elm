@@ -218,7 +218,9 @@ viewGridBG =
         , SA.opacity "0.9"
         , xf [ mv2 (width / 2) (height / 2) ]
         ]
-        [ circle (cz * 1.3) [ xf [ mv2 0 (cz / 2) ] ]
+        [ group [ xf [ mv2 0 (cz / 2) ] ]
+            [ circle (cz * 1.3) []
+            ]
         , circle (cz * 0.3) [ xf [ mv2 0 (-height * 0.5 + cz * 0.5) ] ]
         ]
 
