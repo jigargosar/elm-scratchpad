@@ -130,19 +130,19 @@ initialTiles =
             Dict.insert t.originalGP t
     in
     allGPs
+        |> List.filter (gpToTileViewIndex >> neq 8)
         |> List.map Tile
-        |> List.filter (getTileViewIndex >> neq 8)
         |> List.foldl insertTile Dict.empty
 
 
-gpToViewIndex : GPos -> Int
-gpToViewIndex ( x, y ) =
+gpToTileViewIndex : GPos -> Int
+gpToTileViewIndex ( x, y ) =
     y * gw + x + 1
 
 
 getTileViewIndex : Tile -> Int
 getTileViewIndex tile =
-    gpToViewIndex tile.originalGP
+    gpToTileViewIndex tile.originalGP
 
 
 getEmptyGP : TilesDict -> GPos
