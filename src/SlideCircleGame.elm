@@ -219,9 +219,13 @@ viewGridBG =
         , xf [ mv2 (width / 2) (height / 2) ]
         ]
         [ group [ xf [ mv2 0 (cz / 2) ] ]
-            [ circle (cz * 1.3) []
+            [ circle (cz * 1.3) [ stroke "aqua", SA.strokeWidth "20" ]
+            , circle (cz * 1.3 * 0.8) [ stroke "aqua", SA.strokeWidth "20" ]
             ]
-        , circle (cz * 0.3) [ xf [ mv2 0 (-height * 0.5 + cz * 0.5) ] ]
+        , group [ xf [ mv2 0 (-height * 0.5 + cz * 0.5) ] ]
+            [ circle (cz * 0.3) [ stroke "aqua", fill "black" ]
+            , circle (cz * 0.3 * 0.15) [ fill "aqua" ]
+            ]
         ]
 
 
