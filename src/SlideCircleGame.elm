@@ -227,7 +227,7 @@ viewGridBG =
 
 
 viewTileBase : Tile -> Svg msg
-viewTileBase t =
+viewTileBase _ =
     group []
         [ square cz [ fill black, xf [ mv2 3 3 ] ]
         , square cz [ fill <| grayN 0.35 ]
