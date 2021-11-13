@@ -213,9 +213,7 @@ viewTilePaint t =
 viewGridBG : Svg msg
 viewGridBG =
     group
-        [ stroke "aqua"
-        , SA.strokeWidth "20"
-        , SA.opacity "0.9"
+        [ SA.opacity "0.9"
         ]
         [ group [ xf [ mv (gpToCenterWC ( 1, 0 )) ] ]
             [ circle (cz * 0.15) [ stroke "black", SA.strokeWidth "50" ]
@@ -233,10 +231,11 @@ viewTileBase t =
     group []
         [ square cz [ fill black, xf [ mv2 3 3 ] ]
         , square cz [ fill <| grayN 0.35 ]
-        , words
-            [ fill white
-            , xf [ scale 3 ]
-            , SA.opacity "0.1"
-            ]
-            t.key
+
+        --, words
+        --    [ fill white
+        --    , xf [ scale 3 ]
+        --    , SA.opacity "0.5"
+        --    ]
+        --    t.key
         ]
