@@ -159,7 +159,7 @@ isSolved d =
 
 
 dropFirstRow =
-    Dict.filter (\( _, y ) _ -> y == 0)
+    Dict.filter (\( _, y ) _ -> y /= 0)
 
 
 solvedTiles : TilesDict
