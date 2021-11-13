@@ -91,7 +91,7 @@ view model =
         ]
         [ model.tiles
             |> Dict.toList
-            |> List.map viewTile3
+            |> List.map viewTileAt
             |> group []
         ]
 
@@ -196,9 +196,9 @@ viewTileImage t =
         ]
 
 
-viewTileIndexAt : ( GPos, Tile ) -> Html Msg
-viewTileIndexAt ( gp, t ) =
-    group [ xf [ mv (gpToWorld gp) ] ]
+viewTileIndex : Tile -> Svg msg
+viewTileIndex t =
+    group []
         [ square cz [ fillTransparent ]
         , words
             [ fill white
@@ -208,11 +208,12 @@ viewTileIndexAt ( gp, t ) =
         ]
 
 
-viewTileImageAt : ( GPos, Tile ) -> Html Msg
-viewTileImageAt ( gp, t ) =
-    group [ xf [ mv (gpToWorld gp) ] ]
-        [ viewTileImage t ]
-
-
-viewTile3 (( gp, _ ) as x) =
-    group [ SE.onClick (GPClicked gp) ] [ viewTileIndexAt x, viewTileImageAt x ]
+viewTileAt : ( GPos, Tile ) -> Svg Msg
+viewTileAt ( gp, t ) =
+    group
+        [ SE.onClick (GPClicked gp)
+        , xf [ mv (gpToWorld gp) ]
+        ]
+        [ viewTileIndex t
+        , viewTileImage t
+        ]
