@@ -123,14 +123,13 @@ type alias TilesDict =
 initialTiles : TilesDict
 initialTiles =
     let
-        gps =
+        allGPs =
             rangeWH gw gh
 
-        --|> List.take (gw * gh - 1)
         insertTile t =
             Dict.insert t.originalGP t
     in
-    gps
+    allGPs
         |> List.indexedMap Tile
         |> List.filter (.index >> inc >> neq 8)
         |> List.foldl insertTile Dict.empty
