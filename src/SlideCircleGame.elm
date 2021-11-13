@@ -186,14 +186,21 @@ viewTileBG t =
         leftTop =
             gpToTileLeftTopWC t.originalGP
     in
-    Svg.svg
+    nestedSvg cz
+        cz
         [ TA.viewBox leftTop.x leftTop.y cz cz
-        , Px.x <| (cz / -2)
-        , Px.y <| (cz / -2)
-        , saWidth cz
-        , saHeight cz
         ]
         [ viewGridBG ]
+
+
+nestedSvg w h xs =
+    Svg.svg
+        (saWidth w
+            :: saHeight h
+            :: Px.x (w / -2)
+            :: Px.y (h / -2)
+            :: xs
+        )
 
 
 viewGridBG : Svg msg
