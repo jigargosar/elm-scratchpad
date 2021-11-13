@@ -189,7 +189,7 @@ viewTileAt ( gp, t ) =
     group
         [ SE.onClick (GPClicked gp)
         , xf [ mv (gpToCenterWC gp), scale 0.97 ]
-        , style "transition" "all 1s"
+        , style "transition" "translate 1s"
         , HA.attribute "data-key" t.key
         ]
         [ viewTileBG t
