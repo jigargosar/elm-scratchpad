@@ -8,6 +8,7 @@ import Svg exposing (Svg)
 import Svg.Attributes as SA
 import Svg.Events as SE
 import Time
+import Tuple exposing (first, mapFirst)
 import TypedSvg as TS
 import TypedSvg.Attributes as TA
 import TypedSvg.Attributes.InPx as Px
@@ -101,8 +102,9 @@ view model =
             ]
             [ model.tiles
                 |> Dict.toList
-                |> List.map viewTileAt
-                |> group []
+                |> List.sortBy (first >> gpToTileViewIndex)
+                |> List.map viewKeyedTileAt
+                |> keyedGroup []
             ]
         ]
 
@@ -172,6 +174,14 @@ onGPClick gp model =
                     model.tiles
     in
     { model | tiles = updatedTiles }
+
+
+viewKeyedTileAt : ( GPos, Tile ) -> ( String, Svg Msg )
+viewKeyedTileAt ( gp, t ) =
+    ( --t |> getTileViewIndex >> String.fromInt
+      Debug.toString t
+    , viewTileAt ( gp, t )
+    )
 
 
 viewTileAt : ( GPos, Tile ) -> Svg Msg

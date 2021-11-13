@@ -6,6 +6,7 @@ import Html exposing (Attribute, Html)
 import Html.Attributes exposing (style)
 import Svg exposing (Svg)
 import Svg.Attributes as SA
+import Svg.Keyed
 import Time
 import TypedSvg.Attributes as TA
 import TypedSvg.Attributes.InPx as Px
@@ -91,6 +92,11 @@ vAdd1 a { x, y } =
 
 group =
     Svg.g
+
+
+keyedGroup : List (Attribute msg) -> List ( String, Svg msg ) -> Svg msg
+keyedGroup =
+    Svg.Keyed.node "g"
 
 
 xf =
