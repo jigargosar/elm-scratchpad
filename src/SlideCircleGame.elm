@@ -127,13 +127,13 @@ initialTiles =
             rangeWH gw gh
 
         --|> List.take (gw * gh - 1)
-        ins t =
+        insertTile t =
             Dict.insert t.originalGP t
     in
     gps
         |> List.indexedMap Tile
         |> List.filter (.index >> neq 8)
-        |> List.foldl ins Dict.empty
+        |> List.foldl insertTile Dict.empty
 
 
 getEmptyGP : TilesDict -> GPos
