@@ -2,7 +2,7 @@ module SlideCircleGame exposing (..)
 
 import Browser
 import Dict exposing (Dict)
-import Html exposing (Attribute, Html)
+import Html exposing (Attribute, Html, div)
 import Html.Attributes exposing (style)
 import Svg exposing (Svg)
 import Svg.Attributes as SA
@@ -88,18 +88,22 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    Svg.svg
-        [ saWidth width
-        , saHeight height
-        , noFill
-        , noStroke
-        , bgc gray
-        , noUserSelect
-        ]
-        [ model.tiles
-            |> Dict.toList
-            |> List.map viewTileAt
-            |> group []
+    div [ pAll "10px" ]
+        [ Svg.svg
+            [ saWidth width
+            , saHeight height
+            , noFill
+            , noStroke
+
+            --, bgc gray
+            , noUserSelect
+            , style "overflow" "visible"
+            ]
+            [ model.tiles
+                |> Dict.toList
+                |> List.map viewTileAt
+                |> group []
+            ]
         ]
 
 
@@ -223,11 +227,13 @@ viewGridBG =
 viewTileFG : Tile -> Svg msg
 viewTileFG t =
     group []
-        [ square cz [ fillTransparent, stroke "white" ]
+        [ square cz [ fillTransparent ]
+        , square cz [ fill black, xf [ mv2 5 5 ] ]
+        , square cz [ fill <| grayN 0.4 ]
         , words
             [ fill white
             , xf [ scale 3 ]
-            , SA.opacity "0.5"
+            , SA.opacity "0.99"
             ]
             (t |> getTileViewIndex |> String.fromInt)
         ]
