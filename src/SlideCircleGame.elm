@@ -193,16 +193,6 @@ viewTileBG t =
         [ viewGridBG ]
 
 
-nestedSvg w h xs =
-    Svg.svg
-        (saWidth w
-            :: saHeight h
-            :: Px.x (w / -2)
-            :: Px.y (h / -2)
-            :: xs
-        )
-
-
 viewGridBG : Svg msg
 viewGridBG =
     group

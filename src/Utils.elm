@@ -206,6 +206,17 @@ circle r xs =
     Svg.circle (Px.r r :: xs) []
 
 
+nestedSvg : Float -> Float -> List (Attribute msg) -> List (Svg msg) -> Html msg
+nestedSvg w h xs =
+    Svg.svg
+        (saWidth w
+            :: saHeight h
+            :: Px.x (w / -2)
+            :: Px.y (h / -2)
+            :: xs
+        )
+
+
 rect : Float -> Float -> List (Attribute msg) -> Svg msg
 rect w h xs =
     Svg.rect
