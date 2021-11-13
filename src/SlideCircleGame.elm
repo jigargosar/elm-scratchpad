@@ -107,19 +107,6 @@ viewTileAt ( gp, t ) =
         ]
 
 
-viewCircles : Svg msg
-viewCircles =
-    group
-        [ stroke "aqua"
-        , SA.strokeWidth "20"
-        , SA.opacity "0.7"
-        , xf [ mv2 (width / 2) (height / 2) ]
-        ]
-        [ circle (cz * 1.3) [ xf [ mv2 0 (cz / 2) ] ]
-        , circle (cz * 0.3) [ xf [ mv2 0 (-height * 0.5 + cz * 0.5) ] ]
-        ]
-
-
 type alias Tile =
     { originalGP : GPos }
 
@@ -201,7 +188,20 @@ viewTileBG t =
         , Px.x <| (cz / -2)
         , Px.y <| (cz / -2)
         ]
-        [ viewCircles ]
+        [ viewGridBG ]
+
+
+viewGridBG : Svg msg
+viewGridBG =
+    group
+        [ stroke "aqua"
+        , SA.strokeWidth "20"
+        , SA.opacity "0.7"
+        , xf [ mv2 (width / 2) (height / 2) ]
+        ]
+        [ circle (cz * 1.3) [ xf [ mv2 0 (cz / 2) ] ]
+        , circle (cz * 0.3) [ xf [ mv2 0 (-height * 0.5 + cz * 0.5) ] ]
+        ]
 
 
 viewTileFG : Tile -> Svg msg
