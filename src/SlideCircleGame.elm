@@ -3,10 +3,12 @@ module SlideCircleGame exposing (..)
 import Browser
 import Dict exposing (Dict)
 import Html exposing (Attribute, Html)
+import Html.Attributes exposing (style)
 import Svg exposing (Svg)
 import Svg.Attributes as SA
 import Svg.Events as SE
 import Time
+import TypedSvg as TS
 import TypedSvg.Attributes as TA
 import TypedSvg.Attributes.InPx as Px
 import Utils exposing (..)
@@ -205,10 +207,23 @@ viewGridBG =
         ]
 
 
+
+{-
+
+   TS.polyline
+               [ stroke "white"
+               , SA.strokeWidth "5"
+               , style "filter" " drop-shadow(5px 5px 5px white) "
+               , TA.points [ ( -cz / 2, cz / 2 ), ( cz / 2, cz / 2 ), ( cz / 2, -cz / 2 ) ]
+               ]
+               []
+-}
+
+
 viewTileFG : Tile -> Svg msg
 viewTileFG t =
     group []
-        [ square cz [ fillTransparent ]
+        [ square cz [ fillTransparent, stroke "white" ]
         , words
             [ fill white
             , xf [ scale 3 ]
