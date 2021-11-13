@@ -4,9 +4,11 @@ import Browser
 import Dict exposing (Dict)
 import Html exposing (Attribute, Html, div)
 import Html.Attributes as HA exposing (style)
+import Html.Keyed
 import Svg exposing (Svg)
 import Svg.Attributes as SA
 import Svg.Events as SE
+import Svg.Keyed
 import Time
 import Tuple exposing (first)
 import TypedSvg.Attributes as TA
@@ -73,6 +75,7 @@ type Msg
 subscriptions : Model -> Sub Msg
 subscriptions _ =
     Time.every (1000 / 60) (\_ -> OnTick)
+        |> always Sub.none
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -102,7 +105,7 @@ view model =
                 |> Dict.toList
                 |> List.sortBy (first >> gpToTileViewIndex)
                 |> List.map viewKeyedTileAt
-                |> keyedGroup []
+                |> Svg.Keyed.node "g" []
             ]
         ]
 
