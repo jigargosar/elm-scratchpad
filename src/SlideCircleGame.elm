@@ -179,6 +179,7 @@ viewTileAt ( gp, t ) =
     group
         [ SE.onClick (GPClicked gp)
         , xf [ mv (gpToCenterWC gp) ]
+        , style "transition" "all 1s"
         ]
         [ viewTileFG t
         , viewTileBG t
