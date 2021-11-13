@@ -4,13 +4,11 @@ import Browser
 import Dict exposing (Dict)
 import Html exposing (Attribute, Html, div)
 import Html.Attributes as HA exposing (style)
-import Html.Keyed
 import Svg exposing (Svg)
 import Svg.Attributes as SA
 import Svg.Events as SE
-import Svg.Keyed
 import Time
-import Tuple exposing (first, second)
+import Tuple exposing (second)
 import TypedSvg.Attributes as TA
 import Utils exposing (..)
 
@@ -174,15 +172,8 @@ viewTiles tiles =
     tiles
         |> Dict.toList
         |> List.sortBy (second >> .originalGP)
-        |> List.map viewKeyedTileAt
-        |> keyedGroup []
-
-
-viewKeyedTileAt : ( GPos, Tile ) -> ( String, Svg Msg )
-viewKeyedTileAt ( gp, t ) =
-    ( t.key
-    , viewTileAt ( gp, t )
-    )
+        |> List.map viewTileAt
+        |> group []
 
 
 viewTileAt : ( GPos, Tile ) -> Svg Msg
