@@ -212,6 +212,7 @@ viewTileFG t =
         , words
             [ fill white
             , xf [ scale 3 ]
+            , SA.opacity "0.5"
             ]
             (t |> getTileViewIndex |> String.fromInt)
         ]
