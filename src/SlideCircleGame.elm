@@ -175,25 +175,13 @@ onGPClick gp model =
     { model | tiles = updatedTiles }
 
 
-viewTile : ( GPos, Tile ) -> Html Msg
-viewTile ( gp, t ) =
-    group [ xf [ mv (gpToWorld gp) ] ]
-        [ square cz [ fillTransparent ]
-        , words
-            [ fill white
-            , xf [ scale 3 ]
-            ]
-            (viewIndex t)
-        ]
-
-
 viewIndex : Tile -> String
 viewIndex tile =
     getTileViewIndex tile |> String.fromInt
 
 
-viewTile2 : ( GPos, Tile ) -> Html Msg
-viewTile2 ( ( gx, gy ), t ) =
+viewTile : Tile -> Html msg
+viewTile t =
     let
         ( ogx, ogy ) =
             t.originalGP
@@ -204,9 +192,25 @@ viewTile2 ( ( gx, gy ), t ) =
         , TA.viewBox (toFloat ogx * cz) (toFloat ogy * cz) cz cz
         ]
         [ viewCircles ]
-        |> List.singleton
-        |> group [ xf [ mv2 (toFloat gx * cz) (toFloat gy * cz) ] ]
+
+
+viewTileAt : ( GPos, Tile ) -> Html Msg
+viewTileAt ( gp, t ) =
+    group [ xf [ mv (gpToWorld gp) ] ]
+        [ square cz [ fillTransparent ]
+        , words
+            [ fill white
+            , xf [ scale 3 ]
+            ]
+            (viewIndex t)
+        ]
+
+
+viewTileAt2 : ( GPos, Tile ) -> Html Msg
+viewTileAt2 ( ( gx, gy ), t ) =
+    group [ xf [ mv2 (toFloat gx * cz) (toFloat gy * cz) ] ]
+        [ viewTile t ]
 
 
 viewTile3 (( gp, _ ) as x) =
-    group [ SE.onClick (GPClicked gp) ] [ viewTile x, viewTile2 x ]
+    group [ SE.onClick (GPClicked gp) ] [ viewTileAt x, viewTileAt2 x ]
