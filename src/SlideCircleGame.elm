@@ -3,7 +3,7 @@ module SlideCircleGame exposing (..)
 import Browser
 import Dict exposing (Dict)
 import Html exposing (Attribute, Html, div)
-import Html.Attributes as HA exposing (style)
+import Html.Attributes exposing (style)
 import Svg exposing (Svg)
 import Svg.Attributes as SA
 import Svg.Events as SE
@@ -182,7 +182,6 @@ viewTileAt ( gp, t ) =
         [ SE.onClick (GPClicked gp)
         , xf [ mv (gpToCenterWC gp), scale 0.97 ]
         , style "transition" "transform 200ms"
-        , HA.attribute "data-key" t.key
         ]
         [ square cz [ fill black, xf [ mv2 3 3 ] ]
         , square cz [ fill <| grayN 0.35 ]
