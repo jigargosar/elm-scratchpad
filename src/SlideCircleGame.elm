@@ -96,8 +96,6 @@ view model =
             , saHeight height
             , noFill
             , noStroke
-
-            --, bgc gray
             , noUserSelect
             , overflowVisible
             ]
