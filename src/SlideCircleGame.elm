@@ -186,14 +186,14 @@ viewTileBG t =
         ( ogx, ogy ) =
             t.originalGP
     in
-    Svg.g [ xf [ mv2 (cz / -2) (cz / -2) ] ]
-        [ Svg.svg
-            [ saWidth cz
-            , saHeight cz
-            , TA.viewBox (toFloat ogx * cz) (toFloat ogy * cz) cz cz
-            ]
-            [ viewCircles ]
+    Svg.svg
+        [ saWidth cz
+        , saHeight cz
+        , TA.viewBox (toFloat ogx * cz) (toFloat ogy * cz) cz cz
+        , Px.x <| (cz / -2)
+        , Px.y <| (cz / -2)
         ]
+        [ viewCircles ]
 
 
 viewTileFG : Tile -> Svg msg
