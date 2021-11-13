@@ -131,8 +131,17 @@ initialTiles =
     in
     allGPs
         |> List.indexedMap Tile
-        |> List.filter (.index >> inc >> neq 8)
+        |> List.filter (getTileViewIndex >> neq 8)
         |> List.foldl insertTile Dict.empty
+
+
+getTileViewIndex : Tile -> Int
+getTileViewIndex tile =
+    let
+        ( x, y ) =
+            tile.originalGP
+    in
+    y * gw + x + 1
 
 
 getEmptyGP : TilesDict -> GPos
@@ -179,7 +188,7 @@ viewTile ( gp, t ) =
 
 viewIndex : Tile -> String
 viewIndex tile =
-    tile.index + 1 |> String.fromInt
+    getTileViewIndex tile |> String.fromInt
 
 
 viewTile2 : ( GPos, Tile ) -> Html Msg
