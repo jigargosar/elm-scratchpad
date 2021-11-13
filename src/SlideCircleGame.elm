@@ -239,13 +239,11 @@ viewGridBG =
 viewTileBase : Tile -> Svg msg
 viewTileBase t =
     group []
-        [ square cz [ fillTransparent ]
-        , square cz [ fill black, xf [ mv2 3 3 ] ]
+        [ square cz [ fill black, xf [ mv2 3 3 ] ]
         , square cz [ fill <| grayN 0.4 ]
         , words
             [ fill white
             , xf [ scale 3 ]
-            , SA.opacity "0.99"
             ]
             t.key
         ]
