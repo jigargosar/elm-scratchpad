@@ -192,7 +192,8 @@ viewTileAt ( gp, t ) =
         , style "transition" "transform 200ms"
         , HA.attribute "data-key" t.key
         ]
-        [ viewTileBase t
+        [ square cz [ fill black, xf [ mv2 3 3 ] ]
+        , square cz [ fill <| grayN 0.35 ]
         , viewTilePaint t
         ]
 
@@ -223,19 +224,4 @@ viewGridBG =
             [ circle (cz * 1.1) [ stroke "black", SA.strokeWidth "60" ]
             , circle (cz * 1.1) [ stroke "aqua", SA.strokeWidth "25" ]
             ]
-        ]
-
-
-viewTileBase : Tile -> Svg msg
-viewTileBase _ =
-    group []
-        [ square cz [ fill black, xf [ mv2 3 3 ] ]
-        , square cz [ fill <| grayN 0.35 ]
-
-        --, words
-        --    [ fill white
-        --    , xf [ scale 3 ]
-        --    , SA.opacity "0.5"
-        --    ]
-        --    t.key
         ]
