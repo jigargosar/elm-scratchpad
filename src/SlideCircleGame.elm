@@ -188,12 +188,12 @@ viewTileAt : ( GPos, Tile ) -> Svg Msg
 viewTileAt ( gp, t ) =
     group
         [ SE.onClick (GPClicked gp)
-        , xf [ mv (gpToCenterWC gp) ]
+        , xf [ mv (gpToCenterWC gp), scale 0.97 ]
         , style "transition" "all 1s"
         , HA.attribute "data-key" t.key
         ]
-        [ viewTileFG t
-        , viewTileBG t
+        [ viewTileBG t
+        , viewTileFG t
         ]
 
 
@@ -240,7 +240,7 @@ viewTileFG : Tile -> Svg msg
 viewTileFG t =
     group []
         [ square cz [ fillTransparent ]
-        , square cz [ fill black, xf [ mv2 5 5 ] ]
+        , square cz [ fill black, xf [ mv2 3 3 ] ]
         , square cz [ fill <| grayN 0.4 ]
         , words
             [ fill white
