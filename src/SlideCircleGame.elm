@@ -113,7 +113,7 @@ circle r xs =
 
 
 type alias Tile =
-    { index : Int, ogp : GPos }
+    { index : Int, originalGP : GPos }
 
 
 type alias TilesDict =
@@ -128,7 +128,7 @@ initialTiles =
 
         --|> List.take (gw * gh - 1)
         ins t =
-            Dict.insert t.ogp t
+            Dict.insert t.originalGP t
     in
     gps
         |> List.indexedMap Tile
@@ -187,7 +187,7 @@ viewTile2 : ( GPos, Tile ) -> Html Msg
 viewTile2 ( ( gx, gy ), t ) =
     let
         ( ogx, ogy ) =
-            t.ogp
+            t.originalGP
     in
     Svg.svg
         [ saWidth cz
