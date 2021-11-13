@@ -180,22 +180,24 @@ viewIndex tile =
     getTileViewIndex tile |> String.fromInt
 
 
-viewTile : Tile -> Html msg
-viewTile t =
+viewTileImage : Tile -> Html msg
+viewTileImage t =
     let
         ( ogx, ogy ) =
             t.originalGP
     in
-    Svg.svg
-        [ saWidth cz
-        , saHeight cz
-        , TA.viewBox (toFloat ogx * cz) (toFloat ogy * cz) cz cz
+    Svg.g [ xf [ mv2 (cz / -2) (cz / -2) ] ]
+        [ Svg.svg
+            [ saWidth cz
+            , saHeight cz
+            , TA.viewBox (toFloat ogx * cz) (toFloat ogy * cz) cz cz
+            ]
+            [ viewCircles ]
         ]
-        [ viewCircles ]
 
 
-viewTileAt : ( GPos, Tile ) -> Html Msg
-viewTileAt ( gp, t ) =
+viewTileIndexAt : ( GPos, Tile ) -> Html Msg
+viewTileIndexAt ( gp, t ) =
     group [ xf [ mv (gpToWorld gp) ] ]
         [ square cz [ fillTransparent ]
         , words
@@ -206,11 +208,11 @@ viewTileAt ( gp, t ) =
         ]
 
 
-viewTileAt2 : ( GPos, Tile ) -> Html Msg
-viewTileAt2 ( ( gx, gy ), t ) =
-    group [ xf [ mv2 (toFloat gx * cz) (toFloat gy * cz) ] ]
-        [ viewTile t ]
+viewTileImageAt : ( GPos, Tile ) -> Html Msg
+viewTileImageAt ( gp, t ) =
+    group [ xf [ mv (gpToWorld gp) ] ]
+        [ viewTileImage t ]
 
 
 viewTile3 (( gp, _ ) as x) =
-    group [ SE.onClick (GPClicked gp) ] [ viewTileAt x, viewTileAt2 x ]
+    group [ SE.onClick (GPClicked gp) ] [ viewTileIndexAt x, viewTileImageAt x ]
