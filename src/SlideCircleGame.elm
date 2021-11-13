@@ -132,7 +132,7 @@ initialTiles =
     in
     gps
         |> List.indexedMap Tile
-        |> List.filter (.index >> neq 8)
+        |> List.filter (.index >> inc >> neq 8)
         |> List.foldl insertTile Dict.empty
 
 
@@ -180,7 +180,7 @@ viewTile ( gp, t ) =
 
 viewIndex : Tile -> String
 viewIndex tile =
-    tile.index |> String.fromInt
+    tile.index + 1 |> String.fromInt
 
 
 viewTile2 : ( GPos, Tile ) -> Html Msg
