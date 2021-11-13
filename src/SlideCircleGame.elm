@@ -187,11 +187,11 @@ viewTileBG t =
             gpToTileLeftTopWC t.originalGP
     in
     Svg.svg
-        [ saWidth cz
-        , saHeight cz
-        , TA.viewBox leftTop.x leftTop.y cz cz
+        [ TA.viewBox leftTop.x leftTop.y cz cz
         , Px.x <| (cz / -2)
         , Px.y <| (cz / -2)
+        , saWidth cz
+        , saHeight cz
         ]
         [ viewGridBG ]
 
