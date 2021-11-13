@@ -42,13 +42,13 @@ cz =
     160
 
 
-gpToTileCenterWC : GPos -> Vec
-gpToTileCenterWC =
-    gpToTileLeftTopWC >> vAdd1 (cz / 2)
+gpToCenterWC : GPos -> Vec
+gpToCenterWC =
+    gpToLeftTopWC >> vAdd1 (cz / 2)
 
 
-gpToTileLeftTopWC : GPos -> Vec
-gpToTileLeftTopWC =
+gpToLeftTopWC : GPos -> Vec
+gpToLeftTopWC =
     vFromGP >> vScale cz
 
 
@@ -105,7 +105,7 @@ viewTileAt : ( GPos, Tile ) -> Svg Msg
 viewTileAt ( gp, t ) =
     group
         [ SE.onClick (GPClicked gp)
-        , xf [ mv (gpToTileCenterWC gp) ]
+        , xf [ mv (gpToCenterWC gp) ]
         ]
         [ viewTileFG t
         , viewTileBG t
@@ -184,7 +184,7 @@ viewTileBG : Tile -> Html msg
 viewTileBG t =
     let
         leftTop =
-            gpToTileLeftTopWC t.originalGP
+            gpToLeftTopWC t.originalGP
     in
     nestedSvg cz
         cz
