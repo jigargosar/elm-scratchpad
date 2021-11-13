@@ -96,6 +96,17 @@ view model =
         ]
 
 
+viewTileAt : ( GPos, Tile ) -> Svg Msg
+viewTileAt ( gp, t ) =
+    group
+        [ SE.onClick (GPClicked gp)
+        , xf [ mv (gpToWorld gp) ]
+        ]
+        [ viewTileFG t
+        , viewTileBG t
+        ]
+
+
 viewCircles =
     group
         [ stroke "aqua"
@@ -106,10 +117,6 @@ viewCircles =
         [ circle (cz * 1.3) [ xf [ mv2 0 (cz / 2) ] ]
         , circle (cz * 0.3) [ xf [ mv2 0 (-height * 0.5 + cz * 0.5) ] ]
         ]
-
-
-circle r xs =
-    Svg.circle (Px.r r :: xs) []
 
 
 type alias Tile =
@@ -205,15 +212,4 @@ viewTileFG t =
             , xf [ scale 3 ]
             ]
             (viewIndex t)
-        ]
-
-
-viewTileAt : ( GPos, Tile ) -> Svg Msg
-viewTileAt ( gp, t ) =
-    group
-        [ SE.onClick (GPClicked gp)
-        , xf [ mv (gpToWorld gp) ]
-        ]
-        [ viewTileFG t
-        , viewTileBG t
         ]
