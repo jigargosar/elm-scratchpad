@@ -178,8 +178,7 @@ onGPClick gp model =
 
 viewKeyedTileAt : ( GPos, Tile ) -> ( String, Svg Msg )
 viewKeyedTileAt ( gp, t ) =
-    ( --t |> getTileViewIndex >> String.fromInt
-      t.key
+    ( t.key
     , viewTileAt ( gp, t )
     )
 
