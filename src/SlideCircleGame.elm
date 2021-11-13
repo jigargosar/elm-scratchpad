@@ -107,6 +107,7 @@ viewTileAt ( gp, t ) =
         ]
 
 
+viewCircles : Svg msg
 viewCircles =
     group
         [ stroke "aqua"
