@@ -186,10 +186,10 @@ viewTileBG t =
         leftTop =
             gpToLeftTopWC t.originalGP
     in
-    nestedSvg cz
+    nestedSvg
         cz
-        [ TA.viewBox leftTop.x leftTop.y cz cz
-        ]
+        cz
+        [ TA.viewBox leftTop.x leftTop.y cz cz ]
         [ viewGridBG ]
 
 
