@@ -173,7 +173,7 @@ viewTiles : TilesDict -> Svg Msg
 viewTiles tiles =
     tiles
         |> Dict.toList
-        |> List.sortBy (second >> .key)
+        |> List.sortBy (second >> .originalGP)
         |> List.map viewKeyedTileAt
         |> keyedGroup []
 
