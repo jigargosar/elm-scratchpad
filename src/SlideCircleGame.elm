@@ -180,8 +180,8 @@ viewIndex tile =
     getTileViewIndex tile |> String.fromInt
 
 
-viewTileImage : Tile -> Html msg
-viewTileImage t =
+viewTileBG : Tile -> Html msg
+viewTileBG t =
     let
         ( ogx, ogy ) =
             t.originalGP
@@ -196,8 +196,8 @@ viewTileImage t =
         ]
 
 
-viewTileIndex : Tile -> Svg msg
-viewTileIndex t =
+viewTileFG : Tile -> Svg msg
+viewTileFG t =
     group []
         [ square cz [ fillTransparent ]
         , words
@@ -214,6 +214,6 @@ viewTileAt ( gp, t ) =
         [ SE.onClick (GPClicked gp)
         , xf [ mv (gpToWorld gp) ]
         ]
-        [ viewTileIndex t
-        , viewTileImage t
+        [ viewTileFG t
+        , viewTileBG t
         ]
