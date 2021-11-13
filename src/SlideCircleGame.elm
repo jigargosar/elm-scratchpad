@@ -100,21 +100,25 @@ view model =
             , overflowVisible
             ]
             [ viewTiles model.tiles
-            , group [] <|
+            , group [ xf [ mvGridCenter ] ] <|
                 if solvedTiles == model.tiles then
                     [ rect width
                         height
                         [ fill gray
                         , SA.opacity "0.9"
-                        , xf [ mv2 (width / 2) (height / 2) ]
+                        , xf []
                         ]
-                    , words "GOOD JOB" [ fill white, xf [ mv <| gpToCenterWC ( 1, 2 ), scale 5 ] ]
+                    , words "GOOD JOB" [ fill white, xf [ scale 5 ] ]
                     ]
 
                 else
                     [ text "" ]
             ]
         ]
+
+
+mvGridCenter =
+    mv2 (width / 2) (height / 2)
 
 
 
