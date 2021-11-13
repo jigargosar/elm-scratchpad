@@ -113,7 +113,7 @@ circle r xs =
 
 
 type alias Tile =
-    { index : Int, originalGP : GPos }
+    { originalGP : GPos }
 
 
 type alias TilesDict =
@@ -130,18 +130,19 @@ initialTiles =
             Dict.insert t.originalGP t
     in
     allGPs
-        |> List.indexedMap Tile
+        |> List.map Tile
         |> List.filter (getTileViewIndex >> neq 8)
         |> List.foldl insertTile Dict.empty
 
 
+gpToViewIndex : GPos -> Int
+gpToViewIndex ( x, y ) =
+    y * gw + x + 1
+
+
 getTileViewIndex : Tile -> Int
 getTileViewIndex tile =
-    let
-        ( x, y ) =
-            tile.originalGP
-    in
-    y * gw + x + 1
+    gpToViewIndex tile.originalGP
 
 
 getEmptyGP : TilesDict -> GPos
