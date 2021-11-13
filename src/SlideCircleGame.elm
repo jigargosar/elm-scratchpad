@@ -178,13 +178,13 @@ viewIndex tile =
 viewTileBG : Tile -> Html msg
 viewTileBG t =
     let
-        ( ogx, ogy ) =
-            t.originalGP
+        v =
+            gpToWorld t.originalGP |> vAdd1 (-cz / 2)
     in
     Svg.svg
         [ saWidth cz
         , saHeight cz
-        , TA.viewBox (toFloat ogx * cz) (toFloat ogy * cz) cz cz
+        , TA.viewBox v.x v.y cz cz
         , Px.x <| (cz / -2)
         , Px.y <| (cz / -2)
         ]
