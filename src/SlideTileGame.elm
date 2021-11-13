@@ -171,10 +171,10 @@ viewTile ( gp, ( i, _ ) ) =
     group [ xf [ mv (gpToWorld gp) ] ]
         [ square cz [ fillTransparent ]
         , words
+            (String.fromInt (i + 1))
             [ fill white
             , xf [ scale 3 ]
             ]
-            (String.fromInt (i + 1))
         ]
 
 

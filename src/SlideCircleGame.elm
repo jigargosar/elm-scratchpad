@@ -214,4 +214,7 @@ viewGridBG =
             [ circle (cz * 1.1) [ stroke "black", SA.strokeWidth "60" ]
             , circle (cz * 1.1) [ stroke "aqua", SA.strokeWidth "25" ]
             ]
+        , group [ xf [ mv (gpToCenterWC ( 0, 0 )) ] ]
+            [ words "W" []
+            ]
         ]

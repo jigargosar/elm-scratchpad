@@ -248,8 +248,8 @@ square sz =
     rect sz sz
 
 
-words : List (Attribute msg) -> String -> Svg msg
-words xs str =
+words : String -> List (Svg.Attribute msg) -> Svg msg
+words str xs =
     Svg.text_
         (SA.textAnchor "middle"
             :: SA.dominantBaseline "central"
