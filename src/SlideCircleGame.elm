@@ -62,6 +62,7 @@ init () =
     ( { tiles =
             initialTiles
                 |> always solvedTiles
+                |> always initialTiles
       }
     , Cmd.none
     )
