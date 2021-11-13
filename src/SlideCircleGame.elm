@@ -103,7 +103,7 @@ view model =
                 |> Dict.toList
                 |> List.sortBy (second >> .key)
                 |> List.map viewKeyedTileAt
-                |> Svg.Keyed.node "g" []
+                |> keyedGroup []
             ]
         ]
 
