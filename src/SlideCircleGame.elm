@@ -8,10 +8,8 @@ import Svg exposing (Svg)
 import Svg.Attributes as SA
 import Svg.Events as SE
 import Time
-import Tuple exposing (first, mapFirst)
-import TypedSvg as TS
+import Tuple exposing (first)
 import TypedSvg.Attributes as TA
-import TypedSvg.Attributes.InPx as Px
 import Utils exposing (..)
 
 
@@ -114,7 +112,7 @@ view model =
 
 
 type alias Tile =
-    { originalGP : GPos }
+    { originalGP : GPos, key : String }
 
 
 type alias TilesDict =
@@ -132,8 +130,13 @@ initialTiles =
     in
     allGPs
         |> List.filter (gpToTileViewIndex >> neq 8)
-        |> List.map Tile
+        |> List.map tileFromGP
         |> List.foldl insertTile Dict.empty
+
+
+tileFromGP : GPos -> Tile
+tileFromGP gp =
+    Tile gp (gpToTileViewIndex gp |> String.fromInt)
 
 
 gpToTileViewIndex : GPos -> Int
