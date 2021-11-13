@@ -42,9 +42,14 @@ cz =
     160
 
 
-gpToWorld : GPos -> Vec
-gpToWorld =
-    vFromGP >> vScale cz >> vAdd1 (cz / 2)
+gpToTileCenterWC : GPos -> Vec
+gpToTileCenterWC =
+    gpToTileLeftTopWC >> vAdd1 (cz / 2)
+
+
+gpToTileLeftTopWC : GPos -> Vec
+gpToTileLeftTopWC =
+    vFromGP >> vScale cz
 
 
 type alias Model =
@@ -100,7 +105,7 @@ viewTileAt : ( GPos, Tile ) -> Svg Msg
 viewTileAt ( gp, t ) =
     group
         [ SE.onClick (GPClicked gp)
-        , xf [ mv (gpToWorld gp) ]
+        , xf [ mv (gpToTileCenterWC gp) ]
         ]
         [ viewTileFG t
         , viewTileBG t
@@ -178,13 +183,13 @@ viewIndex tile =
 viewTileBG : Tile -> Html msg
 viewTileBG t =
     let
-        v =
-            gpToWorld t.originalGP |> vAdd1 (-cz / 2)
+        leftTop =
+            gpToTileLeftTopWC t.originalGP
     in
     Svg.svg
         [ saWidth cz
         , saHeight cz
-        , TA.viewBox v.x v.y cz cz
+        , TA.viewBox leftTop.x leftTop.y cz cz
         , Px.x <| (cz / -2)
         , Px.y <| (cz / -2)
         ]
