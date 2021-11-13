@@ -99,12 +99,7 @@ view model =
             , noUserSelect
             , overflowVisible
             ]
-            [ model.tiles
-                |> Dict.toList
-                |> List.sortBy (second >> .key)
-                |> List.map viewKeyedTileAt
-                |> keyedGroup []
-            ]
+            [ viewTiles model.tiles ]
         ]
 
 
@@ -172,6 +167,15 @@ onGPClick gp model =
                     model.tiles
     in
     { model | tiles = updatedTiles }
+
+
+viewTiles : TilesDict -> Svg Msg
+viewTiles tiles =
+    tiles
+        |> Dict.toList
+        |> List.sortBy (second >> .key)
+        |> List.map viewKeyedTileAt
+        |> keyedGroup []
 
 
 viewKeyedTileAt : ( GPos, Tile ) -> ( String, Svg Msg )
