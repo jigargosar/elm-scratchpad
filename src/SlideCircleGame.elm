@@ -99,7 +99,7 @@ view model =
 
             --, bgc gray
             , noUserSelect
-            , style "overflow" "visible"
+            , overflowVisible
             ]
             [ model.tiles
                 |> Dict.toList

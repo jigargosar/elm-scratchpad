@@ -167,6 +167,10 @@ stroke =
     SA.stroke
 
 
+overflowVisible =
+    style "overflow" "visible"
+
+
 fontSize =
     style "font-size"
 
