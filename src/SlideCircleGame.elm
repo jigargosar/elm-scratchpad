@@ -155,7 +155,11 @@ initialTiles =
 
 isSolved : TilesDict -> Bool
 isSolved d =
-    solvedTiles == d
+    dropFirstRow solvedTiles == dropFirstRow d
+
+
+dropFirstRow =
+    Dict.filter (\( _, y ) _ -> y == 0)
 
 
 solvedTiles : TilesDict
