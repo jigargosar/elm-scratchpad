@@ -175,11 +175,6 @@ onGPClick gp model =
     { model | tiles = updatedTiles }
 
 
-viewIndex : Tile -> String
-viewIndex tile =
-    getTileViewIndex tile |> String.fromInt
-
-
 viewTileBG : Tile -> Html msg
 viewTileBG t =
     let
@@ -214,5 +209,5 @@ viewTileFG t =
             [ fill white
             , xf [ scale 3 ]
             ]
-            (viewIndex t)
+            (t |> getTileViewIndex |> String.fromInt)
         ]
