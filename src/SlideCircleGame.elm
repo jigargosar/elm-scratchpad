@@ -127,6 +127,10 @@ initialTiles =
 
         insertTile t =
             Dict.insert t.originalGP t
+
+        tileFromGP : GPos -> Tile
+        tileFromGP gp =
+            Tile gp (gpToTileViewIndex gp |> String.fromInt)
     in
     allGPs
         |> List.filter (gpToTileViewIndex >> neq 8)
@@ -134,19 +138,9 @@ initialTiles =
         |> List.foldl insertTile Dict.empty
 
 
-tileFromGP : GPos -> Tile
-tileFromGP gp =
-    Tile gp (gpToTileViewIndex gp |> String.fromInt)
-
-
 gpToTileViewIndex : GPos -> Int
 gpToTileViewIndex ( x, y ) =
     y * gw + x + 1
-
-
-getTileViewIndex : Tile -> Int
-getTileViewIndex tile =
-    gpToTileViewIndex tile.originalGP
 
 
 getEmptyGP : TilesDict -> GPos
@@ -249,5 +243,5 @@ viewTileFG t =
             , xf [ scale 3 ]
             , SA.opacity "0.99"
             ]
-            (t |> getTileViewIndex |> String.fromInt)
+            t.key
         ]
