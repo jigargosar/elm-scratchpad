@@ -131,6 +131,18 @@ initialTiles =
         |> List.foldl insertTile Dict.empty
 
 
+solvedTiles : TilesDict
+solvedTiles =
+    case Dict.get ( 1, 0 ) initialTiles of
+        Just t ->
+            initialTiles
+                |> Dict.remove ( 1, 0 )
+                |> Dict.insert ( 1, 2 ) t
+
+        Nothing ->
+            initialTiles
+
+
 gpToTileViewIndex : GPos -> Int
 gpToTileViewIndex ( x, y ) =
     y * gw + x + 1
