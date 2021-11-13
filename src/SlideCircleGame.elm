@@ -189,16 +189,16 @@ viewTileAt ( gp, t ) =
     group
         [ SE.onClick (GPClicked gp)
         , xf [ mv (gpToCenterWC gp), scale 0.97 ]
-        , style "transition" "transform 1s"
+        , style "transition" "transform 200ms"
         , HA.attribute "data-key" t.key
         ]
-        [ viewTileBG t
-        , viewTileFG t
+        [ viewTileBase t
+        , viewTilePaint t
         ]
 
 
-viewTileBG : Tile -> Html msg
-viewTileBG t =
+viewTilePaint : Tile -> Html msg
+viewTilePaint t =
     let
         leftTop =
             gpToLeftTopWC t.originalGP
@@ -236,8 +236,8 @@ viewGridBG =
 -}
 
 
-viewTileFG : Tile -> Svg msg
-viewTileFG t =
+viewTileBase : Tile -> Svg msg
+viewTileBase t =
     group []
         [ square cz [ fillTransparent ]
         , square cz [ fill black, xf [ mv2 3 3 ] ]
