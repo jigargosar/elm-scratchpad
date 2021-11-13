@@ -101,15 +101,8 @@ view model =
         ]
 
 
-viewTileAt : ( GPos, Tile ) -> Svg Msg
-viewTileAt ( gp, t ) =
-    group
-        [ SE.onClick (GPClicked gp)
-        , xf [ mv (gpToCenterWC gp) ]
-        ]
-        [ viewTileFG t
-        , viewTileBG t
-        ]
+
+-- TILE & TILES DICT
 
 
 type alias Tile =
@@ -173,6 +166,17 @@ onGPClick gp model =
                     model.tiles
     in
     { model | tiles = updatedTiles }
+
+
+viewTileAt : ( GPos, Tile ) -> Svg Msg
+viewTileAt ( gp, t ) =
+    group
+        [ SE.onClick (GPClicked gp)
+        , xf [ mv (gpToCenterWC gp) ]
+        ]
+        [ viewTileFG t
+        , viewTileBG t
+        ]
 
 
 viewTileBG : Tile -> Html msg
