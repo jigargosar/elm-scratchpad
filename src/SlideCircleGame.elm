@@ -100,8 +100,8 @@ view model =
             , overflowVisible
             ]
             [ viewTiles model.tiles
-            , group [ xf [ mvGridCenter ] ] <|
-                if solvedTiles == model.tiles then
+            , if solvedTiles == model.tiles then
+                group [ xf [ mvGridCenter ] ] <|
                     [ rect width
                         height
                         [ fill gray
@@ -111,8 +111,8 @@ view model =
                     , words "GOOD JOB" [ fill white, xf [ scale 5 ] ]
                     ]
 
-                else
-                    [ text "" ]
+              else
+                text ""
             ]
         ]
 
