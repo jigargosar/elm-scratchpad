@@ -3,7 +3,7 @@ module SlideCircleGame exposing (..)
 import Browser
 import Dict exposing (Dict)
 import Html exposing (Attribute, Html, div)
-import Html.Attributes exposing (style)
+import Html.Attributes as HA exposing (style)
 import Svg exposing (Svg)
 import Svg.Attributes as SA
 import Svg.Events as SE
@@ -176,7 +176,7 @@ onGPClick gp model =
 viewKeyedTileAt : ( GPos, Tile ) -> ( String, Svg Msg )
 viewKeyedTileAt ( gp, t ) =
     ( --t |> getTileViewIndex >> String.fromInt
-      Debug.toString t
+      t.key
     , viewTileAt ( gp, t )
     )
 
@@ -187,6 +187,7 @@ viewTileAt ( gp, t ) =
         [ SE.onClick (GPClicked gp)
         , xf [ mv (gpToCenterWC gp) ]
         , style "transition" "all 1s"
+        , HA.attribute "data-key" t.key
         ]
         [ viewTileFG t
         , viewTileBG t
