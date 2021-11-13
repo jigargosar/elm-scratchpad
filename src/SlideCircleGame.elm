@@ -215,7 +215,7 @@ viewGridBG =
     group
         [ stroke "aqua"
         , SA.strokeWidth "20"
-        , SA.opacity "0.7"
+        , SA.opacity "0.9"
         , xf [ mv2 (width / 2) (height / 2) ]
         ]
         [ circle (cz * 1.3) [ xf [ mv2 0 (cz / 2) ] ]
@@ -223,27 +223,15 @@ viewGridBG =
         ]
 
 
-
-{-
-
-   TS.polyline
-               [ stroke "white"
-               , SA.strokeWidth "5"
-               , style "filter" " drop-shadow(5px 5px 5px white) "
-               , TA.points [ ( -cz / 2, cz / 2 ), ( cz / 2, cz / 2 ), ( cz / 2, -cz / 2 ) ]
-               ]
-               []
--}
-
-
 viewTileBase : Tile -> Svg msg
 viewTileBase t =
     group []
         [ square cz [ fill black, xf [ mv2 3 3 ] ]
-        , square cz [ fill <| grayN 0.4 ]
+        , square cz [ fill <| grayN 0.35 ]
         , words
             [ fill white
             , xf [ scale 3 ]
+            , SA.opacity "0.1"
             ]
             t.key
         ]
