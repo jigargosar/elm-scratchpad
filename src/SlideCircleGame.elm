@@ -10,7 +10,7 @@ import Svg.Attributes as SA
 import Svg.Events as SE
 import Svg.Keyed
 import Time
-import Tuple exposing (first)
+import Tuple exposing (first, second)
 import TypedSvg.Attributes as TA
 import Utils exposing (..)
 
@@ -103,7 +103,7 @@ view model =
             ]
             [ model.tiles
                 |> Dict.toList
-                |> List.sortBy (first >> gpToTileViewIndex)
+                |> List.sortBy (second >> .key)
                 |> List.map viewKeyedTileAt
                 |> Svg.Keyed.node "g" []
             ]
@@ -189,7 +189,7 @@ viewTileAt ( gp, t ) =
     group
         [ SE.onClick (GPClicked gp)
         , xf [ mv (gpToCenterWC gp), scale 0.97 ]
-        , style "transition" "translate 1s"
+        , style "transition" "transform 1s"
         , HA.attribute "data-key" t.key
         ]
         [ viewTileBG t
