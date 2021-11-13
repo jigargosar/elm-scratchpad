@@ -179,6 +179,10 @@ ffMonospace =
     style "font-family" "monospace"
 
 
+style =
+    Html.Attributes.style
+
+
 tac =
     style "text-align" "center"
 

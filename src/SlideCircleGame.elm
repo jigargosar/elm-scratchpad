@@ -3,7 +3,6 @@ module SlideCircleGame exposing (..)
 import Browser
 import Dict exposing (Dict)
 import Html exposing (Attribute, Html, div)
-import Html.Attributes exposing (style)
 import Svg exposing (Svg)
 import Svg.Attributes as SA
 import Svg.Events as SE
