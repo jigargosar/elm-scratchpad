@@ -214,7 +214,13 @@ viewGridBG =
             [ circle (cz * 1.1) [ stroke "black", SA.strokeWidth "60" ]
             , circle (cz * 1.1) [ stroke "aqua", SA.strokeWidth "25" ]
             ]
-        , group [ xf [ mv (gpToCenterWC ( 0, 0 )) ] ]
-            [ words "W" []
-            ]
+        , viewWAt ( 0, 0 )
+        , viewWAt ( 2, 0 )
+        ]
+
+
+viewWAt : GPos -> Svg msg
+viewWAt gp =
+    group [ xf [ mv (gpToCenterWC gp) ] ]
+        [ words "W" [ fill white, xf [ scale 7 ] ]
         ]
