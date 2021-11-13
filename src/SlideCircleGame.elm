@@ -101,7 +101,7 @@ view model =
             , overflowVisible
             ]
             [ viewTiles model.tiles
-            , if solvedTiles == model.tiles then
+            , if isSolved model.tiles then
                 group [ xf [ mvGridCenter ] ] <|
                     [ rect width
                         height
@@ -151,6 +151,11 @@ initialTiles =
         |> List.filter (gpToTileViewIndex >> neq 8)
         |> List.map tileFromGP
         |> List.foldl insertTile Dict.empty
+
+
+isSolved : TilesDict -> Bool
+isSolved d =
+    solvedTiles == d
 
 
 solvedTiles : TilesDict
