@@ -244,10 +244,7 @@ isSolved tiles =
     let
         originalToCurrentGPDict : Dict GPos GPos
         originalToCurrentGPDict =
-            tiles.dict
-                |> Dict.foldl
-                    (\currentGP { originalGP } -> Dict.insert originalGP currentGP)
-                    Dict.empty
+            tiles.dict |> swapKeyValueBy .originalGP
 
         currentGPOf : GPos -> Maybe GPos
         currentGPOf ogp =
