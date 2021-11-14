@@ -150,33 +150,29 @@ initialTiles =
         all =
             rangeWH gw gh |> Set.fromList
 
-        notFirstRow ( _, y ) =
-            y /= 0
-
-        solutionGPS =
-            Set.filter notFirstRow all
-
-        solutionTilesDict =
-            solutionGPS
-                |> Set.foldl (initTile >> insertAtOriginalGP) Dict.empty
-
-        solvedSmallCircleGP =
+        smallCircleGP =
             ( 1, 2 )
 
-        unsolvedSmallCircleGP =
+        initialEmptyGP =
             ( 1, 0 )
 
-        dict =
+        initialDict =
             all
-                |> Set.remove unsolvedSmallCircleGP
-                |> Set.remove solvedSmallCircleGP
+                |> Set.remove initialEmptyGP
                 |> Set.foldl (initTile >> insertAtOriginalGP) Dict.empty
-                |> Dict.insert unsolvedSmallCircleGP (initTile solvedSmallCircleGP)
+
+        solutionTilesDict =
+            dropFirstRow initialDict
+
+        dict =
+            initialDict
+                |> Dict.remove smallCircleGP
+                |> Dict.insert initialEmptyGP (initTile smallCircleGP)
 
         insertAtOriginalGP t =
             Dict.insert t.originalGP t
     in
-    { empty = solvedSmallCircleGP
+    { empty = smallCircleGP
     , dict = dict
     , solutionTilesDict = solutionTilesDict
     }
