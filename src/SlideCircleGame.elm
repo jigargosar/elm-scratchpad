@@ -60,7 +60,7 @@ type alias Model =
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { tiles = initialTiles
+    ( { tiles = initialTiles |> always solvedTiles
       }
     , Cmd.none
     )
@@ -144,17 +144,19 @@ type alias Tiles =
     }
 
 
+smallCircleGP =
+    ( 1, 2 )
+
+
+initialEmptyGP =
+    ( 1, 0 )
+
+
 initialTiles : Tiles
 initialTiles =
     let
         all =
             rangeWH gw gh |> Set.fromList
-
-        smallCircleGP =
-            ( 1, 2 )
-
-        initialEmptyGP =
-            ( 1, 0 )
 
         initialDict =
             all
@@ -175,6 +177,17 @@ initialTiles =
     { empty = smallCircleGP
     , dict = dict
     , solutionTilesDict = solutionTilesDict
+    }
+
+
+solvedTiles : Tiles
+solvedTiles =
+    { initialTiles
+        | empty = initialEmptyGP
+        , dict =
+            initialTiles.dict
+                |> Dict.remove initialEmptyGP
+                |> Dict.insert smallCircleGP (initTile smallCircleGP)
     }
 
 
