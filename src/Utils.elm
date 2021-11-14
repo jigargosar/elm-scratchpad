@@ -376,5 +376,10 @@ mapSecond =
     Tuple.mapSecond
 
 
+dictGet2 : comparable -> comparable -> Dict comparable v -> Maybe ( v, v )
+dictGet2 a b dict =
+    Maybe.map2 Tuple.pair (Dict.get a dict) (Dict.get b dict)
+
+
 mapFirst =
     Tuple.mapFirst

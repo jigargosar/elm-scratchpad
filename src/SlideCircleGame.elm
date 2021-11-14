@@ -246,20 +246,21 @@ isSolved tiles =
         originalToCurrentGPDict =
             tiles.dict |> mapValueToSwapWithKey .originalGP
 
-        currentGPOf : GPos -> Maybe GPos
-        currentGPOf ogp =
-            Dict.get ogp originalToCurrentGPDict
+        getCurrentDiff : GPos -> GPos -> Maybe GPos
+        getCurrentDiff oa ob =
+            dictGet2 oa ob originalToCurrentGPDict
+                |> Maybe.map (\( ca, cb ) -> map2 sub ca cb)
 
-        matchesSolutionItem : SolutionItem -> Bool
-        matchesSolutionItem { a, b, diff } =
-            case Maybe.map2 (map2 sub) (currentGPOf a) (currentGPOf b) of
+        originalDiffMatchesCurrentDiff : SolutionItem -> Bool
+        originalDiffMatchesCurrentDiff { a, b, diff } =
+            case getCurrentDiff a b of
                 Nothing ->
                     False
 
                 Just currentDiff ->
                     currentDiff == diff
     in
-    List.all matchesSolutionItem solutionItems
+    List.all originalDiffMatchesCurrentDiff solutionItems
 
 
 isFirstRow : GPos -> Bool
