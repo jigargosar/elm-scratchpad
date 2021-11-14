@@ -62,6 +62,7 @@ init () =
             initialTiles
                 |> always solvedTiles
                 |> always solvedTiles2
+                |> always initialTiles
       }
     , Cmd.none
     )
