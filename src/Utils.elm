@@ -283,8 +283,22 @@ inc =
     add 1
 
 
+dec =
+    add -1
+
+
 add =
     (+)
+
+
+headOfSingleton : List a -> Maybe a
+headOfSingleton list =
+    case list of
+        h :: [] ->
+            Just h
+
+        _ ->
+            Nothing
 
 
 {-| Only when `from` is member and `to` is not member.

@@ -62,6 +62,7 @@ init () =
     ( { tiles =
             initialTiles
                 |> always solvedTiles
+                |> always solvedTiles2
       }
     , Cmd.none
     )
@@ -177,6 +178,21 @@ solvedTiles =
     }
 
 
+solvedTiles2 : Tiles
+solvedTiles2 =
+    { empty = ( 1, 3 )
+    , dict =
+        Dict.union
+            (initialTilesDict
+                |> rejectKey (second >> eq 0)
+                |> Dict.toList
+                |> List.map (Tuple.mapFirst (Tuple.mapSecond dec))
+                |> Dict.fromList
+            )
+            initialTilesDict
+    }
+
+
 moveTileAt : GPos -> Tiles -> Tiles
 moveTileAt gp tiles =
     case
@@ -214,7 +230,7 @@ isSolved tiles =
         currentGPOf gp =
             filterValue (.originalGP >> eq gp) tiles.dict
                 |> Dict.keys
-                |> List.head
+                |> headOfSingleton
 
         pred : GPos -> GPos -> Bool
         pred a b =
