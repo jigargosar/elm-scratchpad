@@ -171,9 +171,8 @@ initialTiles =
 
 solvedTiles : Tiles
 solvedTiles =
-    { initialTiles
-        | empty = initialEmptyGP
-        , dict = initialTilesDict
+    { empty = initialEmptyGP
+    , dict = initialTilesDict
     }
 
 
