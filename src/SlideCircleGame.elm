@@ -3,6 +3,7 @@ module SlideCircleGame exposing (..)
 import Browser
 import Dict exposing (Dict)
 import Html exposing (Attribute, Html, div)
+import Set exposing (Set)
 import Svg exposing (Svg, text)
 import Svg.Attributes as SA
 import Svg.Events as SE
@@ -130,8 +131,53 @@ type alias Tile =
     { originalGP : GPos, key : String }
 
 
+initTile : GPos -> Tile
+initTile gp =
+    { originalGP = gp, key = gpToString gp }
+
+
 type alias TilesDict =
     Dict GPos Tile
+
+
+type alias Tiles =
+    { w : Int
+    , h : Int
+    , empty : GPos
+    , all : Set GPos
+    , dict : TilesDict
+    }
+
+
+initTiles : Tiles
+initTiles =
+    let
+        all =
+            rangeWH gw gh |> Set.fromList
+
+        empty =
+            ( 1, 2 )
+
+        allExceptEmpty =
+            Set.remove empty all
+
+        dict =
+            Set.foldl (initTile >> insertTile) Dict.empty allExceptEmpty
+
+        insertTile t =
+            Dict.insert t.originalGP t
+    in
+    { w = gw
+    , h = gh
+    , empty = empty
+    , all = all
+    , dict = dict
+    }
+
+
+gpToString : GPos -> String
+gpToString =
+    Debug.toString
 
 
 initialTiles : TilesDict
