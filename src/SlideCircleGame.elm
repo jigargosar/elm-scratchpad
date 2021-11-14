@@ -199,7 +199,7 @@ type alias Tiles =
 initialTiles : Tiles
 initialTiles =
     { empty = smallCircleGP
-    , dict = dictMoveValueFromTo smallCircleGP initialEmptyGP initialTilesDict
+    , dict = moveValueFromKeyToKey smallCircleGP initialEmptyGP initialTilesDict
     }
 
 
