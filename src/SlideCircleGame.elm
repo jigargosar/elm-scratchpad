@@ -95,12 +95,14 @@ update msg model =
             ( { model | tiles = applyUserInput (Click gp) model.tiles }, Cmd.none )
 
         OnKeyDown key ->
-            case arrowKeyToDir key of
+            ( case arrowKeyToDir key of
                 Just dir ->
-                    ( { model | tiles = applyUserInput (Slide dir) model.tiles }, Cmd.none )
+                    { model | tiles = applyUserInput (Slide dir) model.tiles }
 
                 Nothing ->
-                    ( model, Cmd.none )
+                    model
+            , Cmd.none
+            )
 
 
 view : Model -> Html Msg
