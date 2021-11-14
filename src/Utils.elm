@@ -299,3 +299,11 @@ dictMoveValueFromTo from to dict =
 
         _ ->
             dict
+
+
+first =
+    Tuple.first
+
+
+second =
+    Tuple.second

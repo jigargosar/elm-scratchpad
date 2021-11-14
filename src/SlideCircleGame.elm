@@ -3,12 +3,10 @@ module SlideCircleGame exposing (..)
 import Browser
 import Dict exposing (Dict)
 import Html exposing (Attribute, Html, div)
-import Set exposing (Set)
 import Svg exposing (Svg, text)
 import Svg.Attributes as SA
 import Svg.Events as SE
 import Time
-import Tuple exposing (second)
 import TypedSvg.Attributes as TA
 import Utils exposing (..)
 
@@ -198,11 +196,14 @@ moveTileAt gp tiles =
 
 isSolved : Tiles -> Bool
 isSolved tiles =
+    let
+        isNotFirstRow ( _, y ) =
+            y /= 0
+
+        dropFirstRow =
+            Dict.filter (first >> isNotFirstRow)
+    in
     dropFirstRow initialTilesDict == dropFirstRow tiles.dict
-
-
-dropFirstRow =
-    Dict.filter (\( _, y ) _ -> y /= 0)
 
 
 viewTiles : Tiles -> Svg Msg
