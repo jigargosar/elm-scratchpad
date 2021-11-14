@@ -204,6 +204,13 @@ moveTileAt gp tiles =
             tiles
 
 
+
+{-
+   Only when `from` is member and `to` is not member.
+-}
+
+
+dictMoveValueFromTo : comparable -> comparable -> Dict comparable v -> Dict comparable v
 dictMoveValueFromTo from to dict =
     case ( Dict.get from dict, Dict.get to dict ) of
         ( Just value, Nothing ) ->
