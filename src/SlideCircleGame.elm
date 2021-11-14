@@ -152,9 +152,8 @@ initialTilesDict =
             Dict.insert t.originalGP t
     in
     rangeWH gw gh
-        |> Set.fromList
-        |> Set.remove initialEmptyGP
-        |> Set.foldl (initTile >> insertAtOriginalGP) Dict.empty
+        |> List.foldl (initTile >> insertAtOriginalGP) Dict.empty
+        |> Dict.remove initialEmptyGP
 
 
 type alias Tiles =
@@ -174,10 +173,7 @@ solvedTiles : Tiles
 solvedTiles =
     { initialTiles
         | empty = initialEmptyGP
-        , dict =
-            initialTiles.dict
-                |> Dict.remove initialEmptyGP
-                |> Dict.insert smallCircleGP (initTile smallCircleGP)
+        , dict = initialTilesDict
     }
 
 
