@@ -244,7 +244,7 @@ isSolved tiles =
     let
         originalToCurrentGPDict : Dict GPos GPos
         originalToCurrentGPDict =
-            tiles.dict |> swapKeyValueBy .originalGP
+            tiles.dict |> mapValueToSwapWithKey .originalGP
 
         currentGPOf : GPos -> Maybe GPos
         currentGPOf ogp =

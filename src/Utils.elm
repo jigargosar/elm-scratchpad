@@ -332,8 +332,8 @@ second =
     Tuple.second
 
 
-swapKeyValueBy : (v -> comparable) -> Dict k v -> Dict comparable k
-swapKeyValueBy fn =
+mapValueToSwapWithKey : (v -> comparable) -> Dict k v -> Dict comparable k
+mapValueToSwapWithKey fn =
     Dict.foldl (\k v -> Dict.insert (fn v) k) Dict.empty
 
 
