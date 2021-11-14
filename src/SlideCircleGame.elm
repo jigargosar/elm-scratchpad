@@ -137,12 +137,6 @@ type alias TilesDict =
     Dict GPos Tile
 
 
-type alias Tiles =
-    { empty : GPos
-    , dict : TilesDict
-    }
-
-
 smallCircleGP =
     ( 1, 2 )
 
@@ -161,6 +155,12 @@ initialTilesDict =
         |> Set.fromList
         |> Set.remove initialEmptyGP
         |> Set.foldl (initTile >> insertAtOriginalGP) Dict.empty
+
+
+type alias Tiles =
+    { empty : GPos
+    , dict : TilesDict
+    }
 
 
 initialTiles : Tiles
@@ -202,6 +202,17 @@ moveTileAt gp tiles =
 
         _ ->
             tiles
+
+
+dictMoveValueFromTo from to dict =
+    case ( Dict.get from dict, Dict.get to dict ) of
+        ( Just value, Nothing ) ->
+            dict
+                |> Dict.remove from
+                |> Dict.insert to value
+
+        _ ->
+            dict
 
 
 isSolved : Tiles -> Bool
