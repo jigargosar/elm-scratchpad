@@ -336,3 +336,13 @@ rejectKey fn =
 filterValue : (b -> Bool) -> Dict comparable b -> Dict comparable b
 filterValue fn =
     Dict.filter (\_ v -> fn v)
+
+
+partitionKey : (comparable -> Bool) -> Dict comparable b -> ( Dict comparable b, Dict comparable b )
+partitionKey fn d =
+    ( filterKey fn d, rejectKey fn d )
+
+
+renameKey : (a -> comparable) -> Dict a v -> Dict comparable v
+renameKey fn =
+    Dict.toList >> List.map (Tuple.mapFirst fn) >> Dict.fromList

@@ -183,20 +183,17 @@ solvedTiles2 =
     { empty = ( 1, 3 )
     , dict =
         initialTilesDict
-            |> partitionKey (second >> eq 0)
-            |> Tuple.mapBoth (renameKey (Tuple.mapSecond <| add 3)) (renameKey (Tuple.mapSecond dec))
-            |> (\( a, b ) -> Dict.union a b)
+            |> renameKey
+                (Tuple.mapSecond
+                    (\y ->
+                        if y == 0 then
+                            3
+
+                        else
+                            y - 1
+                    )
+                )
     }
-
-
-partitionKey : (comparable -> Bool) -> Dict comparable b -> ( Dict comparable b, Dict comparable b )
-partitionKey fn d =
-    ( filterKey fn d, rejectKey fn d )
-
-
-renameKey : (a -> comparable) -> Dict a v -> Dict comparable v
-renameKey fn =
-    Dict.toList >> List.map (Tuple.mapFirst fn) >> Dict.fromList
 
 
 moveTileAt : GPos -> Tiles -> Tiles
