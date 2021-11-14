@@ -59,7 +59,9 @@ type alias Model =
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { tiles = initialTiles |> always solvedTiles
+    ( { tiles =
+            initialTiles
+                |> always solvedTiles
       }
     , Cmd.none
     )
