@@ -219,6 +219,11 @@ solvedTiles2 =
     }
 
 
+slideTileInDir : Dir4 -> Tiles -> Tiles
+slideTileInDir dir tiles =
+    moveTileAt (moveInDir4 dir tiles.empty) tiles
+
+
 moveTileAt : GPos -> Tiles -> Tiles
 moveTileAt gp tiles =
     case

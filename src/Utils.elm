@@ -14,6 +14,33 @@ import TypedSvg.Attributes.InPx as Px
 import TypedSvg.Types as TT
 
 
+type Dir4
+    = Up
+    | Down
+    | Left
+    | Right
+
+
+moveInDir4 : Dir4 -> GPos -> GPos
+moveInDir4 dir gp =
+    let
+        offset =
+            case dir of
+                Up ->
+                    ( 0, -1 )
+
+                Down ->
+                    ( 0, 1 )
+
+                Left ->
+                    ( -1, 0 )
+
+                Right ->
+                    ( 1, 0 )
+    in
+    map2 add gp offset
+
+
 type alias GPos =
     ( Int, Int )
 
