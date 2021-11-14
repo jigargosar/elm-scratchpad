@@ -156,23 +156,23 @@ initialTiles =
         solutionGPS =
             Set.filter notFirstRow all
 
-        smallCircleTarget =
+        solvedSmallCircleGP =
             ( 1, 2 )
 
-        smallCircleSource =
+        unsolvedSmallCircleGP =
             ( 1, 0 )
 
         dict =
             all
-                |> Set.remove smallCircleSource
-                |> Set.remove smallCircleTarget
+                |> Set.remove unsolvedSmallCircleGP
+                |> Set.remove solvedSmallCircleGP
                 |> Set.foldl (initTile >> insertAtOriginalGP) Dict.empty
-                |> Dict.insert smallCircleSource (initTile smallCircleTarget)
+                |> Dict.insert unsolvedSmallCircleGP (initTile solvedSmallCircleGP)
 
         insertAtOriginalGP t =
             Dict.insert t.originalGP t
     in
-    { empty = smallCircleTarget
+    { empty = solvedSmallCircleGP
     , dict = dict
     , solutionGPS = solutionGPS
     }
