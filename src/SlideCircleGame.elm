@@ -194,6 +194,15 @@ moveTileAt gp tiles =
             tiles
 
 
+isSolved2 : Tiles -> Bool
+isSolved2 tiles =
+    let
+        _ =
+            1
+    in
+    Debug.todo "todo"
+
+
 isSolved : Tiles -> Bool
 isSolved tiles =
     let
