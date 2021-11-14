@@ -3,6 +3,7 @@ module SlideCircleGame exposing (..)
 import Browser
 import Dict exposing (Dict)
 import Html exposing (Attribute, Html, div)
+import Set exposing (Set)
 import Svg exposing (Svg, text)
 import Svg.Attributes as SA
 import Svg.Events as SE
@@ -197,18 +198,40 @@ moveTileAt gp tiles =
 isSolved2 : Tiles -> Bool
 isSolved2 tiles =
     let
-        _ =
-            1
+        solutionGPS : List GPos
+        solutionGPS =
+            initialTilesDict
+                |> rejectKey isFirstRow
+                |> Dict.keys
+
+        gDiff : GPos -> GPos -> GPos
+        gDiff ( a, b ) ( c, d ) =
+            ( a - c, b - d )
+
+        currentGPOf : GPos -> GPos
+        currentGPOf _ =
+            Debug.todo "todo"
+
+        pred : GPos -> GPos -> Bool
+        pred a b =
+            gDiff a b == gDiff (currentGPOf a) (currentGPOf b)
     in
-    Debug.todo "todo"
+    case solutionGPS of
+        h :: t ->
+            List.all (pred h) t
+
+        _ ->
+            False
+
+
+isFirstRow : GPos -> Bool
+isFirstRow ( _, y ) =
+    y == 0
 
 
 isSolved : Tiles -> Bool
 isSolved tiles =
     let
-        isFirstRow ( _, y ) =
-            y == 0
-
         dropFirstRow =
             rejectKey isFirstRow
     in
