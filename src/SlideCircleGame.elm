@@ -84,7 +84,7 @@ update msg model =
             ( model, Cmd.none )
 
         GPClicked gp ->
-            ( onGPClick gp model, Cmd.none )
+            ( { model | tiles = moveTileAt gp model.tiles }, Cmd.none )
 
 
 view : Model -> Html Msg
@@ -138,11 +138,9 @@ type alias TilesDict =
 
 
 type alias Tiles =
-    { w : Int
-    , h : Int
-    , empty : GPos
-    , all : Set GPos
+    { empty : GPos
     , dict : TilesDict
+    , solutionGPS : Set GPos
     }
 
 
@@ -152,24 +150,52 @@ initialTiles =
         all =
             rangeWH gw gh |> Set.fromList
 
-        empty =
+        notFirstRow ( _, y ) =
+            y /= 0
+
+        solutionGPS =
+            Set.filter notFirstRow all
+
+        smallCircleTarget =
             ( 1, 2 )
 
-        allExceptEmpty =
-            Set.remove empty all
+        smallCircleSource =
+            ( 1, 0 )
 
         dict =
-            Set.foldl (initTile >> insertTile) Dict.empty allExceptEmpty
+            all
+                |> Set.remove smallCircleSource
+                |> Set.remove smallCircleTarget
+                |> Set.foldl (initTile >> insertAtOriginalGP) Dict.empty
+                |> Dict.insert smallCircleSource (initTile smallCircleTarget)
 
-        insertTile t =
+        insertAtOriginalGP t =
             Dict.insert t.originalGP t
     in
-    { w = gw
-    , h = gh
-    , empty = empty
-    , all = all
+    { empty = smallCircleTarget
     , dict = dict
+    , solutionGPS = solutionGPS
     }
+
+
+moveTileAt : GPos -> Tiles -> Tiles
+moveTileAt gp tiles =
+    case
+        ( Dict.get gp tiles.dict
+        , areAdjacent gp tiles.empty
+        )
+    of
+        ( Just tile, True ) ->
+            let
+                updatedDict =
+                    tiles.dict
+                        |> Dict.remove gp
+                        |> Dict.insert tiles.empty tile
+            in
+            { tiles | empty = gp, dict = updatedDict }
+
+        _ ->
+            tiles
 
 
 gpToString : GPos -> String
@@ -196,17 +222,17 @@ initialTilesDict =
         |> List.foldl insertTile Dict.empty
 
 
-isSolved : TilesDict -> Bool
-isSolved d =
-    dropFirstRow solvedTiles == dropFirstRow d
+isSolved : Tiles -> Bool
+isSolved tiles =
+    dropFirstRow solvedTilesDict == dropFirstRow tiles.dict
 
 
 dropFirstRow =
     Dict.filter (\( _, y ) _ -> y /= 0)
 
 
-solvedTiles : TilesDict
-solvedTiles =
+solvedTilesDict : TilesDict
+solvedTilesDict =
     case Dict.get ( 1, 0 ) initialTilesDict of
         Just t ->
             initialTilesDict
@@ -222,39 +248,9 @@ gpToTileViewIndex ( x, y ) =
     y * gw + x + 1
 
 
-getEmptyGP : TilesDict -> GPos
-getEmptyGP td =
-    case
-        rangeWH gw gh
-            |> List.filter (\k -> Dict.member k td |> not)
-            |> List.head
-    of
-        Nothing ->
-            Debug.todo "this should never happen"
-
-        Just gp ->
-            gp
-
-
-onGPClick : GPos -> Model -> Model
-onGPClick gp model =
-    let
-        updatedTiles =
-            case ( Dict.get gp model.tiles, areAdjacent gp (getEmptyGP model.tiles) ) of
-                ( Just gpTile, True ) ->
-                    model.tiles
-                        |> Dict.remove gp
-                        |> Dict.insert (getEmptyGP model.tiles) gpTile
-
-                _ ->
-                    model.tiles
-    in
-    { model | tiles = updatedTiles }
-
-
-viewTiles : TilesDict -> Svg Msg
+viewTiles : Tiles -> Svg Msg
 viewTiles tiles =
-    tiles
+    tiles.dict
         |> Dict.toList
         |> List.sortBy (second >> .originalGP)
         |> List.map viewTileAt
@@ -292,7 +288,7 @@ viewGridBG =
     group
         [ SA.opacity "0.9"
         ]
-        [ group [ xf [ mv (gpToCenterWC ( 1, 0 )) ] ]
+        [ group [ xf [ mv (gpToCenterWC ( 1, 2 )) ] ]
             [ circle (cz * 0.15) [ stroke "black", SA.strokeWidth "50" ]
             , circle (cz * 0.15) [ stroke "aqua", SA.strokeWidth "15" ]
             ]
