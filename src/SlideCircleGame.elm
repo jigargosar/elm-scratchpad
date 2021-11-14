@@ -70,6 +70,11 @@ init () =
     )
 
 
+updateTiles : UserInput -> Model -> Model
+updateTiles input model =
+    { model | tiles = applyUserInput input model.tiles }
+
+
 type Msg
     = OnTick
     | GPClicked GPos
@@ -92,12 +97,12 @@ update msg model =
             ( model, Cmd.none )
 
         GPClicked gp ->
-            ( { model | tiles = applyUserInput (Click gp) model.tiles }, Cmd.none )
+            ( updateTiles (Click gp) model, Cmd.none )
 
         OnKeyDown key ->
             ( case arrowKeyToDir key of
                 Just dir ->
-                    { model | tiles = applyUserInput (Slide dir) model.tiles }
+                    updateTiles (Slide dir) model
 
                 Nothing ->
                     model
