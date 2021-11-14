@@ -197,11 +197,11 @@ moveTileAt gp tiles =
 isSolved : Tiles -> Bool
 isSolved tiles =
     let
-        isNotFirstRow ( _, y ) =
-            y /= 0
+        isFirstRow ( _, y ) =
+            y == 0
 
         dropFirstRow =
-            filterKey isNotFirstRow
+            rejectKey isFirstRow
     in
     dropFirstRow initialTilesDict == dropFirstRow tiles.dict
 

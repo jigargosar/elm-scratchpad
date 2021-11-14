@@ -309,5 +309,11 @@ second =
     Tuple.second
 
 
+filterKey : (comparable -> Bool) -> Dict comparable b -> Dict comparable b
 filterKey fn =
     Dict.filter (\k _ -> fn k)
+
+
+rejectKey : (comparable -> Bool) -> Dict comparable b -> Dict comparable b
+rejectKey fn =
+    filterKey (fn >> not)
