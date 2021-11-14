@@ -130,7 +130,7 @@ type alias Tile =
 
 initTile : GPos -> Tile
 initTile gp =
-    { originalGP = gp, key = gpToString gp }
+    { originalGP = gp, key = Debug.toString gp }
 
 
 type alias TilesDict =
@@ -202,11 +202,6 @@ moveTileAt gp tiles =
 
         _ ->
             tiles
-
-
-gpToString : GPos -> String
-gpToString =
-    Debug.toString
 
 
 isSolved : Tiles -> Bool
