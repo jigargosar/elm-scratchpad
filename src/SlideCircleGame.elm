@@ -140,7 +140,6 @@ type alias TilesDict =
 type alias Tiles =
     { empty : GPos
     , dict : TilesDict
-    , largeCircleGPS : Set GPos
     }
 
 
@@ -174,7 +173,6 @@ initialTiles =
     in
     { empty = solvedSmallCircleGP
     , dict = dict
-    , largeCircleGPS = solutionGPS
     }
 
 
