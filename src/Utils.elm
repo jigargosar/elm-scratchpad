@@ -2,6 +2,7 @@ module Utils exposing (..)
 
 import Browser
 import Color
+import Dict exposing (Dict)
 import Html exposing (Attribute, Html)
 import Html.Attributes exposing (style)
 import Svg exposing (Svg)
@@ -284,3 +285,17 @@ inc =
 
 add =
     (+)
+
+
+{-| Only when `from` is member and `to` is not member.
+-}
+dictMoveValueFromTo : comparable -> comparable -> Dict comparable v -> Dict comparable v
+dictMoveValueFromTo from to dict =
+    case ( Dict.get from dict, Dict.get to dict ) of
+        ( Just value, Nothing ) ->
+            dict
+                |> Dict.remove from
+                |> Dict.insert to value
+
+        _ ->
+            dict

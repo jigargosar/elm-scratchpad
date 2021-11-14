@@ -166,10 +166,7 @@ type alias Tiles =
 initialTiles : Tiles
 initialTiles =
     { empty = smallCircleGP
-    , dict =
-        initialTilesDict
-            |> Dict.remove smallCircleGP
-            |> Dict.insert initialEmptyGP (initTile smallCircleGP)
+    , dict = dictMoveValueFromTo smallCircleGP initialEmptyGP initialTilesDict
     }
 
 
@@ -202,24 +199,6 @@ moveTileAt gp tiles =
 
         _ ->
             tiles
-
-
-
-{-
-   Only when `from` is member and `to` is not member.
--}
-
-
-dictMoveValueFromTo : comparable -> comparable -> Dict comparable v -> Dict comparable v
-dictMoveValueFromTo from to dict =
-    case ( Dict.get from dict, Dict.get to dict ) of
-        ( Just value, Nothing ) ->
-            dict
-                |> Dict.remove from
-                |> Dict.insert to value
-
-        _ ->
-            dict
 
 
 isSolved : Tiles -> Bool
