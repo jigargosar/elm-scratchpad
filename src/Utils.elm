@@ -46,6 +46,22 @@ arrowKeyToDir key =
             Nothing
 
 
+oppositeDir4 : Dir4 -> Dir4
+oppositeDir4 dir =
+    case dir of
+        Up ->
+            Down
+
+        Down ->
+            Up
+
+        Left ->
+            Right
+
+        Right ->
+            Left
+
+
 moveInDir4 : Dir4 -> GPos -> GPos
 moveInDir4 dir gp =
     let
