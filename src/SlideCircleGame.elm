@@ -157,6 +157,28 @@ solutionGPS =
     allGPS |> reject isFirstRow
 
 
+type alias SolutionItem =
+    { a : GPos, b : GPos, diff : GPos }
+
+
+initSolutionItem : GPos -> GPos -> SolutionItem
+initSolutionItem a b =
+    { a = a
+    , b = b
+    , diff = map2 sub a b
+    }
+
+
+solutionItems : List SolutionItem
+solutionItems =
+    case solutionGPS of
+        [] ->
+            []
+
+        h :: t ->
+            List.map (initSolutionItem h) t
+
+
 initialTilesDict : TilesDict
 initialTilesDict =
     let
@@ -220,34 +242,27 @@ moveTileAt gp tiles =
 isSolved : Tiles -> Bool
 isSolved tiles =
     let
-        gDiff : GPos -> GPos -> GPos
-        gDiff ( a, b ) ( c, d ) =
-            ( a - c, b - d )
-
         originalToCurrentGPDict : Dict GPos GPos
         originalToCurrentGPDict =
             tiles.dict
-                |> Dict.foldl (\cgp { originalGP } -> Dict.insert originalGP cgp) Dict.empty
+                |> Dict.foldl
+                    (\currentGP { originalGP } -> Dict.insert originalGP currentGP)
+                    Dict.empty
 
         currentGPOf : GPos -> Maybe GPos
         currentGPOf ogp =
             Dict.get ogp originalToCurrentGPDict
 
-        currentDiffEqOriginalDiff : GPos -> GPos -> Bool
-        currentDiffEqOriginalDiff a b =
-            case Maybe.map2 gDiff (currentGPOf a) (currentGPOf b) of
+        matchesSolutionItem : SolutionItem -> Bool
+        matchesSolutionItem { a, b, diff } =
+            case Maybe.map2 (map2 sub) (currentGPOf a) (currentGPOf b) of
                 Nothing ->
                     False
 
-                Just diff ->
-                    gDiff a b == diff
+                Just currentDiff ->
+                    currentDiff == diff
     in
-    case solutionGPS of
-        h :: t ->
-            List.all (currentDiffEqOriginalDiff h) t
-
-        _ ->
-            False
+    List.all matchesSolutionItem solutionItems
 
 
 isFirstRow : GPos -> Bool
