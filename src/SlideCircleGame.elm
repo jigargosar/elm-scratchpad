@@ -195,8 +195,8 @@ moveTileAt gp tiles =
             tiles
 
 
-isSolved2 : Tiles -> Bool
-isSolved2 tiles =
+isSolved : Tiles -> Bool
+isSolved tiles =
     let
         solutionGPS : List GPos
         solutionGPS =
@@ -208,13 +208,17 @@ isSolved2 tiles =
         gDiff ( a, b ) ( c, d ) =
             ( a - c, b - d )
 
-        currentGPOf : GPos -> GPos
-        currentGPOf _ =
-            Debug.todo "todo"
+        currentGPOf : GPos -> Maybe GPos
+        currentGPOf gp =
+            filterValue (.originalGP >> eq gp) tiles.dict
+                |> Dict.keys
+                |> List.head
 
         pred : GPos -> GPos -> Bool
         pred a b =
-            gDiff a b == gDiff (currentGPOf a) (currentGPOf b)
+            Maybe.map2 gDiff (currentGPOf a) (currentGPOf b)
+                |> Maybe.map (eq <| gDiff a b)
+                |> Maybe.withDefault False
     in
     case solutionGPS of
         h :: t ->
@@ -229,8 +233,8 @@ isFirstRow ( _, y ) =
     y == 0
 
 
-isSolved : Tiles -> Bool
-isSolved tiles =
+isSolved1 : Tiles -> Bool
+isSolved1 tiles =
     let
         dropFirstRow =
             rejectKey isFirstRow

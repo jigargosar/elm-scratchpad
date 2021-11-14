@@ -317,3 +317,8 @@ filterKey fn =
 rejectKey : (comparable -> Bool) -> Dict comparable b -> Dict comparable b
 rejectKey fn =
     filterKey (fn >> not)
+
+
+filterValue : (b -> Bool) -> Dict comparable b -> Dict comparable b
+filterValue fn =
+    Dict.filter (\_ v -> fn v)
