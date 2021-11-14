@@ -328,6 +328,16 @@ filterKey fn =
     Dict.filter (\k _ -> fn k)
 
 
+filter : (a -> Bool) -> List a -> List a
+filter =
+    List.filter
+
+
+reject : (a -> Bool) -> List a -> List a
+reject fn =
+    filter (fn >> not)
+
+
 rejectKey : (comparable -> Bool) -> Dict comparable b -> Dict comparable b
 rejectKey fn =
     filterKey (fn >> not)

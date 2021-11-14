@@ -147,13 +147,23 @@ initialEmptyGP =
     ( 1, 0 )
 
 
+allGPS : List GPos
+allGPS =
+    rangeWH gw gh
+
+
+solutionGPS : List GPos
+solutionGPS =
+    allGPS |> reject isFirstRow
+
+
 initialTilesDict : TilesDict
 initialTilesDict =
     let
         insertAtOriginalGP t =
             Dict.insert t.originalGP t
     in
-    rangeWH gw gh
+    allGPS
         |> List.foldl (initTile >> insertAtOriginalGP) Dict.empty
         |> Dict.remove initialEmptyGP
 
@@ -210,31 +220,31 @@ moveTileAt gp tiles =
 isSolved : Tiles -> Bool
 isSolved tiles =
     let
-        solutionGPS : List GPos
-        solutionGPS =
-            initialTilesDict
-                |> rejectKey isFirstRow
-                |> Dict.keys
-
         gDiff : GPos -> GPos -> GPos
         gDiff ( a, b ) ( c, d ) =
             ( a - c, b - d )
 
-        currentGPOf : GPos -> Maybe GPos
-        currentGPOf gp =
-            filterValue (.originalGP >> eq gp) tiles.dict
-                |> Dict.keys
-                |> headOfSingleton
+        originalToCurrentGPDict : Dict GPos GPos
+        originalToCurrentGPDict =
+            tiles.dict
+                |> Dict.foldl (\cgp { originalGP } -> Dict.insert originalGP cgp) Dict.empty
 
-        pred : GPos -> GPos -> Bool
-        pred a b =
-            Maybe.map2 gDiff (currentGPOf a) (currentGPOf b)
-                |> Maybe.map (eq <| gDiff a b)
-                |> Maybe.withDefault False
+        currentGPOf : GPos -> Maybe GPos
+        currentGPOf ogp =
+            Dict.get ogp originalToCurrentGPDict
+
+        currentDiffEqOriginalDiff : GPos -> GPos -> Bool
+        currentDiffEqOriginalDiff a b =
+            case Maybe.map2 gDiff (currentGPOf a) (currentGPOf b) of
+                Nothing ->
+                    False
+
+                Just diff ->
+                    gDiff a b == diff
     in
     case solutionGPS of
         h :: t ->
-            List.all (pred h) t
+            List.all (currentDiffEqOriginalDiff h) t
 
         _ ->
             False
@@ -243,15 +253,6 @@ isSolved tiles =
 isFirstRow : GPos -> Bool
 isFirstRow ( _, y ) =
     y == 0
-
-
-isSolved1 : Tiles -> Bool
-isSolved1 tiles =
-    let
-        dropFirstRow =
-            rejectKey isFirstRow
-    in
-    dropFirstRow initialTilesDict == dropFirstRow tiles.dict
 
 
 viewTiles : Tiles -> Svg Msg
