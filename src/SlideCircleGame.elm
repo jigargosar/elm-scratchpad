@@ -54,16 +54,13 @@ gpToLeftTopWC =
 
 
 type alias Model =
-    { tiles : TilesDict
+    { tiles : Tiles
     }
 
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { tiles =
-            initialTiles
-                |> always solvedTiles
-                |> always initialTiles
+    ( { tiles = initialTiles
       }
     , Cmd.none
     )
@@ -149,8 +146,8 @@ type alias Tiles =
     }
 
 
-initTiles : Tiles
-initTiles =
+initialTiles : Tiles
+initialTiles =
     let
         all =
             rangeWH gw gh |> Set.fromList
@@ -180,8 +177,8 @@ gpToString =
     Debug.toString
 
 
-initialTiles : TilesDict
-initialTiles =
+initialTilesDict : TilesDict
+initialTilesDict =
     let
         allGPs =
             rangeWH gw gh
@@ -210,14 +207,14 @@ dropFirstRow =
 
 solvedTiles : TilesDict
 solvedTiles =
-    case Dict.get ( 1, 0 ) initialTiles of
+    case Dict.get ( 1, 0 ) initialTilesDict of
         Just t ->
-            initialTiles
+            initialTilesDict
                 |> Dict.remove ( 1, 0 )
                 |> Dict.insert ( 1, 2 ) t
 
         Nothing ->
-            initialTiles
+            initialTilesDict
 
 
 gpToTileViewIndex : GPos -> Int
