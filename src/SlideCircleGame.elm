@@ -140,7 +140,6 @@ type alias TilesDict =
 type alias Tiles =
     { empty : GPos
     , dict : TilesDict
-    , solutionTilesDict : TilesDict
     }
 
 
@@ -152,31 +151,25 @@ initialEmptyGP =
     ( 1, 0 )
 
 
-initialTiles : Tiles
-initialTiles =
+initialTilesDict : TilesDict
+initialTilesDict =
     let
-        all =
-            rangeWH gw gh |> Set.fromList
-
-        initialDict =
-            all
-                |> Set.remove initialEmptyGP
-                |> Set.foldl (initTile >> insertAtOriginalGP) Dict.empty
-
-        solutionTilesDict =
-            dropFirstRow initialDict
-
-        dict =
-            initialDict
-                |> Dict.remove smallCircleGP
-                |> Dict.insert initialEmptyGP (initTile smallCircleGP)
-
         insertAtOriginalGP t =
             Dict.insert t.originalGP t
     in
+    rangeWH gw gh
+        |> Set.fromList
+        |> Set.remove initialEmptyGP
+        |> Set.foldl (initTile >> insertAtOriginalGP) Dict.empty
+
+
+initialTiles : Tiles
+initialTiles =
     { empty = smallCircleGP
-    , dict = dict
-    , solutionTilesDict = solutionTilesDict
+    , dict =
+        initialTilesDict
+            |> Dict.remove smallCircleGP
+            |> Dict.insert initialEmptyGP (initTile smallCircleGP)
     }
 
 
@@ -218,7 +211,7 @@ gpToString =
 
 isSolved : Tiles -> Bool
 isSolved tiles =
-    tiles.solutionTilesDict == dropFirstRow tiles.dict
+    dropFirstRow initialTilesDict == dropFirstRow tiles.dict
 
 
 dropFirstRow =
