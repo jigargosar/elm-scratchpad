@@ -307,3 +307,7 @@ first =
 
 second =
     Tuple.second
+
+
+filterKey fn =
+    Dict.filter (\k _ -> fn k)

@@ -201,7 +201,7 @@ isSolved tiles =
             y /= 0
 
         dropFirstRow =
-            Dict.filter (first >> isNotFirstRow)
+            filterKey isNotFirstRow
     in
     dropFirstRow initialTilesDict == dropFirstRow tiles.dict
 
