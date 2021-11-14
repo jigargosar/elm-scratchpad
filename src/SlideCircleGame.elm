@@ -70,11 +70,6 @@ init () =
     )
 
 
-updateTiles : UserInput -> Model -> Model
-updateTiles input model =
-    { model | tiles = applyUserInput input model.tiles }
-
-
 type Msg
     = OnTick
     | GPClicked GPos
@@ -108,6 +103,11 @@ update msg model =
                     model
             , Cmd.none
             )
+
+
+updateTiles : UserInput -> Model -> Model
+updateTiles input model =
+    { model | tiles = applyUserInput input model.tiles }
 
 
 view : Model -> Html Msg
@@ -247,12 +247,16 @@ type UserInput
 
 applyUserInput : UserInput -> Tiles -> Tiles
 applyUserInput input tiles =
-    case input of
-        Click gp ->
-            moveTileAt gp tiles
+    if isSolved tiles then
+        tiles
 
-        Slide dir ->
-            slideTileInDir dir tiles
+    else
+        case input of
+            Click gp ->
+                moveTileAt gp tiles
+
+            Slide dir ->
+                slideTileInDir dir tiles
 
 
 slideTileInDir : Dir4 -> Tiles -> Tiles
