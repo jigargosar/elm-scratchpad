@@ -1,8 +1,10 @@
 module SlideCircleGame exposing (..)
 
 import Browser
+import Browser.Events
 import Dict exposing (Dict)
 import Html exposing (Attribute, Html, div)
+import Json.Decode as JD exposing (Decoder)
 import Svg exposing (Svg, text)
 import Svg.Attributes as SA
 import Svg.Events as SE
@@ -71,12 +73,16 @@ init () =
 type Msg
     = OnTick
     | GPClicked GPos
+    | OnKeyDown String
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Time.every (1000 / 60) (\_ -> OnTick)
-        |> always Sub.none
+    Sub.batch
+        [ Time.every (1000 / 60) (\_ -> OnTick)
+            |> always Sub.none
+        , Browser.Events.onKeyDown (JD.map OnKeyDown keyDecoder)
+        ]
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -87,6 +93,14 @@ update msg model =
 
         GPClicked gp ->
             ( { model | tiles = moveTileAt gp model.tiles }, Cmd.none )
+
+        OnKeyDown key ->
+            case arrowKeyToDir key of
+                Just dir ->
+                    ( { model | tiles = slideTileInDir dir model.tiles }, Cmd.none )
+
+                Nothing ->
+                    ( model, Cmd.none )
 
 
 view : Model -> Html Msg

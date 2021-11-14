@@ -5,6 +5,7 @@ import Color
 import Dict exposing (Dict)
 import Html exposing (Attribute, Html)
 import Html.Attributes exposing (style)
+import Json.Decode as JD exposing (Decoder)
 import Svg exposing (Svg)
 import Svg.Attributes as SA
 import Svg.Keyed
@@ -19,6 +20,30 @@ type Dir4
     | Down
     | Left
     | Right
+
+
+keyDecoder : Decoder String
+keyDecoder =
+    JD.field "key" JD.string
+
+
+arrowKeyToDir : String -> Maybe Dir4
+arrowKeyToDir key =
+    case key of
+        "ArrowUp" ->
+            Just Up
+
+        "ArrowDown" ->
+            Just Down
+
+        "ArrowLeft" ->
+            Just Left
+
+        "ArrowRight" ->
+            Just Right
+
+        _ ->
+            Nothing
 
 
 moveInDir4 : Dir4 -> GPos -> GPos
