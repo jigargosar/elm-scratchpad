@@ -140,6 +140,7 @@ type alias TilesDict =
 type alias Tiles =
     { empty : GPos
     , dict : TilesDict
+    , solutionTilesDict : TilesDict
     }
 
 
@@ -154,6 +155,10 @@ initialTiles =
 
         solutionGPS =
             Set.filter notFirstRow all
+
+        solutionTilesDict =
+            solutionGPS
+                |> Set.foldl (initTile >> insertAtOriginalGP) Dict.empty
 
         solvedSmallCircleGP =
             ( 1, 2 )
@@ -173,6 +178,7 @@ initialTiles =
     in
     { empty = solvedSmallCircleGP
     , dict = dict
+    , solutionTilesDict = solutionTilesDict
     }
 
 
@@ -201,49 +207,13 @@ gpToString =
     Debug.toString
 
 
-initialTilesDict : TilesDict
-initialTilesDict =
-    let
-        allGPs =
-            rangeWH gw gh
-
-        insertTile t =
-            Dict.insert t.originalGP t
-
-        tileFromGP : GPos -> Tile
-        tileFromGP gp =
-            Tile gp (gpToTileViewIndex gp |> String.fromInt)
-    in
-    allGPs
-        |> List.filter (gpToTileViewIndex >> neq 8)
-        |> List.map tileFromGP
-        |> List.foldl insertTile Dict.empty
-
-
 isSolved : Tiles -> Bool
 isSolved tiles =
-    dropFirstRow solvedTilesDict == dropFirstRow tiles.dict
+    tiles.solutionTilesDict == dropFirstRow tiles.dict
 
 
 dropFirstRow =
     Dict.filter (\( _, y ) _ -> y /= 0)
-
-
-solvedTilesDict : TilesDict
-solvedTilesDict =
-    case Dict.get ( 1, 0 ) initialTilesDict of
-        Just t ->
-            initialTilesDict
-                |> Dict.remove ( 1, 0 )
-                |> Dict.insert ( 1, 2 ) t
-
-        Nothing ->
-            initialTilesDict
-
-
-gpToTileViewIndex : GPos -> Int
-gpToTileViewIndex ( x, y ) =
-    y * gw + x + 1
 
 
 viewTiles : Tiles -> Svg Msg
