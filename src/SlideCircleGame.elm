@@ -92,12 +92,12 @@ update msg model =
             ( model, Cmd.none )
 
         GPClicked gp ->
-            ( { model | tiles = moveTileAt gp model.tiles }, Cmd.none )
+            ( { model | tiles = applyUserInput (Click gp) model.tiles }, Cmd.none )
 
         OnKeyDown key ->
             case arrowKeyToDir key of
                 Just dir ->
-                    ( { model | tiles = slideTileInDir dir model.tiles }, Cmd.none )
+                    ( { model | tiles = applyUserInput (Slide dir) model.tiles }, Cmd.none )
 
                 Nothing ->
                     ( model, Cmd.none )
@@ -231,6 +231,21 @@ solvedTiles2 =
         initialTilesDict
             |> renameKey (mapSecond (dec >> modBy 4))
     }
+
+
+type UserInput
+    = Click GPos
+    | Slide Dir4
+
+
+applyUserInput : UserInput -> Tiles -> Tiles
+applyUserInput input tiles =
+    case input of
+        Click gp ->
+            moveTileAt gp tiles
+
+        Slide dir ->
+            slideTileInDir dir tiles
 
 
 slideTileInDir : Dir4 -> Tiles -> Tiles
