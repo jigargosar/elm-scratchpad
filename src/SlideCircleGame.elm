@@ -3,7 +3,6 @@ module SlideCircleGame exposing (..)
 import Browser
 import Dict exposing (Dict)
 import Html exposing (Attribute, Html, div)
-import Set exposing (Set)
 import Svg exposing (Svg, text)
 import Svg.Attributes as SA
 import Svg.Events as SE
@@ -183,16 +182,7 @@ solvedTiles2 =
     { empty = ( 1, 3 )
     , dict =
         initialTilesDict
-            |> renameKey
-                (Tuple.mapSecond
-                    (\y ->
-                        if y == 0 then
-                            3
-
-                        else
-                            y - 1
-                    )
-                )
+            |> renameKey (mapSecond (dec >> modBy 4))
     }
 
 

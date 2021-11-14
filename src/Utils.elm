@@ -346,3 +346,11 @@ partitionKey fn d =
 renameKey : (a -> comparable) -> Dict a v -> Dict comparable v
 renameKey fn =
     Dict.toList >> List.map (Tuple.mapFirst fn) >> Dict.fromList
+
+
+mapSecond =
+    Tuple.mapSecond
+
+
+mapFirst =
+    Tuple.mapFirst
