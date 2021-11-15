@@ -178,6 +178,31 @@ solutionGPS =
     allGPS |> reject (\( _, y ) -> y == 0)
 
 
+solutionVectors : List Int2
+solutionVectors =
+    List.map (sub2 smallCircleGP) solutionGPS
+
+
+computeCurrentSolutionVectors : TilesDict -> List Int2
+computeCurrentSolutionVectors dict =
+    let
+        originalToCurrentGPDict : Dict GPos GPos
+        originalToCurrentGPDict =
+            dict |> mapValueAndSwapWithKey .originalGP
+    in
+    case Dict.get smallCircleGP originalToCurrentGPDict of
+        Just currentSmallCircleGP ->
+            List.filterMap
+                (\gp ->
+                    Dict.get gp originalToCurrentGPDict
+                        |> Maybe.map (sub2 currentSmallCircleGP)
+                )
+                solutionGPS
+
+        Nothing ->
+            []
+
+
 initialTilesDict : TilesDict
 initialTilesDict =
     let

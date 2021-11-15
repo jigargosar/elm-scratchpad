@@ -84,6 +84,14 @@ type alias GPos =
     ( Int, Int )
 
 
+type alias Int2 =
+    Num2 Int
+
+
+type alias Num2 number =
+    ( number, number )
+
+
 map2 : (a -> b -> c) -> ( a, a ) -> ( b, b ) -> ( c, c )
 map2 fn ( a, b ) ( c, d ) =
     ( fn a c, fn b d )
