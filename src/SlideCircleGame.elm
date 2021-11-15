@@ -218,6 +218,7 @@ computeCurrentSolutionVectors dict =
 type alias Tiles =
     { empty : GPos
     , dict : TilesDict
+    , moves : Int
     }
 
 
@@ -225,6 +226,7 @@ initialTiles : Tiles
 initialTiles =
     { empty = smallCircleGP
     , dict = moveValueFromKeyToKey smallCircleGP initialEmptyGP initialTilesDict
+    , moves = 0
     }
 
 
@@ -232,6 +234,7 @@ solvedTiles : Tiles
 solvedTiles =
     { empty = initialEmptyGP
     , dict = initialTilesDict
+    , moves = 0
     }
 
 
@@ -241,6 +244,7 @@ solvedTiles2 =
     , dict =
         initialTilesDict
             |> renameKey (mapSecond (dec >> modBy 4))
+    , moves = 0
     }
 
 
