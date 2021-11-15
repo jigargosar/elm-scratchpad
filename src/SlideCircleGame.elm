@@ -147,19 +147,6 @@ mvGridCenter =
 -- TILE & TILES DICT
 
 
-type alias Tile =
-    { originalGP : GPos, key : String }
-
-
-initTile : GPos -> Tile
-initTile gp =
-    { originalGP = gp, key = Debug.toString gp }
-
-
-type alias TilesDict =
-    Dict GPos Tile
-
-
 smallCircleGP =
     ( 1, 2 )
 
@@ -183,6 +170,30 @@ solutionVectors =
     List.map (sub2 smallCircleGP) solutionGPS
 
 
+type alias Tile =
+    { originalGP : GPos, key : String }
+
+
+initTile : GPos -> Tile
+initTile gp =
+    { originalGP = gp, key = Debug.toString gp }
+
+
+type alias TilesDict =
+    Dict GPos Tile
+
+
+initialTilesDict : TilesDict
+initialTilesDict =
+    let
+        insertAtOriginalGP t =
+            Dict.insert t.originalGP t
+    in
+    allGPS
+        |> List.foldl (initTile >> insertAtOriginalGP) Dict.empty
+        |> Dict.remove initialEmptyGP
+
+
 computeCurrentSolutionVectors : TilesDict -> List Int2
 computeCurrentSolutionVectors dict =
     let
@@ -201,17 +212,6 @@ computeCurrentSolutionVectors dict =
 
         Nothing ->
             []
-
-
-initialTilesDict : TilesDict
-initialTilesDict =
-    let
-        insertAtOriginalGP t =
-            Dict.insert t.originalGP t
-    in
-    allGPS
-        |> List.foldl (initTile >> insertAtOriginalGP) Dict.empty
-        |> Dict.remove initialEmptyGP
 
 
 type alias Tiles =
