@@ -173,25 +173,24 @@ allGPS =
     rangeWH gw gh
 
 
-solutionGPS : List GPos
-solutionGPS =
-    allGPS |> reject isFirstRow
-
-
 type alias SolutionItem =
     { a : GPos, b : GPos, diff : GPos }
 
 
-initSolutionItem : GPos -> GPos -> SolutionItem
-initSolutionItem a b =
-    { a = a
-    , b = b
-    , diff = map2 sub a b
-    }
-
-
 solutionItems : List SolutionItem
 solutionItems =
+    let
+        solutionGPS : List GPos
+        solutionGPS =
+            allGPS |> reject isFirstRow
+
+        initSolutionItem : GPos -> GPos -> SolutionItem
+        initSolutionItem a b =
+            { a = a
+            , b = b
+            , diff = map2 sub a b
+            }
+    in
     case solutionGPS of
         [] ->
             []
