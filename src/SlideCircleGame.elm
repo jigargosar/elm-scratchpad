@@ -141,7 +141,7 @@ updateTiles input model =
 
 view : Model -> Html Msg
 view { tiles, forceOverlay } =
-    div [ bgc gray, bgcTransparent ]
+    div [ bgcTransparent, bgc gray ]
         [ stylesNode """
                 * {box-sizing:border-box;}
                 html,body{display:grid;min-height:100%;background-color:#ddd;}
@@ -168,9 +168,9 @@ viewMoves : Int -> Svg msg
 viewMoves moves =
     words ("MOVES: " ++ String.fromInt moves)
         [ fill white
-        , wordsAlignXLeft
+        , wordsAlignXRight
         , wordsAlignYTop
-        , xf [ scale 2 ]
+        , xf [ mvRight width, scale 2 ]
         , ffMonospace
         ]
 

@@ -183,6 +183,10 @@ mvUp y =
     mv2 0 -y
 
 
+mvRight x =
+    mv2 x 0
+
+
 scale s =
     TT.Scale s s
 
@@ -338,6 +342,10 @@ rect w h xs =
 
 wordsAlignXLeft =
     TA.textAnchor TT.AnchorStart
+
+
+wordsAlignXRight =
+    TA.textAnchor TT.AnchorEnd
 
 
 wordsAlignYTop =
