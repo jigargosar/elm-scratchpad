@@ -62,8 +62,8 @@ init : () -> ( Model, Cmd Msg )
 init () =
     ( { tiles =
             initialTiles
-                |> always solvedTiles
 
+      --|> always solvedTiles
       --|> always solvedTiles2
       --|> always initialTiles
       }
@@ -98,8 +98,8 @@ update msg model =
         OnKeyDown key ->
             ( case arrowKeyToDir key of
                 Just dir ->
-                    --updateTiles (Slide dir) model
-                    { model | tiles = slideTileInDir dir model.tiles }
+                    --{ model | tiles = slideTileInDir dir model.tiles }
+                    updateTiles (Slide dir) model
 
                 Nothing ->
                     model
