@@ -56,17 +56,24 @@ gpToLeftTopWC =
 
 type alias Model =
     { tiles : Tiles
+    , forceOverlay : Bool
+    }
+
+
+initialModel : Model
+initialModel =
+    { tiles =
+        initialTiles
+            |> always solvedTiles
+            |> always solvedTiles2
+            |> always initialTiles
+    , forceOverlay = False
     }
 
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { tiles =
-            initialTiles
-                |> always solvedTiles
-                |> always solvedTiles2
-                |> always initialTiles
-      }
+    ( initialModel
     , Cmd.none
     )
 
@@ -115,6 +122,12 @@ update msg model =
                                     else
                                         solvedTiles
                             }
+
+                        "o" ->
+                            { model | forceOverlay = not model.forceOverlay }
+
+                        "r" ->
+                            init () |> Tuple.first
 
                         _ ->
                             model
