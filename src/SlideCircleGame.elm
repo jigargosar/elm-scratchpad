@@ -170,7 +170,7 @@ viewMoves moves =
         [ fill white
         , wordsAlignXRight
         , wordsAlignYTop
-        , xf [ mvRight width, scale 2 ]
+        , xf [ mv2 (width - 5) 5, scale 1.5 ]
         , ffMonospace
         ]
 
