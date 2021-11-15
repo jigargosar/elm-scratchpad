@@ -10,7 +10,6 @@ import Svg.Attributes as SA
 import Svg.Events as SE
 import Time
 import TypedSvg.Attributes as TA
-import TypedSvg.Types as TT
 import Utils exposing (..)
 
 
