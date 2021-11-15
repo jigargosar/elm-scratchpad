@@ -63,8 +63,9 @@ init () =
     ( { tiles =
             initialTiles
                 |> always solvedTiles
-                |> always solvedTiles2
-                |> always initialTiles
+
+      --|> always solvedTiles2
+      --|> always initialTiles
       }
     , Cmd.none
     )
@@ -97,7 +98,8 @@ update msg model =
         OnKeyDown key ->
             ( case arrowKeyToDir key of
                 Just dir ->
-                    updateTiles (Slide dir) model
+                    --updateTiles (Slide dir) model
+                    { model | tiles = slideTileInDir dir model.tiles }
 
                 Nothing ->
                     model
@@ -192,6 +194,11 @@ initialTilesDict =
     allGPS
         |> List.foldl (initTile >> insertAtOriginalGP) Dict.empty
         |> Dict.remove initialEmptyGP
+
+
+tilesDictIsSolved : TilesDict -> Bool
+tilesDictIsSolved dict =
+    solutionVectors == computeCurrentSolutionVectors dict
 
 
 computeCurrentSolutionVectors : TilesDict -> List Int2
@@ -289,6 +296,11 @@ moveTileAt gp tiles =
 
 isSolved : Tiles -> Bool
 isSolved tiles =
+    tilesDictIsSolved tiles.dict
+
+
+isSolved1 : Tiles -> Bool
+isSolved1 tiles =
     let
         originalToCurrentGPDict : Dict GPos GPos
         originalToCurrentGPDict =
