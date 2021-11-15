@@ -124,11 +124,12 @@ view { tiles } =
             , overflowVisible
             ]
             [ viewTiles tiles
-            , words ("MOVES:" ++ String.fromInt tiles.moves)
+            , words ("MOVES: " ++ String.fromInt tiles.moves)
                 [ fill white
                 , TA.textAnchor TT.AnchorStart
                 , TA.dominantBaseline TT.DominantBaselineHanging
-                , xf [ scale 1 ]
+                , xf [ scale 2 ]
+                , ffMonospace
                 ]
             , if isSolved tiles then
                 group [ xf [ mvGridCenter ] ] <|
