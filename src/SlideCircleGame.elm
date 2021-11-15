@@ -62,10 +62,9 @@ init : () -> ( Model, Cmd Msg )
 init () =
     ( { tiles =
             initialTiles
-
-      --|> always solvedTiles
-      --|> always solvedTiles2
-      --|> always initialTiles
+                |> always solvedTiles
+                |> always solvedTiles2
+                |> always initialTiles
       }
     , Cmd.none
     )
@@ -297,52 +296,6 @@ moveTileAt gp tiles =
 isSolved : Tiles -> Bool
 isSolved tiles =
     tilesDictIsSolved tiles.dict
-
-
-isSolved1 : Tiles -> Bool
-isSolved1 tiles =
-    let
-        originalToCurrentGPDict : Dict GPos GPos
-        originalToCurrentGPDict =
-            tiles.dict |> mapValueAndSwapWithKey .originalGP
-
-        getCurrentDiff : GPos -> GPos -> Maybe GPos
-        getCurrentDiff oa ob =
-            dictGet2 oa ob originalToCurrentGPDict
-                |> Maybe.map (\( ca, cb ) -> sub2 ca cb)
-
-        originalDiffMatchesCurrentDiff : SolutionItem -> Bool
-        originalDiffMatchesCurrentDiff { a, b, diff } =
-            case getCurrentDiff a b of
-                Nothing ->
-                    False
-
-                Just currentDiff ->
-                    currentDiff == diff
-    in
-    List.all originalDiffMatchesCurrentDiff solutionItems
-
-
-type alias SolutionItem =
-    { a : GPos, b : GPos, diff : GPos }
-
-
-solutionItems : List SolutionItem
-solutionItems =
-    let
-        initSolutionItem : GPos -> GPos -> SolutionItem
-        initSolutionItem a b =
-            { a = a
-            , b = b
-            , diff = sub2 a b
-            }
-    in
-    case solutionGPS of
-        [] ->
-            []
-
-        h :: t ->
-            List.map (initSolutionItem h) t
 
 
 viewTiles : Tiles -> Svg Msg
