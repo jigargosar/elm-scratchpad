@@ -286,7 +286,7 @@ moveTileAt gp tiles =
                         |> Dict.remove gp
                         |> Dict.insert tiles.empty tile
             in
-            { tiles | empty = gp, dict = updatedDict }
+            { tiles | empty = gp, dict = updatedDict, moves = tiles.moves + 1 }
 
         _ ->
             tiles
