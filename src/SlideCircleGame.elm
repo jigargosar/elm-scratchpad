@@ -127,7 +127,7 @@ update msg model =
                             { model | forceOverlay = not model.forceOverlay }
 
                         "r" ->
-                            init () |> Tuple.first
+                            initialModel
 
                         _ ->
                             model
