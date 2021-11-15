@@ -158,19 +158,26 @@ view { tiles, forceOverlay } =
                 , xf [ scale 2 ]
                 , ffMonospace
                 ]
-            , if isSolved tiles || forceOverlay then
-                group [ xf [ mvGridCenter ] ] <|
-                    [ rect width
-                        height
-                        [ fill gray
-                        , SA.opacity "0.9"
-                        , xf []
-                        ]
-                    , words "GOOD JOB" [ fill white, xf [ scale 5 ] ]
-                    ]
+            , group
+                [ transitionTransform
+                , xf
+                    [ mvGridCenter
+                    , if isSolved tiles || forceOverlay then
+                        mvUp 0
 
-              else
-                text ""
+                      else
+                        mvUp height
+                    ]
+                ]
+              <|
+                [ rect width
+                    height
+                    [ fill gray
+                    , SA.opacity "0.9"
+                    , xf []
+                    ]
+                , words "GOOD JOB" [ fill white, xf [ scale 5 ] ]
+                ]
             ]
         ]
 
@@ -346,7 +353,7 @@ viewTileAt ( gp, t ) =
     group
         [ SE.onClick (GPClicked gp)
         , xf [ mv (gpToCenterWC gp), scale 0.97 ]
-        , style "transition" "transform 200ms"
+        , transitionTransform
         ]
         [ square cz [ fill black, xf [ mv2 3 3 ] ]
         , square cz [ fill <| grayN 0.35 ]

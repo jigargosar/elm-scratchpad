@@ -179,6 +179,10 @@ mv2 =
     TT.Translate
 
 
+mvUp y =
+    mv2 0 -y
+
+
 scale s =
     TT.Scale s s
 
@@ -245,6 +249,10 @@ overflowVisible =
 
 fontSize =
     style "font-size"
+
+
+transitionTransform =
+    style "transition" "transform 300ms"
 
 
 ffMonospace =
