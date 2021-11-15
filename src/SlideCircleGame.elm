@@ -163,6 +163,7 @@ view { tiles, forceOverlay } =
         ]
 
 
+viewGameOverOverlay : Bool -> Svg msg
 viewGameOverOverlay visible =
     group
         [ transitionTransform
