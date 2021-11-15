@@ -10,6 +10,7 @@ import Svg.Attributes as SA
 import Svg.Events as SE
 import Time
 import TypedSvg.Attributes as TA
+import TypedSvg.Types as TT
 import Utils exposing (..)
 
 
@@ -112,7 +113,7 @@ updateTiles input model =
 
 
 view : Model -> Html Msg
-view model =
+view { tiles } =
     div [ pAll "10px", bgc gray ]
         [ Svg.svg
             [ saWidth width
@@ -122,8 +123,14 @@ view model =
             , noUserSelect
             , overflowVisible
             ]
-            [ viewTiles model.tiles
-            , if isSolved model.tiles then
+            [ viewTiles tiles
+            , words ("MOVES:" ++ String.fromInt tiles.moves)
+                [ fill white
+                , TA.textAnchor TT.AnchorStart
+                , TA.dominantBaseline TT.DominantBaselineHanging
+                , xf [ scale 1 ]
+                ]
+            , if isSolved tiles then
                 group [ xf [ mvGridCenter ] ] <|
                     [ rect width
                         height
