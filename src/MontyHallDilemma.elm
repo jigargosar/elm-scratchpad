@@ -5,7 +5,6 @@ import Html exposing (Attribute, Html, div, text)
 import Html.Events exposing (onClick)
 import Random exposing (Generator)
 import Time
-import Tuple exposing (first)
 import Utils exposing (..)
 
 
