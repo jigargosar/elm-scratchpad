@@ -151,15 +151,20 @@ view { tiles, forceOverlay } =
             , overflowVisible
             ]
             [ viewTiles tiles
-            , words ("MOVES: " ++ String.fromInt tiles.moves)
-                [ fill white
-                , wordsAlignXLeft
-                , wordsAlignYTop
-                , xf [ scale 2 ]
-                , ffMonospace
-                ]
+            , viewMoves tiles.moves
             , viewGameOverOverlay (isSolved tiles || forceOverlay)
             ]
+        ]
+
+
+viewMoves : Int -> Svg msg
+viewMoves moves =
+    words ("MOVES: " ++ String.fromInt moves)
+        [ fill white
+        , wordsAlignXLeft
+        , wordsAlignYTop
+        , xf [ scale 2 ]
+        , ffMonospace
         ]
 
 
