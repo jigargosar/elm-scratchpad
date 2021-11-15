@@ -158,27 +158,31 @@ view { tiles, forceOverlay } =
                 , xf [ scale 2 ]
                 , ffMonospace
                 ]
-            , group
-                [ transitionTransform
-                , xf
-                    [ mvGridCenter
-                    , if isSolved tiles || forceOverlay then
-                        mvUp 0
-
-                      else
-                        mvUp height
-                    ]
-                ]
-              <|
-                [ rect width
-                    height
-                    [ fill gray
-                    , SA.opacity "0.9"
-                    , xf []
-                    ]
-                , words "GOOD JOB" [ fill white, xf [ scale 5 ] ]
-                ]
+            , viewGameOverOverlay (isSolved tiles || forceOverlay)
             ]
+        ]
+
+
+viewGameOverOverlay visible =
+    group
+        [ transitionTransform
+        , xf
+            [ mvGridCenter
+            , if visible then
+                mvUp 0
+
+              else
+                mvUp height
+            ]
+        ]
+    <|
+        [ rect width
+            height
+            [ fill gray
+            , SA.opacity "0.9"
+            , xf []
+            ]
+        , words "GOOD JOB" [ fill white, xf [ scale 5 ] ]
         ]
 
 
