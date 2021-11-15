@@ -141,7 +141,7 @@ updateTiles input model =
 
 
 view : Model -> Html Msg
-view { tiles } =
+view { tiles, forceOverlay } =
     div [ pAll "10px", bgc gray ]
         [ Svg.svg
             [ saWidth width
@@ -159,7 +159,7 @@ view { tiles } =
                 , xf [ scale 2 ]
                 , ffMonospace
                 ]
-            , if isSolved tiles then
+            , if isSolved tiles || forceOverlay then
                 group [ xf [ mvGridCenter ] ] <|
                     [ rect width
                         height
