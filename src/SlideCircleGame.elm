@@ -307,10 +307,6 @@ isSolved tiles =
     List.all originalDiffMatchesCurrentDiff solutionItems
 
 
-sub2 =
-    map2 sub
-
-
 isFirstRow : GPos -> Bool
 isFirstRow ( _, y ) =
     y == 0

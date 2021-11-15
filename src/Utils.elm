@@ -77,7 +77,7 @@ moveInDir4 dir gp =
                 Right ->
                     ( 1, 0 )
     in
-    map2 add gp offset
+    add2 gp offset
 
 
 type alias GPos =
@@ -87,6 +87,16 @@ type alias GPos =
 map2 : (a -> b -> c) -> ( a, a ) -> ( b, b ) -> ( c, c )
 map2 fn ( a, b ) ( c, d ) =
     ( fn a c, fn b d )
+
+
+sub2 : ( number, number ) -> ( number, number ) -> ( number, number )
+sub2 =
+    map2 sub
+
+
+add2 : ( number, number ) -> ( number, number ) -> ( number, number )
+add2 =
+    map2 add
 
 
 areAdjacent : GPos -> GPos -> Bool
