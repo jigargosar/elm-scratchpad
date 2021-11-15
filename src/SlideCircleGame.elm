@@ -173,32 +173,6 @@ allGPS =
     rangeWH gw gh
 
 
-type alias SolutionItem =
-    { a : GPos, b : GPos, diff : GPos }
-
-
-solutionItems : List SolutionItem
-solutionItems =
-    let
-        solutionGPS : List GPos
-        solutionGPS =
-            allGPS |> reject isFirstRow
-
-        initSolutionItem : GPos -> GPos -> SolutionItem
-        initSolutionItem a b =
-            { a = a
-            , b = b
-            , diff = sub2 a b
-            }
-    in
-    case solutionGPS of
-        [] ->
-            []
-
-        h :: t ->
-            List.map (initSolutionItem h) t
-
-
 initialTilesDict : TilesDict
 initialTilesDict =
     let
@@ -307,9 +281,30 @@ isSolved tiles =
     List.all originalDiffMatchesCurrentDiff solutionItems
 
 
-isFirstRow : GPos -> Bool
-isFirstRow ( _, y ) =
-    y == 0
+type alias SolutionItem =
+    { a : GPos, b : GPos, diff : GPos }
+
+
+solutionItems : List SolutionItem
+solutionItems =
+    let
+        solutionGPS : List GPos
+        solutionGPS =
+            allGPS |> reject (\( _, y ) -> y == 0)
+
+        initSolutionItem : GPos -> GPos -> SolutionItem
+        initSolutionItem a b =
+            { a = a
+            , b = b
+            , diff = sub2 a b
+            }
+    in
+    case solutionGPS of
+        [] ->
+            []
+
+        h :: t ->
+            List.map (initSolutionItem h) t
 
 
 viewTiles : Tiles -> Svg Msg
