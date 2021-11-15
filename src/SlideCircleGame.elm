@@ -195,11 +195,6 @@ initialTilesDict =
         |> Dict.remove initialEmptyGP
 
 
-tilesDictIsSolved : TilesDict -> Bool
-tilesDictIsSolved dict =
-    solutionVectors == computeCurrentSolutionVectors dict
-
-
 computeCurrentSolutionVectors : TilesDict -> List Int2
 computeCurrentSolutionVectors dict =
     let
@@ -295,7 +290,7 @@ moveTileAt gp tiles =
 
 isSolved : Tiles -> Bool
 isSolved tiles =
-    tilesDictIsSolved tiles.dict
+    solutionVectors == computeCurrentSolutionVectors tiles.dict
 
 
 viewTiles : Tiles -> Svg Msg
