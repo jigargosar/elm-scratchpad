@@ -126,8 +126,8 @@ view { tiles } =
             [ viewTiles tiles
             , words ("MOVES: " ++ String.fromInt tiles.moves)
                 [ fill white
-                , TA.textAnchor TT.AnchorStart
-                , TA.dominantBaseline TT.DominantBaselineHanging
+                , wordsAlignXLeft
+                , wordsAlignYTop
                 , xf [ scale 2 ]
                 , ffMonospace
                 ]

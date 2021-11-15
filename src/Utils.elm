@@ -315,6 +315,14 @@ rect w h xs =
         []
 
 
+wordsAlignXLeft =
+    TA.textAnchor TT.AnchorStart
+
+
+wordsAlignYTop =
+    TA.dominantBaseline TT.DominantBaselineHanging
+
+
 square : Float -> List (Attribute msg) -> Svg msg
 square sz =
     rect sz sz
