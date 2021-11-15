@@ -219,8 +219,16 @@ noFill =
     fill "none"
 
 
+transparent =
+    "transparent"
+
+
+bgcTransparent =
+    bgc transparent
+
+
 fillTransparent =
-    fill "transparent"
+    fill transparent
 
 
 noStroke =

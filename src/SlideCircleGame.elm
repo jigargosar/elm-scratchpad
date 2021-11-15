@@ -141,10 +141,10 @@ updateTiles input model =
 
 view : Model -> Html Msg
 view { tiles, forceOverlay } =
-    div [ bgc gray ]
+    div [ bgc gray, bgcTransparent ]
         [ stylesNode """
                 * {box-sizing:border-box;}
-                html,body{display:grid;min-height:100%;}
+                html,body{display:grid;min-height:100%;background-color:#ddd;}
             """
         , div [ pAll "10px" ]
             [ Svg.svg
@@ -157,7 +157,8 @@ view { tiles, forceOverlay } =
                 ]
                 [ viewTiles tiles
                 , viewMoves tiles.moves
-                , viewGameOverOverlay (isSolved tiles || forceOverlay)
+                , -- overflow hidden
+                  Svg.svg [] [ viewGameOverOverlay (isSolved tiles || forceOverlay) ]
                 ]
             ]
         ]
