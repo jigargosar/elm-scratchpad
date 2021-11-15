@@ -139,10 +139,19 @@ updateTiles input model =
     { model | tiles = applyUserInput input model.tiles }
 
 
+stylesNode : String -> Html msg
+stylesNode string =
+    Html.node "style" [] [ text string ]
+
+
 view : Model -> Html Msg
 view { tiles, forceOverlay } =
     div [ pAll "10px", bgc gray ]
-        [ Svg.svg
+        [ stylesNode """
+            html{height:100%;}
+            body{min-height:100%;}
+        """
+        , Svg.svg
             [ saWidth width
             , saHeight height
             , noFill
