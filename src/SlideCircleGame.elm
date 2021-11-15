@@ -102,7 +102,22 @@ update msg model =
                     updateTiles (Slide dir) model
 
                 Nothing ->
-                    model
+                    case key of
+                        "s" ->
+                            { model
+                                | tiles =
+                                    if model.tiles == solvedTiles then
+                                        solvedTiles2
+
+                                    else if model.tiles == solvedTiles2 then
+                                        initialTiles
+
+                                    else
+                                        solvedTiles
+                            }
+
+                        _ ->
+                            model
             , Cmd.none
             )
 
