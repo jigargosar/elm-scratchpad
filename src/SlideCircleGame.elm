@@ -188,7 +188,7 @@ solutionItems =
         initSolutionItem a b =
             { a = a
             , b = b
-            , diff = map2 sub a b
+            , diff = sub2 a b
             }
     in
     case solutionGPS of
@@ -293,7 +293,7 @@ isSolved tiles =
         getCurrentDiff : GPos -> GPos -> Maybe GPos
         getCurrentDiff oa ob =
             dictGet2 oa ob originalToCurrentGPDict
-                |> Maybe.map (\( ca, cb ) -> map2 sub ca cb)
+                |> Maybe.map (\( ca, cb ) -> sub2 ca cb)
 
         originalDiffMatchesCurrentDiff : SolutionItem -> Bool
         originalDiffMatchesCurrentDiff { a, b, diff } =
@@ -305,6 +305,10 @@ isSolved tiles =
                     currentDiff == diff
     in
     List.all originalDiffMatchesCurrentDiff solutionItems
+
+
+sub2 =
+    map2 sub
 
 
 isFirstRow : GPos -> Bool
