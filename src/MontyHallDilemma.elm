@@ -1,7 +1,7 @@
 module MontyHallDilemma exposing (..)
 
 import Browser
-import Html exposing (Attribute, Html, div, text)
+import Html exposing (Html, div, text)
 import Html.Events exposing (onClick)
 import Random exposing (Generator)
 import Time
@@ -439,7 +439,7 @@ simToDoorsViewModel sim =
                             closedDoor
                     )
 
-        AllOpen { ps, hs, ps2 } ->
+        AllOpen { hs, ps2 } ->
             List.range 1 3
                 |> List.map
                     (\i ->

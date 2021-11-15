@@ -1,6 +1,5 @@
 module Utils exposing (..)
 
-import Browser
 import Color
 import Dict exposing (Dict)
 import Html exposing (Attribute, Html)
@@ -9,7 +8,6 @@ import Json.Decode as JD exposing (Decoder)
 import Svg exposing (Svg)
 import Svg.Attributes as SA
 import Svg.Keyed
-import Time
 import TypedSvg.Attributes as TA
 import TypedSvg.Attributes.InPx as Px
 import TypedSvg.Types as TT
