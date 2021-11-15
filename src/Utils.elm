@@ -243,6 +243,11 @@ stroke =
     SA.stroke
 
 
+stylesNode : String -> Html msg
+stylesNode string =
+    Html.node "style" [] [ Html.text string ]
+
+
 overflowVisible =
     style "overflow" "visible"
 

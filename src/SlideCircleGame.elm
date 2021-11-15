@@ -5,7 +5,7 @@ import Browser.Events
 import Dict exposing (Dict)
 import Html exposing (Attribute, Html, div)
 import Json.Decode as JD exposing (Decoder)
-import Svg exposing (Svg, text)
+import Svg exposing (Svg)
 import Svg.Attributes as SA
 import Svg.Events as SE
 import Time
@@ -137,11 +137,6 @@ update msg model =
 updateTiles : UserInput -> Model -> Model
 updateTiles input model =
     { model | tiles = applyUserInput input model.tiles }
-
-
-stylesNode : String -> Html msg
-stylesNode string =
-    Html.node "style" [] [ text string ]
 
 
 view : Model -> Html Msg
