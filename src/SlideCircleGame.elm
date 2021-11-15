@@ -173,6 +173,11 @@ allGPS =
     rangeWH gw gh
 
 
+solutionGPS : List GPos
+solutionGPS =
+    allGPS |> reject (\( _, y ) -> y == 0)
+
+
 initialTilesDict : TilesDict
 initialTilesDict =
     let
@@ -262,7 +267,7 @@ isSolved tiles =
     let
         originalToCurrentGPDict : Dict GPos GPos
         originalToCurrentGPDict =
-            tiles.dict |> mapValueToSwapWithKey .originalGP
+            tiles.dict |> mapValueAndSwapWithKey .originalGP
 
         getCurrentDiff : GPos -> GPos -> Maybe GPos
         getCurrentDiff oa ob =
@@ -288,10 +293,6 @@ type alias SolutionItem =
 solutionItems : List SolutionItem
 solutionItems =
     let
-        solutionGPS : List GPos
-        solutionGPS =
-            allGPS |> reject (\( _, y ) -> y == 0)
-
         initSolutionItem : GPos -> GPos -> SolutionItem
         initSolutionItem a b =
             { a = a

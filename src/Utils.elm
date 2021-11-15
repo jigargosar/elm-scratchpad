@@ -358,6 +358,34 @@ sub =
     (-)
 
 
+first =
+    Tuple.first
+
+
+second =
+    Tuple.second
+
+
+filter : (a -> Bool) -> List a -> List a
+filter =
+    List.filter
+
+
+reject : (a -> Bool) -> List a -> List a
+reject fn =
+    filter (fn >> not)
+
+
+uncons : List a -> Maybe ( a, List a )
+uncons xs =
+    case xs of
+        h :: t ->
+            Just ( h, t )
+
+        _ ->
+            Nothing
+
+
 headOfSingleton : List a -> Maybe a
 headOfSingleton list =
     case list of
@@ -382,32 +410,14 @@ moveValueFromKeyToKey from to dict =
             dict
 
 
-first =
-    Tuple.first
-
-
-second =
-    Tuple.second
-
-
-mapValueToSwapWithKey : (v -> comparable) -> Dict k v -> Dict comparable k
-mapValueToSwapWithKey fn =
+mapValueAndSwapWithKey : (v -> comparable) -> Dict k v -> Dict comparable k
+mapValueAndSwapWithKey fn =
     Dict.foldl (\k v -> Dict.insert (fn v) k) Dict.empty
 
 
 filterKey : (comparable -> Bool) -> Dict comparable b -> Dict comparable b
 filterKey fn =
     Dict.filter (\k _ -> fn k)
-
-
-filter : (a -> Bool) -> List a -> List a
-filter =
-    List.filter
-
-
-reject : (a -> Bool) -> List a -> List a
-reject fn =
-    filter (fn >> not)
 
 
 rejectKey : (comparable -> Bool) -> Dict comparable b -> Dict comparable b
