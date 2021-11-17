@@ -163,7 +163,7 @@ initNode board =
 
 
 type PriorityQueue
-    = PriorityQueue
+    = PriorityQueue (List Node)
 
 
 priorityQueueFrom : Node -> PriorityQueue
@@ -176,23 +176,19 @@ enqueueAll =
     Debug.todo "todo"
 
 
-dequeue : PriorityQueue -> Maybe ( Node, PriorityQueue )
-dequeue _ =
-    let
-        maybeIndexedNode : Maybe ( Int, Node )
-        maybeIndexedNode =
-            Debug.todo "todo"
+leastCostOf : Node -> comparable
+leastCostOf node =
+    Debug.todo "todo"
 
-        queueWithoutElementAt : Int -> PriorityQueue
-        queueWithoutElementAt =
-            Debug.todo "todo"
-    in
-    case maybeIndexedNode of
-        Nothing ->
+
+dequeue : PriorityQueue -> Maybe ( Node, PriorityQueue )
+dequeue (PriorityQueue ls) =
+    case List.sortBy leastCostOf ls of
+        [] ->
             Nothing
 
-        Just ( i, n ) ->
-            Just ( n, queueWithoutElementAt i )
+        n :: rest ->
+            Just ( n, PriorityQueue rest )
 
 
 solveBoard : Board -> Maybe Node
