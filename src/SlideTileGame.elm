@@ -170,8 +170,8 @@ dequeue =
     Debug.todo "todo"
 
 
-solve : PriorityQueue -> Maybe Node
-solve pq =
+solvePriorityQueue : PriorityQueue -> Maybe Node
+solvePriorityQueue pq =
     case dequeue pq of
         Nothing ->
             Nothing
@@ -181,7 +181,7 @@ solve pq =
                 Just node
 
             else
-                solve (enqueueAll (createChildrenNodes node) pendingPQ)
+                solvePriorityQueue (enqueueAll (createChildrenNodes node) pendingPQ)
 
 
 
