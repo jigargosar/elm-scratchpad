@@ -52,7 +52,10 @@ type alias Model =
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { board = solvedBoard }
+    ( { board =
+            solvedBoard
+                |> always initialBoard
+      }
     , Cmd.none
     )
 
@@ -100,6 +103,13 @@ type alias Tile =
 
 type alias Board =
     { e : GPos, d : Dict GPos Tile }
+
+
+initialBoard : Board
+initialBoard =
+    Random.step randomBoard
+        (Random.initialSeed 0)
+        |> first
 
 
 randomBoard : Generator Board
