@@ -37,6 +37,10 @@ gh =
     4
 
 
+totalCellCount =
+    gw * gh
+
+
 cz =
     160
 
@@ -134,7 +138,7 @@ solutionBoard =
     let
         gps =
             rangeWH gw gh
-                |> List.take (gw * gh - 1)
+                |> List.take (totalCellCount - 1)
 
         d =
             gps
@@ -171,8 +175,29 @@ possibleNextBoards board =
 
 
 estimateCostToReachSolution : Board -> Int
-estimateCostToReachSolution =
-    Debug.todo "todo"
+estimateCostToReachSolution board =
+    totalCellCount - solvedCellCount board
+
+
+solvedCellCount : Board -> Int
+solvedCellCount board =
+    Dict.merge (\_ _ -> identity)
+        (\_ a b ->
+            if a == b then
+                inc
+
+            else
+                identity
+        )
+        (\_ _ -> identity)
+        solutionBoard.d
+        board.d
+        (if solutionBoard.e == board.e then
+            1
+
+         else
+            0
+        )
 
 
 createChildrenNodes : Node -> List Node
@@ -190,8 +215,13 @@ createChildrenNodes ((Node n) as parent) =
 
 
 initRootNode : Board -> Node
-initRootNode board =
-    Debug.todo "todo"
+initRootNode b =
+    Node
+        { board = b
+        , estimatedCostToReachSolution = estimateCostToReachSolution b
+        , pathToRootCost = 0
+        , parent = Nothing
+        }
 
 
 type PriorityQueue
