@@ -3,14 +3,9 @@ module SlideTileGame exposing (..)
 import Browser
 import Dict exposing (Dict)
 import Html exposing (Attribute, Html)
-import Html.Attributes exposing (style)
 import Svg exposing (Svg)
-import Svg.Attributes as SA
 import Svg.Events as SE
 import Time
-import TypedSvg.Attributes as TA
-import TypedSvg.Attributes.InPx as Px
-import TypedSvg.Types as TT
 import Utils exposing (..)
 
 
@@ -98,22 +93,6 @@ view model =
         ]
 
 
-viewCircles =
-    group
-        [ stroke "aqua"
-        , SA.strokeWidth "20"
-        , SA.opacity "0.7"
-        , xf [ mv2 (width / 2) (height / 2) ]
-        ]
-        [ circle (cz * 1.3) [ xf [ mv2 0 (cz / 2) ] ]
-        , circle (cz * 0.3) [ xf [ mv2 0 (-height * 0.5 + cz * 0.5) ] ]
-        ]
-
-
-circle r xs =
-    Svg.circle (Px.r r :: xs) []
-
-
 type alias Tile =
     ( Int, GPos )
 
@@ -178,17 +157,7 @@ viewTile ( gp, ( i, _ ) ) =
         ]
 
 
-viewTile2 : ( GPos, Tile ) -> Html Msg
-viewTile2 ( ( gx, gy ), ( _, ( ogx, ogy ) ) ) =
-    Svg.svg
-        [ saWidth cz
-        , saHeight cz
-        , TA.viewBox (toFloat ogx * cz) (toFloat ogy * cz) cz cz
-        ]
-        [ viewCircles ]
-        |> List.singleton
-        |> group [ xf [ mv2 (toFloat gx * cz) (toFloat gy * cz) ] ]
-
-
 viewTile3 (( gp, _ ) as x) =
-    group [ SE.onClick (GPClicked gp) ] [ viewTile x, viewTile2 x ]
+    group [ SE.onClick (GPClicked gp) ]
+        [ viewTile x
+        ]
