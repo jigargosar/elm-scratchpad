@@ -147,14 +147,14 @@ type Node
     = Node
         { board : Board
         , estimatedCostToReachSolution : Int
-        , parentPathCost : Int
+        , pathToRootCost : Int
         , parent : Maybe Node
         }
 
 
 leastCostOf : Node -> Int
 leastCostOf (Node n) =
-    n.parentPathCost + n.estimatedCostToReachSolution
+    n.pathToRootCost + n.estimatedCostToReachSolution
 
 
 isSolutionNode : Node -> Bool
@@ -167,8 +167,8 @@ possibleNextBoards board =
     Debug.todo "todo"
 
 
-estimateCostToReach : Board -> Board -> Int
-estimateCostToReach a b =
+estimateCostToReachSolution : Board -> Int
+estimateCostToReachSolution =
     Debug.todo "todo"
 
 
@@ -179,8 +179,8 @@ createChildrenNodes ((Node n) as parent) =
             (\b ->
                 Node
                     { board = b
-                    , estimatedCostToReachSolution = estimateCostToReach solutionBoard b
-                    , parentPathCost = n.parentPathCost + 1
+                    , estimatedCostToReachSolution = estimateCostToReachSolution b
+                    , pathToRootCost = n.pathToRootCost + 1
                     , parent = Just parent
                     }
             )
