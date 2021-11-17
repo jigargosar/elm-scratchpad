@@ -142,6 +142,25 @@ solutionBoard =
     { e = ( gw - 1, gh - 1 ), d = d }
 
 
+type alias Acc =
+    { stack : List Board }
+
+
+type alias Node =
+    { board : Board
+    , path : List Dir4
+    }
+
+
+
+--solveHelp: Node -> Acc -> List Dir4
+--solveHelp node acc =
+--    if node.board == solutionBoard then
+--        node.path
+--    else
+--
+
+
 moveTileAt : GPos -> Board -> Board
 moveTileAt gp board =
     case ( Dict.get gp board.d, areAdjacent board.e gp ) of
