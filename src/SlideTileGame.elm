@@ -88,7 +88,7 @@ view model =
         ]
         [ model.board.d
             |> Dict.toList
-            |> List.map viewTile3
+            |> List.map viewTile
             |> group []
         ]
 
@@ -138,17 +138,13 @@ moveTileAt gp board =
 
 viewTile : ( GPos, Tile ) -> Html Msg
 viewTile ( gp, i ) =
-    group [ xf [ mv (gpToWorld gp) ] ]
-        [ square cz [ fillTransparent ]
-        , words
-            (String.fromInt (i + 1))
-            [ fill white
-            , xf [ scale 3 ]
-            ]
-        ]
-
-
-viewTile3 (( gp, _ ) as x) =
     group [ SE.onClick (GPClicked gp) ]
-        [ viewTile x
+        [ group [ xf [ mv (gpToWorld gp) ] ]
+            [ square cz [ fillTransparent ]
+            , words
+                (String.fromInt (i + 1))
+                [ fill white
+                , xf [ scale 3 ]
+                ]
+            ]
         ]
