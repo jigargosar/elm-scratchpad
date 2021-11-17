@@ -53,7 +53,7 @@ type alias Model =
 init : () -> ( Model, Cmd Msg )
 init () =
     ( { board =
-            solvedBoard
+            solutionBoard
                 |> always initialBoard
       }
     , Cmd.none
@@ -121,14 +121,14 @@ randomBoard =
 
         slideInDirections : List Dir4 -> Board
         slideInDirections =
-            List.foldl slideInDir4 solvedBoard
+            List.foldl slideInDir4 solutionBoard
     in
     Random.list 100 randomDir
         |> Random.map slideInDirections
 
 
-solvedBoard : Board
-solvedBoard =
+solutionBoard : Board
+solutionBoard =
     let
         gps =
             rangeWH gw gh
