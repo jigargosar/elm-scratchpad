@@ -145,16 +145,45 @@ solutionBoard =
 
 type Node
     = Node
+        { board : Board
+        , estimatedCostToReachSolution : Int
+        , parentPathCost : Int
+        , parent : Maybe Node
+        }
+
+
+leastCostOf : Node -> Int
+leastCostOf (Node n) =
+    n.parentPathCost + n.estimatedCostToReachSolution
 
 
 isSolutionNode : Node -> Bool
-isSolutionNode =
+isSolutionNode (Node n) =
+    n.board == solutionBoard
+
+
+possibleNextBoards : Board -> List Board
+possibleNextBoards board =
+    Debug.todo "todo"
+
+
+estimateCostToReach : Board -> Board -> Int
+estimateCostToReach a b =
     Debug.todo "todo"
 
 
 createChildrenNodes : Node -> List Node
-createChildrenNodes =
-    Debug.todo "todo"
+createChildrenNodes ((Node n) as parent) =
+    possibleNextBoards n.board
+        |> List.map
+            (\b ->
+                Node
+                    { board = b
+                    , estimatedCostToReachSolution = estimateCostToReach solutionBoard b
+                    , parentPathCost = n.parentPathCost + 1
+                    , parent = Just parent
+                    }
+            )
 
 
 initNode : Board -> Node
@@ -173,11 +202,6 @@ priorityQueueFrom node =
 
 enqueueAll : List Node -> PriorityQueue -> PriorityQueue
 enqueueAll =
-    Debug.todo "todo"
-
-
-leastCostOf : Node -> comparable
-leastCostOf node =
     Debug.todo "todo"
 
 
