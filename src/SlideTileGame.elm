@@ -1,6 +1,5 @@
 module SlideTileGame exposing (..)
 
-import Array
 import Browser
 import Dict exposing (Dict)
 import Html exposing (Attribute, Html)
@@ -230,12 +229,12 @@ type PriorityQueue
 
 priorityQueueFrom : Node -> PriorityQueue
 priorityQueueFrom node =
-    Debug.todo "todo"
+    PriorityQueue [ node ]
 
 
 enqueueAll : List Node -> PriorityQueue -> PriorityQueue
-enqueueAll =
-    Debug.todo "todo"
+enqueueAll nodes (PriorityQueue ls) =
+    PriorityQueue (ls ++ nodes)
 
 
 dequeue : PriorityQueue -> Maybe ( Node, PriorityQueue )
