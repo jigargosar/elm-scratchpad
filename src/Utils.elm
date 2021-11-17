@@ -5,6 +5,7 @@ import Dict exposing (Dict)
 import Html exposing (Attribute, Html)
 import Html.Attributes exposing (style)
 import Json.Decode as JD exposing (Decoder)
+import Random exposing (Generator)
 import Svg exposing (Svg)
 import Svg.Attributes as SA
 import Svg.Keyed
@@ -42,6 +43,11 @@ arrowKeyToDir key =
 
         _ ->
             Nothing
+
+
+randomDir : Generator Dir4
+randomDir =
+    Random.uniform Up [ Down, Left, Right ]
 
 
 oppositeDir4 : Dir4 -> Dir4

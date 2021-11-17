@@ -3,6 +3,7 @@ module SlideTileGame exposing (..)
 import Browser
 import Dict exposing (Dict)
 import Html exposing (Attribute, Html)
+import Random exposing (Generator)
 import Svg exposing (Svg)
 import Svg.Events as SE
 import Time
@@ -99,6 +100,21 @@ type alias Tile =
 
 type alias Board =
     { e : GPos, d : Dict GPos Tile }
+
+
+randomBoard : Generator Board
+randomBoard =
+    let
+        slideInDir4 : Dir4 -> Board -> Board
+        slideInDir4 dir board =
+            moveTileAt (moveInDir4 dir board.e) board
+
+        slideInDirections : List Dir4 -> Board
+        slideInDirections =
+            List.foldl slideInDir4 solvedBoard
+    in
+    Random.list 100 randomDir
+        |> Random.map slideInDirections
 
 
 solvedBoard : Board
