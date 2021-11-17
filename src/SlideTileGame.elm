@@ -116,16 +116,17 @@ initialBoard =
 randomBoard : Generator Board
 randomBoard =
     let
-        slideInDir4 : Dir4 -> Board -> Board
-        slideInDir4 dir board =
-            moveTileAt (moveInDir4 dir board.e) board
-
         slideInDirections : List Dir4 -> Board
         slideInDirections =
-            List.foldl slideInDir4 solutionBoard
+            List.foldl slideTileInDirection solutionBoard
     in
     Random.list 100 randomDir
         |> Random.map slideInDirections
+
+
+slideTileInDirection : Dir4 -> Board -> Board
+slideTileInDirection dir board =
+    moveTileAt (moveInDir4 (oppositeDir4 dir) board.e) board
 
 
 solutionBoard : Board
@@ -164,7 +165,9 @@ isSolutionNode (Node n) =
 
 possibleNextBoards : Board -> List Board
 possibleNextBoards board =
-    Debug.todo "todo"
+    [ Up, Down, Left, Right ]
+        |> List.map (\dir -> slideTileInDirection dir board)
+        |> reject (eq board)
 
 
 estimateCostToReachSolution : Board -> Int
