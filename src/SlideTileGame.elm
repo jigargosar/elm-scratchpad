@@ -33,7 +33,7 @@ gw =
 
 
 gh =
-    4
+    2
 
 
 totalCellCount =
@@ -259,11 +259,7 @@ solveBoard board =
 
 solvePriorityQueue : Int -> PriorityQueue -> Maybe Node
 solvePriorityQueue iteration pq =
-    if iteration > 100 then
-        let
-            _ =
-                Debug.todo "FAIL"
-        in
+    if iteration > 300 then
         Nothing
 
     else
