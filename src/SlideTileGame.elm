@@ -186,8 +186,8 @@ createChildrenNodes ((Node n) as parent) =
             )
 
 
-initNode : Board -> Node
-initNode board =
+initRootNode : Board -> Node
+initRootNode board =
     Debug.todo "todo"
 
 
@@ -217,7 +217,7 @@ dequeue (PriorityQueue ls) =
 
 solveBoard : Board -> Maybe Node
 solveBoard board =
-    initNode board
+    initRootNode board
         |> priorityQueueFrom
         |> solvePriorityQueue
 
