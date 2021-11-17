@@ -45,13 +45,13 @@ gpToWorld =
 
 
 type alias Model =
-    { tiles : TilesDict
+    { board : Board
     }
 
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { tiles = initialTiles }
+    ( { board = initialTiles }
     , Cmd.none
     )
 
@@ -73,7 +73,7 @@ update msg model =
             ( model, Cmd.none )
 
         GPClicked gp ->
-            ( onGPClick gp model, Cmd.none )
+            ( { model | board = moveTileAt gp model.board }, Cmd.none )
 
 
 view : Model -> Html Msg
@@ -86,7 +86,7 @@ view model =
         , bgc gray
         , noUserSelect
         ]
-        [ model.tiles
+        [ model.board.d
             |> Dict.toList
             |> List.map viewTile3
             |> group []
@@ -97,50 +97,43 @@ type alias Tile =
     Int
 
 
-type alias TilesDict =
-    Dict GPos Tile
+type alias Board =
+    { e : GPos, d : Dict GPos Tile }
 
 
-initialTiles : TilesDict
+initialTiles : Board
 initialTiles =
     let
         gps =
             rangeWH gw gh
                 |> List.take (gw * gh - 1)
+
+        d =
+            gps
+                |> List.indexedMap (\i gp -> ( gp, i ))
+                |> Dict.fromList
     in
-    gps
-        |> List.indexedMap (\i gp -> ( gp, i ))
-        |> Dict.fromList
+    { e = ( gw - 1, gh - 1 ), d = d }
 
 
-getEmptyGP : TilesDict -> GPos
-getEmptyGP td =
-    case
-        rangeWH gw gh
-            |> List.filter (\k -> Dict.member k td |> not)
-            |> List.head
-    of
-        Nothing ->
-            Debug.todo "this should never happen"
-
-        Just gp ->
-            gp
-
-
-onGPClick : GPos -> Model -> Model
-onGPClick gp model =
+moveTileAt : GPos -> Board -> Board
+moveTileAt gp board =
     let
-        updatedTiles =
-            case ( Dict.get gp model.tiles, areAdjacent gp (getEmptyGP model.tiles) ) of
+        updatedBoard =
+            case ( Dict.get gp board.d, areAdjacent board.e gp ) of
                 ( Just gpTile, True ) ->
-                    model.tiles
-                        |> Dict.remove gp
-                        |> Dict.insert (getEmptyGP model.tiles) gpTile
+                    { board
+                        | e = gp
+                        , d =
+                            board.d
+                                |> Dict.remove gp
+                                |> Dict.insert board.e gpTile
+                    }
 
                 _ ->
-                    model.tiles
+                    board
     in
-    { model | tiles = updatedTiles }
+    updatedBoard
 
 
 viewTile : ( GPos, Tile ) -> Html Msg
