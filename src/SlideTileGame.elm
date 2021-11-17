@@ -94,7 +94,7 @@ view model =
 
 
 type alias Tile =
-    ( Int, GPos )
+    Int
 
 
 type alias TilesDict =
@@ -106,12 +106,10 @@ initialTiles =
     let
         gps =
             rangeWH gw gh
-
-        --|> List.take (gw * gh - 1)
+                |> List.take (gw * gh - 1)
     in
     gps
-        |> List.indexedMap (\i gp -> ( gp, ( i, gp ) ))
-        |> List.filter (\( _, ( i, _ ) ) -> i /= (8 - 1))
+        |> List.indexedMap (\i gp -> ( gp, i ))
         |> Dict.fromList
 
 
@@ -146,7 +144,7 @@ onGPClick gp model =
 
 
 viewTile : ( GPos, Tile ) -> Html Msg
-viewTile ( gp, ( i, _ ) ) =
+viewTile ( gp, i ) =
     group [ xf [ mv (gpToWorld gp) ] ]
         [ square cz [ fillTransparent ]
         , words
