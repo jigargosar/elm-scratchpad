@@ -389,6 +389,10 @@ eq =
     (==)
 
 
+eqBy fn a b =
+    fn a == fn b
+
+
 neq =
     (/=)
 

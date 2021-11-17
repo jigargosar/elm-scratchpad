@@ -259,12 +259,10 @@ solveBoard board =
 
 solvePriorityQueue : Int -> PriorityQueue -> Maybe Node
 solvePriorityQueue iteration pq =
-    if iteration > 10 then
+    if iteration > 100 then
         let
             _ =
-                pq
-                    |> Debug.toString
-                    |> Debug.todo
+                Debug.todo "FAIL"
         in
         Nothing
 
