@@ -51,7 +51,7 @@ type alias Model =
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { board = initialTiles }
+    ( { board = solvedBoard }
     , Cmd.none
     )
 
@@ -101,8 +101,8 @@ type alias Board =
     { e : GPos, d : Dict GPos Tile }
 
 
-initialTiles : Board
-initialTiles =
+solvedBoard : Board
+solvedBoard =
     let
         gps =
             rangeWH gw gh
