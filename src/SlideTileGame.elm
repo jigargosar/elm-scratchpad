@@ -142,14 +142,46 @@ solutionBoard =
     { e = ( gw - 1, gh - 1 ), d = d }
 
 
-type alias Acc =
-    { stack : List Board }
+type PriorityQueue
+    = PriorityQueue
 
 
-type alias Node =
-    { board : Board
-    , path : List Dir4
-    }
+type Node
+    = Node
+
+
+isSolutionNode : Node -> Bool
+isSolutionNode =
+    Debug.todo "todo"
+
+
+createChildrenNodes : Node -> List Node
+createChildrenNodes =
+    Debug.todo "todo"
+
+
+enqueueAll : List Node -> PriorityQueue -> PriorityQueue
+enqueueAll =
+    Debug.todo "todo"
+
+
+dequeue : PriorityQueue -> Maybe ( Node, PriorityQueue )
+dequeue =
+    Debug.todo "todo"
+
+
+solve : PriorityQueue -> Maybe Node
+solve pq =
+    case dequeue pq of
+        Nothing ->
+            Nothing
+
+        Just ( node, pendingPQ ) ->
+            if isSolutionNode node then
+                Just node
+
+            else
+                solve (enqueueAll (createChildrenNodes node) pendingPQ)
 
 
 
