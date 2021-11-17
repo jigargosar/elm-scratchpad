@@ -1,5 +1,6 @@
 module SlideTileGame exposing (..)
 
+import Array
 import Browser
 import Dict exposing (Dict)
 import Html exposing (Attribute, Html)
@@ -142,10 +143,6 @@ solutionBoard =
     { e = ( gw - 1, gh - 1 ), d = d }
 
 
-type PriorityQueue
-    = PriorityQueue
-
-
 type Node
     = Node
 
@@ -160,14 +157,49 @@ createChildrenNodes =
     Debug.todo "todo"
 
 
+initNode : Board -> Node
+initNode board =
+    Debug.todo "todo"
+
+
+type PriorityQueue
+    = PriorityQueue
+
+
+priorityQueueFrom : Node -> PriorityQueue
+priorityQueueFrom node =
+    Debug.todo "todo"
+
+
 enqueueAll : List Node -> PriorityQueue -> PriorityQueue
 enqueueAll =
     Debug.todo "todo"
 
 
 dequeue : PriorityQueue -> Maybe ( Node, PriorityQueue )
-dequeue =
-    Debug.todo "todo"
+dequeue _ =
+    let
+        maybeIndexedNode : Maybe ( Int, Node )
+        maybeIndexedNode =
+            Debug.todo "todo"
+
+        queueWithoutElementAt : Int -> PriorityQueue
+        queueWithoutElementAt =
+            Debug.todo "todo"
+    in
+    case maybeIndexedNode of
+        Nothing ->
+            Nothing
+
+        Just ( i, n ) ->
+            Just ( n, queueWithoutElementAt i )
+
+
+solveBoard : Board -> Maybe Node
+solveBoard board =
+    initNode board
+        |> priorityQueueFrom
+        |> solvePriorityQueue
 
 
 solvePriorityQueue : PriorityQueue -> Maybe Node
