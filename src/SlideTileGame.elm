@@ -118,22 +118,18 @@ initialTiles =
 
 moveTileAt : GPos -> Board -> Board
 moveTileAt gp board =
-    let
-        updatedBoard =
-            case ( Dict.get gp board.d, areAdjacent board.e gp ) of
-                ( Just gpTile, True ) ->
-                    { board
-                        | e = gp
-                        , d =
-                            board.d
-                                |> Dict.remove gp
-                                |> Dict.insert board.e gpTile
-                    }
+    case ( Dict.get gp board.d, areAdjacent board.e gp ) of
+        ( Just gpTile, True ) ->
+            { board
+                | e = gp
+                , d =
+                    board.d
+                        |> Dict.remove gp
+                        |> Dict.insert board.e gpTile
+            }
 
-                _ ->
-                    board
-    in
-    updatedBoard
+        _ ->
+            board
 
 
 viewTile : ( GPos, Tile ) -> Html Msg
