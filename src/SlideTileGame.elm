@@ -56,12 +56,15 @@ type alias Model =
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { board =
+    let
+        board =
             solutionBoard
                 |> always initialBoard
-      }
-    , Cmd.none
-    )
+
+        _ =
+            Debug.log "solution" (solveBoard board)
+    in
+    ( { board = board }, Cmd.none )
 
 
 type Msg
@@ -251,21 +254,31 @@ solveBoard : Board -> Maybe Node
 solveBoard board =
     initRootNode board
         |> priorityQueueFrom
-        |> solvePriorityQueue
+        |> solvePriorityQueue 1
 
 
-solvePriorityQueue : PriorityQueue -> Maybe Node
-solvePriorityQueue pq =
-    case dequeue pq of
-        Nothing ->
-            Nothing
+solvePriorityQueue : Int -> PriorityQueue -> Maybe Node
+solvePriorityQueue iteration pq =
+    if iteration > 10 then
+        let
+            _ =
+                pq
+                    |> Debug.toString
+                    |> Debug.todo
+        in
+        Nothing
 
-        Just ( node, pendingPQ ) ->
-            if isSolutionNode node then
-                Just node
+    else
+        case dequeue pq of
+            Nothing ->
+                Nothing
 
-            else
-                solvePriorityQueue (enqueueAll (createChildrenNodes node) pendingPQ)
+            Just ( node, pendingPQ ) ->
+                if isSolutionNode node then
+                    Just node
+
+                else
+                    solvePriorityQueue (iteration + 1) (enqueueAll (createChildrenNodes node) pendingPQ)
 
 
 
