@@ -2,7 +2,7 @@ module SlideTileGame exposing (..)
 
 import Browser
 import Dict exposing (Dict)
-import Html exposing (Attribute, Html)
+import Html exposing (Attribute, Html, div)
 import Random exposing (Generator)
 import Svg exposing (Svg)
 import Svg.Events as SE
@@ -87,18 +87,20 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    Svg.svg
-        [ saWidth width
-        , saHeight height
-        , noFill
-        , noStroke
-        , bgc gray
-        , noUserSelect
-        ]
-        [ model.board.d
-            |> Dict.toList
-            |> List.map viewTile
-            |> group []
+    div []
+        [ Svg.svg
+            [ saWidth width
+            , saHeight height
+            , noFill
+            , noStroke
+            , bgc gray
+            , noUserSelect
+            ]
+            [ model.board.d
+                |> Dict.toList
+                |> List.map viewTile
+                |> group []
+            ]
         ]
 
 
