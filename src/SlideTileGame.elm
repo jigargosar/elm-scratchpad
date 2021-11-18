@@ -105,32 +105,14 @@ viewSolution =
         (\(Node n) ->
             div []
                 [ Debug.toString n.pathToRootCost |> text
-                , viewSmallBoardSvg n.board
+                , viewScaledBoardSvg 0.3 n.board
                 ]
         )
         >> Maybe.withDefault (text "NotFound")
 
 
-viewBoardSvg : Board -> Html Msg
-viewBoardSvg board =
-    Svg.svg
-        [ saWidth width
-        , saHeight height
-        , noFill
-        , noStroke
-        , bgc gray
-        , noUserSelect
-        ]
-        [ viewBoard board
-        ]
-
-
-viewSmallBoardSvg : Board -> Html Msg
-viewSmallBoardSvg board =
-    let
-        scl =
-            0.5
-    in
+viewScaledBoardSvg : Float -> Board -> Html Msg
+viewScaledBoardSvg scl board =
     Svg.svg
         [ saWidth (width * scl)
         , saHeight (height * scl)
@@ -140,8 +122,13 @@ viewSmallBoardSvg board =
         , bgc gray
         , noUserSelect
         ]
-        [ viewBoard board |> Html.map (always Nop)
+        [ viewBoard board
         ]
+
+
+viewBoardSvg : Board -> Html Msg
+viewBoardSvg =
+    viewScaledBoardSvg 1
 
 
 viewBoard : Board -> Svg Msg
