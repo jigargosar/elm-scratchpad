@@ -273,7 +273,7 @@ solveBoard board =
 
 solvePriorityQueue : Int -> PriorityQueue -> Maybe Node
 solvePriorityQueue iteration pq =
-    if iteration > 100 then
+    if iteration > 1000 then
         Nothing
 
     else
