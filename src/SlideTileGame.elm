@@ -248,8 +248,11 @@ priorityQueueFrom node =
 
 enqueueAll : List Node -> PriorityQueue -> PriorityQueue
 enqueueAll nodes (PriorityQueue ls) =
-    reject (\n -> List.member n ls)
-        nodes
+    let
+        rejectPred new =
+            List.any (\old -> old == new) ls
+    in
+    reject rejectPred nodes
         |> (++) ls
         |> PriorityQueue
 
