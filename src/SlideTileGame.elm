@@ -33,7 +33,7 @@ gw =
 
 
 gh =
-    2
+    4
 
 
 totalCellCount =
@@ -155,7 +155,8 @@ type Node
         { board : Board
         , estimatedCostToReachSolution : Int
         , pathToRootCost : Int
-        , parent : Maybe Node
+
+        --, parent : Maybe Node
         }
 
 
@@ -211,7 +212,8 @@ createChildrenNodes ((Node n) as parent) =
                     { board = b
                     , estimatedCostToReachSolution = estimateCostToReachSolution b
                     , pathToRootCost = n.pathToRootCost + 1
-                    , parent = Just parent
+
+                    --, parent = Just parent
                     }
             )
 
@@ -222,7 +224,8 @@ initRootNode b =
         { board = b
         , estimatedCostToReachSolution = estimateCostToReachSolution b
         , pathToRootCost = 0
-        , parent = Nothing
+
+        --, parent = Nothing
         }
 
 
@@ -237,7 +240,10 @@ priorityQueueFrom node =
 
 enqueueAll : List Node -> PriorityQueue -> PriorityQueue
 enqueueAll nodes (PriorityQueue ls) =
-    PriorityQueue (ls ++ nodes)
+    reject (\n -> List.member n ls)
+        nodes
+        |> (++) ls
+        |> PriorityQueue
 
 
 dequeue : PriorityQueue -> Maybe ( Node, PriorityQueue )
@@ -259,7 +265,7 @@ solveBoard board =
 
 solvePriorityQueue : Int -> PriorityQueue -> Maybe Node
 solvePriorityQueue iteration pq =
-    if iteration > 300 then
+    if iteration > 1000 then
         Nothing
 
     else
@@ -273,15 +279,6 @@ solvePriorityQueue iteration pq =
 
                 else
                     solvePriorityQueue (iteration + 1) (enqueueAll (createChildrenNodes node) pendingPQ)
-
-
-
---solveHelp: Node -> Acc -> List Dir4
---solveHelp node acc =
---    if node.board == solutionBoard then
---        node.path
---    else
---
 
 
 moveTileAt : GPos -> Board -> Board
