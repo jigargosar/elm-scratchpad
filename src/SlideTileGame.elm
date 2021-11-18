@@ -102,12 +102,12 @@ viewBoardSvg board =
         , bgc gray
         , noUserSelect
         ]
-        [ renderBoardContent board
+        [ viewBoard board
         ]
 
 
-renderBoardContent : Board -> Svg Msg
-renderBoardContent board =
+viewBoard : Board -> Svg Msg
+viewBoard board =
     board.d
         |> Dict.toList
         |> List.map viewTile
