@@ -295,17 +295,8 @@ enqueueAll candidates (PriorityQueue live dead) =
         rejectPred new =
             isDead new || List.any (\old -> isWorseThan old new) live
 
-        shouldFilter =
-            False
-                |> always False
-                |> always True
-
         filteredNodes =
-            if shouldFilter then
-                reject rejectPred candidates
-
-            else
-                candidates
+            reject rejectPred candidates
     in
     PriorityQueue (live ++ filteredNodes) dead
 
@@ -329,7 +320,7 @@ solveBoard board =
 
 solvePriorityQueue : Int -> PriorityQueue -> Maybe Node
 solvePriorityQueue iteration pq =
-    if iteration > 15 * 1000 then
+    if iteration > 50 * 1000 then
         Nothing
 
     else
