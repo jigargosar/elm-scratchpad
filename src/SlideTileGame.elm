@@ -88,20 +88,29 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
-        [ Svg.svg
-            [ saWidth width
-            , saHeight height
-            , noFill
-            , noStroke
-            , bgc gray
-            , noUserSelect
-            ]
-            [ model.board.d
-                |> Dict.toList
-                |> List.map viewTile
-                |> group []
-            ]
+        [ viewBoardSvg model.board
         ]
+
+
+viewBoardSvg board =
+    Svg.svg
+        [ saWidth width
+        , saHeight height
+        , noFill
+        , noStroke
+        , bgc gray
+        , noUserSelect
+        ]
+        [ renderBoardContent board
+        ]
+
+
+renderBoardContent : Board -> Svg Msg
+renderBoardContent board =
+    board.d
+        |> Dict.toList
+        |> List.map viewTile
+        |> group []
 
 
 type alias Tile =
