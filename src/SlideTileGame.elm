@@ -249,12 +249,25 @@ priorityQueueFrom node =
 enqueueAll : List Node -> PriorityQueue -> PriorityQueue
 enqueueAll nodes (PriorityQueue ls) =
     let
+        isWorseThan (Node old) (Node new) =
+            old.board == new.board && old.pathToRootCost <= new.pathToRootCost
+
         rejectPred new =
-            List.any (\old -> old == new) ls
+            List.any (\old -> isWorseThan old new) ls
+
+        shouldFilter =
+            False
+                |> always True
+                |> always False
+
+        filteredNodes =
+            if shouldFilter then
+                reject rejectPred nodes
+
+            else
+                nodes
     in
-    reject rejectPred nodes
-        |> (++) ls
-        |> PriorityQueue
+    PriorityQueue (ls ++ filteredNodes)
 
 
 dequeue : PriorityQueue -> Maybe ( Node, PriorityQueue )
@@ -276,7 +289,7 @@ solveBoard board =
 
 solvePriorityQueue : Int -> PriorityQueue -> Maybe Node
 solvePriorityQueue iteration pq =
-    if iteration > 1000 then
+    if iteration > 2 * 1000 then
         Nothing
 
     else
