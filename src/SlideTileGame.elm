@@ -8,6 +8,7 @@ import Set exposing (Set)
 import Svg exposing (Svg)
 import Svg.Events as SE
 import Time
+import TypedSvg.Attributes as TA
 import Utils exposing (..)
 
 
@@ -69,6 +70,7 @@ init () =
 type Msg
     = OnTick
     | GPClicked GPos
+    | Nop
 
 
 subscriptions : Model -> Sub Msg
@@ -85,13 +87,28 @@ update msg model =
         GPClicked gp ->
             ( { model | board = moveTileAt gp model.board }, Cmd.none )
 
+        Nop ->
+            ( model, Cmd.none )
+
 
 view : Model -> Html Msg
 view model =
     div [ fontSize "24px", dFlex, fDCol, gap "20px", pAll "20px" ]
-        [ div [] [ text <| Debug.toString model.solution ]
+        [ div [] [ viewSolution model.solution ]
         , viewBoardSvg model.board
         ]
+
+
+viewSolution : Maybe Node -> Html Msg
+viewSolution =
+    Maybe.map
+        (\(Node n) ->
+            div []
+                [ Debug.toString n.pathToRootCost |> text
+                , viewSmallBoardSvg n.board
+                ]
+        )
+        >> Maybe.withDefault (text "NotFound")
 
 
 viewBoardSvg : Board -> Html Msg
@@ -105,6 +122,25 @@ viewBoardSvg board =
         , noUserSelect
         ]
         [ viewBoard board
+        ]
+
+
+viewSmallBoardSvg : Board -> Html Msg
+viewSmallBoardSvg board =
+    let
+        scl =
+            0.5
+    in
+    Svg.svg
+        [ saWidth (width * scl)
+        , saHeight (height * scl)
+        , TA.viewBox 0 0 width height
+        , noFill
+        , noStroke
+        , bgc gray
+        , noUserSelect
+        ]
+        [ viewBoard board |> Html.map (always Nop)
         ]
 
 
