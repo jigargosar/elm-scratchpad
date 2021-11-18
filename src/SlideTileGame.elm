@@ -250,15 +250,18 @@ enqueueAll : List Node -> PriorityQueue -> PriorityQueue
 enqueueAll nodes (PriorityQueue ls) =
     let
         isWorseThan (Node old) (Node new) =
-            old.board == new.board && old.pathToRootCost <= new.pathToRootCost
+            True
+                && (old.estimatedCostToReachSolution == new.estimatedCostToReachSolution)
+                && (old.pathToRootCost <= new.pathToRootCost)
+                && (old.board == new.board)
 
         rejectPred new =
             List.any (\old -> isWorseThan old new) ls
 
         shouldFilter =
             False
-                |> always True
                 |> always False
+                |> always True
 
         filteredNodes =
             if shouldFilter then
