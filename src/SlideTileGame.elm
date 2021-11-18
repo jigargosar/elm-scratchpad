@@ -92,6 +92,7 @@ view model =
         ]
 
 
+viewBoardSvg : Board -> Html Msg
 viewBoardSvg board =
     Svg.svg
         [ saWidth width
