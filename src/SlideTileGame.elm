@@ -104,7 +104,7 @@ viewSolution =
     Maybe.map
         (\(Node n) ->
             div []
-                [ Debug.toString n.pathToRootCost |> text
+                [ div [] [ text ("moves = " ++ String.fromInt n.pathToRootCost) ]
                 , viewScaledBoardSvg 0.3 n.board
                 ]
         )
