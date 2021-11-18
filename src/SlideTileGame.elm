@@ -4,6 +4,7 @@ import Browser
 import Dict exposing (Dict)
 import Html exposing (Attribute, Html, div, text)
 import Random exposing (Generator)
+import Set exposing (Set)
 import Svg exposing (Svg)
 import Svg.Events as SE
 import Time
@@ -33,7 +34,7 @@ gw =
 
 
 gh =
-    4
+    3
 
 
 totalCellCount =
@@ -164,7 +165,7 @@ solutionBoard =
 type Node
     = Node
         { board : Board
-        , boardHash : String
+        , boardStringRepresentation : String
         , estimatedCostToReachSolution : Int
         , pathToRootCost : Int
         , parent : Maybe Node
@@ -221,7 +222,7 @@ createChildrenNodes ((Node n) as parent) =
             (\b ->
                 Node
                     { board = b
-                    , boardHash = Debug.toString b
+                    , boardStringRepresentation = Debug.toString b
                     , estimatedCostToReachSolution = estimateCostToReachSolution b
                     , pathToRootCost = n.pathToRootCost + 1
                     , parent = Just parent
@@ -233,34 +234,43 @@ initRootNode : Board -> Node
 initRootNode b =
     Node
         { board = b
-        , boardHash = Debug.toString b
+        , boardStringRepresentation = Debug.toString b
         , estimatedCostToReachSolution = estimateCostToReachSolution b
         , pathToRootCost = 0
         , parent = Nothing
         }
 
 
+boardStringRepresentationOfNode : Node -> String
+boardStringRepresentationOfNode (Node n) =
+    n.boardStringRepresentation
+
+
 type PriorityQueue
-    = PriorityQueue (List Node)
+    = PriorityQueue (List Node) (Set String)
 
 
 priorityQueueFrom : Node -> PriorityQueue
 priorityQueueFrom node =
-    PriorityQueue [ node ]
+    PriorityQueue [ node ] Set.empty
 
 
 enqueueAll : List Node -> PriorityQueue -> PriorityQueue
-enqueueAll nodes (PriorityQueue ls) =
+enqueueAll candidates (PriorityQueue live dead) =
     let
         isWorseThan (Node old) (Node new) =
             True
                 && (old.estimatedCostToReachSolution == new.estimatedCostToReachSolution)
                 && (old.pathToRootCost <= new.pathToRootCost)
-                && (old.boardHash == new.boardHash)
+                && (old.boardStringRepresentation == new.boardStringRepresentation)
                 && (old.board == new.board)
 
+        isDead : Node -> Bool
+        isDead n =
+            Set.member (boardStringRepresentationOfNode n) dead
+
         rejectPred new =
-            List.any (\old -> isWorseThan old new) ls
+            isDead new || List.any (\old -> isWorseThan old new) live
 
         shouldFilter =
             False
@@ -269,22 +279,22 @@ enqueueAll nodes (PriorityQueue ls) =
 
         filteredNodes =
             if shouldFilter then
-                reject rejectPred nodes
+                reject rejectPred candidates
 
             else
-                nodes
+                candidates
     in
-    PriorityQueue (ls ++ filteredNodes)
+    PriorityQueue (live ++ filteredNodes) dead
 
 
 dequeue : PriorityQueue -> Maybe ( Node, PriorityQueue )
-dequeue (PriorityQueue ls) =
-    case List.sortBy leastCostOf ls of
+dequeue (PriorityQueue live dead) =
+    case List.sortBy leastCostOf live of
         [] ->
             Nothing
 
         n :: rest ->
-            Just ( n, PriorityQueue rest )
+            Just ( n, PriorityQueue rest (Set.insert (boardStringRepresentationOfNode n) dead) )
 
 
 solveBoard : Board -> Maybe Node
@@ -296,7 +306,7 @@ solveBoard board =
 
 solvePriorityQueue : Int -> PriorityQueue -> Maybe Node
 solvePriorityQueue iteration pq =
-    if iteration > 2 * 1000 then
+    if iteration > 15 * 1000 then
         Nothing
 
     else
