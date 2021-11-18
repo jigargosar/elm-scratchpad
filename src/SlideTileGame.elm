@@ -2,7 +2,7 @@ module SlideTileGame exposing (..)
 
 import Browser
 import Dict exposing (Dict)
-import Html exposing (Attribute, Html, div)
+import Html exposing (Attribute, Html, div, text)
 import Random exposing (Generator)
 import Svg exposing (Svg)
 import Svg.Events as SE
@@ -87,8 +87,9 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ viewBoardSvg model.board
+    div [ fontSize "24px", dFlex, fDCol, gap "20px", pAll "20px" ]
+        [ div [] [ text <| Debug.toString model.solution ]
+        , viewBoardSvg model.board
         ]
 
 
