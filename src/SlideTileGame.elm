@@ -286,8 +286,8 @@ enqueueAll candidates (PriorityQueue live dead) =
                 && (old.estimatedCostToReachSolution == new.estimatedCostToReachSolution)
                 && (old.pathToRootCost <= new.pathToRootCost)
                 && (old.boardStringRepresentation == new.boardStringRepresentation)
-                && (old.board == new.board)
 
+        --&& (old.board == new.board)
         isDead : Node -> Bool
         isDead n =
             Set.member (boardStringRepresentationOfNode n) dead
@@ -320,7 +320,7 @@ solveBoard board =
 
 solvePriorityQueue : Int -> PriorityQueue -> Maybe Node
 solvePriorityQueue iteration pq =
-    if iteration > 50 * 1000 then
+    if iteration > 15 * 1000 then
         Nothing
 
     else
