@@ -51,6 +51,7 @@ gpToWorld =
 
 type alias Model =
     { board : Board
+    , solution : Maybe Node
     }
 
 
@@ -60,11 +61,8 @@ init () =
         board =
             solutionBoard
                 |> always initialBoard
-
-        _ =
-            Debug.log "solution" (solveBoard board)
     in
-    ( { board = board }, Cmd.none )
+    ( { board = board, solution = solveBoard board }, Cmd.none )
 
 
 type Msg
