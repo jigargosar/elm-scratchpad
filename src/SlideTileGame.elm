@@ -164,6 +164,7 @@ solutionBoard =
 type Node
     = Node
         { board : Board
+        , boardHash : String
         , estimatedCostToReachSolution : Int
         , pathToRootCost : Int
         , parent : Maybe Node
@@ -220,6 +221,7 @@ createChildrenNodes ((Node n) as parent) =
             (\b ->
                 Node
                     { board = b
+                    , boardHash = Debug.toString b
                     , estimatedCostToReachSolution = estimateCostToReachSolution b
                     , pathToRootCost = n.pathToRootCost + 1
                     , parent = Just parent
@@ -231,6 +233,7 @@ initRootNode : Board -> Node
 initRootNode b =
     Node
         { board = b
+        , boardHash = Debug.toString b
         , estimatedCostToReachSolution = estimateCostToReachSolution b
         , pathToRootCost = 0
         , parent = Nothing
@@ -253,6 +256,7 @@ enqueueAll nodes (PriorityQueue ls) =
             True
                 && (old.estimatedCostToReachSolution == new.estimatedCostToReachSolution)
                 && (old.pathToRootCost <= new.pathToRootCost)
+                && (old.boardHash == new.boardHash)
                 && (old.board == new.board)
 
         rejectPred new =
