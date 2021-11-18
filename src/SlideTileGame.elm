@@ -155,8 +155,7 @@ type Node
         { board : Board
         , estimatedCostToReachSolution : Int
         , pathToRootCost : Int
-
-        --, parent : Maybe Node
+        , parent : Maybe Node
         }
 
 
@@ -212,8 +211,7 @@ createChildrenNodes ((Node n) as parent) =
                     { board = b
                     , estimatedCostToReachSolution = estimateCostToReachSolution b
                     , pathToRootCost = n.pathToRootCost + 1
-
-                    --, parent = Just parent
+                    , parent = Just parent
                     }
             )
 
@@ -224,8 +222,7 @@ initRootNode b =
         { board = b
         , estimatedCostToReachSolution = estimateCostToReachSolution b
         , pathToRootCost = 0
-
-        --, parent = Nothing
+        , parent = Nothing
         }
 
 
