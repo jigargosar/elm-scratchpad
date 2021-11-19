@@ -30,7 +30,7 @@ height =
 
 
 maxIterations =
-    5 * 1000
+    15 * 1000
 
 
 gw =
@@ -249,9 +249,13 @@ solvedCellCount board =
         )
 
 
+allDirections =
+    [ Up, Down, Left, Right ]
+
+
 createChildrenNodes : Node -> List Node
 createChildrenNodes n =
-    [ Up, Down, Left, Right ]
+    allDirections
         |> List.filterMap
             (\dir ->
                 slideTileInDirection dir n.board
