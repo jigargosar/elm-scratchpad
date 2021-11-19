@@ -351,7 +351,6 @@ reduce n ( min, acc ) =
 
 
 pop frontier =
-    --List.sortBy leastCostOf frontier |> uncons
     case frontier of
         [] ->
             Nothing
