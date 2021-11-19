@@ -312,6 +312,21 @@ dequeue (PriorityQueue live) =
             Just ( n, PriorityQueue rest )
 
 
+type Loop state result
+    = Loop state
+    | Complete result
+
+
+stepLoop : (state -> Loop state result) -> Loop state result -> Loop state result
+stepLoop fn loop =
+    case loop of
+        Loop state ->
+            fn state
+
+        Complete _ ->
+            loop
+
+
 solveBoard : Board -> Maybe Node
 solveBoard board =
     initRootNode board
