@@ -34,7 +34,7 @@ gw =
 
 
 gh =
-    4
+    2
 
 
 totalCellCount =
@@ -84,7 +84,7 @@ update msg model =
             ( model, Cmd.none )
 
         GPClicked gp ->
-            ( { model | board = moveTileAt gp model.board }, Cmd.none )
+            ( { model | board = moveTileAt gp model.board |> Maybe.withDefault model.board }, Cmd.none )
 
         Nop ->
             ( model, Cmd.none )
@@ -158,13 +158,23 @@ randomBoard =
     let
         slideInDirections : List Dir4 -> Board
         slideInDirections =
-            List.foldl slideTileInDirection solutionBoard
+            List.foldl (\dir -> withRollback (slideTileInDirection dir)) solutionBoard
     in
     Random.list 100 randomDir
         |> Random.map slideInDirections
 
 
-slideTileInDirection : Dir4 -> Board -> Board
+withRollback : (a -> Maybe a) -> a -> a
+withRollback fn x =
+    case fn x of
+        Nothing ->
+            x
+
+        Just y ->
+            y
+
+
+slideTileInDirection : Dir4 -> Board -> Maybe Board
 slideTileInDirection dir board =
     moveTileAt (moveInDir4 (oppositeDir4 dir) board.e) board
 
@@ -207,8 +217,7 @@ isSolutionNode (Node n) =
 possibleNextBoards : Board -> List Board
 possibleNextBoards board =
     [ Up, Down, Left, Right ]
-        |> List.map (\dir -> slideTileInDirection dir board)
-        |> reject (eq board)
+        |> List.filterMap (\dir -> slideTileInDirection dir board)
 
 
 estimateCostToReachSolution : Board -> Int
@@ -334,20 +343,21 @@ solvePriorityQueue iteration pq =
                     solvePriorityQueue (iteration + 1) (enqueueAll (createChildrenNodes node) pendingPQ)
 
 
-moveTileAt : GPos -> Board -> Board
+moveTileAt : GPos -> Board -> Maybe Board
 moveTileAt gp board =
     case ( Dict.get gp board.d, areAdjacent board.e gp ) of
         ( Just gpTile, True ) ->
-            { board
-                | e = gp
-                , d =
-                    board.d
-                        |> Dict.remove gp
-                        |> Dict.insert board.e gpTile
-            }
+            Just
+                { board
+                    | e = gp
+                    , d =
+                        board.d
+                            |> Dict.remove gp
+                            |> Dict.insert board.e gpTile
+                }
 
         _ ->
-            board
+            Nothing
 
 
 viewTile : ( GPos, Tile ) -> Html Msg
