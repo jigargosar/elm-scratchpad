@@ -506,3 +506,13 @@ dictGet2 a b dict =
 
 mapFirst =
     Tuple.mapFirst
+
+
+withRollback : (a -> Maybe a) -> a -> a
+withRollback fn x =
+    case fn x of
+        Nothing ->
+            x
+
+        Just y ->
+            y

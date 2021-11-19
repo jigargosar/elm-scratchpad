@@ -164,16 +164,6 @@ randomBoard =
         |> Random.map slideInDirections
 
 
-withRollback : (a -> Maybe a) -> a -> a
-withRollback fn x =
-    case fn x of
-        Nothing ->
-            x
-
-        Just y ->
-            y
-
-
 slideTileInDirection : Dir4 -> Board -> Maybe Board
 slideTileInDirection dir board =
     moveTileAt (moveInDir4 (oppositeDir4 dir) board.e) board
