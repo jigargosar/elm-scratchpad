@@ -334,6 +334,20 @@ solveBoard board =
         |> solvePriorityQueue 1
 
 
+solveBoardHelp : PriorityQueue -> Loop PriorityQueue (Maybe Node)
+solveBoardHelp pq =
+    case dequeue pq of
+        Nothing ->
+            Complete Nothing
+
+        Just ( node, pendingPQ ) ->
+            if isSolutionNode node then
+                Complete (Just node)
+
+            else
+                Loop (enqueueAll (createChildrenNodes node) pendingPQ)
+
+
 solvePriorityQueue : Int -> PriorityQueue -> Maybe Node
 solvePriorityQueue iteration pq =
     if iteration > maxIterations then
