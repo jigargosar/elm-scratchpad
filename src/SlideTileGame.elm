@@ -223,12 +223,6 @@ isSolutionNode n =
     n.boardAsString == solutionBoardAsString
 
 
-possibleNextBoards : Board -> List Board
-possibleNextBoards board =
-    [ Up, Down, Left, Right ]
-        |> List.filterMap (\dir -> slideTileInDirection dir board)
-
-
 estimateCostToReachSolution : Board -> Int
 estimateCostToReachSolution board =
     totalCellCount - solvedCellCount board
@@ -257,15 +251,19 @@ solvedCellCount board =
 
 createChildrenNodes : Node -> List Node
 createChildrenNodes n =
-    possibleNextBoards n.board
-        |> List.map
-            (\b ->
-                { board = b
-                , boardAsString = Debug.toString b
-                , estimatedCostToReachSolution = estimateCostToReachSolution b
-                , pathToRootCost = n.pathToRootCost + 1
-                , parent = Parent n
-                }
+    [ Up, Down, Left, Right ]
+        |> List.filterMap
+            (\dir ->
+                slideTileInDirection dir n.board
+                    |> Maybe.map
+                        (\b ->
+                            { board = b
+                            , boardAsString = Debug.toString b
+                            , estimatedCostToReachSolution = estimateCostToReachSolution b
+                            , pathToRootCost = n.pathToRootCost + 1
+                            , parent = Parent n
+                            }
+                        )
             )
 
 
