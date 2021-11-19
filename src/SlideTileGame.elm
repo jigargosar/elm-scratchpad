@@ -29,12 +29,16 @@ height =
     gh * cz
 
 
+maxIterations =
+    15 * 1000
+
+
 gw =
     3
 
 
 gh =
-    2
+    3
 
 
 totalCellCount =
@@ -317,7 +321,7 @@ solveBoard board =
 
 solvePriorityQueue : Int -> PriorityQueue -> Maybe Node
 solvePriorityQueue iteration pq =
-    if iteration > 1 * 1000 then
+    if iteration > maxIterations then
         Nothing
 
     else
