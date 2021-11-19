@@ -195,9 +195,13 @@ solutionBoard =
     { e = ( gw - 1, gh - 1 ), d = d }
 
 
+solutionBoardAsString =
+    Debug.toString solutionBoard
+
+
 type alias Node =
     { board : Board
-    , boardStringRepresentation : String
+    , boardAsString : String
     , estimatedCostToReachSolution : Int
     , pathToRootCost : Int
     , parent : Parent
@@ -216,7 +220,7 @@ leastCostOf n =
 
 isSolutionNode : Node -> Bool
 isSolutionNode n =
-    n.board == solutionBoard
+    n.boardAsString == solutionBoardAsString
 
 
 possibleNextBoards : Board -> List Board
@@ -257,7 +261,7 @@ createChildrenNodes n =
         |> List.map
             (\b ->
                 { board = b
-                , boardStringRepresentation = Debug.toString b
+                , boardAsString = Debug.toString b
                 , estimatedCostToReachSolution = estimateCostToReachSolution b
                 , pathToRootCost = n.pathToRootCost + 1
                 , parent = Parent n
@@ -268,7 +272,7 @@ createChildrenNodes n =
 initRootNode : Board -> Node
 initRootNode b =
     { board = b
-    , boardStringRepresentation = Debug.toString b
+    , boardAsString = Debug.toString b
     , estimatedCostToReachSolution = estimateCostToReachSolution b
     , pathToRootCost = 0
     , parent = None
