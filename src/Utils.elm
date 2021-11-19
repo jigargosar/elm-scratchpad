@@ -516,3 +516,12 @@ withRollback fn x =
 
         Just y ->
             y
+
+
+applyN : Int -> (a -> a) -> a -> a
+applyN n fn x =
+    if n <= 0 then
+        x
+
+    else
+        applyN (n - 1) fn (fn x)

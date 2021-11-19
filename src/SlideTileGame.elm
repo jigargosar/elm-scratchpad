@@ -56,7 +56,7 @@ gpToWorld =
 
 type alias Model =
     { board : Board
-    , solution : Maybe Node
+    , loop : Loop PriorityQueue (Maybe Node)
     }
 
 
@@ -67,7 +67,7 @@ init () =
             solutionBoard
                 |> always initialBoard
     in
-    ( { board = board, solution = solveBoard board }, Cmd.none )
+    ( { board = board, loop = solveBoard board }, Cmd.none )
 
 
 type Msg
@@ -97,21 +97,22 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div [ fontSize "24px", dFlex, fDCol, gap "20px", pAll "20px" ]
-        [ div [] [ viewSolution model.solution ]
+        [ div [] [ viewLoop model.loop ]
         , viewBoardSvg model.board
         ]
 
 
-viewSolution : Maybe Node -> Html Msg
-viewSolution =
-    Maybe.map
-        (\(Node n) ->
+viewLoop : Loop PriorityQueue (Maybe Node) -> Html Msg
+viewLoop loop =
+    case loop of
+        Complete (Just (Node n)) ->
             div []
                 [ div [] [ text ("moves = " ++ String.fromInt n.pathToRootCost) ]
                 , viewScaledBoardSvg 0.3 n.board
                 ]
-        )
-        >> Maybe.withDefault (text "NotFound")
+
+        _ ->
+            text "NotFound"
 
 
 viewScaledBoardSvg : Float -> Board -> Html Msg
@@ -327,11 +328,13 @@ stepLoop fn loop =
             loop
 
 
-solveBoard : Board -> Maybe Node
+solveBoard : Board -> Loop PriorityQueue (Maybe Node)
 solveBoard board =
     initRootNode board
         |> priorityQueueFrom
-        |> solvePriorityQueue 1
+        --|> solvePriorityQueue 1
+        |> Loop
+        |> applyN maxIterations (stepLoop solveBoardHelp)
 
 
 solveBoardHelp : PriorityQueue -> Loop PriorityQueue (Maybe Node)
