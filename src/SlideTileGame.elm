@@ -334,13 +334,31 @@ stepLoop fn loop =
             loop
 
 
+isComplete : Loop state result -> Bool
+isComplete loop =
+    case loop of
+        Complete _ ->
+            True
+
+        _ ->
+            False
+
+
+stepLoopN : Int -> (state -> Loop state result) -> Loop state result -> Loop state result
+stepLoopN n fn loop =
+    if n <= 0 || isComplete loop then
+        loop
+
+    else
+        stepLoopN (n - 1) fn (stepLoop fn loop)
+
+
 solveBoard : Board -> Loop PriorityQueue (Maybe Node)
 solveBoard board =
     initRootNode board
         |> priorityQueueFrom
-        --|> solvePriorityQueue 1
         |> Loop
-        |> applyN maxIterations (stepLoop solveBoardHelp)
+        |> stepLoopN maxIterations solveBoardHelp
 
 
 solveBoardHelp : PriorityQueue -> Loop PriorityQueue (Maybe Node)
