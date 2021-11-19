@@ -348,7 +348,15 @@ solveBoardHelp state =
 
             else
                 { state
-                    | frontier = createChildrenNodes node ++ pendingFrontier
+                    | explored = Dict.insert node.boardAsString node state.explored
+                    , frontier =
+                        (createChildrenNodes node
+                            |> reject
+                                (\c ->
+                                    Dict.member c.boardAsString state.explored
+                                )
+                        )
+                            ++ pendingFrontier
                 }
                     |> Loop
 
