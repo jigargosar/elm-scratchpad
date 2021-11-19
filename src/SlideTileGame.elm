@@ -30,7 +30,7 @@ height =
 
 
 maxIterations =
-    15 * 1000
+    5 * 1000 |> round
 
 
 gw =
@@ -272,7 +272,9 @@ createChildrenNodes n =
 
 
 type alias State =
-    { explored : Dict String Node, frontier : List Node }
+    { explored : Dict String Node
+    , frontier : List Node
+    }
 
 
 initState : Board -> State
@@ -340,9 +342,27 @@ solveBoard board =
         |> stepLoopN maxIterations solveBoardHelp
 
 
+pop frontier =
+    let
+        reduce n ( min, acc ) =
+            if leastCostOf n < leastCostOf min then
+                ( n, min :: acc )
+
+            else
+                ( min, n :: acc )
+    in
+    --List.sortBy leastCostOf frontier |> uncons
+    case frontier of
+        [] ->
+            Nothing
+
+        h :: t ->
+            Just (List.foldl reduce ( h, [] ) t)
+
+
 solveBoardHelp : State -> LoopResult State (Maybe Node)
 solveBoardHelp state =
-    case List.sortBy leastCostOf state.frontier |> uncons of
+    case pop state.frontier of
         Nothing ->
             Done Nothing
 
@@ -351,16 +371,23 @@ solveBoardHelp state =
                 Done (Just node)
 
             else
-                { state
-                    | explored = Dict.insert node.boardAsString node state.explored
-                    , frontier =
-                        (createChildrenNodes node
+                let
+                    children =
+                        createChildrenNodes node
+
+                    filteredChildren =
+                        children
                             |> reject
                                 (\c ->
                                     Dict.member c.boardAsString state.explored
                                 )
-                        )
-                            ++ pendingFrontier
+
+                    insertNodes =
+                        List.foldl (\n -> Dict.insert n.boardAsString n)
+                in
+                { state
+                    | explored = insertNodes state.explored (node :: filteredChildren)
+                    , frontier = pendingFrontier ++ filteredChildren
                 }
                     |> Loop
 
