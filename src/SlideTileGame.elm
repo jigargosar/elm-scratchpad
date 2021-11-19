@@ -320,7 +320,7 @@ dequeue (PriorityQueue live) =
 
 
 type LoopResult state result
-    = Continue state
+    = Loop state
     | Done result
 
 
@@ -329,11 +329,16 @@ type Loop state result
     | Complete result
 
 
-stepLoop : (state -> Loop state result) -> Loop state result -> Loop state result
+stepLoop : (state -> LoopResult state result) -> Loop state result -> Loop state result
 stepLoop fn loop =
     case loop of
         Looping state ->
-            fn state
+            case fn state of
+                Loop newState ->
+                    Looping newState
+
+                Done result ->
+                    Complete result
 
         Complete _ ->
             loop
@@ -349,7 +354,7 @@ isComplete loop =
             False
 
 
-stepLoopN : Int -> (state -> Loop state result) -> Loop state result -> Loop state result
+stepLoopN : Int -> (state -> LoopResult state result) -> Loop state result -> Loop state result
 stepLoopN n fn loop =
     if n <= 0 || isComplete loop then
         loop
@@ -366,18 +371,18 @@ solveBoard board =
         |> stepLoopN maxIterations solveBoardHelp
 
 
-solveBoardHelp : PriorityQueue -> Loop PriorityQueue (Maybe Node)
+solveBoardHelp : PriorityQueue -> LoopResult PriorityQueue (Maybe Node)
 solveBoardHelp pq =
     case dequeue pq of
         Nothing ->
-            Complete Nothing
+            Done Nothing
 
         Just ( node, pendingPQ ) ->
             if isSolutionNode node then
-                Complete (Just node)
+                Done (Just node)
 
             else
-                Looping (enqueueAll (createChildrenNodes node) pendingPQ)
+                Loop (enqueueAll (createChildrenNodes node) pendingPQ)
 
 
 moveTileAt : GPos -> Board -> Maybe Board
