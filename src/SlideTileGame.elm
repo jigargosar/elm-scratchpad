@@ -30,7 +30,7 @@ height =
 
 
 maxIterations =
-    5 * 1000 |> round
+    25 * 1000 |> round
 
 
 gw =
@@ -342,15 +342,15 @@ solveBoard board =
         |> stepLoopN maxIterations solveBoardHelp
 
 
-pop frontier =
-    let
-        reduce n ( min, acc ) =
-            if leastCostOf n < leastCostOf min then
-                ( n, min :: acc )
+reduce n ( min, acc ) =
+    if leastCostOf n < leastCostOf min then
+        ( n, min :: acc )
 
-            else
-                ( min, n :: acc )
-    in
+    else
+        ( min, n :: acc )
+
+
+pop frontier =
     --List.sortBy leastCostOf frontier |> uncons
     case frontier of
         [] ->
