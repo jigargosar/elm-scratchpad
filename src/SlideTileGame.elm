@@ -246,27 +246,31 @@ createChildrenNodes ((Node p) as parent) =
                     boardStringRepresentation =
                         Debug.toString b
 
-                    toNode () =
-                        Just
-                            (Node
-                                { board = b
-                                , boardStringRepresentation = boardStringRepresentation
-                                , estimatedCostToReachSolution = estimateCostToReachSolution b
-                                , pathToRootCost = p.pathToRootCost + 1
-                                , parent = Just parent
-                                }
-                            )
-                in
-                case p.parent of
-                    Just (Node gp) ->
-                        if gp.boardStringRepresentation == boardStringRepresentation then
-                            Nothing
+                    isCircular (Node ancestor) =
+                        if ancestor.boardStringRepresentation == boardStringRepresentation then
+                            True
 
                         else
-                            toNode ()
+                            case ancestor.parent of
+                                Just ga ->
+                                    isCircular ga
 
-                    Nothing ->
-                        toNode ()
+                                Nothing ->
+                                    False
+                in
+                if isCircular parent then
+                    Nothing
+
+                else
+                    Just
+                        (Node
+                            { board = b
+                            , boardStringRepresentation = boardStringRepresentation
+                            , estimatedCostToReachSolution = estimateCostToReachSolution b
+                            , pathToRootCost = p.pathToRootCost + 1
+                            , parent = Just parent
+                            }
+                        )
             )
 
 
