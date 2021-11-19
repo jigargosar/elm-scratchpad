@@ -385,11 +385,16 @@ solveBoardHelp state =
                     insertNodes =
                         List.foldl (\n -> Dict.insert n.boardAsString n)
                 in
-                { state
-                    | explored = insertNodes state.explored (node :: filteredChildren)
-                    , frontier = pendingFrontier ++ filteredChildren
-                }
-                    |> Loop
+                case List.filter isSolutionNode filteredChildren |> List.head of
+                    Just c ->
+                        Done (Just c)
+
+                    Nothing ->
+                        { state
+                            | explored = insertNodes state.explored (node :: filteredChildren)
+                            , frontier = pendingFrontier ++ filteredChildren
+                        }
+                            |> Loop
 
 
 moveTileAt : GPos -> Board -> Maybe Board
