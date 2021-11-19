@@ -56,7 +56,7 @@ gpToWorld =
 
 type alias Model =
     { board : Board
-    , loop : Loop PriorityQueue (Maybe Node)
+    , loop : Loop State (Maybe Node)
     }
 
 
@@ -102,7 +102,7 @@ view model =
         ]
 
 
-viewLoop : Loop PriorityQueue (Maybe Node) -> Html Msg
+viewLoop : Loop State (Maybe Node) -> Html Msg
 viewLoop loop =
     case loop of
         Complete (Just n) ->
@@ -267,38 +267,22 @@ createChildrenNodes n =
             )
 
 
-initRootNode : Board -> Node
-initRootNode b =
-    { board = b
-    , boardAsString = Debug.toString b
-    , estimatedCostToReachSolution = estimateCostToReachSolution b
-    , pathToRootCost = 0
-    , parent = None
-    }
+type alias State =
+    { frontier : List Node }
 
 
-type PriorityQueue
-    = PriorityQueue (List Node)
-
-
-priorityQueueFrom : Node -> PriorityQueue
-priorityQueueFrom node =
-    PriorityQueue [ node ]
-
-
-enqueueAll : List Node -> PriorityQueue -> PriorityQueue
-enqueueAll candidates (PriorityQueue live) =
-    PriorityQueue (live ++ candidates)
-
-
-dequeue : PriorityQueue -> Maybe ( Node, PriorityQueue )
-dequeue (PriorityQueue live) =
-    case List.sortBy leastCostOf live of
-        [] ->
-            Nothing
-
-        n :: rest ->
-            Just ( n, PriorityQueue rest )
+initState : Board -> State
+initState b =
+    let
+        rootNode =
+            { board = b
+            , boardAsString = Debug.toString b
+            , estimatedCostToReachSolution = estimateCostToReachSolution b
+            , pathToRootCost = 0
+            , parent = None
+            }
+    in
+    { frontier = [ rootNode ] }
 
 
 type LoopResult state result
@@ -345,26 +329,26 @@ stepLoopN n fn loop =
         stepLoopN (n - 1) fn (stepLoop fn loop)
 
 
-solveBoard : Board -> Loop PriorityQueue (Maybe Node)
+solveBoard : Board -> Loop State (Maybe Node)
 solveBoard board =
-    initRootNode board
-        |> priorityQueueFrom
+    initState board
         |> Looping
         |> stepLoopN maxIterations solveBoardHelp
 
 
-solveBoardHelp : PriorityQueue -> LoopResult PriorityQueue (Maybe Node)
-solveBoardHelp pq =
-    case dequeue pq of
+solveBoardHelp : State -> LoopResult State (Maybe Node)
+solveBoardHelp state =
+    case List.sortBy leastCostOf state.frontier |> uncons of
         Nothing ->
             Done Nothing
 
-        Just ( node, pendingPQ ) ->
+        Just ( node, pendingFrontier ) ->
             if isSolutionNode node then
                 Done (Just node)
 
             else
-                Loop (enqueueAll (createChildrenNodes node) pendingPQ)
+                { state | frontier = createChildrenNodes node ++ pendingFrontier }
+                    |> Loop
 
 
 moveTileAt : GPos -> Board -> Maybe Board
