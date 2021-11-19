@@ -268,7 +268,7 @@ createChildrenNodes n =
 
 
 type alias State =
-    { frontier : List Node }
+    { explored : Dict String Node, frontier : List Node }
 
 
 initState : Board -> State
@@ -282,7 +282,7 @@ initState b =
             , parent = None
             }
     in
-    { frontier = [ rootNode ] }
+    { explored = Dict.empty, frontier = [ rootNode ] }
 
 
 type LoopResult state result
@@ -347,7 +347,9 @@ solveBoardHelp state =
                 Done (Just node)
 
             else
-                { state | frontier = createChildrenNodes node ++ pendingFrontier }
+                { state
+                    | frontier = createChildrenNodes node ++ pendingFrontier
+                }
                     |> Loop
 
 
