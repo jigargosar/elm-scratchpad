@@ -114,11 +114,13 @@ viewLoop loop =
         Complete Nothing ->
             text "Fail: Search Space Exhausted"
 
-        Looping _ ->
+        Looping s ->
             text <|
                 "Unable to find solution in "
                     ++ String.fromInt maxIterations
-                    ++ " iterations"
+                    ++ " iterations. "
+                    ++ String.fromInt (List.length s.frontier)
+                    ++ " frontier length"
 
 
 viewScaledBoardSvg : Float -> Board -> Html Msg
