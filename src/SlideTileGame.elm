@@ -30,7 +30,7 @@ height =
 
 
 maxIterations =
-    15 * 1000
+    5 * 1000
 
 
 gw =
@@ -105,7 +105,7 @@ view model =
 viewLoop : Loop PriorityQueue (Maybe Node) -> Html Msg
 viewLoop loop =
     case loop of
-        Complete (Just (Node n)) ->
+        Complete (Just n) ->
             div []
                 [ div [] [ text ("moves = " ++ String.fromInt n.pathToRootCost) ]
                 , viewScaledBoardSvg 0.3 n.board
@@ -195,23 +195,27 @@ solutionBoard =
     { e = ( gw - 1, gh - 1 ), d = d }
 
 
-type Node
-    = Node
-        { board : Board
-        , boardStringRepresentation : String
-        , estimatedCostToReachSolution : Int
-        , pathToRootCost : Int
-        , parent : Maybe Node
-        }
+type alias Node =
+    { board : Board
+    , boardStringRepresentation : String
+    , estimatedCostToReachSolution : Int
+    , pathToRootCost : Int
+    , parent : Parent
+    }
+
+
+type Parent
+    = None
+    | Parent Node
 
 
 leastCostOf : Node -> Int
-leastCostOf (Node n) =
+leastCostOf n =
     n.pathToRootCost + n.estimatedCostToReachSolution
 
 
 isSolutionNode : Node -> Bool
-isSolutionNode (Node n) =
+isSolutionNode n =
     n.board == solutionBoard
 
 
@@ -248,51 +252,27 @@ solvedCellCount board =
 
 
 createChildrenNodes : Node -> List Node
-createChildrenNodes ((Node p) as parent) =
-    possibleNextBoards p.board
-        |> List.filterMap
+createChildrenNodes n =
+    possibleNextBoards n.board
+        |> List.map
             (\b ->
-                let
-                    boardStringRepresentation =
-                        Debug.toString b
-
-                    isCircular (Node ancestor) =
-                        if ancestor.boardStringRepresentation == boardStringRepresentation then
-                            True
-
-                        else
-                            case ancestor.parent of
-                                Just ga ->
-                                    isCircular ga
-
-                                Nothing ->
-                                    False
-                in
-                if isCircular parent then
-                    Nothing
-
-                else
-                    Just
-                        (Node
-                            { board = b
-                            , boardStringRepresentation = boardStringRepresentation
-                            , estimatedCostToReachSolution = estimateCostToReachSolution b
-                            , pathToRootCost = p.pathToRootCost + 1
-                            , parent = Just parent
-                            }
-                        )
+                { board = b
+                , boardStringRepresentation = Debug.toString b
+                , estimatedCostToReachSolution = estimateCostToReachSolution b
+                , pathToRootCost = n.pathToRootCost + 1
+                , parent = Parent n
+                }
             )
 
 
 initRootNode : Board -> Node
 initRootNode b =
-    Node
-        { board = b
-        , boardStringRepresentation = Debug.toString b
-        , estimatedCostToReachSolution = estimateCostToReachSolution b
-        , pathToRootCost = 0
-        , parent = Nothing
-        }
+    { board = b
+    , boardStringRepresentation = Debug.toString b
+    , estimatedCostToReachSolution = estimateCostToReachSolution b
+    , pathToRootCost = 0
+    , parent = None
+    }
 
 
 type PriorityQueue
