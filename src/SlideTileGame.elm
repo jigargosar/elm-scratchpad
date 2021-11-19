@@ -111,8 +111,14 @@ viewLoop loop =
                 , viewScaledBoardSvg 0.3 n.board
                 ]
 
-        _ ->
-            text "NotFound"
+        Complete Nothing ->
+            text "Fail: Search Space Exhausted"
+
+        Loop _ ->
+            text <|
+                "Unable to find solution in "
+                    ++ String.fromInt maxIterations
+                    ++ " iterations"
 
 
 viewScaledBoardSvg : Float -> Board -> Html Msg
@@ -349,24 +355,6 @@ solveBoardHelp pq =
 
             else
                 Loop (enqueueAll (createChildrenNodes node) pendingPQ)
-
-
-solvePriorityQueue : Int -> PriorityQueue -> Maybe Node
-solvePriorityQueue iteration pq =
-    if iteration > maxIterations then
-        Nothing
-
-    else
-        case dequeue pq of
-            Nothing ->
-                Nothing
-
-            Just ( node, pendingPQ ) ->
-                if isSolutionNode node then
-                    Just node
-
-                else
-                    solvePriorityQueue (iteration + 1) (enqueueAll (createChildrenNodes node) pendingPQ)
 
 
 moveTileAt : GPos -> Board -> Maybe Board
