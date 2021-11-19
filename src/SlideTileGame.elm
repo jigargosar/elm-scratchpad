@@ -114,7 +114,7 @@ viewLoop loop =
         Complete Nothing ->
             text "Fail: Search Space Exhausted"
 
-        Loop _ ->
+        Looping _ ->
             text <|
                 "Unable to find solution in "
                     ++ String.fromInt maxIterations
@@ -319,15 +319,20 @@ dequeue (PriorityQueue live) =
             Just ( n, PriorityQueue rest )
 
 
+type LoopResult state result
+    = Continue state
+    | Done result
+
+
 type Loop state result
-    = Loop state
+    = Looping state
     | Complete result
 
 
 stepLoop : (state -> Loop state result) -> Loop state result -> Loop state result
 stepLoop fn loop =
     case loop of
-        Loop state ->
+        Looping state ->
             fn state
 
         Complete _ ->
@@ -357,7 +362,7 @@ solveBoard : Board -> Loop PriorityQueue (Maybe Node)
 solveBoard board =
     initRootNode board
         |> priorityQueueFrom
-        |> Loop
+        |> Looping
         |> stepLoopN maxIterations solveBoardHelp
 
 
@@ -372,7 +377,7 @@ solveBoardHelp pq =
                 Complete (Just node)
 
             else
-                Loop (enqueueAll (createChildrenNodes node) pendingPQ)
+                Looping (enqueueAll (createChildrenNodes node) pendingPQ)
 
 
 moveTileAt : GPos -> Board -> Maybe Board
