@@ -31,7 +31,7 @@ height =
 
 
 maxIterations =
-    2 * 100 * 1000 |> round
+    0.5 * 100 * 1000 |> round
 
 
 gw =
@@ -191,11 +191,16 @@ randomBoard =
 
 slideTileInDirection : Dir4 -> Board -> Maybe Board
 slideTileInDirection dir board =
+    slideTileInDirection_A1 ( dir, board )
+
+
+slideTileInDirection_A1 : ( Dir4, Board ) -> Maybe Board
+slideTileInDirection_A1 ( dir, board ) =
     moveTileAt (moveInDir4 (oppositeDir4 dir) board.e) board
 
 
-moveTileAt : GPos -> Board -> Maybe Board
-moveTileAt gp board =
+moveTileAt_A1 : ( GPos, Board ) -> Maybe Board
+moveTileAt_A1 ( gp, board ) =
     case ( Dict.get gp board.d, areAdjacent board.e gp ) of
         ( Just gpTile, True ) ->
             Just
@@ -209,6 +214,11 @@ moveTileAt gp board =
 
         _ ->
             Nothing
+
+
+moveTileAt : GPos -> Board -> Maybe Board
+moveTileAt gp board =
+    moveTileAt_A1 ( gp, board )
 
 
 solutionBoard : Board
@@ -407,6 +417,10 @@ pop frontier =
 
 isExplored : State -> Node -> Bool
 isExplored state node =
+    let
+        _ =
+            Debug.log
+    in
     Dict.member node.boardAsString state.explored
 
 
