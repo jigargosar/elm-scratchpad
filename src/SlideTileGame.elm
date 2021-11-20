@@ -363,8 +363,8 @@ pop frontier =
             Nothing
 
         h :: t ->
-            --Just (List.foldl reduce ( h, [] ) t)
-            Just ( h, t )
+            --Just ( h, t )
+            Just (List.foldl reduce ( h, [] ) t)
 
 
 solveBoardHelp : State -> LoopResult State (Maybe Node)
