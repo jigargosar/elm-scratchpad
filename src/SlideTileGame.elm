@@ -308,7 +308,7 @@ initState b =
     let
         rootNode =
             { board = b
-            , boardAsString = Debug.toString b
+            , boardAsString = boardAsString b
             , estimatedCostToReachSolution = estimateCostToReachSolution b
             , pathToRootCost = 0
             , parent = None
