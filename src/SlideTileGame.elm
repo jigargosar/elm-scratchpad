@@ -307,6 +307,7 @@ createChildrenNodes n =
 type alias State =
     { explored : Dict String Node
     , frontier : Frontier
+    , steps : Int
     }
 
 
@@ -323,6 +324,7 @@ initState b =
     in
     { explored = Dict.empty
     , frontier = PriorityQueue.empty leastCostOf |> PriorityQueue.insert rootNode
+    , steps = 0
     }
 
 
@@ -442,9 +444,9 @@ solveBoardHelp state =
                         Done (Just c)
 
                     Nothing ->
-                        { state
-                            | explored = insertNodes state.explored (node :: filteredChildren)
-                            , frontier = List.foldl (\c -> PriorityQueue.insert c) pendingFrontier filteredChildren
+                        { explored = insertNodes state.explored (node :: filteredChildren)
+                        , frontier = List.foldl (\c -> PriorityQueue.insert c) pendingFrontier filteredChildren
+                        , steps = state.steps + 1
                         }
                             |> Loop
 
