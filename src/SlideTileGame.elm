@@ -184,6 +184,23 @@ slideTileInDirection dir board =
     moveTileAt (moveInDir4 (oppositeDir4 dir) board.e) board
 
 
+moveTileAt : GPos -> Board -> Maybe Board
+moveTileAt gp board =
+    case ( Dict.get gp board.d, areAdjacent board.e gp ) of
+        ( Just gpTile, True ) ->
+            Just
+                { board
+                    | e = gp
+                    , d =
+                        board.d
+                            |> Dict.remove gp
+                            |> Dict.insert board.e gpTile
+                }
+
+        _ ->
+            Nothing
+
+
 solutionBoard : Board
 solutionBoard =
     let
@@ -413,23 +430,6 @@ solveBoardHelp state =
                             , frontier = List.foldl (\c -> PriorityQueue.insert c) pendingFrontier filteredChildren
                         }
                             |> Loop
-
-
-moveTileAt : GPos -> Board -> Maybe Board
-moveTileAt gp board =
-    case ( Dict.get gp board.d, areAdjacent board.e gp ) of
-        ( Just gpTile, True ) ->
-            Just
-                { board
-                    | e = gp
-                    , d =
-                        board.d
-                            |> Dict.remove gp
-                            |> Dict.insert board.e gpTile
-                }
-
-        _ ->
-            Nothing
 
 
 viewTile : ( GPos, Tile ) -> Html Msg
