@@ -103,6 +103,11 @@ map2 fn ( a, b ) ( c, d ) =
     ( fn a c, fn b d )
 
 
+pairTo : a -> b -> ( b, a )
+pairTo b a =
+    ( a, b )
+
+
 sub2 : ( number, number ) -> ( number, number ) -> ( number, number )
 sub2 =
     map2 sub

@@ -358,10 +358,6 @@ pop frontier =
         |> Maybe.map (pairTo (PriorityQueue.tail frontier))
 
 
-pairTo b a =
-    ( a, b )
-
-
 
 --pop : Frontier -> Maybe ( Node, Frontier )
 --pop frontier =
