@@ -170,7 +170,12 @@ initialBoard =
 
 boardAsString : Board -> String
 boardAsString board =
-    Debug.toString board
+    --Debug.toString board
+    board.d
+        |> Dict.insert board.e (totalCellCount - 1)
+        |> Dict.values
+        |> List.map String.fromInt
+        |> String.join ","
 
 
 randomBoard : Generator Board
