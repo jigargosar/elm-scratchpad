@@ -352,6 +352,11 @@ reduce n ( min, acc ) =
         ( min, n :: acc )
 
 
+type alias Frontier =
+    List Node
+
+
+pop : Frontier -> Maybe ( Node, Frontier )
 pop frontier =
     case frontier of
         [] ->
