@@ -259,7 +259,7 @@ solutionBoardAsString =
 
 type alias Node =
     { board : Board
-    , boardAsString : String
+    , key : String
     , estimatedCostToReachSolution : Int
     , pathToRootCost : Int
     , parent : Parent
@@ -278,7 +278,7 @@ leastCostOf n =
 
 isSolutionNode : Node -> Bool
 isSolutionNode n =
-    n.boardAsString == solutionBoardAsString
+    n.key == solutionBoardAsString
 
 
 estimateCostToReachSolution : Board -> Int
@@ -349,7 +349,7 @@ createChildNode ( b, n ) =
                     False
 
                 Parent p ->
-                    if p.boardAsString == bs then
+                    if p.key == bs then
                         True
 
                     else
@@ -361,7 +361,7 @@ createChildNode ( b, n ) =
     else
         Just
             { board = b
-            , boardAsString = bs
+            , key = bs
             , estimatedCostToReachSolution = estimateCostToReachSolution b
             , pathToRootCost = n.pathToRootCost + 1
             , parent = Parent n
@@ -380,7 +380,7 @@ initState b =
     let
         rootNode =
             { board = b
-            , boardAsString = boardAsString b
+            , key = boardAsString b
             , estimatedCostToReachSolution = estimateCostToReachSolution b
             , pathToRootCost = 0
             , parent = None
@@ -460,7 +460,7 @@ isExplored state node =
 
 isExplored_A1 : ( State, Node ) -> Bool
 isExplored_A1 ( state, node ) =
-    Dict.member node.boardAsString state.explored
+    Dict.member node.key state.explored
 
 
 solveBoardHelp : State -> LoopResult State ( State, Maybe Node )
@@ -474,23 +474,14 @@ solveBoardHelp state =
                 Done ( state, Just node )
 
             else
-                let
-                    children =
-                        createChildrenNodes node
-
-                    filteredChildren =
-                        children |> reject (isExplored state)
-                in
-                case List.filter isSolutionNode filteredChildren |> List.head of
-                    Just c ->
-                        Done ( state, Just c )
-
-                    Nothing ->
-                        { explored = Dict.insert node.boardAsString node state.explored
-                        , frontier = List.foldl (\c -> PriorityQueue.insert c) pendingFrontier filteredChildren
-                        , steps = state.steps + 1
-                        }
-                            |> Loop
+                { explored = Dict.insert node.key node state.explored
+                , frontier =
+                    createChildrenNodes node
+                        |> reject (isExplored state)
+                        |> List.foldl PriorityQueue.insert pendingFrontier
+                , steps = state.steps + 1
+                }
+                    |> Loop
 
 
 viewTile : ( GPos, Tile ) -> Html Msg
