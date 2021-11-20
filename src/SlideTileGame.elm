@@ -317,18 +317,39 @@ createChildrenNodes n =
         |> List.filterMap
             (\dir ->
                 slideTileInDirection dir n.board
-                    |> Maybe.map (\b -> createChildNode ( b, n ))
+                    |> Maybe.andThen (\b -> createChildNode ( b, n ))
             )
 
 
-createChildNode : ( Board, Node ) -> Node
+createChildNode : ( Board, Node ) -> Maybe Node
 createChildNode ( b, n ) =
-    { board = b
-    , boardAsString = boardAsString b
-    , estimatedCostToReachSolution = estimateCostToReachSolution b
-    , pathToRootCost = n.pathToRootCost + 1
-    , parent = Parent n
-    }
+    let
+        bs =
+            boardAsString b
+
+        isCircular parent =
+            case parent of
+                None ->
+                    False
+
+                Parent p ->
+                    if p.boardAsString == bs then
+                        True
+
+                    else
+                        isCircular p.parent
+    in
+    if isCircular n.parent then
+        Nothing
+
+    else
+        Just
+            { board = b
+            , boardAsString = bs
+            , estimatedCostToReachSolution = estimateCostToReachSolution b
+            , pathToRootCost = n.pathToRootCost + 1
+            , parent = Parent n
+            }
 
 
 type alias State =
