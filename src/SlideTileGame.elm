@@ -188,8 +188,8 @@ initialBoard =
         |> first
 
 
-boardAsString : Board -> String
-boardAsString board =
+boardToKey : Board -> String
+boardToKey board =
     let
         reduce i acc =
             String.fromInt i ++ "," ++ acc
@@ -254,7 +254,7 @@ solutionBoardAsList =
 
 
 solutionBoardAsString =
-    boardAsString solutionBoard
+    boardToKey solutionBoard
 
 
 type alias Node =
@@ -340,8 +340,8 @@ createChildrenNodes n =
 createChildNode : ( Board, Node ) -> Maybe Node
 createChildNode ( b, n ) =
     let
-        bs =
-            boardAsString b
+        key =
+            boardToKey b
 
         isCircular parent =
             case parent of
@@ -349,7 +349,7 @@ createChildNode ( b, n ) =
                     False
 
                 Parent p ->
-                    if p.key == bs then
+                    if p.key == key then
                         True
 
                     else
@@ -361,7 +361,7 @@ createChildNode ( b, n ) =
     else
         Just
             { board = b
-            , key = bs
+            , key = key
             , estimatedCostToReachSolution = estimateCostToReachSolution b
             , pathToRootCost = n.pathToRootCost + 1
             , parent = Parent n
@@ -380,7 +380,7 @@ initState b =
     let
         rootNode =
             { board = b
-            , key = boardAsString b
+            , key = boardToKey b
             , estimatedCostToReachSolution = estimateCostToReachSolution b
             , pathToRootCost = 0
             , parent = None
