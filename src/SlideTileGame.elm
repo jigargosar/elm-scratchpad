@@ -80,8 +80,13 @@ type Msg
 
 
 subscriptions : Model -> Sub Msg
-subscriptions _ =
-    Time.every (1000 / 60) (\_ -> OnTick)
+subscriptions { loop } =
+    case loop of
+        Looping _ ->
+            Time.every (1000 / 60) (\_ -> OnTick)
+
+        _ ->
+            Sub.none
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
