@@ -31,7 +31,7 @@ height =
 
 
 maxIterations =
-    1 * 1000 |> round
+    2 * 100 * 1000 |> round
 
 
 gw =
@@ -39,7 +39,7 @@ gw =
 
 
 gh =
-    3
+    4
 
 
 totalCellCount =
