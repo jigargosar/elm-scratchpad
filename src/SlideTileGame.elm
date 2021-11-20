@@ -344,20 +344,20 @@ solveBoard board =
         |> stepLoopN maxIterations solveBoardHelp
 
 
-reduce n ( min, acc ) =
-    if leastCostOf n < leastCostOf min then
-        ( n, min :: acc )
-
-    else
-        ( min, n :: acc )
-
-
 type alias Frontier =
     List Node
 
 
 pop : Frontier -> Maybe ( Node, Frontier )
 pop frontier =
+    let
+        reduce n ( min, acc ) =
+            if leastCostOf n < leastCostOf min then
+                ( n, min :: acc )
+
+            else
+                ( min, n :: acc )
+    in
     case frontier of
         [] ->
             Nothing
