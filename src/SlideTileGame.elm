@@ -480,16 +480,13 @@ solveBoardHelp state =
 
                     filteredChildren =
                         children |> reject (isExplored state)
-
-                    insertNodes =
-                        List.foldl (\n -> Dict.insert n.boardAsString n)
                 in
                 case List.filter isSolutionNode filteredChildren |> List.head of
                     Just c ->
                         Done ( state, Just c )
 
                     Nothing ->
-                        { explored = insertNodes state.explored (node :: filteredChildren)
+                        { explored = Dict.insert node.boardAsString node state.explored
                         , frontier = List.foldl (\c -> PriorityQueue.insert c) pendingFrontier filteredChildren
                         , steps = state.steps + 1
                         }
