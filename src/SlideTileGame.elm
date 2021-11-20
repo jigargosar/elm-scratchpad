@@ -122,7 +122,7 @@ viewLoop loop =
             text <|
                 "Unable to find solution in "
                     ++ String.fromInt s.steps
-                    ++ " iterations. "
+                    ++ " steps. "
                     --++ String.fromInt (List.length s.frontier)
                     --++ " frontier length"
                     ++ ""
