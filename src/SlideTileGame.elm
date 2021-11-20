@@ -405,6 +405,11 @@ pop frontier =
 --            Just (List.foldl reduce ( h, [] ) t)
 
 
+isExplored : State -> Node -> Bool
+isExplored state node =
+    Dict.member node.boardAsString state.explored
+
+
 solveBoardHelp : State -> LoopResult State (Maybe Node)
 solveBoardHelp state =
     case pop state.frontier of
@@ -421,11 +426,7 @@ solveBoardHelp state =
                         createChildrenNodes node
 
                     filteredChildren =
-                        children
-                            |> reject
-                                (\c ->
-                                    Dict.member c.boardAsString state.explored
-                                )
+                        children |> reject (isExplored state)
 
                     insertNodes =
                         List.foldl (\n -> Dict.insert n.boardAsString n)
