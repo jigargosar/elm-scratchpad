@@ -36,6 +36,10 @@ maxIterations =
     0.5 * 100 * 1000 |> round
 
 
+iterationsPerFrame =
+    3 * 1000
+
+
 gw =
     3
 
@@ -93,7 +97,9 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         OnTick ->
-            ( model, Cmd.none )
+            ( { model | loop = stepLoopN iterationsPerFrame solveBoardHelp model.loop }
+            , Cmd.none
+            )
 
         GPClicked gp ->
             ( { model | board = moveTileAt gp model.board |> Maybe.withDefault model.board }, Cmd.none )
@@ -117,7 +123,8 @@ viewLoop loop =
             div []
                 [ div [] [ text ("moves = " ++ String.fromInt n.pathToRootCost) ]
                 , div [] [ text ("steps = " ++ String.fromInt s.steps) ]
-                , viewScaledBoardSvg 0.3 n.board
+
+                --, viewScaledBoardSvg 0.3 n.board
                 ]
 
         Complete ( _, Nothing ) ->
