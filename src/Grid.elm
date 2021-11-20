@@ -49,15 +49,15 @@ swap a b grid =
 
         ib =
             gpToI grid.w b
-    in
-    Maybe.map2
-        (\va vb ->
+
+        swapWithValues va vb =
             { grid
                 | a =
                     grid.a
                         |> Array.set ia vb
                         |> Array.set ib va
             }
-        )
+    in
+    Maybe.map2 swapWithValues
         (Array.get ia grid.a)
         (Array.get ib grid.a)
