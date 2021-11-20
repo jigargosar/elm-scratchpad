@@ -328,24 +328,23 @@ allDirections =
 
 
 createChildrenNodes : Node -> List Node
-createChildrenNodes n =
+createChildrenNodes p =
     allDirections
         |> List.filterMap
             (\dir ->
-                slideTileInDirection dir n.board
-                    |> Maybe.andThen (\b -> createChildNode ( b, n ))
+                slideTileInDirection dir p.board
+                    |> Maybe.map (createChildNode p)
             )
 
 
-createChildNode : ( Board, Node ) -> Maybe Node
-createChildNode ( b, n ) =
-    Just
-        { board = b
-        , key = boardToKey b
-        , estimatedCostToReachSolution = estimateCostToReachSolution b
-        , pathToRootCost = n.pathToRootCost + 1
-        , parent = Parent n
-        }
+createChildNode : Node -> Board -> Node
+createChildNode p board =
+    { board = board
+    , key = boardToKey board
+    , estimatedCostToReachSolution = estimateCostToReachSolution board
+    , pathToRootCost = p.pathToRootCost + 1
+    , parent = Parent p
+    }
 
 
 type alias State =
