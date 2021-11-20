@@ -121,16 +121,10 @@ add2 =
 areAdjacent : GPos -> GPos -> Bool
 areAdjacent gp1 gp2 =
     let
-        adjacentOffsets =
-            [ ( 1, 0 ), ( 0, 1 ), ( -1, 0 ), ( 0, -1 ) ]
-
-        gpAdd : GPos -> GPos -> GPos
-        gpAdd ( a, b ) ( c, d ) =
-            ( a + c, b + d )
+        ( x, y ) =
+            sub2 gp1 gp2
     in
-    adjacentOffsets
-        |> List.map (gpAdd gp1)
-        |> List.member gp2
+    abs x + abs y == 1
 
 
 rangeWH : Int -> Int -> List GPos
