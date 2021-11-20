@@ -287,12 +287,23 @@ estimateCostToReachSolution board =
 
 solvedCellCount : Board -> Int
 solvedCellCount board =
+    let
+        reduce a ( ct, b ) =
+            case b of
+                h :: t ->
+                    if h == a then
+                        ( ct + 1, t )
+
+                    else
+                        ( ct, t )
+
+                _ ->
+                    ( ct, b )
+    in
     board.g
         |> Grid.toArray
-        |> Array.toList
-        |> List.map2 (\si bi -> si == bi) solutionBoardAsList
-        |> List.filter identity
-        |> List.length
+        |> Array.foldl reduce ( 0, solutionBoardAsList )
+        |> first
 
 
 allDirections =
