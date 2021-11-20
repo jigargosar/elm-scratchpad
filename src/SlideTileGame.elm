@@ -30,7 +30,7 @@ height =
 
 
 maxIterations =
-    25 * 1000 |> round
+    1 * 1000 |> round
 
 
 gw =
@@ -38,7 +38,7 @@ gw =
 
 
 gh =
-    4
+    3
 
 
 totalCellCount =
@@ -363,7 +363,8 @@ pop frontier =
             Nothing
 
         h :: t ->
-            Just (List.foldl reduce ( h, [] ) t)
+            --Just (List.foldl reduce ( h, [] ) t)
+            Just ( h, t )
 
 
 solveBoardHelp : State -> LoopResult State (Maybe Node)
