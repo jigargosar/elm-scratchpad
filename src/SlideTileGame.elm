@@ -190,12 +190,13 @@ initialBoard =
 
 boardAsString : Board -> String
 boardAsString board =
-    --Debug.toString board
+    let
+        reduce i acc =
+            String.fromInt i ++ "," ++ acc
+    in
     board.g
         |> Grid.toArray
-        |> Array.toList
-        |> List.map String.fromInt
-        |> String.join ","
+        |> Array.foldl reduce ""
 
 
 randomBoard : Generator Board
@@ -437,10 +438,11 @@ pop frontier =
 
 isExplored : State -> Node -> Bool
 isExplored state node =
-    let
-        _ =
-            Debug.log
-    in
+    isExplored_A1 ( state, node )
+
+
+isExplored_A1 : ( State, Node ) -> Bool
+isExplored_A1 ( state, node ) =
     Dict.member node.boardAsString state.explored
 
 
