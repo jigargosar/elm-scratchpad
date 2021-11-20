@@ -115,7 +115,7 @@ viewLoop loop =
         Complete Nothing ->
             text "Fail: Search Space Exhausted"
 
-        Looping s ->
+        Looping _ ->
             text <|
                 "Unable to find solution in "
                     ++ String.fromInt maxIterations
@@ -168,6 +168,11 @@ initialBoard =
         |> first
 
 
+boardAsString : Board -> String
+boardAsString board =
+    Debug.toString board
+
+
 randomBoard : Generator Board
 randomBoard =
     let
@@ -217,7 +222,7 @@ solutionBoard =
 
 
 solutionBoardAsString =
-    Debug.toString solutionBoard
+    boardAsString solutionBoard
 
 
 type alias Node =
@@ -283,7 +288,7 @@ createChildrenNodes n =
                     |> Maybe.map
                         (\b ->
                             { board = b
-                            , boardAsString = Debug.toString b
+                            , boardAsString = boardAsString b
                             , estimatedCostToReachSolution = estimateCostToReachSolution b
                             , pathToRootCost = n.pathToRootCost + 1
                             , parent = Parent n
