@@ -437,26 +437,6 @@ pop frontier =
         |> Maybe.map (pairTo (PriorityQueue.tail frontier))
 
 
-
---pop : Frontier -> Maybe ( Node, Frontier )
---pop frontier =
---    let
---        reduce n ( min, acc ) =
---            if leastCostOf n < leastCostOf min then
---                ( n, min :: acc )
---
---            else
---                ( min, n :: acc )
---    in
---    case frontier of
---        [] ->
---            Nothing
---
---        h :: t ->
---            --Just ( h, t )
---            Just (List.foldl reduce ( h, [] ) t)
-
-
 isExplored : State -> Node -> Bool
 isExplored state node =
     isExplored_A1 ( state, node )
