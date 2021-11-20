@@ -59,7 +59,7 @@ gpToWorld =
 
 type alias Model =
     { board : Board
-    , loop : Loop State (Maybe Node)
+    , loop : Loop State ( State, Maybe Node )
     }
 
 
@@ -105,22 +105,23 @@ view model =
         ]
 
 
-viewLoop : Loop State (Maybe Node) -> Html Msg
+viewLoop : Loop State ( State, Maybe Node ) -> Html Msg
 viewLoop loop =
     case loop of
-        Complete (Just n) ->
+        Complete ( s, Just n ) ->
             div []
                 [ div [] [ text ("moves = " ++ String.fromInt n.pathToRootCost) ]
+                , div [] [ text ("steps = " ++ String.fromInt s.steps) ]
                 , viewScaledBoardSvg 0.3 n.board
                 ]
 
-        Complete Nothing ->
+        Complete ( _, Nothing ) ->
             text "Fail: Search Space Exhausted"
 
-        Looping _ ->
+        Looping s ->
             text <|
                 "Unable to find solution in "
-                    ++ String.fromInt maxIterations
+                    ++ String.fromInt s.steps
                     ++ " iterations. "
                     --++ String.fromInt (List.length s.frontier)
                     --++ " frontier length"
@@ -372,7 +373,7 @@ stepLoopN n fn loop =
         stepLoopN (n - 1) fn (stepLoop fn loop)
 
 
-solveBoard : Board -> Loop State (Maybe Node)
+solveBoard : Board -> Loop State ( State, Maybe Node )
 solveBoard board =
     initState board
         |> Looping
@@ -418,15 +419,15 @@ isExplored state node =
     Dict.member node.boardAsString state.explored
 
 
-solveBoardHelp : State -> LoopResult State (Maybe Node)
+solveBoardHelp : State -> LoopResult State ( State, Maybe Node )
 solveBoardHelp state =
     case pop state.frontier of
         Nothing ->
-            Done Nothing
+            Done ( state, Nothing )
 
         Just ( node, pendingFrontier ) ->
             if isSolutionNode node then
-                Done (Just node)
+                Done ( state, Just node )
 
             else
                 let
@@ -441,7 +442,7 @@ solveBoardHelp state =
                 in
                 case List.filter isSolutionNode filteredChildren |> List.head of
                     Just c ->
-                        Done (Just c)
+                        Done ( state, Just c )
 
                     Nothing ->
                         { explored = insertNodes state.explored (node :: filteredChildren)
