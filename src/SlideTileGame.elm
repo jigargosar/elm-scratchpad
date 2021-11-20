@@ -275,7 +275,7 @@ createChildrenNodes n =
 
 type alias State =
     { explored : Dict String Node
-    , frontier : List Node
+    , frontier : Frontier
     }
 
 
