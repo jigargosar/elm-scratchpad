@@ -127,6 +127,18 @@ areAdjacent gp1 gp2 =
     abs x + abs y == 1
 
 
+
+--noinspection SpellCheckingInspection
+
+
+manhattenDistance a b =
+    let
+        ( x, y ) =
+            sub2 a b
+    in
+    abs x + abs y
+
+
 rangeWH : Int -> Int -> List GPos
 rangeWH w h =
     rangeN h

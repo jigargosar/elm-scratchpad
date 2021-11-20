@@ -283,6 +283,22 @@ isSolutionNode n =
 
 estimateCostToReachSolution : Board -> Int
 estimateCostToReachSolution board =
+    let
+        reduce ( solutionGP, currentGP ) sum =
+            sum + manhattenDistance solutionGP currentGP
+    in
+    board.g
+        |> Grid.toArray
+        |> Array.toIndexedList
+        |> List.foldl (Tuple.mapBoth iToGP iToGP >> reduce) 0
+
+
+
+--noinspection ElmUnusedSymbol
+
+
+estimateCostToReachSolution1 : Board -> Int
+estimateCostToReachSolution1 board =
     totalCellCount - solvedCellCount board
 
 
