@@ -3,6 +3,7 @@ module SlideTileGame exposing (..)
 import Browser
 import Dict exposing (Dict)
 import Html exposing (Attribute, Html, div, text)
+import PriorityQueue exposing (PriorityQueue)
 import Random exposing (Generator)
 import Svg exposing (Svg)
 import Svg.Events as SE
@@ -119,8 +120,9 @@ viewLoop loop =
                 "Unable to find solution in "
                     ++ String.fromInt maxIterations
                     ++ " iterations. "
-                    ++ String.fromInt (List.length s.frontier)
-                    ++ " frontier length"
+                    --++ String.fromInt (List.length s.frontier)
+                    --++ " frontier length"
+                    ++ ""
 
 
 viewScaledBoardSvg : Float -> Board -> Html Msg
@@ -290,7 +292,9 @@ initState b =
             , parent = None
             }
     in
-    { explored = Dict.empty, frontier = [ rootNode ] }
+    { explored = Dict.empty
+    , frontier = PriorityQueue.empty leastCostOf |> PriorityQueue.insert rootNode
+    }
 
 
 type LoopResult state result
@@ -345,26 +349,37 @@ solveBoard board =
 
 
 type alias Frontier =
-    List Node
+    PriorityQueue Node
 
 
 pop : Frontier -> Maybe ( Node, Frontier )
 pop frontier =
-    let
-        reduce n ( min, acc ) =
-            if leastCostOf n < leastCostOf min then
-                ( n, min :: acc )
+    PriorityQueue.head frontier
+        |> Maybe.map (pairTo (PriorityQueue.tail frontier))
 
-            else
-                ( min, n :: acc )
-    in
-    case frontier of
-        [] ->
-            Nothing
 
-        h :: t ->
-            --Just ( h, t )
-            Just (List.foldl reduce ( h, [] ) t)
+pairTo b a =
+    ( a, b )
+
+
+
+--pop : Frontier -> Maybe ( Node, Frontier )
+--pop frontier =
+--    let
+--        reduce n ( min, acc ) =
+--            if leastCostOf n < leastCostOf min then
+--                ( n, min :: acc )
+--
+--            else
+--                ( min, n :: acc )
+--    in
+--    case frontier of
+--        [] ->
+--            Nothing
+--
+--        h :: t ->
+--            --Just ( h, t )
+--            Just (List.foldl reduce ( h, [] ) t)
 
 
 solveBoardHelp : State -> LoopResult State (Maybe Node)
@@ -399,7 +414,7 @@ solveBoardHelp state =
                     Nothing ->
                         { state
                             | explored = insertNodes state.explored (node :: filteredChildren)
-                            , frontier = pendingFrontier ++ filteredChildren
+                            , frontier = List.foldl (\c -> PriorityQueue.insert c) pendingFrontier filteredChildren
                         }
                             |> Loop
 
