@@ -339,33 +339,13 @@ createChildrenNodes n =
 
 createChildNode : ( Board, Node ) -> Maybe Node
 createChildNode ( b, n ) =
-    let
-        key =
-            boardToKey b
-
-        isCircular parent =
-            case parent of
-                None ->
-                    False
-
-                Parent p ->
-                    if p.key == key then
-                        True
-
-                    else
-                        isCircular p.parent
-    in
-    if isCircular n.parent then
-        Nothing
-
-    else
-        Just
-            { board = b
-            , key = key
-            , estimatedCostToReachSolution = estimateCostToReachSolution b
-            , pathToRootCost = n.pathToRootCost + 1
-            , parent = Parent n
-            }
+    Just
+        { board = b
+        , key = boardToKey b
+        , estimatedCostToReachSolution = estimateCostToReachSolution b
+        , pathToRootCost = n.pathToRootCost + 1
+        , parent = Parent n
+        }
 
 
 type alias State =
