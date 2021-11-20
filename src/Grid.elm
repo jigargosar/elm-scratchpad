@@ -15,7 +15,7 @@ init w h fn =
 
 toGP : Int -> Int -> GPos
 toGP w i =
-    ( modBy w i, i // w - 1 )
+    ( modBy w i, i // w )
 
 
 gpToI : Int -> GPos -> Int
@@ -61,3 +61,8 @@ swap a b grid =
     Maybe.map2 swapWithValues
         (Array.get ia grid.a)
         (Array.get ib grid.a)
+
+
+toArray : Grid a -> Array a
+toArray =
+    .a

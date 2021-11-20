@@ -1,7 +1,9 @@
 module SlideTileGame exposing (..)
 
+import Array
 import Browser
 import Dict exposing (Dict)
+import Grid exposing (Grid)
 import Html exposing (Attribute, Html, div, text)
 import PriorityQueue exposing (PriorityQueue)
 import Random exposing (Generator)
@@ -147,10 +149,15 @@ viewBoardSvg =
 
 viewBoard : Board -> Svg Msg
 viewBoard board =
-    board.d
-        |> Dict.toList
-        |> List.map viewTile
+    board.g
+        |> Grid.toArray
+        |> Array.toIndexedList
+        |> List.map (mapFirst iToGP >> viewTile)
         |> group []
+
+
+iToGP i =
+    ( modBy gw i, i // gw - 1 )
 
 
 type alias Tile =
@@ -158,7 +165,7 @@ type alias Tile =
 
 
 type alias Board =
-    { e : GPos, d : Dict GPos Tile }
+    { e : GPos, g : Grid Tile }
 
 
 initialBoard : Board
@@ -171,9 +178,9 @@ initialBoard =
 boardAsString : Board -> String
 boardAsString board =
     --Debug.toString board
-    board.d
-        |> Dict.insert board.e (totalCellCount - 1)
-        |> Dict.values
+    board.g
+        |> Grid.toArray
+        |> Array.toList
         |> List.map String.fromInt
         |> String.join ","
 
@@ -201,19 +208,16 @@ slideTileInDirection_A1 ( dir, board ) =
 
 moveTileAt_A1 : ( GPos, Board ) -> Maybe Board
 moveTileAt_A1 ( gp, board ) =
-    case ( Dict.get gp board.d, areAdjacent board.e gp ) of
-        ( Just gpTile, True ) ->
-            Just
-                { board
-                    | e = gp
-                    , d =
-                        board.d
-                            |> Dict.remove gp
-                            |> Dict.insert board.e gpTile
-                }
+    if areAdjacent board.e gp then
+        board.g
+            |> Grid.swap gp board.e
+            |> Maybe.map
+                (\g ->
+                    { board | e = gp, g = g }
+                )
 
-        _ ->
-            Nothing
+    else
+        Nothing
 
 
 moveTileAt : GPos -> Board -> Maybe Board
@@ -223,17 +227,16 @@ moveTileAt gp board =
 
 solutionBoard : Board
 solutionBoard =
-    let
-        gps =
-            rangeWH gw gh
-                |> List.take (totalCellCount - 1)
+    { e = ( gw - 1, gh - 1 )
+    , g = Grid.init gw gh (\( x, y ) -> y * gw + x)
+    }
 
-        d =
-            gps
-                |> List.indexedMap (\i gp -> ( gp, i ))
-                |> Dict.fromList
-    in
-    { e = ( gw - 1, gh - 1 ), d = d }
+
+solutionBoardAsList : List Tile
+solutionBoardAsList =
+    solutionBoard.g
+        |> Grid.toArray
+        |> Array.toList
 
 
 solutionBoardAsString =
@@ -271,23 +274,12 @@ estimateCostToReachSolution board =
 
 solvedCellCount : Board -> Int
 solvedCellCount board =
-    Dict.merge (\_ _ -> identity)
-        (\_ a b ->
-            if a == b then
-                inc
-
-            else
-                identity
-        )
-        (\_ _ -> identity)
-        solutionBoard.d
-        board.d
-        (if solutionBoard.e == board.e then
-            1
-
-         else
-            0
-        )
+    board.g
+        |> Grid.toArray
+        |> Array.toList
+        |> List.map2 (\si bi -> si == bi) solutionBoardAsList
+        |> List.filter identity
+        |> List.length
 
 
 allDirections =
