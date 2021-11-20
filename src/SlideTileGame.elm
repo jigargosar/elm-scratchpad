@@ -157,7 +157,7 @@ viewBoard board =
 
 
 iToGP i =
-    ( modBy gw i, i // gw - 1 )
+    ( modBy gw i, i // gw )
 
 
 type alias Tile =
