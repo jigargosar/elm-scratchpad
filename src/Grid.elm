@@ -39,3 +39,17 @@ set gp v grid =
             gpToI grid.w gp
     in
     { grid | a = Array.set i v grid.a }
+
+
+swap : GPos -> GPos -> Grid a -> Maybe (Grid a)
+swap a b grid =
+    let
+        ia =
+            gpToI grid.w a
+
+        ib =
+            gpToI grid.w b
+    in
+    Maybe.map2 (\va vb -> { grid | a = grid.a |> Array.set ia vb |> Array.set ib va })
+        (Array.get ia grid.a)
+        (Array.get ib grid.b)
