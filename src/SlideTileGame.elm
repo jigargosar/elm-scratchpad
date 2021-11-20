@@ -305,16 +305,18 @@ createChildrenNodes n =
         |> List.filterMap
             (\dir ->
                 slideTileInDirection dir n.board
-                    |> Maybe.map
-                        (\b ->
-                            { board = b
-                            , boardAsString = boardAsString b
-                            , estimatedCostToReachSolution = estimateCostToReachSolution b
-                            , pathToRootCost = n.pathToRootCost + 1
-                            , parent = Parent n
-                            }
-                        )
+                    |> Maybe.map (\b -> createChildNode ( b, n ))
             )
+
+
+createChildNode : ( Board, Node ) -> Node
+createChildNode ( b, n ) =
+    { board = b
+    , boardAsString = boardAsString b
+    , estimatedCostToReachSolution = estimateCostToReachSolution b
+    , pathToRootCost = n.pathToRootCost + 1
+    , parent = Parent n
+    }
 
 
 type alias State =
