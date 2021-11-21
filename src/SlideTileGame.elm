@@ -5,6 +5,7 @@ import Browser.Events
 import Dict exposing (Dict)
 import Grid exposing (Grid)
 import Html exposing (Attribute, Html, div, text)
+import Html.Lazy
 import PriorityQueue exposing (PriorityQueue)
 import Random exposing (Generator)
 import Svg exposing (Svg)
@@ -72,8 +73,19 @@ init () =
             solutionBoard
                 |> always solutionBoard
                 |> always initialBoard
+
+        _ =
+            case loop of
+                Complete ( _, Just n ) ->
+                    Debug.log "n" n
+
+                _ ->
+                    Debug.todo "todo"
+
+        loop =
+            solveBoard board
     in
-    ( { board = board, loop = solveBoard board, now = 0 }, Time.now |> Task.perform OnNow )
+    ( { board = board, loop = loop, now = 0 }, Time.now |> Task.perform OnNow )
 
 
 type Msg
@@ -156,7 +168,7 @@ viewScaledBoardSvg scl board =
         , bgc gray
         , noUserSelect
         ]
-        [ viewBoard board
+        [ Html.Lazy.lazy viewBoard board
         ]
 
 
@@ -167,10 +179,6 @@ viewBoardSvg =
 
 viewBoard : Board -> Svg Msg
 viewBoard board =
-    let
-        _ =
-            Debug.log "board" board
-    in
     board.g
         |> Grid.toList
         |> reject (first >> eq board.e)
