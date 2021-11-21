@@ -150,7 +150,7 @@ view model =
             [ viewSearch model.search
             , viewAnimBoards model.animBoards model.now
             ]
-        , viewBoardSvg model.board
+        , viewScaledBoardSvg 0.6 model.board
         ]
 
 
@@ -209,11 +209,6 @@ viewScaledBoardSvg scl board =
         ]
         [ Html.Lazy.lazy viewBoard board
         ]
-
-
-viewBoardSvg : Board -> Html Msg
-viewBoardSvg =
-    viewScaledBoardSvg 1
 
 
 viewBoard : Board -> Svg Msg
