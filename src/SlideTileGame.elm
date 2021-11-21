@@ -1,6 +1,5 @@
 module SlideTileGame exposing (..)
 
-import Array
 import Browser
 import Dict exposing (Dict)
 import Grid exposing (Grid)
@@ -46,10 +45,6 @@ gw =
 
 gh =
     4
-
-
-totalCellCount =
-    gw * gh
 
 
 cz =
@@ -163,18 +158,33 @@ viewBoardSvg =
 viewBoard : Board -> Svg Msg
 viewBoard board =
     board.g
-        |> Grid.toArray
-        |> Array.toIndexedList
-        |> List.map (mapFirst iToGP >> viewTile)
+        |> Grid.toList
+        |> List.map viewTile
         |> group []
 
 
-iToGP =
-    Grid.indexToGP gw
-
-
 type alias Tile =
-    Int
+    ( Int, GPos )
+
+
+tileIndex : Tile -> Int
+tileIndex =
+    first
+
+
+tileSolutionGP : Tile -> GPos
+tileSolutionGP =
+    second
+
+
+tileViewIndex : Tile -> String
+tileViewIndex =
+    tileIndex >> inc >> String.fromInt
+
+
+tileFromIndexAndSolutionGP : Int -> GPos -> Tile
+tileFromIndexAndSolutionGP =
+    Tuple.pair
 
 
 type alias Board =
@@ -191,12 +201,10 @@ initialBoard =
 boardToKey : Board -> String
 boardToKey board =
     let
-        reduce i acc =
-            String.fromInt i ++ "," ++ acc
+        reduce tile acc =
+            String.fromInt (tileIndex tile) ++ "," ++ acc
     in
-    board.g
-        |> Grid.toArray
-        |> Array.foldl reduce ""
+    board.g |> Grid.foldValues reduce ""
 
 
 randomBoard : Generator Board
@@ -242,15 +250,8 @@ moveTileAt gp board =
 solutionBoard : Board
 solutionBoard =
     { e = ( gw - 1, gh - 1 )
-    , g = Grid.init gw gh (\( x, y ) -> y * gw + x)
+    , g = Grid.initIndexed gw gh tileFromIndexAndSolutionGP
     }
-
-
-solutionBoardAsList : List Tile
-solutionBoardAsList =
-    solutionBoard.g
-        |> Grid.toArray
-        |> Array.toList
 
 
 solutionBoardAsString =
@@ -284,43 +285,12 @@ isSolutionNode n =
 estimateCostToReachSolution : Board -> Int
 estimateCostToReachSolution board =
     let
-        reduce ( solutionGP, currentGP ) sum =
+        reduce ( currentGP, solutionGP ) sum =
             sum + manhattenDistance solutionGP currentGP
     in
     board.g
-        |> Grid.toArray
-        |> Array.toIndexedList
-        |> List.foldl (Tuple.mapBoth iToGP iToGP >> reduce) 0
-
-
-
---noinspection ElmUnusedSymbol
-
-
-estimateCostToReachSolution1 : Board -> Int
-estimateCostToReachSolution1 board =
-    totalCellCount - solvedCellCount board
-
-
-solvedCellCount : Board -> Int
-solvedCellCount board =
-    let
-        reduce a ( ct, b ) =
-            case b of
-                h :: t ->
-                    if h == a then
-                        ( ct + 1, t )
-
-                    else
-                        ( ct, t )
-
-                _ ->
-                    ( ct, b )
-    in
-    board.g
-        |> Grid.toArray
-        |> Array.foldl reduce ( 0, solutionBoardAsList )
-        |> first
+        |> Grid.toList
+        |> List.foldl (Tuple.mapSecond tileSolutionGP >> reduce) 0
 
 
 allDirections =
@@ -464,12 +434,12 @@ solveBoardHelp state =
 
 
 viewTile : ( GPos, Tile ) -> Html Msg
-viewTile ( gp, i ) =
+viewTile ( gp, tile ) =
     group [ SE.onClick (GPClicked gp) ]
         [ group [ xf [ mv (gpToWorld gp) ] ]
             [ square cz [ fillTransparent ]
             , words
-                (String.fromInt (i + 1))
+                (tileViewIndex tile)
                 [ fill white
                 , xf [ scale 3 ]
                 ]

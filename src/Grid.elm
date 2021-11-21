@@ -1,4 +1,4 @@
-module Grid exposing (..)
+module Grid exposing (Grid, foldValues, get, init, initIndexed, set, swap, toList)
 
 import Array exposing (Array)
 import Utils exposing (..)
@@ -10,7 +10,18 @@ type alias Grid a =
 
 init : Int -> Int -> (GPos -> a) -> Grid a
 init w h fn =
-    Grid w h (Array.initialize (w * h) (\i -> fn (indexToGP w i)))
+    { w = w
+    , h = h
+    , a = Array.initialize (w * h) (\i -> fn (indexToGP w i))
+    }
+
+
+initIndexed : Int -> Int -> (Int -> GPos -> a) -> Grid a
+initIndexed w h fn =
+    { w = w
+    , h = h
+    , a = Array.initialize (w * h) (\i -> fn i (indexToGP w i))
+    }
 
 
 indexToGP : Int -> Int -> GPos
@@ -63,6 +74,19 @@ swap a b grid =
         (Array.get ib grid.a)
 
 
-toArray : Grid a -> Array a
-toArray =
+toArray_ : Grid a -> Array a
+toArray_ =
     .a
+
+
+foldValues : (a -> b -> b) -> b -> Grid a -> b
+foldValues fn acc grid =
+    toArray_ grid
+        |> Array.foldl fn acc
+
+
+toList : Grid a -> List ( GPos, a )
+toList grid =
+    grid.a
+        |> Array.toIndexedList
+        |> List.map (mapFirst (indexToGP grid.w))
