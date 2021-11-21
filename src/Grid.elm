@@ -12,7 +12,7 @@ init : Int -> Int -> (GPos -> a) -> Grid a
 init w h fn =
     { w = w
     , h = h
-    , a = Array.initialize (w * h) (\i -> fn (indexToGP w i))
+    , a = Array.initialize (w * h) (\i -> fn (indexToGPUnsafe w i))
     }
 
 
@@ -20,12 +20,12 @@ initIndexed : Int -> Int -> (Int -> GPos -> a) -> Grid a
 initIndexed w h fn =
     { w = w
     , h = h
-    , a = Array.initialize (w * h) (\i -> fn i (indexToGP w i))
+    , a = Array.initialize (w * h) (\i -> fn i (indexToGPUnsafe w i))
     }
 
 
-indexToGP : Int -> Int -> GPos
-indexToGP w i =
+indexToGPUnsafe : Int -> Int -> GPos
+indexToGPUnsafe w i =
     ( modBy w i, i // w )
 
 
@@ -84,4 +84,4 @@ toList : Grid a -> List ( GPos, a )
 toList grid =
     grid.a
         |> Array.toIndexedList
-        |> List.map (mapFirst (indexToGP grid.w))
+        |> List.map (mapFirst (indexToGPUnsafe grid.w))
