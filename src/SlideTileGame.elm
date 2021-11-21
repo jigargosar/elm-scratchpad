@@ -32,7 +32,7 @@ height =
 
 
 maxIterations =
-    0.5 * 100 * 1000 |> round
+    50 * 1000 |> round
 
 
 iterationsPerFrame =
@@ -287,12 +287,12 @@ isSolutionNode n =
 estimateCostToReachSolution : Board -> Int
 estimateCostToReachSolution board =
     let
-        reduce ( currentGP, solutionGP ) sum =
-            sum + manhattenDistance solutionGP currentGP
+        tileManhattanCostToSolution ( currentGP, tile ) =
+            manhattenDistance currentGP (tileSolutionGP tile)
     in
     board.g
         |> Grid.toList
-        |> List.foldl (Tuple.mapSecond tileSolutionGP >> reduce) 0
+        |> List.foldl (tileManhattanCostToSolution >> add) 0
 
 
 allDirections =
