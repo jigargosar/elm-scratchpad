@@ -165,13 +165,13 @@ viewAnimBoards boards t =
         duration =
             1 * 1000
     in
-    animateListEl duration boards t
+    cycleListFocusedItemEvery duration boards t
         |> Maybe.map (viewScaledBoardSvg 0.3)
         |> Maybe.withDefault (text "")
 
 
-animateListEl : Int -> List a -> Int -> Maybe a
-animateListEl duration list t =
+cycleListFocusedItemEvery : Int -> List a -> Int -> Maybe a
+cycleListFocusedItemEvery duration list t =
     let
         len =
             List.length list
