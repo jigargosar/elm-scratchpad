@@ -61,7 +61,7 @@ gpToWorld =
 
 type alias Model =
     { board : Board
-    , loop : Loop State ( State, Maybe Node )
+    , search : Search State Node
     , animBoards : List Board
     , now : Int
     }
@@ -85,18 +85,19 @@ init () =
                     nodeAncestorBoards p (n.board :: acc)
 
         animBoards =
-            case loop of
-                Complete ( _, Just n ) ->
+            case search of
+                Found _ n ->
                     nodeAncestorBoards n []
 
                 _ ->
                     []
 
-        loop =
+        search : Search State Node
+        search =
             solveBoard board
     in
     ( { board = board
-      , loop = loop
+      , search = search
       , animBoards = animBoards
       , now = 0
       }
@@ -112,10 +113,10 @@ type Msg
 
 
 subscriptions : Model -> Sub Msg
-subscriptions { loop } =
+subscriptions { search } =
     Sub.batch
-        [ case loop of
-            Looping _ ->
+        [ case search of
+            Searching _ ->
                 Time.every (1000 / 60) (\_ -> OnTick)
 
             _ ->
@@ -128,7 +129,7 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         OnTick ->
-            ( { model | loop = stepLoopN iterationsPerFrame solveBoardHelp model.loop }
+            ( { model | search = stepSearchN iterationsPerFrame solveBoardHelp model.search }
             , Cmd.none
             )
 
@@ -146,7 +147,7 @@ view : Model -> Html Msg
 view model =
     div [ fontSize "24px", dFlex, fDCol, gap "20px", pAll "20px" ]
         [ div [ dFlex, gap "20px" ]
-            [ viewLoop model.loop
+            [ viewSearch model.search
             , viewAnimBoards model.animBoards model.now
             ]
         , viewBoardSvg model.board
@@ -172,20 +173,20 @@ viewAnimBoards bs t =
         |> Maybe.withDefault (text "")
 
 
-viewLoop : Loop State ( State, Maybe Node ) -> Html Msg
-viewLoop loop =
-    case loop of
-        Complete ( s, Just n ) ->
+viewSearch : Search State Node -> Html Msg
+viewSearch search =
+    case search of
+        Found s n ->
             div []
                 [ div [] [ text ("moves = " ++ String.fromInt n.pathToRootCost) ]
                 , div [] [ text ("steps = " ++ String.fromInt s.steps) ]
                 , viewScaledBoardSvg 0.3 n.board
                 ]
 
-        Complete ( _, Nothing ) ->
+        Exhausted _ ->
             text "Fail: Search Space Exhausted"
 
-        Looping s ->
+        Searching s ->
             text <|
                 "Unable to find solution in "
                     ++ String.fromInt s.steps
@@ -396,55 +397,36 @@ initState b =
     }
 
 
-type LoopResult state result
-    = Loop state
-    | Done result
+type Search state answer
+    = Searching state
+    | Exhausted state
+    | Found state answer
 
 
-type Loop state result
-    = Looping state
-    | Complete result
-
-
-stepLoop : (state -> LoopResult state result) -> Loop state result -> Loop state result
-stepLoop fn loop =
-    case loop of
-        Looping state ->
-            case fn state of
-                Loop newState ->
-                    Looping newState
-
-                Done result ->
-                    Complete result
-
-        Complete _ ->
-            loop
-
-
-isComplete : Loop state result -> Bool
-isComplete loop =
-    case loop of
-        Complete _ ->
-            True
+stepSearch : (state -> Search state answer) -> Search state answer -> Search state answer
+stepSearch fn search =
+    case search of
+        Searching state ->
+            fn state
 
         _ ->
-            False
+            search
 
 
-stepLoopN : Int -> (state -> LoopResult state result) -> Loop state result -> Loop state result
-stepLoopN n fn loop =
-    if n <= 0 || isComplete loop then
-        loop
-
-    else
-        stepLoopN (n - 1) fn (stepLoop fn loop)
+stepSearchN : Int -> (state -> Search state answer) -> Search state answer -> Search state answer
+stepSearchN n fn =
+    applyN n (stepSearch fn)
 
 
-solveBoard : Board -> Loop State ( State, Maybe Node )
+initSearch : state -> Search state answer
+initSearch =
+    Searching
+
+
+solveBoard : Board -> Search State Node
 solveBoard board =
-    initState board
-        |> Looping
-        |> stepLoopN maxIterations solveBoardHelp
+    initSearch (initState board)
+        |> stepSearchN maxIterations solveBoardHelp
 
 
 type alias Frontier =
@@ -467,25 +449,25 @@ isExplored_A1 ( state, node ) =
     Dict.member node.key state.explored
 
 
-solveBoardHelp : State -> LoopResult State ( State, Maybe Node )
+solveBoardHelp : State -> Search State Node
 solveBoardHelp state =
     case pop state.frontier of
         Nothing ->
-            Done ( state, Nothing )
+            Exhausted state
 
         Just ( node, pendingFrontier ) ->
             if isSolutionNode node then
-                Done ( state, Just node )
+                Found state node
 
             else
-                { explored = Dict.insert node.key node state.explored
-                , frontier =
-                    createChildrenNodes node
-                        |> reject (isExplored state)
-                        |> List.foldl PriorityQueue.insert pendingFrontier
-                , steps = state.steps + 1
-                }
-                    |> Loop
+                Searching
+                    { explored = Dict.insert node.key node state.explored
+                    , frontier =
+                        createChildrenNodes node
+                            |> reject (isExplored state)
+                            |> List.foldl PriorityQueue.insert pendingFrontier
+                    , steps = state.steps + 1
+                    }
 
 
 viewTile : ( GPos, Tile ) -> Html Msg
