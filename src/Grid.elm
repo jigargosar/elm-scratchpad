@@ -10,16 +10,16 @@ type alias Grid a =
 
 init : Int -> Int -> (GPos -> a) -> Grid a
 init w h fn =
-    Grid w h (Array.initialize (w * h) (\i -> fn (toGP w i)))
+    Grid w h (Array.initialize (w * h) (\i -> fn (indexToGP w i)))
 
 
-toGP : Int -> Int -> GPos
-toGP w i =
+indexToGP : Int -> Int -> GPos
+indexToGP w i =
     ( modBy w i, i // w )
 
 
-fromGP : Int -> GPos -> Int
-fromGP w ( x, y ) =
+indexFromGP : Int -> GPos -> Int
+indexFromGP w ( x, y ) =
     w * y + x
 
 
@@ -27,7 +27,7 @@ get : GPos -> Grid a -> Maybe a
 get gp grid =
     let
         i =
-            fromGP grid.w gp
+            indexFromGP grid.w gp
     in
     Array.get i grid.a
 
@@ -36,7 +36,7 @@ set : GPos -> a -> Grid a -> Grid a
 set gp v grid =
     let
         i =
-            fromGP grid.w gp
+            indexFromGP grid.w gp
     in
     { grid | a = Array.set i v grid.a }
 
@@ -45,10 +45,10 @@ swap : GPos -> GPos -> Grid a -> Maybe (Grid a)
 swap a b grid =
     let
         ia =
-            fromGP grid.w a
+            indexFromGP grid.w a
 
         ib =
-            fromGP grid.w b
+            indexFromGP grid.w b
 
         swapWithValues va vb =
             { grid
