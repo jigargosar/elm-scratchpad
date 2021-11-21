@@ -63,7 +63,7 @@ gpToWorld =
 type alias Model =
     { board : Board
     , search : Search State Node
-    , animBoards : List Board
+    , animBoards : ( Board, List Board )
     , now : Int
     }
 
@@ -76,11 +76,11 @@ init () =
                 |> always solutionBoard
                 |> always initialBoard
 
-        nodeAncestorBoards : Node -> List Board -> List Board
+        nodeAncestorBoards : Node -> List Board -> ( Board, List Board )
         nodeAncestorBoards n acc =
             case n.parent of
                 None ->
-                    n.board :: acc
+                    ( n.board, acc )
 
                 Parent p ->
                     nodeAncestorBoards p (n.board :: acc)
@@ -91,7 +91,7 @@ init () =
                     nodeAncestorBoards n []
 
                 _ ->
-                    []
+                    Debug.todo "todo"
 
         search : Search State Node
         search =
@@ -155,11 +155,10 @@ view model =
         ]
 
 
-viewAnimBoards : List Board -> Int -> Html Msg
-viewAnimBoards boards time =
-    nextListItemEvery 1 boards time
-        |> Maybe.map (viewScaledBoardSvg 0.3)
-        |> Maybe.withDefault (text "")
+viewAnimBoards : ( Board, List Board ) -> Int -> Html Msg
+viewAnimBoards nonEmptyBoards time =
+    nextNonEmptyListItemEvery 1 nonEmptyBoards time
+        |> viewScaledBoardSvg 0.3
 
 
 viewSearch : Search State Node -> Html Msg

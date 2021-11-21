@@ -593,6 +593,12 @@ nextListItemEvery itemPeriodInSec list t =
     listGetAt idx list
 
 
+nextNonEmptyListItemEvery : Float -> ( a, List a ) -> Int -> a
+nextNonEmptyListItemEvery itemPeriodInSec ( head, tail ) t =
+    nextListItemEvery itemPeriodInSec (head :: tail) t
+        |> Maybe.withDefault head
+
+
 listGetAt : Int -> List a -> Maybe a
 listGetAt idx =
     List.drop idx >> List.head
