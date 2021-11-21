@@ -18,8 +18,8 @@ toGP w i =
     ( modBy w i, i // w )
 
 
-gpToI : Int -> GPos -> Int
-gpToI w ( x, y ) =
+fromGP : Int -> GPos -> Int
+fromGP w ( x, y ) =
     w * y + x
 
 
@@ -27,7 +27,7 @@ get : GPos -> Grid a -> Maybe a
 get gp grid =
     let
         i =
-            gpToI grid.w gp
+            fromGP grid.w gp
     in
     Array.get i grid.a
 
@@ -36,7 +36,7 @@ set : GPos -> a -> Grid a -> Grid a
 set gp v grid =
     let
         i =
-            gpToI grid.w gp
+            fromGP grid.w gp
     in
     { grid | a = Array.set i v grid.a }
 
@@ -45,10 +45,10 @@ swap : GPos -> GPos -> Grid a -> Maybe (Grid a)
 swap a b grid =
     let
         ia =
-            gpToI grid.w a
+            fromGP grid.w a
 
         ib =
-            gpToI grid.w b
+            fromGP grid.w b
 
         swapWithValues va vb =
             { grid
