@@ -220,7 +220,7 @@ viewBoard board =
     board.g
         |> Grid.toList
         |> reject (first >> eq board.e)
-        |> List.sortBy second
+        |> List.sortBy (second >> tileIndex)
         |> List.map viewTile
         |> group []
 
