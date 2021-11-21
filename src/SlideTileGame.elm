@@ -161,8 +161,8 @@ listGetAt idx =
 
 
 viewAnimBoards : List Board -> Int -> Html Msg
-viewAnimBoards boards t =
-    nextListItemEvery 1 boards t
+viewAnimBoards boards time =
+    nextListItemEvery 1 boards time
         |> Maybe.map (viewScaledBoardSvg 0.3)
         |> Maybe.withDefault (text "")
 
