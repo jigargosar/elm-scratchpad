@@ -155,31 +155,11 @@ view model =
         ]
 
 
-listGetAt : Int -> List a -> Maybe a
-listGetAt idx =
-    List.drop idx >> List.head
-
-
 viewAnimBoards : List Board -> Int -> Html Msg
 viewAnimBoards boards time =
     nextListItemEvery 1 boards time
         |> Maybe.map (viewScaledBoardSvg 0.3)
         |> Maybe.withDefault (text "")
-
-
-nextListItemEvery : Float -> List a -> Int -> Maybe a
-nextListItemEvery itemPeriodInSec list t =
-    let
-        periodInSec =
-            itemPeriodInSec * len
-
-        len =
-            List.length list |> toFloat
-
-        idx =
-            floor (secondsToFractionOverNowMills periodInSec t * len)
-    in
-    listGetAt idx list
 
 
 viewSearch : Search State Node -> Html Msg

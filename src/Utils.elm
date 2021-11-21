@@ -576,3 +576,23 @@ secondsToFractionOverNowMills periodSec nowMS =
             periodSec * 1000
     in
     toFloat (modBy (round pMS) nowMS) / pMS
+
+
+nextListItemEvery : Float -> List a -> Int -> Maybe a
+nextListItemEvery itemPeriodInSec list t =
+    let
+        periodInSec =
+            itemPeriodInSec * len
+
+        len =
+            List.length list |> toFloat
+
+        idx =
+            floor (secondsToFractionOverNowMills periodInSec t * len)
+    in
+    listGetAt idx list
+
+
+listGetAt : Int -> List a -> Maybe a
+listGetAt idx =
+    List.drop idx >> List.head
