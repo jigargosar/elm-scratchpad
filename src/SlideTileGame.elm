@@ -154,21 +154,24 @@ view model =
         ]
 
 
-viewAnimBoards bs t =
+listGetAt : Int -> List a -> Maybe a
+listGetAt idx =
+    List.drop idx >> List.head
+
+
+viewAnimBoards : List Board -> Int -> Html Msg
+viewAnimBoards boards t =
     let
         duration =
             1 * 1000
 
         len =
-            List.length bs
+            List.length boards
 
         idx =
             modBy (duration * len) t // duration
-
-        mbBoard =
-            bs |> List.drop idx |> List.head
     in
-    mbBoard
+    listGetAt idx boards
         |> Maybe.map (viewScaledBoardSvg 0.3)
         |> Maybe.withDefault (text "")
 
