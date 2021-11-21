@@ -62,6 +62,7 @@ gpToWorld =
 type alias Model =
     { board : Board
     , loop : Loop State ( State, Maybe Node )
+    , animBoards : List Board
     , now : Int
     }
 
@@ -74,10 +75,19 @@ init () =
                 |> always solutionBoard
                 |> always initialBoard
 
-        _ =
+        nodeAncestorBoards : Node -> List Board -> List Board
+        nodeAncestorBoards n acc =
+            case n.parent of
+                None ->
+                    n.board :: acc
+
+                Parent p ->
+                    nodeAncestorBoards p (n.board :: acc)
+
+        animBoards =
             case loop of
                 Complete ( _, Just n ) ->
-                    Debug.log "n" n
+                    Debug.log "n" (nodeAncestorBoards n [])
 
                 _ ->
                     Debug.todo "todo"
@@ -85,7 +95,13 @@ init () =
         loop =
             solveBoard board
     in
-    ( { board = board, loop = loop, now = 0 }, Time.now |> Task.perform OnNow )
+    ( { board = board
+      , loop = loop
+      , animBoards = animBoards
+      , now = 0
+      }
+    , Time.now |> Task.perform OnNow
+    )
 
 
 type Msg
