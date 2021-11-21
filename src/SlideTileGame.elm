@@ -96,8 +96,8 @@ init () =
     )
 
 
-searchToAnimBoards : Search state Node -> List Board
-searchToAnimBoards search =
+searchToSolutionAnimBoards : Search state Node -> List Board
+searchToSolutionAnimBoards search =
     case search of
         Found _ n ->
             nodeAncestorBoards n []
@@ -150,7 +150,7 @@ view model =
     div [ fontSize "24px", dFlex, fDCol, gap "20px", pAll "20px" ]
         [ div [ dFlex, gap "20px" ]
             [ viewSearch model.search
-            , viewAnimBoards (searchToAnimBoards model.search) model.now
+            , viewAnimBoards (searchToSolutionAnimBoards model.search) model.now
             ]
         , viewScaledBoardSvg 0.6 model.board
         ]
