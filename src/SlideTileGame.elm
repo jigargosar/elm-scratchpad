@@ -220,6 +220,7 @@ viewBoard board =
     board.g
         |> Grid.toList
         |> reject (first >> eq board.e)
+        |> List.sortBy second
         |> List.map viewTile
         |> group []
 
@@ -490,7 +491,7 @@ solveBoardHelp state =
 viewTile : ( GPos, Tile ) -> Html Msg
 viewTile ( gp, tile ) =
     group [ SE.onClick (GPClicked gp) ]
-        [ group [ xf [ mv (gpToWorld gp) ] ]
+        [ group [ transitionTransform, xf [ mv (gpToWorld gp) ] ]
             [ square cz [ fillTransparent ]
             , words
                 (tileViewIndex tile)
