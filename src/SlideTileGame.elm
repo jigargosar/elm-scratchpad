@@ -238,10 +238,7 @@ moveTileAt_A1 ( gp, board ) =
     if areAdjacent board.e gp then
         board.g
             |> Grid.swap gp board.e
-            |> Maybe.map
-                (\g ->
-                    { board | e = gp, g = g }
-                )
+            |> Maybe.map (\g -> { e = gp, g = g })
 
     else
         Nothing

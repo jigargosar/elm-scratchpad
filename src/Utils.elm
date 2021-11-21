@@ -536,3 +536,24 @@ applyN n fn x =
 
     else
         applyN (n - 1) fn (fn x)
+
+
+maybeFilter : (a -> Bool) -> Maybe a -> Maybe a
+maybeFilter pred =
+    Maybe.andThen
+        (\v ->
+            if pred v then
+                Just v
+
+            else
+                Nothing
+        )
+
+
+maybeFromPred : (a -> Bool) -> a -> Maybe a
+maybeFromPred pred v =
+    if pred v then
+        Just v
+
+    else
+        Nothing
