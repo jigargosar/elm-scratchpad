@@ -164,16 +164,22 @@ viewAnimBoards boards t =
     let
         duration =
             1 * 1000
+    in
+    animateListEl duration boards t
+        |> Maybe.map (viewScaledBoardSvg 0.3)
+        |> Maybe.withDefault (text "")
 
+
+animateListEl : Int -> List a -> Int -> Maybe a
+animateListEl duration list t =
+    let
         len =
-            List.length boards
+            List.length list
 
         idx =
             modBy (duration * len) t // duration
     in
-    listGetAt idx boards
-        |> Maybe.map (viewScaledBoardSvg 0.3)
-        |> Maybe.withDefault (text "")
+    listGetAt idx list
 
 
 viewSearch : Search State Node -> Html Msg
