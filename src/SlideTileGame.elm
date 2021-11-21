@@ -87,10 +87,10 @@ init () =
         animBoards =
             case loop of
                 Complete ( _, Just n ) ->
-                    Debug.log "n" (nodeAncestorBoards n [])
+                    nodeAncestorBoards n []
 
                 _ ->
-                    Debug.todo "todo"
+                    []
 
         loop =
             solveBoard board
@@ -145,9 +145,19 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div [ fontSize "24px", dFlex, fDCol, gap "20px", pAll "20px" ]
-        [ div [] [ viewLoop model.loop ]
+        [ div [ dFlex, gap "20px" ]
+            [ viewLoop model.loop
+            , viewAnimBoards model.animBoards model.now
+            ]
         , viewBoardSvg model.board
         ]
+
+
+viewAnimBoards bs t =
+    bs
+        |> List.head
+        |> Maybe.map (viewScaledBoardSvg 0.3)
+        |> Maybe.withDefault (text "")
 
 
 viewLoop : Loop State ( State, Maybe Node ) -> Html Msg
