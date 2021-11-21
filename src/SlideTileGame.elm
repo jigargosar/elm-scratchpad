@@ -169,8 +169,8 @@ viewBoard board =
         |> group []
 
 
-iToGP i =
-    ( modBy gw i, i // gw )
+iToGP =
+    Grid.indexToGP gw
 
 
 type alias Tile =
