@@ -154,8 +154,20 @@ view model =
 
 
 viewAnimBoards bs t =
-    bs
-        |> List.head
+    let
+        duration =
+            1 * 1000
+
+        len =
+            List.length bs
+
+        idx =
+            modBy (duration * len) t // duration
+
+        mbBoard =
+            bs |> List.drop idx |> List.head
+    in
+    mbBoard
         |> Maybe.map (viewScaledBoardSvg 0.3)
         |> Maybe.withDefault (text "")
 
