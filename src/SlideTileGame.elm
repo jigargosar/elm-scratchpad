@@ -62,7 +62,6 @@ gpToWorld =
 type alias Model =
     { board : Board
     , search : Search State Node
-    , animBoards : ( Board, List Board )
     , now : Int
     }
 
@@ -75,21 +74,12 @@ init () =
                 |> always solutionBoard
                 |> always initialBoard
 
-        animBoards =
-            case search of
-                Found _ n ->
-                    nodeAncestorBoards n []
-
-                _ ->
-                    Debug.todo "todo"
-
         search : Search State Node
         search =
             solveBoard board
     in
     ( { board = board
       , search = search
-      , animBoards = animBoards
       , now = 0
       }
     , Time.now |> Task.perform OnNow
