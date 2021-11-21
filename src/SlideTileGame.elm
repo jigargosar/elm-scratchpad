@@ -1,6 +1,7 @@
 module SlideTileGame exposing (..)
 
 import Browser
+import Browser.Events
 import Dict exposing (Dict)
 import Grid exposing (Grid)
 import Html exposing (Attribute, Html, div, text)
@@ -8,7 +9,8 @@ import PriorityQueue exposing (PriorityQueue)
 import Random exposing (Generator)
 import Svg exposing (Svg)
 import Svg.Events as SE
-import Time
+import Task
+import Time exposing (Posix)
 import TypedSvg.Attributes as TA
 import Utils exposing (..)
 
@@ -59,6 +61,7 @@ gpToWorld =
 type alias Model =
     { board : Board
     , loop : Loop State ( State, Maybe Node )
+    , now : Int
     }
 
 
@@ -70,23 +73,27 @@ init () =
                 |> always solutionBoard
                 |> always initialBoard
     in
-    ( { board = board, loop = solveBoard board }, Cmd.none )
+    ( { board = board, loop = solveBoard board, now = 0 }, Time.now |> Task.perform OnNow )
 
 
 type Msg
     = OnTick
     | GPClicked GPos
     | Nop
+    | OnNow Posix
 
 
 subscriptions : Model -> Sub Msg
 subscriptions { loop } =
-    case loop of
-        Looping _ ->
-            Time.every (1000 / 60) (\_ -> OnTick)
+    Sub.batch
+        [ case loop of
+            Looping _ ->
+                Time.every (1000 / 60) (\_ -> OnTick)
 
-        _ ->
-            Sub.none
+            _ ->
+                Sub.none
+        , Browser.Events.onAnimationFrame OnNow
+        ]
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -102,6 +109,9 @@ update msg model =
 
         Nop ->
             ( model, Cmd.none )
+
+        OnNow posix ->
+            ( { model | now = Time.posixToMillis posix }, Cmd.none )
 
 
 view : Model -> Html Msg
