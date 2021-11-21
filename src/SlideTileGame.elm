@@ -158,7 +158,7 @@ view model =
 
 viewAnimBoards : List Board -> Int -> Html Msg
 viewAnimBoards boards time =
-    nextListItemEvery 1 [] time
+    nextListItemEvery 1 boards time
         |> Maybe.map (viewScaledBoardSvg 0.3)
         |> Maybe.withDefault (text "")
 
