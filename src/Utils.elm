@@ -21,6 +21,11 @@ type Dir4
     | Right
 
 
+allDir4 : List Dir4
+allDir4 =
+    [ Up, Down, Left, Right ]
+
+
 keyDecoder : Decoder String
 keyDecoder =
     JD.field "key" JD.string
@@ -557,3 +562,8 @@ maybeFromPred pred v =
 
     else
         Nothing
+
+
+sumBy : (a -> number) -> List a -> number
+sumBy fn =
+    List.foldl (fn >> add) 0

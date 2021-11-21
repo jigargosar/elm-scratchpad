@@ -292,11 +292,7 @@ estimateCostToReachSolution board =
     in
     board.g
         |> Grid.toList
-        |> List.foldl (tileManhattanCostToSolution >> add) 0
-
-
-allDirections =
-    [ Up, Down, Left, Right ]
+        |> sumBy tileManhattanCostToSolution
 
 
 createChildrenNodes : Node -> List Node
@@ -314,7 +310,7 @@ createChildrenNodes p =
         slideParentBoardInDir dir =
             slideTileInDirection dir p.board
     in
-    allDirections
+    allDir4
         |> List.filterMap
             (slideParentBoardInDir >> Maybe.map childFromBoard)
 
