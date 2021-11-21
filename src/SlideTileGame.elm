@@ -6,7 +6,6 @@ import Dict exposing (Dict)
 import Grid exposing (Grid)
 import Html exposing (Attribute, Html, div, text)
 import Html.Lazy
-import Playground
 import PriorityQueue exposing (PriorityQueue)
 import Random exposing (Generator)
 import Svg exposing (Svg)
@@ -76,15 +75,6 @@ init () =
                 |> always solutionBoard
                 |> always initialBoard
 
-        nodeAncestorBoards : Node -> List Board -> ( Board, List Board )
-        nodeAncestorBoards n acc =
-            case n.parent of
-                None ->
-                    ( n.board, acc )
-
-                Parent p ->
-                    nodeAncestorBoards p (n.board :: acc)
-
         animBoards =
             case search of
                 Found _ n ->
@@ -104,6 +94,17 @@ init () =
       }
     , Time.now |> Task.perform OnNow
     )
+
+
+searchToAnimBoards : Search state Node -> List Board
+searchToAnimBoards search =
+    case search of
+        Found _ n ->
+            nodeAncestorBoards n []
+                |> (\( h, t ) -> h :: t)
+
+        _ ->
+            []
 
 
 type Msg
@@ -149,16 +150,17 @@ view model =
     div [ fontSize "24px", dFlex, fDCol, gap "20px", pAll "20px" ]
         [ div [ dFlex, gap "20px" ]
             [ viewSearch model.search
-            , viewAnimBoards model.animBoards model.now
+            , viewAnimBoards (searchToAnimBoards model.search) model.now
             ]
         , viewScaledBoardSvg 0.6 model.board
         ]
 
 
-viewAnimBoards : ( Board, List Board ) -> Int -> Html Msg
-viewAnimBoards nonEmptyBoards time =
-    nextNonEmptyListItemEvery 1 nonEmptyBoards time
-        |> viewScaledBoardSvg 0.3
+viewAnimBoards : List Board -> Int -> Html Msg
+viewAnimBoards boards time =
+    nextListItemEvery 1 [] time
+        |> Maybe.map (viewScaledBoardSvg 0.3)
+        |> Maybe.withDefault (text "")
 
 
 viewSearch : Search State Node -> Html Msg
@@ -313,6 +315,16 @@ type alias Node =
 type Parent
     = None
     | Parent Node
+
+
+nodeAncestorBoards : Node -> List Board -> ( Board, List Board )
+nodeAncestorBoards n acc =
+    case n.parent of
+        None ->
+            ( n.board, acc )
+
+        Parent p ->
+            nodeAncestorBoards p (n.board :: acc)
 
 
 leastCostOf : Node -> Int

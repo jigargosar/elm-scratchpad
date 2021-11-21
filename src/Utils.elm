@@ -580,17 +580,21 @@ secondsToFractionOverNowMills periodSec nowMS =
 
 nextListItemEvery : Float -> List a -> Int -> Maybe a
 nextListItemEvery itemPeriodInSec list t =
-    let
-        periodInSec =
-            itemPeriodInSec * len
+    if list == [] then
+        Nothing
 
-        len =
-            List.length list |> toFloat
+    else
+        let
+            len =
+                List.length list |> toFloat
 
-        idx =
-            floor (secondsToFractionOverNowMills periodInSec t * len)
-    in
-    listGetAt idx list
+            periodInSec =
+                itemPeriodInSec * len
+
+            idx =
+                floor (secondsToFractionOverNowMills periodInSec t * len)
+        in
+        listGetAt idx list
 
 
 nextNonEmptyListItemEvery : Float -> ( a, List a ) -> Int -> a
