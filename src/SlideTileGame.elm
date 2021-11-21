@@ -6,6 +6,7 @@ import Dict exposing (Dict)
 import Grid exposing (Grid)
 import Html exposing (Attribute, Html, div, text)
 import Html.Lazy
+import Playground
 import PriorityQueue exposing (PriorityQueue)
 import Random exposing (Generator)
 import Svg exposing (Svg)
@@ -161,23 +162,22 @@ listGetAt idx =
 
 viewAnimBoards : List Board -> Int -> Html Msg
 viewAnimBoards boards t =
-    let
-        duration =
-            1 * 1000
-    in
-    cycleListFocusedItemEvery duration boards t
+    nextListItemEvery 1 boards t
         |> Maybe.map (viewScaledBoardSvg 0.3)
         |> Maybe.withDefault (text "")
 
 
-cycleListFocusedItemEvery : Int -> List a -> Int -> Maybe a
-cycleListFocusedItemEvery duration list t =
+nextListItemEvery : Float -> List a -> Int -> Maybe a
+nextListItemEvery itemPeriodInSec list t =
     let
+        periodInSec =
+            itemPeriodInSec * len
+
         len =
-            List.length list
+            List.length list |> toFloat
 
         idx =
-            modBy (duration * len) t // duration
+            floor (secondsToFractionOverNowMills periodInSec t * len)
     in
     listGetAt idx list
 

@@ -567,3 +567,12 @@ maybeFromPred pred v =
 sumBy : (a -> number) -> List a -> number
 sumBy fn =
     List.foldl (fn >> add) 0
+
+
+secondsToFractionOverNowMills : Float -> Int -> Float
+secondsToFractionOverNowMills periodSec nowMS =
+    let
+        pMS =
+            periodSec * 1000
+    in
+    toFloat (modBy (round pMS) nowMS) / pMS
