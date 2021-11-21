@@ -67,6 +67,7 @@ init () =
     let
         board =
             solutionBoard
+                |> always solutionBoard
                 |> always initialBoard
     in
     ( { board = board, loop = solveBoard board }, Cmd.none )
@@ -118,8 +119,7 @@ viewLoop loop =
             div []
                 [ div [] [ text ("moves = " ++ String.fromInt n.pathToRootCost) ]
                 , div [] [ text ("steps = " ++ String.fromInt s.steps) ]
-
-                --, viewScaledBoardSvg 0.3 n.board
+                , viewScaledBoardSvg 0.3 n.board
                 ]
 
         Complete ( _, Nothing ) ->
@@ -157,8 +157,13 @@ viewBoardSvg =
 
 viewBoard : Board -> Svg Msg
 viewBoard board =
+    let
+        _ =
+            Debug.log "board" board
+    in
     board.g
         |> Grid.toList
+        |> reject (first >> eq board.e)
         |> List.map viewTile
         |> group []
 

@@ -29,49 +29,44 @@ indexToGP w i =
     ( modBy w i, i // w )
 
 
-indexFromGP : Int -> GPos -> Int
-indexFromGP w ( x, y ) =
-    w * y + x
+indexFromGP : Int -> Int -> GPos -> Maybe Int
+indexFromGP w h ( x, y ) =
+    if validGP w h ( x, y ) then
+        Just (w * y + x)
+
+    else
+        Nothing
+
+
+validGP : number -> number -> ( number, number ) -> Bool
+validGP w h ( x, y ) =
+    x >= 0 && x < w && y >= 0 && y < h
 
 
 get : GPos -> Grid a -> Maybe a
 get gp grid =
-    let
-        i =
-            indexFromGP grid.w gp
-    in
-    Array.get i grid.a
+    indexFromGP grid.w grid.h gp
+        |> Maybe.andThen (\i -> Array.get i grid.a)
 
 
 set : GPos -> a -> Grid a -> Grid a
 set gp v grid =
-    let
-        i =
-            indexFromGP grid.w gp
-    in
-    { grid | a = Array.set i v grid.a }
+    indexFromGP grid.w grid.h gp
+        |> Maybe.map (\i -> { grid | a = Array.set i v grid.a })
+        |> Maybe.withDefault grid
 
 
 swap : GPos -> GPos -> Grid a -> Maybe (Grid a)
 swap a b grid =
     let
-        ia =
-            indexFromGP grid.w a
-
-        ib =
-            indexFromGP grid.w b
-
         swapWithValues va vb =
-            { grid
-                | a =
-                    grid.a
-                        |> Array.set ia vb
-                        |> Array.set ib va
-            }
+            grid
+                |> set a vb
+                |> set b va
     in
     Maybe.map2 swapWithValues
-        (Array.get ia grid.a)
-        (Array.get ib grid.a)
+        (get a grid)
+        (get b grid)
 
 
 toArray_ : Grid a -> Array a
