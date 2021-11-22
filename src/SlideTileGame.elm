@@ -157,8 +157,11 @@ viewSearch search =
             div []
                 [ div [] [ text ("moves = " ++ String.fromInt n.pathToRootCost) ]
                 , div [] [ text ("steps = " ++ String.fromInt s.steps) ]
-                , div [] [ text ("explored = " ++ String.fromInt (Dict.size s.explored)) ]
-                , div [] [ text ("frontier = " ++ String.fromInt (frontierSize s.frontier)) ]
+                , div []
+                    [ div [] [ text ("explored = " ++ String.fromInt (Dict.size s.explored)) ]
+                    , div [] [ text ("frontier = " ++ String.fromInt (frontierSize s.frontier)) ]
+                    ]
+                    |> always (text "")
                 , viewBoard 0.3 n.board
                 ]
 
@@ -473,7 +476,10 @@ stepSearchHelp state =
                     isExplored child =
                         Dict.member child.key explored
 
-                    filterChildren =
+                    keepUnexploredChildren =
+                        reject isExplored
+
+                    keepChildrenIfUnExploredOrCheaper =
                         filter
                             (\c ->
                                 case Dict.get c.key explored of
@@ -483,12 +489,18 @@ stepSearchHelp state =
                                     Just ex ->
                                         leastCostOf c < leastCostOf ex
                             )
+
+                    filterChildren =
+                        if True then
+                            keepChildrenIfUnExploredOrCheaper
+
+                        else
+                            keepUnexploredChildren
                 in
                 Searching
                     { explored = explored
                     , frontier =
                         createChildrenNodes node
-                            --|> reject isExplored
                             |> filterChildren
                             |> frontierInsert pendingFrontier
                     , steps = state.steps + 1
