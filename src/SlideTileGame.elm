@@ -62,7 +62,7 @@ gpToWorld =
 type alias Model =
     { board : Board
     , search : Search State Node
-    , search2 : Search State2 Node
+    , search2 : Search State Node
     , now : Int
     }
 
@@ -120,7 +120,7 @@ update msg model =
         OnTick ->
             ( { model
                 | search = stepSearchN iterationsPerFrame solveBoardHelp model.search
-                , search2 = stepSearchN iterationsPerFrame solveBoardHelp2 model.search2
+                , search2 = stepSearchN iterationsPerFrame solveBoardHelp model.search2
               }
             , Cmd.none
             )
@@ -386,6 +386,11 @@ initFrontierPQ node =
         |> PQFrontier
 
 
+initFrontierLS : Node -> Frontier
+initFrontierLS node =
+    LSFrontier [ node ]
+
+
 type alias State =
     { explored : Dict String Node
     , frontier : Frontier
@@ -410,16 +415,18 @@ initState b =
     }
 
 
-type alias State2 =
-    { explored : Dict String Node
 
-    --, frontier : Frontier
-    , frontier : FrontierLS
-    , steps : Int
-    }
+--type alias State2 =
+--    { explored : Dict String Node
+--
+--    --, frontier : Frontier
+--    , frontier : FrontierLS
+--    , steps : Int
+--    }
+--
 
 
-initState2 : Board -> State2
+initState2 : Board -> State
 initState2 b =
     let
         rootNode =
@@ -431,7 +438,7 @@ initState2 b =
             }
     in
     { explored = Dict.empty
-    , frontier = [ rootNode ]
+    , frontier = initFrontierLS rootNode
     , steps = 0
     }
 
@@ -468,10 +475,10 @@ solveBoard board =
         |> stepSearchN maxIterations solveBoardHelp
 
 
-solveBoard2 : Board -> Search State2 Node
+solveBoard2 : Board -> Search State Node
 solveBoard2 board =
     initSearch (initState2 board)
-        |> stepSearchN maxIterations solveBoardHelp2
+        |> stepSearchN maxIterations solveBoardHelp
 
 
 type alias FrontierPQ =
@@ -536,32 +543,6 @@ solveBoardHelp state =
                         createChildrenNodes node
                             |> reject (isExplored state)
                             |> frontierInsert pendingFrontier
-                    , steps = state.steps + 1
-                    }
-
-
-solveBoardHelp2 : State2 -> Search State2 Node
-solveBoardHelp2 state =
-    --case pop state.frontier of
-    case popFrontierLS state.frontier of
-        Nothing ->
-            Exhausted state
-
-        Just ( node, pendingFrontier ) ->
-            if isSolutionNode node then
-                Found state node
-
-            else
-                Searching
-                    { explored = insertBy .key node state.explored
-
-                    --, frontier =
-                    --    createChildrenNodes node
-                    --        |> reject (isExplored state)
-                    --        |> List.foldl PriorityQueue.insert pendingFrontier
-                    , frontier =
-                        pendingFrontier
-                            ++ (createChildrenNodes node |> reject (isExplored state))
                     , steps = state.steps + 1
                     }
 
