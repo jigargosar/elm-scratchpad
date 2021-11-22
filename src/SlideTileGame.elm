@@ -178,16 +178,19 @@ viewSearch search =
 
 viewScaledBoardSvg : Float -> Board -> Html Msg
 viewScaledBoardSvg scl board =
-    Svg.svg
-        [ saWidth (width * scl)
-        , saHeight (height * scl)
-        , TA.viewBox 0 0 width height
-        , noFill
-        , noStroke
-        , bgc gray
-        , noUserSelect
-        ]
-        [ Html.Lazy.lazy viewBoard board
+    div []
+        [ text <| String.fromInt <| estimateCostToReachSolution board
+        , Svg.svg
+            [ saWidth (width * scl)
+            , saHeight (height * scl)
+            , TA.viewBox 0 0 width height
+            , noFill
+            , noStroke
+            , bgc gray
+            , noUserSelect
+            ]
+            [ Html.Lazy.lazy viewBoard board
+            ]
         ]
 
 
