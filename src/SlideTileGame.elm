@@ -61,8 +61,7 @@ gpToWorld =
 
 type alias Model =
     { board : Board
-    , search : Search
-    , search2 : Search
+    , search : List Search
     , now : Int
     }
 
@@ -76,8 +75,10 @@ init () =
                 |> always initialBoard
     in
     ( { board = board
-      , search = initFrontierPQ board |> startSolvingWithFrontier
-      , search2 = initFrontierLS board |> startSolvingWithFrontier
+      , search =
+            [ initFrontierPQ board |> startSolvingWithFrontier
+            , initFrontierLS board |> startSolvingWithFrontier
+            ]
       , now = 0
       }
     , Time.now |> Task.perform OnNow
@@ -115,8 +116,7 @@ update msg model =
     case msg of
         OnTick ->
             ( { model
-                | search = stepSearchN iterationsPerFrame model.search
-                , search2 = stepSearchN iterationsPerFrame model.search2
+                | search = List.map (stepSearchN iterationsPerFrame) model.search
               }
             , Cmd.none
             )
@@ -135,10 +135,12 @@ view : Model -> Html Msg
 view model =
     div [ fontSize "24px", dFlex, fDCol, gap "20px", pAll "20px" ]
         [ div [ dFlex, gap "20px" ]
-            [ viewSearch model.search
-            , viewSearch model.search2
-            , viewAnimBoards (searchToSolutionAnimBoards model.search) model.now
-            ]
+            (model.search
+                |> List.map
+                    (\s ->
+                        div [] [ viewSearch s, viewAnimBoards (searchToSolutionAnimBoards s) model.now ]
+                    )
+            )
         , viewBoard 0.6 model.board
         ]
 
@@ -162,7 +164,7 @@ viewSearch search =
                     , div [] [ text ("frontier = " ++ String.fromInt (frontierSize s.frontier)) ]
                     ]
                     |> always (text "")
-                , viewBoard 0.3 n.board
+                , viewBoard 0.1 n.board
                 ]
 
         Exhausted _ ->
