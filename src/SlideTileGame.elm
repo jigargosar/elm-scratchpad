@@ -62,6 +62,7 @@ gpToWorld =
 type alias Model =
     { board : Board
     , search : Search State Node
+    , search2 : Search State2 Node
     , now : Int
     }
 
@@ -80,6 +81,7 @@ init () =
     in
     ( { board = board
       , search = search
+      , search2 = solveBoard2 board
       , now = 0
       }
     , Time.now |> Task.perform OnNow
@@ -105,14 +107,9 @@ type Msg
 
 
 subscriptions : Model -> Sub Msg
-subscriptions { search } =
+subscriptions _ =
     Sub.batch
-        [ case search of
-            Searching _ ->
-                Time.every (1000 / 60) (\_ -> OnTick)
-
-            _ ->
-                Sub.none
+        [ Time.every (1000 / 60) (\_ -> OnTick)
         , Browser.Events.onAnimationFrame OnNow
         ]
 
@@ -121,7 +118,10 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         OnTick ->
-            ( { model | search = stepSearchN iterationsPerFrame solveBoardHelp model.search }
+            ( { model
+                | search = stepSearchN iterationsPerFrame solveBoardHelp model.search
+                , search2 = stepSearchN iterationsPerFrame solveBoardHelp2 model.search2
+              }
             , Cmd.none
             )
 
@@ -140,6 +140,7 @@ view model =
     div [ fontSize "24px", dFlex, fDCol, gap "20px", pAll "20px" ]
         [ div [ dFlex, gap "20px" ]
             [ viewSearch model.search
+            , viewSearch model.search2
             , viewAnimBoards (searchToSolutionAnimBoards model.search) model.now
             ]
         , viewScaledBoardSvg 0.6 model.board
@@ -153,7 +154,6 @@ viewAnimBoards boards time =
         |> Maybe.withDefault (text "")
 
 
-viewSearch : Search State Node -> Html Msg
 viewSearch search =
     case search of
         Found s n ->
@@ -361,15 +361,9 @@ createChildrenNodes p =
             (slideParentBoardInDir >> Maybe.map childFromBoard)
 
 
-type alias FrontierDict =
-    Dict String Node
-
-
 type alias State =
     { explored : Dict String Node
-
-    --, frontier : Frontier
-    , frontier : Frontier2
+    , frontier : Frontier
     , steps : Int
     }
 
@@ -386,8 +380,32 @@ initState b =
             }
     in
     { explored = Dict.empty
+    , frontier = PriorityQueue.empty leastCostOf |> PriorityQueue.insert rootNode
+    , steps = 0
+    }
 
-    --, frontier = PriorityQueue.empty leastCostOf |> PriorityQueue.insert rootNode
+
+type alias State2 =
+    { explored : Dict String Node
+
+    --, frontier : Frontier
+    , frontier : Frontier2
+    , steps : Int
+    }
+
+
+initState2 : Board -> State2
+initState2 b =
+    let
+        rootNode =
+            { board = b
+            , key = boardToKey b
+            , estimatedCostToReachSolution = estimateCostToReachSolution b
+            , pathToRootCost = 0
+            , parent = None
+            }
+    in
+    { explored = Dict.empty
     , frontier = [ rootNode ]
     , steps = 0
     }
@@ -425,6 +443,12 @@ solveBoard board =
         |> stepSearchN maxIterations solveBoardHelp
 
 
+solveBoard2 : Board -> Search State2 Node
+solveBoard2 board =
+    initSearch (initState2 board)
+        |> stepSearchN maxIterations solveBoardHelp2
+
+
 type alias Frontier =
     PriorityQueue Node
 
@@ -456,18 +480,37 @@ pop2 frontier =
         |> Maybe.map pop2Help
 
 
-isExplored : State -> Node -> Bool
 isExplored state node =
     isExplored_A1 ( state, node )
 
 
-isExplored_A1 : ( State, Node ) -> Bool
 isExplored_A1 ( state, node ) =
     Dict.member node.key state.explored
 
 
 solveBoardHelp : State -> Search State Node
 solveBoardHelp state =
+    case pop state.frontier of
+        Nothing ->
+            Exhausted state
+
+        Just ( node, pendingFrontier ) ->
+            if isSolutionNode node then
+                Found state node
+
+            else
+                Searching
+                    { explored = insertBy .key node state.explored
+                    , frontier =
+                        createChildrenNodes node
+                            |> reject (isExplored state)
+                            |> List.foldl PriorityQueue.insert pendingFrontier
+                    , steps = state.steps + 1
+                    }
+
+
+solveBoardHelp2 : State2 -> Search State2 Node
+solveBoardHelp2 state =
     --case pop state.frontier of
     case pop2 state.frontier of
         Nothing ->
