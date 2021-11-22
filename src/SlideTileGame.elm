@@ -34,10 +34,6 @@ height =
     gh * cz
 
 
-initialIterations =
-    5 * 1000 |> round
-
-
 iterationsPerFrame =
     3 * 1000
 
@@ -419,6 +415,10 @@ initFrontierPQ board =
         |> PQFrontier
 
 
+
+--noinspection ElmUnusedSymbol
+
+
 initFrontierLS : Board -> Frontier
 initFrontierLS board =
     LSFrontier [ rootNodeFromBoard board ]
@@ -438,7 +438,6 @@ startSolvingWithFrontier frontier =
     , steps = 0
     }
         |> Searching
-        |> stepSearchN initialIterations
 
 
 rootNodeFromBoard : Board -> Node
