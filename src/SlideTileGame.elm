@@ -160,11 +160,11 @@ viewSearch search =
             div []
                 [ div [] [ text ("moves = " ++ String.fromInt n.pathToRootCost) ]
                 , div [] [ text ("steps = " ++ String.fromInt s.steps) ]
-                , div []
-                    [ div [] [ text ("explored = " ++ String.fromInt (Dict.size s.explored)) ]
-                    , div [] [ text ("frontier = " ++ String.fromInt (frontierSize s.frontier)) ]
-                    ]
-                    |> always (text "")
+
+                --, div []
+                --    [ div [] [ text ("explored = " ++ String.fromInt (Dict.size s.explored)) ]
+                --    , div [] [ text ("frontier = " ++ String.fromInt (frontierSize s.frontier)) ]
+                --    ]
                 , viewBoard 0.1 n.board
                 ]
 
@@ -329,15 +329,27 @@ isSolutionNode n =
     n.key == solutionBoardAsString
 
 
+
+--noinspection ElmUnusedSymbol
+
+
 estimateCostToReachSolution : Board -> Int
 estimateCostToReachSolution board =
     let
         tileManhattanCostToSolution ( currentGP, tile ) =
             manhattenDistance currentGP (tileSolutionGP tile)
+
+        simpleCost ( currentGP, tile ) =
+            if currentGP == tileSolutionGP tile then
+                0
+
+            else
+                1
     in
     board.g
         |> Grid.toList
-        |> sumBy tileManhattanCostToSolution
+        --|> sumBy tileManhattanCostToSolution
+        |> sumBy simpleCost
         |> mul 1
 
 
@@ -364,6 +376,10 @@ createChildrenNodes p =
 type Frontier
     = PQFrontier FrontierPQ
     | LSFrontier FrontierLS
+
+
+
+--noinspection ElmUnusedSymbol
 
 
 frontierSize : Frontier -> Int
