@@ -606,3 +606,12 @@ nextNonEmptyListItemEvery itemPeriodInSec ( head, tail ) t =
 listGetAt : Int -> List a -> Maybe a
 listGetAt idx =
     List.drop idx >> List.head
+
+
+minBy : (a -> comparable) -> a -> a -> a
+minBy fn a b =
+    if fn a < fn b then
+        a
+
+    else
+        b
