@@ -339,8 +339,11 @@ estimateCostToReachSolution board =
         tileManhattanCostToSolution ( currentGP, tile ) =
             manhattenDistance currentGP (tileSolutionGP tile)
 
-        simpleCost ( currentGP, tile ) =
-            if currentGP == tileSolutionGP tile then
+        admissibleCost ( currentGP, tile ) =
+            if
+                (currentGP == tileSolutionGP tile)
+                    || (currentGP == board.e)
+            then
                 0
 
             else
@@ -349,8 +352,7 @@ estimateCostToReachSolution board =
     board.g
         |> Grid.toList
         --|> sumBy tileManhattanCostToSolution
-        |> sumBy simpleCost
-        |> mul 1
+        |> sumBy admissibleCost
 
 
 createChildrenNodes : Node -> List Node
