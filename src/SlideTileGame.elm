@@ -431,6 +431,27 @@ stepSearch search =
             search
 
 
+stepSearchHelp : State -> Search State Node
+stepSearchHelp state =
+    case pop state.frontier of
+        Nothing ->
+            Exhausted state
+
+        Just ( node, pendingFrontier ) ->
+            if isSolutionNode node then
+                Found state node
+
+            else
+                Searching
+                    { explored = insertBy .key node state.explored
+                    , frontier =
+                        createChildrenNodes node
+                            |> reject (isExplored state)
+                            |> frontierInsert pendingFrontier
+                    , steps = state.steps + 1
+                    }
+
+
 stepSearchN : Int -> Search State Node -> Search State Node
 stepSearchN n =
     applyN n stepSearch
@@ -479,27 +500,6 @@ isExplored state node =
 
 isExplored_A1 ( state, node ) =
     Dict.member node.key state.explored
-
-
-stepSearchHelp : State -> Search State Node
-stepSearchHelp state =
-    case pop state.frontier of
-        Nothing ->
-            Exhausted state
-
-        Just ( node, pendingFrontier ) ->
-            if isSolutionNode node then
-                Found state node
-
-            else
-                Searching
-                    { explored = insertBy .key node state.explored
-                    , frontier =
-                        createChildrenNodes node
-                            |> reject (isExplored state)
-                            |> frontierInsert pendingFrontier
-                    , steps = state.steps + 1
-                    }
 
 
 viewTile : ( GPos, Tile ) -> Html Msg
