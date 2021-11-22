@@ -367,7 +367,9 @@ type alias FrontierDict =
 
 type alias State =
     { explored : Dict String Node
-    , frontier : Frontier
+
+    --, frontier : Frontier
+    , frontier : Frontier2
     , steps : Int
     }
 
@@ -384,7 +386,9 @@ initState b =
             }
     in
     { explored = Dict.empty
-    , frontier = PriorityQueue.empty leastCostOf |> PriorityQueue.insert rootNode
+
+    --, frontier = PriorityQueue.empty leastCostOf |> PriorityQueue.insert rootNode
+    , frontier = [ rootNode ]
     , steps = 0
     }
 
@@ -425,10 +429,31 @@ type alias Frontier =
     PriorityQueue Node
 
 
+type alias Frontier2 =
+    List Node
+
+
 pop : Frontier -> Maybe ( Node, Frontier )
 pop frontier =
     PriorityQueue.head frontier
         |> Maybe.map (pairTo (PriorityQueue.tail frontier))
+
+
+pop2 : Frontier2 -> Maybe ( Node, Frontier2 )
+pop2 frontier =
+    let
+        reduce n ( min, acc ) =
+            if leastCostOf n <= leastCostOf min then
+                ( n, min :: acc )
+
+            else
+                ( min, n :: acc )
+
+        pop2Help ( h, t ) =
+            List.foldl reduce ( h, [] ) t
+    in
+    uncons frontier
+        |> Maybe.map pop2Help
 
 
 isExplored : State -> Node -> Bool
@@ -443,7 +468,8 @@ isExplored_A1 ( state, node ) =
 
 solveBoardHelp : State -> Search State Node
 solveBoardHelp state =
-    case pop state.frontier of
+    --case pop state.frontier of
+    case pop2 state.frontier of
         Nothing ->
             Exhausted state
 
@@ -454,10 +480,14 @@ solveBoardHelp state =
             else
                 Searching
                     { explored = Dict.insert node.key node state.explored
+
+                    --, frontier =
+                    --    createChildrenNodes node
+                    --        |> reject (isExplored state)
+                    --        |> List.foldl PriorityQueue.insert pendingFrontier
                     , frontier =
-                        createChildrenNodes node
-                            |> reject (isExplored state)
-                            |> List.foldl PriorityQueue.insert pendingFrontier
+                        pendingFrontier
+                            ++ (createChildrenNodes node |> reject (isExplored state))
                     , steps = state.steps + 1
                     }
 
