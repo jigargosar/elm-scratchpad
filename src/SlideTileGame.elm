@@ -469,12 +469,26 @@ stepSearchHelp state =
                                         Just (minBy leastCostOf ex node)
                             )
                             state.explored
+
+                    isExplored child =
+                        Dict.member child.key explored
+
+                    filterChildren =
+                        filter
+                            (\c ->
+                                case Dict.get c.key explored of
+                                    Nothing ->
+                                        True
+
+                                    Just ex ->
+                                        leastCostOf c < leastCostOf ex
+                            )
                 in
                 Searching
                     { explored = explored
                     , frontier =
                         createChildrenNodes node
-                            |> reject (isExplored state)
+                            |> reject isExplored
                             |> frontierInsert pendingFrontier
                     , steps = state.steps + 1
                     }
@@ -520,10 +534,6 @@ popFrontierLS frontierLS =
     in
     uncons frontierLS
         |> Maybe.map pop2Help
-
-
-isExplored state node =
-    Dict.member node.key state.explored
 
 
 viewTile : ( GPos, Tile ) -> Html Msg
