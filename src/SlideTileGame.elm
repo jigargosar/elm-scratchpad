@@ -473,11 +473,8 @@ stepSearchHelp state =
                             )
                             state.explored
 
-                    isExplored child =
-                        Dict.member child.key explored
-
                     keepUnexploredChildren =
-                        reject isExplored
+                        reject (\c -> Dict.member c.key explored)
 
                     keepChildrenIfUnExploredOrCheaper =
                         filter
