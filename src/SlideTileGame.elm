@@ -480,7 +480,7 @@ stepSearchHelp state =
                         reject
                             (\c ->
                                 Dict.get c.key explored
-                                    |> Maybe.map (\ex -> leastCostOf c > leastCostOf ex)
+                                    |> Maybe.map (\ex -> leastCostOf c >= leastCostOf ex)
                                     |> Maybe.withDefault False
                             )
 
