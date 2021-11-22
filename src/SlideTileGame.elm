@@ -296,7 +296,7 @@ solutionBoardAsString =
 type alias Node =
     { board : Board
     , key : String
-    , estimatedCostToReachSolution : Int
+    , heuristicCost : Int
     , pathToRootCost : Int
     , parent : Parent
     }
@@ -319,7 +319,7 @@ nodeAncestorBoards n acc =
 
 leastCostOf : Node -> Int
 leastCostOf n =
-    n.pathToRootCost + n.estimatedCostToReachSolution
+    n.pathToRootCost + n.heuristicCost
 
 
 isSolutionNode : Node -> Bool
@@ -352,7 +352,7 @@ createChildrenNodes p =
         childFromBoard board =
             { board = board
             , key = boardToKey board
-            , estimatedCostToReachSolution = admissibleHeuristicCost board
+            , heuristicCost = admissibleHeuristicCost board
             , pathToRootCost = p.pathToRootCost + 1
             , parent = Parent p
             }
@@ -438,7 +438,7 @@ rootNodeFromBoard : Board -> Node
 rootNodeFromBoard board =
     { board = board
     , key = boardToKey board
-    , estimatedCostToReachSolution = admissibleHeuristicCost board
+    , heuristicCost = admissibleHeuristicCost board
     , pathToRootCost = 0
     , parent = None
     }
