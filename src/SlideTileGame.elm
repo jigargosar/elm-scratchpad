@@ -488,7 +488,8 @@ stepSearchHelp state =
                     { explored = explored
                     , frontier =
                         createChildrenNodes node
-                            |> reject isExplored
+                            --|> reject isExplored
+                            |> filterChildren
                             |> frontierInsert pendingFrontier
                     , steps = state.steps + 1
                     }
