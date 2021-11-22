@@ -74,14 +74,10 @@ init () =
             solutionBoard
                 |> always solutionBoard
                 |> always initialBoard
-
-        search : Search State Node
-        search =
-            solveBoard board
     in
     ( { board = board
-      , search = search
-      , search2 = solveBoard2 board
+      , search = initFrontierPQ board |> startSolvingWithFrontier
+      , search2 = initFrontierLS board |> startSolvingWithFrontier
       , now = 0
       }
     , Time.now |> Task.perform OnNow
@@ -119,8 +115,8 @@ update msg model =
     case msg of
         OnTick ->
             ( { model
-                | search = stepSearchN iterationsPerFrame solveBoardHelp model.search
-                , search2 = stepSearchN iterationsPerFrame solveBoardHelp model.search2
+                | search = stepSearchN iterationsPerFrame model.search
+                , search2 = stepSearchN iterationsPerFrame model.search2
               }
             , Cmd.none
             )
@@ -154,6 +150,7 @@ viewAnimBoards boards time =
         |> Maybe.withDefault (text "")
 
 
+viewSearch : Search State Node -> Html Msg
 viewSearch search =
     case search of
         Found s n ->
@@ -379,16 +376,16 @@ frontierInsert frontier =
             (++) ls >> LSFrontier
 
 
-initFrontierPQ : Node -> Frontier
-initFrontierPQ node =
+initFrontierPQ : Board -> Frontier
+initFrontierPQ board =
     PriorityQueue.empty leastCostOf
-        |> PriorityQueue.insert node
+        |> PriorityQueue.insert (rootNodeFromBoard board)
         |> PQFrontier
 
 
-initFrontierLS : Node -> Frontier
-initFrontierLS node =
-    LSFrontier [ node ]
+initFrontierLS : Board -> Frontier
+initFrontierLS board =
+    LSFrontier [ rootNodeFromBoard board ]
 
 
 type alias State =
@@ -398,48 +395,23 @@ type alias State =
     }
 
 
-initState : Board -> State
-initState b =
-    let
-        rootNode =
-            { board = b
-            , key = boardToKey b
-            , estimatedCostToReachSolution = estimateCostToReachSolution b
-            , pathToRootCost = 0
-            , parent = None
-            }
-    in
+startSolvingWithFrontier : Frontier -> Search State Node
+startSolvingWithFrontier frontier =
     { explored = Dict.empty
-    , frontier = initFrontierPQ rootNode
+    , frontier = frontier
     , steps = 0
     }
+        |> Searching
+        |> stepSearchN maxIterations
 
 
-
---type alias State2 =
---    { explored : Dict String Node
---
---    --, frontier : Frontier
---    , frontier : FrontierLS
---    , steps : Int
---    }
---
-
-
-initState2 : Board -> State
-initState2 b =
-    let
-        rootNode =
-            { board = b
-            , key = boardToKey b
-            , estimatedCostToReachSolution = estimateCostToReachSolution b
-            , pathToRootCost = 0
-            , parent = None
-            }
-    in
-    { explored = Dict.empty
-    , frontier = initFrontierLS rootNode
-    , steps = 0
+rootNodeFromBoard : Board -> Node
+rootNodeFromBoard board =
+    { board = board
+    , key = boardToKey board
+    , estimatedCostToReachSolution = estimateCostToReachSolution board
+    , pathToRootCost = 0
+    , parent = None
     }
 
 
@@ -459,26 +431,9 @@ stepSearch fn search =
             search
 
 
-stepSearchN : Int -> (state -> Search state answer) -> Search state answer -> Search state answer
-stepSearchN n fn =
-    applyN n (stepSearch fn)
-
-
-initSearch : state -> Search state answer
-initSearch =
-    Searching
-
-
-solveBoard : Board -> Search State Node
-solveBoard board =
-    initSearch (initState board)
-        |> stepSearchN maxIterations solveBoardHelp
-
-
-solveBoard2 : Board -> Search State Node
-solveBoard2 board =
-    initSearch (initState2 board)
-        |> stepSearchN maxIterations solveBoardHelp
+stepSearchN : Int -> Search State Node -> Search State Node
+stepSearchN n =
+    applyN n (stepSearch stepSearchHelp)
 
 
 type alias FrontierPQ =
@@ -526,8 +481,8 @@ isExplored_A1 ( state, node ) =
     Dict.member node.key state.explored
 
 
-solveBoardHelp : State -> Search State Node
-solveBoardHelp state =
+stepSearchHelp : State -> Search State Node
+stepSearchHelp state =
     case pop state.frontier of
         Nothing ->
             Exhausted state
