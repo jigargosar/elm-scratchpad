@@ -157,6 +157,8 @@ viewSearch search =
             div []
                 [ div [] [ text ("moves = " ++ String.fromInt n.pathToRootCost) ]
                 , div [] [ text ("steps = " ++ String.fromInt s.steps) ]
+                , div [] [ text ("explored = " ++ String.fromInt (Dict.size s.explored)) ]
+                , div [] [ text ("frontier = " ++ String.fromInt (frontierSize s.frontier)) ]
                 , viewBoard 0.3 n.board
                 ]
 
@@ -354,6 +356,24 @@ createChildrenNodes p =
 type Frontier
     = PQFrontier FrontierPQ
     | LSFrontier FrontierLS
+
+
+frontierSize : Frontier -> Int
+frontierSize frontier =
+    case frontier of
+        PQFrontier frontierPQ ->
+            let
+                pqLenHelp pq ct =
+                    if PriorityQueue.isEmpty pq then
+                        ct
+
+                    else
+                        pqLenHelp (PriorityQueue.tail pq) (ct + 1)
+            in
+            pqLenHelp frontierPQ 0
+
+        LSFrontier frontierLS ->
+            List.length frontierLS
 
 
 frontierInsert : Frontier -> List Node -> Frontier
