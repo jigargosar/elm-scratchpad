@@ -39,11 +39,11 @@ iterationsPerFrame =
 
 
 gw =
-    5
+    3
 
 
 gh =
-    5
+    4
 
 
 cz =
@@ -240,6 +240,7 @@ initialBoard : Board
 initialBoard =
     Random.step randomBoard
         --(Random.initialSeed 10011)
+        --(Random.initialSeed 5)
         (Random.initialSeed 0)
         |> first
 
