@@ -569,6 +569,15 @@ sumBy fn =
     List.foldl (fn >> add) 0
 
 
+maxBy : (a -> number) -> List a -> number
+maxBy fn =
+    List.foldl (fn >> max) 0
+
+
+atLeast =
+    max
+
+
 secondsToFractionOverNowMills : Float -> Int -> Float
 secondsToFractionOverNowMills periodSec nowMS =
     let

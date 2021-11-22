@@ -77,7 +77,8 @@ init () =
     ( { board = board
       , search =
             [ initFrontierPQ board |> startSolvingWithFrontier
-            , initFrontierLS board |> startSolvingWithFrontier
+
+            --, initFrontierLS board |> startSolvingWithFrontier
             ]
       , now = 0
       }
@@ -242,6 +243,7 @@ type alias Board =
 initialBoard : Board
 initialBoard =
     Random.step randomBoard
+        --(Random.initialSeed 10011)
         (Random.initialSeed 0)
         |> first
 
@@ -332,13 +334,6 @@ estimateCostToReachSolution board =
     let
         tileManhattanCostToSolution ( currentGP, tile ) =
             manhattenDistance currentGP (tileSolutionGP tile)
-
-        --tileSimpleCostToSolution ( currentGP, tile ) =
-        --    if currentGP == tileSolutionGP tile then
-        --        0
-        --
-        --    else
-        --        1
     in
     board.g
         |> Grid.toList
@@ -486,17 +481,17 @@ stepSearchHelp state =
                     rejectExploredChildren =
                         reject (\c -> Dict.member c.key explored)
 
-                    rejectExpensiveChildren =
+                    rejectExpensiveExploredChildren =
                         reject
                             (\c ->
                                 Dict.get c.key explored
-                                    |> Maybe.map (\ex -> leastCostOf c >= leastCostOf ex)
+                                    |> Maybe.map (\ex -> c.pathToRootCost >= ex.pathToRootCost)
                                     |> Maybe.withDefault False
                             )
 
                     filterChildren =
                         if True then
-                            rejectExpensiveChildren
+                            rejectExpensiveExploredChildren
 
                         else
                             rejectExploredChildren
