@@ -34,8 +34,8 @@ height =
     gh * cz
 
 
-maxIterations =
-    50 * 1000 |> round
+initialIterations =
+    5 * 1000 |> round
 
 
 iterationsPerFrame =
@@ -438,7 +438,7 @@ startSolvingWithFrontier frontier =
     , steps = 0
     }
         |> Searching
-        |> stepSearchN maxIterations
+        |> stepSearchN initialIterations
 
 
 rootNodeFromBoard : Board -> Node
