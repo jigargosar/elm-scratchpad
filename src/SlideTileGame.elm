@@ -457,8 +457,21 @@ stepSearchHelp state =
                     node
 
             else
+                let
+                    explored =
+                        Dict.update node.key
+                            (\mbExplored ->
+                                case mbExplored of
+                                    Nothing ->
+                                        Just node
+
+                                    Just ex ->
+                                        Just (minBy leastCostOf ex node)
+                            )
+                            state.explored
+                in
                 Searching
-                    { explored = insertBy .key node state.explored
+                    { explored = explored
                     , frontier =
                         createChildrenNodes node
                             |> reject (isExplored state)
