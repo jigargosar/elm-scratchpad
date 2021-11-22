@@ -479,7 +479,7 @@ solveBoardHelp state =
 
             else
                 Searching
-                    { explored = Dict.insert node.key node state.explored
+                    { explored = insertBy .key node state.explored
 
                     --, frontier =
                     --    createChildrenNodes node
