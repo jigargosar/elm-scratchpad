@@ -343,6 +343,7 @@ estimateCostToReachSolution board =
     board.g
         |> Grid.toList
         |> sumBy tileManhattanCostToSolution
+        |> mul 1
 
 
 createChildrenNodes : Node -> List Node
@@ -395,7 +396,7 @@ frontierInsert frontier =
             List.foldl PriorityQueue.insert pq >> PQFrontier
 
         LSFrontier ls ->
-            (++) ls >> LSFrontier
+            (\new -> ls ++ new) >> LSFrontier
 
 
 initFrontierPQ : Board -> Frontier
@@ -539,7 +540,7 @@ popFrontierLS : FrontierLS -> Maybe ( Node, FrontierLS )
 popFrontierLS frontierLS =
     let
         reduce n ( min, acc ) =
-            if leastCostOf n <= leastCostOf min then
+            if leastCostOf n < leastCostOf min then
                 ( n, min :: acc )
 
             else
@@ -547,6 +548,8 @@ popFrontierLS frontierLS =
 
         pop2Help ( h, t ) =
             List.foldl reduce ( h, [] ) t
+
+        --|> mapSecond List.reverse
     in
     uncons frontierLS
         |> Maybe.map pop2Help
