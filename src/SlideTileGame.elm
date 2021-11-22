@@ -366,7 +366,7 @@ createChildrenNodes p =
 
 type alias State =
     { explored : Dict String Node
-    , frontier : Frontier
+    , frontier : FrontierPQ
     , steps : Int
     }
 
@@ -392,7 +392,7 @@ type alias State2 =
     { explored : Dict String Node
 
     --, frontier : Frontier
-    , frontier : Frontier2
+    , frontier : FrontierLS
     , steps : Int
     }
 
@@ -452,21 +452,21 @@ solveBoard2 board =
         |> stepSearchN maxIterations solveBoardHelp2
 
 
-type alias Frontier =
+type alias FrontierPQ =
     PriorityQueue Node
 
 
-type alias Frontier2 =
+type alias FrontierLS =
     List Node
 
 
-pop : Frontier -> Maybe ( Node, Frontier )
+pop : FrontierPQ -> Maybe ( Node, FrontierPQ )
 pop frontier =
     PriorityQueue.head frontier
         |> Maybe.map (pairTo (PriorityQueue.tail frontier))
 
 
-pop2 : Frontier2 -> Maybe ( Node, Frontier2 )
+pop2 : FrontierLS -> Maybe ( Node, FrontierLS )
 pop2 frontier =
     let
         reduce n ( min, acc ) =
