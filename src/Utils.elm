@@ -615,3 +615,8 @@ minBy fn a b =
 
     else
         b
+
+
+insertBy : (v -> comparable) -> v -> Dict comparable v -> Dict comparable v
+insertBy keyFn v =
+    Dict.insert (keyFn v) v

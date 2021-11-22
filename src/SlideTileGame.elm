@@ -365,7 +365,6 @@ type alias FrontierDict =
 type alias State =
     { explored : Dict String Node
     , frontier : Frontier
-    , frontierDict : FrontierDict
     , steps : Int
     }
 
@@ -439,22 +438,6 @@ isExplored_A1 ( state, node ) =
     Dict.member node.key state.explored
 
 
-popFrontierDict : FrontierDict -> Maybe ( Node, FrontierDict )
-popFrontierDict dict =
-    let
-        reduceMB _ n mbMin =
-            case mbMin of
-                Nothing ->
-                    Just n
-
-                Just minN ->
-                    minBy (.board >> estimateCostToReachSolution) n minN
-                        |> Just
-    in
-    Dict.foldl reduceMB Nothing dict
-        |> Maybe.map (\minN -> ( minN, Dict.remove minN.key dict ))
-
-
 solveBoardHelp : State -> Search State Node
 solveBoardHelp state =
     case pop state.frontier of
@@ -472,7 +455,6 @@ solveBoardHelp state =
                         createChildrenNodes node
                             |> reject (isExplored state)
                             |> List.foldl PriorityQueue.insert pendingFrontier
-                    , frontierDict = state.frontierDict
                     , steps = state.steps + 1
                     }
 
