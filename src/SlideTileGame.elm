@@ -477,7 +477,7 @@ stepSearchHelp state =
                         reject (\c -> Dict.member c.key explored)
 
                     keepChildrenIfUnExploredOrCheaper =
-                        filter
+                        keep
                             (\c ->
                                 case Dict.get c.key explored of
                                     Nothing ->

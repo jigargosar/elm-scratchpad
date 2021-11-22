@@ -437,14 +437,14 @@ second =
     Tuple.second
 
 
-filter : (a -> Bool) -> List a -> List a
-filter =
+keep : (a -> Bool) -> List a -> List a
+keep =
     List.filter
 
 
 reject : (a -> Bool) -> List a -> List a
 reject fn =
-    filter (fn >> not)
+    keep (fn >> not)
 
 
 uncons : List a -> Maybe ( a, List a )
