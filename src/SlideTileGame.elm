@@ -39,11 +39,11 @@ iterationsPerFrame =
 
 
 gw =
-    3
+    5
 
 
 gh =
-    4
+    5
 
 
 cz =
@@ -169,7 +169,7 @@ viewSearch search =
 
         Searching s ->
             text <|
-                "Unable to find solution in "
+                "Searching... "
                     ++ String.fromInt s.steps
                     ++ " steps. "
                     --++ String.fromInt (List.length s.frontier)
@@ -325,16 +325,18 @@ isSolutionNode n =
     n.key == solutionBoardAsString
 
 
+heuristicCost : Board -> Int
+heuristicCost =
+    if True then
+        admissibleHeuristicCost
 
---noinspection ElmUnusedSymbol
+    else
+        inadmissibleHeuristicCost
 
 
 admissibleHeuristicCost : Board -> Int
 admissibleHeuristicCost board =
     let
-        tileManhattanCostToSolution ( currentGP, tile ) =
-            manhattenDistance currentGP (tileSolutionGP tile)
-
         admissibleCost ( currentGP, tile ) =
             if
                 (currentGP == tileSolutionGP tile)
@@ -351,6 +353,17 @@ admissibleHeuristicCost board =
         |> sumBy admissibleCost
 
 
+inadmissibleHeuristicCost : Board -> Int
+inadmissibleHeuristicCost board =
+    let
+        tileManhattanCostToSolution ( currentGP, tile ) =
+            manhattenDistance currentGP (tileSolutionGP tile)
+    in
+    board.g
+        |> Grid.toList
+        |> sumBy tileManhattanCostToSolution
+
+
 createChildrenNodes : Node -> List Node
 createChildrenNodes p =
     let
@@ -358,7 +371,7 @@ createChildrenNodes p =
         childFromBoard board =
             { board = board
             , key = boardToKey board
-            , estimatedCostToReachSolution = admissibleHeuristicCost board
+            , estimatedCostToReachSolution = heuristicCost board
             , pathToRootCost = p.pathToRootCost + 1
             , parent = Parent p
             }
@@ -444,7 +457,7 @@ rootNodeFromBoard : Board -> Node
 rootNodeFromBoard board =
     { board = board
     , key = boardToKey board
-    , estimatedCostToReachSolution = admissibleHeuristicCost board
+    , estimatedCostToReachSolution = heuristicCost board
     , pathToRootCost = 0
     , parent = None
     }
