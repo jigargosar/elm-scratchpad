@@ -449,7 +449,12 @@ stepSearchHelp state =
 
         Just ( node, pendingFrontier ) ->
             if isSolutionNode node then
-                Found state node
+                Found
+                    { explored = insertBy .key node state.explored
+                    , frontier = pendingFrontier
+                    , steps = state.steps + 1
+                    }
+                    node
 
             else
                 Searching
