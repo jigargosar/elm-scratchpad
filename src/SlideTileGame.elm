@@ -473,26 +473,23 @@ stepSearchHelp state =
                             )
                             state.explored
 
-                    keepUnexploredChildren =
+                    rejectExploredChildren =
                         reject (\c -> Dict.member c.key explored)
 
-                    keepChildrenIfUnExploredOrCheaper =
-                        keep
+                    rejectExpensiveChildren =
+                        reject
                             (\c ->
-                                case Dict.get c.key explored of
-                                    Nothing ->
-                                        True
-
-                                    Just ex ->
-                                        leastCostOf c < leastCostOf ex
+                                Dict.get c.key explored
+                                    |> Maybe.map (\ex -> leastCostOf c > leastCostOf ex)
+                                    |> Maybe.withDefault False
                             )
 
                     filterChildren =
                         if True then
-                            keepChildrenIfUnExploredOrCheaper
+                            rejectExpensiveChildren
 
                         else
-                            keepUnexploredChildren
+                            rejectExploredChildren
                 in
                 Searching
                     { explored = explored
