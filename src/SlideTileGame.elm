@@ -421,11 +421,11 @@ type Search state answer
     | Found state answer
 
 
-stepSearch : (state -> Search state answer) -> Search state answer -> Search state answer
-stepSearch fn search =
+stepSearch : Search State Node -> Search State Node
+stepSearch search =
     case search of
         Searching state ->
-            fn state
+            stepSearchHelp state
 
         _ ->
             search
@@ -433,7 +433,7 @@ stepSearch fn search =
 
 stepSearchN : Int -> Search State Node -> Search State Node
 stepSearchN n =
-    applyN n (stepSearch stepSearchHelp)
+    applyN n stepSearch
 
 
 type alias FrontierPQ =
