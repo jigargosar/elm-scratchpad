@@ -507,7 +507,7 @@ stepSearchHelp state =
                             )
 
                     filterChildren =
-                        if True then
+                        if False then
                             rejectExpensiveExploredChildren
 
                         else
