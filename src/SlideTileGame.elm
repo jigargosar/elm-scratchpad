@@ -261,16 +261,11 @@ randomBoard =
 
 slideTileInDirection : Dir4 -> Board -> Maybe Board
 slideTileInDirection dir board =
-    slideTileInDirection_A1 ( dir, board )
-
-
-slideTileInDirection_A1 : ( Dir4, Board ) -> Maybe Board
-slideTileInDirection_A1 ( dir, board ) =
     moveTileAt (moveInDir4 (oppositeDir4 dir) board.e) board
 
 
-moveTileAt_A1 : ( GPos, Board ) -> Maybe Board
-moveTileAt_A1 ( gp, board ) =
+moveTileAt : GPos -> Board -> Maybe Board
+moveTileAt gp board =
     if areAdjacent board.e gp then
         board.g
             |> Grid.swap gp board.e
@@ -278,11 +273,6 @@ moveTileAt_A1 ( gp, board ) =
 
     else
         Nothing
-
-
-moveTileAt : GPos -> Board -> Maybe Board
-moveTileAt gp board =
-    moveTileAt_A1 ( gp, board )
 
 
 solutionBoard : Board
@@ -495,10 +485,6 @@ popFrontierLS frontierLS =
 
 
 isExplored state node =
-    isExplored_A1 ( state, node )
-
-
-isExplored_A1 ( state, node ) =
     Dict.member node.key state.explored
 
 
