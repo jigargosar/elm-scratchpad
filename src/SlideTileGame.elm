@@ -143,14 +143,14 @@ view model =
             , viewSearch model.search2
             , viewAnimBoards (searchToSolutionAnimBoards model.search) model.now
             ]
-        , viewScaledBoardSvg 0.6 model.board
+        , viewBoard 0.6 model.board
         ]
 
 
 viewAnimBoards : List Board -> Int -> Html Msg
 viewAnimBoards boards time =
     nextListItemEvery 1 boards time
-        |> Maybe.map (viewScaledBoardSvg 0.3)
+        |> Maybe.map (viewBoard 0.3)
         |> Maybe.withDefault (text "")
 
 
@@ -160,7 +160,7 @@ viewSearch search =
             div []
                 [ div [] [ text ("moves = " ++ String.fromInt n.pathToRootCost) ]
                 , div [] [ text ("steps = " ++ String.fromInt s.steps) ]
-                , viewScaledBoardSvg 0.3 n.board
+                , viewBoard 0.3 n.board
                 ]
 
         Exhausted _ ->
@@ -176,10 +176,13 @@ viewSearch search =
                     ++ ""
 
 
-viewScaledBoardSvg : Float -> Board -> Html Msg
-viewScaledBoardSvg scl board =
+viewBoard : Float -> Board -> Html Msg
+viewBoard scl board =
     div []
-        [ text <| String.fromInt <| estimateCostToReachSolution board
+        [ div []
+            [ text "heuristic="
+            , text (String.fromInt (estimateCostToReachSolution board))
+            ]
         , Svg.svg
             [ saWidth (width * scl)
             , saHeight (height * scl)
@@ -189,13 +192,13 @@ viewScaledBoardSvg scl board =
             , bgc gray
             , noUserSelect
             ]
-            [ Html.Lazy.lazy viewBoard board
+            [ Html.Lazy.lazy viewBoardHelp board
             ]
         ]
 
 
-viewBoard : Board -> Svg Msg
-viewBoard board =
+viewBoardHelp : Board -> Svg Msg
+viewBoardHelp board =
     board.g
         |> Grid.toList
         |> reject (first >> eq board.e)
