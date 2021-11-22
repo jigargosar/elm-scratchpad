@@ -186,7 +186,7 @@ viewBoard scl board =
     div []
         [ div []
             [ text "heuristic="
-            , text (String.fromInt (estimateCostToReachSolution board))
+            , text (String.fromInt (admissibleHeuristicCost board))
             ]
         , Svg.svg
             [ saWidth (width * scl)
@@ -333,8 +333,8 @@ isSolutionNode n =
 --noinspection ElmUnusedSymbol
 
 
-estimateCostToReachSolution : Board -> Int
-estimateCostToReachSolution board =
+admissibleHeuristicCost : Board -> Int
+admissibleHeuristicCost board =
     let
         tileManhattanCostToSolution ( currentGP, tile ) =
             manhattenDistance currentGP (tileSolutionGP tile)
@@ -362,7 +362,7 @@ createChildrenNodes p =
         childFromBoard board =
             { board = board
             , key = boardToKey board
-            , estimatedCostToReachSolution = estimateCostToReachSolution board
+            , estimatedCostToReachSolution = admissibleHeuristicCost board
             , pathToRootCost = p.pathToRootCost + 1
             , parent = Parent p
             }
@@ -445,7 +445,7 @@ rootNodeFromBoard : Board -> Node
 rootNodeFromBoard board =
     { board = board
     , key = boardToKey board
-    , estimatedCostToReachSolution = estimateCostToReachSolution board
+    , estimatedCostToReachSolution = admissibleHeuristicCost board
     , pathToRootCost = 0
     , parent = None
     }
