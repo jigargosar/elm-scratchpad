@@ -61,8 +61,8 @@ gpToWorld =
 
 type alias Model =
     { board : Board
-    , search : Search State Node
-    , search2 : Search State Node
+    , search : Search
+    , search2 : Search
     , now : Int
     }
 
@@ -84,7 +84,7 @@ init () =
     )
 
 
-searchToSolutionAnimBoards : Search state Node -> List Board
+searchToSolutionAnimBoards : Search -> List Board
 searchToSolutionAnimBoards search =
     case search of
         Found _ n ->
@@ -150,7 +150,7 @@ viewAnimBoards boards time =
         |> Maybe.withDefault (text "")
 
 
-viewSearch : Search State Node -> Html Msg
+viewSearch : Search -> Html Msg
 viewSearch search =
     case search of
         Found s n ->
@@ -405,7 +405,7 @@ type alias State =
     }
 
 
-startSolvingWithFrontier : Frontier -> Search State Node
+startSolvingWithFrontier : Frontier -> Search
 startSolvingWithFrontier frontier =
     { explored = Dict.empty
     , frontier = frontier
@@ -425,13 +425,13 @@ rootNodeFromBoard board =
     }
 
 
-type Search state answer
-    = Searching state
-    | Exhausted state
-    | Found state answer
+type Search
+    = Searching State
+    | Exhausted State
+    | Found State Node
 
 
-stepSearch : Search State Node -> Search State Node
+stepSearch : Search -> Search
 stepSearch search =
     case search of
         Searching state ->
@@ -441,7 +441,7 @@ stepSearch search =
             search
 
 
-stepSearchHelp : State -> Search State Node
+stepSearchHelp : State -> Search
 stepSearchHelp state =
     case pop state.frontier of
         Nothing ->
@@ -467,7 +467,7 @@ stepSearchHelp state =
                     }
 
 
-stepSearchN : Int -> Search State Node -> Search State Node
+stepSearchN : Int -> Search -> Search
 stepSearchN n =
     applyN n stepSearch
 
