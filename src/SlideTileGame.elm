@@ -330,6 +330,13 @@ estimateCostToReachSolution board =
     let
         tileManhattanCostToSolution ( currentGP, tile ) =
             manhattenDistance currentGP (tileSolutionGP tile)
+
+        --tileSimpleCostToSolution ( currentGP, tile ) =
+        --    if currentGP == tileSolutionGP tile then
+        --        0
+        --
+        --    else
+        --        1
     in
     board.g
         |> Grid.toList
