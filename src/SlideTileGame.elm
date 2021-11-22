@@ -327,15 +327,6 @@ isSolutionNode n =
     n.key == solutionBoardAsString
 
 
-heuristicCost : Board -> Int
-heuristicCost =
-    if True then
-        admissibleHeuristicCost
-
-    else
-        inadmissibleHeuristicCost
-
-
 admissibleHeuristicCost : Board -> Int
 admissibleHeuristicCost board =
     let
@@ -351,19 +342,7 @@ admissibleHeuristicCost board =
     in
     board.g
         |> Grid.toList
-        --|> sumBy tileManhattanCostToSolution
         |> sumBy admissibleCost
-
-
-inadmissibleHeuristicCost : Board -> Int
-inadmissibleHeuristicCost board =
-    let
-        tileManhattanCostToSolution ( currentGP, tile ) =
-            manhattenDistance currentGP (tileSolutionGP tile)
-    in
-    board.g
-        |> Grid.toList
-        |> sumBy tileManhattanCostToSolution
 
 
 createChildrenNodes : Node -> List Node
@@ -373,7 +352,7 @@ createChildrenNodes p =
         childFromBoard board =
             { board = board
             , key = boardToKey board
-            , estimatedCostToReachSolution = heuristicCost board
+            , estimatedCostToReachSolution = admissibleHeuristicCost board
             , pathToRootCost = p.pathToRootCost + 1
             , parent = Parent p
             }
@@ -459,7 +438,7 @@ rootNodeFromBoard : Board -> Node
 rootNodeFromBoard board =
     { board = board
     , key = boardToKey board
-    , estimatedCostToReachSolution = heuristicCost board
+    , estimatedCostToReachSolution = admissibleHeuristicCost board
     , pathToRootCost = 0
     , parent = None
     }
