@@ -364,9 +364,31 @@ createChildrenNodes p =
             (slideParentBoardInDir >> Maybe.map childFromBoard)
 
 
+type Frontier
+    = PQFrontier FrontierPQ
+    | LSFrontier FrontierLS
+
+
+frontierInsert : Frontier -> List Node -> Frontier
+frontierInsert frontier =
+    case frontier of
+        PQFrontier pq ->
+            List.foldl PriorityQueue.insert pq >> PQFrontier
+
+        LSFrontier ls ->
+            (++) ls >> LSFrontier
+
+
+initFrontierPQ : Node -> Frontier
+initFrontierPQ node =
+    PriorityQueue.empty leastCostOf
+        |> PriorityQueue.insert node
+        |> PQFrontier
+
+
 type alias State =
     { explored : Dict String Node
-    , frontier : FrontierPQ
+    , frontier : Frontier
     , steps : Int
     }
 
@@ -383,7 +405,7 @@ initState b =
             }
     in
     { explored = Dict.empty
-    , frontier = PriorityQueue.empty leastCostOf |> PriorityQueue.insert rootNode
+    , frontier = initFrontierPQ rootNode
     , steps = 0
     }
 
@@ -460,14 +482,20 @@ type alias FrontierLS =
     List Node
 
 
-pop : FrontierPQ -> Maybe ( Node, FrontierPQ )
+pop : Frontier -> Maybe ( Node, Frontier )
 pop frontier =
-    PriorityQueue.head frontier
-        |> Maybe.map (pairTo (PriorityQueue.tail frontier))
+    case frontier of
+        PQFrontier frontierPQ ->
+            PriorityQueue.head frontierPQ
+                |> Maybe.map (pairTo (PriorityQueue.tail frontierPQ |> PQFrontier))
+
+        LSFrontier frontierLS ->
+            popFrontierLS frontierLS
+                |> Maybe.map (mapSecond LSFrontier)
 
 
-pop2 : FrontierLS -> Maybe ( Node, FrontierLS )
-pop2 frontier =
+popFrontierLS : FrontierLS -> Maybe ( Node, FrontierLS )
+popFrontierLS frontierLS =
     let
         reduce n ( min, acc ) =
             if leastCostOf n <= leastCostOf min then
@@ -479,7 +507,7 @@ pop2 frontier =
         pop2Help ( h, t ) =
             List.foldl reduce ( h, [] ) t
     in
-    uncons frontier
+    uncons frontierLS
         |> Maybe.map pop2Help
 
 
@@ -507,7 +535,7 @@ solveBoardHelp state =
                     , frontier =
                         createChildrenNodes node
                             |> reject (isExplored state)
-                            |> List.foldl PriorityQueue.insert pendingFrontier
+                            |> frontierInsert pendingFrontier
                     , steps = state.steps + 1
                     }
 
@@ -515,7 +543,7 @@ solveBoardHelp state =
 solveBoardHelp2 : State2 -> Search State2 Node
 solveBoardHelp2 state =
     --case pop state.frontier of
-    case pop2 state.frontier of
+    case popFrontierLS state.frontier of
         Nothing ->
             Exhausted state
 
