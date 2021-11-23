@@ -4,6 +4,7 @@ import Browser
 import Browser.Events
 import Dict exposing (Dict)
 import Grid exposing (Grid)
+import Heap exposing (Heap)
 import Html exposing (Attribute, Html, div, text)
 import Html.Lazy
 import PriorityQueue exposing (PriorityQueue)
@@ -73,6 +74,7 @@ init () =
     ( { board = board
       , search =
             [ initFrontierPQ board |> startSolvingWithFrontier
+            , initFrontierHP board |> startSolvingWithFrontier
 
             --, initFrontierLS board |> startSolvingWithFrontier
             ]
@@ -368,6 +370,7 @@ createChildrenNodes p =
 type Frontier
     = PQFrontier FrontierPQ
     | LSFrontier FrontierLS
+    | HPFrontier FrontierHP
 
 
 
@@ -391,6 +394,9 @@ frontierSize frontier =
         LSFrontier frontierLS ->
             List.length frontierLS
 
+        HPFrontier frontierHP ->
+            Heap.size frontierHP
+
 
 frontierInsert : Frontier -> List Node -> Frontier
 frontierInsert frontier =
@@ -401,12 +407,22 @@ frontierInsert frontier =
         LSFrontier ls ->
             (\new -> ls ++ new) >> LSFrontier
 
+        HPFrontier frontierHP ->
+            List.foldl Heap.push frontierHP >> HPFrontier
+
 
 initFrontierPQ : Board -> Frontier
 initFrontierPQ board =
     PriorityQueue.empty leastCostOf
         |> PriorityQueue.insert (rootNodeFromBoard board)
         |> PQFrontier
+
+
+initFrontierHP : Board -> Frontier
+initFrontierHP board =
+    Heap.singleton (Heap.smallest |> Heap.by leastCostOf)
+        (rootNodeFromBoard board)
+        |> HPFrontier
 
 
 
@@ -526,6 +542,10 @@ type alias FrontierPQ =
     PriorityQueue Node
 
 
+type alias FrontierHP =
+    Heap Node
+
+
 type alias FrontierLS =
     List Node
 
@@ -540,6 +560,9 @@ pop frontier =
         LSFrontier frontierLS ->
             popFrontierLS frontierLS
                 |> Maybe.map (mapSecond LSFrontier)
+
+        HPFrontier frontierHP ->
+            Heap.pop frontierHP |> Maybe.map (mapSecond HPFrontier)
 
 
 popFrontierLS : FrontierLS -> Maybe ( Node, FrontierLS )
