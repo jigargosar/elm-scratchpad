@@ -48,6 +48,10 @@ gh =
     4
 
 
+greedy =
+    gw * gh >= 9
+
+
 cz =
     160
 
@@ -352,9 +356,13 @@ nodeAncestorBoards n acc =
             nodeAncestorBoards p (n.board :: acc)
 
 
-leastCostOf : Node -> Int
-leastCostOf n =
-    n.pathToRootCost + n.heuristicCost
+priorityOf : Node -> Int
+priorityOf n =
+    if greedy then
+        n.heuristicCost
+
+    else
+        n.pathToRootCost + n.heuristicCost
 
 
 isSolutionNode : Node -> Bool
@@ -443,14 +451,14 @@ frontierInsert frontier =
 
 initFrontierPQ : Board -> Frontier
 initFrontierPQ board =
-    PriorityQueue.empty leastCostOf
+    PriorityQueue.empty priorityOf
         |> PriorityQueue.insert (rootNodeFromBoard board)
         |> PQFrontier
 
 
 initFrontierHP : Board -> Frontier
 initFrontierHP board =
-    Heap.singleton (Heap.smallest |> Heap.by leastCostOf)
+    Heap.singleton (Heap.smallest |> Heap.by priorityOf)
         (rootNodeFromBoard board)
         |> HPFrontier
 
@@ -523,7 +531,7 @@ stepSearchHelp state =
                                         Just node
 
                                     Just ex ->
-                                        Just (minBy leastCostOf ex node)
+                                        Just (minBy priorityOf ex node)
                             )
                             state.explored
 
