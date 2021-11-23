@@ -1,6 +1,5 @@
 module SlideTileGame exposing (..)
 
-import Array
 import Browser
 import Browser.Events
 import Dict exposing (Dict)
@@ -425,7 +424,7 @@ frontierInsert frontier =
             List.foldl PriorityQueue.insert pq >> PQFrontier
 
         LSFrontier ls ->
-            (\new -> List.sortBy leastCostOf (ls ++ new)) >> LSFrontier
+            (\new -> ls ++ new) >> LSFrontier
 
         HPFrontier frontierHP ->
             List.foldl Heap.push frontierHP >> HPFrontier
@@ -582,16 +581,11 @@ pop frontier =
                 |> Maybe.map (pairTo (PriorityQueue.tail frontierPQ |> PQFrontier))
 
         LSFrontier frontierLS ->
-            uncons frontierLS
-                --popFrontierLS frontierLS
+            popFrontierLS frontierLS
                 |> Maybe.map (mapSecond LSFrontier)
 
         HPFrontier frontierHP ->
             Heap.pop frontierHP |> Maybe.map (mapSecond HPFrontier)
-
-
-
---noinspection ElmUnusedSymbol
 
 
 popFrontierLS : FrontierLS -> Maybe ( Node, FrontierLS )
