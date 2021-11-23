@@ -45,7 +45,7 @@ gw =
 
 
 gh =
-    3
+    4
 
 
 cz =
@@ -92,7 +92,7 @@ init () =
             [ initFrontierHP board |> startSolvingWithFrontier
 
             --, initFrontierPQ board |> startSolvingWithFrontier
-            --, initFrontierLS board |> startSolvingWithFrontier
+            , initFrontierLS board |> startSolvingWithFrontier
             ]
       , aiSearch = aiSearch
       , now = 0
