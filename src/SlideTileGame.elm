@@ -1,5 +1,6 @@
 module SlideTileGame exposing (..)
 
+import Array
 import Browser
 import Browser.Events
 import Dict exposing (Dict)
