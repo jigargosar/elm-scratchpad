@@ -516,30 +516,32 @@ stepSearchUnbounded state =
 
                     rejectExploredChildren =
                         reject (\c -> Dict.member c.key explored)
-
-                    rejectExpensiveExploredChildren =
-                        reject
-                            (\c ->
-                                Dict.get c.key explored
-                                    |> Maybe.map (\ex -> c.pathToRootCost >= ex.pathToRootCost)
-                                    |> Maybe.withDefault False
-                            )
-
-                    filterChildren =
-                        if False then
-                            rejectExpensiveExploredChildren
-
-                        else
-                            rejectExploredChildren
                 in
                 Searching
                     { explored = explored
                     , frontier =
                         createChildrenNodes node
-                            |> filterChildren
+                            |> rejectExploredChildren
                             |> frontierInsert pendingFrontier
                     , steps = state.steps + 1
                     }
+
+
+
+--rejectExpensiveExploredChildren =
+--    reject
+--        (\c ->
+--            Dict.get c.key explored
+--                |> Maybe.map (\ex -> c.pathToRootCost >= ex.pathToRootCost)
+--                |> Maybe.withDefault False
+--        )
+--
+--filterChildren =
+--    if False then
+--        rejectExpensiveExploredChildren
+--
+--    else
+--        rejectExploredChildren
 
 
 stepSearchN : Int -> Search -> Search
