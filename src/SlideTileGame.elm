@@ -93,8 +93,8 @@ init () =
     in
     ( { board = board
       , search =
-            [ initFrontierHP board |> startSolvingWithFrontier
-            , initFrontierPQ board |> startSolvingWithFrontier
+            [ initState initFrontierHP board
+            , initState initFrontierPQ board
 
             --, initFrontierLS board |> startSolvingWithFrontier
             ]
@@ -427,18 +427,17 @@ frontierInsert frontier =
             List.foldl Heap.push frontierHP >> HPFrontier
 
 
-initFrontierPQ : Board -> Frontier
-initFrontierPQ board =
+initFrontierPQ : Node -> Frontier
+initFrontierPQ n =
     PriorityQueue.empty priorityOf
-        |> PriorityQueue.insert (rootNodeFromBoard board)
+        |> PriorityQueue.insert n
         |> PQFrontier
 
 
-initFrontierHP : Board -> Frontier
-initFrontierHP board =
+initFrontierHP : Node -> Frontier
+initFrontierHP =
     Heap.singleton (Heap.smallest |> Heap.by priorityOf)
-        (rootNodeFromBoard board)
-        |> HPFrontier
+        >> HPFrontier
 
 
 type alias State =
@@ -448,23 +447,22 @@ type alias State =
     }
 
 
-startSolvingWithFrontier : Frontier -> Search
-startSolvingWithFrontier frontier =
-    { explored = Dict.empty
-    , frontier = frontier
-    , steps = 0
-    }
-        |> Searching
-
-
-rootNodeFromBoard : Board -> Node
-rootNodeFromBoard board =
-    { board = board
-    , key = boardToKey board
-    , heuristicCost = admissibleHeuristicCost board
-    , pathToRootCost = 0
-    , parent = None
-    }
+initState : (Node -> Frontier) -> Board -> Search
+initState frontierInitFn board =
+    let
+        rootNode =
+            { board = board
+            , key = boardToKey board
+            , heuristicCost = admissibleHeuristicCost board
+            , pathToRootCost = 0
+            , parent = None
+            }
+    in
+    Searching
+        { explored = insertBy .key rootNode Dict.empty
+        , frontier = frontierInitFn rootNode
+        , steps = 0
+        }
 
 
 type Search
