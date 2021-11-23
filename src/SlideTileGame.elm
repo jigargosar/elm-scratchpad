@@ -46,7 +46,7 @@ gw =
 
 
 gh =
-    4
+    3
 
 
 cz =
@@ -425,7 +425,7 @@ frontierInsert frontier =
             List.foldl PriorityQueue.insert pq >> PQFrontier
 
         LSFrontier ls ->
-            (\new -> ls ++ new) >> LSFrontier
+            (\new -> List.sortBy leastCostOf (ls ++ new)) >> LSFrontier
 
         HPFrontier frontierHP ->
             List.foldl Heap.push frontierHP >> HPFrontier
@@ -582,11 +582,16 @@ pop frontier =
                 |> Maybe.map (pairTo (PriorityQueue.tail frontierPQ |> PQFrontier))
 
         LSFrontier frontierLS ->
-            popFrontierLS frontierLS
+            uncons frontierLS
+                --popFrontierLS frontierLS
                 |> Maybe.map (mapSecond LSFrontier)
 
         HPFrontier frontierHP ->
             Heap.pop frontierHP |> Maybe.map (mapSecond HPFrontier)
+
+
+
+--noinspection ElmUnusedSymbol
 
 
 popFrontierLS : FrontierLS -> Maybe ( Node, FrontierLS )
