@@ -273,7 +273,8 @@ initialBoard =
     Random.step randomBoard
         --(Random.initialSeed 10011)
         --(Random.initialSeed 5)
-        (Random.initialSeed 6)
+        --(Random.initialSeed 6)
+        (Random.initialSeed 11)
         --(Random.initialSeed 0)
         |> first
 
