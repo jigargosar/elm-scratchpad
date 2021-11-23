@@ -180,7 +180,7 @@ viewSearch search =
         Found s n ->
             div []
                 [ div []
-                    [ if greedy then
+                    [ if greedy && not (frontierEmpty s.frontier) then
                         text "Maybe Optimal"
 
                       else
@@ -407,26 +407,14 @@ type Frontier
     | HPFrontier FrontierHP
 
 
-
---noinspection ElmUnusedSymbol
-
-
-frontierSize : Frontier -> Int
-frontierSize frontier =
+frontierEmpty : Frontier -> Bool
+frontierEmpty frontier =
     case frontier of
         PQFrontier frontierPQ ->
-            let
-                pqLenHelp pq ct =
-                    if PriorityQueue.isEmpty pq then
-                        ct
-
-                    else
-                        pqLenHelp (PriorityQueue.tail pq) (ct + 1)
-            in
-            pqLenHelp frontierPQ 0
+            PriorityQueue.isEmpty frontierPQ
 
         HPFrontier frontierHP ->
-            Heap.size frontierHP
+            Heap.isEmpty frontierHP
 
 
 frontierInsert : Frontier -> List Node -> Frontier
