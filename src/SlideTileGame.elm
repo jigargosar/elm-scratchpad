@@ -45,11 +45,11 @@ gw =
 
 
 gh =
-    4
+    3
 
 
 greedy =
-    gw * gh >= 9
+    gw * gh > 9
 
 
 cz =
