@@ -185,6 +185,18 @@ viewSearch search =
                 , viewBoard 0.1 n.board
                 ]
 
+        Optimal s n ->
+            div []
+                [ div [] [ text ("moves = " ++ String.fromInt n.pathToRootCost) ]
+                , div [] [ text ("steps = " ++ String.fromInt s.steps) ]
+
+                --, div []
+                --    [ div [] [ text ("explored = " ++ String.fromInt (Dict.size s.explored)) ]
+                --    , div [] [ text ("frontier = " ++ String.fromInt (frontierSize s.frontier)) ]
+                --    ]
+                , viewBoard 0.1 n.board
+                ]
+
         Exhausted _ ->
             text "Fail: Search Space Exhausted"
 
@@ -471,6 +483,7 @@ type Search
     = Searching State
     | Exhausted State
     | Found State Node
+    | Optimal State Node
 
 
 stepSearch : Search -> Search
