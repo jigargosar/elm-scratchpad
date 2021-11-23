@@ -133,6 +133,7 @@ update msg model =
         OnTick ->
             ( { model
                 | search = List.map (stepSearchN iterationsPerFrame) model.search
+                , aiSearch = Search.nextN 4000 model.aiSearch
               }
             , Cmd.none
             )
