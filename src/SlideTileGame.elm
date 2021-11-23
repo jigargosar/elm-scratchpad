@@ -503,10 +503,7 @@ stepSearchUnbounded state =
                 let
                     filteredChildren =
                         createChildrenNodes node
-                            |> rejectExploredChildren
-
-                    rejectExploredChildren =
-                        reject (\c -> Set.member c.key state.visited)
+                            |> reject (\c -> Set.member c.key state.visited)
                 in
                 Searching
                     { visited = List.foldl (.key >> Set.insert) state.visited filteredChildren
