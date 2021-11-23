@@ -175,7 +175,8 @@ viewSearch search =
     case search of
         Found s n ->
             div []
-                [ div [] [ text ("moves = " ++ String.fromInt n.pathToRootCost) ]
+                [ div [] [ text "Maybe Optimal" ]
+                , div [] [ text ("moves = " ++ String.fromInt n.pathToRootCost) ]
                 , div [] [ text ("steps = " ++ String.fromInt s.steps) ]
 
                 --, div []
@@ -187,7 +188,8 @@ viewSearch search =
 
         Optimal s n ->
             div []
-                [ div [] [ text ("moves = " ++ String.fromInt n.pathToRootCost) ]
+                [ div [] [ text "Guaranteed Optimal" ]
+                , div [] [ text ("moves = " ++ String.fromInt n.pathToRootCost) ]
                 , div [] [ text ("steps = " ++ String.fromInt s.steps) ]
 
                 --, div []
