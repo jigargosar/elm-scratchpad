@@ -479,9 +479,9 @@ stepSearch search =
             stepSearchUnbounded state
 
         Found state g ->
-            --stepSearchBounded state g
-            search
+            stepSearchBounded state g
 
+        --search
         _ ->
             search
 
@@ -513,7 +513,13 @@ stepSearchBounded state g =
                 let
                     filteredChildren =
                         createChildrenNodes node
-                            |> reject (\c -> not (isSolutionNode c) && Set.member c.key state.visited)
+                            |> reject
+                                (\c ->
+                                    not (isSolutionNode c)
+                                        && (Set.member c.key state.visited
+                                                || (c.pathToRootCost + c.heuristicCost >= g.pathToRootCost)
+                                           )
+                                )
                 in
                 Found
                     { visited = List.foldl (.key >> Set.insert) state.visited filteredChildren
