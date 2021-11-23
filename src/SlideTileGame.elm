@@ -10,6 +10,7 @@ import Html.Lazy
 import PriorityQueue exposing (PriorityQueue)
 import Random exposing (Generator)
 import Search
+import Set exposing (Set)
 import Svg exposing (Svg)
 import Svg.Events as SE
 import Task
@@ -441,7 +442,7 @@ initFrontierHP =
 
 
 type alias State =
-    { explored : Dict String Node
+    { visited : Set String
     , frontier : Frontier
     , steps : Int
     }
@@ -459,7 +460,7 @@ initState frontierInitFn board =
             }
     in
     Searching
-        { explored = insertBy .key rootNode Dict.empty
+        { visited = Set.singleton rootNode.key
         , frontier = frontierInitFn rootNode
         , steps = 0
         }
@@ -492,7 +493,7 @@ stepSearchUnbounded state =
         Just ( node, pendingFrontier ) ->
             if isSolutionNode node then
                 Found
-                    { explored = insertBy .key node state.explored
+                    { visited = state.visited
                     , frontier = pendingFrontier
                     , steps = state.steps + 1
                     }
@@ -500,27 +501,16 @@ stepSearchUnbounded state =
 
             else
                 let
-                    explored =
-                        Dict.update node.key
-                            (\mbExplored ->
-                                case mbExplored of
-                                    Nothing ->
-                                        Just node
-
-                                    Just ex ->
-                                        Just (minBy priorityOf ex node)
-                            )
-                            state.explored
-
-                    rejectExploredChildren =
-                        reject (\c -> Dict.member c.key explored)
-                in
-                Searching
-                    { explored = explored
-                    , frontier =
+                    filteredChildren =
                         createChildrenNodes node
                             |> rejectExploredChildren
-                            |> frontierInsert pendingFrontier
+
+                    rejectExploredChildren =
+                        reject (\c -> Set.member c.key state.visited)
+                in
+                Searching
+                    { visited = List.foldl (.key >> Set.insert) state.visited filteredChildren
+                    , frontier = frontierInsert pendingFrontier filteredChildren
                     , steps = state.steps + 1
                     }
 
