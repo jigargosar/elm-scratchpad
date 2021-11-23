@@ -479,7 +479,8 @@ stepSearch search =
             stepSearchUnbounded state
 
         Found state g ->
-            stepSearchBounded state g
+            --stepSearchBounded state g
+            search
 
         _ ->
             search
@@ -492,15 +493,15 @@ stepSearchBounded state g =
             Found state g
 
         Just ( node, pendingFrontier ) ->
-            if isSolutionNode node then
+            if isSolutionNode node && node.pathToRootCost < g.pathToRootCost then
                 Found
                     { visited = state.visited
                     , frontier = pendingFrontier
                     , steps = state.steps + 1
                     }
-                    (minBy .pathToRootCost node g)
+                    node
 
-            else if node.pathToRootCost >= g.pathToRootCost then
+            else if (node.pathToRootCost + node.heuristicCost) >= g.pathToRootCost then
                 Found
                     { visited = state.visited
                     , frontier = pendingFrontier
