@@ -90,9 +90,9 @@ init () =
     ( { board = board
       , search =
             [ initFrontierHP board |> startSolvingWithFrontier
+            , initFrontierPQ board |> startSolvingWithFrontier
 
-            --, initFrontierPQ board |> startSolvingWithFrontier
-            , initFrontierLS board |> startSolvingWithFrontier
+            --, initFrontierLS board |> startSolvingWithFrontier
             ]
       , aiSearch = aiSearch
       , now = 0
@@ -388,7 +388,6 @@ createChildrenNodes p =
 
 type Frontier
     = PQFrontier FrontierPQ
-    | LSFrontier FrontierLS
     | HPFrontier FrontierHP
 
 
@@ -410,9 +409,6 @@ frontierSize frontier =
             in
             pqLenHelp frontierPQ 0
 
-        LSFrontier frontierLS ->
-            List.length frontierLS
-
         HPFrontier frontierHP ->
             Heap.size frontierHP
 
@@ -422,9 +418,6 @@ frontierInsert frontier =
     case frontier of
         PQFrontier pq ->
             List.foldl PriorityQueue.insert pq >> PQFrontier
-
-        LSFrontier ls ->
-            (\new -> ls ++ new) >> LSFrontier
 
         HPFrontier frontierHP ->
             List.foldl Heap.push frontierHP >> HPFrontier
@@ -446,15 +439,6 @@ initFrontierHP board =
     Heap.singleton (Heap.smallest |> Heap.by leastCostOf)
         (rootNodeFromBoard board)
         |> HPFrontier
-
-
-
---noinspection ElmUnusedSymbol
-
-
-initFrontierLS : Board -> Frontier
-initFrontierLS board =
-    LSFrontier [ rootNodeFromBoard board ]
 
 
 type alias State =
@@ -580,31 +564,8 @@ pop frontier =
             PriorityQueue.head frontierPQ
                 |> Maybe.map (pairTo (PriorityQueue.tail frontierPQ |> PQFrontier))
 
-        LSFrontier frontierLS ->
-            popFrontierLS frontierLS
-                |> Maybe.map (mapSecond LSFrontier)
-
         HPFrontier frontierHP ->
             Heap.pop frontierHP |> Maybe.map (mapSecond HPFrontier)
-
-
-popFrontierLS : FrontierLS -> Maybe ( Node, FrontierLS )
-popFrontierLS frontierLS =
-    let
-        reduce n ( min, acc ) =
-            if leastCostOf n < leastCostOf min then
-                ( n, min :: acc )
-
-            else
-                ( min, n :: acc )
-
-        pop2Help ( h, t ) =
-            List.foldl reduce ( h, [] ) t
-
-        --|> mapSecond List.reverse
-    in
-    uncons frontierLS
-        |> Maybe.map pop2Help
 
 
 viewTile : ( GPos, Tile ) -> Html Msg
