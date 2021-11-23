@@ -179,20 +179,13 @@ viewSearch search =
     case search of
         Found s n ->
             div []
-                [ div [] [ text "Maybe Optimal" ]
-                , div [] [ text ("moves = " ++ String.fromInt n.pathToRootCost) ]
-                , div [] [ text ("steps = " ++ String.fromInt s.steps) ]
+                [ div []
+                    [ if greedy then
+                        text "Maybe Optimal"
 
-                --, div []
-                --    [ div [] [ text ("explored = " ++ String.fromInt (Dict.size s.explored)) ]
-                --    , div [] [ text ("frontier = " ++ String.fromInt (frontierSize s.frontier)) ]
-                --    ]
-                , viewBoard 0.1 n.board
-                ]
-
-        Optimal s n ->
-            div []
-                [ div [] [ text "Guaranteed Optimal" ]
+                      else
+                        text "Optimal"
+                    ]
                 , div [] [ text ("moves = " ++ String.fromInt n.pathToRootCost) ]
                 , div [] [ text ("steps = " ++ String.fromInt s.steps) ]
 
@@ -493,7 +486,6 @@ type Search
     = Searching State
     | Exhausted State
     | Found State Node
-    | Optimal State Node
 
 
 stepSearch : Search -> Search
