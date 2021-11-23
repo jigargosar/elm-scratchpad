@@ -9,6 +9,7 @@ import Html exposing (Attribute, Html, div, text)
 import Html.Lazy
 import PriorityQueue exposing (PriorityQueue)
 import Random exposing (Generator)
+import Search
 import Svg exposing (Svg)
 import Svg.Events as SE
 import Task
@@ -44,7 +45,7 @@ gw =
 
 
 gh =
-    4
+    3
 
 
 cz =
@@ -59,6 +60,7 @@ gpToWorld =
 type alias Model =
     { board : Board
     , search : List Search
+    , aiSearch : Search.SearchResult Board
     , now : Int
     }
 
@@ -70,6 +72,20 @@ init () =
             solutionBoard
                 |> always solutionBoard
                 |> always initialBoard
+
+        aiSearch =
+            Search.aStar
+                { step =
+                    \b ->
+                        allDir4
+                            |> List.filterMap (\d -> slideTileInDirection d b)
+                            |> List.map (\c -> ( c, c == solutionBoard ))
+                , cost = always 1
+                , heuristic = admissibleHeuristicCost >> toFloat
+                }
+                [ ( board, False ) ]
+                |> Search.nextN 4000
+                |> Debug.log "ans"
     in
     ( { board = board
       , search =
@@ -78,6 +94,7 @@ init () =
             --, initFrontierPQ board |> startSolvingWithFrontier
             --, initFrontierLS board |> startSolvingWithFrontier
             ]
+      , aiSearch = aiSearch
       , now = 0
       }
     , Time.now |> Task.perform OnNow
