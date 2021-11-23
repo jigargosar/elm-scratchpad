@@ -477,7 +477,7 @@ stepSearch : Search -> Search
 stepSearch search =
     case search of
         Searching state ->
-            stepSearchHelp state
+            stepSearchUnbounded state
 
         Found state g ->
             stepSearchBounded state g
@@ -495,8 +495,8 @@ stepSearchBounded state g =
             Found state g
 
 
-stepSearchHelp : State -> Search
-stepSearchHelp state =
+stepSearchUnbounded : State -> Search
+stepSearchUnbounded state =
     case pop state.frontier of
         Nothing ->
             Exhausted state
