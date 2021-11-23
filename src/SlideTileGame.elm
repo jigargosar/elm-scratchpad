@@ -478,10 +478,48 @@ stepSearch search =
         Searching state ->
             stepSearchUnbounded state
 
-        --Found state g ->
-        --    stepSearchBounded state g
+        Found state g ->
+            stepSearchBounded state g
+
         _ ->
             search
+
+
+stepSearchBounded : State -> Node -> Search
+stepSearchBounded state g =
+    case pop state.frontier of
+        Nothing ->
+            Found state g
+
+        Just ( node, pendingFrontier ) ->
+            if isSolutionNode node then
+                Found
+                    { visited = state.visited
+                    , frontier = pendingFrontier
+                    , steps = state.steps + 1
+                    }
+                    (minBy .pathToRootCost node g)
+
+            else if node.pathToRootCost >= g.pathToRootCost then
+                Found
+                    { visited = state.visited
+                    , frontier = pendingFrontier
+                    , steps = state.steps + 1
+                    }
+                    g
+
+            else
+                let
+                    filteredChildren =
+                        createChildrenNodes node
+                            |> reject (\c -> not (isSolutionNode c) && Set.member c.key state.visited)
+                in
+                Found
+                    { visited = List.foldl (.key >> Set.insert) state.visited filteredChildren
+                    , frontier = frontierInsert pendingFrontier filteredChildren
+                    , steps = state.steps + 1
+                    }
+                    g
 
 
 stepSearchUnbounded : State -> Search
