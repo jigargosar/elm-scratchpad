@@ -479,9 +479,9 @@ stepSearch search =
             stepSearchUnbounded state
 
         Found state g ->
-            stepSearchBounded state g
+            --stepSearchBounded state g
+            search
 
-        --search
         _ ->
             search
 
