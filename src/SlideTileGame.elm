@@ -73,9 +73,9 @@ init () =
     in
     ( { board = board
       , search =
-            [ initFrontierPQ board |> startSolvingWithFrontier
-            , initFrontierHP board |> startSolvingWithFrontier
+            [ initFrontierHP board |> startSolvingWithFrontier
 
+            --, initFrontierPQ board |> startSolvingWithFrontier
             --, initFrontierLS board |> startSolvingWithFrontier
             ]
       , now = 0
@@ -409,6 +409,10 @@ frontierInsert frontier =
 
         HPFrontier frontierHP ->
             List.foldl Heap.push frontierHP >> HPFrontier
+
+
+
+--noinspection ElmUnusedSymbol
 
 
 initFrontierPQ : Board -> Frontier
