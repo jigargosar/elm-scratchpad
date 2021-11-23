@@ -427,10 +427,6 @@ frontierInsert frontier =
             List.foldl Heap.push frontierHP >> HPFrontier
 
 
-
---noinspection ElmUnusedSymbol
-
-
 initFrontierPQ : Board -> Frontier
 initFrontierPQ board =
     PriorityQueue.empty priorityOf
