@@ -479,20 +479,10 @@ stepSearch search =
         Searching state ->
             stepSearchUnbounded state
 
-        Found state g ->
-            stepSearchBounded state g
-
+        --Found state g ->
+        --    stepSearchBounded state g
         _ ->
             search
-
-
-stepSearchBounded state g =
-    case pop state.frontier of
-        Nothing ->
-            Found state g
-
-        Just n ->
-            Found state g
 
 
 stepSearchUnbounded : State -> Search
