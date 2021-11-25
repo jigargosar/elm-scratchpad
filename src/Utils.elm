@@ -286,6 +286,10 @@ overflowVisible =
     style "overflow" "visible"
 
 
+overflowHidden =
+    style "overflow" "hidden"
+
+
 fontSize =
     style "font-size"
 
@@ -324,6 +328,14 @@ pAll =
 
 dFlex =
     style "display" "flex"
+
+
+dBlock =
+    style "display" "block"
+
+
+dGrid =
+    style "display" "grid"
 
 
 fDCol =
