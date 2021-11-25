@@ -15,7 +15,7 @@ main =
         , noStroke
         ]
         [ group
-            [ style "transform" "translate(50%,30%)"
+            [ style "transform" "translate(50%,50%)"
             , strokeW 1
             , stroke black
             ]
@@ -51,8 +51,12 @@ createChildren node =
         offset =
             radius * 2
     in
-    [ vec -offset 20, vec offset 20 ]
-        |> List.map (vAdd node.center >> nodeFromRC radius)
+    adjacentUnitVectors
+        |> List.map
+            (vScale offset
+                >> vAdd node.center
+                >> nodeFromRC radius
+            )
 
 
 drawNode : Node -> Svg msg
