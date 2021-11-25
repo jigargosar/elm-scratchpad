@@ -43,12 +43,15 @@ genCirc2 pending acc =
 
             else
                 let
-                    rn =
-                        r * 0.5
+                    newR =
+                        r / 2
+
+                    xOff =
+                        newR * 2
                 in
                 genCirc2
-                    (( x + r, y, rn )
-                        :: ( x - r, y, rn )
+                    (( x + xOff, y, newR )
+                        :: ( x - xOff, y, newR )
                         :: newPending
                     )
                     (circleParams :: acc)
