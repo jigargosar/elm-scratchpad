@@ -18,7 +18,7 @@ main =
         [ group
             [ style "transform" "translate(50%,50%)"
             , strokeW 1
-            , stroke "black"
+            , stroke black
             , noFill
             ]
             [ genCirc 0 0 1000 []
