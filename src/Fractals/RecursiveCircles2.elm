@@ -40,14 +40,15 @@ genCirc2 pending acc =
             acc
 
         (( x, y, r ) as circleParams) :: newPending ->
-            if r > 2 then
-                let
-                    rn =
-                        r / 2
-                in
-                genCirc2
-                    (( x + rn, y, rn ) :: ( x - rn, y, rn ) :: newPending)
-                    (circleParams :: acc)
+            genCirc2
+                (if r > 2 then
+                    let
+                        rn =
+                            r / 2
+                    in
+                    ( x + rn, y, rn ) :: ( x - rn, y, rn ) :: newPending
 
-            else
-                genCirc2 newPending acc
+                 else
+                    newPending
+                )
+                (circleParams :: acc)
