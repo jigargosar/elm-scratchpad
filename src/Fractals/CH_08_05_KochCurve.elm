@@ -51,13 +51,19 @@ createKochChildren { start, end } =
         vDiff =
             vFromTo start end
 
+        vDiffThird =
+            vDiff |> vScale (1 / 3)
+
         a =
             start
 
         b =
-            vAdd start vDiff
+            vAdd start vDiffThird
 
-        c =
+        d =
+            vAdd b vDiffThird
+
+        e =
             end
     in
-    [ KochLine a b, KochLine b c ]
+    [ KochLine a b, KochLine d e ]
