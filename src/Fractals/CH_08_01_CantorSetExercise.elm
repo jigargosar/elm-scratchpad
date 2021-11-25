@@ -1,4 +1,4 @@
-module Fractals.CH_08_04_CantorSetEx exposing (..)
+module Fractals.CH_08_01_CantorSetExercise exposing (..)
 
 import Svg exposing (Svg)
 import TypedSvg as TS
