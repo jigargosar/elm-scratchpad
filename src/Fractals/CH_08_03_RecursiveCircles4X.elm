@@ -69,7 +69,7 @@ genCirc oldPending acc =
             acc
 
         node :: pending ->
-            if node.radius < 4 then
+            if node.radius < 2 then
                 genCirc pending acc
 
             else
