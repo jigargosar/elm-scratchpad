@@ -28,7 +28,6 @@ main =
             , stroke black
             ]
             [ genCirc2 [ ( 0, 0, 1000 ) ] []
-                |> Debug.log "c2"
                 |> List.map (\( x, y, r ) -> circle r [ xf [ mv2 x y ] ])
                 |> group []
             ]
