@@ -27,8 +27,8 @@ main =
             , strokeW 1
             , stroke black
             ]
-            [ genCirc2 [ ( 0, 0, 1000 ) ] []
-                |> List.map (\( x, y, r ) -> circle r [ xf [ mv2 x y ] ])
+            [ genCirc2 [ ( 0, 0, 400 ) ] []
+                |> List.map (\( x, y, r ) -> circle (r / 2) [ xf [ mv2 x y ] ])
                 |> group []
             ]
         ]
