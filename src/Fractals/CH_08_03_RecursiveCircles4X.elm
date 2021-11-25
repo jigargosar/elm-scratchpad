@@ -1,15 +1,7 @@
 module Fractals.CH_08_03_RecursiveCircles4X exposing (..)
 
-import Svg
+import Svg exposing (Svg)
 import Utils exposing (..)
-
-
-width =
-    500
-
-
-height =
-    500
 
 
 main =
@@ -25,32 +17,57 @@ main =
             , strokeW 1
             , stroke black
             ]
-            [ genCirc2 [ ( 0, 0, 200 ) ] []
-                |> List.map (\( x, y, r ) -> circle r [ xf [ mv2 x y ] ])
+            [ genCirc [ initialRootNode ] []
+                |> List.map drawNode
                 |> group []
             ]
         ]
 
 
-genCirc2 pending acc =
-    case pending of
+type alias Node =
+    { center : Vec
+    , radius : Float
+    }
+
+
+nodeFromRC : Float -> Vec -> Node
+nodeFromRC r c =
+    { center = c, radius = r }
+
+
+createChildren : Node -> List Node
+createChildren node =
+    adjacentUnitVectors
+        |> List.map
+            (vScale node.radius
+                >> vAdd node.center
+                >> nodeFromRC (node.radius * 0.5)
+            )
+
+
+initialRootNode : Node
+initialRootNode =
+    nodeFromRC 200 vZero
+
+
+drawNode : Node -> Svg msg
+drawNode node =
+    circle node.radius [ xf [ mv node.center ] ]
+
+
+genCirc : List Node -> List Node -> List Node
+genCirc oldPending acc =
+    case oldPending of
         [] ->
             acc
 
-        (( x, y, r ) as circleParams) :: newPending ->
-            if r < 4 then
-                genCirc2 newPending acc
+        node :: pending ->
+            if node.radius < 4 then
+                genCirc pending acc
 
             else
-                let
-                    rn =
-                        r * 0.5
-                in
-                genCirc2
-                    (( x + r, y, rn )
-                        :: ( x - r, y, rn )
-                        :: ( x, y + r, rn )
-                        :: ( x, y - r, rn )
-                        :: newPending
+                genCirc
+                    (createChildren node
+                        |> List.foldl cons pending
                     )
-                    (circleParams :: acc)
+                    (node :: acc)
