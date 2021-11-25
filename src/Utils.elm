@@ -178,6 +178,11 @@ adjacentUnitVectors =
     ]
 
 
+vToTuple : Vec -> ( Float, Float )
+vToTuple { x, y } =
+    ( x, y )
+
+
 vScale : Float -> Vec -> Vec
 vScale s { x, y } =
     vec (s * x) (s * y)
@@ -398,6 +403,16 @@ rect w h xs =
             :: xs
         )
         []
+
+
+vPolyline : List Vec -> List (Attribute msg) -> Svg msg
+vPolyline vs =
+    polyline (List.map vToTuple vs)
+
+
+polyline : List ( Float, Float ) -> List (Attribute msg) -> Svg msg
+polyline pts aa =
+    Svg.polyline (TA.points pts :: aa) []
 
 
 wordsAlignXLeft =

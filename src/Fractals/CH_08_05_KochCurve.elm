@@ -15,74 +15,32 @@ main =
         , noStroke
         ]
         [ group
-            [ style "transform" "translate(50%,30%)"
-            , strokeW 10
+            [ --style "transform" "translate(50%,50%)"
+              strokeW 1
             , stroke black
             ]
-            [ genCantor [ initialRootNode ] []
-                |> List.map drawNode
+            [ initialKochLine
+                |> createKochChildren
+                |> List.map drawKochLine
                 |> group []
             ]
         ]
 
 
-type alias Node =
-    { center : Vec
-    , radius : Float
-    }
+initialKochLine : KochLine
+initialKochLine =
+    KochLine vZero (vec 400 0)
 
 
-initialRootNode : Node
-initialRootNode =
-    nodeFromRC 250 vZero
+type alias KochLine =
+    { start : Vec, end : Vec }
 
 
-nodeFromRC : Float -> Vec -> Node
-nodeFromRC r c =
-    { center = c, radius = r }
+drawKochLine : KochLine -> Svg msg
+drawKochLine { start, end } =
+    vPolyline [ start, end ] []
 
 
-createChildren : Node -> List Node
-createChildren node =
-    let
-        radius =
-            node.radius / 3
-
-        offset =
-            radius * 2
-    in
-    [ vec -offset 20, vec offset 20 ]
-        |> List.map (vAdd node.center >> nodeFromRC radius)
-
-
-drawNode : Node -> Svg msg
-drawNode node =
-    let
-        center =
-            node.center
-    in
-    TS.polyline
-        [ TA.points
-            [ ( center.x - node.radius, center.y )
-            , ( center.x + node.radius, center.y )
-            ]
-        ]
-        []
-
-
-genCantor : List Node -> List Node -> List Node
-genCantor oldPending acc =
-    case oldPending of
-        [] ->
-            acc
-
-        node :: pending ->
-            if node.radius < 1 then
-                genCantor pending acc
-
-            else
-                genCantor
-                    (createChildren node
-                        |> List.foldl cons pending
-                    )
-                    (node :: acc)
+createKochChildren : KochLine -> List KochLine
+createKochChildren { start, end } =
+    [ KochLine start end ]
