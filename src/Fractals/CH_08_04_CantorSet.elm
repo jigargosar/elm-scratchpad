@@ -55,7 +55,7 @@ createChildren node =
             2 * radius
 
         xOffSet =
-            node.diameter / 3
+            oldRadius * 2 / 3
     in
     [ vec -xOffSet 20, vec xOffSet 20 ]
         |> List.map (vAdd node.center >> nodeFromLC diameter)
