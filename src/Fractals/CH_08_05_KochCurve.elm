@@ -15,8 +15,8 @@ main =
         , noStroke
         ]
         [ group
-            [ --style "transform" "translate(50%,50%)"
-              strokeW 1
+            [ style "transform" "translate(50%,50%)"
+            , strokeW 1
             , stroke black
             ]
             [ initialKochLine
@@ -29,7 +29,7 @@ main =
 
 initialKochLine : KochLine
 initialKochLine =
-    KochLine vZero (vec 400 0)
+    KochLine (vec -200 0) (vec 200 0)
 
 
 type alias KochLine =
