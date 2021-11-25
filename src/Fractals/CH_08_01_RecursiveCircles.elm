@@ -1,4 +1,4 @@
-module Fractals.RecursiveCircles exposing (..)
+module Fractals.CH_08_01_RecursiveCircles exposing (..)
 
 import Svg
 import Utils exposing (..)

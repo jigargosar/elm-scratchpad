@@ -1,4 +1,4 @@
-module Fractals.RecursiveCircles4X exposing (..)
+module Fractals.CH_08_02_RecursiveCircles2X exposing (..)
 
 import Svg
 import Utils exposing (..)
@@ -49,8 +49,6 @@ genCirc2 pending acc =
                 genCirc2
                     (( x + r, y, rn )
                         :: ( x - r, y, rn )
-                        :: ( x, y + r, rn )
-                        :: ( x, y - r, rn )
                         :: newPending
                     )
                     (circleParams :: acc)
