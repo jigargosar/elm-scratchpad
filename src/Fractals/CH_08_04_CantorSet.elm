@@ -48,10 +48,10 @@ createChildren node =
         radius =
             node.radius / 3
 
-        xOffSet =
+        offset =
             radius * 2
     in
-    [ vec -xOffSet 20, vec xOffSet 20 ]
+    [ vec -offset 20, vec offset 20 ]
         |> List.map (vAdd node.center >> nodeFromRC radius)
 
 
