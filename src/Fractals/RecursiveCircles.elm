@@ -5,7 +5,7 @@ import Playground exposing (..)
 
 main =
     picture
-        [ genRadii { min = 5, step = 5 } 1000 []
+        [ genRadii { min = 5, step = 10 } 1000 []
             |> List.map (strokeCircle 2)
             |> group
         ]
