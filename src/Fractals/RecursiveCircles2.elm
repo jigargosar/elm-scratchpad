@@ -2,6 +2,7 @@ module Fractals.RecursiveCircles2 exposing (..)
 
 import Svg
 import Svg.Attributes as SA
+import TypedSvg.Attributes as TA
 import Utils exposing (..)
 
 
@@ -26,17 +27,28 @@ main =
             , strokeW 1
             , stroke black
             ]
-            [ genCirc 0 0 1000 []
+            [ genCirc2 [ ( 0, 0, 1000 ) ] []
+                |> Debug.log "c2"
                 |> List.map (\( x, y, r ) -> circle r [ xf [ mv2 x y ] ])
                 |> group []
             ]
         ]
 
 
-genCirc : Float -> Float -> Float -> List ( Float, Float, Float ) -> List ( Float, Float, Float )
-genCirc x y r acc =
-    if r > 2 then
-        genCirc x y (r * 0.75) (( x, y, r ) :: acc)
+genCirc2 pending acc =
+    case pending of
+        [] ->
+            acc
 
-    else
-        ( x, y, r ) :: acc
+        (( x, y, r ) as circleParams) :: newPending ->
+            if r > 2 then
+                let
+                    rn =
+                        r / 2
+                in
+                genCirc2
+                    (( x + rn, y, rn ) :: ( x - rn, y, rn ) :: newPending)
+                    (circleParams :: acc)
+
+            else
+                genCirc2 newPending acc
