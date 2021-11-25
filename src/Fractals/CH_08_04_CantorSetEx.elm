@@ -16,7 +16,7 @@ main =
         ]
         [ group
             [ style "transform" "translate(50%,30%)"
-            , strokeW 10
+            , strokeW 1
             , stroke black
             ]
             [ genCantor [ initialRootNode ] []
