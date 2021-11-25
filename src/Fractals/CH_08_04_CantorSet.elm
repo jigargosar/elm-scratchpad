@@ -25,10 +25,7 @@ main =
             , strokeW 1
             , stroke black
             ]
-            [ genCirc2 [ ( 0, 0, 200 ) ] []
-                |> List.map (\( x, y, r ) -> circle r [ xf [ mv2 x y ] ])
-                |> group []
-            , genCirc [ initialRootNode ] []
+            [ genCirc [ initialRootNode ] []
                 |> List.map drawNode
                 |> group []
             ]
@@ -48,16 +45,12 @@ nodeFromRC r c =
 
 createChildren : Node -> List Node
 createChildren node =
-    let
-        radius =
-            node.radius * 0.5
-    in
-    [ vec -1 0
-    , vec 1 0
-    , vec 0 -1
-    , vec 0 1
-    ]
-        |> List.map (vScale radius >> vAdd node.center >> nodeFromRC radius)
+    adjacentUnitVectors
+        |> List.map
+            (vScale node.radius
+                >> vAdd node.center
+                >> nodeFromRC (node.radius * 0.5)
+            )
 
 
 initialRootNode : Node

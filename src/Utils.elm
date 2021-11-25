@@ -169,6 +169,15 @@ vec =
     Vec
 
 
+adjacentUnitVectors : List Vec
+adjacentUnitVectors =
+    [ vec -1 0
+    , vec 1 0
+    , vec 0 -1
+    , vec 0 1
+    ]
+
+
 vScale : Float -> Vec -> Vec
 vScale s { x, y } =
     vec (s * x) (s * y)
