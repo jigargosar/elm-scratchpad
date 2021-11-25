@@ -28,9 +28,9 @@ main =
 
 
 toNgonPoints : Int -> Int -> Float -> List ( Float, Float ) -> List ( Float, Float )
-toNgonPoints i n radius string =
+toNgonPoints i n radius acc =
     if i == n then
-        string
+        acc
 
     else
         let
@@ -43,7 +43,7 @@ toNgonPoints i n radius string =
             y =
                 radius * sin a
         in
-        toNgonPoints (i + 1) n radius (string ++ [ ( x, y ) ])
+        toNgonPoints (i + 1) n radius (acc ++ [ ( x, y ) ])
 
 
 kochLineWithR : Float -> KochLine
