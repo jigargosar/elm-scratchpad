@@ -15,7 +15,7 @@ main =
         , noStroke
         ]
         [ group
-            [ style "transform" "translate(50%,50%)"
+            [ style "transform" "translate(50%,30%)"
             , strokeW 10
             , stroke black
             ]
