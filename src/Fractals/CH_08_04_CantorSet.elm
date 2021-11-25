@@ -45,10 +45,19 @@ nodeFromLC len c =
 createChildren : Node -> List Node
 createChildren node =
     let
+        oldRadius =
+            node.diameter / 2
+
+        radius =
+            oldRadius / 3
+
         diameter =
+            2 * radius
+
+        xOffSet =
             node.diameter / 3
     in
-    [ vec -diameter 20, vec diameter 20 ]
+    [ vec -xOffSet 20, vec xOffSet 20 ]
         |> List.map (vAdd node.center >> nodeFromLC diameter)
 
 
