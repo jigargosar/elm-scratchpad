@@ -21,6 +21,11 @@ main =
             ]
             [ initialKochLine
                 |> createKochChildren
+                |> List.concatMap createKochChildren
+                |> List.concatMap createKochChildren
+                |> List.concatMap createKochChildren
+                |> List.concatMap createKochChildren
+                |> List.concatMap createKochChildren
                 |> List.map drawKochLine
                 |> group []
             ]
