@@ -39,7 +39,7 @@ createChildren : Node -> List Node
 createChildren node =
     let
         radius =
-            node.radius * 0.5
+            node.radius / 2
 
         xOffset =
             radius * 2
