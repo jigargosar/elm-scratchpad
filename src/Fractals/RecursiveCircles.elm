@@ -8,7 +8,54 @@ main =
         [ genRadii { min = 5, step = 10 } 1000 []
             |> List.map (strokeCircle 2)
             |> group
+            |> fade 0
+        , radii
+            |> List.reverse
+            |> Debug.log "radii"
+            |> List.map (strokeCircle 2)
+            |> group
+        , radii2
+            |> Debug.log "radii"
+            |> List.map (strokeCircle 2)
+            |> group
+            |> fade 0.5
         ]
+
+
+radii2 =
+    iterate
+        (\r ->
+            if r > 1000 then
+                Nothing
+
+            else
+                Just (r * 1.75)
+        )
+        5
+        []
+
+
+radii =
+    iterate
+        (\r ->
+            if r < 5 then
+                Nothing
+
+            else
+                Just (r * 0.75)
+        )
+        1000
+        []
+
+
+iterate : (a -> Maybe a) -> a -> List a -> List a
+iterate mbFn root xs =
+    case mbFn root of
+        Nothing ->
+            xs
+
+        Just nextRoot ->
+            iterate mbFn nextRoot (root :: xs)
 
 
 genRadii :
