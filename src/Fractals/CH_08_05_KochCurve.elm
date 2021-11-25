@@ -27,6 +27,25 @@ main =
         ]
 
 
+toNgonPoints : Int -> Int -> Float -> List ( Float, Float ) -> List ( Float, Float )
+toNgonPoints i n radius string =
+    if i == n then
+        string
+
+    else
+        let
+            a =
+                turns (toFloat i / toFloat n - 0.25)
+
+            x =
+                radius * cos a
+
+            y =
+                radius * sin a
+        in
+        toNgonPoints (i + 1) n radius (string ++ [ ( x, y ) ])
+
+
 kochLineWithR : Float -> KochLine
 kochLineWithR radius =
     KochLine (vec -radius 0) (vec radius 0)
