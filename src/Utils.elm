@@ -184,6 +184,19 @@ vAdd1 a { x, y } =
     vec (x + a) (y + a)
 
 
+vAdd =
+    vMap2 add
+
+
+vZero =
+    vec 0 0
+
+
+vMap2 : (Float -> Float -> Float) -> Vec -> Vec -> Vec
+vMap2 fn a b =
+    vec (fn a.x b.x) (fn a.y b.y)
+
+
 group =
     Svg.g
 
@@ -471,6 +484,10 @@ uncons xs =
 
         _ ->
             Nothing
+
+
+cons =
+    (::)
 
 
 headOfSingleton : List a -> Maybe a
