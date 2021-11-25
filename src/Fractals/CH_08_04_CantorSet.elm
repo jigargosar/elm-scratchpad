@@ -28,45 +28,39 @@ main =
 
 type alias Node =
     { center : Vec
-    , diameter : Float
+    , radius : Float
     }
 
 
 initialRootNode : Node
 initialRootNode =
-    nodeFromLC 250 vZero
+    nodeFromRC 250 vZero
 
 
-nodeFromLC : Float -> Vec -> Node
-nodeFromLC len c =
-    { center = c, diameter = len }
+nodeFromRC : Float -> Vec -> Node
+nodeFromRC r c =
+    { center = c, radius = r }
 
 
 createChildren : Node -> List Node
 createChildren node =
     let
-        oldRadius =
-            node.diameter / 2
-
         radius =
-            oldRadius / 3
-
-        diameter =
-            2 * radius
+            node.radius / 3
 
         xOffSet =
-            oldRadius * 2 / 3
+            radius * 2
     in
     [ vec -xOffSet 20, vec xOffSet 20 ]
-        |> List.map (vAdd node.center >> nodeFromLC diameter)
+        |> List.map (vAdd node.center >> nodeFromRC radius)
 
 
 drawNode : Node -> Svg msg
 drawNode node =
     TS.polyline
         [ TA.points
-            [ ( node.center.x - node.diameter / 2, node.center.y )
-            , ( node.center.x + node.diameter / 2, node.center.y )
+            [ ( node.center.x - node.radius, node.center.y )
+            , ( node.center.x + node.radius, node.center.y )
             ]
         ]
         []
@@ -79,7 +73,7 @@ genCantor oldPending acc =
             acc
 
         node :: pending ->
-            if node.diameter < 1 then
+            if node.radius < 1 then
                 genCantor pending acc
 
             else
