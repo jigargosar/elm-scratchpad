@@ -18,7 +18,7 @@ main =
         [ group [ style "transform" "translate(50%,50%)" ]
             [ genCirc 0 0 1000 []
                 |> List.map (\( x, y, r ) -> circle r [ xf [ mv2 x y ] ])
-                |> group [ SA.strokeWidth "2", SA.fill "none", SA.stroke "black" ]
+                |> group [ SA.strokeWidth "1", SA.fill "none", SA.stroke "black" ]
             ]
         ]
 
