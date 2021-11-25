@@ -269,6 +269,10 @@ saHeight =
     SA.height << String.fromFloat
 
 
+strokeW =
+    SA.strokeWidth << String.fromFloat
+
+
 fill =
     SA.fill
 
