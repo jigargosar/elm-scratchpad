@@ -193,6 +193,16 @@ vToPolar =
     vToTuple >> toPolar
 
 
+vFromTuple : ( Float, Float ) -> Vec
+vFromTuple ( x, y ) =
+    vec x y
+
+
+vFromPolar : ( Float, Float ) -> Vec
+vFromPolar =
+    fromPolar >> vFromTuple
+
+
 vFromTo : Vec -> Vec -> Vec
 vFromTo a b =
     vSub b a
@@ -206,6 +216,11 @@ vSub =
 vScale : Float -> Vec -> Vec
 vScale s { x, y } =
     vec (s * x) (s * y)
+
+
+vRotate : Float -> Vec -> Vec
+vRotate angle =
+    vToPolar >> mapSecond (add angle) >> vFromPolar
 
 
 vSub1 : Float -> Vec -> Vec

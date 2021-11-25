@@ -60,10 +60,13 @@ createKochChildren { start, end } =
         b =
             vAdd start vDiffThird
 
+        c =
+            vAdd b (vDiffThird |> vRotate (degrees -60))
+
         d =
             vAdd b vDiffThird
 
         e =
             end
     in
-    [ KochLine a b, KochLine d e ]
+    [ KochLine a b, KochLine b c, KochLine c d, KochLine d e ]
