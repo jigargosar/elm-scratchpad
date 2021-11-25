@@ -39,7 +39,7 @@ initialRootNode =
 
 nodeFromLC : Float -> Vec -> Node
 nodeFromLC len c =
-    { start = vec (c.x - (len / 2)) c.y, len = len }
+    { start = c, len = len }
 
 
 createChildren : Node -> List Node
@@ -47,14 +47,17 @@ createChildren node =
     let
         s =
             node.start
+
+        len =
+            node.len / 3
     in
     [ { node
-        | start = vec s.x (s.y + 20)
-        , len = node.len / 3
+        | start = vec (s.x - len) (s.y + 20)
+        , len = len
       }
     , { node
-        | start = vec (s.x + (node.len * 2 / 3)) (s.y + 20)
-        , len = node.len / 3
+        | start = vec (s.x + len) (s.y + 20)
+        , len = len
       }
     ]
 
@@ -63,8 +66,8 @@ drawNode : Node -> Svg msg
 drawNode node =
     TS.polyline
         [ TA.points
-            [ ( node.start.x, node.start.y )
-            , ( node.start.x + node.len, node.start.y )
+            [ ( node.start.x - node.len / 2, node.start.y )
+            , ( node.start.x + node.len / 2, node.start.y )
             ]
         ]
         []
