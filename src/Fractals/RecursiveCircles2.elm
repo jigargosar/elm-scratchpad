@@ -14,12 +14,17 @@ height =
 
 
 main =
-    Svg.svg [ style "width" "100vw", style "height" "100vh", dBlock ]
+    Svg.svg
+        [ style "width" "100vw"
+        , style "height" "100vh"
+        , dBlock
+        , noFill
+        , noStroke
+        ]
         [ group
             [ style "transform" "translate(50%,50%)"
             , strokeW 1
             , stroke black
-            , noFill
             ]
             [ genCirc 0 0 1000 []
                 |> List.map (\( x, y, r ) -> circle r [ xf [ mv2 x y ] ])
