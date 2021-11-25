@@ -4,14 +4,6 @@ import Svg exposing (Svg)
 import Utils exposing (..)
 
 
-width =
-    500
-
-
-height =
-    500
-
-
 main =
     Svg.svg
         [ style "width" "100vw"
