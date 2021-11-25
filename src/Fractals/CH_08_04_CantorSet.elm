@@ -17,7 +17,7 @@ main =
             , strokeW 1
             , stroke black
             ]
-            [ genCirc [ initialRootNode ] []
+            [ genCantor [ initialRootNode ] []
                 |> List.map drawNode
                 |> group []
             ]
@@ -55,18 +55,18 @@ drawNode node =
     circle node.radius [ xf [ mv node.center ] ]
 
 
-genCirc : List Node -> List Node -> List Node
-genCirc oldPending acc =
+genCantor : List Node -> List Node -> List Node
+genCantor oldPending acc =
     case oldPending of
         [] ->
             acc
 
         node :: pending ->
             if node.radius < 4 then
-                genCirc pending acc
+                genCantor pending acc
 
             else
-                genCirc
+                genCantor
                     (createChildren node
                         |> List.foldl cons pending
                     )
