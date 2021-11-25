@@ -38,7 +38,7 @@ genCirc2 pending acc =
             acc
 
         (( x, y, r ) as circleParams) :: newPending ->
-            if r < 4 then
+            if r < 2 then
                 genCirc2 newPending acc
 
             else
