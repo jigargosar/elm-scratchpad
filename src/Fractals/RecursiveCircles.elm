@@ -8,12 +8,12 @@ main =
         [ genRadii { min = 5, step = 10 } 1000 []
             |> List.map (strokeCircle 2)
             |> group
-            |> fade 0
         , radii
             |> List.reverse
             |> Debug.log "radii"
             |> List.map (strokeCircle 2)
             |> group
+            |> fade 0.5
         , radii2
             |> Debug.log "radii"
             |> List.map (strokeCircle 2)
