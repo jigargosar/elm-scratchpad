@@ -37,11 +37,18 @@ nodeFromRC r c =
 
 createChildren : Node -> List Node
 createChildren node =
+    let
+        radius =
+            node.radius * 0.5
+
+        xOffset =
+            radius * 2
+    in
     adjacentUnitVectors
         |> List.map
-            (vScale node.radius
+            (vScale xOffset
                 >> vAdd node.center
-                >> nodeFromRC (node.radius * 0.5)
+                >> nodeFromRC radius
             )
 
 
