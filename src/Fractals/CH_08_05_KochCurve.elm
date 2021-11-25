@@ -20,22 +20,22 @@ main =
             , stroke black
             ]
             [ [ kochLineWithR 250 ]
-                |> applyN 5 (List.concatMap createKochChildren)
+                --(toNgonVs 0 6 200 [] |> vsToKochLines [])
+                |> applyN 6 (List.concatMap createKochChildren)
                 |> List.map drawKochLine
                 |> group []
             ]
         ]
 
 
-toNgonPoints : Int -> Int -> Float -> List ( Float, Float ) -> List ( Float, Float )
-toNgonPoints i n radius acc =
-    if i == n then
+toNgonVs i n radius acc =
+    if i > n then
         acc
 
     else
         let
             a =
-                turns (toFloat i / toFloat n - 0.25)
+                turns (toFloat i / toFloat n)
 
             x =
                 radius * cos a
@@ -43,7 +43,16 @@ toNgonPoints i n radius acc =
             y =
                 radius * sin a
         in
-        toNgonPoints (i + 1) n radius (acc ++ [ ( x, y ) ])
+        toNgonVs (i + 1) n radius (acc ++ [ vec x y ])
+
+
+vsToKochLines acc pending =
+    case pending of
+        a :: b :: rest ->
+            vsToKochLines (KochLine a b :: acc) (b :: rest)
+
+        _ ->
+            acc
 
 
 kochLineWithR : Float -> KochLine
