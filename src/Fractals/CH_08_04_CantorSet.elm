@@ -45,21 +45,11 @@ nodeFromLC len c =
 createChildren : Node -> List Node
 createChildren node =
     let
-        s =
-            node.start
-
         len =
             node.len / 3
     in
-    [ { node
-        | start = vec (s.x - len) (s.y + 20)
-        , len = len
-      }
-    , { node
-        | start = vec (s.x + len) (s.y + 20)
-        , len = len
-      }
-    ]
+    [ vec -len 20, vec len 20 ]
+        |> List.map (vAdd node.start >> nodeFromLC len)
 
 
 drawNode : Node -> Svg msg
