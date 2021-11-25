@@ -28,7 +28,7 @@ main =
             , stroke black
             ]
             [ genCirc2 [ ( 0, 0, 400 ) ] []
-                |> List.map (\( x, y, r ) -> circle (r / 2) [ xf [ mv2 x y ] ])
+                |> List.map (\( x, y, r ) -> circle r [ xf [ mv2 x y ] ])
                 |> group []
             ]
         ]
@@ -46,7 +46,7 @@ genCirc2 pending acc =
                         rn =
                             r / 2
                     in
-                    ( x + rn, y, rn ) :: ( x - rn, y, rn ) :: newPending
+                    ( x + r, y, rn ) :: ( x - r, y, rn ) :: newPending
 
                  else
                     newPending
