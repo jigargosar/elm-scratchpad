@@ -16,7 +16,7 @@ main =
         ]
         [ group
             [ style "transform" "translate(50%,50%)"
-            , strokeW 1
+            , strokeW 10
             , stroke black
             ]
             [ genCantor [ initialRootNode ] []
@@ -30,6 +30,11 @@ type alias Node =
     { start : Vec
     , len : Float
     }
+
+
+initialRootNode : Node
+initialRootNode =
+    nodeFromLC 500 vZero
 
 
 nodeFromLC : Float -> Vec -> Node
@@ -52,11 +57,6 @@ createChildren node =
         , len = node.len / 3
       }
     ]
-
-
-initialRootNode : Node
-initialRootNode =
-    nodeFromLC 200 vZero
 
 
 drawNode : Node -> Svg msg
