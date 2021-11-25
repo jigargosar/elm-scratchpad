@@ -27,7 +27,7 @@ main =
 
 
 type alias Node =
-    { start : Vec
+    { center : Vec
     , len : Float
     }
 
@@ -39,7 +39,7 @@ initialRootNode =
 
 nodeFromLC : Float -> Vec -> Node
 nodeFromLC len c =
-    { start = c, len = len }
+    { center = c, len = len }
 
 
 createChildren : Node -> List Node
@@ -49,15 +49,15 @@ createChildren node =
             node.len / 3
     in
     [ vec -len 20, vec len 20 ]
-        |> List.map (vAdd node.start >> nodeFromLC len)
+        |> List.map (vAdd node.center >> nodeFromLC len)
 
 
 drawNode : Node -> Svg msg
 drawNode node =
     TS.polyline
         [ TA.points
-            [ ( node.start.x - node.len / 2, node.start.y )
-            , ( node.start.x + node.len / 2, node.start.y )
+            [ ( node.center.x - node.len / 2, node.center.y )
+            , ( node.center.x + node.len / 2, node.center.y )
             ]
         ]
         []
