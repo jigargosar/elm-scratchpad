@@ -44,7 +44,7 @@ genCirc2 pending acc =
                 (if r > 2 then
                     let
                         rn =
-                            r / 2
+                            r * 0.5
                     in
                     ( x + r, y, rn ) :: ( x - r, y, rn ) :: newPending
 
