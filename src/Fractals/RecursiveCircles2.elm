@@ -14,7 +14,7 @@ height =
 
 
 main =
-    Svg.svg [ style "width" "100%", style "height" "100vh", dBlock ]
+    Svg.svg [ style "width" "100vw", style "height" "100vh", dBlock ]
         [ group [ style "transform" "translate(50%,50%)" ]
             [ genCirc 0 0 1000 []
                 |> List.map (\( x, y, r ) -> circle r [ xf [ mv2 x y ] ])
