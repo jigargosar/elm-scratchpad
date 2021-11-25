@@ -35,7 +35,7 @@ type alias Node =
 
 initialRootNode : Node
 initialRootNode =
-    nodeFromRC True 250 vZero
+    nodeFromRC True 300 vZero
 
 
 nodeFromRC : Bool -> Float -> Vec -> Node
@@ -52,12 +52,6 @@ createChildren node =
         offset =
             radius * 1.5
     in
-    --adjacentUnitVectors
-    --    |> List.map
-    --        (vScale offset
-    --            >> vAdd node.center
-    --            >> nodeFromRC (not node.horizontal) radius
-    --        )
     (if node.horizontal then
         [ vec -offset 0, vec offset 0 ]
 
@@ -96,7 +90,7 @@ genCantor oldPending acc =
             acc
 
         node :: pending ->
-            if node.radius < 1 then
+            if node.radius < 1.5 then
                 genCantor pending acc
 
             else
