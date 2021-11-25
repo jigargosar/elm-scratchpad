@@ -71,27 +71,3 @@ genCirc oldPending acc =
                         |> List.foldl cons pending
                     )
                     (node :: acc)
-
-
-genCirc2 pending acc =
-    case pending of
-        [] ->
-            acc
-
-        (( x, y, r ) as circleParams) :: newPending ->
-            if r < 4 then
-                genCirc2 newPending acc
-
-            else
-                let
-                    rn =
-                        r * 0.5
-                in
-                genCirc2
-                    (( x + r, y, rn )
-                        :: ( x - r, y, rn )
-                        :: ( x, y + r, rn )
-                        :: ( x, y - r, rn )
-                        :: newPending
-                    )
-                    (circleParams :: acc)
