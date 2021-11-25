@@ -57,10 +57,14 @@ createChildren node =
 
 drawNode : Node -> Svg msg
 drawNode node =
+    let
+        center =
+            node.center
+    in
     TS.polyline
         [ TA.points
-            [ ( node.center.x - node.radius, node.center.y )
-            , ( node.center.x + node.radius, node.center.y )
+            [ ( center.x - node.radius, center.y )
+            , ( center.x + node.radius, center.y )
             ]
         ]
         []
