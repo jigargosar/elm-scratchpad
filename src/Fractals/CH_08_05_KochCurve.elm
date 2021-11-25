@@ -29,7 +29,11 @@ main =
 
 initialKochLine : KochLine
 initialKochLine =
-    KochLine (vec -200 0) (vec 200 0)
+    let
+        radius =
+            250
+    in
+    KochLine (vec -radius 0) (vec radius 0)
 
 
 type alias KochLine =
