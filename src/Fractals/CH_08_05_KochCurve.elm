@@ -19,25 +19,16 @@ main =
             , strokeW 1
             , stroke black
             ]
-            [ initialKochLine
-                |> createKochChildren
-                |> List.concatMap createKochChildren
-                |> List.concatMap createKochChildren
-                |> List.concatMap createKochChildren
-                |> List.concatMap createKochChildren
-                |> List.concatMap createKochChildren
+            [ [ ketchLineWithR 250 ]
+                |> applyN 5 (List.concatMap createKochChildren)
                 |> List.map drawKochLine
                 |> group []
             ]
         ]
 
 
-initialKochLine : KochLine
-initialKochLine =
-    let
-        radius =
-            250
-    in
+ketchLineWithR : Float -> KochLine
+ketchLineWithR radius =
     KochLine (vec -radius 0) (vec radius 0)
 
 
