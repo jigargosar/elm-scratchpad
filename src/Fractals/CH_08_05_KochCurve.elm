@@ -47,4 +47,17 @@ drawKochLine { start, end } =
 
 createKochChildren : KochLine -> List KochLine
 createKochChildren { start, end } =
-    [ KochLine start end ]
+    let
+        vDiff =
+            vFromTo start end
+
+        a =
+            start
+
+        b =
+            vAdd start vDiff
+
+        c =
+            end
+    in
+    [ KochLine a b, KochLine b c ]

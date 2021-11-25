@@ -183,6 +183,26 @@ vToTuple { x, y } =
     ( x, y )
 
 
+vLen : Vec -> Float
+vLen =
+    vToPolar >> first
+
+
+vToPolar : Vec -> ( Float, Float )
+vToPolar =
+    vToTuple >> toPolar
+
+
+vFromTo : Vec -> Vec -> Vec
+vFromTo a b =
+    vSub b a
+
+
+vSub : Vec -> Vec -> Vec
+vSub =
+    vMap2 sub
+
+
 vScale : Float -> Vec -> Vec
 vScale s { x, y } =
     vec (s * x) (s * y)
