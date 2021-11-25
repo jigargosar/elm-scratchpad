@@ -27,36 +27,44 @@ main =
 
 
 type alias Node =
-    { center : Vec
+    { horizontal : Bool
+    , center : Vec
     , radius : Float
     }
 
 
 initialRootNode : Node
 initialRootNode =
-    nodeFromRC 250 vZero
+    nodeFromRC True 250 vZero
 
 
-nodeFromRC : Float -> Vec -> Node
-nodeFromRC r c =
-    { center = c, radius = r }
+nodeFromRC : Bool -> Float -> Vec -> Node
+nodeFromRC b r c =
+    { horizontal = b, center = c, radius = r }
 
 
 createChildren : Node -> List Node
 createChildren node =
     let
         radius =
-            node.radius / 3
+            node.radius / 1.5
 
         offset =
-            radius * 2
+            radius * 1.5
     in
-    adjacentUnitVectors
-        |> List.map
-            (vScale offset
-                >> vAdd node.center
-                >> nodeFromRC radius
-            )
+    --adjacentUnitVectors
+    --    |> List.map
+    --        (vScale offset
+    --            >> vAdd node.center
+    --            >> nodeFromRC (not node.horizontal) radius
+    --        )
+    (if node.horizontal then
+        [ vec -offset 0, vec offset 0 ]
+
+     else
+        [ vec 0 -offset, vec 0 offset ]
+    )
+        |> List.map (vAdd node.center >> nodeFromRC (not node.horizontal) radius)
 
 
 drawNode : Node -> Svg msg
@@ -67,9 +75,16 @@ drawNode node =
     in
     TS.polyline
         [ TA.points
-            [ ( center.x - node.radius, center.y )
-            , ( center.x + node.radius, center.y )
-            ]
+            (if node.horizontal then
+                [ ( center.x - node.radius, center.y )
+                , ( center.x + node.radius, center.y )
+                ]
+
+             else
+                [ ( center.x, center.y - node.radius )
+                , ( center.x, center.y + node.radius )
+                ]
+            )
         ]
         []
 
