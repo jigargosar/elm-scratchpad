@@ -1,8 +1,6 @@
 module Fractals.RecursiveCircles2 exposing (..)
 
 import Svg
-import Svg.Attributes as SA
-import TypedSvg.Attributes as TA
 import Utils exposing (..)
 
 
