@@ -2,11 +2,33 @@ module TCBON.LSystem exposing (..)
 
 import Dict
 import Html exposing (div, text)
+import Svg
 import Utils exposing (..)
 
 
 main =
-    div [] (List.map viewResult results)
+    div []
+        [ div [] (List.map viewResult results)
+        , div [] (List.map drawResult results)
+        ]
+
+
+drawResult str =
+    Svg.svg
+        [ style "width" "100vw"
+        , style "height" "20vh"
+        , dBlock
+        , noFill
+        , noStroke
+        ]
+        [ group
+            [ style "transform" "translate(50%,50%)"
+            , strokeW 1
+            , stroke black
+            ]
+            [ words str []
+            ]
+        ]
 
 
 viewResult r =
