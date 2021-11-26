@@ -1,6 +1,6 @@
 module TCBON.LSystemV2 exposing (..)
 
-import Dict
+import Dict exposing (Dict)
 import Html exposing (Html, div, text)
 import Svg exposing (Svg)
 import Utils exposing (..)
@@ -139,3 +139,40 @@ applyRules =
 
 results =
     scanApplyN 5 applyRules axiom
+
+
+type alias Config =
+    { axiom : String
+    , rules : Dict Char String
+    , depth : Int
+    }
+
+
+type C2
+    = C2 Int Char
+
+
+parseAxiom : String -> List C2
+parseAxiom =
+    parseRule 0
+
+
+parseRule : Int -> String -> List C2
+parseRule depth =
+    String.toList >> List.map (C2 depth)
+
+
+iterate : Int -> Dict Char String -> List C2 -> List C2
+iterate depth rules =
+    let
+        rewrite ((C2 _ ch) as c2) =
+            Dict.get ch rules
+                |> Maybe.map (parseRule depth)
+                |> Maybe.withDefault [ c2 ]
+    in
+    List.concatMap rewrite
+
+
+lsys : Config -> Html msg
+lsys config =
+    Debug.todo "todo"
