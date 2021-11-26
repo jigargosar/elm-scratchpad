@@ -30,7 +30,7 @@ drawResult str =
             , strokeW 1
             , stroke black
             ]
-            (drawStr (Turtle vZero 0 (degrees 60) 20) (String.toList str) [])
+            (drawStr (Turtle vZero 0 (degrees 60) 20 None) (String.toList str) [])
         ]
 
 
@@ -39,7 +39,13 @@ type alias Turtle =
     , a : Float
     , ad : Float
     , len : Float
+    , prev : Prev
     }
+
+
+type Prev
+    = None
+    | Prev Turtle
 
 
 drawStr t chs acc =
@@ -63,6 +69,19 @@ drawStr t chs acc =
 
                         '+' ->
                             ( { t | a = t.a + t.ad }, [] )
+
+                        '[' ->
+                            ( { t | prev = Prev t }, [] )
+
+                        ']' ->
+                            ( case t.prev of
+                                None ->
+                                    t
+
+                                Prev pt ->
+                                    pt
+                            , []
+                            )
 
                         _ ->
                             ( t, [] )
