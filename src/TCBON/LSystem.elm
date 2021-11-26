@@ -20,17 +20,17 @@ main =
 drawResult str =
     Svg.svg
         [ style "width" "100vw"
-        , style "height" "20vh"
+        , style "height" "30vh"
         , dBlock
         , noFill
         , noStroke
         ]
         [ group
-            [ style "transform" "translate(50%,50%)"
+            [ style "transform" "translate(0%,50%)"
             , strokeW 1
             , stroke black
             ]
-            (drawStr (Turtle vZero 0 (degrees 60) 50) (String.toList str) [])
+            (drawStr (Turtle vZero 0 (degrees 60) 20) (String.toList str) [])
         ]
 
 
@@ -52,7 +52,17 @@ drawStr t chs acc =
                 ( nt, res ) =
                     case h of
                         'F' ->
-                            ( t, [] )
+                            let
+                                np =
+                                    vAdd t.p (vFromPolar ( t.len, t.a ))
+                            in
+                            ( { t | p = np }, [ vPolyline [ t.p, np ] [] ] )
+
+                        '-' ->
+                            ( { t | a = t.a - t.ad }, [] )
+
+                        '+' ->
+                            ( { t | a = t.a + t.ad }, [] )
 
                         _ ->
                             ( t, [] )
