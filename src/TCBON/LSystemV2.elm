@@ -8,7 +8,7 @@ import Utils exposing (..)
 
 main =
     div []
-        [ lsys { depth = 5, rules = rulesDict, axiom = axiom }
+        [ lsys { depth = 7, rules = rulesDict, axiom = axiom }
         , div []
             (results
                 |> List.reverse
@@ -69,7 +69,7 @@ render str =
                 { p = vZero
                 , a = degrees -90
                 , da = degrees 20
-                , len = 60
+                , len = 150
                 , prev = None
                 }
                 str
@@ -86,19 +86,22 @@ drawC2List t chs acc =
 
         (C2 depth h) :: tail ->
             let
+                factor =
+                    0.5
+
                 ( nt, res ) =
                     case h of
                         'F' ->
                             let
                                 np =
-                                    vAdd t.p (vFromPolar ( t.len * (0.65 ^ toFloat depth), t.a ))
+                                    vAdd t.p (vFromPolar ( t.len * (factor ^ toFloat depth), t.a ))
                             in
                             ( { t | p = np }, [ vPolyline [ t.p, np ] [] ] )
 
                         '|' ->
                             let
                                 np =
-                                    vAdd t.p (vFromPolar ( t.len * (0.65 ^ toFloat depth), t.a ))
+                                    vAdd t.p (vFromPolar ( t.len * (factor ^ toFloat depth), t.a ))
                             in
                             ( { t | p = np }, [ vPolyline [ t.p, np ] [] ] )
 
