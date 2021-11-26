@@ -20,7 +20,7 @@ main =
 drawResult str =
     Svg.svg
         [ style "width" "100vw"
-        , style "height" "30vh"
+        , style "height" "40vh"
         , dBlock
         , noFill
         , noStroke
