@@ -1,13 +1,16 @@
 module TCBON.LSystem exposing (..)
 
 import Dict
-import Html exposing (text)
+import Html exposing (div, text)
 import Utils exposing (..)
 
 
 main =
-    Debug.toString results
-        |> text
+    div [] (List.map viewResult results)
+
+
+viewResult r =
+    div [] [ text r ]
 
 
 axiom =
@@ -33,4 +36,4 @@ applyRules =
 
 
 results =
-    applyN 3 applyRules axiom
+    scanApplyN 3 applyRules axiom

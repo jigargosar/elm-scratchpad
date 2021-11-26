@@ -663,6 +663,18 @@ applyN n fn x =
         applyN (n - 1) fn (fn x)
 
 
+scanApplyN n fn x =
+    scanApplyNHelp n fn x [] |> List.reverse
+
+
+scanApplyNHelp n fn x acc =
+    if n <= 0 then
+        x :: acc
+
+    else
+        scanApplyNHelp (n - 1) fn (fn x) (x :: acc)
+
+
 maybeFilter : (a -> Bool) -> Maybe a -> Maybe a
 maybeFilter pred =
     Maybe.andThen
