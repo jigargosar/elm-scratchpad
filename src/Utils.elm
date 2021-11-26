@@ -421,6 +421,30 @@ circle r xs =
     Svg.circle (Px.r r :: xs) []
 
 
+ngonVertices : Int -> Float -> List Vec
+ngonVertices n r =
+    ngonVerticesHelper 0 n r []
+
+
+ngonVerticesHelper : Int -> Int -> Float -> List Vec -> List Vec
+ngonVerticesHelper i n radius acc =
+    if i > n then
+        acc
+
+    else
+        let
+            a =
+                turns (toFloat i / toFloat n)
+
+            x =
+                radius * cos a
+
+            y =
+                radius * sin a
+        in
+        ngonVerticesHelper (i + 1) n radius (acc ++ [ vec x y ])
+
+
 nestedSvg : Float -> Float -> List (Attribute msg) -> List (Svg msg) -> Html msg
 nestedSvg w h xs =
     Svg.svg

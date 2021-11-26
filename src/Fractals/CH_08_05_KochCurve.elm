@@ -19,37 +19,13 @@ main =
             , strokeW 1
             , stroke black
             ]
-            [ ngon 3 250
+            [ ngonVertices 3 250
                 |> kochLinesFromVertices
                 |> applyN 5 (List.concatMap createKochChildren)
                 |> List.map drawKochLine
                 |> group [ xf [ rotateDeg -90 ] ]
             ]
         ]
-
-
-ngon : Int -> Float -> List Vec
-ngon n r =
-    toNgonVertices 0 n r []
-
-
-toNgonVertices : Int -> Int -> Float -> List Vec -> List Vec
-toNgonVertices i n radius acc =
-    if i > n then
-        acc
-
-    else
-        let
-            a =
-                turns (toFloat i / toFloat n)
-
-            x =
-                radius * cos a
-
-            y =
-                radius * sin a
-        in
-        toNgonVertices (i + 1) n radius (acc ++ [ vec x y ])
 
 
 kochLinesFromVertices : List Vec -> List KochLine
