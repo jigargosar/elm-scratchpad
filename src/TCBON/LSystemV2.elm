@@ -29,6 +29,7 @@ drawResult str =
         , dBlock
         , noFill
         , noStroke
+        , overflowVisible
         ]
         [ group
             [ style "transform" "translate(50%,50%)"
@@ -137,4 +138,4 @@ applyRules =
 
 
 results =
-    scanApplyN 9 applyRules axiom
+    scanApplyN 5 applyRules axiom
