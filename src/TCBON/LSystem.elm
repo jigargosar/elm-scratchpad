@@ -30,13 +30,34 @@ drawResult str =
             , strokeW 1
             , stroke black
             ]
-            [ drawStr str
-            ]
+            (drawStr (Turtle vZero 0 (degrees 60) 50) (String.toList str) [])
         ]
 
 
-drawStr str =
-    words str []
+type alias Turtle =
+    { p : Vec
+    , a : Float
+    , ad : Float
+    , len : Float
+    }
+
+
+drawStr t chs acc =
+    case chs of
+        [] ->
+            acc
+
+        h :: tail ->
+            let
+                ( nt, res ) =
+                    case h of
+                        'F' ->
+                            ( t, [] )
+
+                        _ ->
+                            ( t, [] )
+            in
+            drawStr nt tail (acc ++ res)
 
 
 viewResult r =
