@@ -275,7 +275,7 @@ scale s =
     TT.Scale s s
 
 
-rotate deg =
+rotateDeg deg =
     TT.Rotate deg 0 0
 
 

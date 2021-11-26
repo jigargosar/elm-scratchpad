@@ -23,7 +23,7 @@ main =
               (toNgonVs 0 3 200 [] |> vsToKochLines [])
                 |> applyN 5 (List.concatMap createKochChildren)
                 |> List.map drawKochLine
-                |> group [ xf [ rotate 90 ] ]
+                |> group [ xf [ rotateDeg 90 ] ]
             ]
         ]
 
