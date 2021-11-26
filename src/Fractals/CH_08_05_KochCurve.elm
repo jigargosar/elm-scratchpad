@@ -19,7 +19,8 @@ main =
             , strokeW 1
             , stroke black
             ]
-            [ (ngon 3 250 |> kochLinesFromVertices)
+            [ ngon 3 250
+                |> kochLinesFromVertices
                 |> applyN 5 (List.concatMap createKochChildren)
                 |> List.map drawKochLine
                 |> group [ xf [ rotateDeg -90 ] ]
