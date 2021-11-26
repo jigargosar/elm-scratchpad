@@ -30,9 +30,13 @@ drawResult str =
             , strokeW 1
             , stroke black
             ]
-            [ words str []
+            [ drawStr str
             ]
         ]
+
+
+drawStr str =
+    words str []
 
 
 viewResult r =
