@@ -35,7 +35,7 @@ drawResult str =
             , strokeW 1
             , stroke black
             ]
-            (drawStr (Turtle vZero 0 (degrees 20) 1 None) (String.toList str) [])
+            (drawStr (Turtle vZero 0 (degrees 20) 30 None) (String.toList str) [])
         ]
 
 
@@ -64,6 +64,13 @@ drawStr t chs acc =
                 ( nt, res ) =
                     case h of
                         'F' ->
+                            let
+                                np =
+                                    vAdd t.p (vFromPolar ( t.len, t.a ))
+                            in
+                            ( { t | p = np }, [ vPolyline [ t.p, np ] [] ] )
+
+                        '|' ->
                             let
                                 np =
                                     vAdd t.p (vFromPolar ( t.len, t.a ))
@@ -100,13 +107,12 @@ viewResult r =
 
 
 axiom =
-    "B"
+    "F"
 
 
 rulesDict =
     Dict.fromList
-        [ ( 'B', "F[-B]+B" )
-        , ( 'F', "FF" )
+        [ ( 'F', "|[-F][+F]" )
         ]
 
 
