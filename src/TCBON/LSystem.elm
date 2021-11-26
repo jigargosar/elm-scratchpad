@@ -2,7 +2,7 @@ module TCBON.LSystem exposing (..)
 
 import Dict
 import Html exposing (text)
-import Utils exposing (applyN)
+import Utils exposing (..)
 
 
 main =
