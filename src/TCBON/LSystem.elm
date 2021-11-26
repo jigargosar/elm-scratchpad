@@ -2,6 +2,7 @@ module TCBON.LSystem exposing (..)
 
 import Dict
 import Html exposing (text)
+import Utils exposing (applyN)
 
 
 main =
@@ -32,7 +33,4 @@ applyRules =
 
 
 results =
-    [ "B"
-    , "F[-B]+B"
-    ]
-        |> always (applyRules axiom)
+    applyN 3 applyRules axiom
