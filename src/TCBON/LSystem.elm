@@ -11,9 +11,13 @@ main =
         [ div []
             (results
                 |> List.reverse
+                |> List.take 2
                 |> List.map drawResult
             )
-        , div [] (List.map viewResult results)
+        , div []
+            (results
+                |> List.map viewResult
+            )
         ]
 
 
@@ -30,7 +34,7 @@ drawResult str =
             , strokeW 1
             , stroke black
             ]
-            (drawStr (Turtle vZero 0 (degrees 60) 20 None) (String.toList str) [])
+            (drawStr (Turtle vZero 0 (degrees 60) 1.1 None) (String.toList str) [])
         ]
 
 
@@ -116,4 +120,4 @@ applyRules =
 
 
 results =
-    scanApplyN 3 applyRules axiom
+    scanApplyN 8 applyRules axiom
