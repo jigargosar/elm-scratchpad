@@ -8,7 +8,8 @@ import Utils exposing (..)
 
 main =
     div []
-        [ div []
+        [ lsys { depth = 5, rules = rulesDict, axiom = axiom }
+        , div []
             (results
                 |> List.reverse
                 |> List.take 2
@@ -47,6 +48,83 @@ drawResult str =
                 []
             )
         ]
+
+
+render : List C2 -> Html msg
+render str =
+    Svg.svg
+        [ style "width" "100vw"
+        , style "height" "40vh"
+        , dBlock
+        , noFill
+        , noStroke
+        , overflowVisible
+        ]
+        [ group
+            [ style "transform" "translate(50%,50%)"
+            , strokeW 1
+            , stroke black
+            ]
+            (drawC2List
+                { p = vZero
+                , a = degrees -90
+                , da = degrees 20
+                , len = 60
+                , prev = None
+                }
+                str
+                []
+            )
+        ]
+
+
+drawC2List : Turtle -> List C2 -> List (Svg msg) -> List (Svg msg)
+drawC2List t chs acc =
+    case chs of
+        [] ->
+            acc
+
+        (C2 depth h) :: tail ->
+            let
+                ( nt, res ) =
+                    case h of
+                        'F' ->
+                            let
+                                np =
+                                    vAdd t.p (vFromPolar ( t.len * (0.65 ^ toFloat depth), t.a ))
+                            in
+                            ( { t | p = np }, [ vPolyline [ t.p, np ] [] ] )
+
+                        '|' ->
+                            let
+                                np =
+                                    vAdd t.p (vFromPolar ( t.len * (0.65 ^ toFloat depth), t.a ))
+                            in
+                            ( { t | p = np }, [ vPolyline [ t.p, np ] [] ] )
+
+                        '-' ->
+                            ( { t | a = t.a - t.da }, [] )
+
+                        '+' ->
+                            ( { t | a = t.a + t.da }, [] )
+
+                        '[' ->
+                            ( { t | prev = Prev t }, [] )
+
+                        ']' ->
+                            ( case t.prev of
+                                None ->
+                                    t
+
+                                Prev pt ->
+                                    pt
+                            , []
+                            )
+
+                        _ ->
+                            ( t, [] )
+            in
+            drawC2List nt tail (acc ++ res)
 
 
 type alias Turtle =
@@ -162,17 +240,19 @@ parseRule depth =
     String.toList >> List.map (C2 depth)
 
 
-iterate : Int -> Dict Char String -> List C2 -> List C2
-iterate depth rules =
+expand : Int -> Dict Char String -> List C2 -> List C2
+expand depth rules =
     let
-        rewrite ((C2 _ ch) as c2) =
+        rewriteC2 ((C2 _ ch) as c2) =
             Dict.get ch rules
                 |> Maybe.map (parseRule depth)
                 |> Maybe.withDefault [ c2 ]
     in
-    List.concatMap rewrite
+    List.concatMap rewriteC2
 
 
 lsys : Config -> Html msg
 lsys config =
-    Debug.todo "todo"
+    List.range 1 (config.depth - 1)
+        |> List.foldl (\depth -> expand depth config.rules) (parseAxiom config.axiom)
+        |> render
