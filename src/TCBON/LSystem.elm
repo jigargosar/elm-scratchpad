@@ -8,19 +8,19 @@ import Utils exposing (..)
 
 main =
     div []
-        [ div [] (List.map viewResult results)
-        , div []
+        [ div []
             (results
                 |> List.reverse
                 |> List.map drawResult
             )
+        , div [] (List.map viewResult results)
         ]
 
 
 drawResult str =
     Svg.svg
         [ style "width" "100vw"
-        , style "height" "30vh"
+        , style "height" "20vh"
         , dBlock
         , noFill
         , noStroke
