@@ -34,7 +34,7 @@ drawResult str =
             , strokeW 1
             , stroke black
             ]
-            (drawStr (Turtle vZero 0 (degrees 60) 1.1 None) (String.toList str) [])
+            (drawStr (Turtle vZero 0 (degrees 20) 1 None) (String.toList str) [])
         ]
 
 
@@ -120,4 +120,4 @@ applyRules =
 
 
 results =
-    scanApplyN 8 applyRules axiom
+    scanApplyN 9 applyRules axiom
