@@ -19,11 +19,11 @@ main =
             , strokeW 1
             , stroke black
             ]
-            [ [ kochLineWithR 250 ]
-                --(toNgonVs 0 6 200 [] |> vsToKochLines [])
+            [ --[ kochLineWithR 250 ]
+              (toNgonVs 0 3 200 [] |> vsToKochLines [])
                 |> applyN 5 (List.concatMap createKochChildren)
                 |> List.map drawKochLine
-                |> group []
+                |> group [ xf [ rotate 90 ] ]
             ]
         ]
 

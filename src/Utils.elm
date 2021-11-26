@@ -275,6 +275,10 @@ scale s =
     TT.Scale s s
 
 
+rotate deg =
+    TT.Rotate deg 0 0
+
+
 mv { x, y } =
     mv2 x y
 
