@@ -20,15 +20,21 @@ main =
             , stroke black
             ]
             [ --[ kochLineWithR 250 ]
-              (toNgonVs 0 3 200 [] |> vsToKochLines [])
+              (ngon 3 200 |> vsToKochLines [])
                 |> applyN 5 (List.concatMap createKochChildren)
                 |> List.map drawKochLine
-                |> group [ xf [ rotateDeg 90 ] ]
+                |> group [ xf [ rotateDeg -90 ] ]
             ]
         ]
 
 
-toNgonVs i n radius acc =
+ngon : Int -> Float -> List Vec
+ngon n r =
+    toNgonVertices 0 n r []
+
+
+toNgonVertices : Int -> Int -> Float -> List Vec -> List Vec
+toNgonVertices i n radius acc =
     if i > n then
         acc
 
@@ -43,7 +49,7 @@ toNgonVs i n radius acc =
             y =
                 radius * sin a
         in
-        toNgonVs (i + 1) n radius (acc ++ [ vec x y ])
+        toNgonVertices (i + 1) n radius (acc ++ [ vec x y ])
 
 
 vsToKochLines acc pending =
