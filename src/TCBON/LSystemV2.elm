@@ -31,18 +31,27 @@ drawResult str =
         , noStroke
         ]
         [ group
-            [ style "transform" "translate(0%,50%)"
+            [ style "transform" "translate(50%,50%)"
             , strokeW 1
             , stroke black
             ]
-            (drawStr (Turtle vZero 0 (degrees 20) 30 None) (String.toList str) [])
+            (drawStr
+                { p = vZero
+                , a = degrees -90
+                , da = degrees 20
+                , len = 30
+                , prev = None
+                }
+                (String.toList str)
+                []
+            )
         ]
 
 
 type alias Turtle =
     { p : Vec
     , a : Float
-    , ad : Float
+    , da : Float
     , len : Float
     , prev : Prev
     }
@@ -78,10 +87,10 @@ drawStr t chs acc =
                             ( { t | p = np }, [ vPolyline [ t.p, np ] [] ] )
 
                         '-' ->
-                            ( { t | a = t.a - t.ad }, [] )
+                            ( { t | a = t.a - t.da }, [] )
 
                         '+' ->
-                            ( { t | a = t.a + t.ad }, [] )
+                            ( { t | a = t.a + t.da }, [] )
 
                         '[' ->
                             ( { t | prev = Prev t }, [] )
