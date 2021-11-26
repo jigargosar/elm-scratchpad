@@ -9,14 +9,18 @@ import Utils exposing (..)
 main =
     div []
         [ div [] (List.map viewResult results)
-        , div [] (List.map drawResult results)
+        , div []
+            (results
+                |> List.reverse
+                |> List.map drawResult
+            )
         ]
 
 
 drawResult str =
     Svg.svg
         [ style "width" "100vw"
-        , style "height" "20vh"
+        , style "height" "30vh"
         , dBlock
         , noFill
         , noStroke
