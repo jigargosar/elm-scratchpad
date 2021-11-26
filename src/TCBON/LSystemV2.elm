@@ -1,8 +1,8 @@
 module TCBON.LSystemV2 exposing (..)
 
 import Dict
-import Html exposing (div, text)
-import Svg
+import Html exposing (Html, div, text)
+import Svg exposing (Svg)
 import Utils exposing (..)
 
 
@@ -21,6 +21,7 @@ main =
         ]
 
 
+drawResult : String -> Html msg
 drawResult str =
     Svg.svg
         [ style "width" "100vw"
@@ -52,6 +53,7 @@ type Prev
     | Prev Turtle
 
 
+drawStr : Turtle -> List Char -> List (Svg msg) -> List (Svg msg)
 drawStr t chs acc =
     case chs of
         [] ->
