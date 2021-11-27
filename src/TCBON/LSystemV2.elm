@@ -50,6 +50,7 @@ drawResult str =
                 { p = vZero
                 , a = degrees -90
                 , da = degrees 20
+                , ds = 0.5
                 , len = 30
                 , prev = None
                 }
