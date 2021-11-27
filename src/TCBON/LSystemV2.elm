@@ -97,25 +97,11 @@ addPointToBounds vec bounds =
 render : Config -> List C2 -> Html msg
 render config chs =
     let
-        ( w, h ) =
-            ( 100, 100 )
-
+        --( w, h ) =
+        --    ( 100, 100 )
         vDiffAbs =
             vSub bounds.max bounds.min
                 |> vAbs
-
-        center =
-            vFromTo bounds.min bounds.max
-                |> vScale 0.5
-                |> vMapBoth (round >> toFloat)
-                |> Debug.log "center"
-
-        --|> always vZero
-        ( left, top ) =
-            ( center.x - ww / 2, center.y - hh / 2 )
-
-        ( ww, hh ) =
-            ( vDiffAbs.x |> atLeast 100, vDiffAbs.y |> atLeast 100 )
 
         ( bounds, drawing ) =
             renderCharList
@@ -140,8 +126,10 @@ render config chs =
                     ( { min = vZero, max = vZero }, [] )
     in
     Svg.svg
-        [ viewBoxC w h
-        , TA.viewBox left top ww hh
+        [ -- viewBoxC w h ,
+          TA.viewBox (bounds.min.x - 5) (bounds.min.y - 5) (vDiffAbs.x + 10) (vDiffAbs.y + 10)
+        , saWidth 150
+        , saHeight 150
         , dBlock
         , noFill
         , noStroke
@@ -155,7 +143,8 @@ render config chs =
             --, style "transform" "translate(0%,0%)"
             ]
             drawing
-        , circle 10 [ fill black, xf [ mv center ] ]
+
+        --, circle 10 [ fill black, xf [ mv center ] ]
         ]
         |> Svg.map never
 
