@@ -7,17 +7,16 @@ import Utils exposing (..)
 
 
 main =
+    let
+        twig =
+            { axiom = "F"
+            , rules = [ ( 'F', "|[-F][+F]" ) ]
+            }
+    in
     div []
-        [ lsys
-            { depth = 7
-            , axiom = "F"
-            , rules = [ ( 'F', "|[-F][+F]" ) ]
-            }
-        , lsys
-            { depth = 7
-            , axiom = "F"
-            , rules = [ ( 'F', "|[-F][+F]" ) ]
-            }
+        [ lsys twig 1
+        , lsys twig 2
+        , lsys twig 7
         , div []
             (results
                 |> List.reverse
@@ -234,10 +233,17 @@ results =
     scanApplyN 5 applyRules axiom
 
 
+type alias Axiom =
+    String
+
+
+type alias Rules =
+    List ( Char, String )
+
+
 type alias Config =
-    { axiom : String
-    , rules : List ( Char, String )
-    , depth : Int
+    { axiom : Axiom
+    , rules : Rules
     }
 
 
@@ -266,12 +272,12 @@ expand depth rules =
     List.concatMap rewriteC2
 
 
-lsys : Config -> Html msg
-lsys config =
+lsys : Config -> Int -> Html msg
+lsys config maxDepth =
     let
         rd =
             Dict.fromList config.rules
     in
-    List.range 1 (config.depth - 1)
+    List.range 1 (maxDepth - 1)
         |> List.foldl (\depth -> expand depth rd) (parseAxiom config.axiom)
         |> render
