@@ -151,12 +151,8 @@ render config chs =
         [ group
             [ strokeW 1
             , stroke black
-
-            --, style "transform" "translate(0%,0%)"
             ]
             drawing
-
-        --, circle 10 [ fill black, xf [ mv center ] ]
         ]
         |> Svg.map never
 
