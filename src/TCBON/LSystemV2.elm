@@ -3,6 +3,7 @@ module TCBON.LSystemV2 exposing (..)
 import Dict exposing (Dict)
 import Html exposing (Html, div)
 import Svg exposing (Svg)
+import TypedSvg.Attributes as TA
 import Utils exposing (..)
 
 
@@ -88,7 +89,9 @@ type alias Bounds =
 
 addPointToBounds : Vec -> Bounds -> Bounds
 addPointToBounds vec bounds =
-    bounds
+    { min = vMap2 min bounds.min vec
+    , max = vMap2 max bounds.max vec
+    }
 
 
 render : Config -> List C2 -> Html msg
@@ -96,6 +99,9 @@ render config chs =
     let
         ( w, h ) =
             ( 100, 100 )
+
+        vs =
+            vSub bounds.max bounds.min
 
         ( bounds, drawing ) =
             renderCharList
@@ -121,6 +127,8 @@ render config chs =
     in
     Svg.svg
         [ viewBoxC w h
+
+        --, TA.viewBox bounds.min.x bounds.min.y (abs vs.x |> atLeast 100) (abs vs.y |> atLeast 100)
         , dBlock
         , noFill
         , noStroke
