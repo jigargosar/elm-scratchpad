@@ -99,17 +99,20 @@ render config chs =
     let
         --( w, h ) =
         --    ( 100, 100 )
-        vDiffAbs =
+        vDiff =
             vSub bounds.max bounds.min
-                |> vAbs
 
         ( bounds, drawing ) =
             renderCharList
-                { p = config.origin
+                { p = vZero
+
+                --p = config.origin
                 , a = degrees -90 + config.initialAngle
                 , da = config.deltaAngle
                 , ds = config.stepSize
-                , len = config.initialLength
+
+                --, len = config.initialLength
+                , len = 100
                 , prev = None
                 }
                 chs
@@ -124,10 +127,16 @@ render config chs =
                         )
                     )
                     ( { min = vZero, max = vZero }, [] )
+                |> mapFirst
+                    (\b ->
+                        { min = vMapBoth (floor >> toFloat) b.min
+                        , max = vMapBoth (ceiling >> toFloat) b.max
+                        }
+                    )
     in
     Svg.svg
         [ -- viewBoxC w h ,
-          TA.viewBox (bounds.min.x - 5) (bounds.min.y - 5) (vDiffAbs.x + 10) (vDiffAbs.y + 10)
+          TA.viewBox (bounds.min.x - 5) (bounds.min.y - 5) (vDiff.x + 10) (vDiff.y + 10)
         , saWidth 150
         , saHeight 150
         , dBlock
