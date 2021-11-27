@@ -15,8 +15,6 @@ main =
             , rules = [ ( 'F', "|[+F][-F]" ) ]
             , deltaAngle = degrees 90
             , stepSize = 13 / 20
-            , origin = vZero
-            , initialLength = 40
             , initialAngle = 0
             }
 
@@ -26,8 +24,6 @@ main =
             , rules = [ ( 'F', "|[+F][-F]" ) ]
             , deltaAngle = degrees 80
             , stepSize = 13 / 20
-            , origin = vZero
-            , initialLength = 30
             , initialAngle = degrees -5
             }
 
@@ -37,8 +33,6 @@ main =
             , rules = [ ( 'F', "|[+F][-F]" ) ]
             , deltaAngle = degrees 45
             , stepSize = 13 / 20
-            , origin = vZero
-            , initialLength = 28
             , initialAngle = 0
             }
 
@@ -48,8 +42,6 @@ main =
             , rules = [ ( 'F', "|[-F][+F]" ) ]
             , deltaAngle = degrees 20
             , stepSize = 1 / 2
-            , origin = vec 0 45
-            , initialLength = 90
             , initialAngle = 0
             }
 
@@ -59,8 +51,6 @@ main =
             , rules = [ ( 'F', "F[-F]F[+F]F" ) ]
             , deltaAngle = degrees 25
             , stepSize = 1 / 2
-            , origin = vec 0 45
-            , initialLength = 16
             , initialAngle = 0
             }
     in
@@ -229,8 +219,6 @@ type alias Rules =
 type alias Config =
     { axiom : Axiom
     , rules : Rules
-    , origin : Vec
-    , initialLength : Float
     , initialAngle : Float
     , deltaAngle : Float
     , stepSize : Float
