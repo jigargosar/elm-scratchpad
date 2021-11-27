@@ -78,6 +78,7 @@ render str =
                 { p = vZero
                 , a = degrees -90
                 , da = degrees 20
+                , ds = 0.5
                 , len = 150
                 , prev = None
                 }
@@ -96,7 +97,7 @@ drawC2List t chs acc =
         (C2 depth h) :: tail ->
             let
                 factor =
-                    0.5
+                    t.ds
 
                 ( nt, res ) =
                     case h of
@@ -143,6 +144,7 @@ type alias Turtle =
     { p : Vec
     , a : Float
     , da : Float
+    , ds : Float
     , len : Float
     , prev : Prev
     }
