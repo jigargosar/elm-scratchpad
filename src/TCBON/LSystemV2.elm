@@ -86,8 +86,8 @@ viewLSys3 ( c, d ) =
         [ lsys c 1, lsys c 2, lsys c d ]
 
 
-type alias PathAcc =
-    List ( Vec, Vec )
+type alias LineSegment =
+    ( Vec, Vec )
 
 
 type alias Bounds =
@@ -105,18 +105,7 @@ render : Config -> List C2 -> Html msg
 render config chs =
     let
         ( bounds, drawing ) =
-            renderCharList
-                { p = vZero
-
-                --p = config.origin
-                , a = degrees -90 + config.initialAngle
-                , da = config.deltaAngle
-                , ds = config.stepSize
-
-                --, len = config.initialLength
-                , len = 100
-                , prev = None
-                }
+            toLineSegments (initTurtle config)
                 chs
                 []
                 |> List.foldl
@@ -157,8 +146,8 @@ render config chs =
         |> Svg.map never
 
 
-renderCharList : Turtle -> List C2 -> PathAcc -> PathAcc
-renderCharList t chs acc =
+toLineSegments : Turtle -> List C2 -> List LineSegment -> List LineSegment
+toLineSegments t chs acc =
     case chs of
         [] ->
             acc
@@ -171,10 +160,10 @@ renderCharList t chs acc =
                 ( nt, res ) =
                     renderChar factor depth h t
             in
-            renderCharList nt tail (acc ++ res)
+            toLineSegments nt tail (acc ++ res)
 
 
-moveForward : Float -> Int -> Turtle -> ( Turtle, PathAcc )
+moveForward : Float -> Int -> Turtle -> ( Turtle, List LineSegment )
 moveForward factor depth pen =
     let
         np =
@@ -185,7 +174,7 @@ moveForward factor depth pen =
     )
 
 
-renderChar : Float -> Int -> Char -> Turtle -> ( Turtle, PathAcc )
+renderChar : Float -> Int -> Char -> Turtle -> ( Turtle, List LineSegment )
 renderChar factor depth ch pen =
     case ch of
         'F' ->
@@ -224,6 +213,21 @@ type alias Turtle =
     , ds : Float
     , len : Float
     , prev : Prev
+    }
+
+
+initTurtle : Config -> Turtle
+initTurtle config =
+    { p = vZero
+
+    --p = config.origin
+    , a = degrees -90 + config.initialAngle
+    , da = config.deltaAngle
+    , ds = config.stepSize
+
+    --, len = config.initialLength
+    , len = 100
+    , prev = None
     }
 
 
