@@ -140,7 +140,7 @@ type PathCommands
     = LineTo Vec
 
 
-moveForward : Float -> Int -> Turtle -> ( Turtle, List (Svg msg) )
+moveForward : Float -> Int -> Turtle -> ( Turtle, PathAcc )
 moveForward factor depth pen =
     let
         np =
