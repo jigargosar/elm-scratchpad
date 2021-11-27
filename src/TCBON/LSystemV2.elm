@@ -133,6 +133,11 @@ renderCharList t chs acc =
             renderCharList nt tail (acc ++ res)
 
 
+type PathCommands
+    = LineTo Vec
+
+
+moveForward : Float -> Int -> Turtle -> ( Turtle, List (Svg msg) )
 moveForward factor depth pen =
     let
         np =
