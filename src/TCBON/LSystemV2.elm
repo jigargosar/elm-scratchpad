@@ -93,7 +93,12 @@ moveForward factor depth pen =
         np =
             vAdd pen.p (vFromPolar ( pen.len * (factor ^ toFloat depth), pen.a ))
     in
-    ( { pen | p = np }, [ vPolyline [ pen.p, np ] [] ] )
+    ( { pen | p = np }
+    , [ vPolyline [ pen.p, np ]
+            [ style "vector-effect" "non-scaling-stroke"
+            ]
+      ]
+    )
 
 
 renderChar factor depth ch pen =
