@@ -19,9 +19,10 @@ main =
             , initialPosition = vZero
             }
     in
-    div
-        [ dGrid, style "grid-auto-flow" "column" ]
-        [ lsys twig 1, lsys twig 2, lsys twig 7 ]
+    div []
+        [ div [ dGrid, style "grid-auto-flow" "column" ]
+            [ lsys twig 1, lsys twig 2, lsys twig 7 ]
+        ]
 
 
 render : Config -> List C2 -> Html msg
