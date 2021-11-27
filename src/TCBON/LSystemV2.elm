@@ -18,6 +18,7 @@ main =
             , stepSize = 13 / 20
             , origin = vZero
             , initialLength = 40
+            , initialAngle = 0
             }
 
         bentBigH : Config
@@ -28,6 +29,7 @@ main =
             , stepSize = 13 / 20
             , origin = vZero
             , initialLength = 30
+            , initialAngle = degrees -5
             }
 
         twoYs : Config
@@ -38,6 +40,7 @@ main =
             , stepSize = 13 / 20
             , origin = vZero
             , initialLength = 28
+            , initialAngle = 0
             }
 
         twig : Config
@@ -48,6 +51,7 @@ main =
             , stepSize = 1 / 2
             , origin = vec 0 45
             , initialLength = 90
+            , initialAngle = 0
             }
     in
     div []
@@ -73,7 +77,7 @@ render config chs =
         drawing =
             renderCharList
                 { p = config.origin
-                , a = degrees -90
+                , a = degrees -90 + config.initialAngle
                 , da = config.deltaAngle
                 , ds = config.stepSize
                 , len = config.initialLength
@@ -189,6 +193,7 @@ type alias Config =
     , rules : Rules
     , origin : Vec
     , initialLength : Float
+    , initialAngle : Float
     , deltaAngle : Float
     , stepSize : Float
     }
