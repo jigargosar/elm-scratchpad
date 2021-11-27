@@ -13,9 +13,8 @@ main =
             { axiom = "F"
             , rules = [ ( 'F', "|[-F][+F]" ) ]
             , deltaAngle = degrees 20
-            , initialPosition = vZero
-            , initialLength = 100
             , stepSizeFactor = 0.5
+            , initialPosition = vZero
             }
     in
     div []
@@ -30,11 +29,11 @@ render config chs =
     let
         drawing =
             renderCharList
-                { p = vZero
+                { p = config.initialPosition
                 , a = degrees -90
-                , da = degrees 20
-                , ds = 0.5
-                , len = 150
+                , da = config.deltaAngle
+                , ds = config.stepSizeFactor
+                , len = 100
                 , prev = None
                 }
                 chs
@@ -190,7 +189,6 @@ type alias Config =
     , rules : Rules
     , initialPosition : Vec
     , deltaAngle : Float
-    , initialLength : Float
     , stepSizeFactor : Float
     }
 
