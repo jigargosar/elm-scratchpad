@@ -104,9 +104,6 @@ addPointToBounds vec bounds =
 render : Config -> List C2 -> Html msg
 render config chs =
     let
-        _ =
-            List.foldl renderChar ( initTurtle config, [] ) chs
-
         ( bounds, drawing ) =
             List.foldl renderChar ( initTurtle config, [] ) chs
                 |> second
