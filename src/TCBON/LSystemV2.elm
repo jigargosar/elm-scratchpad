@@ -15,7 +15,7 @@ main =
             { axiom = "[F]--F"
             , rules = [ ( 'F', "|[+F][-F]" ) ]
             , deltaAngle = degrees 90
-            , stepSizeFactor = 0.65
+            , stepSize = 0.65
             , origin = vZero
             , stepLength = 40
             }
@@ -25,7 +25,7 @@ main =
             { axiom = "F"
             , rules = [ ( 'F', "|[-F][+F]" ) ]
             , deltaAngle = degrees 20
-            , stepSizeFactor = 0.5
+            , stepSize = 0.5
             , origin = vAdd vZero (vec 0 50)
             , stepLength = 80
             }
@@ -51,7 +51,7 @@ render config chs =
                 { p = config.origin
                 , a = degrees -90
                 , da = config.deltaAngle
-                , ds = config.stepSizeFactor
+                , ds = config.stepSize
                 , len = config.stepLength
                 , prev = None
                 }
@@ -166,7 +166,7 @@ type alias Config =
     , origin : Vec
     , stepLength : Float
     , deltaAngle : Float
-    , stepSizeFactor : Float
+    , stepSize : Float
     }
 
 
