@@ -145,40 +145,34 @@ render config chs =
         |> Svg.map never
 
 
-moveForward : Int -> Turtle -> ( Turtle, List Segment )
-moveForward depth pen =
+moveForward : Int -> ( Turtle, List Segment ) -> ( Turtle, List Segment )
+moveForward depth ( pen, acc ) =
     let
         np =
             vAdd pen.p (vFromPolar ( pen.len * (pen.ds ^ toFloat depth), pen.a ))
     in
     ( { pen | p = np }
-    , [ ( pen.p, np ) ]
+    , ( pen.p, np ) :: acc
     )
 
 
 renderChar : C2 -> ( Turtle, List Segment ) -> ( Turtle, List Segment )
-renderChar c ( t, acc ) =
-    renderCharHelp c t
-        |> mapSecond (List.append acc)
-
-
-renderCharHelp : C2 -> Turtle -> ( Turtle, List Segment )
-renderCharHelp (C2 depth ch) t =
-    case ch of
+renderChar (C2 depth c) (( t, acc ) as tAcc) =
+    case c of
         'F' ->
-            moveForward depth t
+            moveForward depth tAcc
 
         '|' ->
-            moveForward depth t
+            moveForward depth tAcc
 
         '-' ->
-            ( { t | a = t.a - t.da }, [] )
+            ( { t | a = t.a - t.da }, acc )
 
         '+' ->
-            ( { t | a = t.a + t.da }, [] )
+            ( { t | a = t.a + t.da }, acc )
 
         '[' ->
-            ( { t | prev = Prev t }, [] )
+            ( { t | prev = Prev t }, acc )
 
         ']' ->
             ( case t.prev of
@@ -187,11 +181,11 @@ renderCharHelp (C2 depth ch) t =
 
                 Prev pt ->
                     pt
-            , []
+            , acc
             )
 
         _ ->
-            ( t, [] )
+            ( t, acc )
 
 
 type alias Turtle =
