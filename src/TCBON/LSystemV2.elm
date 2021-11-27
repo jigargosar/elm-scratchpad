@@ -88,7 +88,7 @@ render config chs =
         ( w, h ) =
             ( 100, 100 )
 
-        drawing =
+        ( bounds, drawing ) =
             renderCharList
                 { p = config.origin
                 , a = degrees -90 + config.initialAngle
@@ -100,11 +100,13 @@ render config chs =
                 chs
                 []
                 |> List.foldl
-                    (\( a, b ) acc ->
-                        vPolyline [ a, b ] [ style "vector-effect" "non-scaling-stroke" ]
+                    (\( a, b ) ( bnd, acc ) ->
+                        ( bnd
+                        , vPolyline [ a, b ] [ style "vector-effect" "non-scaling-stroke" ]
                             :: acc
+                        )
                     )
-                    []
+                    ( (), [] )
     in
     Svg.svg
         [ viewBoxC w h
