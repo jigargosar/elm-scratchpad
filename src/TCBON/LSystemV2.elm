@@ -17,7 +17,7 @@ main =
             , deltaAngle = degrees 90
             , stepSize = 0.65
             , origin = vZero
-            , stepLength = 40
+            , initialLength = 40
             }
 
         twig : Config
@@ -27,7 +27,7 @@ main =
             , deltaAngle = degrees 20
             , stepSize = 0.5
             , origin = vAdd vZero (vec 0 50)
-            , stepLength = 80
+            , initialLength = 80
             }
     in
     div []
@@ -52,7 +52,7 @@ render config chs =
                 , a = degrees -90
                 , da = config.deltaAngle
                 , ds = config.stepSize
-                , len = config.stepLength
+                , len = config.initialLength
                 , prev = None
                 }
                 chs
@@ -164,7 +164,7 @@ type alias Config =
     { axiom : Axiom
     , rules : Rules
     , origin : Vec
-    , stepLength : Float
+    , initialLength : Float
     , deltaAngle : Float
     , stepSize : Float
     }
