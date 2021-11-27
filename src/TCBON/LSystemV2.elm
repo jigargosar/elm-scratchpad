@@ -28,7 +28,7 @@ render : Config -> List C2 -> Html msg
 render config chs =
     let
         drawing =
-            drawC2List
+            renderCharList
                 { p = vZero
                 , a = degrees -90
                 , da = degrees 20
@@ -56,8 +56,8 @@ render config chs =
         ]
 
 
-drawC2List : Turtle -> List C2 -> List (Svg msg) -> List (Svg msg)
-drawC2List t chs acc =
+renderCharList : Turtle -> List C2 -> List (Svg msg) -> List (Svg msg)
+renderCharList t chs acc =
     case chs of
         [] ->
             acc
@@ -70,7 +70,7 @@ drawC2List t chs acc =
                 ( nt, res ) =
                     renderChar factor depth h t
             in
-            drawC2List nt tail (acc ++ res)
+            renderCharList nt tail (acc ++ res)
 
 
 renderChar factor depth ch pen =
