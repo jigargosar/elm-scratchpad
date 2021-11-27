@@ -71,6 +71,15 @@ main =
             , stepSize = 1 / 3
             , initialAngle = 0
             }
+
+        bush_1 : Config
+        bush_1 =
+            { axiom = "F"
+            , rules = [ ( 'F', "FF+[+F-F-F]-[-F+F+F]" ) ]
+            , deltaAngle = degrees 25
+            , stepSize = 1 / 2
+            , initialAngle = 0
+            }
     in
     div []
         ([ ( bigH, 9 )
@@ -80,6 +89,7 @@ main =
          , ( weed_1, 6 )
          , ( weed_2, 6 )
          , ( weed_3, 6 )
+         , ( bush_1, 5 )
          ]
             |> List.map viewLSys3
         )
