@@ -126,9 +126,8 @@ render config chs =
                     ( { min = vZero, max = vZero }, [] )
     in
     Svg.svg
-        [ viewBoxC w h
-
-        --, TA.viewBox bounds.min.x bounds.min.y (abs vs.x |> atLeast 100) (abs vs.y |> atLeast 100)
+        [ TA.viewBox bounds.min.x bounds.min.y (abs vs.x |> atLeast 100) (abs vs.y |> atLeast 100)
+        , viewBoxC w h
         , dBlock
         , noFill
         , noStroke
