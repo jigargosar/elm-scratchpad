@@ -8,7 +8,11 @@ import Utils exposing (..)
 
 main =
     div []
-        [ lsys { depth = 7, rules = rulesDict, axiom = axiom }
+        [ lsys
+            { depth = 7
+            , axiom = "F"
+            , rules = [ ( 'F', "|[-F][+F]" ) ]
+            }
         , div []
             (results
                 |> List.reverse
@@ -224,7 +228,7 @@ results =
 
 type alias Config =
     { axiom : String
-    , rules : Dict Char String
+    , rules : List ( Char, String )
     , depth : Int
     }
 
@@ -256,6 +260,10 @@ expand depth rules =
 
 lsys : Config -> Html msg
 lsys config =
+    let
+        rd =
+            Dict.fromList config.rules
+    in
     List.range 1 (config.depth - 1)
-        |> List.foldl (\depth -> expand depth config.rules) (parseAxiom config.axiom)
+        |> List.foldl (\depth -> expand depth rd) (parseAxiom config.axiom)
         |> render
