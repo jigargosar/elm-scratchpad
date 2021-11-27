@@ -104,7 +104,7 @@ addPointToBounds vec bounds =
 render : Config -> List C2 -> Html msg
 render config chs =
     let
-        foo (C2 d c) ( t, acc ) =
+        foo c ( t, acc ) =
             ( t, acc )
 
         _ =
@@ -176,27 +176,27 @@ moveForward depth pen =
 
 
 renderChar : C2 -> Turtle -> ( Turtle, List Segment )
-renderChar (C2 depth ch) pen =
+renderChar (C2 depth ch) t =
     case ch of
         'F' ->
-            moveForward depth pen
+            moveForward depth t
 
         '|' ->
-            moveForward depth pen
+            moveForward depth t
 
         '-' ->
-            ( { pen | a = pen.a - pen.da }, [] )
+            ( { t | a = t.a - t.da }, [] )
 
         '+' ->
-            ( { pen | a = pen.a + pen.da }, [] )
+            ( { t | a = t.a + t.da }, [] )
 
         '[' ->
-            ( { pen | prev = Prev pen }, [] )
+            ( { t | prev = Prev t }, [] )
 
         ']' ->
-            ( case pen.prev of
+            ( case t.prev of
                 None ->
-                    pen
+                    t
 
                 Prev pt ->
                     pt
@@ -204,7 +204,7 @@ renderChar (C2 depth ch) pen =
             )
 
         _ ->
-            ( pen, [] )
+            ( t, [] )
 
 
 type alias Turtle =
