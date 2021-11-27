@@ -119,7 +119,7 @@ render config chs =
         |> Svg.map never
 
 
-renderCharList : Turtle -> List C2 -> List (Svg Never) -> List (Svg Never)
+renderCharList : Turtle -> List C2 -> PathAcc -> PathAcc
 renderCharList t chs acc =
     case chs of
         [] ->
@@ -154,7 +154,7 @@ moveForward factor depth pen =
     )
 
 
-renderChar : Float -> Int -> Char -> Turtle -> ( Turtle, List (Svg msg) )
+renderChar : Float -> Int -> Char -> Turtle -> ( Turtle, PathAcc )
 renderChar factor depth ch pen =
     case ch of
         'F' ->
