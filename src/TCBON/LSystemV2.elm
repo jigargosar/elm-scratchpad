@@ -15,7 +15,7 @@ main =
             { axiom = "[F]--F"
             , rules = [ ( 'F', "|[+F][-F]" ) ]
             , deltaAngle = degrees 90
-            , stepSize = 0.65
+            , stepSize = 13 / 20
             , origin = vZero
             , initialLength = 40
             }
@@ -25,7 +25,17 @@ main =
             { axiom = "[F]--F"
             , rules = [ ( 'F', "|[+F][-F]" ) ]
             , deltaAngle = degrees 80
-            , stepSize = 0.65
+            , stepSize = 13 / 20
+            , origin = vZero
+            , initialLength = 30
+            }
+
+        twoYs : Config
+        twoYs =
+            { axiom = "[F]----F"
+            , rules = [ ( 'F', "|[+F][-F]" ) ]
+            , deltaAngle = degrees 45
+            , stepSize = 13 / 20
             , origin = vZero
             , initialLength = 30
             }
@@ -35,7 +45,7 @@ main =
             { axiom = "F"
             , rules = [ ( 'F', "|[-F][+F]" ) ]
             , deltaAngle = degrees 20
-            , stepSize = 0.5
+            , stepSize = 1 / 2
             , origin = vec 0 45
             , initialLength = 90
             }
@@ -43,6 +53,7 @@ main =
     div []
         ([ ( bigH, 9 )
          , ( bentBigH, 9 )
+         , ( twoYs, 9 )
          , ( twig, 9 )
          ]
             |> List.map viewLSys3
