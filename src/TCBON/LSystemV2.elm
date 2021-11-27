@@ -105,9 +105,7 @@ render : Config -> List C2 -> Html msg
 render config chs =
     let
         ( bounds, drawing ) =
-            charsToLineSegments (initTurtle config)
-                chs
-                []
+            charsToLineSegments (initTurtle config) chs []
                 |> List.foldl
                     (\( a, b ) ( bnd, acc ) ->
                         ( bnd
@@ -147,8 +145,8 @@ render config chs =
 
 
 charsToLineSegments : Turtle -> List C2 -> List Segment -> List Segment
-charsToLineSegments t chs acc =
-    case chs of
+charsToLineSegments t charList acc =
+    case charList of
         [] ->
             acc
 
