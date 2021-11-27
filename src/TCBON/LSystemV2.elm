@@ -1,7 +1,7 @@
 module TCBON.LSystemV2 exposing (..)
 
 import Dict exposing (Dict)
-import Html exposing (Html, div, text)
+import Html exposing (Html, div)
 import Svg exposing (Svg)
 import Utils exposing (..)
 
@@ -21,45 +21,6 @@ main =
         [ lsys twig 1
         , lsys twig 2
         , lsys twig 7
-        , div []
-            (results
-                |> List.reverse
-                |> List.take 2
-                |> List.map drawResult
-            )
-        , div []
-            (results
-                |> List.map viewResult
-            )
-        ]
-
-
-drawResult : String -> Html msg
-drawResult str =
-    Svg.svg
-        [ style "width" "100vw"
-        , style "height" "40vh"
-        , dBlock
-        , noFill
-        , noStroke
-        , overflowVisible
-        ]
-        [ group
-            [ style "transform" "translate(50%,50%)"
-            , strokeW 1
-            , stroke black
-            ]
-            (drawStr
-                { p = vZero
-                , a = degrees -90
-                , da = degrees 20
-                , ds = 0.5
-                , len = 30
-                , prev = None
-                }
-                (String.toList str)
-                []
-            )
         ]
 
 
@@ -206,35 +167,6 @@ drawStr t chs acc =
                             ( t, [] )
             in
             drawStr nt tail (acc ++ res)
-
-
-viewResult r =
-    div [] [ text r ]
-
-
-axiom =
-    "F"
-
-
-rulesDict =
-    Dict.fromList
-        [ ( 'F', "|[-F][+F]" )
-        ]
-
-
-applyRules : String -> String
-applyRules =
-    String.toList
-        >> List.foldr
-            (\ch ->
-                (::) (Dict.get ch rulesDict |> Maybe.withDefault (String.fromChar ch))
-            )
-            []
-        >> String.join ""
-
-
-results =
-    scanApplyN 5 applyRules axiom
 
 
 type alias Axiom =
