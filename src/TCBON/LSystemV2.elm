@@ -197,13 +197,13 @@ type C2
     = C2 Int Char
 
 
-expandAxion : String -> List C2
-expandAxion =
-    parseRule 0
+expandAxiom : String -> List C2
+expandAxiom =
+    expandString 0
 
 
-parseRule : Int -> String -> List C2
-parseRule depth =
+expandString : Int -> String -> List C2
+expandString depth =
     String.toList >> List.map (C2 depth)
 
 
@@ -212,7 +212,7 @@ expand rules depth =
     let
         rewriteC2 ((C2 _ ch) as c2) =
             Dict.get ch rules
-                |> Maybe.map (parseRule depth)
+                |> Maybe.map (expandString depth)
                 |> Maybe.withDefault [ c2 ]
     in
     List.concatMap rewriteC2
@@ -225,5 +225,5 @@ lsys config maxDepth =
             Dict.fromList config.rules
     in
     List.range 1 (maxDepth - 1)
-        |> List.foldl (expand rulesDict) (expandAxion config.axiom)
+        |> List.foldl (expand rulesDict) (expandAxiom config.axiom)
         |> render config
