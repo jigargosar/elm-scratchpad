@@ -29,13 +29,13 @@ main =
             }
     in
     div []
-        ([ bigH, twig ]
+        ([ ( bigH, 7 ), ( twig, 5 ) ]
             |> List.map viewLSys3
         )
 
 
-viewLSys3 c =
-    div [ dGrid, style "grid-auto-flow" "column" ] [ lsys c 1, lsys c 2, lsys c 10 ]
+viewLSys3 ( c, d ) =
+    div [ dGrid, style "grid-auto-flow" "column" ] [ lsys c 1, lsys c 2, lsys c d ]
 
 
 render : Config -> List C2 -> Html msg
@@ -47,14 +47,14 @@ render config chs =
                 , a = degrees -90
                 , da = config.deltaAngle
                 , ds = config.stepSizeFactor
-                , len = 80
+                , len = 50
                 , prev = None
                 }
                 chs
                 []
     in
     Svg.svg
-        [ viewBoxC 200 200
+        [ viewBoxC 100 100
         , dBlock
         , noFill
         , noStroke
