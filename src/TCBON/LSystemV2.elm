@@ -59,7 +59,7 @@ main =
          , ( bentBigH, 9 )
          , ( twoYs, 9 )
          , ( twig, 9 )
-         , ( weed_1, 5 )
+         , ( weed_1, 6 )
          ]
             |> List.map viewLSys3
         )
