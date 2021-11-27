@@ -26,7 +26,7 @@ main =
             , rules = [ ( 'F', "|[-F][+F]" ) ]
             , deltaAngle = degrees 20
             , stepSize = 0.5
-            , origin = vAdd vZero (vec 0 50)
+            , origin = vec 0 50
             , initialLength = 80
             }
     in
