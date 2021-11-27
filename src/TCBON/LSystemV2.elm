@@ -151,6 +151,7 @@ moveForward factor depth pen =
     )
 
 
+renderChar : Float -> Int -> c -> Turtle -> ( Turtle, List (Svg msg) )
 renderChar factor depth ch pen =
     case ch of
         'F' ->
