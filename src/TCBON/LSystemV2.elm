@@ -108,6 +108,45 @@ drawC2List t chs acc =
             drawC2List nt tail (acc ++ res)
 
 
+renderChar factor depth ch pen =
+    case ch of
+        'F' ->
+            let
+                np =
+                    vAdd pen.p (vFromPolar ( pen.len * (factor ^ toFloat depth), pen.a ))
+            in
+            ( { pen | p = np }, [ vPolyline [ pen.p, np ] [] ] )
+
+        '|' ->
+            let
+                np =
+                    vAdd pen.p (vFromPolar ( pen.len * (factor ^ toFloat depth), pen.a ))
+            in
+            ( { pen | p = np }, [ vPolyline [ pen.p, np ] [] ] )
+
+        '-' ->
+            ( { pen | a = pen.a - pen.da }, [] )
+
+        '+' ->
+            ( { pen | a = pen.a + pen.da }, [] )
+
+        '[' ->
+            ( { pen | prev = Prev pen }, [] )
+
+        ']' ->
+            ( case pen.prev of
+                None ->
+                    pen
+
+                Prev pt ->
+                    pt
+            , []
+            )
+
+        _ ->
+            ( pen, [] )
+
+
 type alias Turtle =
     { p : Vec
     , a : Float
