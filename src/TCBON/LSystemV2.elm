@@ -104,6 +104,12 @@ addPointToBounds vec bounds =
 render : Config -> List C2 -> Html msg
 render config chs =
     let
+        foo (C2 d c) ( t, acc ) =
+            ( t, acc )
+
+        _ =
+            List.foldl foo ( initTurtle config, [] ) chs
+
         ( bounds, drawing ) =
             charsToLineSegments (initTurtle config) chs []
                 |> List.foldl
