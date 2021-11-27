@@ -20,18 +20,28 @@ main =
             , initialLength = 40
             }
 
+        bentBigH : Config
+        bentBigH =
+            { axiom = "[F]--F"
+            , rules = [ ( 'F', "|[+F][-F]" ) ]
+            , deltaAngle = degrees 80
+            , stepSize = 0.65
+            , origin = vZero
+            , initialLength = 30
+            }
+
         twig : Config
         twig =
             { axiom = "F"
             , rules = [ ( 'F', "|[-F][+F]" ) ]
             , deltaAngle = degrees 20
             , stepSize = 0.5
-            , origin = vec 0 50
-            , initialLength = 80
+            , origin = vec 0 45
+            , initialLength = 90
             }
     in
     div []
-        ([ ( bigH, 8 ), ( twig, 8 ) ]
+        ([ ( bigH, 9 ), ( bentBigH, 9 ), ( twig, 9 ) ]
             |> List.map viewLSys3
         )
 
