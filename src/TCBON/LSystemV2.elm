@@ -3,7 +3,6 @@ module TCBON.LSystemV2 exposing (..)
 import Dict exposing (Dict)
 import Html exposing (Html, div)
 import Svg exposing (Svg)
-import TypedSvg.Attributes as TA
 import Utils exposing (..)
 
 
