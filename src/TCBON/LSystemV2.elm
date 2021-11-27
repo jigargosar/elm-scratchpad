@@ -108,7 +108,8 @@ render config chs =
             List.foldl renderChar ( initTurtle config, [] ) chs
 
         ( bounds, drawing ) =
-            charsToLineSegments (initTurtle config) chs []
+            List.foldl renderChar ( initTurtle config, [] ) chs
+                |> second
                 |> List.foldl
                     (\( a, b ) ( bnd, acc ) ->
                         ( bnd
@@ -145,20 +146,6 @@ render config chs =
             drawing
         ]
         |> Svg.map never
-
-
-charsToLineSegments : Turtle -> List C2 -> List Segment -> List Segment
-charsToLineSegments t charList acc =
-    case charList of
-        [] ->
-            acc
-
-        c :: tail ->
-            let
-                ( nt, res ) =
-                    renderCharHelp c t
-            in
-            charsToLineSegments nt tail (acc ++ res)
 
 
 moveForward : Int -> Turtle -> ( Turtle, List Segment )
