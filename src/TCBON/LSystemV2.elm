@@ -142,63 +142,6 @@ type Prev
     | Prev Turtle
 
 
-drawStr : Turtle -> List Char -> List (Svg msg) -> List (Svg msg)
-drawStr t chs acc =
-    case chs of
-        [] ->
-            acc
-
-        h :: tail ->
-            let
-                ( nt, res ) =
-                    case h of
-                        'F' ->
-                            let
-                                np =
-                                    vAdd t.p (vFromPolar ( t.len, t.a ))
-                            in
-                            ( { t | p = np }
-                            , [ vPolyline [ t.p, np ]
-                                    [ style "vector-effect" "non-scaling-stroke" ]
-                              ]
-                            )
-
-                        '|' ->
-                            let
-                                np =
-                                    vAdd t.p (vFromPolar ( t.len, t.a ))
-                            in
-                            ( { t | p = np }
-                            , [ vPolyline [ t.p, np ]
-                                    [ style "vector-effect" "non-scaling-stroke" ]
-                              ]
-                            )
-
-                        '-' ->
-                            ( { t | a = t.a - t.da }, [] )
-
-                        '+' ->
-                            ( { t | a = t.a + t.da }, [] )
-
-                        '[' ->
-                            ( { t | prev = Prev t }, [] )
-
-                        ']' ->
-                            ( case t.prev of
-                                None ->
-                                    t
-
-                                Prev pt ->
-                                    pt
-                            , []
-                            )
-
-                        _ ->
-                            ( t, [] )
-            in
-            drawStr nt tail (acc ++ res)
-
-
 type alias Axiom =
     String
 
