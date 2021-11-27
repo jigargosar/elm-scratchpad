@@ -2,9 +2,7 @@ module TCBON.LSystemV2 exposing (..)
 
 import Dict exposing (Dict)
 import Html exposing (Html, div)
-import Html.Attributes as HA
 import Svg exposing (Svg)
-import Svg.Attributes as SA
 import Utils exposing (..)
 
 
@@ -151,7 +149,7 @@ moveForward factor depth pen =
     )
 
 
-renderChar : Float -> Int -> c -> Turtle -> ( Turtle, List (Svg msg) )
+renderChar : Float -> Int -> Char -> Turtle -> ( Turtle, List (Svg msg) )
 renderChar factor depth ch pen =
     case ch of
         'F' ->
