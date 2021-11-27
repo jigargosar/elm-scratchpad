@@ -47,7 +47,7 @@ render config chs =
                 , a = degrees -90
                 , da = config.deltaAngle
                 , ds = config.stepSizeFactor
-                , len = 100
+                , len = 80
                 , prev = None
                 }
                 chs
