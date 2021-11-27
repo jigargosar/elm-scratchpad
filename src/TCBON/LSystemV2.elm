@@ -51,9 +51,10 @@ render config chs =
         , style "outline" "auto blue"
         ]
         [ group
-            [ style "transform" "translate(0%,0%)"
-            , strokeW 1
+            [ strokeW 1
             , stroke black
+
+            --, style "transform" "translate(0%,0%)"
             ]
             drawing
         ]
