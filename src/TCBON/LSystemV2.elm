@@ -29,7 +29,7 @@ main =
             }
     in
     div []
-        ([ ( bigH, 7 ), ( twig, 7 ) ]
+        ([ ( bigH, 8 ), ( twig, 8 ) ]
             |> List.map viewLSys3
         )
 
