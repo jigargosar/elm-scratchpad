@@ -14,7 +14,7 @@ main =
             , rules = [ ( 'F', "|[-F][+F]" ) ]
             , deltaAngle = degrees 20
             , initialPosition = vZero
-            , length = 100
+            , initialLength = 100
             , stepSizeFactor = 0.5
             }
     in
@@ -190,7 +190,7 @@ type alias Config =
     , rules : Rules
     , initialPosition : Vec
     , deltaAngle : Float
-    , length : Float
+    , initialLength : Float
     , stepSizeFactor : Float
     }
 
