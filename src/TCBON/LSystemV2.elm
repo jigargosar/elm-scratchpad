@@ -86,7 +86,7 @@ viewLSys3 ( c, d ) =
         [ lsys c 1, lsys c 2, lsys c d ]
 
 
-type alias LineSegment =
+type alias Segment =
     ( Vec, Vec )
 
 
@@ -146,7 +146,7 @@ render config chs =
         |> Svg.map never
 
 
-toLineSegments : Turtle -> List C2 -> List LineSegment -> List LineSegment
+toLineSegments : Turtle -> List C2 -> List Segment -> List Segment
 toLineSegments t chs acc =
     case chs of
         [] ->
@@ -163,7 +163,7 @@ toLineSegments t chs acc =
             toLineSegments nt tail (acc ++ res)
 
 
-moveForward : Float -> Int -> Turtle -> ( Turtle, List LineSegment )
+moveForward : Float -> Int -> Turtle -> ( Turtle, List Segment )
 moveForward factor depth pen =
     let
         np =
@@ -174,7 +174,7 @@ moveForward factor depth pen =
     )
 
 
-renderChar : Float -> Int -> Char -> Turtle -> ( Turtle, List LineSegment )
+renderChar : Float -> Int -> Char -> Turtle -> ( Turtle, List Segment )
 renderChar factor depth ch pen =
     case ch of
         'F' ->
