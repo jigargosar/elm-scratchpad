@@ -156,10 +156,10 @@ charsToLineSegments t charList acc =
         [] ->
             acc
 
-        (C2 depth h) :: tail ->
+        c :: tail ->
             let
                 ( nt, res ) =
-                    renderChar depth h t
+                    renderChar c t
             in
             charsToLineSegments nt tail (acc ++ res)
 
@@ -175,8 +175,8 @@ moveForward depth pen =
     )
 
 
-renderChar : Int -> Char -> Turtle -> ( Turtle, List Segment )
-renderChar depth ch pen =
+renderChar : C2 -> Turtle -> ( Turtle, List Segment )
+renderChar (C2 depth ch) pen =
     case ch of
         'F' ->
             moveForward depth pen
