@@ -13,6 +13,11 @@ main =
             , axiom = "F"
             , rules = [ ( 'F', "|[-F][+F]" ) ]
             }
+        , lsys
+            { depth = 7
+            , axiom = "F"
+            , rules = [ ( 'F', "|[-F][+F]" ) ]
+            }
         , div []
             (results
                 |> List.reverse
