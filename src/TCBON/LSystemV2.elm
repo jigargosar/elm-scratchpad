@@ -146,10 +146,10 @@ render config chs =
 
 
 moveForward : Int -> ( Turtle, List Segment ) -> ( Turtle, List Segment )
-moveForward depth ( pen, acc ) =
+moveForward t ( pen, acc ) =
     let
         np =
-            vAdd pen.p (vFromPolar ( pen.len * (pen.ds ^ toFloat depth), pen.a ))
+            vAdd pen.p (vFromPolar ( pen.len * (pen.ds ^ toFloat t), pen.a ))
     in
     ( { pen | p = np }
     , ( pen.p, np ) :: acc
