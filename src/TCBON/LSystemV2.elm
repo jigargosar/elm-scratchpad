@@ -29,7 +29,7 @@ main =
             }
     in
     div []
-        ([ ( bigH, 7 ), ( twig, 5 ) ]
+        ([ ( bigH, 7 ), ( twig, 7 ) ]
             |> List.map viewLSys3
         )
 
@@ -47,7 +47,7 @@ render config chs =
                 , a = degrees -90
                 , da = config.deltaAngle
                 , ds = config.stepSizeFactor
-                , len = 50
+                , len = 40
                 , prev = None
                 }
                 chs
