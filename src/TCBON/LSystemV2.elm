@@ -12,7 +12,8 @@ main =
         twig =
             { axiom = "F"
             , rules = [ ( 'F', "|[-F][+F]" ) ]
-            , angle = degrees 20
+            , deltaAngle = degrees 20
+            , initialPosition = vZero
             , length = 100
             , stepSizeFactor = 0.5
             }
@@ -187,7 +188,8 @@ type alias Rules =
 type alias Config =
     { axiom : Axiom
     , rules : Rules
-    , angle : Float
+    , initialPosition : Vec
+    , deltaAngle : Float
     , length : Float
     , stepSizeFactor : Float
     }
