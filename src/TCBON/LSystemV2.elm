@@ -10,6 +10,15 @@ import Utils exposing (..)
 
 main =
     let
+        bigH : Config
+        bigH =
+            { axiom = "[F]--F"
+            , rules = [ ( 'F', "|[+F][-F]" ) ]
+            , deltaAngle = degrees 90
+            , stepSizeFactor = 0.65
+            , initialPosition = vZero
+            }
+
         twig : Config
         twig =
             { axiom = "F"
@@ -20,8 +29,8 @@ main =
             }
     in
     div []
-        [ div [ dGrid, style "grid-auto-flow" "column" ]
-            [ lsys twig 1, lsys twig 2, lsys twig 7 ]
+        [ div [ dGrid, style "grid-auto-flow" "column" ] [ lsys bigH 1, lsys bigH 2, lsys bigH 10 ]
+        , div [ dGrid, style "grid-auto-flow" "column" ] [ lsys twig 1, lsys twig 2, lsys twig 10 ]
         ]
 
 
