@@ -79,7 +79,7 @@ viewLSys3 ( c, d ) =
 
 
 type alias PathAcc =
-    List (Svg Never)
+    List ( Vec, Vec )
 
 
 render : Config -> List C2 -> Html msg
@@ -99,6 +99,10 @@ render config chs =
                 }
                 chs
                 []
+                |> List.map
+                    (\( a, b ) ->
+                        vPolyline [ a, b ] [ style "vector-effect" "non-scaling-stroke" ]
+                    )
     in
     Svg.svg
         [ viewBoxC w h
@@ -143,7 +147,7 @@ moveForward factor depth pen =
             vAdd pen.p (vFromPolar ( pen.len * (factor ^ toFloat depth), pen.a ))
     in
     ( { pen | p = np }
-    , [ vPolyline [ pen.p, np ] [ style "vector-effect" "non-scaling-stroke" ] ]
+    , [ ( pen.p, np ) ]
     )
 
 
