@@ -140,16 +140,12 @@ render config chs =
             vSub bounds.max bounds.min
     in
     Svg.svg
-        [ -- viewBoxC w h ,
-          TA.viewBox (bounds.min.x - 5) (bounds.min.y - 5) (vDiff.x + 10) (vDiff.y + 10)
+        [ TA.viewBox (bounds.min.x - 5) (bounds.min.y - 5) (vDiff.x + 10) (vDiff.y + 10)
         , style "max-height" "200px"
-
-        --, saWidth 150
-        --, saHeight 150
         , dBlock
         , noFill
         , noStroke
-        , overflowVisible
+        , overflowHidden
         , style "outline" "auto blue"
         ]
         [ group
