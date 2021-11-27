@@ -76,7 +76,14 @@ main =
 
 
 viewLSys3 ( c, d ) =
-    div [ dGrid, style "grid-auto-flow" "column" ] [ lsys c 1, lsys c 2, lsys c d ]
+    div
+        [ dGrid
+        , style "grid-auto-flow" "column"
+        , style "justify-items" "stretch"
+
+        --, style "align-items" "stretch"
+        ]
+        [ lsys c 1, lsys c 2, lsys c d ]
 
 
 type alias PathAcc =
@@ -135,8 +142,10 @@ render config chs =
     Svg.svg
         [ -- viewBoxC w h ,
           TA.viewBox (bounds.min.x - 5) (bounds.min.y - 5) (vDiff.x + 10) (vDiff.y + 10)
-        , saWidth 150
-        , saHeight 150
+        , style "max-height" "200px"
+
+        --, saWidth 150
+        --, saHeight 150
         , dBlock
         , noFill
         , noStroke
