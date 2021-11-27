@@ -21,9 +21,6 @@ main =
     in
     div
         [ dGrid
-        , style "width" "100%"
-        , style "height" "100%"
-        , style "place-content" "stretch"
         , style "grid-auto-flow" "column"
         ]
         [ lsys twig 1, lsys twig 2, lsys twig 7 ]
