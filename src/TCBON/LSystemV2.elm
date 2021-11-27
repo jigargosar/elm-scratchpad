@@ -16,7 +16,7 @@ main =
             , rules = [ ( 'F', "|[+F][-F]" ) ]
             , deltaAngle = degrees 90
             , stepSizeFactor = 0.65
-            , pivot = vZero
+            , origin = vZero
             }
 
         twig : Config
@@ -25,7 +25,7 @@ main =
             , rules = [ ( 'F', "|[-F][+F]" ) ]
             , deltaAngle = degrees 20
             , stepSizeFactor = 0.5
-            , pivot = vZero
+            , origin = vZero
             }
     in
     div []
@@ -44,12 +44,9 @@ render config chs =
         ( w, h ) =
             ( 100, 100 )
 
-        pivot =
-            config.pivot
-
         drawing =
             renderCharList
-                { p = pivot
+                { p = config.origin
                 , a = degrees -90
                 , da = config.deltaAngle
                 , ds = config.stepSizeFactor
@@ -164,7 +161,7 @@ type alias Rules =
 type alias Config =
     { axiom : Axiom
     , rules : Rules
-    , pivot : Vec
+    , origin : Vec
     , deltaAngle : Float
     , stepSizeFactor : Float
     }
