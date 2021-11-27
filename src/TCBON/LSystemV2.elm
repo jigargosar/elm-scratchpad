@@ -2,7 +2,9 @@ module TCBON.LSystemV2 exposing (..)
 
 import Dict exposing (Dict)
 import Html exposing (Html, div)
+import Html.Attributes as HA
 import Svg exposing (Svg)
+import Svg.Attributes as SA
 import Utils exposing (..)
 
 
@@ -17,11 +19,14 @@ main =
             , initialPosition = vZero
             }
     in
-    div [ dFlex, pAll "20px" ]
-        [ lsys twig 1
-        , lsys twig 2
-        , lsys twig 7
+    div
+        [ dGrid
+        , style "width" "100%"
+        , style "height" "100%"
+        , style "place-content" "stretch"
+        , style "grid-auto-flow" "column"
         ]
+        [ lsys twig 1, lsys twig 2, lsys twig 7 ]
 
 
 render : Config -> List C2 -> Html msg
@@ -40,9 +45,7 @@ render config chs =
                 []
     in
     Svg.svg
-        [ style "width" "200px"
-        , style "height" "200px"
-        , viewBoxC 200 200
+        [ viewBoxC 200 200
         , dBlock
         , noFill
         , noStroke
