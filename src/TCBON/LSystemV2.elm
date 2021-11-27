@@ -37,7 +37,7 @@ main =
             , deltaAngle = degrees 45
             , stepSize = 13 / 20
             , origin = vZero
-            , initialLength = 30
+            , initialLength = 28
             }
 
         twig : Config
