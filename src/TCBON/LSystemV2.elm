@@ -77,7 +77,7 @@ main =
             { axiom = "F"
             , rules = [ ( 'F', "FF+[+F-F-F]-[-F+F+F]" ) ]
             , deltaAngle = degrees 25
-            , stepSize = 1 / 2
+            , stepSize = 1 / 4
             , initialAngle = 0
             }
     in
