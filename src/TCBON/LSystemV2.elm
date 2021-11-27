@@ -68,42 +68,7 @@ drawC2List t chs acc =
                     t.ds
 
                 ( nt, res ) =
-                    case h of
-                        'F' ->
-                            let
-                                np =
-                                    vAdd t.p (vFromPolar ( t.len * (factor ^ toFloat depth), t.a ))
-                            in
-                            ( { t | p = np }, [ vPolyline [ t.p, np ] [] ] )
-
-                        '|' ->
-                            let
-                                np =
-                                    vAdd t.p (vFromPolar ( t.len * (factor ^ toFloat depth), t.a ))
-                            in
-                            ( { t | p = np }, [ vPolyline [ t.p, np ] [] ] )
-
-                        '-' ->
-                            ( { t | a = t.a - t.da }, [] )
-
-                        '+' ->
-                            ( { t | a = t.a + t.da }, [] )
-
-                        '[' ->
-                            ( { t | prev = Prev t }, [] )
-
-                        ']' ->
-                            ( case t.prev of
-                                None ->
-                                    t
-
-                                Prev pt ->
-                                    pt
-                            , []
-                            )
-
-                        _ ->
-                            ( t, [] )
+                    renderChar factor depth h t
             in
             drawC2List nt tail (acc ++ res)
 
