@@ -78,6 +78,10 @@ viewLSys3 ( c, d ) =
     div [ dGrid, style "grid-auto-flow" "column" ] [ lsys c 1, lsys c 2, lsys c d ]
 
 
+type alias PathAcc =
+    List (Svg Never)
+
+
 render : Config -> List C2 -> Html msg
 render config chs =
     let
@@ -112,9 +116,10 @@ render config chs =
             ]
             drawing
         ]
+        |> Svg.map never
 
 
-renderCharList : Turtle -> List C2 -> List (Svg msg) -> List (Svg msg)
+renderCharList : Turtle -> List C2 -> List (Svg Never) -> List (Svg Never)
 renderCharList t chs acc =
     case chs of
         [] ->
