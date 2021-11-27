@@ -105,7 +105,7 @@ render : Config -> List C2 -> Html msg
 render config chs =
     let
         foo c ( t, acc ) =
-            ( t, acc )
+            renderChar c t acc
 
         _ =
             List.foldl foo ( initTurtle config, [] ) chs
@@ -159,7 +159,7 @@ charsToLineSegments t charList acc =
         c :: tail ->
             let
                 ( nt, res ) =
-                    renderChar c t
+                    renderCharHelp c t
             in
             charsToLineSegments nt tail (acc ++ res)
 
@@ -175,8 +175,14 @@ moveForward depth pen =
     )
 
 
-renderChar : C2 -> Turtle -> ( Turtle, List Segment )
-renderChar (C2 depth ch) t =
+renderChar : C2 -> Turtle -> List Segment -> ( Turtle, List Segment )
+renderChar c t acc =
+    renderCharHelp c t
+        |> mapSecond (List.append acc)
+
+
+renderCharHelp : C2 -> Turtle -> ( Turtle, List Segment )
+renderCharHelp (C2 depth ch) t =
     case ch of
         'F' ->
             moveForward depth t
