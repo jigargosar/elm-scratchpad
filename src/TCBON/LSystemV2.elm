@@ -104,11 +104,8 @@ addPointToBounds vec bounds =
 render : Config -> List C2 -> Html msg
 render config chs =
     let
-        foo c ( t, acc ) =
-            renderChar c t acc
-
         _ =
-            List.foldl foo ( initTurtle config, [] ) chs
+            List.foldl renderChar ( initTurtle config, [] ) chs
 
         ( bounds, drawing ) =
             charsToLineSegments (initTurtle config) chs []
@@ -175,8 +172,8 @@ moveForward depth pen =
     )
 
 
-renderChar : C2 -> Turtle -> List Segment -> ( Turtle, List Segment )
-renderChar c t acc =
+renderChar : C2 -> ( Turtle, List Segment ) -> ( Turtle, List Segment )
+renderChar c ( t, acc ) =
     renderCharHelp c t
         |> mapSecond (List.append acc)
 
