@@ -20,9 +20,7 @@ main =
             }
     in
     div
-        [ dGrid
-        , style "grid-auto-flow" "column"
-        ]
+        [ dGrid, style "grid-auto-flow" "column" ]
         [ lsys twig 1, lsys twig 2, lsys twig 7 ]
 
 
