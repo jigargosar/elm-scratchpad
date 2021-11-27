@@ -41,7 +41,10 @@ main =
             }
     in
     div []
-        ([ ( bigH, 9 ), ( bentBigH, 9 ), ( twig, 9 ) ]
+        ([ ( bigH, 9 )
+         , ( bentBigH, 9 )
+         , ( twig, 9 )
+         ]
             |> List.map viewLSys3
         )
 
