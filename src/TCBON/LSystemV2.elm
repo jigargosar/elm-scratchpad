@@ -88,21 +88,21 @@ renderCharList t chs acc =
             renderCharList nt tail (acc ++ res)
 
 
+moveForward factor depth pen =
+    let
+        np =
+            vAdd pen.p (vFromPolar ( pen.len * (factor ^ toFloat depth), pen.a ))
+    in
+    ( { pen | p = np }, [ vPolyline [ pen.p, np ] [] ] )
+
+
 renderChar factor depth ch pen =
     case ch of
         'F' ->
-            let
-                np =
-                    vAdd pen.p (vFromPolar ( pen.len * (factor ^ toFloat depth), pen.a ))
-            in
-            ( { pen | p = np }, [ vPolyline [ pen.p, np ] [] ] )
+            moveForward factor depth pen
 
         '|' ->
-            let
-                np =
-                    vAdd pen.p (vFromPolar ( pen.len * (factor ^ toFloat depth), pen.a ))
-            in
-            ( { pen | p = np }, [ vPolyline [ pen.p, np ] [] ] )
+            moveForward factor depth pen
 
         '-' ->
             ( { pen | a = pen.a - pen.da }, [] )
