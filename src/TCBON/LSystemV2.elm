@@ -105,7 +105,7 @@ render : Config -> List C2 -> Html msg
 render config chs =
     let
         ( bounds, drawing ) =
-            toLineSegments (initTurtle config)
+            charsToLineSegments (initTurtle config)
                 chs
                 []
                 |> List.foldl
@@ -146,8 +146,8 @@ render config chs =
         |> Svg.map never
 
 
-toLineSegments : Turtle -> List C2 -> List Segment -> List Segment
-toLineSegments t chs acc =
+charsToLineSegments : Turtle -> List C2 -> List Segment -> List Segment
+charsToLineSegments t chs acc =
     case chs of
         [] ->
             acc
@@ -160,7 +160,7 @@ toLineSegments t chs acc =
                 ( nt, res ) =
                     renderChar factor depth h t
             in
-            toLineSegments nt tail (acc ++ res)
+            charsToLineSegments nt tail (acc ++ res)
 
 
 moveForward : Float -> Int -> Turtle -> ( Turtle, List Segment )
