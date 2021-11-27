@@ -100,8 +100,22 @@ render config chs =
         ( w, h ) =
             ( 100, 100 )
 
-        vs =
+        vDiffAbs =
             vSub bounds.max bounds.min
+                |> vAbs
+
+        center =
+            vFromTo bounds.min bounds.max
+                |> vScale 0.5
+                |> vMapBoth (round >> toFloat)
+                |> Debug.log "center"
+
+        --|> always vZero
+        ( left, top ) =
+            ( center.x - ww / 2, center.y - hh / 2 )
+
+        ( ww, hh ) =
+            ( vDiffAbs.x |> atLeast 100, vDiffAbs.y |> atLeast 100 )
 
         ( bounds, drawing ) =
             renderCharList
@@ -126,8 +140,8 @@ render config chs =
                     ( { min = vZero, max = vZero }, [] )
     in
     Svg.svg
-        [ TA.viewBox bounds.min.x bounds.min.y (abs vs.x |> atLeast 100) (abs vs.y |> atLeast 100)
-        , viewBoxC w h
+        [ viewBoxC w h
+        , TA.viewBox left top ww hh
         , dBlock
         , noFill
         , noStroke
@@ -141,6 +155,7 @@ render config chs =
             --, style "transform" "translate(0%,0%)"
             ]
             drawing
+        , circle 10 [ fill black, xf [ mv center ] ]
         ]
         |> Svg.map never
 

@@ -218,6 +218,16 @@ vScale s { x, y } =
     vec (s * x) (s * y)
 
 
+vMapBoth : (Float -> Float) -> Vec -> Vec
+vMapBoth fn { x, y } =
+    vec (fn x) (fn y)
+
+
+vAbs : Vec -> Vec
+vAbs =
+    vMapBoth abs
+
+
 vRotate : Float -> Vec -> Vec
 vRotate angle =
     vToPolar >> mapSecond (add angle) >> vFromPolar
