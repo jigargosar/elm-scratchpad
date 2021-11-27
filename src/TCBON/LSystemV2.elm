@@ -157,14 +157,22 @@ drawStr t chs acc =
                                 np =
                                     vAdd t.p (vFromPolar ( t.len, t.a ))
                             in
-                            ( { t | p = np }, [ vPolyline [ t.p, np ] [] ] )
+                            ( { t | p = np }
+                            , [ vPolyline [ t.p, np ]
+                                    [ style "vector-effect" "non-scaling-stroke" ]
+                              ]
+                            )
 
                         '|' ->
                             let
                                 np =
                                     vAdd t.p (vFromPolar ( t.len, t.a ))
                             in
-                            ( { t | p = np }, [ vPolyline [ t.p, np ] [] ] )
+                            ( { t | p = np }
+                            , [ vPolyline [ t.p, np ]
+                                    [ style "vector-effect" "non-scaling-stroke" ]
+                              ]
+                            )
 
                         '-' ->
                             ( { t | a = t.a - t.da }, [] )
