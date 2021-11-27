@@ -97,11 +97,6 @@ addPointToBounds vec bounds =
 render : Config -> List C2 -> Html msg
 render config chs =
     let
-        --( w, h ) =
-        --    ( 100, 100 )
-        vDiff =
-            vSub bounds.max bounds.min
-
         ( bounds, drawing ) =
             renderCharList
                 { p = vZero
@@ -133,6 +128,9 @@ render config chs =
                         , max = vMapBoth (ceiling >> toFloat) b.max
                         }
                     )
+
+        vDiff =
+            vSub bounds.max bounds.min
     in
     Svg.svg
         [ -- viewBoxC w h ,
