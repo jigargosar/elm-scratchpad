@@ -24,8 +24,21 @@ main =
         ]
 
 
-render : List C2 -> Html msg
-render str =
+render : Config -> List C2 -> Html msg
+render config str =
+    let
+        drawing =
+            drawC2List
+                { p = vZero
+                , a = degrees -90
+                , da = degrees 20
+                , ds = 0.5
+                , len = 150
+                , prev = None
+                }
+                str
+                []
+    in
     Svg.svg
         [ style "width" "100vw"
         , style "height" "40vh"
@@ -39,17 +52,7 @@ render str =
             , strokeW 1
             , stroke black
             ]
-            (drawC2List
-                { p = vZero
-                , a = degrees -90
-                , da = degrees 20
-                , ds = 0.5
-                , len = 150
-                , prev = None
-                }
-                str
-                []
-            )
+            drawing
         ]
 
 
@@ -219,4 +222,4 @@ lsys config maxDepth =
     in
     List.range 1 (maxDepth - 1)
         |> List.foldl (\depth -> expand depth rd) (parseAxiom config.axiom)
-        |> render
+        |> render config
