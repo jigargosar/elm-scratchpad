@@ -197,8 +197,8 @@ type C2
     = C2 Int Char
 
 
-parseAxiom : String -> List C2
-parseAxiom =
+expandAxion : String -> List C2
+expandAxion =
     parseRule 0
 
 
@@ -207,8 +207,8 @@ parseRule depth =
     String.toList >> List.map (C2 depth)
 
 
-expand : Int -> Dict Char String -> List C2 -> List C2
-expand depth rules =
+expand : Dict Char String -> Int -> List C2 -> List C2
+expand rules depth =
     let
         rewriteC2 ((C2 _ ch) as c2) =
             Dict.get ch rules
@@ -221,9 +221,9 @@ expand depth rules =
 lsys : Config -> Int -> Html msg
 lsys config maxDepth =
     let
-        rd =
+        rulesDict =
             Dict.fromList config.rules
     in
     List.range 1 (maxDepth - 1)
-        |> List.foldl (\depth -> expand depth rd) (parseAxiom config.axiom)
+        |> List.foldl (expand rulesDict) (expandAxion config.axiom)
         |> render config
