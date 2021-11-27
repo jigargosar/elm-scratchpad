@@ -3,6 +3,7 @@ module TCBON.LSystemV2 exposing (..)
 import Dict exposing (Dict)
 import Html exposing (Html, div)
 import Svg exposing (Svg)
+import TypedSvg.Attributes as TA
 import Utils exposing (..)
 
 
@@ -42,6 +43,7 @@ render config chs =
     Svg.svg
         [ style "width" "200px"
         , style "height" "200px"
+        , viewBoxC 200 200
         , dBlock
         , noFill
         , noStroke
@@ -49,7 +51,7 @@ render config chs =
         , style "outline" "auto blue"
         ]
         [ group
-            [ style "transform" "translate(50%,50%)"
+            [ style "transform" "translate(0%,0%)"
             , strokeW 1
             , stroke black
             ]

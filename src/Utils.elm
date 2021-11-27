@@ -478,6 +478,10 @@ polyline pts aa =
     Svg.polyline (TA.points pts :: aa) []
 
 
+viewBoxC w h =
+    TA.viewBox (-w / 2) (-h / 2) w h
+
+
 wordsAlignXLeft =
     TA.textAnchor TT.AnchorStart
 
