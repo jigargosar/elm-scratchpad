@@ -158,34 +158,31 @@ charsToLineSegments t charList acc =
 
         (C2 depth h) :: tail ->
             let
-                factor =
-                    t.ds
-
                 ( nt, res ) =
-                    renderChar factor depth h t
+                    renderChar depth h t
             in
             charsToLineSegments nt tail (acc ++ res)
 
 
-moveForward : Float -> Int -> Turtle -> ( Turtle, List Segment )
-moveForward factor depth pen =
+moveForward : Int -> Turtle -> ( Turtle, List Segment )
+moveForward depth pen =
     let
         np =
-            vAdd pen.p (vFromPolar ( pen.len * (factor ^ toFloat depth), pen.a ))
+            vAdd pen.p (vFromPolar ( pen.len * (pen.ds ^ toFloat depth), pen.a ))
     in
     ( { pen | p = np }
     , [ ( pen.p, np ) ]
     )
 
 
-renderChar : Float -> Int -> Char -> Turtle -> ( Turtle, List Segment )
-renderChar factor depth ch pen =
+renderChar : Int -> Char -> Turtle -> ( Turtle, List Segment )
+renderChar depth ch pen =
     case ch of
         'F' ->
-            moveForward factor depth pen
+            moveForward depth pen
 
         '|' ->
-            moveForward factor depth pen
+            moveForward depth pen
 
         '-' ->
             ( { pen | a = pen.a - pen.da }, [] )
