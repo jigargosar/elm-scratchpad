@@ -62,6 +62,15 @@ main =
             , stepSize = 1 / 2.5
             , initialAngle = 0
             }
+
+        weed_3 : Config
+        weed_3 =
+            { axiom = "F"
+            , rules = [ ( 'F', "|[-F]|[+F][-F]F" ) ]
+            , deltaAngle = degrees 20
+            , stepSize = 1 / 3
+            , initialAngle = 0
+            }
     in
     div []
         ([ ( bigH, 9 )
@@ -70,6 +79,7 @@ main =
          , ( twig, 9 )
          , ( weed_1, 6 )
          , ( weed_2, 6 )
+         , ( weed_3, 6 )
          ]
             |> List.map viewLSys3
         )
