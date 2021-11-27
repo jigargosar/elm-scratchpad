@@ -17,7 +17,7 @@ main =
             , initialPosition = vZero
             }
     in
-    div []
+    div [ dFlex, pAll "20px" ]
         [ lsys twig 1
         , lsys twig 2
         , lsys twig 7
@@ -40,12 +40,13 @@ render config chs =
                 []
     in
     Svg.svg
-        [ style "width" "100vw"
-        , style "height" "40vh"
+        [ style "width" "200px"
+        , style "height" "200px"
         , dBlock
         , noFill
         , noStroke
         , overflowVisible
+        , style "outline" "auto blue"
         ]
         [ group
             [ style "transform" "translate(50%,50%)"
