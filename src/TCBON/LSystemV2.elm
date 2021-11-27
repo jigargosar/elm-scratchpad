@@ -8,6 +8,7 @@ import Utils exposing (..)
 
 main =
     let
+        twig : Config
         twig =
             { axiom = "F"
             , rules = [ ( 'F', "|[-F][+F]" ) ]
