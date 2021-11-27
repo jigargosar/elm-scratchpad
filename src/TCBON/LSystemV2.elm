@@ -16,7 +16,7 @@ main =
             , rules = [ ( 'F', "|[+F][-F]" ) ]
             , deltaAngle = degrees 90
             , stepSizeFactor = 0.65
-            , initialPosition = vZero
+            , pivot = vZero
             }
 
         twig : Config
@@ -25,7 +25,7 @@ main =
             , rules = [ ( 'F', "|[-F][+F]" ) ]
             , deltaAngle = degrees 20
             , stepSizeFactor = 0.5
-            , initialPosition = vZero
+            , pivot = vZero
             }
     in
     div []
@@ -41,9 +41,15 @@ viewLSys3 ( c, d ) =
 render : Config -> List C2 -> Html msg
 render config chs =
     let
+        ( w, h ) =
+            ( 100, 100 )
+
+        pivot =
+            config.pivot
+
         drawing =
             renderCharList
-                { p = config.initialPosition
+                { p = pivot
                 , a = degrees -90
                 , da = config.deltaAngle
                 , ds = config.stepSizeFactor
@@ -54,7 +60,7 @@ render config chs =
                 []
     in
     Svg.svg
-        [ viewBoxC 100 100
+        [ viewBoxC w h
         , dBlock
         , noFill
         , noStroke
@@ -158,7 +164,7 @@ type alias Rules =
 type alias Config =
     { axiom : Axiom
     , rules : Rules
-    , initialPosition : Vec
+    , pivot : Vec
     , deltaAngle : Float
     , stepSizeFactor : Float
     }
