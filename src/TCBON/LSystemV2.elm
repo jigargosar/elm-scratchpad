@@ -25,7 +25,7 @@ main =
 
 
 render : Config -> List C2 -> Html msg
-render config str =
+render config chs =
     let
         drawing =
             drawC2List
@@ -36,7 +36,7 @@ render config str =
                 , len = 150
                 , prev = None
                 }
-                str
+                chs
                 []
     in
     Svg.svg
