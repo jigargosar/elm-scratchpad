@@ -82,6 +82,15 @@ type alias PathAcc =
     List ( Vec, Vec )
 
 
+type alias Bounds =
+    { min : Vec, max : Vec }
+
+
+addPointToBounds : Vec -> Bounds -> Bounds
+addPointToBounds vec bounds =
+    bounds
+
+
 render : Config -> List C2 -> Html msg
 render config chs =
     let
@@ -102,11 +111,13 @@ render config chs =
                 |> List.foldl
                     (\( a, b ) ( bnd, acc ) ->
                         ( bnd
+                            |> addPointToBounds a
+                            |> addPointToBounds b
                         , vPolyline [ a, b ] [ style "vector-effect" "non-scaling-stroke" ]
                             :: acc
                         )
                     )
-                    ( (), [] )
+                    ( { min = vZero, max = vZero }, [] )
     in
     Svg.svg
         [ viewBoxC w h
