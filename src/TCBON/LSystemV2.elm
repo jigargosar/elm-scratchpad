@@ -183,6 +183,30 @@ main =
             , stepSize = 1 / 2
             , initialAngle = degrees 90
             }
+
+        sierpinskiMaze : Config
+        sierpinskiMaze =
+            { axiom = "F"
+            , rules =
+                [ ( 'F', "[GF][+G3-F][G+G+F]" )
+                , ( 'G', "GG" )
+                ]
+            , deltaAngle = degrees 60
+            , stepSize = 1 / 2
+            , initialAngle = degrees 30
+            }
+
+        sierpinskiArrowHead : Config
+        sierpinskiArrowHead =
+            { axiom = "F"
+            , rules =
+                [ ( 'F', "[-G+++F][-G+F][GG--F]" )
+                , ( 'G', "GG" )
+                ]
+            , deltaAngle = degrees 60
+            , stepSize = 1 / 2
+            , initialAngle = degrees 90
+            }
     in
     div []
         ([ ( bigH, 9 )
@@ -203,7 +227,9 @@ main =
          , ( kochIsland, 6 )
          , ( quadraticKochIsland, 4 )
          , ( squareSpikes, 6 )
-         , ( sierpinskiGasket, 7 )
+         , ( sierpinskiGasket, 6 )
+         , ( sierpinskiMaze, 7 )
+         , ( sierpinskiArrowHead, 7 )
          ]
             |> List.map viewLSys3
         )
