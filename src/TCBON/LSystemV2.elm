@@ -84,8 +84,8 @@ main =
         bush_2 : Config
         bush_2 =
             { axiom = "F"
-            , rules = [ ( 'F', "FF+[+F-F-F]-[-F+F+F]" ) ]
-            , deltaAngle = degrees 25
+            , rules = [ ( 'F', "|[+F]|[-F]+F" ) ]
+            , deltaAngle = degrees 20
             , stepSize = 1 / 2
             , initialAngle = 0
             }
@@ -95,10 +95,11 @@ main =
          , ( bentBigH, 9 )
          , ( twoYs, 9 )
          , ( twig, 9 )
-         , ( weed_1, 6 )
+         , ( weed_1, 5 )
          , ( weed_2, 6 )
-         , ( weed_3, 6 )
+         , ( weed_3, 5 )
          , ( bush_1, 5 )
+         , ( bush_2, 8 )
          ]
             |> List.map viewLSys3
         )
