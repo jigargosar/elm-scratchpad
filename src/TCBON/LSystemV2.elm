@@ -143,6 +143,24 @@ main =
             , stepSize = 1 / 2
             , initialAngle = 0
             }
+
+        kochIsland : Config
+        kochIsland =
+            { axiom = "F++F++F"
+            , rules = [ ( 'F', "F-F++F-F" ) ]
+            , deltaAngle = degrees 60
+            , stepSize = 1 / 2
+            , initialAngle = degrees 90
+            }
+
+        quadraticKochIsland : Config
+        quadraticKochIsland =
+            { axiom = "F-F-F-F"
+            , rules = [ ( 'F', "F-F+F+FF-F-F+F" ) ]
+            , deltaAngle = degrees 90
+            , stepSize = 1 / 2
+            , initialAngle = degrees 0
+            }
     in
     div []
         ([ ( bigH, 9 )
@@ -160,6 +178,8 @@ main =
          , ( carpet, 5 )
          , ( sierpinskiSquare, 5 )
          , ( rug, 5 )
+         , ( kochIsland, 5 )
+         , ( quadraticKochIsland, 5 )
          ]
             |> List.map viewLSys3
         )
