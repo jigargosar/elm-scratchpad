@@ -8,231 +8,280 @@ import TypedSvg.Attributes as TA
 import Utils exposing (..)
 
 
+bigH : Config
+bigH =
+    { axiom = "[F]--F"
+    , rules = [ ( 'F', "|[+F][-F]" ) ]
+    , deltaAngle = degrees 90
+    , stepSize = 13 / 20
+    , initialAngle = 0
+    }
+
+
+bentBigH : Config
+bentBigH =
+    { axiom = "[F]--F"
+    , rules = [ ( 'F', "|[+F][-F]" ) ]
+    , deltaAngle = degrees 80
+    , stepSize = 13 / 20
+    , initialAngle = degrees -5
+    }
+
+
+twoYs : Config
+twoYs =
+    { axiom = "[F]----F"
+    , rules = [ ( 'F', "|[+F][-F]" ) ]
+    , deltaAngle = degrees 45
+    , stepSize = 13 / 20
+    , initialAngle = 0
+    }
+
+
+twig : Config
+twig =
+    { axiom = "F"
+    , rules = [ ( 'F', "|[-F][+F]" ) ]
+    , deltaAngle = degrees 20
+    , stepSize = 1 / 2
+    , initialAngle = 0
+    }
+
+
+weed_1 : Config
+weed_1 =
+    { axiom = "F"
+    , rules = [ ( 'F', "F[-F]F[+F]F" ) ]
+    , deltaAngle = degrees 25
+    , stepSize = 1 / 2
+    , initialAngle = 0
+    }
+
+
+weed_2 : Config
+weed_2 =
+    { axiom = "F"
+    , rules = [ ( 'F', "|[-F]|[+F]F" ) ]
+    , deltaAngle = degrees 25
+    , stepSize = 1 / 2.5
+    , initialAngle = 0
+    }
+
+
+weed_3 : Config
+weed_3 =
+    { axiom = "F"
+    , rules = [ ( 'F', "|[-F]|[+F][-F]F" ) ]
+    , deltaAngle = degrees 20
+    , stepSize = 1 / 3
+    , initialAngle = 0
+    }
+
+
+bush_1 : Config
+bush_1 =
+    { axiom = "F"
+    , rules = [ ( 'F', "FF+[+F-F-F]-[-F+F+F]" ) ]
+    , deltaAngle = degrees 25
+    , stepSize = 1 / 2
+    , initialAngle = 0
+    }
+
+
+bush_2 : Config
+bush_2 =
+    { axiom = "F"
+    , rules = [ ( 'F', "|[+F]|[-F]+F" ) ]
+    , deltaAngle = degrees 20
+    , stepSize = 1 / 2
+    , initialAngle = 0
+    }
+
+
+tree_1 : Config
+tree_1 =
+    { axiom = "F"
+    , rules = [ ( 'F', "|[---F][+++F]|[--F][++F]|F" ) ]
+    , deltaAngle = degrees 20
+    , stepSize = 1 / 2
+    , initialAngle = 0
+    }
+
+
+tree_2 : Config
+tree_2 =
+    { axiom = "F"
+    , rules = [ ( 'F', "|[+++++F][-------F]-|[++++F][------F]-|[+++F][-----F]-|F" ) ]
+    , deltaAngle = degrees 8
+    , stepSize = 1 / 2
+    , initialAngle = 0
+    }
+
+
+tree_3 : Config
+tree_3 =
+    { axiom = "F"
+    , rules = [ ( 'F', "|[--F][+F]-F" ) ]
+    , deltaAngle = degrees 20
+    , stepSize = 1 / 1.5
+    , initialAngle = 0
+    }
+
+
+carpet : Config
+carpet =
+    { axiom = "F-F-F-F"
+    , rules = [ ( 'F', "F[F]-F+F[--F]+F-F" ) ]
+    , deltaAngle = degrees 90
+    , stepSize = 1 / 2
+    , initialAngle = 0
+    }
+
+
+sierpinskiSquare : Config
+sierpinskiSquare =
+    { axiom = "F-F-F-F"
+    , rules = [ ( 'F', "FF[-F-F-F]F" ) ]
+    , deltaAngle = degrees 90
+    , stepSize = 1 / 2
+    , initialAngle = 0
+    }
+
+
+rug : Config
+rug =
+    { axiom = "F-F-F-F"
+    , rules = [ ( 'F', "F[-F-F]FF" ) ]
+    , deltaAngle = degrees 90
+    , stepSize = 1 / 2
+    , initialAngle = 0
+    }
+
+
+kochIsland : Config
+kochIsland =
+    { axiom = "F++F++F"
+    , rules = [ ( 'F', "F-F++F-F" ) ]
+    , deltaAngle = degrees 60
+    , stepSize = 1 / 2
+    , initialAngle = degrees 90
+    }
+
+
+quadraticKochIsland : Config
+quadraticKochIsland =
+    { axiom = "F-F-F-F"
+    , rules = [ ( 'F', "F-F+F+FF-F-F+F" ) ]
+    , deltaAngle = degrees 90
+    , stepSize = 1 / 2
+    , initialAngle = degrees 0
+    }
+
+
+squareSpikes : Config
+squareSpikes =
+    { axiom = "F18-F18-F18-F"
+    , rules = [ ( 'F', "F17-F34+F17-F" ) ]
+    , deltaAngle = degrees 5
+    , stepSize = 1 / 2
+    , initialAngle = degrees 0
+    }
+
+
+sierpinskiGasket : Config
+sierpinskiGasket =
+    { axiom = "F--F--F"
+    , rules =
+        [ ( 'F', "F--F--F--GG" )
+        , ( 'G', "GG" )
+        ]
+    , deltaAngle = degrees 60
+    , stepSize = 1 / 2
+    , initialAngle = degrees 90
+    }
+
+
+sierpinskiMaze : Config
+sierpinskiMaze =
+    { axiom = "F"
+    , rules =
+        [ ( 'F', "[GF][+G3-F][G+G+F]" )
+        , ( 'G', "GG" )
+        ]
+    , deltaAngle = degrees 60
+    , stepSize = 1 / 2
+    , initialAngle = degrees 30
+    }
+
+
+sierpinskiArrowHead : Config
+sierpinskiArrowHead =
+    { axiom = "F"
+    , rules =
+        [ ( 'F', "[-G+++F][-G+F][GG--F]" )
+        , ( 'G', "GG" )
+        ]
+    , deltaAngle = degrees 60
+    , stepSize = 1 / 2
+    , initialAngle = degrees 90
+    }
+
+
+penroseTile : Config
+penroseTile =
+    { axiom = "[X]++[X]++[X]++[X]++[X]"
+    , rules =
+        [ ( 'W', "YF++ZF4-XF[-YF4-WF]++" )
+        , ( 'X', "+YF--ZF[3-WF--XF]+" )
+        , ( 'Y', "-WF++XF[+++YF++ZF]-" )
+        , ( 'Z', "--YF++++WF[+ZF++++XF]--XF" )
+        ]
+    , deltaAngle = degrees 36
+    , stepSize = 1 / 2
+    , initialAngle = degrees 0
+    }
+
+
 main =
-    let
-        bigH : Config
-        bigH =
-            { axiom = "[F]--F"
-            , rules = [ ( 'F', "|[+F][-F]" ) ]
-            , deltaAngle = degrees 90
-            , stepSize = 13 / 20
-            , initialAngle = 0
-            }
-
-        bentBigH : Config
-        bentBigH =
-            { axiom = "[F]--F"
-            , rules = [ ( 'F', "|[+F][-F]" ) ]
-            , deltaAngle = degrees 80
-            , stepSize = 13 / 20
-            , initialAngle = degrees -5
-            }
-
-        twoYs : Config
-        twoYs =
-            { axiom = "[F]----F"
-            , rules = [ ( 'F', "|[+F][-F]" ) ]
-            , deltaAngle = degrees 45
-            , stepSize = 13 / 20
-            , initialAngle = 0
-            }
-
-        twig : Config
-        twig =
-            { axiom = "F"
-            , rules = [ ( 'F', "|[-F][+F]" ) ]
-            , deltaAngle = degrees 20
-            , stepSize = 1 / 2
-            , initialAngle = 0
-            }
-
-        weed_1 : Config
-        weed_1 =
-            { axiom = "F"
-            , rules = [ ( 'F', "F[-F]F[+F]F" ) ]
-            , deltaAngle = degrees 25
-            , stepSize = 1 / 2
-            , initialAngle = 0
-            }
-
-        weed_2 : Config
-        weed_2 =
-            { axiom = "F"
-            , rules = [ ( 'F', "|[-F]|[+F]F" ) ]
-            , deltaAngle = degrees 25
-            , stepSize = 1 / 2.5
-            , initialAngle = 0
-            }
-
-        weed_3 : Config
-        weed_3 =
-            { axiom = "F"
-            , rules = [ ( 'F', "|[-F]|[+F][-F]F" ) ]
-            , deltaAngle = degrees 20
-            , stepSize = 1 / 3
-            , initialAngle = 0
-            }
-
-        bush_1 : Config
-        bush_1 =
-            { axiom = "F"
-            , rules = [ ( 'F', "FF+[+F-F-F]-[-F+F+F]" ) ]
-            , deltaAngle = degrees 25
-            , stepSize = 1 / 2
-            , initialAngle = 0
-            }
-
-        bush_2 : Config
-        bush_2 =
-            { axiom = "F"
-            , rules = [ ( 'F', "|[+F]|[-F]+F" ) ]
-            , deltaAngle = degrees 20
-            , stepSize = 1 / 2
-            , initialAngle = 0
-            }
-
-        tree_1 : Config
-        tree_1 =
-            { axiom = "F"
-            , rules = [ ( 'F', "|[---F][+++F]|[--F][++F]|F" ) ]
-            , deltaAngle = degrees 20
-            , stepSize = 1 / 2
-            , initialAngle = 0
-            }
-
-        tree_2 : Config
-        tree_2 =
-            { axiom = "F"
-            , rules = [ ( 'F', "|[+++++F][-------F]-|[++++F][------F]-|[+++F][-----F]-|F" ) ]
-            , deltaAngle = degrees 8
-            , stepSize = 1 / 2
-            , initialAngle = 0
-            }
-
-        tree_3 : Config
-        tree_3 =
-            { axiom = "F"
-            , rules = [ ( 'F', "|[--F][+F]-F" ) ]
-            , deltaAngle = degrees 20
-            , stepSize = 1 / 1.5
-            , initialAngle = 0
-            }
-
-        carpet : Config
-        carpet =
-            { axiom = "F-F-F-F"
-            , rules = [ ( 'F', "F[F]-F+F[--F]+F-F" ) ]
-            , deltaAngle = degrees 90
-            , stepSize = 1 / 2
-            , initialAngle = 0
-            }
-
-        sierpinskiSquare : Config
-        sierpinskiSquare =
-            { axiom = "F-F-F-F"
-            , rules = [ ( 'F', "FF[-F-F-F]F" ) ]
-            , deltaAngle = degrees 90
-            , stepSize = 1 / 2
-            , initialAngle = 0
-            }
-
-        rug : Config
-        rug =
-            { axiom = "F-F-F-F"
-            , rules = [ ( 'F', "F[-F-F]FF" ) ]
-            , deltaAngle = degrees 90
-            , stepSize = 1 / 2
-            , initialAngle = 0
-            }
-
-        kochIsland : Config
-        kochIsland =
-            { axiom = "F++F++F"
-            , rules = [ ( 'F', "F-F++F-F" ) ]
-            , deltaAngle = degrees 60
-            , stepSize = 1 / 2
-            , initialAngle = degrees 90
-            }
-
-        quadraticKochIsland : Config
-        quadraticKochIsland =
-            { axiom = "F-F-F-F"
-            , rules = [ ( 'F', "F-F+F+FF-F-F+F" ) ]
-            , deltaAngle = degrees 90
-            , stepSize = 1 / 2
-            , initialAngle = degrees 0
-            }
-
-        squareSpikes : Config
-        squareSpikes =
-            { axiom = "F18-F18-F18-F"
-            , rules = [ ( 'F', "F17-F34+F17-F" ) ]
-            , deltaAngle = degrees 5
-            , stepSize = 1 / 2
-            , initialAngle = degrees 0
-            }
-
-        sierpinskiGasket : Config
-        sierpinskiGasket =
-            { axiom = "F--F--F"
-            , rules =
-                [ ( 'F', "F--F--F--GG" )
-                , ( 'G', "GG" )
-                ]
-            , deltaAngle = degrees 60
-            , stepSize = 1 / 2
-            , initialAngle = degrees 90
-            }
-
-        sierpinskiMaze : Config
-        sierpinskiMaze =
-            { axiom = "F"
-            , rules =
-                [ ( 'F', "[GF][+G3-F][G+G+F]" )
-                , ( 'G', "GG" )
-                ]
-            , deltaAngle = degrees 60
-            , stepSize = 1 / 2
-            , initialAngle = degrees 30
-            }
-
-        sierpinskiArrowHead : Config
-        sierpinskiArrowHead =
-            { axiom = "F"
-            , rules =
-                [ ( 'F', "[-G+++F][-G+F][GG--F]" )
-                , ( 'G', "GG" )
-                ]
-            , deltaAngle = degrees 60
-            , stepSize = 1 / 2
-            , initialAngle = degrees 90
-            }
-    in
     div []
-        ([ ( bigH, 9 )
-         , ( bentBigH, 9 )
-         , ( twoYs, 9 )
-         , ( twig, 9 )
-         , ( weed_1, 5 )
-         , ( weed_2, 6 )
-         , ( weed_3, 5 )
-         , ( bush_1, 5 )
-         , ( bush_2, 8 )
-         , ( tree_1, 6 )
-         , ( tree_2, 5 )
-         , ( tree_3, 9 )
-         , ( carpet, 5 )
-         , ( sierpinskiSquare, 5 )
-         , ( rug, 5 )
-         , ( kochIsland, 6 )
-         , ( quadraticKochIsland, 4 )
-         , ( squareSpikes, 6 )
-         , ( sierpinskiGasket, 6 )
-         , ( sierpinskiMaze, 7 )
-         , ( sierpinskiArrowHead, 7 )
-         ]
+        (([ ( bigH, 9 )
+          , ( bentBigH, 9 )
+          , ( twoYs, 9 )
+          , ( twig, 9 )
+          , ( weed_1, 5 )
+          , ( weed_2, 6 )
+          , ( weed_3, 5 )
+          , ( bush_1, 5 )
+          , ( bush_2, 8 )
+          , ( tree_1, 6 )
+          , ( tree_2, 5 )
+          , ( tree_3, 9 )
+          , ( carpet, 5 )
+          , ( sierpinskiSquare, 5 )
+          , ( rug, 5 )
+          , ( kochIsland, 6 )
+          , ( quadraticKochIsland, 4 )
+          , ( squareSpikes, 6 )
+          , ( sierpinskiGasket, 6 )
+          , ( sierpinskiMaze, 7 )
+          , ( sierpinskiArrowHead, 7 )
+          ]
             |> List.map viewLSys3
+         )
+            ++ [ viewLSys3Custom ( penroseTile, ( 1, 2, 4 ) )
+               ]
         )
+
+
+viewLSys3Custom ( c, ( d1, d2, d3 ) ) =
+    div
+        [ dGrid
+        , style "grid-auto-flow" "column"
+        , style "justify-items" "stretch"
+
+        --, style "align-items" "stretch"
+        ]
+        [ lsys c d1, lsys c d2, lsys c d3 ]
 
 
 viewLSys3 ( c, d ) =
