@@ -237,40 +237,45 @@ penroseTile =
         , ( 'Z', "--YF++++WF[+ZF++++XF]--XF" )
         ]
     , deltaAngle = degrees 36
-    , stepSize = 1 / 2
+    , stepSize = 0.5
     , initialAngle = degrees 0
     }
 
 
+
+--noinspection ElmUnusedSymbol
+
+
+part1 =
+    [ ( bigH, 9 )
+    , ( bentBigH, 9 )
+    , ( twoYs, 9 )
+    , ( twig, 9 )
+    , ( weed_1, 5 )
+    , ( weed_2, 6 )
+    , ( weed_3, 5 )
+    , ( bush_1, 5 )
+    , ( bush_2, 8 )
+    , ( tree_1, 6 )
+    , ( tree_2, 5 )
+    , ( tree_3, 9 )
+    , ( carpet, 5 )
+    , ( sierpinskiSquare, 5 )
+    , ( rug, 5 )
+    , ( kochIsland, 6 )
+    , ( quadraticKochIsland, 4 )
+    , ( squareSpikes, 6 )
+    , ( sierpinskiGasket, 6 )
+    , ( sierpinskiMaze, 7 )
+    , ( sierpinskiArrowHead, 7 )
+    ]
+        |> List.map viewLSys3
+
+
 main =
     div []
-        (([ ( bigH, 9 )
-          , ( bentBigH, 9 )
-          , ( twoYs, 9 )
-          , ( twig, 9 )
-          , ( weed_1, 5 )
-          , ( weed_2, 6 )
-          , ( weed_3, 5 )
-          , ( bush_1, 5 )
-          , ( bush_2, 8 )
-          , ( tree_1, 6 )
-          , ( tree_2, 5 )
-          , ( tree_3, 9 )
-          , ( carpet, 5 )
-          , ( sierpinskiSquare, 5 )
-          , ( rug, 5 )
-          , ( kochIsland, 6 )
-          , ( quadraticKochIsland, 4 )
-          , ( squareSpikes, 6 )
-          , ( sierpinskiGasket, 6 )
-          , ( sierpinskiMaze, 7 )
-          , ( sierpinskiArrowHead, 7 )
-          ]
-            |> List.map viewLSys3
-         )
-            ++ [ viewLSys3Custom ( penroseTile, ( 2, 3, 4 ) )
-               ]
-        )
+        [ viewLSys3Custom ( penroseTile, ( 2, 3, 4 ) )
+        ]
 
 
 viewLSys3Custom ( c, ( d1, d2, d3 ) ) =
