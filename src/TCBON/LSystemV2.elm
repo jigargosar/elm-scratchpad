@@ -360,13 +360,13 @@ render config maxDepth chs =
 
 
 moveForward : Int -> ( Turtle, List Segment ) -> ( Turtle, List Segment )
-moveForward t ( pen, acc ) =
+moveForward depth ( t, acc ) =
     let
         np =
-            vAdd pen.p (vFromPolar ( pen.len * (pen.ds ^ toFloat t), pen.a ))
+            vAdd t.p (vFromPolar ( t.len * (t.ds ^ toFloat depth), t.a ))
     in
-    ( { pen | p = np }
-    , ( pen.p, np ) :: acc
+    ( { t | p = np }
+    , ( t.p, np ) :: acc
     )
 
 
