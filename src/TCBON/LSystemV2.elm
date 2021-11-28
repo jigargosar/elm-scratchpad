@@ -171,6 +171,18 @@ main =
             , stepSize = 1 / 2
             , initialAngle = degrees 0
             }
+
+        sierpinskiGasket : Config
+        sierpinskiGasket =
+            { axiom = "F--F--F"
+            , rules =
+                [ ( 'F', "F--F--F--GG" )
+                , ( 'G', "GG" )
+                ]
+            , deltaAngle = degrees 60
+            , stepSize = 1 / 2
+            , initialAngle = 0
+            }
     in
     div []
         ([ ( bigH, 9 )
@@ -191,6 +203,7 @@ main =
          , ( kochIsland, 5 )
          , ( quadraticKochIsland, 5 )
          , ( squareSpikes, 6 )
+         , ( sierpinskiGasket, 6 )
          ]
             |> List.map viewLSys3
         )
