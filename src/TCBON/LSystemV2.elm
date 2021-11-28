@@ -238,7 +238,7 @@ penroseTile =
         , ( 'F', "" )
         ]
     , deltaAngle = degrees 36
-    , stepSize = 1 / 2
+    , stepSize = 1
     , initialAngle = degrees 0
     }
 
@@ -275,7 +275,7 @@ part1 =
 
 main =
     div []
-        [ viewLSys3Custom ( penroseTile, ( 2, 3, 4 ) )
+        [ viewLSys3Custom ( penroseTile, ( 2, 3, 7 ) )
         ]
 
 
