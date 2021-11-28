@@ -200,8 +200,8 @@ main =
          , ( carpet, 5 )
          , ( sierpinskiSquare, 5 )
          , ( rug, 5 )
-         , ( kochIsland, 5 )
-         , ( quadraticKochIsland, 5 )
+         , ( kochIsland, 6 )
+         , ( quadraticKochIsland, 4 )
          , ( squareSpikes, 6 )
          , ( sierpinskiGasket, 7 )
          ]
