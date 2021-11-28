@@ -371,7 +371,7 @@ moveForward t ( pen, acc ) =
 
 
 renderChar : Int -> C2 -> ( Turtle, List Segment ) -> ( Turtle, List Segment )
-renderChar maxDepth (C2 depth c) (( t, acc ) as tAcc) =
+renderChar _ (C2 depth c) (( t, acc ) as tAcc) =
     case c of
         'F' ->
             moveForward depth tAcc
