@@ -163,23 +163,6 @@ main =
             , initialAngle = degrees 0
             }
 
-        digitsFollowedByPlusOrMinus =
-            Regex.fromString "\\d+[+-]"
-                |> Maybe.withDefault Regex.never
-
-        fn m =
-            String.repeat
-                (m.match
-                    |> String.dropRight 1
-                    |> String.toInt
-                    |> Maybe.withDefault 0
-                )
-                (String.slice (String.length m.match - 1) (String.length m.match) m.match)
-
-        _ =
-            Regex.replace digitsFollowedByPlusOrMinus fn "3+4-"
-                |> Debug.log "expanded"
-
         squareSpikes : Config
         squareSpikes =
             { axiom = [ "F", (String.repeat 18 "-" ++ "F") |> String.repeat 3 ] |> String.concat
@@ -396,7 +379,7 @@ expandAxiom =
 
 expandString : Int -> String -> List C2
 expandString depth =
-    String.toList >> List.map (C2 depth)
+    preprocessRule >> String.toList >> List.map (C2 depth)
 
 
 expand : Dict Char String -> Int -> List C2 -> List C2
@@ -419,3 +402,22 @@ lsys config maxDepth =
     List.range 1 (maxDepth - 1)
         |> List.foldl (expand rulesDict) (expandAxiom config.axiom)
         |> render config
+
+
+preprocessRule : String -> String
+preprocessRule =
+    let
+        digitsFollowedByPlusOrMinus =
+            Regex.fromString "\\d+[+-]"
+                |> Maybe.withDefault Regex.never
+
+        expandPrefixedAngle m =
+            String.repeat
+                (m.match
+                    |> String.dropRight 1
+                    |> String.toInt
+                    |> Maybe.withDefault 0
+                )
+                (String.slice (String.length m.match - 1) (String.length m.match) m.match)
+    in
+    Regex.replace digitsFollowedByPlusOrMinus expandPrefixedAngle
