@@ -125,6 +125,15 @@ main =
             , stepSize = 1 / 2
             , initialAngle = 0
             }
+
+        sierpinskiSquare : Config
+        sierpinskiSquare =
+            { axiom = "F-F-F-F"
+            , rules = [ ( 'F', "FF[-F-F-F]F" ) ]
+            , deltaAngle = degrees 90
+            , stepSize = 1 / 2
+            , initialAngle = 0
+            }
     in
     div []
         ([ ( bigH, 9 )
@@ -139,7 +148,8 @@ main =
          , ( tree_1, 6 )
          , ( tree_2, 5 )
          , ( tree_3, 9 )
-         , ( carpet, 6 )
+         , ( carpet, 5 )
+         , ( sierpinskiSquare, 5 )
          ]
             |> List.map viewLSys3
         )
