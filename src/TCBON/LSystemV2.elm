@@ -404,14 +404,13 @@ lsys config maxDepth =
         |> render config
 
 
-digitsFollowedByPlusOrMinus =
-    Regex.fromString "\\d+[+-]"
-        |> Maybe.withDefault Regex.never
-
-
 preprocessRule : String -> String
 preprocessRule =
     let
+        digitsFollowedByPlusOrMinus =
+            Regex.fromString "\\d+[+-]"
+                |> Maybe.withDefault Regex.never
+
         expandPrefixedAngle m =
             String.repeat
                 (m.match
