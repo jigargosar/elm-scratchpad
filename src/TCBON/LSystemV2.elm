@@ -165,18 +165,21 @@ main =
 
         squareSpikes : Config
         squareSpikes =
-            { axiom = [ "F", (String.repeat 18 "-" ++ "F") |> String.repeat 3 ] |> String.concat
+            { axiom = "F18-F18-F18-F"
+
+            --[ "F", (String.repeat 18 "-" ++ "F") |> String.repeat 3 ] |> String.concat
             , rules =
                 [ ( 'F'
-                  , [ "F"
-                    , String.repeat 17 "-"
-                    , "F"
-                    , String.repeat 34 "+"
-                    , "F"
-                    , String.repeat 17 "-"
-                    , "F"
-                    ]
-                        |> String.concat
+                  , "F17-F34+F17-F"
+                    --[ "F"
+                    --  , String.repeat 17 "-"
+                    --  , "F"
+                    --  , String.repeat 34 "+"
+                    --  , "F"
+                    --  , String.repeat 17 "-"
+                    --  , "F"
+                    --  ]
+                    --      |> String.concat
                   )
                 ]
             , deltaAngle = degrees 5
