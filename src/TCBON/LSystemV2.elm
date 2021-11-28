@@ -235,6 +235,7 @@ penroseTile =
         , ( 'X', "+YF--ZF[3-WF--XF]+" )
         , ( 'Y', "-WF++XF[+++YF++ZF]-" )
         , ( 'Z', "--YF++++WF[+ZF++++XF]--XF" )
+        , ( 'F', "" )
         ]
     , deltaAngle = degrees 36
     , stepSize = 1 / 2
