@@ -181,7 +181,7 @@ main =
                 ]
             , deltaAngle = degrees 60
             , stepSize = 1 / 2
-            , initialAngle = 0
+            , initialAngle = degrees 90
             }
     in
     div []
@@ -298,6 +298,10 @@ renderChar (C2 depth c) (( t, acc ) as tAcc) =
 
         '|' ->
             moveForward depth tAcc
+
+        'G' ->
+            moveForward depth tAcc
+                |> mapSecond (withRollback List.tail)
 
         '-' ->
             ( { t | a = t.a - t.da }, acc )
