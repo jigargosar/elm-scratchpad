@@ -237,7 +237,7 @@ penroseTile =
         , ( 'Z', "--YF++++WF[+ZF++++XF]--XF" )
         ]
     , deltaAngle = degrees 36
-    , stepSize = 0.5
+    , stepSize = 1 / 2
     , initialAngle = degrees 0
     }
 
@@ -315,11 +315,11 @@ addPointToBounds vec bounds =
     }
 
 
-render : Config -> List C2 -> Html msg
-render config chs =
+render : Config -> Int -> List C2 -> Html msg
+render config maxDepth chs =
     let
         ( bounds, drawing ) =
-            List.foldl renderChar ( initTurtle config, [] ) chs
+            List.foldl (renderChar maxDepth) ( initTurtle config, [] ) chs
                 |> second
                 |> List.foldl
                     (\( a, b ) ( bnd, acc ) ->
@@ -370,8 +370,8 @@ moveForward t ( pen, acc ) =
     )
 
 
-renderChar : C2 -> ( Turtle, List Segment ) -> ( Turtle, List Segment )
-renderChar (C2 depth c) (( t, acc ) as tAcc) =
+renderChar : Int -> C2 -> ( Turtle, List Segment ) -> ( Turtle, List Segment )
+renderChar maxDepth (C2 depth c) (( t, acc ) as tAcc) =
     case c of
         'F' ->
             moveForward depth tAcc
@@ -486,7 +486,7 @@ lsys config maxDepth =
     in
     List.range 1 (maxDepth - 1)
         |> List.foldl (expand rulesDict) (expandAxiom config.axiom)
-        |> render config
+        |> render config maxDepth
 
 
 preprocessRule : String -> String
