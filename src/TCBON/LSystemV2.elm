@@ -2,6 +2,7 @@ module TCBON.LSystemV2 exposing (..)
 
 import Dict exposing (Dict)
 import Html exposing (Html, div)
+import Regex
 import Svg exposing (Svg)
 import TypedSvg.Attributes as TA
 import Utils exposing (..)
@@ -161,6 +162,23 @@ main =
             , stepSize = 1 / 2
             , initialAngle = degrees 0
             }
+
+        digitsFollowedByPlusOrMinus =
+            Regex.fromString "\\d+[+-]"
+                |> Maybe.withDefault Regex.never
+
+        fn m =
+            String.repeat
+                (m.match
+                    |> String.dropRight 1
+                    |> String.toInt
+                    |> Maybe.withDefault 0
+                )
+                (String.slice (String.length m.match - 1) (String.length m.match) m.match)
+
+        _ =
+            Regex.replace digitsFollowedByPlusOrMinus fn "3+4-"
+                |> Debug.log "expanded"
 
         squareSpikes : Config
         squareSpikes =
