@@ -89,6 +89,15 @@ main =
             , stepSize = 1 / 2
             , initialAngle = 0
             }
+
+        tree_1 : Config
+        tree_1 =
+            { axiom = "F"
+            , rules = [ ( 'F', "|[---F][+++F]|[--F][++F]|F" ) ]
+            , deltaAngle = degrees 20
+            , stepSize = 1 / 2
+            , initialAngle = 0
+            }
     in
     div []
         ([ ( bigH, 9 )
@@ -100,6 +109,7 @@ main =
          , ( weed_3, 5 )
          , ( bush_1, 5 )
          , ( bush_2, 8 )
+         , ( tree_1, 6 )
          ]
             |> List.map viewLSys3
         )
