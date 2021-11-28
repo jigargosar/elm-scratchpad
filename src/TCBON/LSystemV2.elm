@@ -270,16 +270,16 @@ part1 =
     , ( sierpinskiMaze, 7 )
     , ( sierpinskiArrowHead, 7 )
     ]
-        |> List.map viewLSys3
+        |> List.map viewLSys_1_2_N
 
 
 main =
     div []
-        [ viewLSys3Custom ( penroseTile, ( 2, 3, 7 ) )
+        [ viewLSys3 ( penroseTile, ( 2, 3, 7 ) )
         ]
 
 
-viewLSys3Custom ( c, ( d1, d2, d3 ) ) =
+viewLSys3 ( c, ( d1, d2, d3 ) ) =
     div
         [ dGrid
         , style "grid-auto-flow" "column"
@@ -290,15 +290,8 @@ viewLSys3Custom ( c, ( d1, d2, d3 ) ) =
         [ lsys c d1, lsys c d2, lsys c d3 ]
 
 
-viewLSys3 ( c, d ) =
-    div
-        [ dGrid
-        , style "grid-auto-flow" "column"
-        , style "justify-items" "stretch"
-
-        --, style "align-items" "stretch"
-        ]
-        [ lsys c 1, lsys c 2, lsys c d ]
+viewLSys_1_2_N ( c, d ) =
+    viewLSys3 ( c, ( 1, 2, d ) )
 
 
 type alias Segment =
