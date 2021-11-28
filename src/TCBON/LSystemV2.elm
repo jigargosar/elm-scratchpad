@@ -268,7 +268,7 @@ main =
           ]
             |> List.map viewLSys3
          )
-            ++ [ viewLSys3Custom ( penroseTile, ( 1, 2, 4 ) )
+            ++ [ viewLSys3Custom ( penroseTile, ( 2, 3, 4 ) )
                ]
         )
 
