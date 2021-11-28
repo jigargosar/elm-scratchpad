@@ -161,6 +161,27 @@ main =
             , stepSize = 1 / 2
             , initialAngle = degrees 0
             }
+
+        squareSpikes : Config
+        squareSpikes =
+            { axiom = [ "F", (String.repeat 18 "-" ++ "F") |> String.repeat 3 ] |> String.concat
+            , rules =
+                [ ( 'F'
+                  , [ "F"
+                    , String.repeat 17 "-"
+                    , "F"
+                    , String.repeat 34 "+"
+                    , "F"
+                    , String.repeat 17 "-"
+                    , "F"
+                    ]
+                        |> String.concat
+                  )
+                ]
+            , deltaAngle = degrees 5
+            , stepSize = 1 / 2
+            , initialAngle = degrees 0
+            }
     in
     div []
         ([ ( bigH, 9 )
@@ -180,6 +201,7 @@ main =
          , ( rug, 5 )
          , ( kochIsland, 5 )
          , ( quadraticKochIsland, 5 )
+         , ( squareSpikes, 6 )
          ]
             |> List.map viewLSys3
         )
