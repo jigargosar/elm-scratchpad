@@ -77,7 +77,16 @@ main =
             { axiom = "F"
             , rules = [ ( 'F', "FF+[+F-F-F]-[-F+F+F]" ) ]
             , deltaAngle = degrees 25
-            , stepSize = 1 / 4
+            , stepSize = 1 / 2
+            , initialAngle = 0
+            }
+
+        bush_2 : Config
+        bush_2 =
+            { axiom = "F"
+            , rules = [ ( 'F', "FF+[+F-F-F]-[-F+F+F]" ) ]
+            , deltaAngle = degrees 25
+            , stepSize = 1 / 2
             , initialAngle = 0
             }
     in
