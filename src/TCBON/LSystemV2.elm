@@ -275,8 +275,10 @@ part1 =
 
 main =
     div []
-        [ viewLSys3 ( penroseTile, ( 2, 3, 7 ) )
-        ]
+        ([ viewLSys3 ( penroseTile, ( 2, 3, 7 ) )
+         ]
+            ++ part1
+        )
 
 
 viewLSys_1_2_N ( c, d ) =
