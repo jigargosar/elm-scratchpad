@@ -116,6 +116,15 @@ main =
             , stepSize = 1 / 1.5
             , initialAngle = 0
             }
+
+        carpet : Config
+        carpet =
+            { axiom = "F-F-F-F"
+            , rules = [ ( 'F', "F[F]-F+F[--F]+F-F" ) ]
+            , deltaAngle = degrees 90
+            , stepSize = 1 / 2
+            , initialAngle = 0
+            }
     in
     div []
         ([ ( bigH, 9 )
@@ -130,6 +139,7 @@ main =
          , ( tree_1, 6 )
          , ( tree_2, 5 )
          , ( tree_3, 9 )
+         , ( carpet, 5 )
          ]
             |> List.map viewLSys3
         )
