@@ -139,7 +139,7 @@ main =
          , ( tree_1, 6 )
          , ( tree_2, 5 )
          , ( tree_3, 9 )
-         , ( carpet, 5 )
+         , ( carpet, 6 )
          ]
             |> List.map viewLSys3
         )
