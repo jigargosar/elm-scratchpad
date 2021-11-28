@@ -279,6 +279,10 @@ main =
         ]
 
 
+viewLSys_1_2_N ( c, d ) =
+    viewLSys3 ( c, ( 1, 2, d ) )
+
+
 viewLSys3 ( c, ( d1, d2, d3 ) ) =
     div
         [ dGrid
@@ -288,10 +292,6 @@ viewLSys3 ( c, ( d1, d2, d3 ) ) =
         --, style "align-items" "stretch"
         ]
         [ lsys c d1, lsys c d2, lsys c d3 ]
-
-
-viewLSys_1_2_N ( c, d ) =
-    viewLSys3 ( c, ( 1, 2, d ) )
 
 
 type alias Segment =
