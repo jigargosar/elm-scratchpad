@@ -203,7 +203,7 @@ main =
          , ( kochIsland, 5 )
          , ( quadraticKochIsland, 5 )
          , ( squareSpikes, 6 )
-         , ( sierpinskiGasket, 6 )
+         , ( sierpinskiGasket, 7 )
          ]
             |> List.map viewLSys3
         )
