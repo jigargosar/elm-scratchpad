@@ -12,7 +12,7 @@ bigH : Config
 bigH =
     { axiom = "[F]--F"
     , rules = [ ( 'F', "|[+F][-F]" ) ]
-    , deltaAngle = degrees 90
+    , angle = degrees 90
     , stepSize = 13 / 20
     , initialAngle = 0
     }
@@ -22,7 +22,7 @@ bentBigH : Config
 bentBigH =
     { axiom = "[F]--F"
     , rules = [ ( 'F', "|[+F][-F]" ) ]
-    , deltaAngle = degrees 80
+    , angle = degrees 80
     , stepSize = 13 / 20
     , initialAngle = degrees -5
     }
@@ -32,7 +32,7 @@ twoYs : Config
 twoYs =
     { axiom = "[F]----F"
     , rules = [ ( 'F', "|[+F][-F]" ) ]
-    , deltaAngle = degrees 45
+    , angle = degrees 45
     , stepSize = 13 / 20
     , initialAngle = 0
     }
@@ -42,7 +42,7 @@ twig : Config
 twig =
     { axiom = "F"
     , rules = [ ( 'F', "|[-F][+F]" ) ]
-    , deltaAngle = degrees 20
+    , angle = degrees 20
     , stepSize = 1 / 2
     , initialAngle = 0
     }
@@ -52,7 +52,7 @@ weed_1 : Config
 weed_1 =
     { axiom = "F"
     , rules = [ ( 'F', "F[-F]F[+F]F" ) ]
-    , deltaAngle = degrees 25
+    , angle = degrees 25
     , stepSize = 1 / 2
     , initialAngle = 0
     }
@@ -62,7 +62,7 @@ weed_2 : Config
 weed_2 =
     { axiom = "F"
     , rules = [ ( 'F', "|[-F]|[+F]F" ) ]
-    , deltaAngle = degrees 25
+    , angle = degrees 25
     , stepSize = 1 / 2.5
     , initialAngle = 0
     }
@@ -72,7 +72,7 @@ weed_3 : Config
 weed_3 =
     { axiom = "F"
     , rules = [ ( 'F', "|[-F]|[+F][-F]F" ) ]
-    , deltaAngle = degrees 20
+    , angle = degrees 20
     , stepSize = 1 / 3
     , initialAngle = 0
     }
@@ -82,7 +82,7 @@ bush_1 : Config
 bush_1 =
     { axiom = "F"
     , rules = [ ( 'F', "FF+[+F-F-F]-[-F+F+F]" ) ]
-    , deltaAngle = degrees 25
+    , angle = degrees 25
     , stepSize = 1 / 2
     , initialAngle = 0
     }
@@ -92,7 +92,7 @@ bush_2 : Config
 bush_2 =
     { axiom = "F"
     , rules = [ ( 'F', "|[+F]|[-F]+F" ) ]
-    , deltaAngle = degrees 20
+    , angle = degrees 20
     , stepSize = 1 / 2
     , initialAngle = 0
     }
@@ -102,7 +102,7 @@ tree_1 : Config
 tree_1 =
     { axiom = "F"
     , rules = [ ( 'F', "|[---F][+++F]|[--F][++F]|F" ) ]
-    , deltaAngle = degrees 20
+    , angle = degrees 20
     , stepSize = 1 / 2
     , initialAngle = 0
     }
@@ -112,7 +112,7 @@ tree_2 : Config
 tree_2 =
     { axiom = "F"
     , rules = [ ( 'F', "|[+++++F][-------F]-|[++++F][------F]-|[+++F][-----F]-|F" ) ]
-    , deltaAngle = degrees 8
+    , angle = degrees 8
     , stepSize = 1 / 2
     , initialAngle = 0
     }
@@ -122,7 +122,7 @@ tree_3 : Config
 tree_3 =
     { axiom = "F"
     , rules = [ ( 'F', "|[--F][+F]-F" ) ]
-    , deltaAngle = degrees 20
+    , angle = degrees 20
     , stepSize = 1 / 1.5
     , initialAngle = 0
     }
@@ -132,7 +132,7 @@ carpet : Config
 carpet =
     { axiom = "F-F-F-F"
     , rules = [ ( 'F', "F[F]-F+F[--F]+F-F" ) ]
-    , deltaAngle = degrees 90
+    , angle = degrees 90
     , stepSize = 1 / 2
     , initialAngle = 0
     }
@@ -142,7 +142,7 @@ sierpinskiSquare : Config
 sierpinskiSquare =
     { axiom = "F-F-F-F"
     , rules = [ ( 'F', "FF[-F-F-F]F" ) ]
-    , deltaAngle = degrees 90
+    , angle = degrees 90
     , stepSize = 1 / 2
     , initialAngle = 0
     }
@@ -152,7 +152,7 @@ rug : Config
 rug =
     { axiom = "F-F-F-F"
     , rules = [ ( 'F', "F[-F-F]FF" ) ]
-    , deltaAngle = degrees 90
+    , angle = degrees 90
     , stepSize = 1 / 2
     , initialAngle = 0
     }
@@ -162,7 +162,7 @@ kochIsland : Config
 kochIsland =
     { axiom = "F++F++F"
     , rules = [ ( 'F', "F-F++F-F" ) ]
-    , deltaAngle = degrees 60
+    , angle = degrees 60
     , stepSize = 1 / 2
     , initialAngle = degrees 90
     }
@@ -172,7 +172,7 @@ quadraticKochIsland : Config
 quadraticKochIsland =
     { axiom = "F-F-F-F"
     , rules = [ ( 'F', "F-F+F+FF-F-F+F" ) ]
-    , deltaAngle = degrees 90
+    , angle = degrees 90
     , stepSize = 1 / 2
     , initialAngle = degrees 0
     }
@@ -182,7 +182,7 @@ squareSpikes : Config
 squareSpikes =
     { axiom = "F18-F18-F18-F"
     , rules = [ ( 'F', "F17-F34+F17-F" ) ]
-    , deltaAngle = degrees 5
+    , angle = degrees 5
     , stepSize = 1 / 2
     , initialAngle = degrees 0
     }
@@ -195,7 +195,7 @@ sierpinskiGasket =
         [ ( 'F', "F--F--F--GG" )
         , ( 'G', "GG" )
         ]
-    , deltaAngle = degrees 60
+    , angle = degrees 60
     , stepSize = 1 / 2
     , initialAngle = degrees 90
     }
@@ -208,7 +208,7 @@ sierpinskiMaze =
         [ ( 'F', "[GF][+G3-F][G+G+F]" )
         , ( 'G', "GG" )
         ]
-    , deltaAngle = degrees 60
+    , angle = degrees 60
     , stepSize = 1 / 2
     , initialAngle = degrees 30
     }
@@ -221,7 +221,7 @@ sierpinskiArrowHead =
         [ ( 'F', "[-G+++F][-G+F][GG--F]" )
         , ( 'G', "GG" )
         ]
-    , deltaAngle = degrees 60
+    , angle = degrees 60
     , stepSize = 1 / 2
     , initialAngle = degrees 90
     }
@@ -237,8 +237,18 @@ penroseTile =
         , ( 'Z', "--YF++++WF[+ZF++++XF]--XF" )
         , ( 'F', "" )
         ]
-    , deltaAngle = degrees 36
+    , angle = degrees 36
     , stepSize = 1
+    , initialAngle = degrees 0
+    }
+
+
+penroseSnowflake : Config
+penroseSnowflake =
+    { axiom = "F4-F4-F4-F4-F"
+    , rules = [ ( 'F', "F4-F4-F10-F++F4-F" ) ]
+    , angle = degrees 18
+    , stepSize = 1 / 2
     , initialAngle = degrees 0
     }
 
@@ -250,10 +260,14 @@ dragonCurve =
         [ ( 'F', "[+F][+G--G4-F]" )
         , ( 'G', "-G++G-" )
         ]
-    , deltaAngle = degrees 45
+    , angle = degrees 45
     , stepSize = 1 / 1.25
     , initialAngle = degrees 90
     }
+
+
+
+--noinspection ElmUnusedSymbol
 
 
 dragonCurveBracketLess : Config
@@ -263,7 +277,7 @@ dragonCurveBracketLess =
         [ ( 'l', "l+rF+" )
         , ( 'r', "-Fl-r" )
         ]
-    , deltaAngle = degrees 90
+    , angle = degrees 90
     , stepSize = 1
     , initialAngle = degrees 45
     }
@@ -299,13 +313,19 @@ part1 =
         |> List.map viewLSys_1_2_N
 
 
+part2 =
+    [ viewLSys_1_2_N ( penroseSnowflake, 5 )
+    , viewLSys3 ( penroseTile, ( 2, 3, 7 ) )
+    , viewLSys_1_2_N ( dragonCurve, 14 )
+
+    --, viewLSys_1_2_N ( dragonCurveBracketLess, 14 )
+    ]
+
+
 main =
     div []
-        ([ viewLSys3 ( penroseTile, ( 2, 3, 7 ) )
-         , viewLSys3 ( dragonCurve, ( 1, 2, 14 ) )
-         , viewLSys3 ( dragonCurveBracketLess, ( 1, 2, 14 ) )
-         ]
-         --++ part1
+        (part2
+            ++ part1
         )
 
 
@@ -453,7 +473,7 @@ initTurtle config =
 
     --p = config.origin
     , a = degrees -90 + config.initialAngle
-    , da = config.deltaAngle
+    , da = config.angle
     , ds = config.stepSize
 
     --, len = config.initialLength
@@ -479,7 +499,7 @@ type alias Config =
     { axiom : Axiom
     , rules : Rules
     , initialAngle : Float
-    , deltaAngle : Float
+    , angle : Float
     , stepSize : Float
     }
 
