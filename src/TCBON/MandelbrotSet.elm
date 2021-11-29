@@ -26,28 +26,31 @@ main =
                     (\( x, y ) ->
                         let
                             a =
-                                toFloat x |> rangeMap ( 0, 100 ) ( -2, 2 )
+                                toFloat x |> rangeMap ( 0, 100 ) ( -2.4, 2.4 )
 
                             b =
-                                toFloat y |> rangeMap ( 0, 100 ) ( -2, 2 )
+                                toFloat y |> rangeMap ( 0, 100 ) ( -2.4, 2.4 )
                         in
-                        iterate a b 50 0 0
+                        belongsToMSet a b 20 0 0
                     )
                 |> List.map (vFromIntTuple >> (\p -> square 1 [ xf [ mv p ] ]))
             )
         ]
 
 
-iterate cx cy n a b =
+belongsToMSet cx cy n ta tb =
     let
-        isLessThan2 =
-            sqrt (a ^ 2 + b ^ 2) < 2
-    in
-    if n <= 0 then
-        isLessThan2
+        ( nta, ntb ) =
+            ( ta * ta + cx, tb * tb + cy )
 
-    else if isLessThan2 then
-        iterate cx cy (n - 1) (cx + a ^ 2) (cy + b ^ 2)
+        notMember =
+            (nta * nta + ntb * ntb) > 2 * 2
+    in
+    if notMember then
+        False
+
+    else if n <= 0 then
+        not notMember
 
     else
-        False
+        belongsToMSet cx cy (n - 1) nta ntb
