@@ -44,7 +44,7 @@ belongsToMSet cx cy n ta tb =
             ( ta * ta + cx, tb * tb + cy )
 
         notMember =
-            (nta * nta + ntb * ntb) > 2 * 2
+            (nta * nta + ntb * ntb) > 4
     in
     if notMember then
         False
