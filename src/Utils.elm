@@ -198,6 +198,10 @@ vFromTuple ( x, y ) =
     vec x y
 
 
+vFromIntTuple =
+    mapEach toFloat >> vFromTuple
+
+
 vFromPolar : ( Float, Float ) -> Vec
 vFromPolar =
     fromPolar >> vFromTuple
@@ -218,14 +222,14 @@ vScale s { x, y } =
     vec (s * x) (s * y)
 
 
-vMapBoth : (Float -> Float) -> Vec -> Vec
-vMapBoth fn { x, y } =
+vMapEach : (Float -> Float) -> Vec -> Vec
+vMapEach fn { x, y } =
     vec (fn x) (fn y)
 
 
 vAbs : Vec -> Vec
 vAbs =
-    vMapBoth abs
+    vMapEach abs
 
 
 vRotate : Float -> Vec -> Vec
@@ -561,6 +565,14 @@ sub =
 
 first =
     Tuple.first
+
+
+mapBoth =
+    Tuple.mapBoth
+
+
+mapEach fn =
+    mapBoth fn fn
 
 
 second =

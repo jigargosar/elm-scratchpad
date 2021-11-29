@@ -377,8 +377,8 @@ render config maxDepth chs =
                     ( { min = vZero, max = vZero }, [] )
                 |> mapFirst
                     (\b ->
-                        { min = vMapBoth (floor >> toFloat) b.min
-                        , max = vMapBoth (ceiling >> toFloat) b.max
+                        { min = vMapEach (floor >> toFloat) b.min
+                        , max = vMapEach (ceiling >> toFloat) b.max
                         }
                     )
 
