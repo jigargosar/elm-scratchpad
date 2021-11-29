@@ -14,6 +14,18 @@ import TypedSvg.Attributes.InPx as Px
 import TypedSvg.Types as TT
 
 
+rangeMap ( a, b ) ( c, d ) x =
+    norm a b x |> lerp c d
+
+
+lerp a b x =
+    (x * (b - a)) + a
+
+
+norm a b x =
+    (x - a) / (b - a)
+
+
 type Dir4
     = Up
     | Down
