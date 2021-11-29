@@ -7,11 +7,7 @@ import Utils exposing (..)
 
 main =
     Svg.svg
-        [ TA.viewBox
-            0
-            0
-            1000
-            1000
+        [ TA.viewBox 0 0 100 100
         , dBlock
         , noFill
         , noStroke
@@ -21,19 +17,22 @@ main =
         [ group
             [ fill black
             ]
-            (rangeWH 1000 1000
-                |> List.filter
+            (rangeWH 100 100
+                |> List.filterMap
                     (\( x, y ) ->
                         let
                             a =
-                                toFloat x |> rangeMap ( 0, 1000 ) ( -3, 3 )
+                                toFloat x |> rangeMap ( 0, 100 ) ( -2.4, 2.4 )
 
                             b =
-                                toFloat y |> rangeMap ( 0, 1000 ) ( -3, 3 )
+                                toFloat y |> rangeMap ( 0, 100 ) ( -2.4, 2.4 )
                         in
-                        belongsToMSet a b 20 0 0
+                        if belongsToMSet a b 20 0 0 then
+                            Just (square 1 [ xf [ mv2 (toFloat x) (toFloat y) ] ])
+
+                        else
+                            Nothing
                     )
-                |> List.map (vFromIntTuple >> (\p -> square 1 [ xf [ mv p ] ]))
             )
         ]
 
