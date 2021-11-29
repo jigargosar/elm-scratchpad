@@ -26,10 +26,10 @@ main =
                     (\( x, y ) ->
                         let
                             a =
-                                toFloat x |> rangeMap ( 0, 100 ) ( -2.4, 2.4 )
+                                toFloat x |> rangeMap ( 0, 100 ) ( -3, 3 )
 
                             b =
-                                toFloat y |> rangeMap ( 0, 100 ) ( -2.4, 2.4 )
+                                toFloat y |> rangeMap ( 0, 100 ) ( -3, 3 )
                         in
                         belongsToMSet a b 20 0 0
                     )
