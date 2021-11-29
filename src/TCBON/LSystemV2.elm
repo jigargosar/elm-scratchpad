@@ -283,7 +283,7 @@ main =
                     , ( 'G', "-G++G-" )
                     ]
               , deltaAngle = degrees 45
-              , stepSize = 1
+              , stepSize = 1 / 1.25
               , initialAngle = degrees 90
               }
             , ( 1, 2, 14 )
@@ -360,9 +360,16 @@ render config maxDepth chs =
 
         vDiff =
             vSub bounds.max bounds.min
+
+        borderW =
+            5
     in
     Svg.svg
-        [ TA.viewBox (bounds.min.x - 5) (bounds.min.y - 5) (vDiff.x + 10) (vDiff.y + 10)
+        [ TA.viewBox
+            (bounds.min.x - borderW)
+            (bounds.min.y - borderW)
+            (vDiff.x + borderW * 2)
+            (vDiff.y + borderW * 2)
         , style "max-height" "200px"
         , dBlock
         , noFill
