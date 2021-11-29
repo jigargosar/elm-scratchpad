@@ -243,6 +243,19 @@ penroseTile =
     }
 
 
+dragonCurve : Config
+dragonCurve =
+    { axiom = "F"
+    , rules =
+        [ ( 'F', "[+F][+G--G4-F]" )
+        , ( 'G', "-G++G-" )
+        ]
+    , deltaAngle = degrees 45
+    , stepSize = 1 / 1.25
+    , initialAngle = degrees 90
+    }
+
+
 
 --noinspection ElmUnusedSymbol
 
@@ -276,18 +289,7 @@ part1 =
 main =
     div []
         ([ viewLSys3 ( penroseTile, ( 2, 3, 7 ) )
-         , viewLSys3
-            ( { axiom = "F"
-              , rules =
-                    [ ( 'F', "[+F][+G--G4-F]" )
-                    , ( 'G', "-G++G-" )
-                    ]
-              , deltaAngle = degrees 45
-              , stepSize = 1 / 1.25
-              , initialAngle = degrees 90
-              }
-            , ( 1, 2, 14 )
-            )
+         , viewLSys3 ( dragonCurve, ( 1, 2, 14 ) )
          , viewLSys3
             ( { axiom = "Fl"
               , rules =
