@@ -10,8 +10,8 @@ main =
         [ TA.viewBox
             0
             0
-            100
-            100
+            1000
+            1000
         , dBlock
         , noFill
         , noStroke
@@ -21,15 +21,15 @@ main =
         [ group
             [ fill black
             ]
-            (rangeWH 100 100
+            (rangeWH 1000 1000
                 |> List.filter
                     (\( x, y ) ->
                         let
                             a =
-                                toFloat x |> rangeMap ( 0, 100 ) ( -3, 3 )
+                                toFloat x |> rangeMap ( 0, 1000 ) ( -3, 3 )
 
                             b =
-                                toFloat y |> rangeMap ( 0, 100 ) ( -3, 3 )
+                                toFloat y |> rangeMap ( 0, 1000 ) ( -3, 3 )
                         in
                         belongsToMSet a b 20 0 0
                     )
