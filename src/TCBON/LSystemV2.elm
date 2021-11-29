@@ -325,7 +325,7 @@ part2 =
 main =
     div []
         (part2
-            ++ part1
+         --++ part1
         )
 
 
