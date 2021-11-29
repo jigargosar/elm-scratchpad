@@ -256,6 +256,19 @@ dragonCurve =
     }
 
 
+dragonCurveBracketLess : Config
+dragonCurveBracketLess =
+    { axiom = "Fl"
+    , rules =
+        [ ( 'l', "l+rF+" )
+        , ( 'r', "-Fl-r" )
+        ]
+    , deltaAngle = degrees 90
+    , stepSize = 1
+    , initialAngle = degrees 45
+    }
+
+
 
 --noinspection ElmUnusedSymbol
 
@@ -290,18 +303,7 @@ main =
     div []
         ([ viewLSys3 ( penroseTile, ( 2, 3, 7 ) )
          , viewLSys3 ( dragonCurve, ( 1, 2, 14 ) )
-         , viewLSys3
-            ( { axiom = "Fl"
-              , rules =
-                    [ ( 'l', "l+rF+" )
-                    , ( 'r', "-Fl-r" )
-                    ]
-              , deltaAngle = degrees 90
-              , stepSize = 1
-              , initialAngle = degrees 45
-              }
-            , ( 1, 2, 14 )
-            )
+         , viewLSys3 ( dragonCurveBracketLess, ( 1, 2, 14 ) )
          ]
          --++ part1
         )
