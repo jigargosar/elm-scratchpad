@@ -32,7 +32,7 @@ main =
             initialCri
 
         --( w, h ) =
-        --    ( 250, 250 )
+        --    ( xSteps, xSteps )
     in
     Svg.svg
         [ criToViewBox cri
