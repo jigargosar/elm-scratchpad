@@ -61,6 +61,7 @@ belongsToMSet c =
     belongsToMSetHelp 20 c ( 0, 0 )
 
 
+belongsToMSetHelp : Int -> ComplexNum -> ComplexNum -> Bool
 belongsToMSetHelp n c t0 =
     let
         t1 =
