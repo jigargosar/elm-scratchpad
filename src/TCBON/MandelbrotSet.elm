@@ -40,15 +40,6 @@ initialMandel =
     Debug.todo "todo"
 
 
-mandelViewBox : Mandel -> Attribute a
-mandelViewBox mandel =
-    let
-        w =
-            toFloat mandel.resolution
-    in
-    TA.viewBox 0 0 w w
-
-
 mandelRender mandel =
     let
         inputRange : Float2
@@ -61,17 +52,26 @@ mandelRender mandel =
                 >> mapBoth (rangeMap inputRange mandel.xRange)
                     (rangeMap inputRange mandel.yRange)
 
+        renderInt2 : Int2 -> Maybe (Svg msg)
         renderInt2 i2 =
             if belongsToMSet mandel.maxT (i2ToComplex i2) then
                 Just (square 0.5 [ xf [ mvInt2 i2 ] ])
 
             else
                 Nothing
+
+        mandelViewBox : Attribute a
+        mandelViewBox =
+            let
+                w =
+                    toFloat mandel.resolution
+            in
+            TA.viewBox 0 0 w w
     in
     rangeWH mandel.resolution mandel.resolution
         |> List.filterMap renderInt2
         |> Svg.svg
-            [ mandelViewBox mandel
+            [ mandelViewBox
             , dBlock
             , noFill
             , noStroke
