@@ -72,25 +72,6 @@ floatRange2 =
         |> List.concat
 
 
-type alias ComplexNum =
-    ( Float, Float )
-
-
-complexSquare : ComplexNum -> ComplexNum
-complexSquare ( a, b ) =
-    ( a ^ 2 - b ^ 2, 2 * a * b )
-
-
-complexAdd : ComplexNum -> ComplexNum -> ComplexNum
-complexAdd ( a, b ) ( c, d ) =
-    ( a + c, b + d )
-
-
-complexLengthSquared : ComplexNum -> Float
-complexLengthSquared ( a, b ) =
-    a ^ 2 + b ^ 2
-
-
 belongsToMSet : ComplexNum -> Bool
 belongsToMSet c =
     belongsToMSetHelp 20 c ( 0, 0 )
@@ -113,3 +94,22 @@ belongsToMSetHelp n c t0 =
 
     else
         belongsToMSetHelp (n - 1) c t1
+
+
+type alias ComplexNum =
+    ( Float, Float )
+
+
+complexSquare : ComplexNum -> ComplexNum
+complexSquare ( a, b ) =
+    ( a ^ 2 - b ^ 2, 2 * a * b )
+
+
+complexAdd : ComplexNum -> ComplexNum -> ComplexNum
+complexAdd ( a, b ) ( c, d ) =
+    ( a + c, b + d )
+
+
+complexLengthSquared : ComplexNum -> Float
+complexLengthSquared ( a, b ) =
+    a ^ 2 + b ^ 2
