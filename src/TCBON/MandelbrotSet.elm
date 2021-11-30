@@ -170,7 +170,7 @@ update msg model =
                         |> i2ToComplex initialMandel
                         |> vFromFloat2
             in
-            ( { model | mandel = mandelFromCD c 0.015 }, Cmd.none )
+            ( { model | mandel = mandelFromCD c (0.015 / 2) }, Cmd.none )
 
 
 view : Model -> Html Msg
