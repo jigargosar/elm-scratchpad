@@ -38,7 +38,7 @@ maxT =
 
 
 resolution =
-    500
+    100
 
 
 inputRange : Float2
