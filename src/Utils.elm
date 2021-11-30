@@ -857,6 +857,16 @@ criFromCD c d =
     criFromCR c (d / 2)
 
 
+criToXYRanges : CRI -> ( Float2, Float2 )
+criToXYRanges =
+    criToBounds >> boundsToXYRanges
+
+
+boundsToXYRanges : Bounds -> ( Float2, Float2 )
+boundsToXYRanges { min, max } =
+    ( ( min.x, max.x ), ( min.y, max.y ) )
+
+
 criToBounds : CRI -> Bounds
 criToBounds cri =
     { min = criToMin cri, max = criToMax cri }

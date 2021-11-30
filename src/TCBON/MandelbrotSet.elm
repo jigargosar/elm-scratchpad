@@ -1,6 +1,6 @@
 module TCBON.MandelbrotSet exposing (..)
 
-import Html exposing (Attribute)
+import Html exposing (Attribute, Html, div)
 import Svg exposing (Svg)
 import TypedSvg.Attributes as TA
 import Utils exposing (..)
@@ -37,9 +37,15 @@ type alias Mandel =
 
 initialMandel : Mandel
 initialMandel =
-    Debug.todo "todo"
+    let
+        ( xRange, yRange ) =
+            criFromCD (vec -0.797 -0.157) 0.015
+                |> criToXYRanges
+    in
+    { resolution = 250, maxT = 80, xRange = xRange, yRange = yRange }
 
 
+mandelRender : Mandel -> Html msg
 mandelRender mandel =
     let
         inputRange : Float2
@@ -89,18 +95,21 @@ main =
         --( w, h ) =
         --    ( xSteps, xSteps )
     in
-    Svg.svg
-        [ criToViewBox cri
+    div []
+        [ Svg.svg
+            [ criToViewBox cri
 
-        --, saWidth w
-        --, saHeight h
-        , dBlock
-        , noFill
-        , noStroke
-        , overflowHidden
-        , style "outline" "auto blue"
+            --, saWidth w
+            --, saHeight h
+            , dBlock
+            , noFill
+            , noStroke
+            , overflowHidden
+            , style "outline" "auto blue"
+            ]
+            [ renderMPoints cri ]
+        , mandelRender initialMandel
         ]
-        [ renderMPoints cri ]
 
 
 renderMPoints : CRI -> Svg msg
