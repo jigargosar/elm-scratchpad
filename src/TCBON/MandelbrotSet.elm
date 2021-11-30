@@ -68,14 +68,7 @@ mandelRender mandel =
             in
             TA.viewBox 0 0 w w
     in
-    [ Svg.defs []
-        [ Svg.rect
-            [ SA.id "unit-rect"
-            , SA.width "1"
-            , SA.height "1"
-            ]
-            []
-        ]
+    [ renderDefs
     , rangeWH mandel.resolution mandel.resolution
         |> List.filterMap renderIfMember
         |> group []
@@ -89,6 +82,17 @@ mandelRender mandel =
             , style "outline" "auto blue"
             , fill gray
             ]
+
+
+renderDefs =
+    Svg.defs []
+        [ Svg.rect
+            [ SA.id "unit-rect"
+            , SA.width "1"
+            , SA.height "1"
+            ]
+            []
+        ]
 
 
 renderInt2 : Int2 -> Svg msg
