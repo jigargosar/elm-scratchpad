@@ -47,6 +47,15 @@ points =
     rangeWH resolution resolution
 
 
+mandelViewBox : Attribute a
+mandelViewBox =
+    let
+        w =
+            toFloat resolution
+    in
+    TA.viewBox 0 0 w w
+
+
 xyRangeFromCD : Vec -> Float -> XYRange
 xyRangeFromCD c d =
     let
@@ -59,8 +68,8 @@ xyRangeFromCD c d =
     }
 
 
-initialMandel : XYRange
-initialMandel =
+initialMandelRange : XYRange
+initialMandelRange =
     xyRangeFromCD (vec -0.797 -0.157) 0.015
 
 
@@ -84,15 +93,6 @@ isInt2MandelMember xYRange =
 
 mandelRender : XYRange -> Html Msg
 mandelRender xyRange =
-    let
-        mandelViewBox : Attribute a
-        mandelViewBox =
-            let
-                w =
-                    toFloat resolution
-            in
-            TA.viewBox 0 0 w w
-    in
     [ renderDefs
     , mandelGenerate xyRange
         |> List.map renderInt2
@@ -155,7 +155,7 @@ type alias Model =
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { mandel = initialMandel
+    ( { mandel = initialMandelRange
       }
     , Cmd.none
     )
@@ -181,7 +181,7 @@ update msg model =
                 c =
                     p
                         |> mapEach round
-                        |> rangeMapInt2ToComplex initialMandel
+                        |> rangeMapInt2ToComplex initialMandelRange
                         |> vFromFloat2
             in
             ( { model | mandel = xyRangeFromCD c (0.015 / 2) }, Cmd.none )
@@ -190,7 +190,7 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
-        [ Html.Lazy.lazy mandelRender initialMandel
+        [ Html.Lazy.lazy mandelRender initialMandelRange
         , Html.Lazy.lazy mandelRender model.mandel
         ]
 
