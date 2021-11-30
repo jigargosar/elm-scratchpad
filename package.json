@@ -1,6 +1,10 @@
 {
+  "scripts": {
+    "start": "cross-env PARCEL_ELM_NO_DEBUG=1  parcel src/TCBON/Mandel.html --no-hmr "
+  },
   "devDependencies": {
     "@parcel/transformer-elm": "^2.0.1",
+    "cross-env": "^7.0.3",
     "elm": "^0.19.1-5",
     "parcel": "^2.0.1"
   }
