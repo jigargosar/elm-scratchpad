@@ -55,7 +55,9 @@ initialBounds =
     --boundsFromWH 0.00035 0.00035 |> centerBoundsAt -0.86192 -0.25289
     --boundsFromWH 0.001 0.001 |> centerBoundsAt -0.786 -0.16
     --boundsFromWH 3 2 |> centerBoundsAt -0.8 0
-    boundsFromWH 0.1 0.1 |> centerBoundsAt -0.815 -0.157
+    --boundsFromWH 0.1 0.1 |> centerBoundsAt -0.815 -0.157
+    --boundsFromWH 0.03 0.03 |> centerBoundsAt -0.815 -0.157
+    boundsFromWH 0.03 0.03 |> centerBoundsAt -0.815 -0.157
 
 
 boundsFromWH : Float -> Float -> Bounds
