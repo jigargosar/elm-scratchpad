@@ -26,6 +26,20 @@ boundsToViewBox b =
     TA.viewBox b.min.x b.min.y (boundsWidth b) (boundsHeight b)
 
 
+boundsToRangeWithSteps : Int -> Bounds -> List ( Float, Float )
+boundsToRangeWithSteps steps { min, max } =
+    let
+        xs =
+            Float.Extra.range { start = min.x, end = max.x, steps = steps }
+
+        ys =
+            Float.Extra.range { start = min.y, end = max.y, steps = steps }
+    in
+    ys
+        |> List.map (\y -> xs |> List.map (pairTo y))
+        |> List.concat
+
+
 initialBounds : Bounds
 initialBounds =
     { min = vec -2.5 -2.5, max = vec 2.5 2.5 }
