@@ -27,31 +27,44 @@ criFromCD c d =
 
 
 criToBounds : CRI -> Bounds
-criToBounds { c, ri } =
-    { min = vAdd c (vNegate ri), max = vAdd c ri }
+criToBounds cri =
+    { min = criToMin cri, max = criToMax cri }
+
+
+criAspectRatio : CRI -> Float
+criAspectRatio =
+    criToWH >> (\( w, h ) -> w / h)
+
+
+criToWH : CRI -> Float2
+criToWH { ri } =
+    ( ri.x * 2, ri.y * 2 )
+
+
+criToMin : CRI -> Vec
+criToMin { c, ri } =
+    vAdd c (vNegate ri)
+
+
+criToMax : CRI -> Vec
+criToMax { c, ri } =
+    vAdd c ri
 
 
 criToViewBox : CRI -> Attribute a
-criToViewBox { c, ri } =
+criToViewBox cri =
     let
-        lt =
-            vAdd c (vNegate ri)
+        { x, y } =
+            criToMin cri
+
+        ( w, h ) =
+            criToWH cri
     in
-    TA.viewBox lt.x lt.y (ri.x * 2) (ri.y * 2)
+    TA.viewBox x y w h
 
 
 type alias Bounds =
     { min : Vec, max : Vec }
-
-
-boundsToRadii : Bounds -> Vec
-boundsToRadii bounds =
-    Debug.todo "todo"
-
-
-boundsToWH : Bounds -> Float2
-boundsToWH bounds =
-    Debug.todo "todo"
 
 
 boundsWidth : Bounds -> Float
@@ -67,6 +80,34 @@ boundsHeight { min, max } =
 boundsToViewBox : Bounds -> Attribute a
 boundsToViewBox b =
     TA.viewBox b.min.x b.min.y (boundsWidth b) (boundsHeight b)
+
+
+criToPointsWithXStep : Int -> CRI -> List Vec
+criToPointsWithXStep intXSteps cri =
+    let
+        xSteps : Float
+        xSteps =
+            toFloat intXSteps
+
+        { min, max } =
+            criToBounds cri
+
+        ar =
+            criAspectRatio cri
+
+        xs =
+            Float.Extra.range { start = min.x, end = max.x, steps = round xSteps }
+
+        ySteps : Float
+        ySteps =
+            xSteps / ar
+
+        ys =
+            Float.Extra.range { start = min.y, end = max.y, steps = round ySteps }
+    in
+    ys
+        |> List.map (\y -> xs |> List.map (\x -> vec x y))
+        |> List.concat
 
 
 boundsToRangeWithSteps : Int -> Bounds -> List ( Float, Float )
