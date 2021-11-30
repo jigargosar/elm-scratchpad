@@ -75,16 +75,6 @@ type alias Bounds =
     { min : Vec, max : Vec }
 
 
-boundsWidth : Bounds -> Float
-boundsWidth { min, max } =
-    max.x - min.x
-
-
-boundsHeight : Bounds -> Float
-boundsHeight { min, max } =
-    max.y - min.y
-
-
 
 --boundsToViewBox : Bounds -> Attribute a
 --boundsToViewBox b =
@@ -101,15 +91,12 @@ criToPointsWithXStep intXSteps cri =
         { min, max } =
             criToBounds cri
 
-        ar =
-            criAspectRatio cri
-
         xs =
             Float.Extra.range { start = min.x, end = max.x, steps = round xSteps }
 
         ySteps : Float
         ySteps =
-            xSteps / ar
+            xSteps / criAspectRatio cri
 
         ys =
             Float.Extra.range { start = min.y, end = max.y, steps = round ySteps }
@@ -140,37 +127,21 @@ criToPointsWithXStep intXSteps cri =
 --    ys
 --        |> List.map (\y -> xs |> List.map (pairTo y))
 --        |> List.concat
-
-
-initialBounds : Bounds
-initialBounds =
-    --{ min = vec -2.4 -1.4, max = vec 1.34 1.4 }
-    --{ min = vec -2.2 -1.4, max = vec 0.6 1.4 }
-    --boundsFromWH 0.00035 0.00035 |> centerBoundsAt -0.86192 -0.25289
-    --boundsFromWH 0.001 0.001 |> centerBoundsAt -0.786 -0.16
-    --boundsFromWH 3 2 |> centerBoundsAt -0.8 0
-    --boundsFromWH 0.1 0.1 |> centerBoundsAt -0.815 -0.157
-    --boundsFromWH 0.03 0.03 |> centerBoundsAt -0.815 -0.157
-    boundsFromWH 0.015 0.015 |> centerBoundsAt -0.797 -0.157
+--initialBounds : Bounds
+--initialBounds =
+--{ min = vec -2.4 -1.4, max = vec 1.34 1.4 }
+--{ min = vec -2.2 -1.4, max = vec 0.6 1.4 }
+--boundsFromWH 0.00035 0.00035 |> centerBoundsAt -0.86192 -0.25289
+--boundsFromWH 0.001 0.001 |> centerBoundsAt -0.786 -0.16
+--boundsFromWH 3 2 |> centerBoundsAt -0.8 0
+--boundsFromWH 0.1 0.1 |> centerBoundsAt -0.815 -0.157
+--boundsFromWH 0.03 0.03 |> centerBoundsAt -0.815 -0.157
+--boundsFromWH 0.015 0.015 |> centerBoundsAt -0.797 -0.157
 
 
 initialCRI : CRI
 initialCRI =
     criFromCD (vec -0.797 -0.157) 0.015
-
-
-boundsFromWH : Float -> Float -> Bounds
-boundsFromWH w h =
-    { min = vec (-w / 2) (-h / 2), max = vec (w / 2) (h / 2) }
-
-
-centerBoundsAt : Float -> Float -> Bounds -> Bounds
-centerBoundsAt x y bounds =
-    let
-        ( w, h ) =
-            ( boundsWidth bounds, boundsHeight bounds )
-    in
-    { min = vec (x - (w / 2)) (y - h / 2), max = vec (x + w / 2) (y + h / 2) }
 
 
 main =
