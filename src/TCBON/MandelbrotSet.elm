@@ -88,7 +88,7 @@ main =
             ]
             (let
                 steps =
-                    1000
+                    250
 
                 cw =
                     (boundsWidth initialBounds / steps) * 1
