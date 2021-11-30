@@ -21,6 +21,11 @@ criFromCR c r =
     newCRI c (vec r r)
 
 
+criFromCD : Vec -> Float -> CRI
+criFromCD c d =
+    newCRI c (vec (d / 2) (d / 2))
+
+
 criToBounds : CRI -> Bounds
 criToBounds { c, ri } =
     { min = vAdd c (vNegate ri), max = vAdd c ri }
@@ -119,7 +124,7 @@ centerBoundsAt x y bounds =
 
 main =
     Svg.svg
-        [ boundsToViewBox initialBounds
+        [ criToViewBox initialCRI
         , dBlock
         , noFill
         , noStroke
