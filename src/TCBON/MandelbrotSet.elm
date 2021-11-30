@@ -42,10 +42,9 @@ main =
         ]
         [ group
             [ fill black
-
-            --, noFill
-            --, strokeW 1
-            --, stroke black
+            , noFill
+            , strokeW 0.01
+            , stroke black
             ]
             (rangeWH 100 100
                 |> List.filterMap
