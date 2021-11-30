@@ -75,6 +75,7 @@ mandelRender mandel =
     ]
         |> Svg.svg
             [ mandelViewBox
+            , style "max-width" (String.fromInt (mandel.resolution * 2) ++ "px")
             , dBlock
             , noFill
             , noStroke
