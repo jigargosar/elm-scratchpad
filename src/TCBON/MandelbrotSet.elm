@@ -64,11 +64,11 @@ initialMandel =
     xyRangeFromCD (vec -0.797 -0.157) 0.015
 
 
-i2ToComplex : XYRange -> Int2 -> ComplexNum
-i2ToComplex mandel =
+rangeMapInt2ToComplex : XYRange -> Int2 -> ComplexNum
+rangeMapInt2ToComplex xyRange =
     toFloat2
-        >> mapBoth (rangeMap inputRange mandel.xRange)
-            (rangeMap inputRange mandel.yRange)
+        >> mapBoth (rangeMap inputRange xyRange.xRange)
+            (rangeMap inputRange xyRange.yRange)
 
 
 
@@ -76,17 +76,20 @@ i2ToComplex mandel =
 --mandelGenerate mandel =
 
 
+parseInt2ToMandel : XYRange -> Int2 -> Maybe Int2
+parseInt2ToMandel xYRange i2 =
+    Just i2
+        |> maybeFilter (isInt2MandelMember xYRange)
+
+
+isInt2MandelMember : XYRange -> Int2 -> Bool
+isInt2MandelMember xYRange =
+    rangeMapInt2ToComplex xYRange >> belongsToMSet maxT
+
+
 mandelRender : XYRange -> Html Msg
-mandelRender mandel =
+mandelRender xyRange =
     let
-        renderIfMember : Int2 -> Maybe (Svg msg)
-        renderIfMember i2 =
-            if belongsToMSet maxT (i2ToComplex mandel i2) then
-                Just (renderInt2 i2)
-
-            else
-                Nothing
-
         mandelViewBox : Attribute a
         mandelViewBox =
             let
@@ -97,7 +100,8 @@ mandelRender mandel =
     in
     [ renderDefs
     , points
-        |> List.filterMap renderIfMember
+        |> List.filter (isInt2MandelMember xyRange)
+        |> List.map renderInt2
         |> group [ style "pointer-events" "none" ]
     ]
         |> Svg.svg
@@ -183,7 +187,7 @@ update msg model =
                 c =
                     p
                         |> mapEach round
-                        |> i2ToComplex initialMandel
+                        |> rangeMapInt2ToComplex initialMandel
                         |> vFromFloat2
             in
             ( { model | mandel = xyRangeFromCD c (0.015 / 2) }, Cmd.none )
