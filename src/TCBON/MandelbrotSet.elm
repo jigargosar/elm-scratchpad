@@ -16,8 +16,8 @@ newCRI c ri =
     { c = c, ri = ri }
 
 
-newCR : Vec -> Float -> CRI
-newCR c r =
+criFromCR : Vec -> Float -> CRI
+criFromCR c r =
     newCRI c (vec r r)
 
 
@@ -96,6 +96,11 @@ initialBounds =
     --boundsFromWH 0.1 0.1 |> centerBoundsAt -0.815 -0.157
     --boundsFromWH 0.03 0.03 |> centerBoundsAt -0.815 -0.157
     boundsFromWH 0.015 0.015 |> centerBoundsAt -0.797 -0.157
+
+
+initialCRI : CRI
+initialCRI =
+    criFromCR (vec -0.797 -0.157) 0.015
 
 
 boundsFromWH : Float -> Float -> Bounds
