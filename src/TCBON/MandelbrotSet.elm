@@ -61,7 +61,7 @@ mandelRender mandel =
         renderInt2 : Int2 -> Maybe (Svg msg)
         renderInt2 i2 =
             if belongsToMSet mandel.maxT (i2ToComplex i2) then
-                Just (square 1 [ xf [ mvInt2 i2 ] ])
+                Just (circle 0.5 [ xf [ mvInt2 i2 ] ])
 
             else
                 Nothing
@@ -87,29 +87,29 @@ mandelRender mandel =
             ]
 
 
-main =
+main1 =
     let
         cri : CRI
         cri =
             initialCri
-
-        --( w, h ) =
-        --    ( xSteps, xSteps )
     in
-    div []
-        [ Svg.svg
-            [ criToViewBox cri
+    Svg.svg
+        [ criToViewBox cri
 
-            --, saWidth w
-            --, saHeight h
-            , dBlock
-            , noFill
-            , noStroke
-            , overflowHidden
-            , style "outline" "auto blue"
-            ]
-            [ renderMPoints cri ]
-        , mandelRender initialMandel
+        --, saWidth w
+        --, saHeight h
+        , dBlock
+        , noFill
+        , noStroke
+        , overflowHidden
+        , style "outline" "auto blue"
+        ]
+        [ renderMPoints cri ]
+
+
+main =
+    div []
+        [ mandelRender initialMandel
         ]
 
 
