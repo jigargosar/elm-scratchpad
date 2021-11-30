@@ -1,5 +1,6 @@
 module TCBON.MandelbrotSet exposing (..)
 
+import Html exposing (Attribute)
 import Svg
 import TypedSvg.Attributes as TA
 import Utils exposing (..)
@@ -17,6 +18,11 @@ boundsWidth { min, max } =
 boundsHeight : Bounds -> Float
 boundsHeight { min, max } =
     max.y - min.y
+
+
+boundsToViewBox : Bounds -> Attribute a
+boundsToViewBox b =
+    TA.viewBox b.min.x b.min.y (boundsWidth b) (boundsHeight b)
 
 
 initialBounds : Bounds
@@ -48,7 +54,7 @@ main =
                                         y |> rangeMap ( 0, 100 ) ( -2.5, 2.5 )
                                 in
                                 if belongsToMSet ( a, b ) then
-                                    Just (square 1 [ xf [ mv2 x y ] ])
+                                    Just (square 1 [ xf [ mv2 a b ] ])
 
                                 else
                                     Nothing
