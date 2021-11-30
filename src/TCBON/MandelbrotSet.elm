@@ -133,7 +133,9 @@ subscriptions _ =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    ( model, Cmd.none )
+    case msg of
+        Msg ->
+            ( model, Cmd.none )
 
 
 view _ =
