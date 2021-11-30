@@ -27,8 +27,12 @@ criToBounds { c, ri } =
 
 
 criToViewBox : CRI -> Attribute a
-criToViewBox cri =
-    Debug.todo "todo"
+criToViewBox { c, ri } =
+    let
+        lt =
+            vAdd c (vNegate ri)
+    in
+    TA.viewBox lt.x lt.y (ri.x * 2) (ri.y * 2)
 
 
 type alias Bounds =
