@@ -1,4 +1,4 @@
-module TCBON.MandelbrotSet exposing (..)
+port module TCBON.MandelbrotSet exposing (..)
 
 import Browser
 import Html.Lazy
@@ -8,6 +8,9 @@ import Svg.Attributes as SA
 import Svg.Events
 import TypedSvg.Attributes as TA
 import Utils exposing (..)
+
+
+port sendMandel : List Int2 -> Cmd msg
 
 
 
@@ -156,13 +159,11 @@ type alias Model =
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    let
-        _ =
-            mandelGenerate initialMandelRange
-    in
     ( { mandel = initialMandelRange
       }
-    , Cmd.none
+    , Cmd.batch
+        [ sendMandel (mandelGenerate initialMandelRange)
+        ]
     )
 
 
