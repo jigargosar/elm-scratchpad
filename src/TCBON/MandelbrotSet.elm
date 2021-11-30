@@ -42,13 +42,13 @@ boundsToRangeWithSteps steps { min, max } =
 
 initialBounds : Bounds
 initialBounds =
-    { min = vec -2.4 -1.4, max = vec 1.34 1.4 }
+    --{ min = vec -2.4 -1.4, max = vec 1.34 1.4 }
+    { min = vec -2.2 -1.4, max = vec 0.6 1.4 }
 
 
 main =
     Svg.svg
-        [ TA.viewBox 0 0 100 100
-        , boundsToViewBox initialBounds
+        [ boundsToViewBox initialBounds
         , dBlock
         , noFill
         , noStroke
@@ -61,7 +61,7 @@ main =
             , strokeW 0.01
             , stroke black
             ]
-            (boundsToRangeWithSteps 100 initialBounds |> List.filterMap maybeRender)
+            (boundsToRangeWithSteps 200 initialBounds |> List.filterMap maybeRender)
         ]
 
 
