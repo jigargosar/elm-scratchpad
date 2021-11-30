@@ -1,7 +1,6 @@
 module TCBON.MandelbrotSet exposing (..)
 
 import Browser
-import Html exposing (Attribute, Html, div)
 import Html.Lazy
 import Json.Decode as JD exposing (Decoder)
 import Svg exposing (Svg)

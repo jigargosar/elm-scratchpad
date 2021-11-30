@@ -466,6 +466,22 @@ noUserSelect =
     style "user-select" "none"
 
 
+text =
+    Html.text
+
+
+div =
+    Html.div
+
+
+type alias Html a =
+    Html.Html a
+
+
+type alias Attribute a =
+    Html.Attribute a
+
+
 circle : Float -> List (Attribute msg) -> Svg msg
 circle r xs =
     Svg.circle (Px.r r :: xs) []
