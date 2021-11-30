@@ -54,7 +54,8 @@ initialBounds =
     --{ min = vec -2.2 -1.4, max = vec 0.6 1.4 }
     --boundsFromWH 0.00035 0.00035 |> centerBoundsAt -0.86192 -0.25289
     --boundsFromWH 0.001 0.001 |> centerBoundsAt -0.786 -0.16
-    boundsFromWH 3 2 |> centerBoundsAt -0.8 0
+    --boundsFromWH 3 2 |> centerBoundsAt -0.8 0
+    boundsFromWH 0.1 0.1 |> centerBoundsAt -0.815 -0.157
 
 
 boundsFromWH : Float -> Float -> Bounds
@@ -85,7 +86,7 @@ main =
             ]
             (let
                 steps =
-                    700
+                    200
 
                 cw =
                     (boundsWidth initialBounds / steps) * 1
@@ -105,7 +106,7 @@ main =
 
 belongsToMSet : ComplexNum -> Bool
 belongsToMSet c =
-    belongsToMSetHelp 200 c ( 0, 0 )
+    belongsToMSetHelp 2000 c ( 0, 0 )
 
 
 belongsToMSetHelp : Int -> ComplexNum -> ComplexNum -> Bool
