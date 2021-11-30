@@ -22,12 +22,12 @@ main =
                     (\( x, y ) ->
                         let
                             a =
-                                toFloat x |> rangeMap ( 0, 100 ) ( -2.4, 2.4 )
+                                toFloat x |> rangeMap ( 0, 100 ) ( -2.5, 2.5 )
 
                             b =
-                                toFloat y |> rangeMap ( 0, 100 ) ( -2.4, 2.4 )
+                                toFloat y |> rangeMap ( 0, 100 ) ( -2.5, 2.5 )
                         in
-                        if belongsToMSet a b 20 0 0 then
+                        if belongsToMSet ( a, b ) 20 ( 0, 0 ) then
                             Just (square 1 [ xf [ mv2 (toFloat x) (toFloat y) ] ])
 
                         else
@@ -37,19 +37,19 @@ main =
         ]
 
 
-belongsToMSet cx cy n ta tb =
+belongsToMSet ( cx, cy ) n ( ta, tb ) =
     let
         ( nta, ntb ) =
             ( ta * ta + cx, tb * tb + cy )
 
-        notMember =
+        isDiverging =
             (nta * nta + ntb * ntb) > 4
     in
-    if notMember then
+    if isDiverging then
         False
 
     else if n <= 0 then
-        not notMember
+        not isDiverging
 
     else
         belongsToMSet cx cy (n - 1) nta ntb
