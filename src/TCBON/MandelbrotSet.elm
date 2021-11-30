@@ -177,7 +177,7 @@ view : Model -> Html Msg
 view model =
     div []
         [ Html.Lazy.lazy mandelRender initialMandel
-        , mandelRender model.mandel
+        , Html.Lazy.lazy mandelRender model.mandel
         ]
 
 
