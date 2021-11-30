@@ -11,6 +11,10 @@ type alias CRI =
     { c : Vec, ri : Vec }
 
 
+type alias Bounds =
+    { min : Vec, max : Vec }
+
+
 newCRI : Vec -> Vec -> CRI
 newCRI c ri =
     { c = c, ri = ri }
@@ -69,10 +73,6 @@ criToViewBox cri =
             criToWH cri
     in
     TA.viewBox x y w h
-
-
-type alias Bounds =
-    { min : Vec, max : Vec }
 
 
 criToPointsWithXStep : Int -> CRI -> List Vec
