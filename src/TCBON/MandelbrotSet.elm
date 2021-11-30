@@ -74,16 +74,24 @@ main =
         [ group
             [ fill black
             ]
-            (boundsToRangeWithSteps 200 initialBounds |> List.filterMap maybeRender)
+            (let
+                steps =
+                    200
+
+                cw =
+                    boundsHeight initialBounds / (steps - 1)
+             in
+             boundsToRangeWithSteps 200 initialBounds
+                |> List.filterMap
+                    (\( a, b ) ->
+                        if belongsToMSet ( a, b ) then
+                            Just (square cw [ xf [ mv2 a b ] ])
+
+                        else
+                            Nothing
+                    )
+            )
         ]
-
-
-maybeRender ( a, b ) =
-    if belongsToMSet ( a, b ) then
-        Just (square 0.008 [ xf [ mv2 a b ] ])
-
-    else
-        Nothing
 
 
 belongsToMSet : ComplexNum -> Bool
