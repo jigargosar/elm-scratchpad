@@ -196,9 +196,9 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div [ fontSize "100px" ]
-        [ --Html.Lazy.lazy mandelRender initialMandelRange
-          --, Html.Lazy.lazy mandelRender model.mandel
-          text "HH"
+        [ Html.Lazy.lazy mandelRender initialMandelRange
+        , Html.Lazy.lazy mandelRender model.mandel
+        , text "HH"
         ]
 
 
