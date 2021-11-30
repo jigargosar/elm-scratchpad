@@ -43,22 +43,24 @@ initialMandel =
     { resolution = 250, maxT = 80, xRange = xRange, yRange = yRange }
 
 
-mandelRender : Mandel -> Html Msg
-mandelRender mandel =
+i2ToComplex : Mandel -> Int2 -> ComplexNum
+i2ToComplex mandel =
     let
         inputRange : Float2
         inputRange =
             ( 0, toFloat mandel.resolution )
+    in
+    toFloat2
+        >> mapBoth (rangeMap inputRange mandel.xRange)
+            (rangeMap inputRange mandel.yRange)
 
-        i2ToComplex : Int2 -> ComplexNum
-        i2ToComplex =
-            toFloat2
-                >> mapBoth (rangeMap inputRange mandel.xRange)
-                    (rangeMap inputRange mandel.yRange)
 
+mandelRender : Mandel -> Html Msg
+mandelRender mandel =
+    let
         renderIfMember : Int2 -> Maybe (Svg msg)
         renderIfMember i2 =
-            if belongsToMSet mandel.maxT (i2ToComplex i2) then
+            if belongsToMSet mandel.maxT (i2ToComplex mandel i2) then
                 Just (renderInt2 i2)
 
             else
