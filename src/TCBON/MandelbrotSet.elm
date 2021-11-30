@@ -7,6 +7,25 @@ import TypedSvg.Attributes as TA
 import Utils exposing (..)
 
 
+type alias CRI =
+    { c : Vec, ri : Vec }
+
+
+criFromBounds : Bounds -> CRI
+criFromBounds bounds =
+    Debug.todo "todo"
+
+
+criToBounds : CRI -> Bounds
+criToBounds cri =
+    Debug.todo "todo"
+
+
+criToViewBox : CRI -> Attribute a
+criToViewBox cri =
+    Debug.todo "todo"
+
+
 type alias Bounds =
     { min : Vec, max : Vec }
 
