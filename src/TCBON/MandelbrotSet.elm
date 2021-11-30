@@ -43,7 +43,13 @@ boundsToRangeWithSteps steps { min, max } =
 initialBounds : Bounds
 initialBounds =
     --{ min = vec -2.4 -1.4, max = vec 1.34 1.4 }
-    { min = vec -2.2 -1.4, max = vec 0.6 1.4 }
+    --{ min = vec -2.2 -1.4, max = vec 0.6 1.4 }
+    boundsFromWH 2 2
+
+
+boundsFromWH : Float -> Float -> Bounds
+boundsFromWH w h =
+    { min = vec (-w / 2) (-h / 2), max = vec (w / 2) (h / 2) }
 
 
 main =
