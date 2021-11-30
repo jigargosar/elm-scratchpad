@@ -2,8 +2,10 @@ module TCBON.MandelbrotSet exposing (..)
 
 import Browser
 import Html exposing (Attribute, Html, div)
+import Json.Decode as JD
 import Svg exposing (Svg)
 import Svg.Attributes as SA
+import Svg.Events
 import TypedSvg.Attributes as TA
 import Utils exposing (..)
 
@@ -40,7 +42,7 @@ initialMandel =
     { resolution = 250, maxT = 80, xRange = xRange, yRange = yRange }
 
 
-mandelRender : Mandel -> Html msg
+mandelRender : Mandel -> Html Msg
 mandelRender mandel =
     let
         inputRange : Float2
@@ -83,6 +85,7 @@ mandelRender mandel =
             , overflowHidden
             , style "outline" "auto blue"
             , fill gray
+            , Svg.Events.on "click" (JD.succeed Msg)
             ]
 
 
