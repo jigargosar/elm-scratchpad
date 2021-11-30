@@ -108,7 +108,7 @@ main =
 
 belongsToMSet : ComplexNum -> Bool
 belongsToMSet c =
-    belongsToMSetHelp 200 c ( 0, 0 )
+    belongsToMSetHelp 80 c ( 0, 0 )
 
 
 belongsToMSetHelp : Int -> ComplexNum -> ComplexNum -> Bool
