@@ -19,6 +19,11 @@ boundsHeight { min, max } =
     max.y - min.y
 
 
+initialBounds : Bounds
+initialBounds =
+    { min = vec -2.5 -2.5, max = vec 2.5 2.5 }
+
+
 main =
     Svg.svg
         [ TA.viewBox 0 0 100 100
