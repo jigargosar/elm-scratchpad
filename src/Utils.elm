@@ -305,6 +305,10 @@ mv2 =
     TT.Translate
 
 
+mvInt2 =
+    toFloat2 >> mvT
+
+
 mvT ( x, y ) =
     mv2 x y
 
@@ -605,6 +609,11 @@ mapBoth =
 
 mapEach fn =
     mapBoth fn fn
+
+
+toFloat2 : Int2 -> Float2
+toFloat2 =
+    mapEach toFloat
 
 
 second =

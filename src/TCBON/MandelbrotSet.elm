@@ -1,5 +1,6 @@
 module TCBON.MandelbrotSet exposing (..)
 
+import Html exposing (Attribute)
 import Svg exposing (Svg)
 import Utils exposing (..)
 
@@ -23,6 +24,49 @@ initialCri =
     --boundsFromWH 0.03 0.03 |> centerBoundsAt -0.815 -0.157
     --boundsFromWH 0.015 0.015 |> centerBoundsAt -0.797 -0.157
     criFromCD (vec -0.797 -0.157) 0.015
+
+
+type alias Mandel =
+    { resolution : Int
+    , maxT : Int
+    , xRange : Float2
+    , yRange : Float2
+    }
+
+
+initialMandel : Mandel
+initialMandel =
+    Debug.todo "todo"
+
+
+mandelViewBox : Mandel -> Attribute a
+mandelViewBox mandel =
+    Debug.todo "todo"
+
+
+mandelRender mandel =
+    let
+        i2ToComplex : Int2 -> ComplexNum
+        i2ToComplex i2 =
+            Debug.todo "todo"
+
+        renderInt2 i2 =
+            if belongsToMSet mandel.maxT (i2ToComplex i2) then
+                Just (square 0.5 [ xf [ mvInt2 i2 ] ])
+
+            else
+                Nothing
+    in
+    rangeWH mandel.resolution mandel.resolution
+        |> List.filterMap renderInt2
+        |> Svg.svg
+            [ mandelViewBox mandel
+            , dBlock
+            , noFill
+            , noStroke
+            , overflowHidden
+            , style "outline" "auto blue"
+            ]
 
 
 main =
