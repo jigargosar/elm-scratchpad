@@ -51,8 +51,8 @@ mandelRender mandel =
                 >> mapBoth (rangeMap inputRange mandel.xRange)
                     (rangeMap inputRange mandel.yRange)
 
-        maybeRender : Int2 -> Maybe (Svg msg)
-        maybeRender i2 =
+        renderIfMember : Int2 -> Maybe (Svg msg)
+        renderIfMember i2 =
             if belongsToMSet mandel.maxT (i2ToComplex i2) then
                 Just (renderInt2 i2)
 
@@ -76,7 +76,7 @@ mandelRender mandel =
             []
         ]
     , rangeWH mandel.resolution mandel.resolution
-        |> List.filterMap maybeRender
+        |> List.filterMap renderIfMember
         |> group []
     ]
         |> Svg.svg
