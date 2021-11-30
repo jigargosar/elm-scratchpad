@@ -156,6 +156,10 @@ type alias Model =
 
 init : () -> ( Model, Cmd Msg )
 init () =
+    let
+        _ =
+            mandelGenerate initialMandelRange
+    in
     ( { mandel = initialMandelRange
       }
     , Cmd.none
