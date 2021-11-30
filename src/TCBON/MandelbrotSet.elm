@@ -17,8 +17,8 @@ criFromBounds bounds =
 
 
 criToBounds : CRI -> Bounds
-criToBounds cri =
-    Debug.todo "todo"
+criToBounds { c, ri } =
+    { min = vAdd c (vNegate ri), max = vAdd c ri }
 
 
 criToViewBox : CRI -> Attribute a

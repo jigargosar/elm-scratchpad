@@ -249,6 +249,11 @@ vAbs =
     vMapEach abs
 
 
+vNegate : Vec -> Vec
+vNegate =
+    vMapEach negate
+
+
 vRotate : Float -> Vec -> Vec
 vRotate angle =
     vToPolar >> mapSecond (add angle) >> vFromPolar
