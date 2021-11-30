@@ -19,19 +19,21 @@ main =
             ]
             (rangeWH 100 100
                 |> List.filterMap
-                    (\( x, y ) ->
-                        let
-                            a =
-                                toFloat x |> rangeMap ( 0, 100 ) ( -2.5, 2.5 )
+                    (mapEach toFloat
+                        >> (\( x, y ) ->
+                                let
+                                    a =
+                                        x |> rangeMap ( 0, 100 ) ( -2.5, 2.5 )
 
-                            b =
-                                toFloat y |> rangeMap ( 0, 100 ) ( -2.5, 2.5 )
-                        in
-                        if belongsToMSet ( a, b ) then
-                            Just (square 1 [ xf [ mv2 (toFloat x) (toFloat y) ] ])
+                                    b =
+                                        y |> rangeMap ( 0, 100 ) ( -2.5, 2.5 )
+                                in
+                                if belongsToMSet ( a, b ) then
+                                    Just (square 1 [ xf [ mv2 x y ] ])
 
-                        else
-                            Nothing
+                                else
+                                    Nothing
+                           )
                     )
             )
         ]
