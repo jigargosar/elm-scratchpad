@@ -61,7 +61,7 @@ main =
             , strokeW 0.01
             , stroke black
             ]
-            (floatRange2 |> List.filterMap maybeRender)
+            (boundsToRangeWithSteps 1000 initialBounds |> List.filterMap maybeRender)
         ]
 
 
@@ -71,19 +71,6 @@ maybeRender ( a, b ) =
 
     else
         Nothing
-
-
-floatRange2 =
-    let
-        xs =
-            Float.Extra.range { start = -2.5, end = 2.5, steps = 100 }
-
-        ys =
-            Float.Extra.range { start = -2.5, end = 2.5, steps = 100 }
-    in
-    ys
-        |> List.map (\y -> xs |> List.map (pairTo y))
-        |> List.concat
 
 
 belongsToMSet : ComplexNum -> Bool
