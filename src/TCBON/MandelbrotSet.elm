@@ -74,7 +74,7 @@ main =
         [ group
             [ fill black
             ]
-            (boundsToRangeWithSteps 400 initialBounds |> List.filterMap maybeRender)
+            (boundsToRangeWithSteps 200 initialBounds |> List.filterMap maybeRender)
         ]
 
 
