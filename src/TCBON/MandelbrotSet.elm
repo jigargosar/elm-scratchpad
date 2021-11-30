@@ -2,6 +2,7 @@ module TCBON.MandelbrotSet exposing (..)
 
 import Browser
 import Html exposing (Attribute, Html, div)
+import Html.Lazy
 import Json.Decode as JD exposing (Decoder)
 import Svg exposing (Svg)
 import Svg.Attributes as SA
@@ -117,16 +118,26 @@ renderInt2 ( x, y ) =
         []
 
 
+main : Program () Model Msg
 main =
-    Browser.element { init = init, update = update, subscriptions = subscriptions, view = view }
+    Browser.element
+        { init = init
+        , update = update
+        , subscriptions = subscriptions
+        , view = view
+        }
 
 
 type alias Model =
-    {}
+    { mandel : Mandel }
 
 
+init : () -> ( Model, Cmd Msg )
 init () =
-    ( Model, Cmd.none )
+    ( { mandel = initialMandel
+      }
+    , Cmd.none
+    )
 
 
 type Msg
@@ -149,10 +160,11 @@ update msg model =
             ( model, Cmd.none )
 
 
-view _ =
+view : Model -> Html Msg
+view model =
     div []
-        [ mandelRender initialMandel
-        , mandelRender initialMandel
+        [ Html.Lazy.lazy mandelRender initialMandel
+        , mandelRender model.mandel
         ]
 
 
