@@ -20,6 +20,8 @@ main =
     in
     Svg.svg
         [ criToViewBox cri
+        , saWidth (criWidth cri)
+        , saHeight (criHeight cri)
         , dBlock
         , noFill
         , noStroke
