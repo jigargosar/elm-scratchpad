@@ -73,8 +73,12 @@ renderPt len ( x, y ) =
 
 
 belongsToMSet : Int -> ComplexNum -> Bool
-belongsToMSet n c =
-    belongsToMSetHelp n c ( 0, 0 )
+belongsToMSet iterations_ c =
+    let
+        t0 =
+            ( 0, 0 )
+    in
+    belongsToMSetHelp iterations_ c t0
 
 
 belongsToMSetHelp : Int -> ComplexNum -> ComplexNum -> Bool
