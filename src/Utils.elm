@@ -2,6 +2,7 @@ module Utils exposing (..)
 
 import Color
 import Dict exposing (Dict)
+import Float.Extra
 import Html exposing (Attribute, Html)
 import Html.Attributes exposing (style)
 import Json.Decode as JD exposing (Decoder)
@@ -809,3 +810,100 @@ minBy fn a b =
 insertBy : (v -> comparable) -> v -> Dict comparable v -> Dict comparable v
 insertBy keyFn v =
     Dict.insert (keyFn v) v
+
+
+
+-- CRI
+
+
+type alias CRI =
+    { c : Vec, ri : Vec }
+
+
+type alias Bounds =
+    { min : Vec, max : Vec }
+
+
+newCRI : Vec -> Vec -> CRI
+newCRI c ri =
+    { c = c, ri = ri }
+
+
+criFromCR : Vec -> Float -> CRI
+criFromCR c r =
+    newCRI c (vec r r)
+
+
+criFromCD : Vec -> Float -> CRI
+criFromCD c d =
+    criFromCR c (d / 2)
+
+
+criToBounds : CRI -> Bounds
+criToBounds cri =
+    { min = criToMin cri, max = criToMax cri }
+
+
+criAspectRatio : CRI -> Float
+criAspectRatio =
+    criToWH >> (\( w, h ) -> w / h)
+
+
+criToWH : CRI -> Float2
+criToWH cri =
+    ( criWidth cri, criHeight cri )
+
+
+criWidth =
+    .ri >> .x >> mul 2
+
+
+criHeight =
+    .ri >> .y >> mul 2
+
+
+criToMin : CRI -> Vec
+criToMin { c, ri } =
+    vAdd c (vNegate ri)
+
+
+criToMax : CRI -> Vec
+criToMax { c, ri } =
+    vAdd c ri
+
+
+criToViewBox : CRI -> Attribute a
+criToViewBox cri =
+    let
+        { x, y } =
+            criToMin cri
+
+        ( w, h ) =
+            criToWH cri
+    in
+    TA.viewBox x y w h
+
+
+criToPointsWithXStep : Int -> CRI -> List Vec
+criToPointsWithXStep intXSteps cri =
+    let
+        xSteps : Float
+        xSteps =
+            toFloat intXSteps
+
+        { min, max } =
+            criToBounds cri
+
+        xs =
+            Float.Extra.range { start = min.x, end = max.x, steps = round xSteps }
+
+        ySteps : Float
+        ySteps =
+            xSteps / criAspectRatio cri
+
+        ys =
+            Float.Extra.range { start = min.y, end = max.y, steps = round ySteps }
+    in
+    ys
+        |> List.map (\y -> xs |> List.map (\x -> vec x y))
+        |> List.concat
