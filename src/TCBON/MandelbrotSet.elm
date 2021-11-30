@@ -79,7 +79,7 @@ main =
                     200
 
                 cw =
-                    boundsHeight initialBounds / (steps - 1)
+                    boundsHeight initialBounds / steps
              in
              boundsToRangeWithSteps 200 initialBounds
                 |> List.filterMap
