@@ -2,7 +2,7 @@ module TCBON.MandelbrotSet exposing (..)
 
 import Browser
 import Html exposing (Attribute, Html, div)
-import Json.Decode as JD
+import Json.Decode as JD exposing (Decoder)
 import Svg exposing (Svg)
 import Svg.Attributes as SA
 import Svg.Events
@@ -74,19 +74,26 @@ mandelRender mandel =
     [ renderDefs
     , rangeWH mandel.resolution mandel.resolution
         |> List.filterMap renderIfMember
-        |> group []
+        |> group [ style "pointer-events" "none" ]
     ]
         |> Svg.svg
             [ mandelViewBox
-            , style "max-width" (String.fromInt (mandel.resolution * 2) ++ "px")
+            , style "width" (String.fromInt mandel.resolution ++ "px")
             , dBlock
             , noFill
             , noStroke
             , overflowHidden
             , style "outline" "auto blue"
             , fill gray
-            , Svg.Events.on "click" (JD.succeed Msg)
+            , Svg.Events.on "click" (JD.map OnSvgClicked svgCoordinateDecoder)
             ]
+
+
+svgCoordinateDecoder : Decoder Float2
+svgCoordinateDecoder =
+    JD.map2 Tuple.pair
+        (JD.field "offsetX" JD.float)
+        (JD.field "offsetY" JD.float)
 
 
 renderDefs =
@@ -123,7 +130,7 @@ init () =
 
 
 type Msg
-    = Msg
+    = OnSvgClicked Float2
 
 
 subscriptions : Model -> Sub Msg
@@ -134,7 +141,11 @@ subscriptions _ =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Msg ->
+        OnSvgClicked p ->
+            let
+                _ =
+                    Debug.log "p" p
+            in
             ( model, Cmd.none )
 
 
