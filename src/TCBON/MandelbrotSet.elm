@@ -29,6 +29,7 @@ main =
         [ renderMPoints cri ]
 
 
+renderMPoints : CRI -> Svg msg
 renderMPoints cri =
     let
         xSteps =
