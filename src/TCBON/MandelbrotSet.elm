@@ -164,12 +164,13 @@ update msg model =
                 _ =
                     Debug.log "p" p
 
-                _ =
+                c =
                     p
                         |> mapEach round
                         |> i2ToComplex initialMandel
+                        |> vFromFloat2
             in
-            ( model, Cmd.none )
+            ( { model | mandel = mandelFromCD c 0.015 }, Cmd.none )
 
 
 view : Model -> Html Msg
