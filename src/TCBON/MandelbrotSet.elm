@@ -30,6 +30,16 @@ type alias Bounds =
     { min : Vec, max : Vec }
 
 
+boundsToRadii : Bounds -> Vec
+boundsToRadii bounds =
+    Debug.todo "todo"
+
+
+boundsToWH : Bounds -> Float2
+boundsToWH bounds =
+    Debug.todo "todo"
+
+
 boundsWidth : Bounds -> Float
 boundsWidth { min, max } =
     max.x - min.x

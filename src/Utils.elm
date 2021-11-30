@@ -111,6 +111,10 @@ type alias Int2 =
     Num2 Int
 
 
+type alias Float2 =
+    Num2 Float
+
+
 type alias Num2 number =
     ( number, number )
 
@@ -205,18 +209,19 @@ vToPolar =
     vToTuple >> toPolar
 
 
-vFromTuple : ( Float, Float ) -> Vec
-vFromTuple ( x, y ) =
+vFromFloat2 : Float2 -> Vec
+vFromFloat2 ( x, y ) =
     vec x y
 
 
-vFromIntTuple =
-    mapEach toFloat >> vFromTuple
+vFromInt2 : Int2 -> Vec
+vFromInt2 =
+    mapEach toFloat >> vFromFloat2
 
 
 vFromPolar : ( Float, Float ) -> Vec
 vFromPolar =
-    fromPolar >> vFromTuple
+    fromPolar >> vFromFloat2
 
 
 vFromTo : Vec -> Vec -> Vec
