@@ -51,9 +51,15 @@ mandelViewBox mandel =
 
 mandelRender mandel =
     let
+        inputRange : Float2
+        inputRange =
+            ( 0, toFloat mandel.resolution )
+
         i2ToComplex : Int2 -> ComplexNum
-        i2ToComplex i2 =
-            Debug.todo "todo"
+        i2ToComplex =
+            toFloat2
+                >> mapBoth (rangeMap inputRange mandel.xRange)
+                    (rangeMap inputRange mandel.yRange)
 
         renderInt2 i2 =
             if belongsToMSet mandel.maxT (i2ToComplex i2) then
