@@ -8,7 +8,7 @@ xSteps =
     250
 
 
-iter =
+maxT =
     80
 
 
@@ -55,7 +55,7 @@ renderMPoints cri =
             criWidth cri / xSteps
 
         renderMaybe c =
-            if belongsToMSet iter c then
+            if belongsToMSet maxT c then
                 Just (renderPt cw c)
 
             else
@@ -73,12 +73,12 @@ renderPt len ( x, y ) =
 
 
 belongsToMSet : Int -> ComplexNum -> Bool
-belongsToMSet iterations_ c =
+belongsToMSet maxT_ c =
     let
         t0 =
             ( 0, 0 )
     in
-    belongsToMSetHelp iterations_ c t0
+    belongsToMSetHelp maxT_ c t0
 
 
 belongsToMSetHelp : Int -> ComplexNum -> ComplexNum -> Bool
