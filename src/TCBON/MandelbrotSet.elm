@@ -24,7 +24,7 @@ import Utils exposing (..)
 --    criFromCD (vec -0.797 -0.157) 0.015
 
 
-type alias Mandel =
+type alias XYRange =
     { xRange : Float2
     , yRange : Float2
     }
@@ -47,8 +47,8 @@ points =
     rangeWH resolution resolution
 
 
-mandelFromCD : Vec -> Float -> Mandel
-mandelFromCD c d =
+xyRangeFromCD : Vec -> Float -> XYRange
+xyRangeFromCD c d =
     let
         ( xRange, yRange ) =
             criFromCD c d
@@ -59,12 +59,12 @@ mandelFromCD c d =
     }
 
 
-initialMandel : Mandel
+initialMandel : XYRange
 initialMandel =
-    mandelFromCD (vec -0.797 -0.157) 0.015
+    xyRangeFromCD (vec -0.797 -0.157) 0.015
 
 
-i2ToComplex : Mandel -> Int2 -> ComplexNum
+i2ToComplex : XYRange -> Int2 -> ComplexNum
 i2ToComplex mandel =
     toFloat2
         >> mapBoth (rangeMap inputRange mandel.xRange)
@@ -76,7 +76,7 @@ i2ToComplex mandel =
 --mandelGenerate mandel =
 
 
-mandelRender : Mandel -> Html Msg
+mandelRender : XYRange -> Html Msg
 mandelRender mandel =
     let
         renderIfMember : Int2 -> Maybe (Svg msg)
@@ -152,7 +152,7 @@ main =
 
 
 type alias Model =
-    { mandel : Mandel }
+    { mandel : XYRange }
 
 
 init : () -> ( Model, Cmd Msg )
@@ -186,7 +186,7 @@ update msg model =
                         |> i2ToComplex initialMandel
                         |> vFromFloat2
             in
-            ( { model | mandel = mandelFromCD c (0.015 / 2) }, Cmd.none )
+            ( { model | mandel = xyRangeFromCD c (0.015 / 2) }, Cmd.none )
 
 
 view : Model -> Html Msg
