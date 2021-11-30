@@ -27,7 +27,7 @@ main =
                             b =
                                 toFloat y |> rangeMap ( 0, 100 ) ( -2.5, 2.5 )
                         in
-                        if belongsToMSet ( a, b ) 20 ( 0, 0 ) then
+                        if belongsToMSet ( a, b ) then
                             Just (square 1 [ xf [ mv2 (toFloat x) (toFloat y) ] ])
 
                         else
@@ -37,13 +37,37 @@ main =
         ]
 
 
-belongsToMSet ( cx, cy ) n ( ta, tb ) =
+type alias ComplexNum =
+    ( Float, Float )
+
+
+complexSquare : ComplexNum -> ComplexNum
+complexSquare ( a, b ) =
+    ( a ^ 2 - b ^ 2, 2 * a * b )
+
+
+complexAdd : ComplexNum -> ComplexNum -> ComplexNum
+complexAdd ( a, b ) ( c, d ) =
+    ( a + c, b + d )
+
+
+complexLengthSquared : ComplexNum -> Float
+complexLengthSquared ( a, b ) =
+    a ^ 2 + b ^ 2
+
+
+belongsToMSet : ComplexNum -> Bool
+belongsToMSet c =
+    belongsToMSetHelp 20 c ( 0, 0 )
+
+
+belongsToMSetHelp n c t0 =
     let
-        ( nta, ntb ) =
-            ( ta * ta + cx, tb * tb + cy )
+        t1 =
+            complexSquare t0 |> complexAdd c
 
         isDiverging =
-            (nta * nta + ntb * ntb) > 4
+            complexLengthSquared t1 > 4
     in
     if isDiverging then
         False
@@ -52,4 +76,4 @@ belongsToMSet ( cx, cy ) n ( ta, tb ) =
         not isDiverging
 
     else
-        belongsToMSet ( cx, cy ) (n - 1) ( nta, ntb )
+        belongsToMSetHelp (n - 1) c t1
