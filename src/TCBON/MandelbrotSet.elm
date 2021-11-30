@@ -11,11 +11,6 @@ type alias CRI =
     { c : Vec, ri : Vec }
 
 
-criFromBounds : Bounds -> CRI
-criFromBounds bounds =
-    Debug.todo "todo"
-
-
 criToBounds : CRI -> Bounds
 criToBounds { c, ri } =
     { min = vAdd c (vNegate ri), max = vAdd c ri }
