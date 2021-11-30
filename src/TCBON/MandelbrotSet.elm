@@ -38,6 +38,11 @@ resolution =
     250
 
 
+inputRange : Float2
+inputRange =
+    ( 0, toFloat resolution )
+
+
 points =
     rangeWH resolution resolution
 
@@ -61,11 +66,6 @@ initialMandel =
 
 i2ToComplex : Mandel -> Int2 -> ComplexNum
 i2ToComplex mandel =
-    let
-        inputRange : Float2
-        inputRange =
-            ( 0, toFloat resolution )
-    in
     toFloat2
         >> mapBoth (rangeMap inputRange mandel.xRange)
             (rangeMap inputRange mandel.yRange)
