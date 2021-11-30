@@ -31,13 +31,14 @@ main =
         cri =
             initialCri
 
-        ( w, h ) =
-            ( 250, 250 )
+        --( w, h ) =
+        --    ( 250, 250 )
     in
     Svg.svg
         [ criToViewBox cri
-        , saWidth w
-        , saHeight h
+
+        --, saWidth w
+        --, saHeight h
         , dBlock
         , noFill
         , noStroke
