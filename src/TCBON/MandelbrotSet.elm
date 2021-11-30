@@ -33,14 +33,19 @@ type alias Mandel =
     }
 
 
-initialMandel : Mandel
-initialMandel =
+mandelFromCD : Vec -> Float -> Mandel
+mandelFromCD c d =
     let
         ( xRange, yRange ) =
-            criFromCD (vec -0.797 -0.157) 0.015
+            criFromCD c d
                 |> criToXYRanges
     in
     { resolution = 250, maxT = 80, xRange = xRange, yRange = yRange }
+
+
+initialMandel : Mandel
+initialMandel =
+    mandelFromCD (vec -0.797 -0.157) 0.015
 
 
 i2ToComplex : Mandel -> Int2 -> ComplexNum
@@ -158,6 +163,11 @@ update msg model =
             let
                 _ =
                     Debug.log "p" p
+
+                _ =
+                    p
+                        |> mapEach round
+                        |> i2ToComplex initialMandel
             in
             ( model, Cmd.none )
 
