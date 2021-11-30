@@ -11,6 +11,11 @@ type alias CRI =
     { c : Vec, ri : Vec }
 
 
+newCRI : Vec -> Vec -> CRI
+newCRI c ri =
+    { c = c, ri = ri }
+
+
 criToBounds : CRI -> Bounds
 criToBounds { c, ri } =
     { min = vAdd c (vNegate ri), max = vAdd c ri }
