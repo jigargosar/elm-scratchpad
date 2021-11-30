@@ -88,7 +88,7 @@ main =
             ]
             (let
                 steps =
-                    200
+                    500
 
                 cw =
                     (boundsWidth initialBounds / steps) * 1
@@ -108,7 +108,7 @@ main =
 
 belongsToMSet : ComplexNum -> Bool
 belongsToMSet c =
-    belongsToMSetHelp 2000 c ( 0, 0 )
+    belongsToMSetHelp 200 c ( 0, 0 )
 
 
 belongsToMSetHelp : Int -> ComplexNum -> ComplexNum -> Bool
