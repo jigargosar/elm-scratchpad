@@ -1,6 +1,6 @@
 module TCBON.MandelbrotSet exposing (..)
 
-import Svg
+import Svg exposing (Svg)
 import Utils exposing (..)
 
 
@@ -47,12 +47,17 @@ renderMPoints cri =
             |> List.filterMap
                 (\c ->
                     if belongsToMSet iter c then
-                        Just (square cw [ xf [ mvT c ] ])
+                        Just (renderPt cw c)
 
                     else
                         Nothing
                 )
         )
+
+
+renderPt : Float -> ComplexNum -> Svg msg
+renderPt len ( x, y ) =
+    square len [ xf [ mv2 x y ] ]
 
 
 belongsToMSet : Int -> ComplexNum -> Bool
