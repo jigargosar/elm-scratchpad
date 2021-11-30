@@ -4,51 +4,54 @@ import Svg
 import Utils exposing (..)
 
 
-initialCRI : CRI
-initialCRI =
-    --{ min = vec -2.4 -1.4, max = vec 1.34 1.4 }
-    --{ min = vec -2.2 -1.4, max = vec 0.6 1.4 }
-    --boundsFromWH 0.00035 0.00035 |> centerBoundsAt -0.86192 -0.25289
-    --boundsFromWH 0.001 0.001 |> centerBoundsAt -0.786 -0.16
-    --boundsFromWH 3 2 |> centerBoundsAt -0.8 0
-    --boundsFromWH 0.1 0.1 |> centerBoundsAt -0.815 -0.157
-    --boundsFromWH 0.03 0.03 |> centerBoundsAt -0.815 -0.157
-    --boundsFromWH 0.015 0.015 |> centerBoundsAt -0.797 -0.157
-    criFromCD (vec -0.797 -0.157) 0.015
-
-
 main =
+    let
+        cri : CRI
+        cri =
+            --{ min = vec -2.4 -1.4, max = vec 1.34 1.4 }
+            --{ min = vec -2.2 -1.4, max = vec 0.6 1.4 }
+            --boundsFromWH 0.00035 0.00035 |> centerBoundsAt -0.86192 -0.25289
+            --boundsFromWH 0.001 0.001 |> centerBoundsAt -0.786 -0.16
+            --boundsFromWH 3 2 |> centerBoundsAt -0.8 0
+            --boundsFromWH 0.1 0.1 |> centerBoundsAt -0.815 -0.157
+            --boundsFromWH 0.03 0.03 |> centerBoundsAt -0.815 -0.157
+            --boundsFromWH 0.015 0.015 |> centerBoundsAt -0.797 -0.157
+            criFromCD (vec -0.797 -0.157) 0.015
+    in
     Svg.svg
-        [ criToViewBox initialCRI
+        [ criToViewBox cri
         , dBlock
         , noFill
         , noStroke
         , overflowHidden
         , style "outline" "auto blue"
         ]
-        [ group
-            [ fill gray
-            ]
-            (let
-                xSteps =
-                    500
+        [ renderMPoints cri ]
 
-                cw =
-                    criWidth initialCRI / xSteps
-             in
-             criToPointsWithXStep xSteps initialCRI
-                |> List.filterMap
-                    (vToTuple
-                        >> (\( a, b ) ->
-                                if belongsToMSet ( a, b ) then
-                                    Just (square cw [ xf [ mv2 a b ] ])
 
-                                else
-                                    Nothing
-                           )
-                    )
-            )
+renderMPoints cri =
+    group
+        [ fill gray
         ]
+        (let
+            xSteps =
+                500
+
+            cw =
+                criWidth cri / xSteps
+         in
+         criToPointsWithXStep xSteps cri
+            |> List.filterMap
+                (vToTuple
+                    >> (\( a, b ) ->
+                            if belongsToMSet ( a, b ) then
+                                Just (square cw [ xf [ mv2 a b ] ])
+
+                            else
+                                Nothing
+                       )
+                )
+        )
 
 
 belongsToMSet : ComplexNum -> Bool
