@@ -5,6 +5,20 @@ import TypedSvg.Attributes as TA
 import Utils exposing (..)
 
 
+type alias Bounds =
+    { min : Vec, max : Vec }
+
+
+boundsWidth : Bounds -> Float
+boundsWidth { min, max } =
+    max.x - min.x
+
+
+boundsHeight : Bounds -> Float
+boundsHeight { min, max } =
+    max.y - min.y
+
+
 main =
     Svg.svg
         [ TA.viewBox 0 0 100 100
