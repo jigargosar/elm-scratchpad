@@ -109,6 +109,7 @@ renderInt2 ( x, y ) =
 main =
     div []
         [ mandelRender initialMandel
+        , mandelRender initialMandel
         ]
 
 
