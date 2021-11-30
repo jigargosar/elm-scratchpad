@@ -52,4 +52,4 @@ belongsToMSet ( cx, cy ) n ( ta, tb ) =
         not isDiverging
 
     else
-        belongsToMSet cx cy (n - 1) nta ntb
+        belongsToMSet ( cx, cy ) (n - 1) ( nta, ntb )
