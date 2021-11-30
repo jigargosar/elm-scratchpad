@@ -33,6 +33,7 @@ initialBounds =
 main =
     Svg.svg
         [ TA.viewBox 0 0 100 100
+        , boundsToViewBox initialBounds
         , dBlock
         , noFill
         , noStroke
@@ -41,6 +42,10 @@ main =
         ]
         [ group
             [ fill black
+
+            --, noFill
+            --, strokeW 1
+            --, stroke black
             ]
             (rangeWH 100 100
                 |> List.filterMap
@@ -54,7 +59,7 @@ main =
                                         y |> rangeMap ( 0, 100 ) ( -2.5, 2.5 )
                                 in
                                 if belongsToMSet ( a, b ) then
-                                    Just (square 1 [ xf [ mv2 a b ] ])
+                                    Just (square 0.01 [ xf [ mv2 a b ] ])
 
                                 else
                                     Nothing
