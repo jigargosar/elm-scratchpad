@@ -57,17 +57,14 @@ main =
         ]
         [ group
             [ fill black
-            , noFill
-            , strokeW 0.01
-            , stroke black
             ]
-            (boundsToRangeWithSteps 200 initialBounds |> List.filterMap maybeRender)
+            (boundsToRangeWithSteps 400 initialBounds |> List.filterMap maybeRender)
         ]
 
 
 maybeRender ( a, b ) =
     if belongsToMSet ( a, b ) then
-        Just (square 0.01 [ xf [ mv2 a b ] ])
+        Just (square 0.008 [ xf [ mv2 a b ] ])
 
     else
         Nothing
