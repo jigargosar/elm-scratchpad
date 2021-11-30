@@ -35,7 +35,7 @@ maxT =
 
 
 resolution =
-    250
+    500
 
 
 inputRange : Float2
@@ -194,9 +194,10 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ Html.Lazy.lazy mandelRender initialMandelRange
-        , Html.Lazy.lazy mandelRender model.mandel
+    div [ fontSize "100px" ]
+        [ --Html.Lazy.lazy mandelRender initialMandelRange
+          --, Html.Lazy.lazy mandelRender model.mandel
+          text "HH"
         ]
 
 
