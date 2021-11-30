@@ -37,8 +37,16 @@ criAspectRatio =
 
 
 criToWH : CRI -> Float2
-criToWH { ri } =
-    ( ri.x * 2, ri.y * 2 )
+criToWH cri =
+    ( criWidth cri, criHeight cri )
+
+
+criWidth =
+    .ri >> .x >> mul 2
+
+
+criHeight =
+    .ri >> .y >> mul 2
 
 
 criToMin : CRI -> Vec
@@ -77,9 +85,10 @@ boundsHeight { min, max } =
     max.y - min.y
 
 
-boundsToViewBox : Bounds -> Attribute a
-boundsToViewBox b =
-    TA.viewBox b.min.x b.min.y (boundsWidth b) (boundsHeight b)
+
+--boundsToViewBox : Bounds -> Attribute a
+--boundsToViewBox b =
+--    TA.viewBox b.min.x b.min.y (boundsWidth b) (boundsHeight b)
 
 
 criToPointsWithXStep : Int -> CRI -> List Vec
@@ -110,26 +119,27 @@ criToPointsWithXStep intXSteps cri =
         |> List.concat
 
 
-boundsToRangeWithSteps : Int -> Bounds -> List ( Float, Float )
-boundsToRangeWithSteps steps ({ min, max } as b) =
-    let
-        xSteps : Float
-        xSteps =
-            toFloat steps
 
-        xs =
-            Float.Extra.range { start = min.x, end = max.x, steps = round xSteps }
-
-        ySteps : Float
-        ySteps =
-            xSteps / (boundsWidth b / boundsHeight b)
-
-        ys =
-            Float.Extra.range { start = min.y, end = max.y, steps = round ySteps }
-    in
-    ys
-        |> List.map (\y -> xs |> List.map (pairTo y))
-        |> List.concat
+--boundsToRangeWithSteps : Int -> Bounds -> List ( Float, Float )
+--boundsToRangeWithSteps steps ({ min, max } as b) =
+--    let
+--        xSteps : Float
+--        xSteps =
+--            toFloat steps
+--
+--        xs =
+--            Float.Extra.range { start = min.x, end = max.x, steps = round xSteps }
+--
+--        ySteps : Float
+--        ySteps =
+--            xSteps / (boundsWidth b / boundsHeight b)
+--
+--        ys =
+--            Float.Extra.range { start = min.y, end = max.y, steps = round ySteps }
+--    in
+--    ys
+--        |> List.map (\y -> xs |> List.map (pairTo y))
+--        |> List.concat
 
 
 initialBounds : Bounds
@@ -176,20 +186,23 @@ main =
             [ fill gray
             ]
             (let
-                steps =
+                xSteps =
                     500
 
                 cw =
-                    (boundsWidth initialBounds / steps) * 1
+                    criWidth initialCRI / xSteps
              in
-             boundsToRangeWithSteps steps initialBounds
+             criToPointsWithXStep xSteps initialCRI
+                --boundsToRangeWithSteps steps initialBounds
                 |> List.filterMap
-                    (\( a, b ) ->
-                        if belongsToMSet ( a, b ) then
-                            Just (square cw [ xf [ mv2 a b ] ])
+                    (vToTuple
+                        >> (\( a, b ) ->
+                                if belongsToMSet ( a, b ) then
+                                    Just (square cw [ xf [ mv2 a b ] ])
 
-                        else
-                            Nothing
+                                else
+                                    Nothing
+                           )
                     )
             )
         ]
