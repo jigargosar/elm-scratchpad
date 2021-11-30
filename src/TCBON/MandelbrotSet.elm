@@ -93,16 +93,6 @@ mandelRender mandel =
 
 renderInt2 : Int2 -> Svg msg
 renderInt2 ( x, y ) =
-    --square 1 [ xf [ mvInt2 i2 ]
-    --
-    --    (Svg.rect
-    --        [ SA.x <| String.fromInt x
-    --        , SA.y <| String.fromInt y
-    --        , SA.width "1"
-    --        , SA.height "1"
-    --        ]
-    --        []
-    --    )
     Svg.use
         [ SA.xlinkHref "#unit-rect"
         , SA.x <| String.fromInt x
