@@ -105,7 +105,7 @@ initialBounds =
 
 initialCRI : CRI
 initialCRI =
-    criFromCR (vec -0.797 -0.157) 0.015
+    criFromCD (vec -0.797 -0.157) 0.015
 
 
 boundsFromWH : Float -> Float -> Bounds
