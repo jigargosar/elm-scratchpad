@@ -39,11 +39,14 @@ renderMPoints cri =
 
             cw =
                 criWidth cri / xSteps
+
+            iter =
+                80
          in
          criToPointsWithXStep xSteps cri
             |> List.filterMap
                 (\c ->
-                    if belongsToMSet c then
+                    if belongsToMSet iter c then
                         Just (square cw [ xf [ mvT c ] ])
 
                     else
@@ -52,9 +55,9 @@ renderMPoints cri =
         )
 
 
-belongsToMSet : ComplexNum -> Bool
-belongsToMSet c =
-    belongsToMSetHelp 80 c ( 0, 0 )
+belongsToMSet : Int -> ComplexNum -> Bool
+belongsToMSet iter c =
+    belongsToMSetHelp iter c ( 0, 0 )
 
 
 belongsToMSetHelp : Int -> ComplexNum -> ComplexNum -> Bool
