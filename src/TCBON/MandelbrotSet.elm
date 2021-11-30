@@ -23,7 +23,7 @@ criFromCR c r =
 
 criFromCD : Vec -> Float -> CRI
 criFromCD c d =
-    newCRI c (vec (d / 2) (d / 2))
+    criFromCR c (d / 2)
 
 
 criToBounds : CRI -> Bounds
