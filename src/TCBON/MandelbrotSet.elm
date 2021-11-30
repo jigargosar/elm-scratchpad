@@ -27,13 +27,21 @@ boundsToViewBox b =
 
 
 boundsToRangeWithSteps : Int -> Bounds -> List ( Float, Float )
-boundsToRangeWithSteps steps { min, max } =
+boundsToRangeWithSteps steps ({ min, max } as b) =
     let
+        xSteps : Float
+        xSteps =
+            toFloat steps
+
         xs =
-            Float.Extra.range { start = min.x, end = max.x, steps = steps }
+            Float.Extra.range { start = min.x, end = max.x, steps = round xSteps }
+
+        ySteps : Float
+        ySteps =
+            xSteps / (boundsWidth b / boundsHeight b)
 
         ys =
-            Float.Extra.range { start = min.y, end = max.y, steps = steps }
+            Float.Extra.range { start = min.y, end = max.y, steps = round ySteps }
     in
     ys
         |> List.map (\y -> xs |> List.map (pairTo y))
@@ -72,16 +80,16 @@ main =
         , style "outline" "auto blue"
         ]
         [ group
-            [ fill black
+            [ fill gray
             ]
             (let
                 steps =
-                    200
+                    2000
 
                 cw =
-                    boundsHeight initialBounds / steps
+                    (boundsWidth initialBounds / steps) * 1
              in
-             boundsToRangeWithSteps 200 initialBounds
+             boundsToRangeWithSteps steps initialBounds
                 |> List.filterMap
                     (\( a, b ) ->
                         if belongsToMSet ( a, b ) then
