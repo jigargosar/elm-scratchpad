@@ -1,5 +1,6 @@
 module TCBON.MandelbrotSet exposing (..)
 
+import Float.Extra
 import Html exposing (Attribute)
 import Svg
 import TypedSvg.Attributes as TA
@@ -46,26 +47,29 @@ main =
             , strokeW 0.01
             , stroke black
             ]
-            (rangeWH 100 100
-                |> List.filterMap
-                    (mapEach toFloat
-                        >> (\( x, y ) ->
-                                let
-                                    a =
-                                        x |> rangeMap ( 0, 100 ) ( -2.5, 2.5 )
-
-                                    b =
-                                        y |> rangeMap ( 0, 100 ) ( -2.5, 2.5 )
-                                in
-                                if belongsToMSet ( a, b ) then
-                                    Just (square 0.01 [ xf [ mv2 a b ] ])
-
-                                else
-                                    Nothing
-                           )
-                    )
-            )
+            (floatRange2 |> List.filterMap maybeRender)
         ]
+
+
+maybeRender ( a, b ) =
+    if belongsToMSet ( a, b ) then
+        Just (square 0.01 [ xf [ mv2 a b ] ])
+
+    else
+        Nothing
+
+
+floatRange2 =
+    let
+        xs =
+            Float.Extra.range { start = -2.5, end = 2.5, steps = 100 }
+
+        ys =
+            Float.Extra.range { start = -2.5, end = 2.5, steps = 100 }
+    in
+    ys
+        |> List.map (\y -> xs |> List.map (pairTo y))
+        |> List.concat
 
 
 type alias ComplexNum =
