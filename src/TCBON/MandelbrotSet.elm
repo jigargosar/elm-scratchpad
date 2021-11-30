@@ -1,5 +1,6 @@
 module TCBON.MandelbrotSet exposing (..)
 
+import Browser
 import Html exposing (Attribute, Html, div)
 import Svg exposing (Svg)
 import Svg.Attributes as SA
@@ -107,6 +108,32 @@ renderInt2 ( x, y ) =
 
 
 main =
+    Browser.element { init = init, update = update, subscriptions = subscriptions, view = view }
+
+
+type alias Model =
+    {}
+
+
+init () =
+    ( Model, Cmd.none )
+
+
+type Msg
+    = Msg
+
+
+subscriptions : Model -> Sub Msg
+subscriptions _ =
+    Sub.none
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    ( model, Cmd.none )
+
+
+view _ =
     div []
         [ mandelRender initialMandel
         , mandelRender initialMandel
