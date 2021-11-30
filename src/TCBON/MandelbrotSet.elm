@@ -25,11 +25,21 @@ import Utils exposing (..)
 
 
 type alias Mandel =
-    { resolution : Int
-    , maxT : Int
-    , xRange : Float2
+    { xRange : Float2
     , yRange : Float2
     }
+
+
+maxT =
+    80
+
+
+resolution =
+    250
+
+
+points =
+    rangeWH resolution resolution
 
 
 mandelFromCD : Vec -> Float -> Mandel
@@ -39,7 +49,9 @@ mandelFromCD c d =
             criFromCD c d
                 |> criToXYRanges
     in
-    { resolution = 250, maxT = 80, xRange = xRange, yRange = yRange }
+    { xRange = xRange
+    , yRange = yRange
+    }
 
 
 initialMandel : Mandel
@@ -52,11 +64,16 @@ i2ToComplex mandel =
     let
         inputRange : Float2
         inputRange =
-            ( 0, toFloat mandel.resolution )
+            ( 0, toFloat resolution )
     in
     toFloat2
         >> mapBoth (rangeMap inputRange mandel.xRange)
             (rangeMap inputRange mandel.yRange)
+
+
+
+--mandelGenerate: Mandel -> List Int2
+--mandelGenerate mandel =
 
 
 mandelRender : Mandel -> Html Msg
@@ -64,7 +81,7 @@ mandelRender mandel =
     let
         renderIfMember : Int2 -> Maybe (Svg msg)
         renderIfMember i2 =
-            if belongsToMSet mandel.maxT (i2ToComplex mandel i2) then
+            if belongsToMSet maxT (i2ToComplex mandel i2) then
                 Just (renderInt2 i2)
 
             else
@@ -74,18 +91,18 @@ mandelRender mandel =
         mandelViewBox =
             let
                 w =
-                    toFloat mandel.resolution
+                    toFloat resolution
             in
             TA.viewBox 0 0 w w
     in
     [ renderDefs
-    , rangeWH mandel.resolution mandel.resolution
+    , points
         |> List.filterMap renderIfMember
         |> group [ style "pointer-events" "none" ]
     ]
         |> Svg.svg
             [ mandelViewBox
-            , style "width" (String.fromInt mandel.resolution ++ "px")
+            , style "width" (String.fromInt resolution ++ "px")
             , dBlock
             , noFill
             , noStroke
