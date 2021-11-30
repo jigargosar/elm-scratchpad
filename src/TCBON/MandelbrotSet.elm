@@ -30,28 +30,26 @@ main =
 
 
 renderMPoints cri =
-    group
-        [ fill gray
-        ]
-        (let
-            xSteps =
-                500
+    let
+        xSteps =
+            500
 
-            cw =
-                criWidth cri / xSteps
+        cw =
+            criWidth cri / xSteps
 
-            iter =
-                80
-         in
-         criToPointsWithXStep xSteps cri
-            |> List.filterMap
-                (\c ->
-                    if belongsToMSet iter c then
-                        Just (renderPt cw c)
+        iter =
+            80
 
-                    else
-                        Nothing
-                )
+        renderMaybe c =
+            if belongsToMSet iter c then
+                Just (renderPt cw c)
+
+            else
+                Nothing
+    in
+    group [ fill gray ]
+        (criToPointsWithXStep xSteps cri
+            |> List.filterMap renderMaybe
         )
 
 
