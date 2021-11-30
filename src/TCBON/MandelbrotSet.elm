@@ -2,6 +2,7 @@ module TCBON.MandelbrotSet exposing (..)
 
 import Html exposing (Attribute)
 import Svg exposing (Svg)
+import TypedSvg.Attributes as TA
 import Utils exposing (..)
 
 
@@ -41,7 +42,11 @@ initialMandel =
 
 mandelViewBox : Mandel -> Attribute a
 mandelViewBox mandel =
-    Debug.todo "todo"
+    let
+        w =
+            toFloat mandel.resolution
+    in
+    TA.viewBox 0 0 w w
 
 
 mandelRender mandel =
