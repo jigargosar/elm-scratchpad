@@ -52,26 +52,9 @@ mandelRender mandel =
                     (rangeMap inputRange mandel.yRange)
 
         maybeRender : Int2 -> Maybe (Svg msg)
-        maybeRender (( x, y ) as i2) =
+        maybeRender i2 =
             if belongsToMSet mandel.maxT (i2ToComplex i2) then
-                --square 1 [ xf [ mvInt2 i2 ]
-                --Just
-                --    (Svg.rect
-                --        [ SA.x <| String.fromInt x
-                --        , SA.y <| String.fromInt y
-                --        , SA.width "1"
-                --        , SA.height "1"
-                --        ]
-                --        []
-                --    )
-                Just
-                    (Svg.use
-                        [ SA.xlinkHref "#unit-rect"
-                        , SA.x <| String.fromInt x
-                        , SA.y <| String.fromInt y
-                        ]
-                        []
-                    )
+                Just (renderInt2 i2)
 
             else
                 Nothing
