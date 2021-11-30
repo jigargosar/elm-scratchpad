@@ -75,12 +75,6 @@ type alias Bounds =
     { min : Vec, max : Vec }
 
 
-
---boundsToViewBox : Bounds -> Attribute a
---boundsToViewBox b =
---    TA.viewBox b.min.x b.min.y (boundsWidth b) (boundsHeight b)
-
-
 criToPointsWithXStep : Int -> CRI -> List Vec
 criToPointsWithXStep intXSteps cri =
     let
@@ -104,39 +98,6 @@ criToPointsWithXStep intXSteps cri =
     ys
         |> List.map (\y -> xs |> List.map (\x -> vec x y))
         |> List.concat
-
-
-
---boundsToRangeWithSteps : Int -> Bounds -> List ( Float, Float )
---boundsToRangeWithSteps steps ({ min, max } as b) =
---    let
---        xSteps : Float
---        xSteps =
---            toFloat steps
---
---        xs =
---            Float.Extra.range { start = min.x, end = max.x, steps = round xSteps }
---
---        ySteps : Float
---        ySteps =
---            xSteps / (boundsWidth b / boundsHeight b)
---
---        ys =
---            Float.Extra.range { start = min.y, end = max.y, steps = round ySteps }
---    in
---    ys
---        |> List.map (\y -> xs |> List.map (pairTo y))
---        |> List.concat
---initialBounds : Bounds
---initialBounds =
---{ min = vec -2.4 -1.4, max = vec 1.34 1.4 }
---{ min = vec -2.2 -1.4, max = vec 0.6 1.4 }
---boundsFromWH 0.00035 0.00035 |> centerBoundsAt -0.86192 -0.25289
---boundsFromWH 0.001 0.001 |> centerBoundsAt -0.786 -0.16
---boundsFromWH 3 2 |> centerBoundsAt -0.8 0
---boundsFromWH 0.1 0.1 |> centerBoundsAt -0.815 -0.157
---boundsFromWH 0.03 0.03 |> centerBoundsAt -0.815 -0.157
---boundsFromWH 0.015 0.015 |> centerBoundsAt -0.797 -0.157
 
 
 initialCRI : CRI
@@ -164,7 +125,6 @@ main =
                     criWidth initialCRI / xSteps
              in
              criToPointsWithXStep xSteps initialCRI
-                --boundsToRangeWithSteps steps initialBounds
                 |> List.filterMap
                     (vToTuple
                         >> (\( a, b ) ->
