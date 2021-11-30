@@ -42,7 +42,7 @@ boundsToRangeWithSteps steps { min, max } =
 
 initialBounds : Bounds
 initialBounds =
-    { min = vec -2.5 -1.5, max = vec 2.5 1.5 }
+    { min = vec -2.4 -1.4, max = vec 1.34 1.4 }
 
 
 main =
@@ -61,7 +61,7 @@ main =
             , strokeW 0.01
             , stroke black
             ]
-            (boundsToRangeWithSteps 1000 initialBounds |> List.filterMap maybeRender)
+            (boundsToRangeWithSteps 100 initialBounds |> List.filterMap maybeRender)
         ]
 
 
