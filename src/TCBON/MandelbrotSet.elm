@@ -16,6 +16,11 @@ newCRI c ri =
     { c = c, ri = ri }
 
 
+newCR : Vec -> Float -> CRI
+newCR c r =
+    newCRI c (vec r r)
+
+
 criToBounds : CRI -> Bounds
 criToBounds { c, ri } =
     { min = vAdd c (vNegate ri), max = vAdd c ri }
