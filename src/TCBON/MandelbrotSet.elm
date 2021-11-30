@@ -42,29 +42,31 @@ renderMPoints cri =
          in
          criToPointsWithXStep xSteps cri
             |> List.filterMap
-                (\c ->
-                    if belongsToMSet c then
-                        Just (square cw [ xf [ mv c ] ])
+                (vToTuple
+                    >> (\( a, b ) ->
+                            if belongsToMSet ( a, b ) then
+                                Just (square cw [ xf [ mv2 a b ] ])
 
-                    else
-                        Nothing
+                            else
+                                Nothing
+                       )
                 )
         )
 
 
 belongsToMSet : ComplexNum -> Bool
 belongsToMSet c =
-    belongsToMSetHelp 80 c vZero
+    belongsToMSetHelp 80 c ( 0, 0 )
 
 
 belongsToMSetHelp : Int -> ComplexNum -> ComplexNum -> Bool
 belongsToMSetHelp n c t0 =
     let
         t1 =
-            complexSquare t0 |> vAdd c
+            complexSquare t0 |> complexAdd c
 
         isDiverging =
-            vLenSquared t1 > 4
+            complexLengthSquared t1 > 4
     in
     if isDiverging then
         False
@@ -77,9 +79,19 @@ belongsToMSetHelp n c t0 =
 
 
 type alias ComplexNum =
-    Vec
+    Float2
 
 
 complexSquare : ComplexNum -> ComplexNum
-complexSquare { x, y } =
-    vec (x ^ 2 - y ^ 2) (2 * x * y)
+complexSquare ( a, b ) =
+    ( a ^ 2 - b ^ 2, 2 * a * b )
+
+
+complexAdd : ComplexNum -> ComplexNum -> ComplexNum
+complexAdd ( a, b ) ( c, d ) =
+    ( a + c, b + d )
+
+
+complexLengthSquared : ComplexNum -> Float
+complexLengthSquared ( a, b ) =
+    a ^ 2 + b ^ 2
