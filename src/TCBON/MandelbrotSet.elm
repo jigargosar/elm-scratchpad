@@ -17,11 +17,14 @@ main =
             --boundsFromWH 0.03 0.03 |> centerBoundsAt -0.815 -0.157
             --boundsFromWH 0.015 0.015 |> centerBoundsAt -0.797 -0.157
             criFromCD (vec -0.797 -0.157) 0.015
+
+        ( w, h ) =
+            ( 250, 250 )
     in
     Svg.svg
         [ criToViewBox cri
-        , saWidth (criWidth cri)
-        , saHeight (criHeight cri)
+        , saWidth w
+        , saHeight h
         , dBlock
         , noFill
         , noStroke
