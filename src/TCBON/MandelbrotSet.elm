@@ -2,6 +2,7 @@ module TCBON.MandelbrotSet exposing (..)
 
 import Html exposing (Attribute, Html, div)
 import Svg exposing (Svg)
+import Svg.Attributes as SA
 import TypedSvg.Attributes as TA
 import Utils exposing (..)
 
@@ -51,9 +52,26 @@ mandelRender mandel =
                     (rangeMap inputRange mandel.yRange)
 
         renderInt2 : Int2 -> Maybe (Svg msg)
-        renderInt2 i2 =
+        renderInt2 (( x, y ) as i2) =
             if belongsToMSet mandel.maxT (i2ToComplex i2) then
-                Just (square 1 [ xf [ mvInt2 i2 ] ])
+                --square 1 [ xf [ mvInt2 i2 ]
+                --Just
+                --    (Svg.rect
+                --        [ SA.x <| String.fromInt x
+                --        , SA.y <| String.fromInt y
+                --        , SA.width "1"
+                --        , SA.height "1"
+                --        ]
+                --        []
+                --    )
+                Just
+                    (Svg.use
+                        [ SA.xlinkHref "#unit-rect"
+                        , SA.x <| String.fromInt x
+                        , SA.y <| String.fromInt y
+                        ]
+                        []
+                    )
 
             else
                 Nothing
@@ -66,8 +84,18 @@ mandelRender mandel =
             in
             TA.viewBox 0 0 w w
     in
-    rangeWH mandel.resolution mandel.resolution
+    [ Svg.defs []
+        [ Svg.rect
+            [ SA.id "unit-rect"
+            , SA.width "1"
+            , SA.height "1"
+            ]
+            []
+        ]
+    , rangeWH mandel.resolution mandel.resolution
         |> List.filterMap renderInt2
+        |> group []
+    ]
         |> Svg.svg
             [ mandelViewBox
             , dBlock
