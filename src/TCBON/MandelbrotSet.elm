@@ -10,7 +10,7 @@ import TypedSvg.Attributes as TA
 import Utils exposing (..)
 
 
-port sendMandel : List Int2 -> Cmd msg
+port sendMandel : ( Int, List Int2 ) -> Cmd msg
 
 
 
@@ -162,7 +162,7 @@ init () =
     ( { mandel = initialMandelRange
       }
     , Cmd.batch
-        [ sendMandel (mandelGenerate initialMandelRange)
+        [ sendMandel ( resolution, mandelGenerate initialMandelRange )
         ]
     )
 
