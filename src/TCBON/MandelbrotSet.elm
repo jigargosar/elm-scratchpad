@@ -42,7 +42,7 @@ boundsToRangeWithSteps steps { min, max } =
 
 initialBounds : Bounds
 initialBounds =
-    { min = vec -2.5 -2.5, max = vec 2.5 2.5 }
+    { min = vec -2.5 -1.5, max = vec 2.5 1.5 }
 
 
 main =
