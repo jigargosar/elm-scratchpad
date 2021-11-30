@@ -33,7 +33,7 @@ renderMPoints : CRI -> Svg msg
 renderMPoints cri =
     let
         xSteps =
-            500
+            250
 
         cw =
             criWidth cri / xSteps
