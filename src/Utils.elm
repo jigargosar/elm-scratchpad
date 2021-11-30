@@ -202,7 +202,12 @@ vToTuple { x, y } =
 
 vLen : Vec -> Float
 vLen =
-    vToPolar >> first
+    vLenSquared >> sqrt
+
+
+vLenSquared : Vec -> Float
+vLenSquared { x, y } =
+    x ^ 2 + y ^ 2
 
 
 vToPolar : Vec -> ( Float, Float )
