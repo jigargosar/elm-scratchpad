@@ -4,6 +4,14 @@ import Svg exposing (Svg)
 import Utils exposing (..)
 
 
+xSteps =
+    250
+
+
+iter =
+    80
+
+
 main =
     let
         cri : CRI
@@ -37,14 +45,8 @@ main =
 renderMPoints : CRI -> Svg msg
 renderMPoints cri =
     let
-        xSteps =
-            250
-
         cw =
             criWidth cri / xSteps
-
-        iter =
-            80
 
         renderMaybe c =
             if belongsToMSet iter c then
@@ -65,8 +67,8 @@ renderPt len ( x, y ) =
 
 
 belongsToMSet : Int -> ComplexNum -> Bool
-belongsToMSet iter c =
-    belongsToMSetHelp iter c ( 0, 0 )
+belongsToMSet n c =
+    belongsToMSetHelp n c ( 0, 0 )
 
 
 belongsToMSetHelp : Int -> ComplexNum -> ComplexNum -> Bool
