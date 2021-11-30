@@ -6,14 +6,6 @@ import TypedSvg.Attributes as TA
 import Utils exposing (..)
 
 
-xSteps =
-    250
-
-
-maxT =
-    80
-
-
 initialCri : CRI
 initialCri =
     --{ min = vec -2.4 -1.4, max = vec 1.34 1.4 }
@@ -61,7 +53,7 @@ mandelRender mandel =
         renderInt2 : Int2 -> Maybe (Svg msg)
         renderInt2 i2 =
             if belongsToMSet mandel.maxT (i2ToComplex i2) then
-                Just (circle 0.5 [ xf [ mvInt2 i2 ] ])
+                Just (square 1 [ xf [ mvInt2 i2 ] ])
 
             else
                 Nothing
@@ -87,54 +79,10 @@ mandelRender mandel =
             ]
 
 
-main1 =
-    let
-        cri : CRI
-        cri =
-            initialCri
-    in
-    Svg.svg
-        [ criToViewBox cri
-
-        --, saWidth w
-        --, saHeight h
-        , dBlock
-        , noFill
-        , noStroke
-        , overflowHidden
-        , style "outline" "auto blue"
-        ]
-        [ renderMPoints cri ]
-
-
 main =
     div []
         [ mandelRender initialMandel
         ]
-
-
-renderMPoints : CRI -> Svg msg
-renderMPoints cri =
-    let
-        cw =
-            criWidth cri / xSteps
-
-        renderMaybe c =
-            if belongsToMSet maxT c then
-                Just (renderPt cw c)
-
-            else
-                Nothing
-    in
-    group [ fill gray ]
-        (criToPointsWithXStep xSteps cri
-            |> List.filterMap renderMaybe
-        )
-
-
-renderPt : Float -> ComplexNum -> Svg msg
-renderPt len ( x, y ) =
-    square len [ xf [ mv2 x y ] ]
 
 
 belongsToMSet : Int -> ComplexNum -> Bool
