@@ -71,15 +71,10 @@ rangeMapInt2ToComplex xyRange =
             (rangeMap inputRange xyRange.yRange)
 
 
-
---mandelGenerate: Mandel -> List Int2
---mandelGenerate mandel =
-
-
-parseInt2ToMandel : XYRange -> Int2 -> Maybe Int2
-parseInt2ToMandel xYRange i2 =
-    Just i2
-        |> maybeFilter (isInt2MandelMember xYRange)
+mandelGenerate : XYRange -> List Int2
+mandelGenerate xyRange =
+    points
+        |> List.filter (isInt2MandelMember xyRange)
 
 
 isInt2MandelMember : XYRange -> Int2 -> Bool
@@ -99,8 +94,7 @@ mandelRender xyRange =
             TA.viewBox 0 0 w w
     in
     [ renderDefs
-    , points
-        |> List.filter (isInt2MandelMember xyRange)
+    , mandelGenerate xyRange
         |> List.map renderInt2
         |> group [ style "pointer-events" "none" ]
     ]
