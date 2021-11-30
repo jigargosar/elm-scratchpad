@@ -305,6 +305,10 @@ mv2 =
     TT.Translate
 
 
+mvT ( x, y ) =
+    mv2 x y
+
+
 mvUp y =
     mv2 0 -y
 
@@ -889,7 +893,7 @@ criToViewBox cri =
     TA.viewBox x y w h
 
 
-criToPointsWithXStep : Int -> CRI -> List Vec
+criToPointsWithXStep : Int -> CRI -> List Float2
 criToPointsWithXStep intXSteps cri =
     let
         xSteps : Float
@@ -910,5 +914,5 @@ criToPointsWithXStep intXSteps cri =
             Float.Extra.range { start = min.y, end = max.y, steps = round ySteps }
     in
     ys
-        |> List.map (\y -> xs |> List.map (\x -> vec x y))
+        |> List.map (\y -> xs |> List.map (\x -> ( x, y )))
         |> List.concat

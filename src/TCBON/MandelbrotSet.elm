@@ -42,14 +42,12 @@ renderMPoints cri =
          in
          criToPointsWithXStep xSteps cri
             |> List.filterMap
-                (vToTuple
-                    >> (\( a, b ) ->
-                            if belongsToMSet ( a, b ) then
-                                Just (square cw [ xf [ mv2 a b ] ])
+                (\c ->
+                    if belongsToMSet c then
+                        Just (square cw [ xf [ mvT c ] ])
 
-                            else
-                                Nothing
-                       )
+                    else
+                        Nothing
                 )
         )
 
