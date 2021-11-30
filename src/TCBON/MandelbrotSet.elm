@@ -96,7 +96,7 @@ mandelRender xyRange =
     [ renderDefs
     , mandelGenerate xyRange
         |> List.map renderInt2
-        |> group [ style "pointer-events" "none" ]
+        |> group [ pointerEventsNone ]
     ]
         |> Svg.svg
             [ mandelViewBox
@@ -118,6 +118,7 @@ svgCoordinateDecoder =
         (JD.field "offsetY" JD.float)
 
 
+renderDefs : Svg msg
 renderDefs =
     Svg.defs []
         [ Svg.rect

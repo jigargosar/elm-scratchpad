@@ -426,6 +426,10 @@ style =
     Html.Attributes.style
 
 
+pointerEventsNone =
+    style "pointer-events" "none"
+
+
 tac =
     style "text-align" "center"
 
