@@ -61,7 +61,7 @@ mandelRender mandel =
         renderInt2 : Int2 -> Maybe (Svg msg)
         renderInt2 i2 =
             if belongsToMSet mandel.maxT (i2ToComplex i2) then
-                Just (square 0.5 [ xf [ mvInt2 i2 ] ])
+                Just (square 1 [ xf [ mvInt2 i2 ] ])
 
             else
                 Nothing
@@ -83,6 +83,7 @@ mandelRender mandel =
             , noStroke
             , overflowHidden
             , style "outline" "auto blue"
+            , fill gray
             ]
 
 
