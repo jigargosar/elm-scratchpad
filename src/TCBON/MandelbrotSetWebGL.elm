@@ -1,6 +1,7 @@
 module TCBON.MandelbrotSetWebGL exposing (..)
 
 import Browser
+import Html.Events
 import Html.Lazy
 import Json.Decode as JD exposing (Decoder)
 import Math.Vector2 exposing (Vec2, vec2)
@@ -23,7 +24,7 @@ maxT =
 
 
 resolution =
-    100
+    400
 
 
 inputRange : Float2
@@ -111,12 +112,12 @@ mandelRender xyRange =
             , overflowHidden
             , style "outline" "auto blue"
             , fill gray
-            , Svg.Events.on "click" (JD.map OnSvgClicked svgCoordinateDecoder)
+            , Svg.Events.on "click" (JD.map OnCanvasClick offsetXYDecoder)
             ]
 
 
-svgCoordinateDecoder : Decoder Float2
-svgCoordinateDecoder =
+offsetXYDecoder : Decoder Float2
+offsetXYDecoder =
     JD.map2 Tuple.pair
         (JD.field "offsetX" JD.float)
         (JD.field "offsetY" JD.float)
@@ -167,7 +168,7 @@ init () =
 
 
 type Msg
-    = OnSvgClicked Float2
+    = OnCanvasClick Float2
 
 
 subscriptions : Model -> Sub Msg
@@ -178,7 +179,7 @@ subscriptions _ =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        OnSvgClicked p ->
+        OnCanvasClick p ->
             let
                 _ =
                     Debug.log "p" p
@@ -208,7 +209,7 @@ viewMandelGL mandel =
             100
 
         res =
-            400 * factor
+            resolution * factor
     in
     WebGL.toHtml
         [ haWidth res
@@ -217,6 +218,7 @@ viewMandelGL mandel =
         , bgc "pink"
         , style "width" (String.fromFloat (res / factor) ++ "px")
         , style "height" (String.fromFloat (res / factor) ++ "px")
+        , Html.Events.on "click" (JD.map OnCanvasClick offsetXYDecoder)
         ]
         [ WebGL.entity vertexShader
             fragmentShader
