@@ -194,16 +194,15 @@ view _ =
 
 type alias Vertex =
     { position : Vec3
-    , color : Vec3
     }
 
 
 mesh : WebGL.Mesh Vertex
 mesh =
     WebGL.triangles
-        [ ( Vertex (vec3 0 0 0) (vec3 1 0 0)
-          , Vertex (vec3 1 1 0) (vec3 0 1 0)
-          , Vertex (vec3 1 -1 0) (vec3 0 0 1)
+        [ ( Vertex (vec3 0 0 0)
+          , Vertex (vec3 1 1 0)
+          , Vertex (vec3 1 -1 0)
           )
         ]
 
@@ -220,7 +219,6 @@ vertexShader : WebGL.Shader Vertex Uniforms { v_pos2 : Vec2 }
 vertexShader =
     [glsl|
         attribute vec3 position;
-        attribute vec3 color;
         varying vec2 v_pos2;
 
         void main () {
