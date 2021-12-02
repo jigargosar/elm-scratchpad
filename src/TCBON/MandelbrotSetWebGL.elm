@@ -247,16 +247,15 @@ fragmentShader =
         precision mediump float;
         varying vec2 v_pos2;
 
+        bool foo(float x, float y){
+            return x + y > 0.0;
+        }
+
         void main () {
             vec2 p = v_pos2;
             float x = p.x;
             float y = p.y;
-            if (
-
-                 x + y > 0.0
-                // abs(x-y) > 0.09
-
-            ){
+            if (foo(x,y)){
 
                 gl_FragColor = vec4(0.0,0.0,0.0, 1.0);
             }
