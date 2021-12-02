@@ -269,7 +269,9 @@ fragmentShader =
             for(int i=0; i<40; i++ ){
                 val = vec2(val.x * val.x - val.y * val.y, 2.0 * val.x * val.y ) + p;
             }
-            return length(val) < 2.0;
+            float len = abs(val.x*val.x + val.y*val.y);
+
+            return len < 4.0;
         }
 
         void main () {
@@ -277,10 +279,10 @@ fragmentShader =
             float x = p.x;
             float y = p.y;
             if (bar(p)){
-                gl_FragColor = vec4(0.0,0.0,0.0, 1.0);
+                gl_FragColor = vec4(1.0,1.0,1.0, 1.0);
             }
             else {
-                gl_FragColor = vec4(1.0,1.0,1.0, 1.0);
+                gl_FragColor = vec4(0.0,0.0,0.0, 1.0);
             }
             // gl_FragColor = vec4(p,1, 1.0);
         }
