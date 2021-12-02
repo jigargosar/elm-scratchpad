@@ -267,7 +267,7 @@ fragmentShader =
             }
             // float gs =  sqrt(sqrt(mandel(v_pos2)));
             float gs =  (sqrt(mandel(v_pos2)));
-            gl_FragColor = vec4(gs,gs,gs, 1.0);
+            gl_FragColor = vec4(gs, gs, gs, 1.0);
         }
     |]
 
