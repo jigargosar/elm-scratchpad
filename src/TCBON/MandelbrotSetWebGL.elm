@@ -257,16 +257,7 @@ fragmentShader =
         }
 
         bool bar(vec2 p){
-            // return mandel(p) >= 1.0;
-
-            vec2 val = p;
-            for(int i=0; i < maxT; i++ ){
-                val = vec2(val.x * val.x - val.y * val.y, 2.0 * val.x * val.y ) + p;
-            }
-
-            float lenSq = abs(val.x*val.x + val.y*val.y);
-
-            return lenSq < 4.0 ;
+             return mandel(p) >= 1.0;
         }
 
         void main () {
