@@ -200,9 +200,9 @@ type alias Vertex =
 mesh : WebGL.Mesh Vertex
 mesh =
     WebGL.triangles
-        [ ( Vertex (vec3 0 0 0)
+        [ ( Vertex (vec3 -1 -1 0)
           , Vertex (vec3 1 1 0)
-          , Vertex (vec3 1 -1 0)
+          , Vertex (vec3 2 -2 0)
           )
         ]
 
@@ -235,7 +235,14 @@ fragmentShader =
         varying vec2 v_pos2;
 
         void main () {
-            gl_FragColor = vec4(v_pos2, 0, 1.0);
+            if ( v_pos2.x + v_pos2.y >= 0.0){
+
+                gl_FragColor = vec4(0.0,0.0,0.0, 1.0);
+            }
+            else {
+                gl_FragColor = vec4(1.0,1.0,1.0, 1.0);
+            }
+            gl_FragColor = vec4(v_pos2,1, 1.0);
         }
     |]
 
