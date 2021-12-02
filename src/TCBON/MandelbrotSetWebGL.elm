@@ -180,14 +180,19 @@ update msg model =
 view : Model -> Html Msg
 view _ =
     let
+        factor =
+            40
+
         res =
-            2400 * 2
+            500 * factor
     in
     WebGL.toHtml
         [ haWidth res
         , haHeight res
         , dBlock
         , bgc "pink"
+        , style "width" (String.fromFloat (res / factor) ++ "px")
+        , style "height" (String.fromFloat (res / factor) ++ "px")
         ]
         [ WebGL.entity vertexShader fragmentShader mesh {}
         ]
