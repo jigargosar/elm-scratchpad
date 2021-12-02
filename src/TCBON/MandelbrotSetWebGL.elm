@@ -259,14 +259,14 @@ fragmentShader =
 
 
         void main () {
-            if (mandel(v_pos2) >= 1.0){
+            if (mandel(v_pos2) <= 0.0){
                 gl_FragColor = vec4(0.0,0.0,0.0, 1.0);
             }
             else {
                 gl_FragColor = vec4(1.0,1.0,1.0, 1.0);
             }
             float gs =  sqrt(sqrt(mandel(v_pos2)));
-            gl_FragColor = vec4(gs,gs,gs, 1.0);
+            //gl_FragColor = vec4(gs,gs,gs, 1.0);
         }
     |]
 
