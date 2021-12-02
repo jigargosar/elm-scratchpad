@@ -232,7 +232,7 @@ vertexShader =
         varying vec2 v_pos2;
 
         float rangeMap(float a, float b, float c, float d){
-            return 0;
+            return 0.0;
         }
 
         void main () {
