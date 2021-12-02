@@ -222,8 +222,19 @@ fragmentShader : WebGL.Shader {} Uniforms { v_pos2 : Vec2 }
 fragmentShader =
     [glsl|
         precision mediump float;
-        uniform int maxT;
         varying vec2 v_pos2;
+
+        float norm(float a, float b, float val){
+                    return (val - a) / (b - a);
+        }
+
+        float lerp(float a, float b, float val){
+            return (val * (b - a)) + a;
+        }
+
+        float rangeMap(float a, float b, float c, float d, float val){
+            return lerp(c, d, (norm(a, b, val)));
+        }
 
         vec2 complexSquared(float x, float y){
             return vec2(x * x - y * y, 2.0 * x * y);
@@ -232,22 +243,17 @@ fragmentShader =
             return complexSquared(c.x,c.y);
         }
 
-        float lenSq(float x, float y) {
-            return abs(x * x + y * y);
-        }
-        float lenSq(vec2 v) {
-            return lenSq(v.x,v.y);
-        }
+        const int maxT = 80;
 
         float mandel(vec2 p){
-             vec2 t = p;
-             for(int i=0; i < 80; i++ ){
-                 t = complexSquared(t) + p;
+            vec2 t = p;
+            for(int i=0; i < maxT; i++ ){
+                if(dot(t,t) > 4.0){
+                    return lerp(0.0, float(maxT), float(i));
+                }
+                t = complexSquared(t) + p;
              }
-
-             float xxx = lenSq(t.x,t.y);
-
-             return 1.0 ;
+             return 1.0;
         }
 
         bool bar(vec2 p){
