@@ -225,10 +225,20 @@ fragmentShader =
         uniform int maxT;
         varying vec2 v_pos2;
 
+        vec2 complexSquared(vec2 cpl){
+            float x = cpl.x, y = cpl.y;
+            return vec2(x * x - y * y, 2.0 * x * y );
+        }
+
         bool bar(vec2 p){
             vec2 val = p;
+            int idx = 0;
             for(int i=0; i < 80; i++ ){
                 val = vec2(val.x * val.x - val.y * val.y, 2.0 * val.x * val.y ) + p;
+                idx = i;
+            }
+            if(idx==1){
+                return false;
             }
             float lenSq = abs(val.x*val.x + val.y*val.y);
 
