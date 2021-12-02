@@ -183,6 +183,7 @@ view _ =
         [ haWidth 400
         , haHeight 400
         , dBlock
+        , bgc "pink"
         ]
         [ WebGL.entity vertexShader fragmentShader mesh {}
         ]
@@ -200,9 +201,9 @@ type alias Vertex =
 mesh : WebGL.Mesh Vertex
 mesh =
     WebGL.triangles
-        [ ( Vertex (vec3 -1 -1 0)
-          , Vertex (vec3 1 1 0)
-          , Vertex (vec3 2 -2 0)
+        [ ( Vertex (vec3 -1 1 0)
+          , Vertex (vec3 -1 -1 0)
+          , Vertex (vec3 1 0 0)
           )
         ]
 
