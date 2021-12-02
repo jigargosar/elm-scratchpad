@@ -177,7 +177,7 @@ update msg model =
 
 
 view : Model -> Html Msg
-view _ =
+view model =
     let
         factor =
             100
@@ -196,10 +196,19 @@ view _ =
         [ WebGL.entity vertexShader
             fragmentShader
             mesh
-            { r = 0.015 / 2.0
-            , cx = -0.797
-            , cy = -0.157
-            }
+            (let
+                ( xMin, xMax ) =
+                    model.mandel.xRange
+
+                ( yMin, yMax ) =
+                    model.mandel.yRange
+             in
+             { xMin = xMin
+             , xMax = xMax
+             , yMin = yMin
+             , yMax = yMax
+             }
+            )
         ]
 
 
@@ -227,7 +236,7 @@ mesh =
 
 
 type alias Uniforms =
-    { cx : Float, cy : Float, r : Float }
+    { xMin : Float, xMax : Float, yMin : Float, yMax : Float }
 
 
 vertexShader : WebGL.Shader Vertex Uniforms { v_pos2 : Vec2 }
@@ -235,9 +244,7 @@ vertexShader =
     [glsl|
         precision mediump float;
         attribute vec2 position;
-        uniform float cx;
-        uniform float cy;
-        uniform float r;
+        uniform float xMin, xMax, yMin, yMax;
         varying vec2 v_pos2;
 
 
@@ -256,8 +263,8 @@ vertexShader =
         void main () {
             gl_Position = vec4(position.x, -position.y, 0, 1.0);
 
-            float x = rangeMap(-1.0, 1.0, cx - r, cx + r, position.x);
-            float y = rangeMap(-1.0, 1.0, cy - r, cy + r, position.y);
+            float x = rangeMap(-1.0, 1.0, xMin, xMax, position.x);
+            float y = rangeMap(-1.0, 1.0, yMin, yMax, position.y);
 
             v_pos2 = vec2(x,y);
         }
