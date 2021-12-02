@@ -249,11 +249,11 @@ fragmentShader =
             vec2 t = p;
             for(int i=0; i < maxT; i++ ){
                 if(dot(t,t) >= 4.0){
-                    return norm(0.0, float(maxT), float(i));
+                    return norm(float(maxT), 0.0, float(i));
                 }
                 t = complexSquared(t) + p;
              }
-             return 1.0;
+             return 0.0;
         }
 
 
@@ -265,7 +265,8 @@ fragmentShader =
             else {
                 gl_FragColor = vec4(1.0,1.0,1.0, 1.0);
             }
-            // gl_FragColor = vec4(p,1, 1.0);
+            float gs =  sqrt(sqrt(mandel(v_pos2)));
+            gl_FragColor = vec4(gs,gs,gs, 1.0);
         }
     |]
 
