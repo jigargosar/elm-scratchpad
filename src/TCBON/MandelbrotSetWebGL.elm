@@ -181,7 +181,7 @@ view : Model -> Html Msg
 view _ =
     let
         factor =
-            40
+            400
 
         res =
             500 * factor
