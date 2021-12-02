@@ -248,14 +248,17 @@ fragmentShader =
         varying vec2 v_pos2;
 
         void main () {
-            if ( v_pos2.x + v_pos2.y >= 0.0){
+            vec2 p = v_pos2;
+            float x = p.x;
+            float y = p.y;
+            if ( x + y >= 0.0){
 
                 gl_FragColor = vec4(0.0,0.0,0.0, 1.0);
             }
             else {
                 gl_FragColor = vec4(1.0,1.0,1.0, 1.0);
             }
-            gl_FragColor = vec4(v_pos2,1, 1.0);
+            // gl_FragColor = vec4(p,1, 1.0);
         }
     |]
 
