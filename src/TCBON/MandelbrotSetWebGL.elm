@@ -256,7 +256,6 @@ fragmentShader =
             float x = p.x;
             float y = p.y;
             if (foo(x,y)){
-
                 gl_FragColor = vec4(0.0,0.0,0.0, 1.0);
             }
             else {
