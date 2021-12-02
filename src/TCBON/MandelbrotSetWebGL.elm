@@ -235,6 +235,14 @@ vertexShader =
             return 0.0;
         }
 
+        float norm(float a, float b, float x){
+            return (x - a) / (b - a);
+        }
+
+        float lerp(float a, float b, float x){
+            return (x * (b - a)) + a;
+        }
+
         void main () {
             gl_Position = vec4(position, 0, 1.0);
 
