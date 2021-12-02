@@ -221,11 +221,11 @@ vertexShader =
         attribute vec3 position;
         attribute vec3 color;
         uniform mat4 perspective;
-        varying vec3 vcolor;
+        varying vec3 vc;
 
         void main () {
             gl_Position = perspective * vec4(position, 1.0);
-            vcolor = color;
+            vc = color;
         }
     |]
 
@@ -234,10 +234,10 @@ fragmentShader : WebGL.Shader {} Uniforms { vc : Vec3 }
 fragmentShader =
     [glsl|
         precision mediump float;
-        varying vec3 vcolor;
+        varying vec3 vc;
 
         void main () {
-            gl_FragColor = vec4(vcolor, 1.0);
+            gl_FragColor = vec4(vc, 1.0);
         }
     |]
 
