@@ -5,10 +5,6 @@ import Html.Events
 import Html.Lazy
 import Json.Decode as JD exposing (Decoder)
 import Math.Vector2 exposing (Vec2, vec2)
-import Svg exposing (Svg)
-import Svg.Attributes as SA
-import Svg.Events
-import TypedSvg.Attributes as TA
 import Utils exposing (..)
 import WebGL
 
@@ -32,19 +28,6 @@ inputRange =
     ( 0, toFloat resolution )
 
 
-points =
-    rangeWH resolution resolution
-
-
-mandelViewBox : Attribute a
-mandelViewBox =
-    let
-        w =
-            toFloat resolution
-    in
-    TA.viewBox 0 0 w w
-
-
 xyRangeFromCD : Vec -> Float -> XYRange
 xyRangeFromCD c d =
     let
@@ -54,22 +37,6 @@ xyRangeFromCD c d =
     in
     { xRange = xRange
     , yRange = yRange
-    }
-
-
-initialUniform : Uniforms
-initialUniform =
-    let
-        ( xMin, xMax ) =
-            initialMandelRange.xRange
-
-        ( yMin, yMax ) =
-            initialMandelRange.yRange
-    in
-    { xMin = xMin
-    , xMax = xMax
-    , yMin = yMin
-    , yMax = yMax
     }
 
 
@@ -85,64 +52,11 @@ rangeMapInt2ToComplex xyRange =
             (rangeMap inputRange xyRange.yRange)
 
 
-mandelGenerate : XYRange -> List Int2
-mandelGenerate xyRange =
-    points
-        |> List.filter (isInt2MandelMember xyRange)
-
-
-isInt2MandelMember : XYRange -> Int2 -> Bool
-isInt2MandelMember xYRange =
-    rangeMapInt2ToComplex xYRange >> belongsToMSet maxT
-
-
-mandelRender : XYRange -> Html Msg
-mandelRender xyRange =
-    [ renderDefs
-    , mandelGenerate xyRange
-        |> List.map renderInt2
-        |> group [ pointerEventsNone ]
-    ]
-        |> Svg.svg
-            [ mandelViewBox
-            , style "width" (String.fromInt resolution ++ "px")
-            , dBlock
-            , noFill
-            , noStroke
-            , overflowHidden
-            , style "outline" "auto blue"
-            , fill gray
-            , Svg.Events.on "click" (JD.map OnCanvasClick offsetXYDecoder)
-            ]
-
-
 offsetXYDecoder : Decoder Float2
 offsetXYDecoder =
     JD.map2 Tuple.pair
         (JD.field "offsetX" JD.float)
         (JD.field "offsetY" JD.float)
-
-
-renderDefs : Svg msg
-renderDefs =
-    Svg.defs []
-        [ Svg.rect
-            [ SA.id "unit-rect"
-            , SA.width "1"
-            , SA.height "1"
-            ]
-            []
-        ]
-
-
-renderInt2 : Int2 -> Svg msg
-renderInt2 ( x, y ) =
-    Svg.use
-        [ SA.xlinkHref "#unit-rect"
-        , SA.x <| String.fromInt x
-        , SA.y <| String.fromInt y
-        ]
-        []
 
 
 main : Program () Model Msg
@@ -234,6 +148,7 @@ viewMandelGL mandel =
              , xMax = xMax
              , yMin = yMin
              , yMax = yMax
+             , maxT = maxT
              }
             )
         ]
@@ -263,7 +178,12 @@ mesh =
 
 
 type alias Uniforms =
-    { xMin : Float, xMax : Float, yMin : Float, yMax : Float }
+    { xMin : Float
+    , xMax : Float
+    , yMin : Float
+    , yMax : Float
+    , maxT : Int
+    }
 
 
 vertexShader : WebGL.Shader Vertex Uniforms { v_pos2 : Vec2 }
@@ -326,61 +246,5 @@ fragmentShader =
     |]
 
 
-
---noinspection ElmUnusedSymbol
-
-
-view1 : Model -> Html Msg
-view1 model =
-    div [ fontSize "100px" ]
-        [ Html.Lazy.lazy mandelRender initialMandelRange
-        , Html.Lazy.lazy mandelRender model.mandel
-        , text "HH"
-        ]
-
-
-belongsToMSet : Int -> ComplexNum -> Bool
-belongsToMSet maxT_ c =
-    let
-        t0 =
-            ( 0, 0 )
-    in
-    belongsToMSetHelp maxT_ c t0
-
-
-belongsToMSetHelp : Int -> ComplexNum -> ComplexNum -> Bool
-belongsToMSetHelp n c t0 =
-    let
-        t1 =
-            complexSquare t0 |> complexAdd c
-
-        isDiverging =
-            complexLengthSquared t1 > 4
-    in
-    if isDiverging then
-        False
-
-    else if n <= 0 then
-        not isDiverging
-
-    else
-        belongsToMSetHelp (n - 1) c t1
-
-
 type alias ComplexNum =
     Float2
-
-
-complexSquare : ComplexNum -> ComplexNum
-complexSquare ( a, b ) =
-    ( a ^ 2 - b ^ 2, 2 * a * b )
-
-
-complexAdd : ComplexNum -> ComplexNum -> ComplexNum
-complexAdd ( a, b ) ( c, d ) =
-    ( a + c, b + d )
-
-
-complexLengthSquared : ComplexNum -> Float
-complexLengthSquared ( a, b ) =
-    a ^ 2 + b ^ 2
