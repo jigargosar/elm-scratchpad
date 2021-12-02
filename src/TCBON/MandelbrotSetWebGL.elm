@@ -233,7 +233,7 @@ vertexShader =
 
         void main () {
             gl_Position = vec4(position, 0, 1.0);
-            v_pos2 = position;
+            v_pos2 = position + vec2(-0.5,0);
         }
     |]
 
