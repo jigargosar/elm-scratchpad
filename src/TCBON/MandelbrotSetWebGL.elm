@@ -248,7 +248,11 @@ fragmentShader =
         varying vec2 v_pos2;
 
         bool foo(float x, float y){
-            return x + y > 0.0;
+            float val = x * x + y * y;
+            for(int i=0; i<80; i++ ){
+                val = val * val + x + y;
+            }
+            return val > 0.0;
         }
 
         void main () {
