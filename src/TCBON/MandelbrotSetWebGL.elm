@@ -181,7 +181,7 @@ view : Model -> Html Msg
 view _ =
     let
         factor =
-            400
+            100
 
         res =
             500 * factor
@@ -265,17 +265,17 @@ fragmentShader =
             for(int i=0; i<40; i++ ){
                 val = vec2(val.x * val.x - val.y * val.y, 2.0 * val.x * val.y ) + p;
             }
-            float len = abs(val.x*val.x + val.y*val.y);
+            float lenSq = abs(val.x*val.x + val.y*val.y);
 
-            return len > 4.0;
+            return lenSq < 16.0;
         }
 
         void main () {
             if (bar(v_pos2)){
-                gl_FragColor = vec4(1.0,1.0,1.0, 1.0);
+                gl_FragColor = vec4(0.0,0.0,0.0, 1.0);
             }
             else {
-                gl_FragColor = vec4(0.0,0.0,0.0, 1.0);
+                gl_FragColor = vec4(1.0,1.0,1.0, 1.0);
             }
             // gl_FragColor = vec4(p,1, 1.0);
         }
