@@ -255,6 +255,14 @@ fragmentShader =
             return val > 0.0;
         }
 
+        bool bar(vec2 p){
+            vec2 val = p;
+            for(int i=0; i<80; i++ ){
+                val = val * val + p;
+            }
+            return length(val) > 2.0;
+        }
+
         void main () {
             vec2 p = v_pos2;
             float x = p.x;
