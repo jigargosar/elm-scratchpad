@@ -1,4 +1,4 @@
-port module TCBON.MandelbrotSet exposing (..)
+module TCBON.MandelbrotSet exposing (..)
 
 import Browser
 import Html.Lazy
@@ -10,10 +10,8 @@ import TypedSvg.Attributes as TA
 import Utils exposing (..)
 
 
-port sendMandel : ( Int, List Int2 ) -> Cmd msg
 
-
-
+--port sendMandel : ( Int, List Int2 ) -> Cmd msg
 --initialCri : CRI
 --initialCri =
 --    --{ min = vec -2.4 -1.4, max = vec 1.34 1.4 }
@@ -162,7 +160,7 @@ init () =
     ( { mandel = initialMandelRange
       }
     , Cmd.batch
-        [ sendMandel ( resolution, mandelGenerate initialMandelRange )
+        [--sendMandel ( resolution, mandelGenerate initialMandelRange )
         ]
     )
 
