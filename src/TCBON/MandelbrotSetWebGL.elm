@@ -3,8 +3,7 @@ module TCBON.MandelbrotSetWebGL exposing (..)
 import Browser
 import Html.Lazy
 import Json.Decode as JD exposing (Decoder)
-import Math.Vector2 exposing (Vec2)
-import Math.Vector3 exposing (Vec3, vec3)
+import Math.Vector2 exposing (Vec2, vec2)
 import Svg exposing (Svg)
 import Svg.Attributes as SA
 import Svg.Events
@@ -203,33 +202,21 @@ view _ =
 
 
 type alias Vertex =
-    { position : Vec3
+    { position : Vec2
     }
 
 
 mesh : WebGL.Mesh Vertex
 mesh =
     WebGL.triangleStrip
-        [ Vertex (vec3 -1 1 0)
-        , Vertex (vec3 -1 -1 0)
-        , Vertex (vec3 1 1 0)
-
-        --, Vertex (vec3 0.9 -0.9 0)
-        , Vertex (vec3 1 -1 0)
+        [ Vertex (vec2 -1 1)
+        , Vertex (vec2 -1 -1)
+        , Vertex (vec2 1 1)
+        , Vertex (vec2 1 -1)
         ]
 
 
 
---WebGL.triangles
---    [ ( Vertex (vec3 -1 1 0)
---      , Vertex (vec3 -1 -1 0)
---      , Vertex (vec3 1 1 0)
---      )
---    , ( Vertex (vec3 -1 1 0)
---      , Vertex (vec3 -1 -1 0)
---      , Vertex (vec3 1 -1 0)
---      )
---    ]
 -- SHADERS
 
 
@@ -241,12 +228,12 @@ vertexShader : WebGL.Shader Vertex Uniforms { v_pos2 : Vec2 }
 vertexShader =
     [glsl|
         precision mediump float;
-        attribute vec3 position;
+        attribute vec2 position;
         varying vec2 v_pos2;
 
         void main () {
-            gl_Position = vec4(position, 1.0);
-            v_pos2 = position.xy;
+            gl_Position = vec4(position, 0, 1.0);
+            v_pos2 = position;
         }
     |]
 
