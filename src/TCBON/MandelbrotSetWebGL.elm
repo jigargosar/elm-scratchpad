@@ -222,6 +222,7 @@ fragmentShader : WebGL.Shader {} Uniforms { v_pos2 : Vec2 }
 fragmentShader =
     [glsl|
         precision mediump float;
+        uniform int maxT;
         varying vec2 v_pos2;
 
         bool bar(vec2 p){
