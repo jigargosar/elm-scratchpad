@@ -3,6 +3,7 @@ module TCBON.MandelbrotSetWebGL exposing (..)
 import Browser
 import Html.Lazy
 import Json.Decode as JD exposing (Decoder)
+import Math.Vector2 exposing (Vec2)
 import Math.Vector3 exposing (Vec3, vec3)
 import Svg exposing (Svg)
 import Svg.Attributes as SA
@@ -215,28 +216,28 @@ type alias Uniforms =
     {}
 
 
-vertexShader : WebGL.Shader Vertex Uniforms { vc : Vec3 }
+vertexShader : WebGL.Shader Vertex Uniforms { v_pos2 : Vec2 }
 vertexShader =
     [glsl|
         attribute vec3 position;
         attribute vec3 color;
-        varying vec3 vc;
+        varying vec2 v_pos2;
 
         void main () {
             gl_Position = vec4(position, 1.0);
-            vc = color;
+            v_pos2 = position.xy;
         }
     |]
 
 
-fragmentShader : WebGL.Shader {} Uniforms { vc : Vec3 }
+fragmentShader : WebGL.Shader {} Uniforms { v_pos2 : Vec2 }
 fragmentShader =
     [glsl|
         precision mediump float;
-        varying vec3 vc;
+        varying vec2 v_pos2;
 
         void main () {
-            gl_FragColor = vec4(vc, 1.0);
+            gl_FragColor = vec4(v_pos2, 0, 1.0);
         }
     |]
 
