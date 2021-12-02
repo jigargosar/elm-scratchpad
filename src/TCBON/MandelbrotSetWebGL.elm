@@ -179,9 +179,13 @@ update msg model =
 
 view : Model -> Html Msg
 view _ =
+    let
+        res =
+            2400 * 2
+    in
     WebGL.toHtml
-        [ haWidth 400
-        , haHeight 400
+        [ haWidth res
+        , haHeight res
         , dBlock
         , bgc "pink"
         ]
@@ -257,7 +261,7 @@ fragmentShader =
 
         bool bar(vec2 p){
             vec2 val = p;
-            for(int i=0; i<20; i++ ){
+            for(int i=0; i<40; i++ ){
                 val = vec2(val.x * val.x - val.y * val.y, 2.0 * val.x * val.y ) + p;
             }
             return length(val) < 2.0;
