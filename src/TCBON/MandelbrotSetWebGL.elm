@@ -256,12 +256,10 @@ fragmentShader =
              return 1.0;
         }
 
-        bool bar(vec2 p){
-             return mandel(p) >= 1.0;
-        }
+
 
         void main () {
-            if (bar(v_pos2)){
+            if (mandel(v_pos2) >= 1.0){
                 gl_FragColor = vec4(0.0,0.0,0.0, 1.0);
             }
             else {
