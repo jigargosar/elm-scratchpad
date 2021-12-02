@@ -240,7 +240,7 @@ type alias Uniforms =
 vertexShader : WebGL.Shader Vertex Uniforms { v_pos2 : Vec2 }
 vertexShader =
     [glsl|
-        precision highp float;
+        precision mediump float;
         attribute vec3 position;
         varying vec2 v_pos2;
 
@@ -254,11 +254,8 @@ vertexShader =
 fragmentShader : WebGL.Shader {} Uniforms { v_pos2 : Vec2 }
 fragmentShader =
     [glsl|
-        // precision mediump float;
-        precision highp float;
+        precision mediump float;
         varying vec2 v_pos2;
-
-
 
         bool bar(vec2 p){
             vec2 val = p;
