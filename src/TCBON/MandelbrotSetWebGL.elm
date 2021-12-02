@@ -271,7 +271,7 @@ fragmentShader =
             }
             float len = abs(val.x*val.x + val.y*val.y);
 
-            return len < 4.0;
+            return len > 4.0;
         }
 
         void main () {
