@@ -248,7 +248,7 @@ vertexShader =
             gl_Position = vec4(position, 0, 1.0);
             float left = -2.0 + 0.4;
             float top = -1.0 + 0.6;
-            float sz = 1.0 - 0.6;
+            float sz = 1.0 - 0.6 + 2.0;
             float x = rangeMap(-1.0, 1.0, left, left + sz, position.x);
             float y = rangeMap(-1.0, 1.0, top, top + sz, position.y);
 
@@ -266,12 +266,12 @@ fragmentShader =
 
         bool bar(vec2 p){
             vec2 val = p;
-            for(int i=0; i<40; i++ ){
+            for(int i=0; i<30; i++ ){
                 val = vec2(val.x * val.x - val.y * val.y, 2.0 * val.x * val.y ) + p;
             }
             float lenSq = abs(val.x*val.x + val.y*val.y);
 
-            return lenSq < 2.0 ;
+            return lenSq < 4.0 ;
         }
 
         void main () {
