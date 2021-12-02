@@ -247,10 +247,11 @@ vertexShader =
         void main () {
             gl_Position = vec4(position.x, -position.y, 0, 1.0);
             float sz = 0.015;
-            float left = -0.797 - sz / 2.0;
-            float top = -0.157 - sz / 2.0;
-            float x = rangeMap(-1.0, 1.0, left, left + sz, position.x);
-            float y = rangeMap(-1.0, 1.0, top, top + sz, position.y);
+            float r = sz / 2.0;
+            float cx = -0.797;
+            float cy = -0.157;
+            float x = rangeMap(-1.0, 1.0, cx - r, cx + r, position.x);
+            float y = rangeMap(-1.0, 1.0, cy - r, cy + r, position.y);
 
             v_pos2 = position + vec2(-0.5,0);
             v_pos2 = vec2(x,y);
