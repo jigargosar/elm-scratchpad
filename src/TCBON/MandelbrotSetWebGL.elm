@@ -251,7 +251,12 @@ fragmentShader =
             vec2 p = v_pos2;
             float x = p.x;
             float y = p.y;
-            if ( x + y >= 0.0){
+            if (
+
+                // x + y >= 0.0
+                abs(x-y) > 0.1
+
+            ){
 
                 gl_FragColor = vec4(0.0,0.0,0.0, 1.0);
             }
