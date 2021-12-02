@@ -56,6 +56,22 @@ xyRangeFromCD c d =
     }
 
 
+initialUniform : Uniforms
+initialUniform =
+    let
+        ( xMin, xMax ) =
+            initialMandelRange.xRange
+
+        ( yMin, yMax ) =
+            initialMandelRange.yRange
+    in
+    { xMin = xMin
+    , xMax = xMax
+    , yMin = yMin
+    , yMax = yMax
+    }
+
+
 initialMandelRange : XYRange
 initialMandelRange =
     xyRangeFromCD (vec -0.797 -0.157) 0.015
@@ -178,12 +194,21 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
+    div [ fontSize "100px" ]
+        [ Html.Lazy.lazy viewMandelGL initialMandelRange
+        , Html.Lazy.lazy viewMandelGL model.mandel
+        , text "HH"
+        ]
+
+
+viewMandelGL : XYRange -> Html Msg
+viewMandelGL mandel =
     let
         factor =
             100
 
         res =
-            500 * factor
+            400 * factor
     in
     WebGL.toHtml
         [ haWidth res
@@ -198,10 +223,10 @@ view model =
             mesh
             (let
                 ( xMin, xMax ) =
-                    model.mandel.xRange
+                    mandel.xRange
 
                 ( yMin, yMax ) =
-                    model.mandel.yRange
+                    mandel.yRange
              in
              { xMin = xMin
              , xMax = xMax
