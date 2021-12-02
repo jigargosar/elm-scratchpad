@@ -1,4 +1,4 @@
-module TCBON.MandelbrotSet exposing (..)
+module TCBON.MandelbrotSetWebGL exposing (..)
 
 import Browser
 import Html.Lazy
@@ -220,11 +220,10 @@ vertexShader =
     [glsl|
         attribute vec3 position;
         attribute vec3 color;
-        uniform mat4 perspective;
         varying vec3 vc;
 
         void main () {
-            gl_Position = perspective * vec4(position, 1.0);
+            gl_Position = vec4(position, 1.0);
             vc = color;
         }
     |]
