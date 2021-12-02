@@ -248,8 +248,8 @@ fragmentShader =
         float mandel(vec2 p){
             vec2 t = p;
             for(int i=0; i < maxT; i++ ){
-                if(dot(t,t) > 4.0){
-                    return lerp(0.0, float(maxT), float(i));
+                if(dot(t,t) >= 4.0){
+                    return norm(0.0, float(maxT), float(i));
                 }
                 t = complexSquared(t) + p;
              }
