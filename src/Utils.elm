@@ -426,6 +426,14 @@ style =
     Html.Attributes.style
 
 
+haWidth =
+    Html.Attributes.width
+
+
+haHeight =
+    Html.Attributes.height
+
+
 pointerEventsNone =
     style "pointer-events" "none"
 

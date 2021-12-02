@@ -8,6 +8,7 @@ import Svg.Attributes as SA
 import Svg.Events
 import TypedSvg.Attributes as TA
 import Utils exposing (..)
+import WebGL
 
 
 type alias XYRange =
@@ -175,7 +176,18 @@ update msg model =
 
 
 view : Model -> Html Msg
-view model =
+view _ =
+    WebGL.toHtml
+        [ haWidth 400
+        , haHeight 400
+        , dBlock
+        ]
+        [--WebGL.entity vertexShader fragmentShader mesh { perspective = perspective (t / 1000) }
+        ]
+
+
+view1 : Model -> Html Msg
+view1 model =
     div [ fontSize "100px" ]
         [ Html.Lazy.lazy mandelRender initialMandelRange
         , Html.Lazy.lazy mandelRender model.mandel
