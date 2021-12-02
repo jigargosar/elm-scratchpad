@@ -231,25 +231,27 @@ vertexShader =
         attribute vec2 position;
         varying vec2 v_pos2;
 
-        float rangeMap(float a, float b, float c, float d){
-            return 0.0;
+
+        float norm(float a, float b, float val){
+            return (val - a) / (b - a);
         }
 
-        float norm(float a, float b, float x){
-            return (x - a) / (b - a);
+        float lerp(float a, float b, float val){
+            return (val * (b - a)) + a;
         }
 
-        float lerp(float a, float b, float x){
-            return (x * (b - a)) + a;
+        float rangeMap(float a, float b, float c, float d, float val){
+            return lerp(c, d, (norm(a, b, val)));
         }
 
         void main () {
             gl_Position = vec4(position, 0, 1.0);
 
-            float x = rangeMap(-1.0,1.0, -0.5, 0.5);
-            float y = rangeMap(-1.0,1.0, -0.5, 0.5);
+            float x = rangeMap(-1.0, 1.0, -0.5, 0.5, position.x);
+            float y = rangeMap(-1.0, 1.0, -0.5, 0.5, position.y);
 
             v_pos2 = position + vec2(-0.5,0);
+            v_pos2 = vec2(x,y);
         }
     |]
 
