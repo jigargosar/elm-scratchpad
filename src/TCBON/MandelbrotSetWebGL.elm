@@ -3,6 +3,7 @@ module TCBON.MandelbrotSet exposing (..)
 import Browser
 import Html.Lazy
 import Json.Decode as JD exposing (Decoder)
+import Math.Vector3 exposing (Vec3, vec3)
 import Svg exposing (Svg)
 import Svg.Attributes as SA
 import Svg.Events
@@ -182,8 +183,67 @@ view _ =
         , haHeight 400
         , dBlock
         ]
-        [--WebGL.entity vertexShader fragmentShader mesh { perspective = perspective (t / 1000) }
+        [ WebGL.entity vertexShader fragmentShader mesh {}
         ]
+
+
+
+-- MESH
+
+
+type alias Vertex =
+    { position : Vec3
+    , color : Vec3
+    }
+
+
+mesh : WebGL.Mesh Vertex
+mesh =
+    WebGL.triangles
+        [ ( Vertex (vec3 0 0 0) (vec3 1 0 0)
+          , Vertex (vec3 1 1 0) (vec3 0 1 0)
+          , Vertex (vec3 1 -1 0) (vec3 0 0 1)
+          )
+        ]
+
+
+
+-- SHADERS
+
+
+type alias Uniforms =
+    {}
+
+
+vertexShader : WebGL.Shader Vertex Uniforms { vc : Vec3 }
+vertexShader =
+    [glsl|
+        attribute vec3 position;
+        attribute vec3 color;
+        uniform mat4 perspective;
+        varying vec3 vcolor;
+
+        void main () {
+            gl_Position = perspective * vec4(position, 1.0);
+            vcolor = color;
+        }
+    |]
+
+
+fragmentShader : WebGL.Shader {} Uniforms { vc : Vec3 }
+fragmentShader =
+    [glsl|
+        precision mediump float;
+        varying vec3 vcolor;
+
+        void main () {
+            gl_FragColor = vec4(vcolor, 1.0);
+        }
+    |]
+
+
+
+--noinspection ElmUnusedSymbol
 
 
 view1 : Model -> Html Msg
