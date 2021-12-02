@@ -193,7 +193,13 @@ view _ =
         , style "width" (String.fromFloat (res / factor) ++ "px")
         , style "height" (String.fromFloat (res / factor) ++ "px")
         ]
-        [ WebGL.entity vertexShader fragmentShader mesh {}
+        [ WebGL.entity vertexShader
+            fragmentShader
+            mesh
+            { r = 0.015 / 2.0
+            , cx = -0.797
+            , cy = -0.157
+            }
         ]
 
 
@@ -221,7 +227,7 @@ mesh =
 
 
 type alias Uniforms =
-    {}
+    { cx : Float, cy : Float, r : Float }
 
 
 vertexShader : WebGL.Shader Vertex Uniforms { v_pos2 : Vec2 }
