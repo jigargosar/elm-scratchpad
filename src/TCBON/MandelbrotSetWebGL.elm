@@ -200,15 +200,27 @@ type alias Vertex =
 
 mesh : WebGL.Mesh Vertex
 mesh =
-    WebGL.triangles
-        [ ( Vertex (vec3 -1 1 0)
-          , Vertex (vec3 -1 -1 0)
-          , Vertex (vec3 1 0 0)
-          )
+    WebGL.triangleStrip
+        [ Vertex (vec3 -1 1 0)
+        , Vertex (vec3 -1 -1 0)
+        , Vertex (vec3 1 1 0)
+
+        --, Vertex (vec3 0.9 -0.9 0)
+        , Vertex (vec3 1 -1 0)
         ]
 
 
 
+--WebGL.triangles
+--    [ ( Vertex (vec3 -1 1 0)
+--      , Vertex (vec3 -1 -1 0)
+--      , Vertex (vec3 1 1 0)
+--      )
+--    , ( Vertex (vec3 -1 1 0)
+--      , Vertex (vec3 -1 -1 0)
+--      , Vertex (vec3 1 -1 0)
+--      )
+--    ]
 -- SHADERS
 
 
