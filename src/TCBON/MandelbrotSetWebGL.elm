@@ -253,7 +253,7 @@ fragmentShader =
             float y = p.y;
             if (
 
-                 x + y < -0.1
+                 x + y > 0.0
                 // abs(x-y) > 0.09
 
             ){
