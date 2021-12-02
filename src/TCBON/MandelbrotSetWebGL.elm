@@ -240,6 +240,7 @@ type alias Uniforms =
 vertexShader : WebGL.Shader Vertex Uniforms { v_pos2 : Vec2 }
 vertexShader =
     [glsl|
+        precision highp float;
         attribute vec3 position;
         varying vec2 v_pos2;
 
@@ -253,16 +254,11 @@ vertexShader =
 fragmentShader : WebGL.Shader {} Uniforms { v_pos2 : Vec2 }
 fragmentShader =
     [glsl|
-        precision mediump float;
+        // precision mediump float;
+        precision highp float;
         varying vec2 v_pos2;
 
-        bool foo(float x, float y){
-            float val = x * x + y * y;
-            for(int i=0; i<80; i++ ){
-                val = val * val + x + y;
-            }
-            return val > 0.0;
-        }
+
 
         bool bar(vec2 p){
             vec2 val = p;
@@ -275,10 +271,7 @@ fragmentShader =
         }
 
         void main () {
-            vec2 p = v_pos2;
-            float x = p.x;
-            float y = p.y;
-            if (bar(p)){
+            if (bar(v_pos2)){
                 gl_FragColor = vec4(1.0,1.0,1.0, 1.0);
             }
             else {
