@@ -231,8 +231,16 @@ vertexShader =
         attribute vec2 position;
         varying vec2 v_pos2;
 
+        float rangeMap(float a, float b, float c, float d){
+            return 0;
+        }
+
         void main () {
             gl_Position = vec4(position, 0, 1.0);
+
+            float x = rangeMap(-1,1, -0.5, 0.5);
+            float y = rangeMap(-1,1, -0.5, 0.5);
+
             v_pos2 = position + vec2(-0.5,0);
         }
     |]
