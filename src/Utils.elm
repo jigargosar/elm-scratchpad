@@ -1071,3 +1071,13 @@ criToPointsWithXStep intXSteps cri =
     ys
         |> List.map (\y -> xs |> List.map (\x -> ( x, y )))
         |> List.concat
+
+
+criPanByWHFraction : Float2 -> CRI -> CRI
+criPanByWHFraction ( wf, hf ) cri =
+    { cri | c = vAdd cri.c (vec (wf * criWidth cri) (hf * criHeight cri)) }
+
+
+criScaleRI : Float -> CRI -> CRI
+criScaleRI s cri =
+    { cri | ri = vScale s cri.ri }

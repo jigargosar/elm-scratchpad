@@ -140,16 +140,6 @@ update msg model =
             ( { model | mandel = criZoom fixedPt scale_ model.mandel }, Cmd.none )
 
 
-criPanByWHFraction : Float2 -> CRI -> CRI
-criPanByWHFraction ( xf, yf ) cri =
-    { cri | c = vAdd cri.c (vec (xf * criWidth cri) (yf * criHeight cri)) }
-
-
-criScaleRI : Float -> CRI -> CRI
-criScaleRI s cri =
-    { cri | ri = vScale s cri.ri }
-
-
 view : Model -> Html Msg
 view model =
     div [ fontSize "100px" ]
