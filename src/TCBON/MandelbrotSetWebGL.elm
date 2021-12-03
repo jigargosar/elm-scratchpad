@@ -72,10 +72,10 @@ subscriptions _ =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        OnCanvasClick me ->
+        OnCanvasClick e ->
             let
                 c =
-                    me.offset
+                    e.offset
                         |> Debug.log "p"
                         |> vFromFloat2
                         |> rangeMapCRI canvasCRI model.mandel
