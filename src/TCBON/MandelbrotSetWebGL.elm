@@ -16,10 +16,6 @@ type alias XYRange =
     }
 
 
-maxT =
-    80
-
-
 width =
     500
 
@@ -177,7 +173,6 @@ viewMandelGL mandel =
              , xMax = xMax
              , yMin = yMin
              , yMax = yMax
-             , maxT = maxT
              }
             )
         ]
@@ -211,7 +206,6 @@ type alias Uniforms =
     , xMax : Float
     , yMin : Float
     , yMax : Float
-    , maxT : Int
     }
 
 
