@@ -175,6 +175,19 @@ criScaleRI s cri =
     { cri | ri = vScale s cri.ri }
 
 
+criZoom : Vec -> Float -> CRI -> CRI
+criZoom fixedPt scale_ { c, ri } =
+    let
+        v1 =
+            vFromTo c fixedPt
+
+        v2 =
+            vScale 1.1 v1
+    in
+    newCRI (vSub c (vFromTo v1 v2))
+        (ri |> vScale scale_)
+
+
 view : Model -> Html Msg
 view model =
     div [ fontSize "100px" ]
