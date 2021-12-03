@@ -99,16 +99,16 @@ update msg model =
                 mandel =
                     case e.key of
                         "ArrowLeft" ->
-                            criShiftByWHFactor ( 0.1, 0 ) model.mandel
-
-                        "ArrowRight" ->
                             criShiftByWHFactor ( -0.1, 0 ) model.mandel
 
+                        "ArrowRight" ->
+                            criShiftByWHFactor ( 0.1, 0 ) model.mandel
+
                         "ArrowUp" ->
-                            criShiftByWHFactor ( 0, 0.1 ) model.mandel
+                            criShiftByWHFactor ( 0, -0.1 ) model.mandel
 
                         "ArrowDown" ->
-                            criShiftByWHFactor ( 0, -0.1 ) model.mandel
+                            criShiftByWHFactor ( 0, 0.1 ) model.mandel
 
                         _ ->
                             model.mandel
