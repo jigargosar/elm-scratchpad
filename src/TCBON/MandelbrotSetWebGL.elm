@@ -81,11 +81,9 @@ update msg model =
     case msg of
         OnCanvasClick p ->
             let
-                _ =
-                    Debug.log "p" p
-
                 c =
                     p
+                        |> Debug.log "p"
                         |> vFromFloat2
                         |> rangeMapCRI canvasCRI initialMandelCRI
             in
