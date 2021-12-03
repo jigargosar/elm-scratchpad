@@ -25,7 +25,8 @@ resolution =
 
 initialMandelCRI : CRI
 initialMandelCRI =
-    criFromCD (vec -0.797 -0.157) 0.015
+    --criFromCD (vec -0.797 -0.157) 0.015
+    criFromCD (vec 0 0) 2
 
 
 canvasCRI : CRI
