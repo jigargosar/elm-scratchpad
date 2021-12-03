@@ -75,7 +75,7 @@ update msg model =
                         |> vFromFloat2
                         |> rangeMapCRI canvasCRI initialMandelCRI
             in
-            ( { model | mandel = newCRI c (initialMandelCRI.ri |> vScale 0.5) }, Cmd.none )
+            ( { model | mandel = newCRI c (initialMandelCRI.ri |> vScale 0.05) }, Cmd.none )
 
 
 view : Model -> Html Msg
