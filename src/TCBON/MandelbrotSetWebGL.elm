@@ -20,7 +20,11 @@ maxT =
     80
 
 
-resolution =
+width =
+    500
+
+
+height =
     500
 
 
@@ -32,7 +36,7 @@ initialMandelCRI =
 
 canvasCRI : CRI
 canvasCRI =
-    criFromLTWH 0 0 resolution resolution
+    criFromLTWH 0 0 width height
 
 
 main : Program () Model Msg
@@ -145,17 +149,14 @@ viewMandelGL mandel =
     let
         factor =
             100
-
-        res =
-            resolution * factor
     in
     WebGL.toHtml
-        [ haWidth res
-        , haHeight res
+        [ haWidth (width * factor)
+        , haHeight (height * factor)
         , dBlock
         , bgc "pink"
-        , style "width" (String.fromFloat (res / factor) ++ "px")
-        , style "height" (String.fromFloat (res / factor) ++ "px")
+        , style "width" (String.fromInt width ++ "px")
+        , style "height" (String.fromInt height ++ "px")
         , Html.Events.on "click" (JD.map OnCanvasClick mouseEventDecoder)
         , Html.Events.on "keydown" (JD.map OnCanvasKeyDown keyEventDecoder)
         , HA.tabindex 0
