@@ -30,7 +30,7 @@ initialMandelCRI =
 
 canvasCRI : CRI
 canvasCRI =
-    criFromD resolution
+    criFromLTWH 0 0 resolution resolution
 
 
 offsetXYDecoder : Decoder Float2

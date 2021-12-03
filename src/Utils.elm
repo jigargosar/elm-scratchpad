@@ -875,6 +875,18 @@ newCRI c ri =
     { c = c, ri = ri }
 
 
+criFromLTWH : Float -> Float -> Float -> Float -> CRI
+criFromLTWH l t w h =
+    let
+        ri =
+            vec w h |> vScale 0.5
+
+        c =
+            vec l t |> vAdd ri
+    in
+    newCRI c ri
+
+
 criFromCR : Vec -> Float -> CRI
 criFromCR c r =
     newCRI c (vec r r)
