@@ -135,7 +135,8 @@ criScaleRI s cri =
 view : Model -> Html Msg
 view model =
     div [ fontSize "100px" ]
-        [ Html.Lazy.lazy viewMandelGL model.mandel
+        [ stylesNode "html,body{height:100%; background-color:#444;}"
+        , Html.Lazy.lazy viewMandelGL model.mandel
         ]
 
 
