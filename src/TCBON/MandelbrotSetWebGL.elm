@@ -50,18 +50,18 @@ type alias Model =
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ({ mandel = initialMandelCRI
-     }
-        --|> update (OnCanvasClick ( 30, 157 ))
-        --|> update (OnCanvasClick ( 43, 171 ))
-        --|> update (OnCanvasClick ( 157, 358 ))
-        |> update (OnCanvasClick ( 111, 313 ))
-     --, Cmd.none
+    ( { mandel = initialMandelCRI
+      }
+      --|> update (OnCanvasClick ( 30, 157 ))
+      --|> update (OnCanvasClick ( 43, 171 ))
+      --|> update (OnCanvasClick ( 157, 358 ))
+      --|> update (OnCanvasClick ( 111, 313 ))
+    , Cmd.none
     )
 
 
 type Msg
-    = OnCanvasClick Float2
+    = OnCanvasClick MouseEvent
 
 
 subscriptions : Model -> Sub Msg
@@ -72,10 +72,10 @@ subscriptions _ =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        OnCanvasClick p ->
+        OnCanvasClick me ->
             let
                 c =
-                    p
+                    me.offset
                         |> Debug.log "p"
                         |> vFromFloat2
                         |> rangeMapCRI canvasCRI model.mandel
@@ -108,7 +108,7 @@ viewMandelGL mandel =
         , bgc "pink"
         , style "width" (String.fromFloat (res / factor) ++ "px")
         , style "height" (String.fromFloat (res / factor) ++ "px")
-        , Html.Events.on "click" (JD.map OnCanvasClick offsetXYDecoder)
+        , Html.Events.on "click" (JD.map OnCanvasClick mouseEventDecoder)
         ]
         [ WebGL.entity vertexShader
             fragmentShader

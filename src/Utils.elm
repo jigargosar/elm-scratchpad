@@ -6,6 +6,7 @@ import Float.Extra
 import Html exposing (Attribute, Html)
 import Html.Attributes exposing (style)
 import Json.Decode as JD exposing (Decoder)
+import Json.Decode.Pipeline exposing (required)
 import Random exposing (Generator)
 import Svg exposing (Svg)
 import Svg.Attributes as SA
@@ -48,6 +49,13 @@ type alias MouseEvent =
     { modifiers : Modifiers
     , offset : Float2
     }
+
+
+mouseEventDecoder : Decoder MouseEvent
+mouseEventDecoder =
+    JD.succeed MouseEvent
+        |> jdAndMap modifiersDecoder
+        |> jdAndMap offsetXYDecoder
 
 
 type alias Modifiers =
