@@ -145,7 +145,10 @@ viewMandelGL mandel =
         , style "width" (String.fromFloat (res / factor) ++ "px")
         , style "height" (String.fromFloat (res / factor) ++ "px")
         , Html.Events.on "click" (JD.map OnCanvasClick mouseEventDecoder)
-        , Html.Events.on "keydown" (JD.map OnCanvasKeyDown keyEventDecoder)
+        , Html.Events.preventDefaultOn "keydown"
+            (JD.map OnCanvasKeyDown keyEventDecoder
+                |> JD.map (pairTo True)
+            )
         , HA.tabindex 0
         , HA.autofocus True
         ]
