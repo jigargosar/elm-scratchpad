@@ -44,6 +44,12 @@ keyDecoder =
     JD.field "key" JD.string
 
 
+type alias MouseEvent =
+    { modifiers : Modifiers
+    , offset : Float2
+    }
+
+
 type alias Modifiers =
     { shift : Bool }
 
