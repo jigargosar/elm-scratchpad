@@ -25,7 +25,7 @@ width =
 
 
 height =
-    500
+    800
 
 
 initialMandelCRI : CRI
