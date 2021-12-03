@@ -20,7 +20,7 @@ maxT =
 
 
 resolution =
-    400
+    500
 
 
 initialMandelCRI : CRI
