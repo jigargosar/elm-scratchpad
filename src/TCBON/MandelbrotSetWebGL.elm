@@ -147,12 +147,12 @@ view model =
 viewMandelGL : CRI -> Html Msg
 viewMandelGL mandel =
     let
-        factor =
+        canvasScalingFactor =
             100
     in
     WebGL.toHtml
-        [ haWidth (width * factor)
-        , haHeight (height * factor)
+        [ haWidth (width * canvasScalingFactor)
+        , haHeight (height * canvasScalingFactor)
         , dBlock
         , bgc "pink"
         , style "width" (String.fromInt width ++ "px")
