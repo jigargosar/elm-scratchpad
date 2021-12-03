@@ -23,11 +23,6 @@ resolution =
     400
 
 
-inputRange : Float2
-inputRange =
-    ( 0, toFloat resolution )
-
-
 initialMandelCRI : CRI
 initialMandelCRI =
     criFromCD (vec -0.797 -0.157) 0.015
