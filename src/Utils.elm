@@ -44,6 +44,16 @@ keyDecoder =
     JD.field "key" JD.string
 
 
+type alias Modifiers =
+    { shift : Bool }
+
+
+modifiersDecoder : Decoder Modifiers
+modifiersDecoder =
+    JD.succeed Modifiers
+        |> JD.map2 (|>) (JD.field "shiftKey" JD.bool)
+
+
 offsetXYDecoder : Decoder Float2
 offsetXYDecoder =
     JD.map2 Tuple.pair
