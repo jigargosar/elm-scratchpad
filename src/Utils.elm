@@ -6,7 +6,6 @@ import Float.Extra
 import Html exposing (Attribute, Html)
 import Html.Attributes exposing (style)
 import Json.Decode as JD exposing (Decoder)
-import Json.Decode.Pipeline exposing (required)
 import Random exposing (Generator)
 import Svg exposing (Svg)
 import Svg.Attributes as SA

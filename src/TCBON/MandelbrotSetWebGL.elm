@@ -79,16 +79,21 @@ update msg model =
                         |> Debug.log "p"
                         |> vFromFloat2
                         |> rangeMapCRI canvasCRI model.mandel
+
+                factor =
+                    if e.modifiers.shift then
+                        2
+
+                    else
+                        0.5
             in
-            ( { model | mandel = newCRI c (model.mandel.ri |> vScale 0.5) }, Cmd.none )
+            ( { model | mandel = newCRI c (model.mandel.ri |> vScale factor) }, Cmd.none )
 
 
 view : Model -> Html Msg
 view model =
     div [ fontSize "100px" ]
-        [ Html.Lazy.lazy viewMandelGL initialMandelCRI
-        , Html.Lazy.lazy viewMandelGL model.mandel
-        , text "HH"
+        [ Html.Lazy.lazy viewMandelGL model.mandel
         ]
 
 
