@@ -105,16 +105,16 @@ update msg model =
                 mandel =
                     case e.key of
                         "a" ->
-                            criShiftByWHFactor ( -pct, 0 ) model.mandel
+                            criPanByWHFraction ( -pct, 0 ) model.mandel
 
                         "d" ->
-                            criShiftByWHFactor ( pct, 0 ) model.mandel
+                            criPanByWHFraction ( pct, 0 ) model.mandel
 
                         "w" ->
-                            criShiftByWHFactor ( 0, -pct ) model.mandel
+                            criPanByWHFraction ( 0, -pct ) model.mandel
 
                         "s" ->
-                            criShiftByWHFactor ( 0, pct ) model.mandel
+                            criPanByWHFraction ( 0, pct ) model.mandel
 
                         "e" ->
                             criScaleRI 0.5 model.mandel
@@ -140,8 +140,8 @@ update msg model =
             ( { model | mandel = criZoom fixedPt scale_ model.mandel }, Cmd.none )
 
 
-criShiftByWHFactor : Float2 -> CRI -> CRI
-criShiftByWHFactor ( xf, yf ) cri =
+criPanByWHFraction : Float2 -> CRI -> CRI
+criPanByWHFraction ( xf, yf ) cri =
     { cri | c = vAdd cri.c (vec (xf * criWidth cri) (yf * criHeight cri)) }
 
 
