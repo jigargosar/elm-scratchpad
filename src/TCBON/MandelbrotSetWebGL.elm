@@ -142,22 +142,10 @@ update msg model =
 
                 mandel =
                     if e.deltaY > 0 then
-                        let
-                            v2 =
-                                vScale 1.1 v1
-                        in
-                        newCRI
-                            (vSub model.mandel.c (vFromTo v1 v2))
-                            (model.mandel.ri |> vScale 1.1)
+                        criZoom oldOffset 1.1 model.mandel
 
                     else if e.deltaY < 0 then
-                        let
-                            v2 =
-                                vScale 0.9 v1
-                        in
-                        newCRI
-                            (vSub model.mandel.c (vFromTo v1 v2))
-                            (model.mandel.ri |> vScale 0.9)
+                        criZoom oldOffset 0.9 model.mandel
 
                     else
                         model.mandel
@@ -182,7 +170,7 @@ criZoom fixedPt scale_ { c, ri } =
             vFromTo c fixedPt
 
         v2 =
-            vScale 1.1 v1
+            vScale scale_ v1
     in
     newCRI (vSub c (vFromTo v1 v2))
         (ri |> vScale scale_)
