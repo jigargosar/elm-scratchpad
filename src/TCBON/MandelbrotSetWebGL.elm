@@ -130,14 +130,23 @@ update msg model =
         OnCanvasWheel e ->
             let
                 _ =
-                    Debug.log "e" e.deltaY
+                    Debug.log "e" e.mouseEvent.offsetPos
+
+                oldOffset =
+                    e.mouseEvent.offsetPos
+                        |> vFromFloat2
+                        |> rangeMapCRI canvasCRI model.mandel
 
                 mandel =
                     if e.deltaY > 0 then
-                        newCRI model.mandel.c (model.mandel.ri |> vScale 1.1)
+                        newCRI
+                            model.mandel.c
+                            (model.mandel.ri |> vScale 1.1)
 
                     else if e.deltaY < 0 then
-                        newCRI model.mandel.c (model.mandel.ri |> vScale 0.9)
+                        newCRI
+                            model.mandel.c
+                            (model.mandel.ri |> vScale 0.9)
 
                     else
                         model.mandel
