@@ -93,22 +93,22 @@ update msg model =
 
         OnCanvasKeyDown e ->
             let
-                _ =
-                    Debug.log "e" e
+                pct =
+                    0.05
 
                 mandel =
                     case e.key of
                         "ArrowLeft" ->
-                            criShiftByWHFactor ( -0.1, 0 ) model.mandel
+                            criShiftByWHFactor ( -pct, 0 ) model.mandel
 
                         "ArrowRight" ->
-                            criShiftByWHFactor ( 0.1, 0 ) model.mandel
+                            criShiftByWHFactor ( pct, 0 ) model.mandel
 
                         "ArrowUp" ->
-                            criShiftByWHFactor ( 0, -0.1 ) model.mandel
+                            criShiftByWHFactor ( 0, -pct ) model.mandel
 
                         "ArrowDown" ->
-                            criShiftByWHFactor ( 0, 0.1 ) model.mandel
+                            criShiftByWHFactor ( 0, pct ) model.mandel
 
                         _ ->
                             model.mandel
