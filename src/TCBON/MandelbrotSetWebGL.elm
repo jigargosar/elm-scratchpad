@@ -98,17 +98,23 @@ update msg model =
 
                 mandel =
                     case e.key of
-                        "ArrowLeft" ->
+                        "a" ->
                             criShiftByWHFactor ( -pct, 0 ) model.mandel
 
-                        "ArrowRight" ->
+                        "d" ->
                             criShiftByWHFactor ( pct, 0 ) model.mandel
 
-                        "ArrowUp" ->
+                        "w" ->
                             criShiftByWHFactor ( 0, -pct ) model.mandel
 
-                        "ArrowDown" ->
+                        "s" ->
                             criShiftByWHFactor ( 0, pct ) model.mandel
+
+                        "e" ->
+                            criScaleRI 0.5 model.mandel
+
+                        "q" ->
+                            criScaleRI 2 model.mandel
 
                         _ ->
                             model.mandel
@@ -119,6 +125,11 @@ update msg model =
 criShiftByWHFactor : Float2 -> CRI -> CRI
 criShiftByWHFactor ( xf, yf ) cri =
     { cri | c = vAdd cri.c (vec (xf * criWidth cri) (yf * criHeight cri)) }
+
+
+criScaleRI : Float -> CRI -> CRI
+criScaleRI s cri =
+    { cri | ri = vScale s cri.ri }
 
 
 view : Model -> Html Msg
