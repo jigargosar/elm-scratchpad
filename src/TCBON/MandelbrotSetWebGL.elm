@@ -78,9 +78,9 @@ update msg model =
                     p
                         |> Debug.log "p"
                         |> vFromFloat2
-                        |> rangeMapCRI canvasCRI initialMandelCRI
+                        |> rangeMapCRI canvasCRI model.mandel
             in
-            ( { model | mandel = newCRI c (initialMandelCRI.ri |> vScale 0.01) }, Cmd.none )
+            ( { model | mandel = newCRI c (model.mandel.ri |> vScale 0.5) }, Cmd.none )
 
 
 view : Model -> Html Msg
@@ -162,7 +162,7 @@ type alias Uniforms =
 vertexShader : WebGL.Shader Vertex Uniforms { v_pos2 : Vec2 }
 vertexShader =
     [glsl|
-        precision mediump float;
+        precision highp float;
         attribute vec2 position;
         uniform float xMin, xMax, yMin, yMax;
         varying vec2 v_pos2;
@@ -194,7 +194,7 @@ vertexShader =
 fragmentShader : WebGL.Shader {} Uniforms { v_pos2 : Vec2 }
 fragmentShader =
     [glsl|
-        precision mediump float;
+        precision highp float;
         varying vec2 v_pos2;
 
         float norm(float a, float b, float val){
