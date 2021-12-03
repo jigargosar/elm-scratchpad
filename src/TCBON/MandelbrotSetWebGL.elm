@@ -50,9 +50,12 @@ type alias Model =
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { mandel = initialMandelCRI
-      }
-    , Cmd.none
+    ({ mandel = initialMandelCRI
+     }
+        --|> update (OnCanvasClick ( 30, 157 ))
+        |> update (OnCanvasClick ( 43, 171 ))
+     --|> update (OnCanvasClick ( 157, 358 ))
+     --, Cmd.none
     )
 
 
@@ -76,7 +79,7 @@ update msg model =
                         |> vFromFloat2
                         |> rangeMapCRI canvasCRI initialMandelCRI
             in
-            ( { model | mandel = newCRI c (initialMandelCRI.ri |> vScale 0.05) }, Cmd.none )
+            ( { model | mandel = newCRI c (initialMandelCRI.ri |> vScale 0.01) }, Cmd.none )
 
 
 view : Model -> Html Msg
