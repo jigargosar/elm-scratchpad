@@ -131,8 +131,18 @@ update msg model =
             let
                 _ =
                     Debug.log "e" e.deltaY
+
+                mandel =
+                    if e.deltaY > 0 then
+                        newCRI model.mandel.c (model.mandel.ri |> vScale 1.1)
+
+                    else if e.deltaY < 0 then
+                        newCRI model.mandel.c (model.mandel.ri |> vScale 0.9)
+
+                    else
+                        model.mandel
             in
-            ( model, Cmd.none )
+            ( { model | mandel = mandel }, Cmd.none )
 
 
 criShiftByWHFactor : Float2 -> CRI -> CRI
