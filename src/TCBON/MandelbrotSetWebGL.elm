@@ -21,7 +21,7 @@ width =
 
 
 height =
-    300
+    500
 
 
 aspectRatio =
