@@ -28,28 +28,14 @@ inputRange =
     ( 0, toFloat resolution )
 
 
-xyRangeFromCD : Vec -> Float -> XYRange
-xyRangeFromCD c d =
-    let
-        ( xRange, yRange ) =
-            criFromCD c d
-                |> criToXYRanges
-    in
-    { xRange = xRange
-    , yRange = yRange
-    }
+initialMandelCRI : CRI
+initialMandelCRI =
+    criFromCD (vec -0.797 -0.157) 0.015
 
 
-initialMandelRange : XYRange
-initialMandelRange =
-    xyRangeFromCD (vec -0.797 -0.157) 0.015
-
-
-rangeMapInt2ToComplex : XYRange -> Int2 -> ComplexNum
-rangeMapInt2ToComplex xyRange =
-    toFloat2
-        >> mapBoth (rangeMap inputRange xyRange.xRange)
-            (rangeMap inputRange xyRange.yRange)
+canvasCRI : CRI
+canvasCRI =
+    criFromD resolution
 
 
 offsetXYDecoder : Decoder Float2
@@ -70,12 +56,12 @@ main =
 
 
 type alias Model =
-    { mandel : XYRange }
+    { mandel : CRI }
 
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { mandel = initialMandelRange
+    ( { mandel = initialMandelCRI
       }
     , Cmd.none
     )
@@ -100,23 +86,22 @@ update msg model =
 
                 c =
                     p
-                        |> mapEach round
-                        |> rangeMapInt2ToComplex initialMandelRange
                         |> vFromFloat2
+                        |> rangeMapCRI canvasCRI initialMandelCRI
             in
-            ( { model | mandel = xyRangeFromCD c (0.015 / 2) }, Cmd.none )
+            ( { model | mandel = newCRI c (initialMandelCRI.ri |> vScale 0.5) }, Cmd.none )
 
 
 view : Model -> Html Msg
 view model =
     div [ fontSize "100px" ]
-        [ Html.Lazy.lazy viewMandelGL initialMandelRange
+        [ Html.Lazy.lazy viewMandelGL initialMandelCRI
         , Html.Lazy.lazy viewMandelGL model.mandel
         , text "HH"
         ]
 
 
-viewMandelGL : XYRange -> Html Msg
+viewMandelGL : CRI -> Html Msg
 viewMandelGL mandel =
     let
         factor =
@@ -138,11 +123,8 @@ viewMandelGL mandel =
             fragmentShader
             mesh
             (let
-                ( xMin, xMax ) =
-                    mandel.xRange
-
-                ( yMin, yMax ) =
-                    mandel.yRange
+                ( ( xMin, xMax ), ( yMin, yMax ) ) =
+                    criToXYRanges mandel
              in
              { xMin = xMin
              , xMax = xMax

@@ -885,9 +885,31 @@ criFromCD c d =
     criFromCR c (d / 2)
 
 
+criFromD : Float -> CRI
+criFromD d =
+    criFromR (d / 2)
+
+
+criFromR : Float -> CRI
+criFromR r =
+    criFromCR vZero r
+
+
 criToXYRanges : CRI -> ( Float2, Float2 )
 criToXYRanges =
     criToBounds >> boundsToXYRanges
+
+
+rangeMapCRI : CRI -> CRI -> Vec -> Vec
+rangeMapCRI inCRI outCRI { x, y } =
+    let
+        ( inX, inY ) =
+            criToXYRanges inCRI
+
+        ( outX, outY ) =
+            criToXYRanges outCRI
+    in
+    vec (rangeMap inX outX x) (rangeMap inY outY y)
 
 
 boundsToXYRanges : Bounds -> ( Float2, Float2 )
