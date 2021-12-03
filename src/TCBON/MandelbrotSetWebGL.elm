@@ -33,13 +33,6 @@ canvasCRI =
     criFromLTWH 0 0 resolution resolution
 
 
-offsetXYDecoder : Decoder Float2
-offsetXYDecoder =
-    JD.map2 Tuple.pair
-        (JD.field "offsetX" JD.float)
-        (JD.field "offsetY" JD.float)
-
-
 main : Program () Model Msg
 main =
     Browser.element

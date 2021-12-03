@@ -44,6 +44,13 @@ keyDecoder =
     JD.field "key" JD.string
 
 
+offsetXYDecoder : Decoder Float2
+offsetXYDecoder =
+    JD.map2 Tuple.pair
+        (JD.field "offsetX" JD.float)
+        (JD.field "offsetY" JD.float)
+
+
 arrowKeyToDir : String -> Maybe Dir4
 arrowKeyToDir key =
     case key of
