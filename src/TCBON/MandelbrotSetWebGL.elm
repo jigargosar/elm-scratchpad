@@ -129,16 +129,10 @@ update msg model =
 
         OnCanvasWheel e ->
             let
-                _ =
-                    Debug.log "e" e.mouseEvent.offsetPos
-
                 oldOffset =
                     e.mouseEvent.offsetPos
                         |> vFromFloat2
                         |> rangeMapCRI canvasCRI model.mandel
-
-                v1 =
-                    vFromTo model.mandel.c oldOffset
 
                 mandel =
                     if e.deltaY > 0 then
