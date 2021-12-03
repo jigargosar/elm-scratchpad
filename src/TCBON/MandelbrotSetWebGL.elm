@@ -129,17 +129,17 @@ update msg model =
 
         OnCanvasWheel e ->
             let
-                oldOffset =
+                fixedPt =
                     e.mouseEvent.offsetPos
                         |> vFromFloat2
                         |> rangeMapCRI canvasCRI model.mandel
 
                 mandel =
                     if e.deltaY > 0 then
-                        criZoom oldOffset 1.1 model.mandel
+                        criZoom fixedPt 1.1 model.mandel
 
                     else if e.deltaY < 0 then
-                        criZoom oldOffset 0.9 model.mandel
+                        criZoom fixedPt 0.9 model.mandel
 
                     else
                         model.mandel
