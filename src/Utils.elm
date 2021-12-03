@@ -51,11 +51,11 @@ type alias Modifiers =
 modifiersDecoder : Decoder Modifiers
 modifiersDecoder =
     JD.succeed Modifiers
-        |> jdCustom (JD.field "shiftKey" JD.bool)
+        |> jdAndMap (JD.field "shiftKey" JD.bool)
 
 
-jdCustom : Decoder a -> Decoder (a -> b) -> Decoder b
-jdCustom =
+jdAndMap : Decoder a -> Decoder (a -> b) -> Decoder b
+jdAndMap =
     JD.map2 (|>)
 
 
