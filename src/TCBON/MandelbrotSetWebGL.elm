@@ -134,17 +134,10 @@ update msg model =
                         |> vFromFloat2
                         |> rangeMapCRI canvasCRI model.mandel
 
-                mandel =
-                    if e.deltaY > 0 then
-                        criZoom fixedPt 1.1 model.mandel
-
-                    else if e.deltaY < 0 then
-                        criZoom fixedPt 0.9 model.mandel
-
-                    else
-                        model.mandel
+                scale_ =
+                    1 + sign e.deltaY * 0.1
             in
-            ( { model | mandel = mandel }, Cmd.none )
+            ( { model | mandel = criZoom fixedPt scale_ model.mandel }, Cmd.none )
 
 
 criShiftByWHFactor : Float2 -> CRI -> CRI
@@ -155,19 +148,6 @@ criShiftByWHFactor ( xf, yf ) cri =
 criScaleRI : Float -> CRI -> CRI
 criScaleRI s cri =
     { cri | ri = vScale s cri.ri }
-
-
-criZoom : Vec -> Float -> CRI -> CRI
-criZoom fixedPt scale_ { c, ri } =
-    let
-        v1 =
-            vFromTo c fixedPt
-
-        v2 =
-            vScale scale_ v1
-    in
-    newCRI (vSub c (vFromTo v1 v2))
-        (ri |> vScale scale_)
 
 
 view : Model -> Html Msg

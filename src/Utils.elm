@@ -675,6 +675,19 @@ sub =
     (-)
 
 
+sign : number -> number
+sign x =
+    case compare x 0 of
+        LT ->
+            -1
+
+        EQ ->
+            0
+
+        GT ->
+            1
+
+
 first =
     Tuple.first
 
@@ -958,6 +971,19 @@ criFromR r =
 criToXYRanges : CRI -> ( Float2, Float2 )
 criToXYRanges =
     criToBounds >> boundsToXYRanges
+
+
+criZoom : Vec -> Float -> CRI -> CRI
+criZoom fixedPt scale_ { c, ri } =
+    let
+        v1 =
+            vFromTo c fixedPt
+
+        v2 =
+            vScale scale_ v1
+    in
+    newCRI (vSub c (vFromTo v1 v2))
+        (ri |> vScale scale_)
 
 
 rangeMapCRI : CRI -> CRI -> Vec -> Vec
