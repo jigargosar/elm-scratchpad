@@ -95,8 +95,30 @@ update msg model =
             let
                 _ =
                     Debug.log "e" e
+
+                mandel =
+                    case e.key of
+                        "ArrowLeft" ->
+                            criShiftByWHFactor ( 0.1, 0 ) model.mandel
+
+                        "ArrowRight" ->
+                            criShiftByWHFactor ( -0.1, 0 ) model.mandel
+
+                        "ArrowUp" ->
+                            criShiftByWHFactor ( 0, 0.1 ) model.mandel
+
+                        "ArrowDown" ->
+                            criShiftByWHFactor ( 0, -0.1 ) model.mandel
+
+                        _ ->
+                            model.mandel
             in
-            ( model, Cmd.none )
+            ( { model | mandel = mandel }, Cmd.none )
+
+
+criShiftByWHFactor : Float2 -> CRI -> CRI
+criShiftByWHFactor ( xf, yf ) cri =
+    { cri | c = vAdd cri.c (vec (xf * criWidth cri) (yf * criHeight cri)) }
 
 
 view : Model -> Html Msg
