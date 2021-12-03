@@ -147,12 +147,16 @@ update msg model =
                                 vScale 1.1 v1
                         in
                         newCRI
-                            model.mandel.c
+                            (vSub model.mandel.c (vFromTo v1 v2))
                             (model.mandel.ri |> vScale 1.1)
 
                     else if e.deltaY < 0 then
+                        let
+                            v2 =
+                                vScale 0.9 v1
+                        in
                         newCRI
-                            model.mandel.c
+                            (vSub model.mandel.c (vFromTo v1 v2))
                             (model.mandel.ri |> vScale 0.9)
 
                     else
