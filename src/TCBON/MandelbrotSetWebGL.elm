@@ -137,8 +137,15 @@ update msg model =
                         |> vFromFloat2
                         |> rangeMapCRI canvasCRI model.mandel
 
+                v1 =
+                    vFromTo model.mandel.c oldOffset
+
                 mandel =
                     if e.deltaY > 0 then
+                        let
+                            v2 =
+                                vScale 1.1 v1
+                        in
                         newCRI
                             model.mandel.c
                             (model.mandel.ri |> vScale 1.1)
