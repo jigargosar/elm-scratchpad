@@ -1,6 +1,7 @@
 module TCBON.MandelbrotSetWebGL exposing (..)
 
 import Browser
+import Html.Attributes as HA
 import Html.Events
 import Html.Lazy
 import Json.Decode as JD exposing (Decoder)
@@ -62,6 +63,7 @@ init () =
 
 type Msg
     = OnCanvasClick MouseEvent
+    | OnCanvasKeyDown KeyEvent
 
 
 subscriptions : Model -> Sub Msg
@@ -89,6 +91,13 @@ update msg model =
             in
             ( { model | mandel = newCRI c (model.mandel.ri |> vScale factor) }, Cmd.none )
 
+        OnCanvasKeyDown e ->
+            let
+                _ =
+                    Debug.log "e" e
+            in
+            ( model, Cmd.none )
+
 
 view : Model -> Html Msg
 view model =
@@ -114,6 +123,9 @@ viewMandelGL mandel =
         , style "width" (String.fromFloat (res / factor) ++ "px")
         , style "height" (String.fromFloat (res / factor) ++ "px")
         , Html.Events.on "click" (JD.map OnCanvasClick mouseEventDecoder)
+        , Html.Events.on "keydown" (JD.map OnCanvasKeyDown keyEventDecoder)
+        , HA.tabindex 0
+        , HA.autofocus True
         ]
         [ WebGL.entity vertexShader
             fragmentShader

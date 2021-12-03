@@ -57,6 +57,19 @@ mouseEventDecoder =
         |> jdAndMap offsetXYDecoder
 
 
+type alias KeyEvent =
+    { modifiers : Modifiers
+    , key : String
+    }
+
+
+keyEventDecoder : Decoder KeyEvent
+keyEventDecoder =
+    JD.succeed KeyEvent
+        |> jdAndMap modifiersDecoder
+        |> jdAndMap (JD.field "key" JD.string)
+
+
 type alias Modifiers =
     { shift : Bool }
 
