@@ -3,6 +3,7 @@ module TCBON.MandelbrotSetWebGL exposing (..)
 import Browser
 import Html.Attributes as HA
 import Html.Events
+import Html.Events.Extra.Wheel as Wheel
 import Html.Lazy
 import Json.Decode as JD exposing (Decoder)
 import Math.Vector2 exposing (Vec2, vec2)
@@ -68,6 +69,7 @@ init () =
 type Msg
     = OnCanvasClick MouseEvent
     | OnCanvasKeyDown KeyEvent
+    | OnCanvasWheel Wheel.Event
 
 
 subscriptions : Model -> Sub Msg
@@ -125,6 +127,13 @@ update msg model =
             in
             ( { model | mandel = mandel }, Cmd.none )
 
+        OnCanvasWheel e ->
+            let
+                _ =
+                    Debug.log "e" e.deltaY
+            in
+            ( model, Cmd.none )
+
 
 criShiftByWHFactor : Float2 -> CRI -> CRI
 criShiftByWHFactor ( xf, yf ) cri =
@@ -159,6 +168,7 @@ viewMandelGL mandel =
         , style "height" (String.fromInt height ++ "px")
         , Html.Events.on "click" (JD.map OnCanvasClick mouseEventDecoder)
         , Html.Events.on "keydown" (JD.map OnCanvasKeyDown keyEventDecoder)
+        , Wheel.onWheel OnCanvasWheel
         , HA.tabindex 0
         , HA.autofocus True
         ]

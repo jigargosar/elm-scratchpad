@@ -25,9 +25,12 @@
             "fifth-postulate/priority-queue": "1.0.0",
             "ianmackenzie/elm-float-extra": "1.1.0",
             "mdgriffith/elm-ui": "1.1.8",
+            "mpizenberg/elm-pointer-events": "4.0.2",
             "the-sett/ai-search": "5.0.0"
         },
         "indirect": {
+            "elm/bytes": "1.0.8",
+            "elm/file": "1.0.5",
             "elm/parser": "1.1.0",
             "elm/url": "1.0.0",
             "elm/virtual-dom": "1.0.2",
