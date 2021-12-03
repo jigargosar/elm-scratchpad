@@ -53,8 +53,9 @@ init () =
     ({ mandel = initialMandelCRI
      }
         --|> update (OnCanvasClick ( 30, 157 ))
-        |> update (OnCanvasClick ( 43, 171 ))
-     --|> update (OnCanvasClick ( 157, 358 ))
+        --|> update (OnCanvasClick ( 43, 171 ))
+        --|> update (OnCanvasClick ( 157, 358 ))
+        |> update (OnCanvasClick ( 111, 313 ))
      --, Cmd.none
     )
 
