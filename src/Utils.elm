@@ -866,6 +866,10 @@ atLeast =
     max
 
 
+atMost =
+    min
+
+
 secondsToFractionOverNowMills : Float -> Int -> Float
 secondsToFractionOverNowMills periodSec nowMS =
     let
