@@ -77,6 +77,7 @@ type Drag
 --init : () -> Url -> Key -> ( Model, Cmd Msg )
 
 
+init : () -> c -> Key -> ( Model, Cmd Msg )
 init () _ _ =
     ( { mandel = initialMandelCRI
       , drag = NotDragging
