@@ -86,16 +86,14 @@ init () url key =
     let
         p =
             UrlP.query
-                (Q.map2 vec
-                    (qFloat "cx" |> Q.map (Maybe.withDefault 0))
-                    (qFloat "cy" |> Q.map (Maybe.withDefault 0))
-                )
+                (Q.map2 (Maybe.map2 vec) (qFloat "cx") (qFloat "cy"))
 
         _ =
             Debug.log "url" url
 
         _ =
             UrlP.parse p { url | path = "" }
+                |> Maybe.andThen identity
                 |> Debug.log "url parsed"
     in
     ( { key = key
