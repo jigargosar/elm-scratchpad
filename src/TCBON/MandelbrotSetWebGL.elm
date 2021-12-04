@@ -10,6 +10,7 @@ import Html.Lazy
 import Json.Decode as JD exposing (Decoder)
 import Math.Vector2 exposing (Vec2, vec2)
 import Url exposing (Url)
+import Url.Builder as QB
 import Url.Parser as UrlP exposing ((</>))
 import Url.Parser.Query as Q
 import Utils exposing (..)
@@ -97,7 +98,13 @@ init () url key =
       , mandel = { initialMandelCRI | c = c }
       , drag = NotDragging
       }
-    , Cmd.none
+    , Browser.Navigation.replaceUrl key
+        (url.path
+            ++ QB.toQuery
+                [ QB.string "cx" (String.fromFloat initialMandelCRI.c.x)
+                , QB.string "cy" (String.fromFloat initialMandelCRI.c.y)
+                ]
+        )
     )
 
 
