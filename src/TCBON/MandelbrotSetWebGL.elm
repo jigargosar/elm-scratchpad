@@ -241,7 +241,10 @@ view model =
     div [ fontSize "30px" ]
         [ stylesNode "html,body{height:100%; background-color:#444;}"
         , Html.Lazy.lazy viewMandelGL mandel
-        , text "aa"
+        , div [] [ text ("cx: " ++ String.fromFloat mandel.c.x) ]
+        , div [] [ text ("cy: " ++ String.fromFloat mandel.c.y) ]
+        , div [] [ text ("w: " ++ String.fromFloat (criWidth mandel)) ]
+        , div [] [ text ("h: " ++ String.fromFloat (criHeight mandel)) ]
         , div [] [ text ("zoom: " ++ String.fromInt (mandelZoomPct mandel) ++ "%") ]
         ]
 
