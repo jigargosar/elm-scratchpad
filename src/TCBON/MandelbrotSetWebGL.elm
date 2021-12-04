@@ -204,6 +204,18 @@ update msg model =
             )
 
 
+panMandel : Vec -> Vec -> CRI -> CRI
+panMandel s e cri =
+    let
+        rm =
+            rangeMapCRI canvasCRI cri
+
+        t =
+            vFromTo (rm e) (rm s)
+    in
+    newCRI (vAdd cri.c t) cri.ri
+
+
 view : Model -> Html Msg
 view model =
     let
