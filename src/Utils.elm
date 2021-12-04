@@ -986,6 +986,11 @@ criZoom fixedPt scale_ { c, ri } =
         (ri |> vScale scale_)
 
 
+criTranslate : Vec -> CRI -> CRI
+criTranslate t { c, ri } =
+    newCRI (vAdd c t) ri
+
+
 rangeMapCRI : CRI -> CRI -> Vec -> Vec
 rangeMapCRI inCRI outCRI { x, y } =
     let

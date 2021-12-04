@@ -213,7 +213,7 @@ panMandel s e cri =
         t =
             vFromTo (rm e) (rm s)
     in
-    newCRI (vAdd cri.c t) cri.ri
+    criTranslate t cri
 
 
 view : Model -> Html Msg
