@@ -242,6 +242,13 @@ view model =
         ]
 
 
+mandelZoomPct : CRI -> Int
+mandelZoomPct cri =
+    (initialMandelCRI.ri.x / cri.ri.x)
+        * 100
+        |> round
+
+
 viewMandelGL : CRI -> Html Msg
 viewMandelGL mandel =
     let
