@@ -64,7 +64,8 @@ main =
 
 
 type alias Model =
-    { mandel : CRI
+    { key : Key
+    , mandel : CRI
     , drag : Drag
     }
 
@@ -79,8 +80,9 @@ type Drag
 
 
 init : () -> Url -> Key -> ( Model, Cmd Msg )
-init () _ _ =
-    ( { mandel = initialMandelCRI
+init () _ key =
+    ( { key = key
+      , mandel = initialMandelCRI
       , drag = NotDragging
       }
       --|> update (OnCanvasClick ( 30, 157 ))
