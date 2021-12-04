@@ -191,7 +191,7 @@ mandelZoom : Vec -> Float -> CRI -> CRI
 mandelZoom fixedPt scale_ cri =
     let
         --minScale = 0.5; i=initial,c=current,n=new
-        -- iw / nw >= 0.5
+        -- iw / nw >= 0.5; i.e >= 50%
         -- iw / (cw * ns) >= 0.5
         -- iw / (cw * 0.5) >= ns
         -- ns <= iw / (cw * 0.5)
