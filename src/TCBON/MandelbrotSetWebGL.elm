@@ -77,14 +77,18 @@ type Drag
     | Dragging Vec Vec CRI
 
 
+qFloat str =
+    Q.string str |> Q.map (Maybe.andThen String.toFloat)
+
+
 init : () -> Url -> Key -> ( Model, Cmd Msg )
 init () url key =
     let
         p =
             UrlP.query
                 (Q.map2 vec
-                    (Q.string "cx" |> Q.map (Maybe.andThen String.toFloat >> Maybe.withDefault 0))
-                    (Q.string "cy" |> Q.map (Maybe.andThen String.toFloat >> Maybe.withDefault 0))
+                    (qFloat "cx" |> Q.map (Maybe.withDefault 0))
+                    (qFloat "cy" |> Q.map (Maybe.withDefault 0))
                 )
 
         _ =
