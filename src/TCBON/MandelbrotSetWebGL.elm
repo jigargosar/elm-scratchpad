@@ -78,6 +78,7 @@ type Msg
     = OnCanvasClick MouseEvent
     | OnCanvasMouseDown MouseEvent
     | OnMouseMove MouseEvent
+    | OnMouseUp MouseEvent
     | OnCanvasKeyDown KeyEvent
     | OnCanvasWheel Wheel.Event
 
@@ -89,7 +90,10 @@ subscriptions { drag } =
             Sub.none
 
         Dragging _ _ ->
-            Browser.Events.onMouseMove (JD.map OnMouseMove mouseEventDecoder)
+            Sub.batch
+                [ Browser.Events.onMouseMove (JD.map OnMouseMove mouseEventDecoder)
+                , Browser.Events.onMouseUp (JD.map OnMouseUp mouseEventDecoder)
+                ]
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -175,6 +179,16 @@ update msg model =
 
                 Dragging s _ ->
                     { model | drag = Dragging s (vFromFloat2 e.offset) }
+            , Cmd.none
+            )
+
+        OnMouseUp _ ->
+            ( case model.drag of
+                NotDragging ->
+                    model
+
+                Dragging _ _ ->
+                    { model | drag = NotDragging }
             , Cmd.none
             )
 
