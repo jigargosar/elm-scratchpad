@@ -232,13 +232,7 @@ view model =
         [ stylesNode "html,body{height:100%; background-color:#444;}"
         , Html.Lazy.lazy viewMandelGL mandel
         , text "aa"
-        , let
-            zoom =
-                (initialMandelCRI.ri.x / mandel.ri.x)
-                    * 100
-                    |> round
-          in
-          div [] [ text (String.fromInt zoom ++ "%") ]
+        , div [] [ text (String.fromInt (mandelZoomPct mandel) ++ "%") ]
         ]
 
 
