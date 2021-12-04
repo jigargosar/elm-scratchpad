@@ -172,7 +172,7 @@ update msg model =
                         end =
                             vFromFloat2 e.offset
                     in
-                    { model | drag = Dragging s end (panMandelWithCanvasStartAndEnd s end model.mandel) }
+                    { model | drag = Dragging s end (mandelPanWithCanvasStartAndEnd s end model.mandel) }
             , Cmd.none
             )
 
@@ -204,8 +204,8 @@ mandelZoom fixedPt scale_ cri =
     criZoom fixedPt clampedScale cri
 
 
-panMandelWithCanvasStartAndEnd : Vec -> Vec -> CRI -> CRI
-panMandelWithCanvasStartAndEnd s e cri =
+mandelPanWithCanvasStartAndEnd : Vec -> Vec -> CRI -> CRI
+mandelPanWithCanvasStartAndEnd s e cri =
     let
         rm =
             rangeMapCRI canvasCRI cri
