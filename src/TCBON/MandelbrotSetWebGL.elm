@@ -238,7 +238,7 @@ viewMandelGL : CRI -> Html Msg
 viewMandelGL mandel =
     let
         canvasScalingFactor =
-            100
+            2
     in
     WebGL.toHtml
         [ haWidth (width * canvasScalingFactor)
