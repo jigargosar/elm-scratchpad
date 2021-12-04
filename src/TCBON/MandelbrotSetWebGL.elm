@@ -97,25 +97,17 @@ init () url key =
         ( c, w ) =
             UrlP.parse p { url | path = "" }
                 |> Maybe.andThen identity
-                |> Maybe.withDefault ( initialMandelCRI.c, initialMandelCRI.ri.x * 2 )
+                |> Maybe.withDefault ( initialMandelCRI.c, criWidth initialMandelCRI )
 
         rx =
             w / 2
     in
-    ({ key = key
-     , url = url
-     , mandel = newCRI c (vec rx (rx / aspectRatio))
-     , drag = NotDragging
-     }
+    { key = key
+    , url = url
+    , mandel = newCRI c (vec rx (rx / aspectRatio))
+    , drag = NotDragging
+    }
         |> replaceUrl
-     --, Browser.Navigation.replaceUrl key
-     --    (url.path
-     --        ++ QB.toQuery
-     --            [ QB.string "cx" (String.fromFloat c.x)
-     --            , QB.string "cy" (String.fromFloat c.y)
-     --            ]
-     --    )
-    )
 
 
 replaceUrl : Model -> ( Model, Cmd Msg )
@@ -128,12 +120,16 @@ replaceUrlCmd model =
     let
         c =
             model.mandel.c
+
+        w =
+            criWidth model.mandel
     in
     Browser.Navigation.replaceUrl model.key
         (model.url.path
             ++ QB.toQuery
                 [ QB.string "cx" (String.fromFloat c.x)
                 , QB.string "cy" (String.fromFloat c.y)
+                , QB.string "w" (String.fromFloat w)
                 ]
         )
 
