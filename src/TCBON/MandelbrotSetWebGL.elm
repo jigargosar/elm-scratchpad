@@ -228,9 +228,11 @@ view model =
                 Dragging _ _ mandel_ ->
                     mandel_
     in
-    div [ fontSize "100px" ]
+    div [ fontSize "30px" ]
         [ stylesNode "html,body{height:100%; background-color:#444;}"
         , Html.Lazy.lazy viewMandelGL mandel
+        , text "aa"
+        , text (String.fromFloat (initialMandelCRI.ri.x / mandel.ri.x))
         ]
 
 
