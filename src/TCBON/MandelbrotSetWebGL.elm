@@ -85,27 +85,16 @@ init : () -> Url -> Key -> ( Model, Cmd Msg )
 init () url key =
     let
         p =
-            UrlP.oneOf
-                [ UrlP.string
-                    </> UrlP.string
-                    </> UrlP.string
-                    </> UrlP.query
-                            (Q.map2 vec
-                                (Q.string "cx" |> Q.map (Maybe.andThen String.toFloat >> Maybe.withDefault 0))
-                                (Q.string "cy" |> Q.map (Maybe.andThen String.toFloat >> Maybe.withDefault 0))
-                            )
-                    |> UrlP.map (\_ _ _ -> identity)
-                , UrlP.query
-                    (Q.map2 vec
-                        (Q.string "cx" |> Q.map (Maybe.andThen String.toFloat >> Maybe.withDefault 0))
-                        (Q.string "cy" |> Q.map (Maybe.andThen String.toFloat >> Maybe.withDefault 0))
-                    )
-                ]
+            UrlP.query
+                (Q.map2 vec
+                    (Q.string "cx" |> Q.map (Maybe.andThen String.toFloat >> Maybe.withDefault 0))
+                    (Q.string "cy" |> Q.map (Maybe.andThen String.toFloat >> Maybe.withDefault 0))
+                )
 
         _ =
             Debug.log "url" url
 
-        r =
+        _ =
             UrlP.parse p { url | path = "" }
                 |> Debug.log "url parsed"
     in
