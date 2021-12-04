@@ -126,10 +126,10 @@ update msg model =
                             criPanByWHFraction ( 0, pct ) model.mandel
 
                         "e" ->
-                            criScaleRI 0.5 model.mandel
+                            criZoom model.mandel.c 0.5 model.mandel
 
                         "q" ->
-                            criScaleRI 2 model.mandel
+                            criZoom model.mandel.c 2 model.mandel
 
                         _ ->
                             model.mandel
