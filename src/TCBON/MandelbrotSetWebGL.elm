@@ -1,10 +1,10 @@
 module TCBON.MandelbrotSetWebGL exposing (..)
 
 import Browser
+import Browser.Events
 import Html.Attributes as HA
 import Html.Events
 import Html.Events.Extra.Wheel as Wheel
-import Html.Lazy
 import Json.Decode as JD exposing (Decoder)
 import Math.Vector2 exposing (Vec2, vec2)
 import Utils exposing (..)
@@ -77,13 +77,19 @@ init () =
 type Msg
     = OnCanvasClick MouseEvent
     | OnCanvasMouseDown MouseEvent
+    | OnMouseMove MouseEvent
     | OnCanvasKeyDown KeyEvent
     | OnCanvasWheel Wheel.Event
 
 
 subscriptions : Model -> Sub Msg
-subscriptions _ =
-    Sub.none
+subscriptions { drag } =
+    case drag of
+        NotDragging ->
+            Sub.none
+
+        Dragging _ _ ->
+            Browser.Events.onMouseMove (JD.map OnMouseMove mouseEventDecoder)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -151,19 +157,49 @@ update msg model =
         OnCanvasMouseDown e ->
             ( case model.drag of
                 NotDragging ->
-                    { model | drag = NotDragging }
+                    let
+                        v =
+                            vFromFloat2 e.offset
+                    in
+                    { model | drag = Dragging v v }
 
                 Dragging _ _ ->
                     model
             , Cmd.none
             )
 
+        OnMouseMove e ->
+            ( case model.drag of
+                NotDragging ->
+                    model
+
+                Dragging s _ ->
+                    { model | drag = Dragging s (vFromFloat2 e.offset) }
+            , Cmd.none
+            )
+
 
 view : Model -> Html Msg
 view model =
+    let
+        mandel =
+            case model.drag of
+                NotDragging ->
+                    model.mandel
+
+                Dragging a b ->
+                    let
+                        rm =
+                            rangeMapCRI canvasCRI model.mandel
+
+                        t =
+                            vFromTo (rm a) (rm b)
+                    in
+                    newCRI (vAdd model.mandel.c t) model.mandel.ri
+    in
     div [ fontSize "100px" ]
         [ stylesNode "html,body{height:100%; background-color:#444;}"
-        , Html.Lazy.lazy viewMandelGL model.mandel
+        , viewMandelGL mandel
         ]
 
 
