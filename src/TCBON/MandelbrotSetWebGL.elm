@@ -88,22 +88,15 @@ init () url key =
             UrlP.query
                 (Q.map2 (Maybe.map2 vec) (qFloat "cx") (qFloat "cy"))
 
-        _ =
-            Debug.log "url" url
-
-        _ =
+        c =
             UrlP.parse p { url | path = "" }
                 |> Maybe.andThen identity
-                |> Debug.log "url parsed"
+                |> Maybe.withDefault initialMandelCRI.c
     in
     ( { key = key
-      , mandel = initialMandelCRI
+      , mandel = { initialMandelCRI | c = c }
       , drag = NotDragging
       }
-      --|> update (OnCanvasClick ( 30, 157 ))
-      --|> update (OnCanvasClick ( 43, 171 ))
-      --|> update (OnCanvasClick ( 157, 358 ))
-      --|> update (OnCanvasClick ( 111, 313 ))
     , Cmd.none
     )
 
