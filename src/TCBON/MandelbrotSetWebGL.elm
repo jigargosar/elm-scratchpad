@@ -61,7 +61,7 @@ main =
         , subscriptions = subscriptions
         , onUrlChange = always NOP
         , onUrlRequest = always NOP
-        , update = update
+        , update = wrapUpdateReplaceUrl
         , view = view
         }
 
@@ -128,6 +128,21 @@ replaceUrl model =
     )
 
 
+replaceUrlCmd : Model -> Cmd Msg
+replaceUrlCmd model =
+    let
+        c =
+            model.mandel.c
+    in
+    Browser.Navigation.replaceUrl model.key
+        (model.url.path
+            ++ QB.toQuery
+                [ QB.string "cx" (String.fromFloat c.x)
+                , QB.string "cy" (String.fromFloat c.y)
+                ]
+        )
+
+
 type Msg
     = NOP
     | OnCanvasMouseDown MouseEvent
@@ -151,6 +166,24 @@ subscriptions { drag } =
                     , Browser.Events.onMouseUp (JD.map OnMouseUp mouseEventDecoder)
                     ]
         ]
+
+
+wrapUpdateReplaceUrl : Msg -> Model -> ( Model, Cmd Msg )
+wrapUpdateReplaceUrl msg model =
+    let
+        ( m2, cmd ) =
+            update msg model
+    in
+    ( m2
+    , Cmd.batch
+        [ cmd
+        , if model.mandel /= m2.mandel then
+            replaceUrlCmd m2
+
+          else
+            Cmd.none
+        ]
+    )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
