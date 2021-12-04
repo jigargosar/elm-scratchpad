@@ -1,7 +1,8 @@
 module TCBON.MandelbrotSetWebGL exposing (..)
 
-import Browser
+import Browser exposing (Document)
 import Browser.Events
+import Browser.Navigation exposing (Key)
 import Html.Attributes as HA
 import Html.Events
 import Html.Events.Extra.Wheel as Wheel
@@ -51,10 +52,12 @@ canvasCRI =
 
 main : Program () Model Msg
 main =
-    Browser.element
+    Browser.application
         { init = init
-        , update = update
         , subscriptions = subscriptions
+        , onUrlChange = always NOP
+        , onUrlRequest = always NOP
+        , update = update
         , view = view
         }
 
@@ -70,8 +73,11 @@ type Drag
     | Dragging Vec Vec CRI
 
 
-init : () -> ( Model, Cmd Msg )
-init () =
+
+--init : () -> Url -> Key -> ( Model, Cmd Msg )
+
+
+init () _ _ =
     ( { mandel = initialMandelCRI
       , drag = NotDragging
       }
@@ -245,8 +251,13 @@ panByWHFraction frac2 cri =
     criTranslate t cri
 
 
-view : Model -> Html Msg
+view : Model -> Document Msg
 view model =
+    Document "" [ viewEl model ]
+
+
+viewEl : Model -> Html Msg
+viewEl model =
     let
         mandel =
             case model.drag of
