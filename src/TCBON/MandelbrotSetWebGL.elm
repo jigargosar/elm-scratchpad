@@ -92,6 +92,7 @@ init () url key =
                     |> Q.map (Maybe.withDefault vZero)
                 )
 
+        r : Maybe Vec
         r =
             UrlP.parse p url
     in
