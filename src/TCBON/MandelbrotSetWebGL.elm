@@ -195,10 +195,10 @@ mandelZoom fixedPt scale_ cri =
         -- iw / (cw * ns) >= 0.5
         -- iw / (cw * 0.5) >= ns
         -- ns <= iw / (cw * 0.5)
-        newScale =
+        clampedScale =
             atMost (initialMandelCRI.ri.x / (cri.ri.x * 0.5)) scale_
     in
-    criZoom fixedPt newScale cri
+    criZoom fixedPt clampedScale cri
 
 
 panMandelWithCanvasStartAndEnd : Vec -> Vec -> CRI -> CRI
