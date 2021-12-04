@@ -89,9 +89,9 @@ init () url key =
                 </> UrlP.string
                 </> UrlP.string
                 </> UrlP.query
-                        (Q.map2 Tuple.pair
-                            (Q.string "cx")
-                            (Q.string "cy")
+                        (Q.map2 vec
+                            (Q.string "cx" |> Q.map (Maybe.andThen String.toFloat >> Maybe.withDefault 0))
+                            (Q.string "cy" |> Q.map (Maybe.andThen String.toFloat >> Maybe.withDefault 0))
                         )
                 |> UrlP.map (\_ _ _ -> identity)
 
