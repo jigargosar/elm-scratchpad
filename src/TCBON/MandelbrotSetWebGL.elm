@@ -77,7 +77,6 @@ init () =
 
 type Msg
     = NOP
-    | OnCanvasClick MouseEvent
     | OnCanvasMouseDown MouseEvent
     | OnMouseMove MouseEvent
     | OnMouseUp MouseEvent
@@ -106,23 +105,6 @@ update msg model =
     case msg of
         NOP ->
             ( model, Cmd.none )
-
-        OnCanvasClick e ->
-            let
-                c =
-                    e.offset
-                        |> Debug.log "p"
-                        |> vFromFloat2
-                        |> rangeMapCRI canvasCRI model.mandel
-
-                factor =
-                    if e.modifiers.shift then
-                        2
-
-                    else
-                        0.5
-            in
-            ( { model | mandel = newCRI c (model.mandel.ri |> vScale factor) }, Cmd.none )
 
         OnCanvasKeyDown e ->
             let
