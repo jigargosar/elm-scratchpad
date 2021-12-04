@@ -51,12 +51,20 @@ main =
 
 
 type alias Model =
-    { mandel : CRI }
+    { mandel : CRI
+    , drag : Drag
+    }
+
+
+type Drag
+    = NotDragging
+    | Dragging Vec
 
 
 init : () -> ( Model, Cmd Msg )
 init () =
     ( { mandel = initialMandelCRI
+      , drag = NotDragging
       }
       --|> update (OnCanvasClick ( 30, 157 ))
       --|> update (OnCanvasClick ( 43, 171 ))
@@ -68,6 +76,7 @@ init () =
 
 type Msg
     = OnCanvasClick MouseEvent
+    | OnCanvasMouseDown MouseEvent
     | OnCanvasKeyDown KeyEvent
     | OnCanvasWheel Wheel.Event
 
@@ -139,6 +148,16 @@ update msg model =
             in
             ( { model | mandel = criZoom fixedPt scale_ model.mandel }, Cmd.none )
 
+        OnCanvasMouseDown e ->
+            ( case model.drag of
+                NotDragging ->
+                    { model | drag = NotDragging }
+
+                Dragging _ ->
+                    model
+            , Cmd.none
+            )
+
 
 view : Model -> Html Msg
 view model =
@@ -161,7 +180,9 @@ viewMandelGL mandel =
         , bgc "pink"
         , style "width" (String.fromFloat width ++ "px")
         , style "height" (String.fromFloat height ++ "px")
-        , Html.Events.on "click" (JD.map OnCanvasClick mouseEventDecoder)
+
+        --, Html.Events.on "click" (JD.map OnCanvasClick mouseEventDecoder)
+        , Html.Events.on "mousedown" (JD.map OnCanvasMouseDown mouseEventDecoder)
         , Html.Events.on "keydown" (JD.map OnCanvasKeyDown keyEventDecoder)
         , Wheel.onWheel OnCanvasWheel
         , HA.tabindex 0
