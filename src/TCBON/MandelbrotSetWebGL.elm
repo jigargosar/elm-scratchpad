@@ -189,7 +189,15 @@ update msg model =
 
 mandelZoom : Vec -> Float -> CRI -> CRI
 mandelZoom fixedPt scale_ cri =
-    criZoom fixedPt scale_ cri
+    let
+        new =
+            criZoom fixedPt scale_ cri
+    in
+    if mandelZoomPct new < 50 then
+        cri
+
+    else
+        new
 
 
 panMandelWithCanvasStartAndEnd : Vec -> Vec -> CRI -> CRI
