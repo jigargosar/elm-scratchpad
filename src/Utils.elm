@@ -1095,7 +1095,6 @@ criPanByWHFraction frac2 cri =
                 |> map2 mul frac2
                 |> vFromFloat2
     in
-    --{ cri | c = vAdd cri.c (vec (wf * criWidth cri) (hf * criHeight cri)) }
     criTranslate t cri
 
 
