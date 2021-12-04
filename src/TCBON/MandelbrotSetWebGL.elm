@@ -76,7 +76,8 @@ init () =
 
 
 type Msg
-    = OnCanvasClick MouseEvent
+    = NOP
+    | OnCanvasClick MouseEvent
     | OnCanvasMouseDown MouseEvent
     | OnMouseMove MouseEvent
     | OnMouseUp MouseEvent
@@ -86,20 +87,26 @@ type Msg
 
 subscriptions : Model -> Sub Msg
 subscriptions { drag } =
-    case drag of
-        NotDragging ->
-            Sub.none
+    Sub.batch
+        [ Browser.Events.onAnimationFrame (always NOP)
+        , case drag of
+            NotDragging ->
+                Sub.none
 
-        Dragging _ _ _ ->
-            Sub.batch
-                [ Browser.Events.onMouseMove (JD.map OnMouseMove mouseEventDecoder)
-                , Browser.Events.onMouseUp (JD.map OnMouseUp mouseEventDecoder)
-                ]
+            Dragging _ _ _ ->
+                Sub.batch
+                    [ Browser.Events.onMouseMove (JD.map OnMouseMove mouseEventDecoder)
+                    , Browser.Events.onMouseUp (JD.map OnMouseUp mouseEventDecoder)
+                    ]
+        ]
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        NOP ->
+            ( model, Cmd.none )
+
         OnCanvasClick e ->
             let
                 c =
