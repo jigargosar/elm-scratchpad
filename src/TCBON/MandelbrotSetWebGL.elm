@@ -190,8 +190,7 @@ update msg model =
 mandelZoom : Vec -> Float -> CRI -> CRI
 mandelZoom fixedPt scale_ cri =
     let
-        --minScale = 0.5
-        --currentScale = initialMandelCRI.ri.x / cri.ri.x
+        --minScale = 0.5; i=initial,c=current,n=new
         -- iw / (cw * ns) >= 0.5
         -- iw / (cw * 0.5) >= ns
         -- ns <= iw / (cw * 0.5)
