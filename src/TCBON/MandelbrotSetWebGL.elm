@@ -101,8 +101,8 @@ init () url key =
     , Browser.Navigation.replaceUrl key
         (url.path
             ++ QB.toQuery
-                [ QB.string "cx" (String.fromFloat initialMandelCRI.c.x)
-                , QB.string "cy" (String.fromFloat initialMandelCRI.c.y)
+                [ QB.string "cx" (String.fromFloat c.x)
+                , QB.string "cy" (String.fromFloat c.y)
                 ]
         )
     )
