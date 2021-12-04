@@ -266,8 +266,6 @@ viewMandelGL mandel =
         , bgc "pink"
         , style "width" (String.fromFloat width ++ "px")
         , style "height" (String.fromFloat height ++ "px")
-
-        --, Html.Events.on "click" (JD.map OnCanvasClick mouseEventDecoder)
         , Html.Events.on "mousedown" (JD.map OnCanvasMouseDown mouseEventDecoder)
         , Html.Events.on "keydown" (JD.map OnCanvasKeyDown keyEventDecoder)
         , Wheel.onWheel OnCanvasWheel
