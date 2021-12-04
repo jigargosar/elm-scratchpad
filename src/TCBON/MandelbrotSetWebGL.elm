@@ -201,7 +201,7 @@ mandelZoom fixedPt scale_ cri =
         clampedScale =
             scale_ |> atMost upperBound
     in
-    criZoom fixedPt clampedScale cri
+    criZoomByAround fixedPt clampedScale cri
 
 
 mandelPanWithCanvasStartAndEnd : Vec -> Vec -> CRI -> CRI

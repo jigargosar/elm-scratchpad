@@ -977,8 +977,8 @@ criToXYRanges =
     criToBounds >> boundsToXYRanges
 
 
-criZoom : Vec -> Float -> CRI -> CRI
-criZoom fixedPt scale_ { c, ri } =
+criZoomByAround : Vec -> Float -> CRI -> CRI
+criZoomByAround fixedPt scale_ { c, ri } =
     let
         v1 =
             vFromTo c fixedPt
