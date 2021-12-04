@@ -9,6 +9,7 @@ import Html.Events.Extra.Wheel as Wheel
 import Html.Lazy
 import Json.Decode as JD exposing (Decoder)
 import Math.Vector2 exposing (Vec2, vec2)
+import Url exposing (Url)
 import Utils exposing (..)
 import WebGL
 
@@ -77,7 +78,7 @@ type Drag
 --init : () -> Url -> Key -> ( Model, Cmd Msg )
 
 
-init : () -> c -> Key -> ( Model, Cmd Msg )
+init : () -> Url -> Key -> ( Model, Cmd Msg )
 init () _ _ =
     ( { mandel = initialMandelCRI
       , drag = NotDragging
