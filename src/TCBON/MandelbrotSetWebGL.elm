@@ -95,13 +95,31 @@ init () url key =
                 |> Maybe.andThen identity
                 |> Maybe.withDefault initialMandelCRI.c
     in
-    ( { key = key
-      , url = url
-      , mandel = { initialMandelCRI | c = c }
-      , drag = NotDragging
-      }
-    , Browser.Navigation.replaceUrl key
-        (url.path
+    ({ key = key
+     , url = url
+     , mandel = { initialMandelCRI | c = c }
+     , drag = NotDragging
+     }
+        |> replaceUrl
+     --, Browser.Navigation.replaceUrl key
+     --    (url.path
+     --        ++ QB.toQuery
+     --            [ QB.string "cx" (String.fromFloat c.x)
+     --            , QB.string "cy" (String.fromFloat c.y)
+     --            ]
+     --    )
+    )
+
+
+replaceUrl : Model -> ( Model, Cmd Msg )
+replaceUrl model =
+    let
+        c =
+            model.mandel.c
+    in
+    ( model
+    , Browser.Navigation.replaceUrl model.key
+        (model.url.path
             ++ QB.toQuery
                 [ QB.string "cx" (String.fromFloat c.x)
                 , QB.string "cy" (String.fromFloat c.y)
