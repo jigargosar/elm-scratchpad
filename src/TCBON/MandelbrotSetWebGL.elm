@@ -300,7 +300,7 @@ type alias Uniforms =
 vertexShader : WebGL.Shader Vertex Uniforms { v_pos2 : Vec2 }
 vertexShader =
     [glsl|
-        precision highp float;
+        precision mediump float;
         attribute vec2 position;
         uniform float xMin, xMax, yMin, yMax;
         varying vec2 v_pos2;
@@ -332,7 +332,7 @@ vertexShader =
 fragmentShader : WebGL.Shader {} Uniforms { v_pos2 : Vec2 }
 fragmentShader =
     [glsl|
-        precision highp float;
+        precision mediump float;
         varying vec2 v_pos2;
 
         float norm(float a, float b, float val){
