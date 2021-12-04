@@ -5,6 +5,7 @@ import Browser.Events
 import Html.Attributes as HA
 import Html.Events
 import Html.Events.Extra.Wheel as Wheel
+import Html.Lazy
 import Json.Decode as JD exposing (Decoder)
 import Math.Vector2 exposing (Vec2, vec2)
 import Utils exposing (..)
@@ -58,7 +59,7 @@ type alias Model =
 
 type Drag
     = NotDragging
-    | Dragging Vec Vec
+    | Dragging Vec Vec CRI
 
 
 init : () -> ( Model, Cmd Msg )
@@ -89,7 +90,7 @@ subscriptions { drag } =
         NotDragging ->
             Sub.none
 
-        Dragging _ _ ->
+        Dragging _ _ _ ->
             Sub.batch
                 [ Browser.Events.onMouseMove (JD.map OnMouseMove mouseEventDecoder)
                 , Browser.Events.onMouseUp (JD.map OnMouseUp mouseEventDecoder)
@@ -165,9 +166,9 @@ update msg model =
                         v =
                             vFromFloat2 e.offset
                     in
-                    { model | drag = Dragging v v }
+                    { model | drag = Dragging v v model.mandel }
 
-                Dragging _ _ ->
+                Dragging _ _ _ ->
                     model
             , Cmd.none
             )
@@ -177,8 +178,12 @@ update msg model =
                 NotDragging ->
                     model
 
-                Dragging s _ ->
-                    { model | drag = Dragging s (vFromFloat2 e.offset) }
+                Dragging s _ _ ->
+                    let
+                        end =
+                            vFromFloat2 e.offset
+                    in
+                    { model | drag = Dragging s end (panMandelWithCanvasStartAndEnd s end model.mandel) }
             , Cmd.none
             )
 
@@ -187,25 +192,14 @@ update msg model =
                 NotDragging ->
                     model
 
-                Dragging s e ->
-                    { model
-                        | drag = NotDragging
-                        , mandel =
-                            let
-                                rm =
-                                    rangeMapCRI canvasCRI model.mandel
-
-                                t =
-                                    vFromTo (rm e) (rm s)
-                            in
-                            newCRI (vAdd model.mandel.c t) model.mandel.ri
-                    }
+                Dragging _ _ mandel ->
+                    { model | drag = NotDragging, mandel = mandel }
             , Cmd.none
             )
 
 
-panMandel : Vec -> Vec -> CRI -> CRI
-panMandel s e cri =
+panMandelWithCanvasStartAndEnd : Vec -> Vec -> CRI -> CRI
+panMandelWithCanvasStartAndEnd s e cri =
     let
         rm =
             rangeMapCRI canvasCRI cri
@@ -224,19 +218,12 @@ view model =
                 NotDragging ->
                     model.mandel
 
-                Dragging s e ->
-                    let
-                        rm =
-                            rangeMapCRI canvasCRI model.mandel
-
-                        t =
-                            vFromTo (rm e) (rm s)
-                    in
-                    newCRI (vAdd model.mandel.c t) model.mandel.ri
+                Dragging _ _ mandel_ ->
+                    mandel_
     in
     div [ fontSize "100px" ]
         [ stylesNode "html,body{height:100%; background-color:#444;}"
-        , viewMandelGL mandel
+        , Html.Lazy.lazy viewMandelGL mandel
         ]
 
 
