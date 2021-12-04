@@ -1027,6 +1027,11 @@ criToWH cri =
     ( criWidth cri, criHeight cri )
 
 
+criDimension : CRI -> Float2
+criDimension =
+    criToWH
+
+
 criWidth =
     .ri >> .x >> mul 2
 
