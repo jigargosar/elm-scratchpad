@@ -10,8 +10,8 @@ import Html.Lazy
 import Json.Decode as JD exposing (Decoder)
 import Math.Vector2 exposing (Vec2, vec2)
 import Url exposing (Url)
-import Url.Parser as Parser
-import Url.Parser.Query as Query
+import Url.Parser as UrlP
+import Url.Parser.Query as Q
 import Utils exposing (..)
 import WebGL
 
@@ -84,12 +84,13 @@ type Drag
 init : () -> Url -> Key -> ( Model, Cmd Msg )
 init () _ key =
     let
+        p : UrlP.Parser (Maybe Vec -> a) a
         p =
-            Parser.oneOf
-                [ Parser.query
-                    (Query.map2 (Maybe.map2 vec)
-                        (Query.string "cx" |> Query.map (Maybe.andThen String.toFloat))
-                        (Query.string "cy" |> Query.map (Maybe.andThen String.toFloat))
+            UrlP.oneOf
+                [ UrlP.query
+                    (Q.map2 (Maybe.map2 vec)
+                        (Q.string "cx" |> Q.map (Maybe.andThen String.toFloat))
+                        (Q.string "cy" |> Q.map (Maybe.andThen String.toFloat))
                     )
                 ]
     in
