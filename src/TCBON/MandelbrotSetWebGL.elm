@@ -87,9 +87,9 @@ init () _ key =
         p =
             Parser.oneOf
                 [ Parser.query
-                    (Query.map2 Tuple.pair
-                        (Query.string "cx")
-                        (Query.string "cx")
+                    (Query.map2 (Maybe.map2 vec)
+                        (Query.string "cx" |> Query.map (Maybe.andThen String.toFloat))
+                        (Query.string "cy" |> Query.map (Maybe.andThen String.toFloat))
                     )
                 ]
     in
