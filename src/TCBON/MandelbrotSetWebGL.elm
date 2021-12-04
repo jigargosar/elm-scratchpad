@@ -198,8 +198,18 @@ zoomAroundBy fixedPt scale_ cri =
         upperBound =
             initialMandelCRI.ri.x / (cri.ri.x * 0.5)
 
+        -- maxScale = 100_000; i=initial,c=current,n=new
+        -- iw / nw <= 100_000;
+        -- iw / (cw * ns) <= 100_000
+        -- iw / (cw * 100_000) <= ns
+        -- ns >= iw / (cw * 100_000)
+        lowerBound =
+            initialMandelCRI.ri.x / (cri.ri.x * (110 * 1000))
+
         clampedScale =
-            scale_ |> atMost upperBound
+            scale_
+                |> atMost upperBound
+                |> atLeast lowerBound
     in
     criZoomByAround fixedPt clampedScale cri
 
