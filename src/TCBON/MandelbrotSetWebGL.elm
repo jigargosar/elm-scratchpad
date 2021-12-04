@@ -196,7 +196,7 @@ mandelZoom fixedPt scale_ cri =
         -- iw / (cw * 0.5) >= ns
         -- ns <= iw / (cw * 0.5)
         clampedScale =
-            atMost (initialMandelCRI.ri.x / (cri.ri.x * 0.5)) scale_
+            min (initialMandelCRI.ri.x / (cri.ri.x * 0.5)) scale_
     in
     criZoom fixedPt clampedScale cri
 
