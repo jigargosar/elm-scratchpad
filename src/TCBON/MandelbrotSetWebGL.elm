@@ -10,7 +10,7 @@ import Html.Lazy
 import Json.Decode as JD exposing (Decoder)
 import Math.Vector2 exposing (Vec2, vec2)
 import Url exposing (Url)
-import Url.Parser as UrlP
+import Url.Parser as UrlP exposing ((</>))
 import Url.Parser.Query as Q
 import Utils exposing (..)
 import WebGL
@@ -85,16 +85,22 @@ init : () -> Url -> Key -> ( Model, Cmd Msg )
 init () url key =
     let
         p =
-            UrlP.query
-                (Q.map2 (Maybe.map2 vec)
-                    (Q.string "cx" |> Q.map (Maybe.andThen String.toFloat))
-                    (Q.string "cy" |> Q.map (Maybe.andThen String.toFloat))
-                    |> Q.map (Maybe.withDefault vZero)
-                )
+            UrlP.string
+                </> UrlP.string
+                </> UrlP.string
+                </> UrlP.query
+                        (Q.map2 Tuple.pair
+                            (Q.string "cx")
+                            (Q.string "cy")
+                        )
+                |> UrlP.map (\_ _ _ -> identity)
 
-        r : Maybe Vec
+        _ =
+            Debug.log "url" url
+
         r =
             UrlP.parse p url
+                |> Debug.log "url parsed"
     in
     ( { key = key
       , mandel = initialMandelCRI
