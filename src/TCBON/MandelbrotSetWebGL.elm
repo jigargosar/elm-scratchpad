@@ -114,22 +114,22 @@ update msg model =
                 mandel =
                     case e.key of
                         "a" ->
-                            mandelPanByWHFraction ( -frac, 0 ) model.mandel
+                            panByWHFraction ( -frac, 0 ) model.mandel
 
                         "d" ->
-                            mandelPanByWHFraction ( frac, 0 ) model.mandel
+                            panByWHFraction ( frac, 0 ) model.mandel
 
                         "w" ->
-                            mandelPanByWHFraction ( 0, -frac ) model.mandel
+                            panByWHFraction ( 0, -frac ) model.mandel
 
                         "s" ->
-                            mandelPanByWHFraction ( 0, frac ) model.mandel
+                            panByWHFraction ( 0, frac ) model.mandel
 
                         "e" ->
-                            mandelZoom model.mandel.c 0.5 model.mandel
+                            zoomAroundBy model.mandel.c 0.5 model.mandel
 
                         "q" ->
-                            mandelZoom model.mandel.c 2 model.mandel
+                            zoomAroundBy model.mandel.c 2 model.mandel
 
                         _ ->
                             model.mandel
@@ -146,7 +146,7 @@ update msg model =
                 scale_ =
                     1 + sign e.deltaY * 0.1
             in
-            ( { model | mandel = mandelZoom fixedPt scale_ model.mandel }, Cmd.none )
+            ( { model | mandel = zoomAroundBy fixedPt scale_ model.mandel }, Cmd.none )
 
         OnCanvasMouseDown e ->
             ( case model.drag of
@@ -172,7 +172,7 @@ update msg model =
                         end =
                             vFromFloat2 e.offset
                     in
-                    { model | drag = Dragging s end (mandelPanWithCanvasStartAndEnd s end model.mandel) }
+                    { model | drag = Dragging s end (panWithCanvasStartAndEnd s end model.mandel) }
             , Cmd.none
             )
 
@@ -187,8 +187,8 @@ update msg model =
             )
 
 
-mandelZoom : Vec -> Float -> CRI -> CRI
-mandelZoom fixedPt scale_ cri =
+zoomAroundBy : Vec -> Float -> CRI -> CRI
+zoomAroundBy fixedPt scale_ cri =
     let
         --minScale = 0.5; i=initial,c=current,n=new
         -- iw / nw >= 0.5; i.e >= 50%
@@ -204,8 +204,8 @@ mandelZoom fixedPt scale_ cri =
     criZoomByAround fixedPt clampedScale cri
 
 
-mandelPanWithCanvasStartAndEnd : Vec -> Vec -> CRI -> CRI
-mandelPanWithCanvasStartAndEnd s e cri =
+panWithCanvasStartAndEnd : Vec -> Vec -> CRI -> CRI
+panWithCanvasStartAndEnd s e cri =
     let
         rm =
             rangeMapCRI canvasCRI cri
@@ -216,8 +216,8 @@ mandelPanWithCanvasStartAndEnd s e cri =
     criTranslate t cri
 
 
-mandelPanByWHFraction : Float2 -> CRI -> CRI
-mandelPanByWHFraction frac2 cri =
+panByWHFraction : Float2 -> CRI -> CRI
+panByWHFraction frac2 cri =
     let
         t =
             criDimension cri
