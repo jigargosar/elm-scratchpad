@@ -58,7 +58,7 @@ type alias Model =
 
 type Drag
     = NotDragging
-    | Dragging Vec
+    | Dragging Vec Vec
 
 
 init : () -> ( Model, Cmd Msg )
@@ -153,7 +153,7 @@ update msg model =
                 NotDragging ->
                     { model | drag = NotDragging }
 
-                Dragging _ ->
+                Dragging _ _ ->
                     model
             , Cmd.none
             )
