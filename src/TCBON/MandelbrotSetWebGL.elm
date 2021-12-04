@@ -197,15 +197,7 @@ mandelZoom fixedPt scale_ cri =
         -- ns <= iw / (cw * 0.5)
         newScale =
             atMost (initialMandelCRI.ri.x / (cri.ri.x * 0.5)) scale_
-
-        new =
-            criZoom fixedPt scale_ cri
     in
-    --if mandelZoomPct new < 50 then
-    --    cri
-    --
-    --else
-    --    new
     criZoom fixedPt newScale cri
 
 
