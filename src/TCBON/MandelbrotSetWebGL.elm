@@ -10,6 +10,8 @@ import Html.Lazy
 import Json.Decode as JD exposing (Decoder)
 import Math.Vector2 exposing (Vec2, vec2)
 import Url exposing (Url)
+import Url.Parser as Parser
+import Url.Parser.Query as Query
 import Utils exposing (..)
 import WebGL
 
@@ -81,6 +83,16 @@ type Drag
 
 init : () -> Url -> Key -> ( Model, Cmd Msg )
 init () _ key =
+    let
+        p =
+            Parser.oneOf
+                [ Parser.query
+                    (Query.map2 Tuple.pair
+                        (Query.string "cx")
+                        (Query.string "cx")
+                    )
+                ]
+    in
     ( { key = key
       , mandel = initialMandelCRI
       , drag = NotDragging
