@@ -1088,13 +1088,15 @@ criToPointsWithXStep intXSteps cri =
 
 
 criPanByWHFraction : Float2 -> CRI -> CRI
-criPanByWHFraction (( wf, hf ) as frac2) cri =
+criPanByWHFraction frac2 cri =
     let
-        _ =
+        t =
             criDimension cri
                 |> map2 mul frac2
+                |> vFromFloat2
     in
-    { cri | c = vAdd cri.c (vec (wf * criWidth cri) (hf * criHeight cri)) }
+    --{ cri | c = vAdd cri.c (vec (wf * criWidth cri) (hf * criHeight cri)) }
+    criTranslate t cri
 
 
 criScaleRI : Float -> CRI -> CRI
