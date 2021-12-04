@@ -1087,17 +1087,6 @@ criToPointsWithXStep intXSteps cri =
         |> List.concat
 
 
-criPanByWHFraction : Float2 -> CRI -> CRI
-criPanByWHFraction frac2 cri =
-    let
-        t =
-            criDimension cri
-                |> map2 mul frac2
-                |> vFromFloat2
-    in
-    criTranslate t cri
-
-
 criScaleRI : Float -> CRI -> CRI
 criScaleRI s cri =
     { cri | ri = vScale s cri.ri }

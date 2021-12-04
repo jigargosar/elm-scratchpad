@@ -108,22 +108,22 @@ update msg model =
 
         OnCanvasKeyDown e ->
             let
-                pct =
+                frac =
                     0.05
 
                 mandel =
                     case e.key of
                         "a" ->
-                            criPanByWHFraction ( -pct, 0 ) model.mandel
+                            criPanByWHFraction ( -frac, 0 ) model.mandel
 
                         "d" ->
-                            criPanByWHFraction ( pct, 0 ) model.mandel
+                            criPanByWHFraction ( frac, 0 ) model.mandel
 
                         "w" ->
-                            criPanByWHFraction ( 0, -pct ) model.mandel
+                            criPanByWHFraction ( 0, -frac ) model.mandel
 
                         "s" ->
-                            criPanByWHFraction ( 0, pct ) model.mandel
+                            criPanByWHFraction ( 0, frac ) model.mandel
 
                         "e" ->
                             mandelZoom model.mandel.c 0.5 model.mandel
@@ -212,6 +212,17 @@ panMandelWithCanvasStartAndEnd s e cri =
 
         t =
             vFromTo (rm e) (rm s)
+    in
+    criTranslate t cri
+
+
+criPanByWHFraction : Float2 -> CRI -> CRI
+criPanByWHFraction frac2 cri =
+    let
+        t =
+            criDimension cri
+                |> map2 mul frac2
+                |> vFromFloat2
     in
     criTranslate t cri
 
