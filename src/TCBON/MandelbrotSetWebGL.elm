@@ -77,10 +77,6 @@ type Drag
     | Dragging Vec Vec CRI
 
 
-
---init : () -> Url -> Key -> ( Model, Cmd Msg )
-
-
 init : () -> Url -> Key -> ( Model, Cmd Msg )
 init () url key =
     let
