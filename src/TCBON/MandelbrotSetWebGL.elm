@@ -126,10 +126,10 @@ update msg model =
                             criPanByWHFraction ( 0, pct ) model.mandel
 
                         "e" ->
-                            criZoom model.mandel.c 0.5 model.mandel
+                            mandelZoom model.mandel.c 0.5 model.mandel
 
                         "q" ->
-                            criZoom model.mandel.c 2 model.mandel
+                            mandelZoom model.mandel.c 2 model.mandel
 
                         _ ->
                             model.mandel
@@ -146,7 +146,7 @@ update msg model =
                 scale_ =
                     1 + sign e.deltaY * 0.1
             in
-            ( { model | mandel = criZoom fixedPt scale_ model.mandel }, Cmd.none )
+            ( { model | mandel = mandelZoom fixedPt scale_ model.mandel }, Cmd.none )
 
         OnCanvasMouseDown e ->
             ( case model.drag of
@@ -185,6 +185,11 @@ update msg model =
                     { model | drag = NotDragging, mandel = mandel }
             , Cmd.none
             )
+
+
+mandelZoom : Vec -> Float -> CRI -> CRI
+mandelZoom fixedPt scale_ cri =
+    criZoom fixedPt scale_ cri
 
 
 panMandelWithCanvasStartAndEnd : Vec -> Vec -> CRI -> CRI
