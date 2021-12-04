@@ -47,6 +47,7 @@ keyDecoder =
 type alias MouseEvent =
     { modifiers : Modifiers
     , offset : Float2
+    , page : Float2
     }
 
 
@@ -55,6 +56,7 @@ mouseEventDecoder =
     JD.succeed MouseEvent
         |> jdAndMap modifiersDecoder
         |> jdAndMap offsetXYDecoder
+        |> jdAndMap pageXYDecoder
 
 
 type alias KeyEvent =
@@ -90,6 +92,13 @@ offsetXYDecoder =
     JD.map2 Tuple.pair
         (JD.field "offsetX" JD.float)
         (JD.field "offsetY" JD.float)
+
+
+pageXYDecoder : Decoder Float2
+pageXYDecoder =
+    JD.map2 Tuple.pair
+        (JD.field "pageX" JD.float)
+        (JD.field "pageY" JD.float)
 
 
 arrowKeyToDir : String -> Maybe Dir4
