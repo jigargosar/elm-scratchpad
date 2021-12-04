@@ -33,7 +33,15 @@ aspectRatio =
 initialMandelCRI : CRI
 initialMandelCRI =
     --criFromCD (vec -0.797 -0.157) 0.015
-    newCRI (vec -0.6 0) (vec 1.5 (1.5 / aspectRatio))
+    {-
+       cx: -1.1203830302034128
+       cy: -0.2915959449337175
+       w: 0.000027272727272727273
+       h: 0.000027272727272727273
+       zoom: 11000000%
+    -}
+    --newCRI (vec -0.6 0) (vec 1.5 (1.5 / aspectRatio))
+    newCRI (vec -1.1203830302034128 -0.2915959449337175) (vec 1.5 (1.5 / aspectRatio))
 
 
 canvasCRI : CRI
