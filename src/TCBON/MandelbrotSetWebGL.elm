@@ -82,17 +82,18 @@ type Drag
 
 
 init : () -> Url -> Key -> ( Model, Cmd Msg )
-init () _ key =
+init () url key =
     let
-        p : UrlP.Parser (Maybe Vec -> a) a
         p =
-            UrlP.oneOf
-                [ UrlP.query
-                    (Q.map2 (Maybe.map2 vec)
-                        (Q.string "cx" |> Q.map (Maybe.andThen String.toFloat))
-                        (Q.string "cy" |> Q.map (Maybe.andThen String.toFloat))
-                    )
-                ]
+            UrlP.query
+                (Q.map2 (Maybe.map2 vec)
+                    (Q.string "cx" |> Q.map (Maybe.andThen String.toFloat))
+                    (Q.string "cy" |> Q.map (Maybe.andThen String.toFloat))
+                    |> Q.map (Maybe.withDefault vZero)
+                )
+
+        r =
+            UrlP.parse p url
     in
     ( { key = key
       , mandel = initialMandelCRI
