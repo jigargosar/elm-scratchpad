@@ -201,13 +201,13 @@ view model =
                 NotDragging ->
                     model.mandel
 
-                Dragging a b ->
+                Dragging s e ->
                     let
                         rm =
                             rangeMapCRI canvasCRI model.mandel
 
                         t =
-                            vFromTo (rm a) (rm b)
+                            vFromTo (rm e) (rm s)
                     in
                     newCRI (vAdd model.mandel.c t) model.mandel.ri
     in
