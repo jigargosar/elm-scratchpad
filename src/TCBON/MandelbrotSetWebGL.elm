@@ -114,16 +114,16 @@ update msg model =
                 mandel =
                     case e.key of
                         "a" ->
-                            criPanByWHFraction ( -frac, 0 ) model.mandel
+                            mandelPanByWHFraction ( -frac, 0 ) model.mandel
 
                         "d" ->
-                            criPanByWHFraction ( frac, 0 ) model.mandel
+                            mandelPanByWHFraction ( frac, 0 ) model.mandel
 
                         "w" ->
-                            criPanByWHFraction ( 0, -frac ) model.mandel
+                            mandelPanByWHFraction ( 0, -frac ) model.mandel
 
                         "s" ->
-                            criPanByWHFraction ( 0, frac ) model.mandel
+                            mandelPanByWHFraction ( 0, frac ) model.mandel
 
                         "e" ->
                             mandelZoom model.mandel.c 0.5 model.mandel
@@ -216,8 +216,8 @@ panMandelWithCanvasStartAndEnd s e cri =
     criTranslate t cri
 
 
-criPanByWHFraction : Float2 -> CRI -> CRI
-criPanByWHFraction frac2 cri =
+mandelPanByWHFraction : Float2 -> CRI -> CRI
+mandelPanByWHFraction frac2 cri =
     let
         t =
             criDimension cri
