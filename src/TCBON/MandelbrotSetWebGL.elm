@@ -88,16 +88,23 @@ init () url key =
     let
         p =
             UrlP.query
-                (Q.map2 (Maybe.map2 vec) (qFloat "cx") (qFloat "cy"))
+                (Q.map3 (Maybe.map3 (\x y -> Tuple.pair (vec x y)))
+                    (qFloat "cx")
+                    (qFloat "cy")
+                    (qFloat "w")
+                )
 
-        c =
+        ( c, w ) =
             UrlP.parse p { url | path = "" }
                 |> Maybe.andThen identity
-                |> Maybe.withDefault initialMandelCRI.c
+                |> Maybe.withDefault ( initialMandelCRI.c, initialMandelCRI.ri.x * 2 )
+
+        rx =
+            w / 2
     in
     ({ key = key
      , url = url
-     , mandel = { initialMandelCRI | c = c }
+     , mandel = newCRI c (vec rx (rx / aspectRatio))
      , drag = NotDragging
      }
         |> replaceUrl
