@@ -68,6 +68,7 @@ main =
 
 type alias Model =
     { key : Key
+    , url : Url
     , mandel : CRI
     , drag : Drag
     }
@@ -95,6 +96,7 @@ init () url key =
                 |> Maybe.withDefault initialMandelCRI.c
     in
     ( { key = key
+      , url = url
       , mandel = { initialMandelCRI | c = c }
       , drag = NotDragging
       }
