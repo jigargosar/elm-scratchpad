@@ -224,8 +224,6 @@ view model =
     div [ fontSize "100px" ]
         [ stylesNode "html,body{height:100%; background-color:#444;}"
         , Html.Lazy.lazy viewMandelGL mandel
-
-        --, viewMandelGL mandel
         ]
 
 
