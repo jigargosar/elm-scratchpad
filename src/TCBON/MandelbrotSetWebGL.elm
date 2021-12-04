@@ -120,19 +120,7 @@ init () url key =
 
 replaceUrl : Model -> ( Model, Cmd Msg )
 replaceUrl model =
-    let
-        c =
-            model.mandel.c
-    in
-    ( model
-    , Browser.Navigation.replaceUrl model.key
-        (model.url.path
-            ++ QB.toQuery
-                [ QB.string "cx" (String.fromFloat c.x)
-                , QB.string "cy" (String.fromFloat c.y)
-                ]
-        )
-    )
+    ( model, replaceUrlCmd model )
 
 
 replaceUrlCmd : Model -> Cmd Msg
