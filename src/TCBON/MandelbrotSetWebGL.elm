@@ -101,7 +101,7 @@ init () url key =
                     (newMandelCRIFromCXYW
                         -1.1203830302034128
                         -0.2915959449337175
-                        3
+                        (defaultRI.x * 2)
                     )
     in
     { key = key
