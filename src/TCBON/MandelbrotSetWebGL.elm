@@ -11,7 +11,7 @@ import Json.Decode as JD exposing (Decoder)
 import Math.Vector2 exposing (Vec2, vec2)
 import Url exposing (Url)
 import Url.Builder as QB
-import Url.Parser as UrlP exposing ((</>))
+import Url.Parser as UrlP
 import Url.Parser.Query as Q
 import Utils exposing (..)
 import WebGL
