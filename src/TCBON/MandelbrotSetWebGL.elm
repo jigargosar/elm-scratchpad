@@ -278,9 +278,8 @@ zoomAroundBy fixedPt scale_ cri =
         -- iw / (cw * ns) >= 0.5
         -- iw / (cw * 0.5) >= ns
         -- ns <= iw / (cw * 0.5)
-        upperBound1 =
-            minRI.x / (cri.ri.x * 0.5)
-
+        --upperBound1 =
+        --    minRI.x / (cri.ri.x * 0.5)
         -- maxScale = 100_000; i=initial,c=current,n=new
         -- iw / nw <= 100_000;
         -- iw / (cw * ns) <= 100_000
@@ -289,7 +288,6 @@ zoomAroundBy fixedPt scale_ cri =
         lowerBound =
             minRI.x / (cri.ri.x * (110 * 1000))
 
-        -- newScale ??
         -- nw >= mw
         -- cw * ns >= mw
         -- ns >= mw / cw
