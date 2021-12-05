@@ -1,6 +1,6 @@
 module TCBON.MandelbrotSetWebGL exposing (..)
 
-import Browser exposing (Document, UrlRequest)
+import Browser exposing (Document, UrlRequest(..))
 import Browser.Events
 import Browser.Navigation exposing (Key)
 import Html
@@ -39,7 +39,14 @@ main =
                         |> addEffect (updateUrlEffect model)
                         |> mapCmd WrapMsg
 
-                OnUrlRequest _ ->
+                OnUrlRequest (Internal url) ->
+                    if url == model.currentUrl then
+                        model |> withNoCmd
+
+                    else
+                        ( model, Browser.Navigation.pushUrl model.key (Url.toString url) )
+
+                OnUrlRequest (External _) ->
                     model |> withNoCmd
 
                 OnUrlChanged url ->
