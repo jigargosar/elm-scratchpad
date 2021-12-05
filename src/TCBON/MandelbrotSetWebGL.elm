@@ -18,6 +18,43 @@ import Utils exposing (..)
 import WebGL
 
 
+type NavMsg
+    = OnUrlChanged Url
+    | OnUrlRequest UrlRequest
+    | WrapMsg Msg
+
+
+main : Program () Model NavMsg
+main =
+    let
+        init_ : () -> Url -> Key -> ( Model, Cmd NavMsg )
+        init_ a b c =
+            init a b c |> mapCmd WrapMsg
+
+        update_ : NavMsg -> Model -> ( Model, Cmd NavMsg )
+        update_ navMsg model =
+            case navMsg of
+                WrapMsg msg ->
+                    update msg model
+                        |> addEffect (updateUrlEffect model)
+                        |> mapCmd WrapMsg
+
+                OnUrlRequest _ ->
+                    model |> withNoCmd
+
+                OnUrlChanged url ->
+                    updateOnUrlChange url model |> withNoCmd
+    in
+    Browser.application
+        { init = init_
+        , subscriptions = subscriptions >> Sub.map WrapMsg
+        , onUrlChange = OnUrlChanged
+        , onUrlRequest = Debug.log "onUrlRequest" >> OnUrlRequest
+        , update = update_
+        , view = view >> mapDocument WrapMsg
+        }
+
+
 canvasCRI : CRI
 canvasCRI =
     let
@@ -58,43 +95,6 @@ defaultRI =
 -}
 --newCRI (vec -0.6 0) (vec 1.5 (1.5 / aspectRatio))
 --newCRI (vec -1.1203830302034128 -0.2915959449337175) (vec 1.5 (1.5 / criAspectRatio canvasCRI))
-
-
-type NavMsg
-    = OnUrlChanged Url
-    | OnUrlRequest UrlRequest
-    | WrapMsg Msg
-
-
-main : Program () Model NavMsg
-main =
-    let
-        init_ : () -> Url -> Key -> ( Model, Cmd NavMsg )
-        init_ a b c =
-            init a b c |> mapCmd WrapMsg
-
-        update_ : NavMsg -> Model -> ( Model, Cmd NavMsg )
-        update_ navMsg model =
-            case navMsg of
-                WrapMsg msg ->
-                    update msg model
-                        |> addEffect (updateUrlEffect model)
-                        |> mapCmd WrapMsg
-
-                OnUrlRequest _ ->
-                    model |> withNoCmd
-
-                OnUrlChanged url ->
-                    updateOnUrlChange url model |> withNoCmd
-    in
-    Browser.application
-        { init = init_
-        , subscriptions = subscriptions >> Sub.map WrapMsg
-        , onUrlChange = OnUrlChanged
-        , onUrlRequest = Debug.log "onUrlRequest" >> OnUrlRequest
-        , update = update_
-        , view = view >> mapDocument WrapMsg
-        }
 
 
 type alias Model =
