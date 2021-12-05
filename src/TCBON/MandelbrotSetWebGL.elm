@@ -301,9 +301,8 @@ update msg model =
 
 updateOnUrlChange : Url -> Model -> Model
 updateOnUrlChange url model =
-    maybeMandelFromUrl url
-        |> Maybe.map (setMandelIn model)
-        |> Maybe.withDefault model
+    mandelFromUrl url
+        |> setMandelIn model
 
 
 setMandelIn : Model -> CRI -> Model
