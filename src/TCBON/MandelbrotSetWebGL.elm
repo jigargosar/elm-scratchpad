@@ -73,14 +73,17 @@ main =
                 WrapMsg msg ->
                     wrapUpdateReplaceUrl msg model |> mapSecond (Cmd.map WrapMsg)
 
-                _ ->
+                Nav_NOP ->
                     model |> withNoCmd
+
+                Nav_OnUrlChanged url ->
+                    update (OnUrlChanged url) model |> mapSecond (Cmd.map WrapMsg)
     in
     Browser.application
         { init = init_
         , subscriptions = subscriptions >> Sub.map WrapMsg
-        , onUrlChange = Debug.log "onUrlChange" >> OnUrlChanged >> WrapMsg
-        , onUrlRequest = Debug.log "onUrlRequest" >> always NOP >> WrapMsg
+        , onUrlChange = Debug.log "onUrlChange" >> Nav_OnUrlChanged
+        , onUrlRequest = Debug.log "onUrlRequest" >> always Nav_NOP
         , update = update_
         , view = view >> mapDocument WrapMsg
         }
