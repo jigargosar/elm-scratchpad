@@ -74,13 +74,27 @@ keyEventDecoder =
 
 
 type alias Modifiers =
-    { shift : Bool }
+    { shift : Bool
+    , ctrl : Bool
+    , alt : Bool
+    }
+
+
+matchesNoModifiers : List String -> KeyEvent -> Bool
+matchesNoModifiers keys e =
+    List.member e.key keys && (e.modifiers == Modifiers False False False)
 
 
 modifiersDecoder : Decoder Modifiers
 modifiersDecoder =
+    let
+        bool s =
+            jdAndMap (JD.field s JD.bool)
+    in
     JD.succeed Modifiers
-        |> jdAndMap (JD.field "shiftKey" JD.bool)
+        |> bool "shiftKey"
+        |> bool "ctrlKey"
+        |> bool "altKey"
 
 
 jdAndMap : Decoder a -> Decoder (a -> b) -> Decoder b

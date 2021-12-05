@@ -400,7 +400,7 @@ viewMandelGL mandel =
         , style "width" (String.fromFloat (criWidth canvasCRI) ++ "px")
         , style "height" (String.fromFloat (criWidth canvasCRI) ++ "px")
         , Html.Events.on "mousedown" (JD.map OnCanvasMouseDown mouseEventDecoder)
-        , Html.Events.on "keydown" (JD.map OnCanvasKeyDown keyEventDecoder)
+        , canvasKeyDownAttr
         , Wheel.onWheel OnCanvasWheel
         , HA.tabindex 0
         , HA.autofocus True
@@ -419,6 +419,25 @@ viewMandelGL mandel =
              }
             )
         ]
+
+
+jdFilter pred =
+    JD.andThen
+        (\v ->
+            if pred v then
+                JD.succeed v
+
+            else
+                JD.fail "pred failed"
+        )
+
+
+canvasKeyDownAttr : Html.Attribute Msg
+canvasKeyDownAttr =
+    keyEventDecoder
+        |> jdFilter (matchesNoModifiers [ "w", "s", "a", "d", "e", "q" ])
+        |> JD.map (OnCanvasKeyDown >> pairTo True)
+        |> Html.Events.preventDefaultOn "keydown"
 
 
 
