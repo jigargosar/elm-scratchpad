@@ -36,7 +36,7 @@ newMandelCRIFromCXYW x y w =
 
 minRI : Vec
 minRI =
-    vec 2 2
+    vec 1.5 1.5
 
 
 initialMandelCRI : CRI
@@ -51,7 +51,7 @@ initialMandelCRI =
     -}
     --newCRI (vec -0.6 0) (vec 1.5 (1.5 / aspectRatio))
     --newCRI (vec -1.1203830302034128 -0.2915959449337175) (vec 1.5 (1.5 / criAspectRatio canvasCRI))
-    newMandelCRIFromCXYW -1.1203830302034128 -0.2915959449337175 1.5
+    newMandelCRIFromCXYW -1.1203830302034128 -0.2915959449337175 3
 
 
 main : Program () Model Msg
