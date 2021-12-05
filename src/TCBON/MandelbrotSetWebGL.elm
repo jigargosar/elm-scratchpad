@@ -71,7 +71,16 @@ main =
         update_ navMsg model =
             case navMsg of
                 WrapMsg msg ->
-                    wrapUpdateReplaceUrl msg model |> mapCmd WrapMsg
+                    update msg model
+                        |> addEffect
+                            (\m2 ->
+                                if model.mandel /= m2.mandel then
+                                    pushUrlCmd m2
+
+                                else
+                                    Cmd.none
+                            )
+                        |> mapCmd WrapMsg
 
                 OnUrlRequest _ ->
                     model |> withNoCmd
@@ -201,19 +210,6 @@ subscriptions { drag } =
                     , Browser.Events.onMouseUp (JD.map OnMouseUp mouseEventDecoder)
                     ]
         ]
-
-
-wrapUpdateReplaceUrl : Msg -> Model -> ( Model, Cmd Msg )
-wrapUpdateReplaceUrl msg model =
-    update msg model
-        |> addEffect
-            (\m2 ->
-                if model.mandel /= m2.mandel then
-                    pushUrlCmd m2
-
-                else
-                    Cmd.none
-            )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
