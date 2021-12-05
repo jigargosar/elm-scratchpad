@@ -29,14 +29,14 @@ canvasCRI =
     criFromLTWH 0 0 width height
 
 
-newMandelCRIFromCXYW : Float -> Float -> Float -> CRI
-newMandelCRIFromCXYW x y w =
-    newCRI (vec x y) (widthToRIWithAspectRatioOfCri canvasCRI w)
-
-
 newMandelCRIFrom_CX_CY_RX : Float -> Float -> Float -> CRI
 newMandelCRIFrom_CX_CY_RX x y rx =
-    newMandelCRIFromCXYW x y (rx * 2)
+    newCRI (vec x y) (rxToRIWithAspectRatioOfCri canvasCRI rx)
+
+
+rxToRIWithAspectRatioOfCri : CRI -> Float -> Vec
+rxToRIWithAspectRatioOfCri cri rx =
+    vec rx (rx / criAspectRatio cri)
 
 
 defaultRI : Vec
@@ -94,12 +94,6 @@ init () url key =
         p =
             UrlP.oneOf
                 [ UrlP.query
-                    (Q.map3 (Maybe.map3 newMandelCRIFromCXYW)
-                        (qFloat "cx")
-                        (qFloat "cy")
-                        (qFloat "w")
-                    )
-                , UrlP.query
                     (Q.map3 (Maybe.map3 newMandelCRIFrom_CX_CY_RX)
                         (qFloat "cx")
                         (qFloat "cy")
@@ -111,10 +105,10 @@ init () url key =
             UrlP.parse p { url | path = "" }
                 |> Maybe.andThen identity
                 |> Maybe.withDefault
-                    (newMandelCRIFromCXYW
+                    (newMandelCRIFrom_CX_CY_RX
                         -1.1203830302034128
                         -0.2915959449337175
-                        (defaultRI.x * 2)
+                        defaultRI.x
                     )
     in
     { key = key
@@ -123,15 +117,6 @@ init () url key =
     , drag = NotDragging
     }
         |> replaceUrl
-
-
-widthToRIWithAspectRatioOfCri : CRI -> Float -> Vec
-widthToRIWithAspectRatioOfCri cri w =
-    let
-        rx =
-            w / 2
-    in
-    vec rx (rx / criAspectRatio cri)
 
 
 replaceUrl : Model -> ( Model, Cmd Msg )
