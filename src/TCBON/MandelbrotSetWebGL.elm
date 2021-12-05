@@ -88,8 +88,8 @@ qFloat str =
     Q.string str |> Q.map (Maybe.andThen String.toFloat)
 
 
-init : () -> Url -> Key -> ( Model, Cmd Msg )
-init () url key =
+mandelFromUrl : Url -> Maybe CRI
+mandelFromUrl url =
     let
         qsCRIParser =
             UrlP.oneOf
@@ -100,10 +100,16 @@ init () url key =
                         (qFloat "rx")
                     )
                 ]
+    in
+    UrlP.parse qsCRIParser { url | path = "" }
+        |> Maybe.andThen identity
 
+
+init : () -> Url -> Key -> ( Model, Cmd Msg )
+init () url key =
+    let
         mandel =
-            UrlP.parse qsCRIParser { url | path = "" }
-                |> Maybe.andThen identity
+            mandelFromUrl url
                 |> Maybe.withDefault
                     (newMandelCRIFrom_CX_CY_RX
                         -1.1203830302034128
@@ -278,7 +284,18 @@ update msg model =
             )
 
         OnUrlChanged url ->
-            ( model, Cmd.none )
+            mandelFromUrl url
+                |> Maybe.map (setMandelIn model >> withNoCmd)
+                |> Maybe.withDefault ( model, Cmd.none )
+
+
+setMandelIn : Model -> CRI -> Model
+setMandelIn model newMandel =
+    if model.mandel /= newMandel then
+        { model | mandel = newMandel }
+
+    else
+        model
 
 
 zoomAroundBy : Vec -> Float -> CRI -> CRI
