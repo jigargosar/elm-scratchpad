@@ -125,6 +125,11 @@ replaceUrlCmd model =
     Browser.Navigation.replaceUrl model.key (computeCurrentURL model)
 
 
+pushUrlCmd : Model -> Cmd Msg
+pushUrlCmd model =
+    Browser.Navigation.pushUrl model.key (computeCurrentURL model)
+
+
 computeCurrentURL : Model -> String
 computeCurrentURL model =
     let
@@ -177,7 +182,7 @@ wrapUpdateReplaceUrl msg model =
     , Cmd.batch
         [ cmd
         , if model.mandel /= m2.mandel then
-            replaceUrlCmd m2
+            pushUrlCmd m2
 
           else
             Cmd.none
