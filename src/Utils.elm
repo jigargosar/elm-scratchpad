@@ -73,14 +73,14 @@ keyEventDecoder =
         |> jdAndMap (JD.field "key" JD.string)
 
 
-keyMapDecoder : List ( KeyEvent -> Bool, KeyEvent -> a ) -> Decoder ( a, Bool )
+keyMapDecoder : List ( KeyEvent -> Bool, KeyEvent -> a ) -> Decoder a
 keyMapDecoder keyMap =
     keyEventDecoder
         |> JD.andThen
             (\e ->
                 keyMap
                     |> findFirst (\( pred, _ ) -> pred e)
-                    |> Maybe.map (\( _, msg ) -> JD.succeed ( msg e, True ))
+                    |> Maybe.map (\( _, msg ) -> JD.succeed (msg e))
                     |> Maybe.withDefault (JD.fail "")
             )
 

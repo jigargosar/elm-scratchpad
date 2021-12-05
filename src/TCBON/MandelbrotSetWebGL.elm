@@ -457,8 +457,8 @@ canvasKeyDownAttr =
             , ( matchesCtrl [ "s", "S" ], always OnSave )
             ]
     in
-    keyMapDecoder keyMap
-        |> Html.Events.preventDefaultOn "keydown"
+    Html.Events.preventDefaultOn "keydown"
+        (keyMapDecoder keyMap |> JD.map (pairTo True))
 
 
 
