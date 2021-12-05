@@ -91,7 +91,7 @@ main =
     Browser.application
         { init = init_
         , subscriptions = subscriptions >> Sub.map WrapMsg
-        , onUrlChange = Debug.log "onUrlChange" >> OnUrlChanged
+        , onUrlChange = OnUrlChanged
         , onUrlRequest = Debug.log "onUrlRequest" >> OnUrlRequest
         , update = update_
         , view = view >> mapDocument WrapMsg
