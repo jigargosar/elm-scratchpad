@@ -73,11 +73,7 @@ main =
                 WrapMsg msg ->
                     wrapUpdateReplaceUrl msg model |> mapSecond (Cmd.map WrapMsg)
 
-                OnUrlRequest req ->
-                    let
-                        _ =
-                            Debug.log "onUrlRequest" req
-                    in
+                OnUrlRequest _ ->
                     model |> withNoCmd
 
                 OnUrlChanged url ->
@@ -87,7 +83,7 @@ main =
         { init = init_
         , subscriptions = subscriptions >> Sub.map WrapMsg
         , onUrlChange = Debug.log "onUrlChange" >> OnUrlChanged
-        , onUrlRequest = OnUrlRequest
+        , onUrlRequest = Debug.log "onUrlRequest" >> OnUrlRequest
         , update = update_
         , view = view >> mapDocument WrapMsg
         }
