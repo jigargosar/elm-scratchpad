@@ -34,8 +34,8 @@ newMandelCRIFromCXYW x y w =
     newCRI (vec x y) (widthToRIWithAspectRatioOfCri canvasCRI w)
 
 
-minRI : Vec
-minRI =
+defaultRI : Vec
+defaultRI =
     vec 1.5 1.5
 
 
@@ -278,22 +278,22 @@ zoomAroundBy fixedPt scale_ cri =
         -- iw / (cw * ns) >= 0.5
         -- iw / (cw * 0.5) >= ns
         -- ns <= iw / (cw * 0.5)
-        --upperBound1 =
-        --    minRI.x / (cri.ri.x * 0.5)
+        upperBound =
+            defaultRI.x / (cri.ri.x * 0.5)
+
         -- maxScale = 100_000; i=initial,c=current,n=new
         -- iw / nw <= 100_000;
         -- iw / (cw * ns) <= 100_000
         -- iw / (cw * 100_000) <= ns
         -- ns >= iw / (cw * 100_000)
         lowerBound =
-            minRI.x / (cri.ri.x * (110 * 1000))
+            defaultRI.x / (cri.ri.x * (110 * 1000))
 
         -- nw >= mw
         -- cw * ns >= mw
         -- ns >= mw / cw
-        upperBound =
-            minRI.x / cri.ri.x
-
+        --upperBound =
+        --    minRI.x / cri.ri.x
         clampedScale =
             scale_
                 |> atMost upperBound
@@ -354,7 +354,7 @@ viewEl model =
 
 mandelZoomPct : CRI -> Int
 mandelZoomPct cri =
-    (minRI.x / cri.ri.x)
+    (defaultRI.x / cri.ri.x)
         * 100
         |> round
 
