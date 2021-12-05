@@ -1153,3 +1153,21 @@ mapCmd tagger =
 mapDocument : (msg1 -> msg2) -> Document msg1 -> Document msg2
 mapDocument tagger { title, body } =
     Document title (List.map (Html.map tagger) body)
+
+
+
+-- LIST HELPERS
+
+
+findFirst : (a -> Bool) -> List a -> Maybe a
+findFirst pred xs =
+    case xs of
+        [] ->
+            Nothing
+
+        h :: t ->
+            if pred h then
+                Just h
+
+            else
+                findFirst pred t

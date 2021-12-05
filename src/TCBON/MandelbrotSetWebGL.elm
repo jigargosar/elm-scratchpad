@@ -456,21 +456,8 @@ canvasKeyDownAttr =
                 [ ( matchesNoModifiers [ "w", "s", "a", "d", "e", "q" ], OnCanvasKeyDown )
                 , ( matchesCtrl [ "s", "S" ], always OnSave )
                 ]
-                    |> List.foldl
-                        (\( pred, msg ) done ->
-                            case done of
-                                Nothing ->
-                                    if pred e then
-                                        Just (msg e)
-
-                                    else
-                                        Nothing
-
-                                _ ->
-                                    done
-                        )
-                        Nothing
-                    |> Maybe.map (pairTo True >> JD.succeed)
+                    |> findFirst (\( pred, _ ) -> pred e)
+                    |> Maybe.map (\( _, msg ) -> JD.succeed ( msg e, True ))
                     |> Maybe.withDefault (JD.fail "")
             )
         --JD.oneOf
