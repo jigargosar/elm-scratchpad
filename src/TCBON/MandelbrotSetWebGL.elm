@@ -60,6 +60,12 @@ defaultRI =
 --newCRI (vec -1.1203830302034128 -0.2915959449337175) (vec 1.5 (1.5 / criAspectRatio canvasCRI))
 
 
+type NavMsg
+    = OnUrlChanged Url
+    | OnUrlRequest UrlRequest
+    | WrapMsg Msg
+
+
 main : Program () Model NavMsg
 main =
     let
@@ -181,12 +187,6 @@ computeCurrentURL model =
             , QB.string "cy" (String.fromFloat c.y)
             , QB.string "rx" (String.fromFloat rx)
             ]
-
-
-type NavMsg
-    = OnUrlChanged Url
-    | OnUrlRequest UrlRequest
-    | WrapMsg Msg
 
 
 type Msg
