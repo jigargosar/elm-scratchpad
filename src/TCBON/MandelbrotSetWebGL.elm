@@ -300,7 +300,11 @@ update msg model =
             )
 
         OnSave ->
-            ( model, Cmd.none )
+            if mandelFromUrl model.currentUrl == model.mandel then
+                model |> withNoCmd
+
+            else
+                ( model, Browser.Navigation.pushUrl model.key (computeCurrentURL model) )
 
 
 updateOnUrlChange : Url -> Model -> Model
