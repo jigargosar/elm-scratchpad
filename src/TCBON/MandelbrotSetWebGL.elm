@@ -116,12 +116,8 @@ init () url key =
     , mandel = mandel
     , drag = NotDragging
     }
-        |> replaceUrl
-
-
-replaceUrl : Model -> ( Model, Cmd Msg )
-replaceUrl model =
-    ( model, replaceUrlCmd model )
+        --|> withEffect replaceUrlCmd
+        |> withNoCmd
 
 
 replaceUrlCmd : Model -> Cmd Msg

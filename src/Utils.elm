@@ -1099,3 +1099,17 @@ criToPointsWithXStep intXSteps cri =
 criScaleRI : Float -> CRI -> CRI
 criScaleRI s cri =
     { cri | ri = vScale s cri.ri }
+
+
+
+-- UPDATE HELPERS
+
+
+withNoCmd : model -> ( model, Cmd msg )
+withNoCmd =
+    pairTo Cmd.none
+
+
+withEffect : (model -> Cmd msg) -> model -> ( model, Cmd msg )
+withEffect effect model =
+    ( model, effect model )
