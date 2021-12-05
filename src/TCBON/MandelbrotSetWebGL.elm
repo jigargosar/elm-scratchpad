@@ -64,8 +64,8 @@ main =
     Browser.application
         { init = init
         , subscriptions = subscriptions
-        , onUrlChange = always NOP
-        , onUrlRequest = always NOP
+        , onUrlChange = Debug.log "onUrlChange" >> always NOP
+        , onUrlRequest = Debug.log "onUrlRequest" >> always NOP
         , update = wrapUpdateReplaceUrl
         , view = view
         }
