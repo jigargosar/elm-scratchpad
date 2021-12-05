@@ -30,8 +30,8 @@ canvasCRI =
 
 
 newMandelCRIFrom_CX_CY_RX : Float -> Float -> Float -> CRI
-newMandelCRIFrom_CX_CY_RX x y rx =
-    newCRI (vec x y) (rxToRIWithAspectRatioOfCri canvasCRI rx)
+newMandelCRIFrom_CX_CY_RX cx cy rx =
+    newCRI (vec cx cy) (rxToRIWithAspectRatioOfCri canvasCRI rx)
 
 
 rxToRIWithAspectRatioOfCri : CRI -> Float -> Vec
