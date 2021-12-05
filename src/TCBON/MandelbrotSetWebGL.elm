@@ -156,7 +156,7 @@ init () url key =
 updateUrlEffect : Model -> Model -> Cmd msg
 updateUrlEffect oldModel newModel =
     if oldModel.mandel /= newModel.mandel then
-        Browser.Navigation.replaceUrl newModel.key
+        Browser.Navigation.pushUrl newModel.key
             (computeCurrentURL newModel)
 
     else
