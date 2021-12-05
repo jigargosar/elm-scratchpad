@@ -1116,6 +1116,16 @@ withEffect effect model =
     ( model, effect model )
 
 
+addEffect : (model -> Cmd msg) -> ( model, Cmd msg ) -> ( model, Cmd msg )
+addEffect effect ( model, cmd ) =
+    ( model, Cmd.batch [ effect model, cmd ] )
+
+
+addCmd : Cmd msg -> ( model, Cmd msg ) -> ( model, Cmd msg )
+addCmd cmd2 ( model, cmd1 ) =
+    ( model, Cmd.batch [ cmd1, cmd2 ] )
+
+
 mapCmd : (msg1 -> msg2) -> ( model, Cmd msg1 ) -> ( model, Cmd msg2 )
 mapCmd tagger =
     mapSecond (Cmd.map tagger)

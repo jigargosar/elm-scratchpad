@@ -205,20 +205,15 @@ subscriptions { drag } =
 
 wrapUpdateReplaceUrl : Msg -> Model -> ( Model, Cmd Msg )
 wrapUpdateReplaceUrl msg model =
-    let
-        ( m2, cmd ) =
-            update msg model
-    in
-    ( m2
-    , Cmd.batch
-        [ cmd
-        , if model.mandel /= m2.mandel then
-            pushUrlCmd m2
+    update msg model
+        |> addEffect
+            (\m2 ->
+                if model.mandel /= m2.mandel then
+                    pushUrlCmd m2
 
-          else
-            Cmd.none
-        ]
-    )
+                else
+                    Cmd.none
+            )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
