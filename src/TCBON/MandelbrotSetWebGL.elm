@@ -153,20 +153,11 @@ init () url key =
         |> withNoCmd
 
 
-replaceUrlCmd : Model -> Cmd msg
-replaceUrlCmd model =
-    Browser.Navigation.replaceUrl model.key (computeCurrentURL model)
-
-
-pushUrlCmd : Model -> Cmd msg
-pushUrlCmd model =
-    Browser.Navigation.pushUrl model.key (computeCurrentURL model)
-
-
 updateUrlEffect : Model -> Model -> Cmd msg
 updateUrlEffect oldModel newModel =
     if oldModel.mandel /= newModel.mandel then
-        pushUrlCmd newModel
+        Browser.Navigation.pushUrl newModel.key
+            (computeCurrentURL newModel)
 
     else
         Cmd.none
@@ -175,17 +166,14 @@ updateUrlEffect oldModel newModel =
 computeCurrentURL : Model -> String
 computeCurrentURL model =
     let
-        c =
-            model.mandel.c
-
-        rx =
-            model.mandel.ri.x
+        { c, ri } =
+            model.mandel
     in
     model.initialUrl.path
         ++ QB.toQuery
             [ QB.string "cx" (String.fromFloat c.x)
             , QB.string "cy" (String.fromFloat c.y)
-            , QB.string "rx" (String.fromFloat rx)
+            , QB.string "rx" (String.fromFloat ri.x)
             ]
 
 
