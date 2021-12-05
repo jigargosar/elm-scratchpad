@@ -457,22 +457,7 @@ canvasKeyDownAttr =
             , ( matchesCtrl [ "s", "S" ], always OnSave )
             ]
     in
-    keyEventDecoder
-        |> JD.andThen
-            (\e ->
-                keyMap
-                    |> findFirst (\( pred, _ ) -> pred e)
-                    |> Maybe.map (\( _, msg ) -> JD.succeed ( msg e, True ))
-                    |> Maybe.withDefault (JD.fail "")
-            )
-        --JD.oneOf
-        --    [ keyEventDecoder
-        --        |> jdFilter (matchesNoModifiers [ "w", "s", "a", "d", "e", "q" ])
-        --        |> JD.map (OnCanvasKeyDown >> pairTo True)
-        --    , keyEventDecoder
-        --        |> jdFilter (matchesCtrl [ "s", "S" ])
-        --        |> JD.map (always ( OnSave, True ))
-        --    ]
+    keyMapDecoder keyMap
         |> Html.Events.preventDefaultOn "keydown"
 
 
