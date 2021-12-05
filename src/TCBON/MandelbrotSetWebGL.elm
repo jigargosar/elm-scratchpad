@@ -77,7 +77,7 @@ main =
                     model |> withNoCmd
 
                 Nav_OnUrlChanged url ->
-                    update (OnUrlChanged url) model |> mapSecond (Cmd.map WrapMsg)
+                    updateOnUrlChange url model |> withNoCmd
     in
     Browser.application
         { init = init_
@@ -185,7 +185,6 @@ type NavMsg
 
 type Msg
     = NOP
-    | OnUrlChanged Url
     | OnCanvasMouseDown MouseEvent
     | OnMouseMove MouseEvent
     | OnMouseUp MouseEvent
@@ -313,10 +312,12 @@ update msg model =
             , Cmd.none
             )
 
-        OnUrlChanged url ->
-            maybeMandelFromUrl url
-                |> Maybe.map (setMandelIn model >> withNoCmd)
-                |> Maybe.withDefault ( model, Cmd.none )
+
+updateOnUrlChange : Url -> Model -> Model
+updateOnUrlChange url model =
+    maybeMandelFromUrl url
+        |> Maybe.map (setMandelIn model)
+        |> Maybe.withDefault model
 
 
 setMandelIn : Model -> CRI -> Model
