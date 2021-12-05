@@ -85,6 +85,11 @@ keyMapDecoder keyMap =
             )
 
 
+keyMapDecoderPreventDefault : List ( KeyEvent -> Bool, KeyEvent -> b ) -> Decoder ( b, Bool )
+keyMapDecoderPreventDefault keyMap =
+    keyMapDecoder keyMap |> JD.map (pairTo True)
+
+
 type alias Modifiers =
     { shift : Bool
     , ctrl : Bool
