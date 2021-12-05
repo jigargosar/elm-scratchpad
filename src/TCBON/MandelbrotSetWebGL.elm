@@ -17,12 +17,6 @@ import Utils exposing (..)
 import WebGL
 
 
-type alias XYRange =
-    { xRange : Float2
-    , yRange : Float2
-    }
-
-
 canvasCRI : CRI
 canvasCRI =
     let
