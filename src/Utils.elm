@@ -1,5 +1,6 @@
 module Utils exposing (..)
 
+import Browser exposing (Document)
 import Color
 import Dict exposing (Dict)
 import Float.Extra
@@ -1113,3 +1114,13 @@ withNoCmd =
 withEffect : (model -> Cmd msg) -> model -> ( model, Cmd msg )
 withEffect effect model =
     ( model, effect model )
+
+
+mapCmd : (msg1 -> msg2) -> ( model, Cmd msg1 ) -> ( model, Cmd msg2 )
+mapCmd tagger =
+    mapSecond (Cmd.map tagger)
+
+
+mapDocument : (msg1 -> msg2) -> Document msg1 -> Document msg2
+mapDocument tagger { title, body } =
+    Document title (List.map (Html.map tagger) body)
