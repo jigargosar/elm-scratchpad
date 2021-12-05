@@ -72,14 +72,7 @@ main =
             case navMsg of
                 WrapMsg msg ->
                     update msg model
-                        |> addEffect
-                            (\m2 ->
-                                if model.mandel /= m2.mandel then
-                                    pushUrlCmd m2
-
-                                else
-                                    Cmd.none
-                            )
+                        |> addEffect (updateUrlEffect model)
                         |> mapCmd WrapMsg
 
                 OnUrlRequest _ ->
@@ -154,14 +147,23 @@ init () url key =
         |> withNoCmd
 
 
-replaceUrlCmd : Model -> Cmd Msg
+replaceUrlCmd : Model -> Cmd msg
 replaceUrlCmd model =
     Browser.Navigation.replaceUrl model.key (computeCurrentURL model)
 
 
-pushUrlCmd : Model -> Cmd Msg
+pushUrlCmd : Model -> Cmd msg
 pushUrlCmd model =
     Browser.Navigation.pushUrl model.key (computeCurrentURL model)
+
+
+updateUrlEffect : Model -> Model -> Cmd msg
+updateUrlEffect oldModel newModel =
+    if oldModel.mandel /= newModel.mandel then
+        pushUrlCmd newModel
+
+    else
+        Cmd.none
 
 
 computeCurrentURL : Model -> String
