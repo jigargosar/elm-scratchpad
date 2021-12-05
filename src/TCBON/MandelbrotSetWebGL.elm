@@ -3,6 +3,7 @@ module TCBON.MandelbrotSetWebGL exposing (..)
 import Browser exposing (Document)
 import Browser.Events
 import Browser.Navigation exposing (Key)
+import Html
 import Html.Attributes as HA
 import Html.Events
 import Html.Events.Extra.Wheel as Wheel
@@ -59,16 +60,35 @@ defaultRI =
 --newCRI (vec -1.1203830302034128 -0.2915959449337175) (vec 1.5 (1.5 / criAspectRatio canvasCRI))
 
 
-main : Program () Model Msg
+main : Program () Model NavMsg
 main =
+    let
+        init_ : () -> Url -> Key -> ( Model, Cmd NavMsg )
+        init_ a b c =
+            init a b c |> mapSecond (Cmd.map WrapMsg)
+
+        update_ : NavMsg -> Model -> ( Model, Cmd NavMsg )
+        update_ navMsg model =
+            case navMsg of
+                WrapMsg msg ->
+                    wrapUpdateReplaceUrl msg model |> mapSecond (Cmd.map WrapMsg)
+
+                _ ->
+                    model |> withNoCmd
+    in
     Browser.application
-        { init = init
-        , subscriptions = subscriptions
-        , onUrlChange = Debug.log "onUrlChange" >> OnUrlChanged
-        , onUrlRequest = Debug.log "onUrlRequest" >> always NOP
-        , update = wrapUpdateReplaceUrl
-        , view = view
+        { init = init_
+        , subscriptions = subscriptions >> Sub.map WrapMsg
+        , onUrlChange = Debug.log "onUrlChange" >> OnUrlChanged >> WrapMsg
+        , onUrlRequest = Debug.log "onUrlRequest" >> always NOP >> WrapMsg
+        , update = update_
+        , view = view >> mapDocument WrapMsg
         }
+
+
+mapDocument : (a -> b) -> Document a -> Document b
+mapDocument tagger { title, body } =
+    Document title (List.map (Html.map tagger) body)
 
 
 type alias Model =
@@ -151,6 +171,12 @@ computeCurrentURL model =
             , QB.string "cy" (String.fromFloat c.y)
             , QB.string "rx" (String.fromFloat rx)
             ]
+
+
+type NavMsg
+    = Nav_NOP
+    | Nav_OnUrlChanged Url
+    | WrapMsg Msg
 
 
 type Msg
