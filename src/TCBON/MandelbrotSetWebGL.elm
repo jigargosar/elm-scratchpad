@@ -91,7 +91,7 @@ qFloat str =
 init : () -> Url -> Key -> ( Model, Cmd Msg )
 init () url key =
     let
-        p =
+        qsCRIParser =
             UrlP.oneOf
                 [ UrlP.query
                     (Q.map3 (Maybe.map3 newMandelCRIFrom_CX_CY_RX)
@@ -102,7 +102,7 @@ init () url key =
                 ]
 
         mandel =
-            UrlP.parse p { url | path = "" }
+            UrlP.parse qsCRIParser { url | path = "" }
                 |> Maybe.andThen identity
                 |> Maybe.withDefault
                     (newMandelCRIFrom_CX_CY_RX
