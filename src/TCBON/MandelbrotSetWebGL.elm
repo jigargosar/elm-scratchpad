@@ -111,8 +111,8 @@ qFloat str =
     Q.string str |> Q.map (Maybe.andThen String.toFloat)
 
 
-mandelFromUrl : Url -> Maybe CRI
-mandelFromUrl url =
+maybeMandelFromUrl : Url -> Maybe CRI
+maybeMandelFromUrl url =
     let
         qsCRIParser =
             UrlP.oneOf
@@ -128,21 +128,22 @@ mandelFromUrl url =
         |> Maybe.andThen identity
 
 
+mandelFromUrl : Url -> CRI
+mandelFromUrl url =
+    maybeMandelFromUrl url
+        |> Maybe.withDefault
+            (newMandelCRIFrom_CX_CY_RX
+                -1.1203830302034128
+                -0.2915959449337175
+                defaultRI.x
+            )
+
+
 init : () -> Url -> Key -> ( Model, Cmd Msg )
 init () url key =
-    let
-        mandel =
-            mandelFromUrl url
-                |> Maybe.withDefault
-                    (newMandelCRIFrom_CX_CY_RX
-                        -1.1203830302034128
-                        -0.2915959449337175
-                        defaultRI.x
-                    )
-    in
     { key = key
     , initialUrl = url
-    , mandel = mandel
+    , mandel = mandelFromUrl url
     , drag = NotDragging
     }
         --|> withEffect replaceUrlCmd
@@ -313,7 +314,7 @@ update msg model =
             )
 
         OnUrlChanged url ->
-            mandelFromUrl url
+            maybeMandelFromUrl url
                 |> Maybe.map (setMandelIn model >> withNoCmd)
                 |> Maybe.withDefault ( model, Cmd.none )
 
