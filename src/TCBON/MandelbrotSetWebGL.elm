@@ -4,7 +4,7 @@ import Browser exposing (Document, UrlRequest)
 import Browser.Events
 import Browser.Navigation exposing (Key)
 import Html
-import Html.Attributes as HA
+import Html.Attributes as HA exposing (href)
 import Html.Events
 import Html.Events.Extra.Wheel as Wheel
 import Html.Lazy
@@ -375,6 +375,7 @@ viewEl model =
     div [ fontSize "30px" ]
         [ stylesNode "html,body{height:100%; background-color:#444;}"
         , Html.Lazy.lazy viewMandelGL mandel
+        , Html.a [ style "color" "#FFF", href (computeCurrentURL model) ] [ text "permalink" ]
         , div [] [ text ("cx: " ++ String.fromFloat mandel.c.x) ]
         , div [] [ text ("cy: " ++ String.fromFloat mandel.c.y) ]
         , div [] [ text ("w: " ++ String.fromFloat (criWidth mandel)) ]
