@@ -34,6 +34,11 @@ newMandelCRIFromCXYW x y w =
     newCRI (vec x y) (widthToRIWithAspectRatioOfCri canvasCRI w)
 
 
+newMandelCRIFrom_CX_CY_RX : Float -> Float -> Float -> CRI
+newMandelCRIFrom_CX_CY_RX x y rx =
+    newMandelCRIFromCXYW x y (rx * 2)
+
+
 defaultRI : Vec
 defaultRI =
     vec 1.5 1.5
@@ -87,12 +92,20 @@ init : () -> Url -> Key -> ( Model, Cmd Msg )
 init () url key =
     let
         p =
-            UrlP.query
-                (Q.map3 (Maybe.map3 newMandelCRIFromCXYW)
-                    (qFloat "cx")
-                    (qFloat "cy")
-                    (qFloat "w")
-                )
+            UrlP.oneOf
+                [ UrlP.query
+                    (Q.map3 (Maybe.map3 newMandelCRIFromCXYW)
+                        (qFloat "cx")
+                        (qFloat "cy")
+                        (qFloat "w")
+                    )
+                , UrlP.query
+                    (Q.map3 (Maybe.map3 newMandelCRIFrom_CX_CY_RX)
+                        (qFloat "cx")
+                        (qFloat "cy")
+                        (qFloat "rx")
+                    )
+                ]
 
         mandel =
             UrlP.parse p { url | path = "" }
@@ -132,15 +145,15 @@ replaceUrlCmd model =
         c =
             model.mandel.c
 
-        w =
-            criWidth model.mandel
+        rx =
+            model.mandel.ri.x
     in
     Browser.Navigation.replaceUrl model.key
         (model.initialUrl.path
             ++ QB.toQuery
                 [ QB.string "cx" (String.fromFloat c.x)
                 , QB.string "cy" (String.fromFloat c.y)
-                , QB.string "w" (String.fromFloat w)
+                , QB.string "rx" (String.fromFloat rx)
                 ]
         )
 
