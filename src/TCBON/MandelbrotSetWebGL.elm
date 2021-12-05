@@ -450,14 +450,37 @@ jdFilter pred =
 
 canvasKeyDownAttr : Html.Attribute Msg
 canvasKeyDownAttr =
-    JD.oneOf
-        [ keyEventDecoder
-            |> jdFilter (matchesNoModifiers [ "w", "s", "a", "d", "e", "q" ])
-            |> JD.map (OnCanvasKeyDown >> pairTo True)
-        , keyEventDecoder
-            |> jdFilter (matchesCtrl [ "s", "S" ])
-            |> JD.map (always ( OnSave, True ))
-        ]
+    keyEventDecoder
+        |> JD.andThen
+            (\e ->
+                [ ( matchesNoModifiers [ "w", "s", "a", "d", "e", "q" ], OnCanvasKeyDown )
+                , ( matchesCtrl [ "s", "S" ], always OnSave )
+                ]
+                    |> List.foldl
+                        (\( pred, msg ) done ->
+                            case done of
+                                Nothing ->
+                                    if pred e then
+                                        Just (msg e)
+
+                                    else
+                                        Nothing
+
+                                _ ->
+                                    done
+                        )
+                        Nothing
+                    |> Maybe.map (pairTo True >> JD.succeed)
+                    |> Maybe.withDefault (JD.fail "")
+            )
+        --JD.oneOf
+        --    [ keyEventDecoder
+        --        |> jdFilter (matchesNoModifiers [ "w", "s", "a", "d", "e", "q" ])
+        --        |> JD.map (OnCanvasKeyDown >> pairTo True)
+        --    , keyEventDecoder
+        --        |> jdFilter (matchesCtrl [ "s", "S" ])
+        --        |> JD.map (always ( OnSave, True ))
+        --    ]
         |> Html.Events.preventDefaultOn "keydown"
 
 
