@@ -64,7 +64,7 @@ main =
     Browser.application
         { init = init
         , subscriptions = subscriptions
-        , onUrlChange = Debug.log "onUrlChange" >> always NOP
+        , onUrlChange = Debug.log "onUrlChange" >> OnUrlChanged
         , onUrlRequest = Debug.log "onUrlRequest" >> always NOP
         , update = wrapUpdateReplaceUrl
         , view = view
@@ -149,6 +149,7 @@ computeCurrentURL model =
 
 type Msg
     = NOP
+    | OnUrlChanged Url
     | OnCanvasMouseDown MouseEvent
     | OnMouseMove MouseEvent
     | OnMouseUp MouseEvent
@@ -275,6 +276,9 @@ update msg model =
                     { model | drag = NotDragging, mandel = mandel }
             , Cmd.none
             )
+
+        OnUrlChanged url ->
+            ( model, Cmd.none )
 
 
 zoomAroundBy : Vec -> Float -> CRI -> CRI
