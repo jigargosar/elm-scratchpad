@@ -1,6 +1,6 @@
 module TCBON.MandelbrotSetWebGL exposing (..)
 
-import Browser exposing (Document)
+import Browser exposing (Document, UrlRequest)
 import Browser.Events
 import Browser.Navigation exposing (Key)
 import Html
@@ -73,17 +73,21 @@ main =
                 WrapMsg msg ->
                     wrapUpdateReplaceUrl msg model |> mapSecond (Cmd.map WrapMsg)
 
-                Nav_NOP ->
+                OnUrlRequest req ->
+                    let
+                        _ =
+                            Debug.log "onUrlRequest" req
+                    in
                     model |> withNoCmd
 
-                Nav_OnUrlChanged url ->
+                OnUrlChanged url ->
                     updateOnUrlChange url model |> withNoCmd
     in
     Browser.application
         { init = init_
         , subscriptions = subscriptions >> Sub.map WrapMsg
-        , onUrlChange = Debug.log "onUrlChange" >> Nav_OnUrlChanged
-        , onUrlRequest = Debug.log "onUrlRequest" >> always Nav_NOP
+        , onUrlChange = Debug.log "onUrlChange" >> OnUrlChanged
+        , onUrlRequest = OnUrlRequest
         , update = update_
         , view = view >> mapDocument WrapMsg
         }
@@ -178,8 +182,8 @@ computeCurrentURL model =
 
 
 type NavMsg
-    = Nav_NOP
-    | Nav_OnUrlChanged Url
+    = OnUrlChanged Url
+    | OnUrlRequest UrlRequest
     | WrapMsg Msg
 
 
