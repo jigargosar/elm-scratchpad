@@ -291,16 +291,7 @@ update msg model =
 
 updateOnUrlChange : Url -> Model -> Model
 updateOnUrlChange url model =
-    mandelFromUrl url |> setMandelIn model
-
-
-setMandelIn : Model -> CRI -> Model
-setMandelIn model newMandel =
-    if model.mandel /= newMandel then
-        { model | mandel = newMandel }
-
-    else
-        model
+    { model | mandel = mandelFromUrl url, currentUrl = url }
 
 
 zoomAroundBy : Vec -> Float -> CRI -> CRI
