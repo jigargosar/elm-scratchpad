@@ -99,7 +99,7 @@ defaultRI =
 
 type alias Model =
     { key : Key
-    , initialUrl : Url
+    , currentUrl : Url
     , mandel : CRI
     , drag : Drag
     }
@@ -145,7 +145,7 @@ mandelFromUrl url =
 init : () -> Url -> Key -> ( Model, Cmd Msg )
 init () url key =
     { key = key
-    , initialUrl = url
+    , currentUrl = url
     , mandel = mandelFromUrl url
     , drag = NotDragging
     }
@@ -169,7 +169,7 @@ computeCurrentURL model =
         { c, ri } =
             model.mandel
     in
-    model.initialUrl.path
+    model.currentUrl.path
         ++ QB.toQuery
             [ QB.string "cx" (String.fromFloat c.x)
             , QB.string "cy" (String.fromFloat c.y)
