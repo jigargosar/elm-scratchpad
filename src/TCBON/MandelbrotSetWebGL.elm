@@ -450,12 +450,17 @@ jdFilter pred =
 
 canvasKeyDownAttr : Html.Attribute Msg
 canvasKeyDownAttr =
+    let
+        keyMap : List ( KeyEvent -> Bool, KeyEvent -> Msg )
+        keyMap =
+            [ ( matchesNoModifiers [ "w", "s", "a", "d", "e", "q" ], OnCanvasKeyDown )
+            , ( matchesCtrl [ "s", "S" ], always OnSave )
+            ]
+    in
     keyEventDecoder
         |> JD.andThen
             (\e ->
-                [ ( matchesNoModifiers [ "w", "s", "a", "d", "e", "q" ], OnCanvasKeyDown )
-                , ( matchesCtrl [ "s", "S" ], always OnSave )
-                ]
+                keyMap
                     |> findFirst (\( pred, _ ) -> pred e)
                     |> Maybe.map (\( _, msg ) -> JD.succeed ( msg e, True ))
                     |> Maybe.withDefault (JD.fail "")
