@@ -186,6 +186,7 @@ type Msg
     | OnMouseMove MouseEvent
     | OnMouseUp MouseEvent
     | OnCanvasKeyDown KeyEvent
+    | OnSave
     | OnCanvasWheel Wheel.Event
 
 
@@ -290,6 +291,9 @@ update msg model =
                     { model | drag = NotDragging, mandel = mandel }
             , Cmd.none
             )
+
+        OnSave ->
+            ( model, Cmd.none )
 
 
 updateOnUrlChange : Url -> Model -> Model
@@ -434,9 +438,14 @@ jdFilter pred =
 
 canvasKeyDownAttr : Html.Attribute Msg
 canvasKeyDownAttr =
-    keyEventDecoder
-        |> jdFilter (matchesNoModifiers [ "w", "s", "a", "d", "e", "q" ])
-        |> JD.map (OnCanvasKeyDown >> pairTo True)
+    JD.oneOf
+        [ keyEventDecoder
+            |> jdFilter (matchesNoModifiers [ "w", "s", "a", "d", "e", "q" ])
+            |> JD.map (OnCanvasKeyDown >> pairTo True)
+        , keyEventDecoder
+            |> jdFilter (matchesCtrl [ "s", "S" ])
+            |> JD.map (always ( OnSave, True ))
+        ]
         |> Html.Events.preventDefaultOn "keydown"
 
 

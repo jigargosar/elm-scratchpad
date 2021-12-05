@@ -85,6 +85,11 @@ matchesNoModifiers keys e =
     List.member e.key keys && (e.modifiers == Modifiers False False False)
 
 
+matchesCtrl : List String -> KeyEvent -> Bool
+matchesCtrl keys e =
+    List.member e.key keys && (e.modifiers == Modifiers False True False)
+
+
 modifiersDecoder : Decoder Modifiers
 modifiersDecoder =
     let
