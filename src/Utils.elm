@@ -1027,8 +1027,8 @@ criToBounds cri =
 
 
 criAspectRatio : CRI -> Float
-criAspectRatio =
-    criToWH >> (\( w, h ) -> w / h)
+criAspectRatio { ri } =
+    ri.x / ri.y
 
 
 criToWH : CRI -> Float2

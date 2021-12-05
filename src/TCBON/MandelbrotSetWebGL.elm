@@ -23,16 +23,16 @@ type alias XYRange =
     }
 
 
-width =
-    500
+canvasCRI : CRI
+canvasCRI =
+    let
+        width =
+            500
 
-
-height =
-    500
-
-
-aspectRatio =
-    width / height
+        height =
+            500
+    in
+    criFromLTWH 0 0 width height
 
 
 initialMandelCRI : CRI
@@ -46,12 +46,7 @@ initialMandelCRI =
        zoom: 11000000%
     -}
     --newCRI (vec -0.6 0) (vec 1.5 (1.5 / aspectRatio))
-    newCRI (vec -1.1203830302034128 -0.2915959449337175) (vec 1.5 (1.5 / aspectRatio))
-
-
-canvasCRI : CRI
-canvasCRI =
-    criFromLTWH 0 0 width height
+    newCRI (vec -1.1203830302034128 -0.2915959449337175) (vec 1.5 (1.5 / criAspectRatio canvasCRI))
 
 
 main : Program () Model Msg
@@ -104,7 +99,7 @@ init () url key =
     in
     { key = key
     , url = url
-    , mandel = newCRI c (vec rx (rx / aspectRatio))
+    , mandel = newCRI c (vec rx (rx / criAspectRatio canvasCRI))
     , drag = NotDragging
     }
         |> replaceUrl
@@ -355,12 +350,12 @@ viewMandelGL mandel =
             2
     in
     WebGL.toHtml
-        [ haWidth (width * canvasScalingFactor)
-        , haHeight (height * canvasScalingFactor)
+        [ haWidth (criWidth canvasCRI * canvasScalingFactor |> round)
+        , haHeight (criHeight canvasCRI * canvasScalingFactor |> round)
         , dBlock
         , bgc "pink"
-        , style "width" (String.fromFloat width ++ "px")
-        , style "height" (String.fromFloat height ++ "px")
+        , style "width" (String.fromFloat (criWidth canvasCRI) ++ "px")
+        , style "height" (String.fromFloat (criWidth canvasCRI) ++ "px")
         , Html.Events.on "mousedown" (JD.map OnCanvasMouseDown mouseEventDecoder)
         , Html.Events.on "keydown" (JD.map OnCanvasKeyDown keyEventDecoder)
         , Wheel.onWheel OnCanvasWheel
