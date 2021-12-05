@@ -122,6 +122,11 @@ init () url key =
 
 replaceUrlCmd : Model -> Cmd Msg
 replaceUrlCmd model =
+    Browser.Navigation.replaceUrl model.key (computeCurrentURL model)
+
+
+computeCurrentURL : Model -> String
+computeCurrentURL model =
     let
         c =
             model.mandel.c
@@ -129,14 +134,12 @@ replaceUrlCmd model =
         rx =
             model.mandel.ri.x
     in
-    Browser.Navigation.replaceUrl model.key
-        (model.initialUrl.path
-            ++ QB.toQuery
-                [ QB.string "cx" (String.fromFloat c.x)
-                , QB.string "cy" (String.fromFloat c.y)
-                , QB.string "rx" (String.fromFloat rx)
-                ]
-        )
+    model.initialUrl.path
+        ++ QB.toQuery
+            [ QB.string "cx" (String.fromFloat c.x)
+            , QB.string "cy" (String.fromFloat c.y)
+            , QB.string "rx" (String.fromFloat rx)
+            ]
 
 
 type Msg
