@@ -39,19 +39,19 @@ defaultRI =
     vec 1.5 1.5
 
 
-initialMandelCRI : CRI
-initialMandelCRI =
-    --criFromCD (vec -0.797 -0.157) 0.015
-    {-
-       cx: -1.1203830302034128
-       cy: -0.2915959449337175
-       w: 0.000027272727272727273
-       h: 0.000027272727272727273
-       zoom: 11000000%
-    -}
-    --newCRI (vec -0.6 0) (vec 1.5 (1.5 / aspectRatio))
-    --newCRI (vec -1.1203830302034128 -0.2915959449337175) (vec 1.5 (1.5 / criAspectRatio canvasCRI))
-    newMandelCRIFromCXYW -1.1203830302034128 -0.2915959449337175 3
+
+--initialMandelCRI : CRI
+--initialMandelCRI =
+--criFromCD (vec -0.797 -0.157) 0.015
+{-
+   cx: -1.1203830302034128
+   cy: -0.2915959449337175
+   w: 0.000027272727272727273
+   h: 0.000027272727272727273
+   zoom: 11000000%
+-}
+--newCRI (vec -0.6 0) (vec 1.5 (1.5 / aspectRatio))
+--newCRI (vec -1.1203830302034128 -0.2915959449337175) (vec 1.5 (1.5 / criAspectRatio canvasCRI))
 
 
 main : Program () Model Msg
@@ -97,7 +97,12 @@ init () url key =
         mandel =
             UrlP.parse p { url | path = "" }
                 |> Maybe.andThen identity
-                |> Maybe.withDefault initialMandelCRI
+                |> Maybe.withDefault
+                    (newMandelCRIFromCXYW
+                        -1.1203830302034128
+                        -0.2915959449337175
+                        3
+                    )
     in
     { key = key
     , initialUrl = url
