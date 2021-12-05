@@ -34,6 +34,11 @@ newMandelCRIFromCXYW x y w =
     newCRI (vec x y) (widthToRIWithAspectRatioOfCri canvasCRI w)
 
 
+minRI : Vec
+minRI =
+    vec 2 2
+
+
 initialMandelCRI : CRI
 initialMandelCRI =
     --criFromCD (vec -0.797 -0.157) 0.015
@@ -344,7 +349,7 @@ viewEl model =
 
 mandelZoomPct : CRI -> Int
 mandelZoomPct cri =
-    (initialMandelCRI.ri.x / cri.ri.x)
+    (minRI.x / cri.ri.x)
         * 100
         |> round
 
