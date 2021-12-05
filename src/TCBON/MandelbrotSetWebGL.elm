@@ -29,6 +29,11 @@ canvasCRI =
     criFromLTWH 0 0 width height
 
 
+newMandelCRIFromCXYW : Float -> Float -> Float -> CRI
+newMandelCRIFromCXYW x y w =
+    newCRI (vec x y) (widthToRIWithAspectRatioOfCri canvasCRI w)
+
+
 initialMandelCRI : CRI
 initialMandelCRI =
     --criFromCD (vec -0.797 -0.157) 0.015
@@ -40,7 +45,8 @@ initialMandelCRI =
        zoom: 11000000%
     -}
     --newCRI (vec -0.6 0) (vec 1.5 (1.5 / aspectRatio))
-    newCRI (vec -1.1203830302034128 -0.2915959449337175) (vec 1.5 (1.5 / criAspectRatio canvasCRI))
+    --newCRI (vec -1.1203830302034128 -0.2915959449337175) (vec 1.5 (1.5 / criAspectRatio canvasCRI))
+    newMandelCRIFromCXYW -1.1203830302034128 -0.2915959449337175 1.5
 
 
 main : Program () Model Msg
@@ -57,7 +63,7 @@ main =
 
 type alias Model =
     { key : Key
-    , url : Url
+    , initialUrl : Url
     , mandel : CRI
     , drag : Drag
     }
@@ -77,7 +83,7 @@ init () url key =
     let
         p =
             UrlP.query
-                (Q.map3 (Maybe.map3 (\x y w -> newCRI (vec x y) (widthToRIWithAspectRatioOfCri canvasCRI w)))
+                (Q.map3 (Maybe.map3 newMandelCRIFromCXYW)
                     (qFloat "cx")
                     (qFloat "cy")
                     (qFloat "w")
@@ -89,7 +95,7 @@ init () url key =
                 |> Maybe.withDefault initialMandelCRI
     in
     { key = key
-    , url = url
+    , initialUrl = url
     , mandel = mandel
     , drag = NotDragging
     }
@@ -120,7 +126,7 @@ replaceUrlCmd model =
             criWidth model.mandel
     in
     Browser.Navigation.replaceUrl model.key
-        (model.url.path
+        (model.initialUrl.path
             ++ QB.toQuery
                 [ QB.string "cx" (String.fromFloat c.x)
                 , QB.string "cy" (String.fromFloat c.y)
