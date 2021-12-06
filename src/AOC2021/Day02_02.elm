@@ -57,11 +57,11 @@ parseLine str =
 
 
 type alias Sub =
-    { h : Int, d : Int }
+    { h : Int, d : Int, a : Int }
 
 
 computeAnswer =
-    parseInput >> List.foldl update { h = 0, d = 0 } >> distance
+    parseInput >> List.foldl update { h = 0, d = 0, a = 0 } >> distance
 
 
 distance : Sub -> Int
@@ -70,16 +70,16 @@ distance { h, d } =
 
 
 update : Cmd -> Sub -> Sub
-update cmd ({ h, d } as sub) =
+update cmd ({ h, d, a } as sub) =
     case cmd of
         Forward n ->
-            { sub | h = h + n }
+            { sub | h = h + n, d = d + a * n }
 
         Up n ->
-            { sub | d = d - n }
+            { sub | a = a - n }
 
         Down n ->
-            { sub | d = d + n }
+            { sub | a = a + n }
 
 
 input =
