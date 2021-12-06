@@ -34,58 +34,13 @@ testInput =
     """
 
 
+parseInput : (String -> Maybe b) -> String -> List b
 parseInput parseLine_ =
     String.lines >> List.filterMap (String.trim >> parseLine_)
 
 
-type Cmd
-    = Forward Int
-    | Up Int
-    | Down Int
-
-
-parseCmd : String -> Maybe Cmd
-parseCmd str =
-    case String.split " " str of
-        "forward" :: ns :: [] ->
-            String.toInt ns |> Maybe.map Forward
-
-        "up" :: ns :: [] ->
-            String.toInt ns |> Maybe.map Up
-
-        "down" :: ns :: [] ->
-            String.toInt ns |> Maybe.map Down
-
-        _ ->
-            Nothing
-
-
-type alias Sub =
-    { h : Int, d : Int }
-
-
 computeAnswer =
-    parseInput parseCmd
-        >> List.foldl update { h = 0, d = 0 }
-        >> distance
-
-
-distance : Sub -> Int
-distance { h, d } =
-    h * d
-
-
-update : Cmd -> Sub -> Sub
-update cmd ({ h, d } as sub) =
-    case cmd of
-        Forward n ->
-            { sub | h = h + n }
-
-        Up n ->
-            { sub | d = d - n }
-
-        Down n ->
-            { sub | d = d + n }
+    parseInput (String.toList >> Just)
 
 
 input =
