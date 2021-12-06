@@ -4,7 +4,7 @@ import Html
 
 
 main =
-    Html.text (Debug.toString answer)
+    Html.text (Debug.toString <| computeAnswer2 input)
 
 
 testInput =
@@ -22,12 +22,24 @@ testInput =
     """
 
 
-answer =
-    case
-        testInput
-            |> String.lines
-            |> List.filterMap (String.trim >> String.toInt)
-    of
+parseInput : String -> List Int
+parseInput =
+    String.lines
+        >> List.filterMap (String.trim >> String.toInt)
+
+
+computeAnswer1 : String -> Int
+computeAnswer1 =
+    parseInput >> countIncreases
+
+
+computeAnswer2 : String -> Int
+computeAnswer2 =
+    parseInput >> toSlidingSum3 >> countIncreases
+
+
+toSlidingSum3 xs =
+    case xs of
         h1 :: h2 :: tail ->
             List.foldl
                 (\n ( ( p1, p2 ), sums ) ->
@@ -39,10 +51,9 @@ answer =
                 tail
                 |> Tuple.second
                 |> List.reverse
-                |> countIncreases
 
         _ ->
-            0
+            []
 
 
 countIncreases : List Int -> Int
