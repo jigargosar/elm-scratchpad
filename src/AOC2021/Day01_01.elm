@@ -1,10 +1,11 @@
 module AOC2021.Day01_01 exposing (..)
 
 import Html exposing (div, text)
+import Utils exposing (fontSize)
 
 
 main =
-    div []
+    div [ fontSize "22px" ]
         [ div []
             [ text "test answer: "
             , text (Debug.toString <| computeAnswer2 testInput)
