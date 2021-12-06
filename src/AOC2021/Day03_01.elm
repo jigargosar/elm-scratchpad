@@ -19,19 +19,23 @@ main =
 
 testInput =
     """
-    forward 5
-    down 5
-    forward 8
-    up 3
-    down 8
-    forward 2
+    00100
+    11110
+    10110
+    10111
+    10101
+    01111
+    00111
+    11100
+    10000
+    11001
+    00010
+    01010
     """
 
 
-parseInput : String -> List Cmd
-parseInput =
-    String.lines
-        >> List.filterMap (String.trim >> parseLine)
+parseInput parseLine_ =
+    String.lines >> List.filterMap (String.trim >> parseLine_)
 
 
 type Cmd
@@ -40,8 +44,8 @@ type Cmd
     | Down Int
 
 
-parseLine : String -> Maybe Cmd
-parseLine str =
+parseCmd : String -> Maybe Cmd
+parseCmd str =
     case String.split " " str of
         "forward" :: ns :: [] ->
             String.toInt ns |> Maybe.map Forward
@@ -61,7 +65,9 @@ type alias Sub =
 
 
 computeAnswer =
-    parseInput >> List.foldl update { h = 0, d = 0 } >> distance
+    parseInput parseCmd
+        >> List.foldl update { h = 0, d = 0 }
+        >> distance
 
 
 distance : Sub -> Int
