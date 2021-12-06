@@ -1,10 +1,19 @@
 module AOC2021.Day01_01 exposing (..)
 
-import Html
+import Html exposing (div, text)
 
 
 main =
-    Html.text (Debug.toString <| computeAnswer2 input)
+    div []
+        [ div []
+            [ text "test answer 2: "
+            , text (Debug.toString <| computeAnswer2 testInput)
+            ]
+        , div []
+            [ text "final answer 2: "
+            , text (Debug.toString <| computeAnswer2 input)
+            ]
+        ]
 
 
 testInput =
