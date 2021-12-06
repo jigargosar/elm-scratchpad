@@ -36,7 +36,7 @@ testInput =
 
 parseInput : (String -> Maybe b) -> String -> List b
 parseInput parseLine_ =
-    String.lines >> List.filterMap (String.trim >> parseLine_)
+    String.trim >> String.lines >> List.filterMap (String.trim >> parseLine_)
 
 
 computeAnswer =
