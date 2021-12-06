@@ -6,11 +6,11 @@ import Html exposing (div, text)
 main =
     div []
         [ div []
-            [ text "test answer 2: "
+            [ text "test answer: "
             , text (Debug.toString <| computeAnswer2 testInput)
             ]
         , div []
-            [ text "final answer 2: "
+            [ text "final answer: "
             , text (Debug.toString <| computeAnswer2 input)
             ]
         ]
