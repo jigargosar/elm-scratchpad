@@ -1,7 +1,6 @@
 module AOC2021.Day03_01 exposing (..)
 
-import Html exposing (div, text)
-import Utils exposing (fontSize)
+import Utils exposing (..)
 
 
 main =
@@ -41,6 +40,28 @@ parseInput parseLine_ =
 
 computeAnswer =
     parseInput (String.toList >> Just)
+        >> List.foldl update (List.repeat 5 ( 0, 0 ))
+
+
+type alias Acc =
+    List ( Int, Int )
+
+
+update : List Char -> Acc -> Acc
+update row =
+    List.map2
+        (\c ->
+            case c of
+                '0' ->
+                    mapFirst inc
+
+                '1' ->
+                    mapFirst inc
+
+                _ ->
+                    identity
+        )
+        row
 
 
 input =
