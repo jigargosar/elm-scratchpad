@@ -40,15 +40,32 @@ parseInput parseLine_ =
 
 computeAnswer =
     parseInput (String.toList >> Just)
-        >> List.foldl update (List.repeat 5 ( 0, 0 ))
+        >> List.foldl updateColCount (List.repeat 5 ( 0, 0 ))
+        >> List.foldr update ( 0, ( 0, 0 ) )
+
+
+update ( zeroes, ones ) ( n, ( e, g ) ) =
+    ( n + 1
+    , ( if ones > zeroes then
+            e + 2 ^ n
+
+        else
+            e
+      , if zeroes > ones then
+            g + 2 ^ n
+
+        else
+            g
+      )
+    )
 
 
 type alias Acc =
     List ( Int, Int )
 
 
-update : List Char -> Acc -> Acc
-update row =
+updateColCount : List Char -> Acc -> Acc
+updateColCount row =
     List.map2
         (\c ->
             case c of
