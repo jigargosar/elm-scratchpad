@@ -56,7 +56,7 @@ update row =
                     mapFirst inc
 
                 '1' ->
-                    mapFirst inc
+                    mapSecond inc
 
                 _ ->
                     identity
