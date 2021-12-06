@@ -8,11 +8,11 @@ main =
     div [ fontSize "22px" ]
         [ div []
             [ text "test answer: "
-            , text (Debug.toString <| computeAnswer2 testInput)
+            , text (Debug.toString <| computeAnswer testInput)
             ]
         , div []
             [ text "final answer: "
-            , text (Debug.toString <| computeAnswer2 input)
+            , text (Debug.toString <| computeAnswer input)
             ]
         ]
 
@@ -38,14 +38,9 @@ parseInput =
         >> List.filterMap (String.trim >> String.toInt)
 
 
-computeAnswer1 : String -> Int
-computeAnswer1 =
+computeAnswer : String -> Int
+computeAnswer =
     parseInput >> countIncreases
-
-
-computeAnswer2 : String -> Int
-computeAnswer2 =
-    parseInput >> toSlidingSum3 >> countIncreases
 
 
 toSlidingSum3 xs =
