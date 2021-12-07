@@ -445,12 +445,13 @@ viewMandelGL canvasCRI mandel =
 
         ( w, h ) =
             criDimension canvasCRI
+                |> mapEach round
     in
     WebGL.toHtml
-        [ attrWidth <| round <| w * resolution
-        , attrHeight <| round <| h * resolution
-        , styleWidthFPx w
-        , styleHeightFPx h
+        [ attrWidth <| w * resolution
+        , attrHeight <| h * resolution
+        , styleWidthIPx w
+        , styleHeightIPx h
         , dBlock
         , bgc "pink"
         , Html.Events.on "mousedown" (JD.map OnCanvasMouseDown mouseEventDecoder)

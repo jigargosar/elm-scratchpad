@@ -532,6 +532,14 @@ styleHeightFPx =
     styleHeight << fpx
 
 
+styleWidthIPx =
+    styleWidth << ipx
+
+
+styleHeightIPx =
+    styleHeight << ipx
+
+
 fpx : Float -> String
 fpx n =
     fromFloat n ++ "px"
@@ -794,6 +802,7 @@ mapBoth =
     Tuple.mapBoth
 
 
+mapEach : (a -> x) -> ( a, a ) -> ( x, x )
 mapEach fn =
     mapBoth fn fn
 
