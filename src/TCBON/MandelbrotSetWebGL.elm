@@ -1,6 +1,7 @@
 module TCBON.MandelbrotSetWebGL exposing (..)
 
 import Browser exposing (Document, UrlRequest(..))
+import Browser.Dom
 import Browser.Events
 import Browser.Navigation exposing (Key)
 import Html
@@ -10,6 +11,8 @@ import Html.Events.Extra.Wheel as Wheel
 import Html.Lazy
 import Json.Decode as JD exposing (Decoder)
 import Math.Vector2 exposing (Vec2, vec2)
+import Process
+import Task
 import Url exposing (Url)
 import Url.Builder as QB
 import Url.Parser as UrlP
@@ -160,7 +163,15 @@ init () url key =
     , canvas = canvasCRI
     }
         --|> withEffect replaceUrlCmd
-        |> withNoCmd
+        |> withCmd
+            (Process.sleep 100
+                |> Task.andThen (always Browser.Dom.getViewport)
+                |> Task.perform (Debug.log "vp" >> .viewport >> criFromViewport >> always NOP)
+            )
+
+
+criFromViewport viewport =
+    criFromLTWH 0 0 viewport.width viewport.height
 
 
 updateUrlEffect : Model -> Model -> Cmd msg
@@ -192,6 +203,7 @@ computeCurrentURL model =
 
 type Msg
     = NOP
+    | GotViewportCri CRI
     | OnCanvasMouseDown MouseEvent
     | OnMouseMove MouseEvent
     | OnMouseUp MouseEvent
@@ -203,8 +215,7 @@ type Msg
 subscriptions : Model -> Sub Msg
 subscriptions { drag } =
     Sub.batch
-        [ Browser.Events.onAnimationFrame (always NOP)
-        , case drag of
+        [ case drag of
             NotDragging ->
                 Sub.none
 
@@ -308,6 +319,15 @@ update msg model =
 
             else
                 ( model, Browser.Navigation.pushUrl model.key (computeCurrentURL model) )
+
+        GotViewportCri cri ->
+            model
+                --|> withCmd
+                --    (Process.sleep 2000
+                --        |> Task.andThen (always Browser.Dom.getViewport)
+                --        |> Task.perform (Debug.log "vp" >> .viewport >> criFromViewport >> always NOP)
+                --    )
+                |> withNoCmd
 
 
 updateOnUrlChange : Url -> Model -> Model
