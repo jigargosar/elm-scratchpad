@@ -442,14 +442,17 @@ viewMandelGL canvasCRI mandel =
     let
         canvasScalingFactor =
             2
+
+        ( w, h ) =
+            criDimension canvasCRI
     in
     WebGL.toHtml
-        [ attrWidth (criWidth canvasCRI * canvasScalingFactor |> round)
-        , attrHeight (criHeight canvasCRI * canvasScalingFactor |> round)
+        [ attrWidth <| round <| w * canvasScalingFactor
+        , attrHeight <| round <| h * canvasScalingFactor
+        , styleWidthFPx w
+        , styleHeightFPx h
         , dBlock
         , bgc "pink"
-        , styleWidth (String.fromFloat (criWidth canvasCRI) ++ "px")
-        , styleHeight (String.fromFloat (criHeight canvasCRI) ++ "px")
         , Html.Events.on "mousedown" (JD.map OnCanvasMouseDown mouseEventDecoder)
         , canvasKeyDownAttr
         , Wheel.onWheel OnCanvasWheel

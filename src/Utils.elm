@@ -524,6 +524,32 @@ styleHeight =
     style "height"
 
 
+styleWidthFPx =
+    styleWidth << fpx
+
+
+styleHeightFPx =
+    styleHeight << fpx
+
+
+fpx : Float -> String
+fpx n =
+    fromFloat n ++ "px"
+
+
+ipx : Int -> String
+ipx n =
+    fromInt n ++ "px"
+
+
+fromFloat =
+    String.fromFloat
+
+
+fromInt =
+    String.fromInt
+
+
 transitionTransform =
     style "transition" "transform 300ms"
 
