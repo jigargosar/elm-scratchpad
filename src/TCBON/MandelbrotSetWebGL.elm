@@ -146,7 +146,7 @@ init () url key =
         canvasCRI =
             let
                 width =
-                    500
+                    200
 
                 height =
                     500
@@ -417,7 +417,7 @@ viewMandelGL canvasCRI mandel =
         , dBlock
         , bgc "pink"
         , style "width" (String.fromFloat (criWidth canvasCRI) ++ "px")
-        , style "height" (String.fromFloat (criWidth canvasCRI) ++ "px")
+        , style "height" (String.fromFloat (criHeight canvasCRI) ++ "px")
         , Html.Events.on "mousedown" (JD.map OnCanvasMouseDown mouseEventDecoder)
         , canvasKeyDownAttr
         , Wheel.onWheel OnCanvasWheel
