@@ -62,23 +62,6 @@ main =
         }
 
 
-canvasCRI : CRI
-canvasCRI =
-    let
-        width =
-            500
-
-        height =
-            500
-    in
-    criFromLTWH 0 0 width height
-
-
-newMandelCRIFrom_CX_CY_RX : Float -> Float -> Float -> CRI
-newMandelCRIFrom_CX_CY_RX cx cy rx =
-    newCRI (vec cx cy) (rxToRIWithAspectRatioOfCri canvasCRI rx)
-
-
 rxToRIWithAspectRatioOfCri : CRI -> Float -> Vec
 rxToRIWithAspectRatioOfCri cri rx =
     vec rx (rx / criAspectRatio cri)
@@ -109,6 +92,7 @@ type alias Model =
     , currentUrl : Url
     , mandel : CRI
     , drag : Drag
+    , canvas : CRI
     }
 
 
@@ -121,40 +105,59 @@ qFloat str =
     Q.string str |> Q.map (Maybe.andThen String.toFloat)
 
 
-maybeMandelFromUrl : Url -> Maybe CRI
-maybeMandelFromUrl url =
+mandelFromUrl : CRI -> Url -> CRI
+mandelFromUrl canvasCRI =
     let
-        qsCRIParser =
-            UrlP.oneOf
-                [ UrlP.query
-                    (Q.map3 (Maybe.map3 newMandelCRIFrom_CX_CY_RX)
-                        (qFloat "cx")
-                        (qFloat "cy")
-                        (qFloat "rx")
-                    )
-                ]
+        newMandelCRIFrom_CX_CY_RX : Float -> Float -> Float -> CRI
+        newMandelCRIFrom_CX_CY_RX cx cy rx =
+            newCRI (vec cx cy) (rxToRIWithAspectRatioOfCri canvasCRI rx)
     in
-    UrlP.parse qsCRIParser { url | path = "" }
-        |> Maybe.andThen identity
-
-
-mandelFromUrl : Url -> CRI
-mandelFromUrl url =
-    maybeMandelFromUrl url
-        |> Maybe.withDefault
-            (newMandelCRIFrom_CX_CY_RX
-                -1.1203830302034128
-                -0.2915959449337175
-                defaultRI.x
-            )
+    let
+        maybeMandelFromUrl : Url -> Maybe CRI
+        maybeMandelFromUrl url =
+            let
+                qsCRIParser =
+                    UrlP.oneOf
+                        [ UrlP.query
+                            (Q.map3 (Maybe.map3 newMandelCRIFrom_CX_CY_RX)
+                                (qFloat "cx")
+                                (qFloat "cy")
+                                (qFloat "rx")
+                            )
+                        ]
+            in
+            UrlP.parse qsCRIParser { url | path = "" }
+                |> Maybe.andThen identity
+    in
+    \url ->
+        maybeMandelFromUrl url
+            |> Maybe.withDefault
+                (newMandelCRIFrom_CX_CY_RX
+                    -1.1203830302034128
+                    -0.2915959449337175
+                    defaultRI.x
+                )
 
 
 init : () -> Url -> Key -> ( Model, Cmd Msg )
 init () url key =
+    let
+        canvasCRI : CRI
+        canvasCRI =
+            let
+                width =
+                    500
+
+                height =
+                    500
+            in
+            criFromLTWH 0 0 width height
+    in
     { key = key
     , currentUrl = url
-    , mandel = mandelFromUrl url
+    , mandel = mandelFromUrl canvasCRI url
     , drag = NotDragging
+    , canvas = canvasCRI
     }
         --|> withEffect replaceUrlCmd
         |> withNoCmd
@@ -254,7 +257,7 @@ update msg model =
                 fixedPt =
                     e.mouseEvent.offsetPos
                         |> vFromFloat2
-                        |> rangeMapCRI canvasCRI model.mandel
+                        |> rangeMapCRI model.canvas model.mandel
 
                 scale_ =
                     1 + sign e.deltaY * 0.1
@@ -285,7 +288,7 @@ update msg model =
                         end =
                             vFromFloat2 e.page
                     in
-                    { model | drag = Dragging s end (panWithCanvasStartAndEnd s end model.mandel) }
+                    { model | drag = Dragging s end (panWithCanvasStartAndEnd s end model.canvas model.mandel) }
             , Cmd.none
             )
 
@@ -300,7 +303,7 @@ update msg model =
             )
 
         OnSave ->
-            if mandelFromUrl model.currentUrl == model.mandel then
+            if mandelFromUrl model.canvas model.currentUrl == model.mandel then
                 model |> withNoCmd
 
             else
@@ -309,7 +312,7 @@ update msg model =
 
 updateOnUrlChange : Url -> Model -> Model
 updateOnUrlChange url model =
-    { model | mandel = mandelFromUrl url, currentUrl = url }
+    { model | mandel = mandelFromUrl model.canvas url, currentUrl = url }
 
 
 zoomAroundBy : Vec -> Float -> CRI -> CRI
@@ -344,16 +347,16 @@ zoomAroundBy fixedPt scale_ cri =
     criZoomByAround fixedPt clampedScale cri
 
 
-panWithCanvasStartAndEnd : Vec -> Vec -> CRI -> CRI
-panWithCanvasStartAndEnd s e cri =
+panWithCanvasStartAndEnd : Vec -> Vec -> CRI -> CRI -> CRI
+panWithCanvasStartAndEnd s e canvas mandel =
     let
         rm =
-            rangeMapCRI canvasCRI cri
+            rangeMapCRI canvas mandel
 
         t =
             vFromTo (rm e) (rm s)
     in
-    criTranslate t cri
+    criTranslate t mandel
 
 
 panByWHFraction : Float2 -> CRI -> CRI
@@ -385,7 +388,7 @@ viewEl model =
     in
     div [ fontSize "30px" ]
         [ stylesNode "html,body{height:100%; background-color:#444;}"
-        , Html.Lazy.lazy viewMandelGL mandel
+        , Html.Lazy.lazy2 viewMandelGL model.canvas mandel
         , Html.a [ style "color" "#FFF", href (computeCurrentURL model) ] [ text "permalink" ]
         , div [] [ text ("cx: " ++ String.fromFloat mandel.c.x) ]
         , div [] [ text ("cy: " ++ String.fromFloat mandel.c.y) ]
@@ -402,8 +405,8 @@ mandelZoomPct cri =
         |> round
 
 
-viewMandelGL : CRI -> Html Msg
-viewMandelGL mandel =
+viewMandelGL : CRI -> CRI -> Html Msg
+viewMandelGL canvasCRI mandel =
     let
         canvasScalingFactor =
             2
