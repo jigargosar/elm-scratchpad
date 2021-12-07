@@ -588,7 +588,7 @@ fragmentShader =
             return complexSquared(c.x,c.y);
         }
 
-        const int maxT = 50 ;
+        const int maxT = 120 ;
 
         float mandel(vec2 p){
             vec2 t = p;
@@ -610,8 +610,7 @@ fragmentShader =
             else {
                 gl_FragColor = vec4(1.0,1.0,1.0, 1.0);
             }
-            // float gs =  sqrt(sqrt(mandel(v_pos2)));
-            float gs =  (sqrt(mandel(v_pos2)));
+            float gs = (sqrt(mandel(v_pos2)));
             gl_FragColor = vec4(gs, gs, gs, 1.0);
         }
     |]
