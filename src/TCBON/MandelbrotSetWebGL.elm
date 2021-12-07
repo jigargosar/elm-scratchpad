@@ -440,15 +440,15 @@ mandelZoomPct cri =
 viewMandelGL : CRI -> CRI -> Html Msg
 viewMandelGL canvasCRI mandel =
     let
-        canvasScalingFactor =
+        resolution =
             2
 
         ( w, h ) =
             criDimension canvasCRI
     in
     WebGL.toHtml
-        [ attrWidth <| round <| w * canvasScalingFactor
-        , attrHeight <| round <| h * canvasScalingFactor
+        [ attrWidth <| round <| w * resolution
+        , attrHeight <| round <| h * resolution
         , styleWidthFPx w
         , styleHeightFPx h
         , dBlock
