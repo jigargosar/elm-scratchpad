@@ -437,14 +437,6 @@ mandelZoomPct cri =
         |> round
 
 
-positionAbsolute =
-    style "position" "absolute"
-
-
-positionRelative =
-    style "position" "relative"
-
-
 viewMandelGL : CRI -> CRI -> Html Msg
 viewMandelGL canvasCRI mandel =
     let
@@ -456,16 +448,14 @@ viewMandelGL canvasCRI mandel =
         , haHeight (criHeight canvasCRI * canvasScalingFactor |> round)
         , dBlock
         , bgc "pink"
-        , style "width" (String.fromFloat (criWidth canvasCRI) ++ "px")
-        , style "height" (String.fromFloat (criHeight canvasCRI) ++ "px")
+        , styleWidth (String.fromFloat (criWidth canvasCRI) ++ "px")
+        , styleHeight (String.fromFloat (criHeight canvasCRI) ++ "px")
         , Html.Events.on "mousedown" (JD.map OnCanvasMouseDown mouseEventDecoder)
         , canvasKeyDownAttr
         , Wheel.onWheel OnCanvasWheel
         , HA.tabindex 0
         , HA.autofocus True
         , positionAbsolute
-
-        --, overflowHidden
         ]
         [ WebGL.entity vertexShader
             fragmentShader

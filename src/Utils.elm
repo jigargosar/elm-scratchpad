@@ -508,6 +508,22 @@ fontSize =
     style "font-size"
 
 
+positionAbsolute =
+    style "position" "absolute"
+
+
+positionRelative =
+    style "position" "relative"
+
+
+styleWidth =
+    style "width"
+
+
+styleHeight =
+    style "height"
+
+
 transitionTransform =
     style "transition" "transform 300ms"
 
