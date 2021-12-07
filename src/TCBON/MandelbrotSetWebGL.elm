@@ -261,10 +261,10 @@ update msg model =
                             panByWHFraction ( 0, frac ) model.mandel
 
                         "e" ->
-                            zoomAroundBy model.mandel.c 0.5 model.mandel
+                            zoomAroundBy model.mandel.c (1 - 0.1) model.mandel
 
                         "q" ->
-                            zoomAroundBy model.mandel.c 2 model.mandel
+                            zoomAroundBy model.mandel.c (1 + 0.1) model.mandel
 
                         _ ->
                             model.mandel
