@@ -569,6 +569,7 @@ fragmentShader : WebGL.Shader {} Uniforms { v_pos2 : Vec2 }
 fragmentShader =
     [glsl|
         precision mediump float;
+        uniform int maxT;
         varying vec2 v_pos2;
 
         float norm(float a, float b, float val){
@@ -590,11 +591,14 @@ fragmentShader =
             return complexSquared(c.x,c.y);
         }
 
-        const int maxT = 250;
+        const int maxTInternal = 5000;
 
         float mandel(vec2 p){
             vec2 t = p;
-            for(int i=0; i < maxT; i++ ){
+            for(int i=0; i < maxTInternal; i++ ){
+                if(i >= maxT){
+                    break;
+                }
                 if(dot(t,t) >= 4.0){
                     return norm(float(maxT), 0.0, float(i));
                 }
