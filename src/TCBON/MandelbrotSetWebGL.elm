@@ -419,8 +419,16 @@ viewEl model =
     div [ fontSize "30px" ]
         [ stylesNode "html,body{height:100%; background-color:#444; overflow:hidden;}"
         , Html.Lazy.lazy2 viewMandelGL model.canvas mandel
-        , div [ positionAbsolute, style "width" "100%" ]
-            [ Html.a [ style "color" "#FFF", href (computeCurrentURL model) ] [ text "permalink" ]
+        , div
+            [ positionAbsolute
+            , style "width" "100%"
+            , style "color" "#555"
+            ]
+            [ Html.a
+                [ style "color" "inherit"
+                , href (computeCurrentURL model)
+                ]
+                [ text "permalink" ]
             , div [] [ text ("cx: " ++ String.fromFloat mandel.c.x) ]
             , div [] [ text ("cy: " ++ String.fromFloat mandel.c.y) ]
             , div [] [ text ("w: " ++ String.fromFloat (criWidth mandel)) ]
