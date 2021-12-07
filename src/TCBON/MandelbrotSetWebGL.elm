@@ -217,6 +217,7 @@ type Msg
     | OnCanvasKeyDown KeyEvent
     | OnSave
     | OnCanvasWheel Wheel.Event
+    | ChangeMaxTByDelta Int
 
 
 subscriptions : Model -> Sub Msg
@@ -340,6 +341,9 @@ update msg model =
                 --        |> Task.perform (Debug.log "vp" >> .viewport >> criFromViewport >> always NOP)
                 --    )
                 |> withNoCmd
+
+        ChangeMaxTByDelta delta ->
+            { model | maxT = model.maxT + delta |> clamp 20 2000 } |> withNoCmd
 
 
 updateOnUrlChange : Url -> Model -> Model
@@ -499,6 +503,8 @@ canvasKeyDownAttr =
         keyMap =
             [ ( matchesNoModifiers [ "w", "s", "a", "d", "e", "q" ], OnCanvasKeyDown )
             , ( matchesCtrl [ "s", "S" ], always OnSave )
+            , ( matchesNoModifiers [ "z" ], always (ChangeMaxTByDelta -50) )
+            , ( matchesNoModifiers [ "c" ], always (ChangeMaxTByDelta 50) )
             ]
     in
     Html.Events.preventDefaultOn "keydown" (keyMapDecoderPreventDefault keyMap)
