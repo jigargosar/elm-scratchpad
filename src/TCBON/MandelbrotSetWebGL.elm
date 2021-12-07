@@ -160,7 +160,7 @@ init () url key =
     { key = key
     , currentUrl = url
     , mandel = mandelFromUrl canvasCRI url
-    , maxT = 15000
+    , maxT = 312
     , drag = NotDragging
     , canvas = canvasCRI
     }
@@ -627,7 +627,7 @@ fragmentShader =
 
 
         float customEase(float x){
-            return pow(x, 50.0);
+            return pow(x, 1.0);
         }
 
 
