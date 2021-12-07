@@ -160,7 +160,7 @@ init () url key =
     { key = key
     , currentUrl = url
     , mandel = mandelFromUrl canvasCRI url
-    , maxT = 250
+    , maxT = 5000
     , drag = NotDragging
     , canvas = canvasCRI
     }
@@ -625,14 +625,13 @@ fragmentShader =
 
 
 
+        float customEase(float x){
+            return pow(x, 50.0);
+        }
+
+
         void main () {
-            if (mandel(v_pos2) <= 0.0){
-                gl_FragColor = vec4(0.0,0.0,0.0, 1.0);
-            }
-            else {
-                gl_FragColor = vec4(1.0,1.0,1.0, 1.0);
-            }
-            float gs = ((mandel(v_pos2)));
+            float gs = (customEase(mandel(v_pos2)));
             gl_FragColor = vec4(gs, gs, gs, 1.0);
         }
     |]
