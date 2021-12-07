@@ -419,7 +419,7 @@ viewEl model =
     div [ fontSize "30px" ]
         [ stylesNode "html,body{height:100%; background-color:#444; overflow:hidden;}"
         , Html.Lazy.lazy2 viewMandelGL model.canvas mandel
-        , div [ positionAbsolute, style "top" "0", overflowHidden, style "width" "100%" ]
+        , div [ positionAbsolute, style "width" "100%" ]
             [ Html.a [ style "color" "#FFF", href (computeCurrentURL model) ] [ text "permalink" ]
             , div [] [ text ("cx: " ++ String.fromFloat mandel.c.x) ]
             , div [] [ text ("cy: " ++ String.fromFloat mandel.c.y) ]
@@ -463,8 +463,8 @@ viewMandelGL canvasCRI mandel =
         , Wheel.onWheel OnCanvasWheel
         , HA.tabindex 0
         , HA.autofocus True
+        , positionAbsolute
 
-        --, positionAbsolute
         --, overflowHidden
         ]
         [ WebGL.entity vertexShader
