@@ -422,14 +422,15 @@ viewEl model =
         , div
             [ positionAbsolute
             , style "width" "100%"
-            , style "color" "#555"
+            , style "color" "#000"
+            , style "text-shadow" "#FFF 1px 1px 1px,#FFF -1px -1px 1px"
             ]
             [ Html.a
                 [ style "color" "inherit"
                 , href (computeCurrentURL model)
                 ]
                 [ text "permalink" ]
-            , div [] [ text ("cx: " ++ String.fromFloat mandel.c.x) ]
+            , div [ style "text-stroke" "1px #FFF" ] [ text ("cx: " ++ String.fromFloat mandel.c.x) ]
             , div [] [ text ("cy: " ++ String.fromFloat mandel.c.y) ]
             , div [] [ text ("w: " ++ String.fromFloat (criWidth mandel)) ]
             , div [] [ text ("h: " ++ String.fromFloat (criHeight mandel)) ]
