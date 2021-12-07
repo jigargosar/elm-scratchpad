@@ -444,8 +444,8 @@ viewMandelGL canvasCRI mandel =
             2
     in
     WebGL.toHtml
-        [ haWidth (criWidth canvasCRI * canvasScalingFactor |> round)
-        , haHeight (criHeight canvasCRI * canvasScalingFactor |> round)
+        [ attrWidth (criWidth canvasCRI * canvasScalingFactor |> round)
+        , attrHeight (criHeight canvasCRI * canvasScalingFactor |> round)
         , dBlock
         , bgc "pink"
         , styleWidth (String.fromFloat (criWidth canvasCRI) ++ "px")

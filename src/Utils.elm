@@ -536,11 +536,11 @@ style =
     Html.Attributes.style
 
 
-haWidth =
+attrWidth =
     Html.Attributes.width
 
 
-haHeight =
+attrHeight =
     Html.Attributes.height
 
 
