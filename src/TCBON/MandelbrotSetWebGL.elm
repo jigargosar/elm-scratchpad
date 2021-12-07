@@ -95,6 +95,7 @@ type alias Model =
     , currentUrl : Url
     , mandel : CRI
     , maxT : Int
+    , colorPow : Float
     , drag : Drag
     , canvas : CRI
     }
@@ -160,7 +161,8 @@ init () url key =
     { key = key
     , currentUrl = url
     , mandel = mandelFromUrl canvasCRI url
-    , maxT = 312
+    , maxT = 400
+    , colorPow = 1
     , drag = NotDragging
     , canvas = canvasCRI
     }
@@ -431,7 +433,7 @@ viewEl model =
     in
     div [ fontSize "30px" ]
         [ stylesNode "html,body{height:100%; background-color:#444; overflow:hidden;}"
-        , Html.Lazy.lazy3 viewMandelGL model.canvas mandel model.maxT
+        , Html.Lazy.lazy4 viewMandelGL model.canvas mandel model.maxT model.colorPow
         , div
             [ positionAbsolute
             , style "width" "100%"
@@ -450,6 +452,7 @@ viewEl model =
             , div [] [ text ("h: " ++ String.fromFloat (criHeight mandel)) ]
             , div [] [ text ("zoom: " ++ String.fromInt (mandelZoomPct mandel) ++ "%") ]
             , div [] [ text ("maxT: " ++ String.fromInt model.maxT) ]
+            , div [] [ text ("colorPow: " ++ String.fromFloat model.colorPow) ]
             ]
         ]
 
@@ -461,8 +464,8 @@ mandelZoomPct cri =
         |> round
 
 
-viewMandelGL : CRI -> CRI -> Int -> Html Msg
-viewMandelGL canvas mandel maxT =
+viewMandelGL : CRI -> CRI -> Int -> Float -> Html Msg
+viewMandelGL canvas mandel maxT colorPow =
     let
         resolution =
             2
@@ -498,7 +501,7 @@ viewMandelGL canvas mandel maxT =
              , yMin = yMin
              , yMax = yMax
              , maxT = maxT
-             , colorPow = 4
+             , colorPow = colorPow
              }
             )
         ]
