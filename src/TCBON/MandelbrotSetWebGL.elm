@@ -627,7 +627,7 @@ fragmentShader =
 
 
         float customEase(float x){
-            return pow(x, 1.0);
+            return pow(x, 10.0);
         }
 
 
