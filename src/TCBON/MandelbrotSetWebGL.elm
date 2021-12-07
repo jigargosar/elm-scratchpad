@@ -422,7 +422,8 @@ viewEl model =
         , div
             [ positionAbsolute
             , style "width" "100%"
-            , style "color" "#FFF"
+            , style "color" "#f0f0f0"
+            , style "text-shadow" "#111 1px 1px 1px"
             , style "background-color" "rgba(64, 64, 64, 0.5)"
             ]
             [ Html.a
