@@ -460,7 +460,7 @@ viewMandelGL canvasCRI mandel =
     WebGL.toHtml
         [ attrWidth <| w * resolution
         , attrHeight <| h * resolution
-        , style "transition" "width,height 100ms"
+        , style "transition" "width,height 300ms"
         , styleWidthIPx w
         , styleHeightIPx h
         , dBlock
