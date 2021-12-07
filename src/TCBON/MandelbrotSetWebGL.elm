@@ -343,7 +343,7 @@ update msg model =
                 |> withNoCmd
 
         ChangeMaxTByDelta delta ->
-            { model | maxT = model.maxT + delta |> clamp 20 2000 } |> withNoCmd
+            { model | maxT = model.maxT + delta |> clamp 20 5000 } |> withNoCmd
 
 
 updateOnUrlChange : Url -> Model -> Model
@@ -625,7 +625,7 @@ fragmentShader =
             else {
                 gl_FragColor = vec4(1.0,1.0,1.0, 1.0);
             }
-            float gs = (sqrt(mandel(v_pos2)));
+            float gs = ((mandel(v_pos2)));
             gl_FragColor = vec4(gs, gs, gs, 1.0);
         }
     |]
