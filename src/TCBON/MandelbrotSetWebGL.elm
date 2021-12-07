@@ -417,14 +417,16 @@ viewEl model =
                     mandel_
     in
     div [ fontSize "30px" ]
-        [ stylesNode "html,body{height:100%; background-color:#444;}"
+        [ stylesNode "html,body{height:100%; background-color:#444; overflow:hidden;}"
         , Html.Lazy.lazy2 viewMandelGL model.canvas mandel
-        , Html.a [ style "color" "#FFF", href (computeCurrentURL model) ] [ text "permalink" ]
-        , div [] [ text ("cx: " ++ String.fromFloat mandel.c.x) ]
-        , div [] [ text ("cy: " ++ String.fromFloat mandel.c.y) ]
-        , div [] [ text ("w: " ++ String.fromFloat (criWidth mandel)) ]
-        , div [] [ text ("h: " ++ String.fromFloat (criHeight mandel)) ]
-        , div [] [ text ("zoom: " ++ String.fromInt (mandelZoomPct mandel) ++ "%") ]
+        , div [ positionAbsolute, style "top" "0", overflowHidden, style "width" "100%" ]
+            [ Html.a [ style "color" "#FFF", href (computeCurrentURL model) ] [ text "permalink" ]
+            , div [] [ text ("cx: " ++ String.fromFloat mandel.c.x) ]
+            , div [] [ text ("cy: " ++ String.fromFloat mandel.c.y) ]
+            , div [] [ text ("w: " ++ String.fromFloat (criWidth mandel)) ]
+            , div [] [ text ("h: " ++ String.fromFloat (criHeight mandel)) ]
+            , div [] [ text ("zoom: " ++ String.fromInt (mandelZoomPct mandel) ++ "%") ]
+            ]
         ]
 
 
@@ -433,6 +435,14 @@ mandelZoomPct cri =
     (defaultRI.x / cri.ri.x)
         * 100
         |> round
+
+
+positionAbsolute =
+    style "position" "absolute"
+
+
+positionRelative =
+    style "position" "relative"
 
 
 viewMandelGL : CRI -> CRI -> Html Msg
@@ -453,6 +463,9 @@ viewMandelGL canvasCRI mandel =
         , Wheel.onWheel OnCanvasWheel
         , HA.tabindex 0
         , HA.autofocus True
+
+        --, positionAbsolute
+        --, overflowHidden
         ]
         [ WebGL.entity vertexShader
             fragmentShader
