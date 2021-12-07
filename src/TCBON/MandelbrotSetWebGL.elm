@@ -326,7 +326,7 @@ update msg model =
                 ( model, Browser.Navigation.pushUrl model.key (computeCurrentURL model) )
 
         GotViewportCri cri ->
-            model
+            { model | canvas = cri }
                 --|> withCmd
                 --    (Process.sleep 2000
                 --        |> Task.andThen (always Browser.Dom.getViewport)
