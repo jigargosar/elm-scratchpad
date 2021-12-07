@@ -94,6 +94,7 @@ type alias Model =
     { key : Key
     , currentUrl : Url
     , mandel : CRI
+    , maxT : Int
     , drag : Drag
     , canvas : CRI
     }
@@ -159,6 +160,7 @@ init () url key =
     { key = key
     , currentUrl = url
     , mandel = mandelFromUrl canvasCRI url
+    , maxT = 250
     , drag = NotDragging
     , canvas = canvasCRI
     }
@@ -418,7 +420,7 @@ viewEl model =
     in
     div [ fontSize "30px" ]
         [ stylesNode "html,body{height:100%; background-color:#444; overflow:hidden;}"
-        , Html.Lazy.lazy2 viewMandelGL model.canvas mandel
+        , Html.Lazy.lazy3 viewMandelGL model.canvas mandel model.maxT
         , div
             [ positionAbsolute
             , style "width" "100%"
@@ -447,14 +449,14 @@ mandelZoomPct cri =
         |> round
 
 
-viewMandelGL : CRI -> CRI -> Html Msg
-viewMandelGL canvasCRI mandel =
+viewMandelGL : CRI -> CRI -> Int -> Html Msg
+viewMandelGL canvas mandel maxT =
     let
         resolution =
             2
 
         ( w, h ) =
-            criDimension canvasCRI
+            criDimension canvas
                 |> mapEach round
     in
     WebGL.toHtml
@@ -483,7 +485,7 @@ viewMandelGL canvasCRI mandel =
              , xMax = xMax
              , yMin = yMin
              , yMax = yMax
-             , maxT = 250
+             , maxT = maxT
              }
             )
         ]
