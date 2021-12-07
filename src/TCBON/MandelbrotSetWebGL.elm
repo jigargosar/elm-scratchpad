@@ -588,7 +588,7 @@ fragmentShader =
             return complexSquared(c.x,c.y);
         }
 
-        const int maxT = 250 ;
+        const int maxT = 250;
 
         float mandel(vec2 p){
             vec2 t = p;
