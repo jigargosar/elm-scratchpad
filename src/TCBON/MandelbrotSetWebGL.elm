@@ -437,17 +437,6 @@ viewMandelGL mandel =
         ]
 
 
-jdFilter pred =
-    JD.andThen
-        (\v ->
-            if pred v then
-                JD.succeed v
-
-            else
-                JD.fail "pred failed"
-        )
-
-
 canvasKeyDownAttr : Html.Attribute Msg
 canvasKeyDownAttr =
     let
