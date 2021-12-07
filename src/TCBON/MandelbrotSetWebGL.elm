@@ -164,9 +164,14 @@ init () url key =
     }
         --|> withEffect replaceUrlCmd
         |> withCmd
-            (Process.sleep 100
+            (Process.sleep 0
                 |> Task.andThen (always Browser.Dom.getViewport)
-                |> Task.perform (Debug.log "vp" >> .viewport >> criFromViewport >> always NOP)
+                |> Task.perform
+                    (Debug.log "Dom.getViewport"
+                        >> .viewport
+                        >> criFromViewport
+                        >> GotViewportCri
+                    )
             )
 
 
