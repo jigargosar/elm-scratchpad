@@ -326,7 +326,12 @@ update msg model =
                 ( model, Browser.Navigation.pushUrl model.key (computeCurrentURL model) )
 
         GotViewportCri cri ->
-            { model | canvas = cri }
+            { model
+                | canvas = cri
+                , mandel =
+                    newCRI model.mandel.c
+                        (rxToRIWithAspectRatioOfCri cri model.mandel.ri.x)
+            }
                 --|> withCmd
                 --    (Process.sleep 2000
                 --        |> Task.andThen (always Browser.Dom.getViewport)
