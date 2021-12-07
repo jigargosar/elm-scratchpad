@@ -540,6 +540,16 @@ attrWidth =
     Html.Attributes.width
 
 
+tabindex : Int -> Attribute msg
+tabindex =
+    Html.Attributes.tabindex
+
+
+autofocus : Bool -> Attribute msg
+autofocus =
+    Html.Attributes.autofocus
+
+
 attrHeight =
     Html.Attributes.height
 

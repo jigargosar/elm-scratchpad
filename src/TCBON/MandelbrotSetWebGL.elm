@@ -453,8 +453,8 @@ viewMandelGL canvasCRI mandel =
         , Html.Events.on "mousedown" (JD.map OnCanvasMouseDown mouseEventDecoder)
         , canvasKeyDownAttr
         , Wheel.onWheel OnCanvasWheel
-        , HA.tabindex 0
-        , HA.autofocus True
+        , tabindex 0
+        , autofocus True
         , positionAbsolute
         ]
         [ WebGL.entity vertexShader
