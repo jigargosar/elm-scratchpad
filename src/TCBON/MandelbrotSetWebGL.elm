@@ -438,6 +438,7 @@ viewEl model =
             , div [] [ text ("w: " ++ String.fromFloat (criWidth mandel)) ]
             , div [] [ text ("h: " ++ String.fromFloat (criHeight mandel)) ]
             , div [] [ text ("zoom: " ++ String.fromInt (mandelZoomPct mandel) ++ "%") ]
+            , div [] [ text ("maxT: " ++ String.fromInt model.maxT) ]
             ]
         ]
 
