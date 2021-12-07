@@ -162,7 +162,7 @@ init () url key =
     , currentUrl = url
     , mandel = mandelFromUrl canvasCRI url
     , maxT = 400
-    , colorPow = 1
+    , colorPow = 1.5
     , drag = NotDragging
     , canvas = canvasCRI
     }
