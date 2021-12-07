@@ -160,7 +160,7 @@ init () url key =
     { key = key
     , currentUrl = url
     , mandel = mandelFromUrl canvasCRI url
-    , maxT = 5000
+    , maxT = 15000
     , drag = NotDragging
     , canvas = canvasCRI
     }
@@ -348,7 +348,7 @@ update msg model =
                     toFloat model.maxT
                         * frac
                         |> round
-                        |> clamp 20 5000
+                        |> clamp 20 50000
             }
                 |> withNoCmd
 
@@ -587,6 +587,8 @@ fragmentShader =
         precision mediump float;
         uniform int maxT;
         varying vec2 v_pos2;
+        const int maxTInternal = 50000;
+
 
         float norm(float a, float b, float val){
                     return (val - a) / (b - a);
@@ -607,7 +609,6 @@ fragmentShader =
             return complexSquared(c.x,c.y);
         }
 
-        const int maxTInternal = 5000;
 
         float mandel(vec2 p){
             vec2 t = p;
