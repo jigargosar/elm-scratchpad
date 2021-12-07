@@ -1147,6 +1147,11 @@ withNoCmd =
     pairTo Cmd.none
 
 
+withCmd : Cmd msg -> model -> ( model, Cmd msg )
+withCmd cmd model =
+    ( model, cmd )
+
+
 withEffect : (model -> Cmd msg) -> model -> ( model, Cmd msg )
 withEffect effect model =
     ( model, effect model )
