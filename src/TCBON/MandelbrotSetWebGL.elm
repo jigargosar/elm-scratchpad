@@ -5,7 +5,7 @@ import Browser.Dom
 import Browser.Events
 import Browser.Navigation exposing (Key)
 import Html
-import Html.Attributes as HA exposing (href)
+import Html.Attributes exposing (href)
 import Html.Events
 import Html.Events.Extra.Wheel as Wheel
 import Html.Lazy
@@ -483,6 +483,7 @@ viewMandelGL canvasCRI mandel =
              , xMax = xMax
              , yMin = yMin
              , yMax = yMax
+             , maxT = 250
              }
             )
         ]
@@ -528,6 +529,7 @@ type alias Uniforms =
     , xMax : Float
     , yMin : Float
     , yMax : Float
+    , maxT : Int
     }
 
 
