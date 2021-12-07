@@ -498,6 +498,7 @@ viewMandelGL canvas mandel maxT =
              , yMin = yMin
              , yMax = yMax
              , maxT = maxT
+             , colorPow = 4
              }
             )
         ]
@@ -546,6 +547,7 @@ type alias Uniforms =
     , yMin : Float
     , yMax : Float
     , maxT : Int
+    , colorPow : Float
     }
 
 
@@ -586,6 +588,7 @@ fragmentShader =
     [glsl|
         precision mediump float;
         uniform int maxT;
+        uniform float colorPow;
         varying vec2 v_pos2;
         const int maxTInternal = 50000;
 
@@ -627,7 +630,7 @@ fragmentShader =
 
 
         float customEase(float x){
-            return pow(x, 10.0);
+            return pow(x, colorPow);
         }
 
 
