@@ -38,5 +38,5 @@ view c m =
     in
     [ rectangle black s.width s.height
     , square black minV
-    , circle green (pct 5)
+    , circle green (pct 1)
     ]
