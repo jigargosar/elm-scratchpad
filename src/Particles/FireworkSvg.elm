@@ -20,7 +20,7 @@ main =
 
 
 type alias Model =
-    { now : Float, particles : List Particle }
+    { now : Int, particles : List Particle }
 
 
 init : () -> ( Model, Cmd Msg )
@@ -35,12 +35,12 @@ init () =
 
 
 type Msg
-    = Frame Float
+    = Frame Int
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Browser.Events.onAnimationFrame (Time.posixToMillis >> toFloat >> Frame)
+    Browser.Events.onAnimationFrame (Time.posixToMillis >> Frame)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -52,13 +52,17 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
+    let
+        fr =
+            secondsToFractionOverNowMills 3 model.now
+    in
     svg
         [ viewBoxC 300 300
         , noFill
         , noStroke
         , bgc black
         ]
-        [ group [] (List.map (viewParticle 0.5) model.particles)
+        [ group [] (List.map (viewParticle fr) model.particles)
         ]
 
 
