@@ -1,6 +1,7 @@
 module Particles.FireworkSvg exposing (..)
 
 import Color
+import Random exposing (Generator)
 import Utils exposing (..)
 
 
@@ -11,11 +12,16 @@ main =
         , noStroke
         , bgc black
         ]
-        [ trail vZero (vec 100 100)
+        [ trail 0.1 vZero (vec 100 100)
         ]
 
 
-trail s e =
+randomHue : Generator Float
+randomHue =
+    Random.float 0 1
+
+
+trail h s e =
     normSamples 50
         |> List.map
             (\n ->
@@ -24,7 +30,7 @@ trail s e =
                         vLerp s e n
                 in
                 circle 5
-                    [ fill <| hsla 0.1 1 0.5 n
+                    [ fill <| hsla h 1 0.5 n
                     , xf [ mv p ]
                     ]
             )
