@@ -35,32 +35,30 @@ view c m =
 
         pct n =
             n * oneHundredth
+
+        lineLen =
+            (s.width / 4) |> round |> toFloat
     in
     [ rectangle black s.width s.height
     , square black minV
 
     --, circle green (pct 1)
+    , square white (lineLen * 2)
     , let
-        len =
-            s.width / 4
-
         r =
-            pct 5
-
-        foo =
-            100
+            pct 0.5
 
         samples =
-            (len / (r * 2)) * foo
+            lineLen
+                |> always (lineLen / (r * 2))
+                |> round
       in
-      List.range 0 (round samples)
+      List.range 0 samples
         |> List.map
-            (toFloat
-                >> (\i ->
-                        circle green r
-                            |> moveRight (i * (len / samples))
-                            |> fade 0.5
-                   )
+            (\i ->
+                circle green r
+                    |> moveRight (toFloat i * (lineLen / toFloat samples))
+                    |> fade 0.5
             )
         |> group
 
