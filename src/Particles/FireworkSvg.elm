@@ -38,8 +38,14 @@ particle nl nv h =
         ( nr, theta ) =
             vToPolar nv
 
+        vInitial =
+            vZero
+
         e =
-            vScale 100 nv
+            nl
+                |> rangeMap ( 0, 0.5 ) ( 0, 1 )
+                |> clamp 0 1
+                |> vLerp vInitial (vScale 100 nv)
 
         s =
             vZero
