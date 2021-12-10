@@ -1,6 +1,7 @@
 module Particles.FireworkPlayground exposing (..)
 
 import Playground exposing (..)
+import Utils as U
 
 
 main =
@@ -29,4 +30,19 @@ view c m =
     in
     [ rectangle black s.width s.height
     , square white 400 |> fade 0.1
+    , strokeLine white 20 0 0 0 200 |> fade 0.9
     ]
+
+
+strokeLine co th a b c d =
+    let
+        ( s, e ) =
+            ( U.vec a b, U.vec c d )
+
+        sh =
+            circle co (th / 2)
+
+        viewPt { x, y } =
+            sh |> move x y
+    in
+    group [ viewPt s, viewPt e ]
