@@ -87,11 +87,3 @@ trail h s e aa =
                     ]
             )
         |> group aa
-
-
-hsl h s l =
-    Color.hsl h s l |> Color.toCssString
-
-
-hsla h s l a =
-    Color.hsla h s l a |> Color.toCssString

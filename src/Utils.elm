@@ -477,6 +477,16 @@ mv { x, y } =
     mv2 x y
 
 
+hsl : Float -> Float -> Float -> String
+hsl h s l =
+    Color.hsl h s l |> Color.toCssString
+
+
+hsla : Float -> Float -> Float -> Float -> String
+hsla h s l a =
+    Color.hsla h s l a |> Color.toCssString
+
+
 black =
     grayN 0.1
 
