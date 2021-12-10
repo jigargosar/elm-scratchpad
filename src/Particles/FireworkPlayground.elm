@@ -44,5 +44,19 @@ strokeLine co th a b c d =
 
         viewPt { x, y } =
             sh |> move x y
+
+        sampleCount =
+            10
+
+        pts =
+            List.range 1 sampleCount
+                |> List.map (toFloat >> U.norm 1 sampleCount)
+                |> List.map (\i -> U.vScale i (U.vFromTo s e))
+                |> List.map viewPt
     in
-    group [ viewPt s, viewPt e ]
+    group
+        ((\_ ->
+            [ viewPt s, viewPt e ]
+         )
+            |> always pts
+        )
