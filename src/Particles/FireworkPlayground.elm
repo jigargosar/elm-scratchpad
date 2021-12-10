@@ -37,11 +37,16 @@ view c m =
         (U.vec 200 200)
         |> fade 0
     , let
+        dur =
+            4
+
         ( st, e ) =
-            ( U.vec 0 0
+            ( U.vec
+                (anim dur 0 100 c.time)
+                (anim dur 0 100 c.time)
             , U.vec
-                (anim 2 0 200 c.time)
-                (anim 2 0 200 c.time)
+                (anim dur 0 200 c.time)
+                (anim dur 0 200 c.time)
             )
       in
       group
