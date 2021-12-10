@@ -1,12 +1,50 @@
 module Particles.FireworkSvg exposing (..)
 
+import Browser
+import Browser.Events
 import Random exposing (Generator)
 import Svg exposing (Svg)
 import Svg.Attributes as SA
+import Time
 import Utils exposing (..)
 
 
+main : Program () Model Msg
 main =
+    Browser.element
+        { init = init
+        , update = update
+        , subscriptions = subscriptions
+        , view = view
+        }
+
+
+type alias Model =
+    { now : Float }
+
+
+init : () -> ( Model, Cmd Msg )
+init () =
+    ( { now = 0 }, Cmd.none )
+
+
+type Msg
+    = Frame Float
+
+
+subscriptions : Model -> Sub Msg
+subscriptions _ =
+    Browser.Events.onAnimationFrame (Time.posixToMillis >> toFloat >> Frame)
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        Frame now ->
+            ( { model | now = now }, Cmd.none )
+
+
+view _ =
     let
         particles : List Particle
         particles =
