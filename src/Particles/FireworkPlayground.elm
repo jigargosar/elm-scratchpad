@@ -46,7 +46,7 @@ strokeLine co th a b c d =
             sh |> move x y
 
         sampleCount =
-            10
+            100
 
         pts =
             List.range 1 sampleCount
