@@ -40,6 +40,7 @@ type Msg
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
+    --Time.every (1000 / 10) (Time.posixToMillis >> Frame)
     Browser.Events.onAnimationFrame (Time.posixToMillis >> Frame)
 
 
