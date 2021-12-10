@@ -20,12 +20,18 @@ main =
 
 
 type alias Model =
-    { now : Float }
+    { now : Float, particles : List Particle }
 
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { now = 0 }, Cmd.none )
+    let
+        particles : List Particle
+        particles =
+            Random.step randomParticles (Random.initialSeed 0)
+                |> first
+    in
+    ( { now = 0, particles = particles }, Cmd.none )
 
 
 type Msg
@@ -45,20 +51,14 @@ update msg model =
 
 
 view : Model -> Html Msg
-view _ =
-    let
-        particles : List Particle
-        particles =
-            Random.step randomParticles (Random.initialSeed 0)
-                |> first
-    in
+view model =
     svg
         [ viewBoxC 300 300
         , noFill
         , noStroke
         , bgc black
         ]
-        [ group [] (List.map (viewParticle 0.5) particles)
+        [ group [] (List.map (viewParticle 0.5) model.particles)
         ]
 
 
