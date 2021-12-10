@@ -41,7 +41,11 @@ particle nl nv h =
         s =
             vZero
     in
-    trail h s e [ SA.opacity <| fromFloat 1 ]
+    trail h
+        s
+        e
+        [ SA.opacity <| fromFloat <| rangeMap ( 0.5, 1 ) ( 1, 0 ) nl
+        ]
 
 
 randomHue : Generator Float
