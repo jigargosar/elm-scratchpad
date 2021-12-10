@@ -41,14 +41,20 @@ particle nl nv h =
         vInitial =
             vZero
 
+        maxLen =
+            100
+
         e =
             nl
                 |> rangeMap ( 0, 0.5 ) ( 0, 1 )
                 |> clamp 0 1
-                |> vLerp vInitial (vScale 100 nv)
+                |> vLerp vInitial (vScale maxLen nv)
 
         s =
-            vZero
+            nl
+                |> rangeMap ( 0.5, 1 ) ( 0, 1 )
+                |> clamp 0 1
+                |> vLerp vInitial (vScale maxLen nv)
     in
     trail h
         s
