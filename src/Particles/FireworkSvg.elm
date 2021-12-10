@@ -44,6 +44,7 @@ update msg model =
             ( { model | now = now }, Cmd.none )
 
 
+view : Model -> Html Msg
 view _ =
     let
         particles : List Particle
