@@ -27,13 +27,17 @@ trails =
 randomTrail : Generator (Svg msg)
 randomTrail =
     Random.map2
-        (particle 1)
+        (particle 0.5)
         randomVec
         randomHue
 
 
 particle nl nv h =
-    trail h vZero (vScale 100 nv)
+    let
+        ( s, e ) =
+            ( vZero, vScale 100 nv )
+    in
+    trail h s e
 
 
 randomHue : Generator Float
