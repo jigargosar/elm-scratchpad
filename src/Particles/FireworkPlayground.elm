@@ -39,13 +39,12 @@ view c m =
     ]
 
 
+placeShapeOnLine : Int -> Shape -> U.Vec -> U.Vec -> Shape
 placeShapeOnLine sampleCount sh s e =
-    let
-        pts =
-            U.sampleVecFromTo sampleCount s e
-                |> List.map (mvSh sh)
-    in
-    group pts
+    group
+        (U.sampleVecFromTo sampleCount s e
+            |> List.map (mvSh sh)
+        )
 
 
 mvSh : Shape -> U.Vec -> Shape
