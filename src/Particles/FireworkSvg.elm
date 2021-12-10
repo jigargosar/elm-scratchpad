@@ -80,7 +80,7 @@ randomParticles =
                 )
                 randomHue
     in
-    Random.list 50 pg
+    Random.list 70 pg
         |> Random.map
             (List.sortBy (first >> vLenSquared >> negate))
 
@@ -102,14 +102,14 @@ viewParticle nl ( nv, h ) =
 
         s =
             nl
-                |> rangeMap ( 0.4, 1 ) ( 0, 1 )
+                |> rangeMap ( 0.5, 1 ) ( 0, 1 )
                 |> clamp 0 1
                 |> vLerp vInitial (vScale maxLen nv)
     in
     viewTrail h
         s
         e
-        [ SA.opacity <| fromFloat <| rangeMap ( 0.3, 1 ) ( 1, 0 ) nl
+        [ SA.opacity <| fromFloat <| rangeMap ( 0.2, 1 ) ( 1, 0 ) nl
         ]
 
 
@@ -126,7 +126,7 @@ viewTrail h s e aa =
                     p =
                         vLerp s e n
                 in
-                circle 2
+                circle 1
                     [ fill <| hsla h 1 0.5 (n * n * n)
                     , xf [ mv p ]
                     ]
