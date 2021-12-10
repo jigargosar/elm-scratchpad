@@ -16,10 +16,24 @@ main =
 
 
 trail s e =
-    sampleVecFromTo 50 s e
-        |> List.map (\p -> circle 5 [ xf [ mv p ] ])
-        |> group [ fill <| hsl 0.1 0.5 0.5 ]
+    normSamples 50
+        |> List.map
+            (\n ->
+                let
+                    p =
+                        vLerp s e n
+                in
+                circle 5
+                    [ fill <| hsla 0.1 0.5 0.5 n
+                    , xf [ mv p ]
+                    ]
+            )
+        |> group []
 
 
 hsl h s l =
     Color.hsl h s l |> Color.toCssString
+
+
+hsla h s l a =
+    Color.hsla h s l a |> Color.toCssString
