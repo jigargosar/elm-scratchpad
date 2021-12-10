@@ -4,4 +4,7 @@ import Utils exposing (..)
 
 
 main =
-    svg [] []
+    svg
+        [ viewBoxC 300 300
+        ]
+        []
