@@ -38,7 +38,11 @@ view c m =
         |> fade 0
     , let
         ( st, e ) =
-            ( U.vec 400 400, U.vec 300 300 )
+            ( U.vec 0 0
+            , U.vec
+                (anim 2 0 200 c.time)
+                (anim 2 0 200 c.time)
+            )
       in
       group
         (U.normSamples 50
@@ -50,9 +54,6 @@ view c m =
                         |> fade (U.lerp 0 1 t)
                 )
         )
-        |> move
-            (anim 2 0 -800 c.time)
-            (anim 2 0 -800 c.time)
     ]
 
 
