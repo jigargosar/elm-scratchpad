@@ -21,16 +21,18 @@ main =
 
 trails : List (Svg msg)
 trails =
-    Random.step (Random.list 40 randomTrail) (Random.initialSeed 0)
+    Random.step (randomParticles 0.5) (Random.initialSeed 0)
         |> first
 
 
-randomTrail : Generator (Svg msg)
-randomTrail =
-    Random.map2
-        (particle 0.5)
-        randomVec
-        randomHue
+randomParticles : Float -> Generator (List (Svg msg))
+randomParticles nl =
+    Random.list 40
+        (Random.map2
+            (particle nl)
+            randomVec
+            randomHue
+        )
 
 
 particle nl nv h =
