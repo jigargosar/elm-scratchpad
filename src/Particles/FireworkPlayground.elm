@@ -26,20 +26,7 @@ view c m =
         s : Screen
         s =
             c.screen
-
-        minV =
-            min s.width s.height
-
-        oneHundredth =
-            minV / 100
-
-        pct n =
-            n * oneHundredth
-
-        lineLen =
-            (s.width / 4) |> round |> toFloat
     in
     [ rectangle black s.width s.height
-    , square black (pct 50)
-    , square white (lineLen * 2)
+    , square white 400
     ]
