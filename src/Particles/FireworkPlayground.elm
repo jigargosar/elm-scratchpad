@@ -35,10 +35,10 @@ view c m =
         (circle white 5 |> fade 1.2)
         (U.vec 0 0)
         (U.vec 200 200)
-        |> fade 1
+        |> fade 0
     , let
         ( st, e ) =
-            ( U.vec -100 -100, U.vec -200 -200 )
+            ( U.vec 400 400, U.vec 300 300 )
       in
       group
         (U.normSamples 50
@@ -50,6 +50,9 @@ view c m =
                         |> fade (U.lerp 0 1 t)
                 )
         )
+        |> move
+            (spin 2 c.time |> U.rangeMap ( 0, 360 ) ( 0, -500 ))
+            (spin 2 c.time |> U.rangeMap ( 0, 360 ) ( 0, -500 ))
     ]
 
 
