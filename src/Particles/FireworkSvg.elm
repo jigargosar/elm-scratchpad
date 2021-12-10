@@ -14,7 +14,14 @@ main =
         , bgc black
         ]
         [ trail 0.1 vZero (vec 100 100)
+        , group [] trails
         ]
+
+
+trails : List (Svg msg)
+trails =
+    Random.step (Random.list 20 randomTrail) (Random.initialSeed 0)
+        |> first
 
 
 randomTrail : Generator (Svg msg)
