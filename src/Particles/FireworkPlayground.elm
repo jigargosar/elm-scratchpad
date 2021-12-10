@@ -30,7 +30,7 @@ view c m =
     in
     [ rectangle black s.width s.height
     , square white 400 |> fade 0.1
-    , strokeLine white 20 0 0 0 200 |> fade 1
+    , strokeLine white 20 -200 -200 200 200 |> fade 1
     ]
 
 
@@ -53,7 +53,7 @@ strokeLine co th a b c d =
         pts =
             List.range 1 sampleCount
                 |> List.map (toFloat >> U.norm 1 sampleCount)
-                |> List.map (\i -> U.vScale i (U.vFromTo s e))
+                |> List.map (\i -> U.vScale i (U.vFromTo s e) |> U.vAdd s)
                 |> List.map viewPt
     in
     group pts
