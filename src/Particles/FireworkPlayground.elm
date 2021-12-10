@@ -48,13 +48,8 @@ strokeLine co th a b c d =
                 |> move x y
                 |> fade 0.1
 
-        sampleCount =
-            100
-
         pts =
-            List.range 1 sampleCount
-                |> List.map (toFloat >> U.norm 1 sampleCount)
-                |> List.map (\i -> U.vScale i (U.vFromTo s e) |> U.vAdd s)
+            U.sampleVecFromTo 100 s e
                 |> List.map viewPt
     in
     group pts

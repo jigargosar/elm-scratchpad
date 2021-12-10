@@ -280,6 +280,13 @@ vec =
     Vec
 
 
+sampleVecFromTo : Int -> Vec -> Vec -> List Vec
+sampleVecFromTo sampleCount s e =
+    List.range 1 sampleCount
+        |> List.map (toFloat >> norm 1 (toFloat sampleCount))
+        |> List.map (\i -> vScale i (vFromTo s e) |> vAdd s)
+
+
 adjacentUnitVectors : List Vec
 adjacentUnitVectors =
     [ vec -1 0
