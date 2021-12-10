@@ -3,6 +3,7 @@ module Particles.FireworkSvg exposing (..)
 import Color
 import Random exposing (Generator)
 import Svg exposing (Svg)
+import Svg.Attributes as SA
 import Utils exposing (..)
 
 
@@ -34,10 +35,13 @@ randomTrail =
 
 particle nl nv h =
     let
-        ( s, e ) =
-            ( vZero, vScale 100 nv )
+        e =
+            vScale 100 nv
+
+        s =
+            vZero
     in
-    trail h s e
+    trail h s e [ SA.opacity <| fromFloat 1 ]
 
 
 randomHue : Generator Float
@@ -45,8 +49,7 @@ randomHue =
     Random.float 0 1
 
 
-trail : Float -> Vec -> Vec -> Svg msg
-trail h s e =
+trail h s e aa =
     normSamples 50
         |> List.map
             (\n ->
@@ -59,7 +62,7 @@ trail h s e =
                     , xf [ mv p ]
                     ]
             )
-        |> group []
+        |> group aa
 
 
 hsl h s l =
