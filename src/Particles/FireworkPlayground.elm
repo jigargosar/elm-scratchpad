@@ -56,6 +56,10 @@ view c m =
     ]
 
 
+anim dur from to t =
+    spin dur t |> U.rangeMap ( 0, 360 ) ( from, to )
+
+
 placeShapeOnLine : Int -> Shape -> U.Vec -> U.Vec -> Shape
 placeShapeOnLine sampleCount sh s e =
     group
