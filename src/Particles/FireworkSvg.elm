@@ -13,8 +13,8 @@ main =
         , noStroke
         , bgc black
         ]
-        [ trail 0.1 vZero (vec 100 100)
-        , group [] trails
+        [ --trail 0.1 vZero (vec 100 100) ,
+          group [] trails
         ]
 
 
@@ -27,7 +27,7 @@ trails =
 randomTrail : Generator (Svg msg)
 randomTrail =
     Random.map2
-        (\uv h -> trail h vZero (vScale 100 uv))
+        (\uv h -> trail h vZero (vScale (h * 100) uv))
         randomVec
         randomHue
 
