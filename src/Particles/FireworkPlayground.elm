@@ -38,7 +38,7 @@ view c m =
         |> fade 1
     , let
         ( st, e ) =
-            ( U.vec 0 0, U.vec -200 -200 )
+            ( U.vec -100 -100, U.vec -200 -200 )
       in
       group
         (U.normSamples 50
@@ -46,7 +46,8 @@ view c m =
                 (\t ->
                     circle yellow 3
                         |> shMV (U.vLerp st e t)
-                        |> fade (U.lerp 0 1.5 t - 0.5)
+                        --|> fade (U.lerp 0 1.5 t - 0.5)
+                        |> fade (U.lerp 0 1 t)
                 )
         )
     ]
