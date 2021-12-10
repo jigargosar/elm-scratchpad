@@ -30,22 +30,24 @@ view c m =
     in
     [ rectangle black s.width s.height
     , square white 400 |> fade 0.1
-    , strokeLine (circle white 10) -200 -200 200 200 |> fade 1
+    , placeShapeOnLine
+        50
+        (circle white 10 |> fade 0.2)
+        (U.vec -200 -200)
+        (U.vec 200 200)
+        |> fade 1
     ]
 
 
-strokeLine sh a b c d =
+placeShapeOnLine sampleCount sh s e =
     let
-        ( s, e ) =
-            ( U.vec a b, U.vec c d )
-
-        viewPt { x, y } =
-            sh
-                |> move x y
-                |> fade 0.1
-
         pts =
-            U.sampleVecFromTo 100 s e
-                |> List.map viewPt
+            U.sampleVecFromTo sampleCount s e
+                |> List.map (mvSh sh)
     in
     group pts
+
+
+mvSh : Shape -> U.Vec -> Shape
+mvSh sh { x, y } =
+    sh |> move x y
