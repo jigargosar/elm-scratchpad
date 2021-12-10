@@ -28,5 +28,5 @@ view c m =
             c.screen
     in
     [ rectangle black s.width s.height
-    , square white 400
+    , square white 400 |> fade 0.1
     ]
