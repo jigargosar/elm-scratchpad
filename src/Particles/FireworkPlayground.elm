@@ -38,5 +38,31 @@ view c m =
     in
     [ rectangle black s.width s.height
     , square black minV
-    , circle green (pct 1)
+
+    --, circle green (pct 1)
+    , let
+        len =
+            s.width / 4
+
+        r =
+            pct 5
+
+        foo =
+            100
+
+        samples =
+            (len / (r * 2)) * foo
+      in
+      List.range 0 (round samples)
+        |> List.map
+            (toFloat
+                >> (\i ->
+                        circle green r
+                            |> moveRight (i * (len / samples))
+                            |> fade 0.5
+                   )
+            )
+        |> group
+
+    --|> moveLeft (minV / 2)
     ]
