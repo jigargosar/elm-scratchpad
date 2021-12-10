@@ -36,6 +36,21 @@ view c m =
         (U.vec 0 0)
         (U.vec 200 200)
         |> fade 1
+    , let
+        ( st, e ) =
+            ( U.vec 0 0, U.vec -200 -200 )
+
+        vd =
+            U.vFromTo st e
+      in
+      group
+        (U.normSamples 50
+            |> List.map
+                (\t ->
+                    circle yellow 3
+                        |> shMV (U.vScale t vd |> U.vAdd st)
+                )
+        )
     ]
 
 
@@ -50,3 +65,7 @@ placeShapeOnLine sampleCount sh s e =
 mvSh : Shape -> U.Vec -> Shape
 mvSh sh { x, y } =
     sh |> move x y
+
+
+shMV a b =
+    mvSh b a

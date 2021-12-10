@@ -282,8 +282,12 @@ vec =
 
 sampleVecFromTo : Int -> Vec -> Vec -> List Vec
 sampleVecFromTo sampleCount s e =
-    normSamples sampleCount
-        |> List.map (\i -> vScale i (vFromTo s e) |> vAdd s)
+    normSamples sampleCount |> List.map (vLerp s e)
+
+
+vLerp : Vec -> Vec -> Float -> Vec
+vLerp s e n =
+    vFromTo s e |> vScale n |> vAdd s
 
 
 normSamples : Int -> List Float
