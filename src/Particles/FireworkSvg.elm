@@ -8,6 +8,12 @@ import Utils exposing (..)
 
 
 main =
+    let
+        particles : List Particle
+        particles =
+            Random.step randomParticles (Random.initialSeed 0)
+                |> first
+    in
     svg
         [ viewBoxC 300 300
         , noFill
@@ -17,12 +23,6 @@ main =
         [ --trail 0.1 vZero (vec 100 100) ,
           group [] (List.map (particle 0.5) particles)
         ]
-
-
-particles : List Particle
-particles =
-    Random.step randomParticles (Random.initialSeed 0)
-        |> first
 
 
 type alias Particle =
