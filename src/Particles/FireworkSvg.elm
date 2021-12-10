@@ -47,7 +47,7 @@ trail h s e =
                         vLerp s e n
                 in
                 circle 2
-                    [ fill <| hsla h 1 0.5 n
+                    [ fill <| hsla h 1 0.5 (n * n * n)
                     , xf [ mv p ]
                     ]
             )
