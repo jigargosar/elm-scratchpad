@@ -54,9 +54,4 @@ strokeLine co th a b c d =
                 |> List.map (\i -> U.vScale i (U.vFromTo s e))
                 |> List.map viewPt
     in
-    group
-        ((\_ ->
-            [ viewPt s, viewPt e ]
-         )
-            |> always pts
-        )
+    group pts
