@@ -136,5 +136,7 @@ viewTrail1 h s e aa =
 
 
 viewTrail h s e aa =
-    viewTrail1 h s e aa
+    (\_ ->
+        viewTrail1 h s e aa
+    )
         |> always (vPolyline [ s, e ] (strokeW 2 :: (stroke <| hsla h 1 0.5 1) :: aa))
