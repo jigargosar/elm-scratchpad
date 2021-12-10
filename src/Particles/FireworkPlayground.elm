@@ -39,9 +39,6 @@ view c m =
     , let
         ( st, e ) =
             ( U.vec 0 0, U.vec -200 -200 )
-
-        vd =
-            U.vFromTo st e
       in
       group
         (U.normSamples 50
