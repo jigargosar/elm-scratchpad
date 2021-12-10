@@ -107,7 +107,7 @@ viewParticle nl ( nv, h ) =
                 |> clamp 0 1
                 |> vLerp vInitial (vScale maxLen nv)
     in
-    viewTrail h
+    viewTrail1 h
         s
         e
         [ SA.opacity <| fromFloat <| rangeMap ( 0.2, 1 ) ( 1, 0 ) nl
@@ -119,7 +119,7 @@ randomHue =
     Random.float 0 1
 
 
-viewTrail h s e aa =
+viewTrail1 h s e aa =
     normSamples 30
         |> List.map
             (\n ->
