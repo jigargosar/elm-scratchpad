@@ -119,7 +119,7 @@ randomHue =
     Random.float 0 1
 
 
-viewTrail1 h s e aa =
+viewTrail h s e aa =
     normSamples 30
         |> List.map
             (\n ->
@@ -135,7 +135,7 @@ viewTrail1 h s e aa =
         |> group aa
 
 
-viewTrail h s e aa =
+viewTrail2 h s e aa =
     (\_ ->
         viewTrail1 h s e aa
     )
