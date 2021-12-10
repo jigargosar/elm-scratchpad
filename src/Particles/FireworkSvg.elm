@@ -1,6 +1,5 @@
 module Particles.FireworkSvg exposing (..)
 
-import Color
 import Random exposing (Generator)
 import Svg exposing (Svg)
 import Svg.Attributes as SA
