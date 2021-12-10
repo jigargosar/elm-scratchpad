@@ -21,7 +21,7 @@ main =
         , bgc black
         ]
         [ --trail 0.1 vZero (vec 100 100) ,
-          group [] (List.map (particle 0.5) particles)
+          group [] (List.map (viewParticle 0.5) particles)
         ]
 
 
@@ -40,7 +40,8 @@ randomParticles =
             (List.sortBy (first >> vLenSquared >> negate))
 
 
-particle nl ( nv, h ) =
+viewParticle : Float -> Particle -> Svg msg
+viewParticle nl ( nv, h ) =
     let
         vInitial =
             nv |> vScale (maxLen * 0.1)
