@@ -48,7 +48,7 @@ view c m =
             |> List.map
                 (\t ->
                     circle yellow 3
-                        |> shMV (U.vScale t vd |> U.vAdd st)
+                        |> shMV (U.vLerp st e t)
                 )
         )
     ]
