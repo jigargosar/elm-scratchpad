@@ -36,7 +36,7 @@ randomTrail =
 particle nl nv h =
     let
         vInitial =
-            vZero
+            nv |> vScale (maxLen * 0.1)
 
         maxLen =
             100
