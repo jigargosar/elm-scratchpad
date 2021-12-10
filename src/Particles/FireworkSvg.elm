@@ -15,27 +15,29 @@ main =
         , bgc black
         ]
         [ --trail 0.1 vZero (vec 100 100) ,
-          group [] trails
+          group [] (List.map (particle 0.5) particles)
         ]
 
 
-trails : List (Svg msg)
-trails =
-    Random.step (randomParticles 0.5) (Random.initialSeed 0)
+particles : List Particle
+particles =
+    Random.step randomParticles (Random.initialSeed 0)
         |> first
 
 
-randomParticles : Float -> Generator (List (Svg msg))
-randomParticles nl =
+type alias Particle =
+    ( Vec, Float )
+
+
+randomParticles : Generator (List Particle)
+randomParticles =
     let
         pg =
             Random.pair randomVec randomHue
     in
     Random.list 40 pg
         |> Random.map
-            (List.sortBy (first >> vLenSquared >> negate)
-                >> List.map (particle nl)
-            )
+            (List.sortBy (first >> vLenSquared >> negate))
 
 
 particle nl ( nv, h ) =
