@@ -20,7 +20,7 @@ main =
 
 trails : List (Svg msg)
 trails =
-    Random.step (Random.list 100 randomTrail) (Random.initialSeed 0)
+    Random.step (Random.list 40 randomTrail) (Random.initialSeed 0)
         |> first
 
 
