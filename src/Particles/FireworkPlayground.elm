@@ -36,7 +36,7 @@ view c m =
         pct n =
             n * oneHundredth
     in
-    [ rectangle white s.width s.height
+    [ rectangle black s.width s.height
     , square black minV
     , circle green (pct 5)
     ]
