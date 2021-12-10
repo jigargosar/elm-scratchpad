@@ -32,8 +32,8 @@ view c m =
     , square white 400 |> fade 0.1
     , placeShapeOnLine
         50
-        (circle white 10 |> fade 0.2)
-        (U.vec -200 -200)
+        (circle white 5 |> fade 1.2)
+        (U.vec 0 0)
         (U.vec 200 200)
         |> fade 1
     ]
