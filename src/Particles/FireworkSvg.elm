@@ -76,7 +76,7 @@ randomParticles =
         pg =
             Random.pair randomVec randomHue
     in
-    Random.list 40 pg
+    Random.list 100 pg
         |> Random.map
             (List.sortBy (first >> vLenSquared >> negate))
 
@@ -115,7 +115,7 @@ randomHue =
 
 
 viewTrail h s e aa =
-    normSamples 50
+    normSamples 10
         |> List.map
             (\n ->
                 let
