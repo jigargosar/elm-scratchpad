@@ -119,7 +119,7 @@ randomHue =
     Random.float 0 1
 
 
-viewTrail h s e aa =
+viewTrail1 h s e aa =
     normSamples 30
         |> List.map
             (\n ->
@@ -133,3 +133,7 @@ viewTrail h s e aa =
                     ]
             )
         |> group aa
+
+
+viewTrail h s e aa =
+    vPolyline [ s, e ] (strokeW 2 :: (stroke <| hsla h 1 0.5 1) :: aa)
