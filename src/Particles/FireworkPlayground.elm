@@ -30,7 +30,7 @@ view c m =
     in
     [ rectangle black s.width s.height
     , square white 400 |> fade 0.1
-    , strokeLine white 20 0 0 0 200 |> fade 0.9
+    , strokeLine white 20 0 0 0 200 |> fade 1
     ]
 
 
@@ -43,7 +43,9 @@ strokeLine co th a b c d =
             circle co (th / 2)
 
         viewPt { x, y } =
-            sh |> move x y
+            sh
+                |> move x y
+                |> fade 0.1
 
         sampleCount =
             100
