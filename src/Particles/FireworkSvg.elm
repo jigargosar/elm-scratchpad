@@ -27,12 +27,12 @@ trails =
 
 randomParticles : Float -> Generator (List (Svg msg))
 randomParticles nl =
-    Random.list 40
-        (Random.map2
-            (particle nl)
-            randomVec
-            randomHue
-        )
+    let
+        pg =
+            Random.pair randomVec randomHue
+    in
+    Random.list 40 pg
+        |> Random.map (List.map (\( nv, h ) -> particle nl nv h))
 
 
 particle nl nv h =
