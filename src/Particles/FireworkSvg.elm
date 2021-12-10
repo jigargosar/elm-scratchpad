@@ -32,10 +32,13 @@ randomParticles nl =
             Random.pair randomVec randomHue
     in
     Random.list 40 pg
-        |> Random.map (List.map (\( nv, h ) -> particle nl nv h))
+        |> Random.map
+            (List.sortBy (first >> vLenSquared >> negate)
+                >> List.map (particle nl)
+            )
 
 
-particle nl nv h =
+particle nl ( nv, h ) =
     let
         vInitial =
             nv |> vScale (maxLen * 0.1)
