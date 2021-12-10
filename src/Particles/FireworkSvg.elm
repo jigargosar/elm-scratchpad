@@ -35,9 +35,6 @@ randomTrail =
 
 particle nl nv h =
     let
-        ( nr, theta ) =
-            vToPolar nv
-
         vInitial =
             vZero
 
