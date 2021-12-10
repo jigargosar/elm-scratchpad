@@ -55,8 +55,8 @@ view c m =
                 (\t ->
                     circle yellow 3
                         |> shMV (U.vLerp st e t)
-                        --|> fade (U.lerp 0 1.5 t - 0.5)
-                        |> fade (U.lerp 0 1 t)
+                        |> fade (U.lerp 0 1.5 t - 0.5)
+                 --|> fade (U.lerp 0 1 t)
                 )
         )
     ]
