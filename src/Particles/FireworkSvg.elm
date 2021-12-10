@@ -74,7 +74,11 @@ randomParticles : Generator (List Particle)
 randomParticles =
     let
         pg =
-            Random.pair randomVec randomHue
+            Random.pair
+                (Random.pair (randomNorm |> Random.map (\x -> sqrt x)) randomAngle
+                    |> Random.map vFromPolar
+                )
+                randomHue
     in
     Random.list 50 pg
         |> Random.map
