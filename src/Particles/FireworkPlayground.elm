@@ -30,17 +30,14 @@ view c m =
     in
     [ rectangle black s.width s.height
     , square white 400 |> fade 0.1
-    , strokeLine white 20 -200 -200 200 200 |> fade 1
+    , strokeLine (circle white 10) -200 -200 200 200 |> fade 1
     ]
 
 
-strokeLine co th a b c d =
+strokeLine sh a b c d =
     let
         ( s, e ) =
             ( U.vec a b, U.vec c d )
-
-        sh =
-            circle co (th / 2)
 
         viewPt { x, y } =
             sh
