@@ -40,27 +40,6 @@ view c m =
             (s.width / 4) |> round |> toFloat
     in
     [ rectangle black s.width s.height
-    , square black minV
-
-    --, circle green (pct 1)
+    , square black (pct 50)
     , square white (lineLen * 2)
-    , let
-        r =
-            pct 0.5
-
-        samples =
-            lineLen
-                |> always (lineLen / (r * 2))
-                |> round
-      in
-      List.range 0 samples
-        |> List.map
-            (\i ->
-                circle green r
-                    |> moveRight (toFloat i * (lineLen / toFloat samples))
-                    |> fade 0.5
-            )
-        |> group
-
-    --|> moveLeft (minV / 2)
     ]
