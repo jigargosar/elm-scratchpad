@@ -119,12 +119,8 @@ randomHue =
     Random.float 0 1
 
 
-sam =
-    normSamples 30
-
-
 viewTrail h s e aa =
-    sam
+    normSamples 30
         |> List.map
             (\n ->
                 let
