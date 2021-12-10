@@ -51,8 +51,8 @@ view c m =
                 )
         )
         |> move
-            (spin 2 c.time |> U.rangeMap ( 0, 360 ) ( 0, -800 ))
-            (spin 2 c.time |> U.rangeMap ( 0, 360 ) ( 0, -800 ))
+            (anim 2 0 -800 c.time)
+            (anim 2 0 -800 c.time)
     ]
 
 
