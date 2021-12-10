@@ -270,6 +270,26 @@ type alias Vec =
     { x : Float, y : Float }
 
 
+randomVec : Generator Vec
+randomVec =
+    Random.map vFromAngle randomAngle
+
+
+vFromAngle : Float -> Vec
+vFromAngle theta =
+    vFromPolar ( 1, theta )
+
+
+randomAngle : Generator Float
+randomAngle =
+    Random.map turns randomNorm
+
+
+randomNorm : Generator Float
+randomNorm =
+    Random.float 0 1
+
+
 vFromGP : GPos -> Vec
 vFromGP ( gx, gy ) =
     vec (toFloat gx) (toFloat gy)

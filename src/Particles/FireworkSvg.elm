@@ -2,6 +2,7 @@ module Particles.FireworkSvg exposing (..)
 
 import Color
 import Random exposing (Generator)
+import Svg exposing (Svg)
 import Utils exposing (..)
 
 
@@ -16,11 +17,20 @@ main =
         ]
 
 
+randomTrail : Generator (Svg msg)
+randomTrail =
+    Random.map2
+        (\uv h -> trail h vZero (vScale 100 uv))
+        randomVec
+        randomHue
+
+
 randomHue : Generator Float
 randomHue =
     Random.float 0 1
 
 
+trail : Float -> Vec -> Vec -> Svg msg
 trail h s e =
     normSamples 50
         |> List.map
