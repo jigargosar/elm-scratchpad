@@ -19,8 +19,7 @@ main =
         , noStroke
         , bgc black
         ]
-        [ --trail 0.1 vZero (vec 100 100) ,
-          group [] (List.map (viewParticle 0.5) particles)
+        [ group [] (List.map (viewParticle 0.5) particles)
         ]
 
 
