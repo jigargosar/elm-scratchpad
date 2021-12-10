@@ -20,14 +20,14 @@ main =
 
 trails : List (Svg msg)
 trails =
-    Random.step (Random.list 20 randomTrail) (Random.initialSeed 0)
+    Random.step (Random.list 100 randomTrail) (Random.initialSeed 0)
         |> first
 
 
 randomTrail : Generator (Svg msg)
 randomTrail =
     Random.map2
-        (\uv h -> trail h vZero (vScale (h * 100) uv))
+        (\nv h -> trail h vZero (vScale 100 nv))
         randomVec
         randomHue
 

@@ -270,9 +270,15 @@ type alias Vec =
     { x : Float, y : Float }
 
 
+randomUnitVec : Generator Vec
+randomUnitVec =
+    Random.map vFromAngle randomAngle
+
+
 randomVec : Generator Vec
 randomVec =
-    Random.map vFromAngle randomAngle
+    Random.pair randomNorm randomAngle
+        |> Random.map vFromPolar
 
 
 vFromAngle : Float -> Vec
