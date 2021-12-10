@@ -398,6 +398,14 @@ vMap2 fn a b =
     vec (fn a.x b.x) (fn a.y b.y)
 
 
+
+-- SVG
+
+
+svg =
+    Svg.svg
+
+
 group =
     Svg.g
 
