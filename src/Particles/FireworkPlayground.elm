@@ -34,7 +34,6 @@ view c m =
     ]
 
 
-strokeLine : Color -> Number -> Number -> Number -> Number -> Number -> Shape
 strokeLine co th a b c d =
     let
         ( s, e ) =
