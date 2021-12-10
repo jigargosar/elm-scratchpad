@@ -35,6 +35,9 @@ randomTrail =
 
 particle nl nv h =
     let
+        ( nr, theta ) =
+            vToPolar nv
+
         e =
             vScale 100 nv
 
