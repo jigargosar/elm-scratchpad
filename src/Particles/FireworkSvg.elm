@@ -54,10 +54,7 @@ update msg model =
             in
             ( { model
                 | now = now
-                , particles =
-                    List.filterMap
-                        (updateParticle ds)
-                        model.particles
+                , particles = updatePS ds model.particles
               }
             , Cmd.none
             )
@@ -102,8 +99,17 @@ initParticle nv h =
     }
 
 
+updatePS : Float -> List Particle -> List Particle
 updatePS ds ps =
-    List.filterMap (updateParticle ds) ps
+    let
+        nps =
+            List.filterMap (updateParticle ds) ps
+    in
+    if nps == [] then
+        initialParticles
+
+    else
+        nps
 
 
 updateParticle : Float -> Particle -> Maybe Particle
