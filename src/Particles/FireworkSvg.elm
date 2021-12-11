@@ -40,8 +40,8 @@ type Msg
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    --Time.every (1000 / 60) (Time.posixToMillis >> Frame)
-    Browser.Events.onAnimationFrame (Time.posixToMillis >> Frame)
+    --Browser.Events.onAnimationFrame (Time.posixToMillis >> Frame)
+    Time.every (1000 / 40) (Time.posixToMillis >> Frame)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -161,7 +161,7 @@ randomHue =
 
 
 viewTrail h s e aa =
-    normSamples 2
+    normSamples 8
         |> List.map
             (\n ->
                 let
