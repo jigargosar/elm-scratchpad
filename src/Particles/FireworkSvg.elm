@@ -68,12 +68,22 @@ view model =
 
 
 type alias Particle =
-    { nv : Vec, h : Float }
+    { nv : Vec
+    , h : Float
+    , p : Vec
+    }
 
 
 initParticle : Vec -> Float -> Particle
 initParticle nv h =
-    Particle nv h
+    let
+        maxLen =
+            100
+    in
+    { nv = nv
+    , h = h
+    , p = nv |> vScale (maxLen * 0.1)
+    }
 
 
 randomParticles : Generator (List Particle)
