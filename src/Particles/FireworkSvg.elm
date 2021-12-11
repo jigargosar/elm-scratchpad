@@ -95,7 +95,7 @@ updateParticle ds pa =
         Nothing
 
     else
-        Just pa
+        Just { pa | lifetime = pa.lifetime + ds, p = vAdd pa.p (vScale ds pa.nv) }
 
 
 randomParticles : Generator (List Particle)
