@@ -69,6 +69,7 @@ view model =
     in
     svg
         [ viewBoxC 300 300
+        , dBlock
         , noFill
         , noStroke
         , bgc black
