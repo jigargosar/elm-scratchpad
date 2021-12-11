@@ -47,7 +47,15 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Frame now ->
-            ( { model | now = now }, Cmd.none )
+            ( { model
+                | now = now
+                , particles =
+                    List.filterMap
+                        (updateParticle (toFloat (now - model.now)))
+                        model.particles
+              }
+            , Cmd.none
+            )
 
 
 view : Model -> Html Msg
