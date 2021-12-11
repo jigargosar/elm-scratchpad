@@ -71,6 +71,7 @@ type alias Particle =
     { nv : Vec
     , h : Float
     , p : Vec
+    , maxLifetime : Float
     }
 
 
@@ -83,6 +84,7 @@ initParticle nv h =
     { nv = nv
     , h = h
     , p = nv |> vScale (maxLen * 0.1)
+    , maxLifetime = 3
     }
 
 
