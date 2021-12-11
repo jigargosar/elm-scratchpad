@@ -102,6 +102,10 @@ initParticle nv h =
     }
 
 
+updatePS ds ps =
+    List.filterMap (updateParticle ds) ps
+
+
 updateParticle : Float -> Particle -> Maybe Particle
 updateParticle ds pa =
     if pa.lifetime + ds > pa.maxLifetime then
