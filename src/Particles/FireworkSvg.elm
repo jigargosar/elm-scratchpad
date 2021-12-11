@@ -68,14 +68,14 @@ view model =
 
 
 type alias Particle =
-    ( Vec, Float )
+    { nv : Vec, h : Float }
 
 
 randomParticles : Generator (List Particle)
 randomParticles =
     let
         pg =
-            Random.pair
+            Random.map2 Particle
                 (Random.pair (randomNorm |> Random.map (\x -> sqrt x)) randomAngle
                     |> Random.map vFromPolar
                 )
@@ -83,11 +83,11 @@ randomParticles =
     in
     Random.list 70 pg
         |> Random.map
-            (List.sortBy (first >> vLenSquared >> negate))
+            (List.sortBy (.nv >> vLenSquared >> negate))
 
 
 viewParticle : Float -> Particle -> Svg msg
-viewParticle nl ( nv, h ) =
+viewParticle nl { nv, h } =
     let
         vInitial =
             nv |> vScale (maxLen * 0.1)
@@ -119,11 +119,7 @@ randomHue =
     Random.float 0 1
 
 
-viewTrail =
-    viewTrail1
-
-
-viewTrail1 h s e aa =
+viewTrail h s e aa =
     normSamples 30
         |> List.map
             (\n ->
@@ -137,10 +133,3 @@ viewTrail1 h s e aa =
                     ]
             )
         |> group aa
-
-
-viewTrail2 h s e aa =
-    (\_ ->
-        viewTrail1 h s e aa
-    )
-        |> always (vPolyline [ s, e ] (strokeW 2 :: (stroke <| hsla h 1 0.5 1) :: aa))
