@@ -87,8 +87,6 @@ randomParticles =
                 randomHue
     in
     Random.list 70 gen
-        --|> Random.map (List.sortBy (.nv >> vLenSquared >> negate))
-        |> identity
 
 
 viewParticle : Float -> Particle -> Svg msg
