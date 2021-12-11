@@ -1,7 +1,6 @@
 module Particles.FireworkSvg exposing (..)
 
 import Browser
-import Browser.Events
 import Random exposing (Generator)
 import Svg exposing (Svg)
 import Svg.Attributes as SA
