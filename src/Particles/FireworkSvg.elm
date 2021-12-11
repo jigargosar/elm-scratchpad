@@ -49,7 +49,7 @@ update msg model =
         Frame now ->
             let
                 ds =
-                    (toFloat (now - model.now) |> clamp 0 (1000 / 30))
+                    (toFloat (now - model.now) |> clamp 0 100)
                         / 1000
             in
             ( { model
