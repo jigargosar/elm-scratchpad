@@ -97,7 +97,7 @@ initParticle nv h =
     { nv = nv
     , h = h
     , p = nv |> vScale (maxLen * 0.1)
-    , maxLifetime = 3
+    , maxLifetime = 2
     , lifetime = 0
     }
 
@@ -108,7 +108,7 @@ updateParticle ds pa =
         Nothing
 
     else
-        Just { pa | lifetime = pa.lifetime + ds, p = vAdd pa.p (vScale (ds * 10) pa.nv) }
+        Just { pa | lifetime = pa.lifetime + ds, p = vAdd pa.p (vScale (ds * 50) pa.nv) }
 
 
 randomParticles : Generator (List Particle)
