@@ -41,7 +41,7 @@ type Msg
 subscriptions : Model -> Sub Msg
 subscriptions _ =
     --Browser.Events.onAnimationFrame (Time.posixToMillis >> Frame)
-    Time.every (1000 / 40) (Time.posixToMillis >> Frame)
+    Time.every (1000 / 35) (Time.posixToMillis >> Frame)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
