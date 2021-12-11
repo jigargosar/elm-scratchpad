@@ -47,23 +47,20 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Frame now ->
-            if model.now == 0 then
-                ( { model | now = now }, Cmd.none )
-
-            else
-                let
-                    ds =
-                        toFloat (now - model.now) / 1000
-                in
-                ( { model
-                    | now = now
-                    , particles =
-                        List.filterMap
-                            (updateParticle ds)
-                            model.particles
-                  }
-                , Cmd.none
-                )
+            let
+                ds =
+                    (toFloat (now - model.now) |> clamp 0 (1000 / 30))
+                        / 1000
+            in
+            ( { model
+                | now = now
+                , particles =
+                    List.filterMap
+                        (updateParticle ds)
+                        model.particles
+              }
+            , Cmd.none
+            )
 
 
 view : Model -> Html Msg
