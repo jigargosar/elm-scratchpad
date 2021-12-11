@@ -71,11 +71,16 @@ type alias Particle =
     { nv : Vec, h : Float }
 
 
+initParticle : Vec -> Float -> Particle
+initParticle nv h =
+    Particle nv h
+
+
 randomParticles : Generator (List Particle)
 randomParticles =
     let
         gen =
-            Random.map2 Particle
+            Random.map2 initParticle
                 (Random.pair (randomNorm |> Random.map (\x -> sqrt x)) randomAngle
                     |> Random.map vFromPolar
                 )
