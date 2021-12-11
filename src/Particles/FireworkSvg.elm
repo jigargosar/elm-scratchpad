@@ -125,6 +125,10 @@ updateParticle ds pa =
         Nothing
 
     else
+        let
+            ( speed, _ ) =
+                pa.v |> vToPolar
+        in
         Just
             { pa
                 | lifetime = pa.lifetime + ds
