@@ -47,15 +47,23 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Frame now ->
-            ( { model
-                | now = now
-                , particles =
-                    List.filterMap
-                        (updateParticle (toFloat (now - model.now)))
-                        model.particles
-              }
-            , Cmd.none
-            )
+            if model.now == 0 then
+                ( { model | now = now }, Cmd.none )
+
+            else
+                let
+                    ds =
+                        toFloat (now - model.now) / 1000
+                in
+                ( { model
+                    | now = now
+                    , particles =
+                        List.filterMap
+                            (updateParticle ds)
+                            model.particles
+                  }
+                , Cmd.none
+                )
 
 
 view : Model -> Html Msg
@@ -103,7 +111,7 @@ updateParticle ds pa =
         Nothing
 
     else
-        Just { pa | lifetime = pa.lifetime + ds, p = vAdd pa.p (vScale ds pa.nv) }
+        Just { pa | lifetime = pa.lifetime + ds, p = vAdd pa.p (vScale (ds * 10) pa.nv) }
 
 
 randomParticles : Generator (List Particle)
@@ -120,7 +128,7 @@ randomParticles =
 
 
 viewParticle : Float -> Particle -> Svg msg
-viewParticle nl { nv, h } =
+viewParticle _ ({ nv, h } as pa) =
     let
         vInitial =
             nv |> vScale (maxLen * 0.1)
@@ -128,21 +136,12 @@ viewParticle nl { nv, h } =
         maxLen =
             100
 
-        e =
-            nl
-                |> rangeMap ( 0, 0.8 ) ( 0, 1 )
-                |> clamp 0 1
-                |> vLerp vInitial (vScale maxLen nv)
-
-        s =
-            nl
-                |> rangeMap ( 0.5, 1 ) ( 0, 1 )
-                |> clamp 0 1
-                |> vLerp vInitial (vScale maxLen nv)
+        nl =
+            pa.lifetime / pa.maxLifetime
     in
     viewTrail h
-        s
-        e
+        vInitial
+        pa.p
         [ SA.opacity <| fromFloat <| rangeMap ( 0.2, 1 ) ( 1, 0 ) nl
         ]
 
