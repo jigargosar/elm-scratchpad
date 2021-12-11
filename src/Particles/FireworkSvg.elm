@@ -90,6 +90,15 @@ initParticle nv h =
     }
 
 
+updateParticle : Float -> Particle -> Maybe Particle
+updateParticle ds pa =
+    if pa.lifetime + ds > pa.maxLifetime then
+        Nothing
+
+    else
+        Just pa
+
+
 randomParticles : Generator (List Particle)
 randomParticles =
     let
