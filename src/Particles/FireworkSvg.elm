@@ -1,6 +1,7 @@
 module Particles.FireworkSvg exposing (..)
 
 import Browser
+import Browser.Events
 import Random exposing (Generator)
 import Svg exposing (Svg)
 import Svg.Attributes as SA
@@ -39,8 +40,8 @@ type Msg
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    --Browser.Events.onAnimationFrame (Time.posixToMillis >> Frame)
-    Time.every (1000 / 30) (Time.posixToMillis >> Frame)
+    --Time.every (1000 / 60) (Time.posixToMillis >> Frame)
+    Browser.Events.onAnimationFrame (Time.posixToMillis >> Frame)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
