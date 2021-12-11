@@ -74,14 +74,14 @@ type alias Particle =
 randomParticles : Generator (List Particle)
 randomParticles =
     let
-        pg =
+        gen =
             Random.map2 Particle
                 (Random.pair (randomNorm |> Random.map (\x -> sqrt x)) randomAngle
                     |> Random.map vFromPolar
                 )
                 randomHue
     in
-    Random.list 70 pg
+    Random.list 70 gen
         |> Random.map
             (List.sortBy (.nv >> vLenSquared >> negate))
 
