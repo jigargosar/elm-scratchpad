@@ -24,13 +24,13 @@ type alias Model =
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    let
-        particles : List Particle
-        particles =
-            Random.step randomParticles (Random.initialSeed 0)
-                |> first
-    in
-    ( { now = 0, particles = particles }, Cmd.none )
+    ( { now = 0, particles = initialParticles }, Cmd.none )
+
+
+initialParticles : List Particle
+initialParticles =
+    Random.step randomParticles (Random.initialSeed 0)
+        |> first
 
 
 type Msg
