@@ -185,7 +185,15 @@ viewParticle ({ nv, h } as pa) =
 
         vl =
             vPolyline (pa.p :: pa.oldPS)
-                [ stroke <| hsla h 1 0.5 lifetimeOpacity
+                [ stroke <|
+                    hsla h
+                        1
+                        0.5
+                        (clamp 0 1 <|
+                            rangeMap ( 10, 2 )
+                                ( 1, 0 )
+                                (pa.v |> vToPolar |> first)
+                        )
                 , strokeW 2
                 , xf [ mv pa.p ]
                 ]
