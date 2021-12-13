@@ -97,7 +97,7 @@ initParticle : Vec -> Float -> Particle
 initParticle nv h =
     let
         iv =
-            vScale 100 nv
+            vScale 150 nv
 
         originPosition =
             vZero
@@ -143,14 +143,14 @@ particleStep ds pa =
                 vScale ds pa.v
 
             cDragVel =
-                cVel |> vScale -2
+                cVel |> vScale -3
         in
         Just
             { pa
                 | lifetimeS = pa.lifetimeS + ds
                 , p = vAdd pa.p cVel
                 , v = vAdd pa.v cDragVel
-                , oldPS = pa.p :: pa.oldPS |> List.take 10
+                , oldPS = pa.p :: pa.oldPS |> List.take 5
             }
 
 
