@@ -106,7 +106,7 @@ initParticle nv h =
             vZero
 
         initialDisplacement =
-            vScale 0.5 iv
+            vScale 0 iv
 
         ip =
             vAdd originP initialDisplacement
