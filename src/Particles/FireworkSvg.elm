@@ -173,11 +173,14 @@ viewParticle _ ({ nv, h } as pa) =
     let
         nl =
             pa.lifetimeS / pa.maxLifetimeS
+
+        lifetimeOpacity =
+            clamp 0 1 <| rangeMap ( 0.8, 1 ) ( 1, 0 ) nl
     in
     viewTrail h
         pa.ip
         pa.p
-        [ SA.opacity <| fromFloat <| clamp 0 1 <| rangeMap ( 0.8, 1 ) ( 1, 0 ) nl
+        [ SA.opacity <| fromFloat <| lifetimeOpacity
         ]
 
 
