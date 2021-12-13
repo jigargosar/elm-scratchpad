@@ -81,13 +81,17 @@ view model =
         ]
 
 
+type alias Seconds =
+    Float
+
+
 type alias Particle =
     { nv : Vec
     , h : Float
     , p : Vec
     , v : Vec
-    , maxLifetime : Float
-    , lifetime : Float
+    , maxLifetime : Seconds
+    , lifetime : Seconds
     }
 
 
@@ -110,7 +114,7 @@ updatePS : Float -> List Particle -> List Particle
 updatePS ds ps =
     let
         nps =
-            List.filterMap (updateParticle ds) ps
+            List.filterMap (particleStep ds) ps
     in
     if nps == [] then
         initialParticles
@@ -119,8 +123,8 @@ updatePS ds ps =
         nps
 
 
-updateParticle : Float -> Particle -> Maybe Particle
-updateParticle ds pa =
+particleStep : Float -> Particle -> Maybe Particle
+particleStep ds pa =
     if pa.lifetime + ds > pa.maxLifetime then
         Nothing
 
