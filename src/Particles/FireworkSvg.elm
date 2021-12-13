@@ -177,10 +177,14 @@ viewParticle _ ({ nv, h } as pa) =
         lifetimeOpacity =
             clamp 0 1 <| rangeMap ( 0.8, 1 ) ( 1, 0 ) nl
     in
-    viewTrail h
-        pa.ip
-        pa.p
-        [ SA.opacity <| fromFloat <| lifetimeOpacity
+    --viewTrail h
+    --    pa.ip
+    --    pa.p
+    --    [ SA.opacity <| fromFloat <| lifetimeOpacity ]
+    circle 2
+        [ xf [ mv pa.p ]
+        , fill <| hsla h 1 0.5 1
+        , SA.opacity <| fromFloat <| lifetimeOpacity
         ]
 
 
