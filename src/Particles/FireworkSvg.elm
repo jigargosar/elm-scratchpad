@@ -99,6 +99,9 @@ type alias Particle =
 initParticle : Vec -> Float -> Particle
 initParticle nv h =
     let
+        iv =
+            vScale 50 nv
+
         ip =
             vScale 10 nv
     in
@@ -106,7 +109,7 @@ initParticle nv h =
     , h = h
     , ip = ip
     , p = ip
-    , v = vScale 50 nv
+    , v = iv
     , maxLifetimeS = 2
     , lifetimeS = 0
     }
