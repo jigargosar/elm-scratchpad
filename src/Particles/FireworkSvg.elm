@@ -164,7 +164,7 @@ randomParticles =
                 )
                 randomHue
     in
-    Random.list 70 gen
+    Random.list 200 gen
 
 
 viewParticle : Particle -> Svg msg
