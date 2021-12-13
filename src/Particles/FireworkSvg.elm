@@ -129,14 +129,10 @@ particleStep ds pa =
         Nothing
 
     else
-        let
-            ( speed, _ ) =
-                pa.v |> vToPolar
-        in
         Just
             { pa
                 | lifetimeS = pa.lifetimeS + ds
-                , p = vAdd pa.p (vScale (ds * 50) pa.v)
+                , p = vAdd pa.p (vScale ds pa.v)
                 , v = vScale 0.97 pa.v
             }
 
