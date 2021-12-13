@@ -97,13 +97,9 @@ type alias Particle =
 
 initParticle : Vec -> Float -> Particle
 initParticle nv h =
-    let
-        maxLen =
-            100
-    in
     { nv = nv
     , h = h
-    , p = nv |> vScale (maxLen * 0.1)
+    , p = nv |> vScale 10
     , v = nv |> vToPolar |> mapFirst (mul 50) |> vFromPolar
     , maxLifetimeS = 2
     , lifetimeS = 0
