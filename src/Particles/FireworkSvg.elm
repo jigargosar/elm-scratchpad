@@ -53,7 +53,7 @@ update msg model =
         Frame now ->
             let
                 ds =
-                    (toFloat (now - model.now) |> clamp 0 100)
+                    (toFloat (now - model.now) |> clamp 0 200)
                         / 1000
             in
             ( { model
@@ -97,7 +97,7 @@ initParticle : Vec -> Float -> Particle
 initParticle nv h =
     let
         iv =
-            vScale 50 nv
+            vScale 100 nv
 
         originPosition =
             vZero
@@ -114,7 +114,7 @@ initParticle nv h =
     , p = initialPosition
     , oldPS = [ initialPosition ]
     , v = iv
-    , maxLifetimeS = 2
+    , maxLifetimeS = 5
     , lifetimeS = 0
     }
 
@@ -134,7 +134,7 @@ updatePS ds ps =
 
 particleStep : Seconds -> Particle -> Maybe Particle
 particleStep ds pa =
-    if pa.lifetimeS + ds > pa.maxLifetimeS then
+    if pa.lifetimeS + ds > pa.maxLifetimeS || (pa.v |> vToPolar |> first) < 5 then
         Nothing
 
     else
@@ -143,14 +143,14 @@ particleStep ds pa =
                 vScale ds pa.v
 
             cDragVel =
-                cVel |> vScale -0.6
+                cVel |> vScale -2
         in
         Just
             { pa
                 | lifetimeS = pa.lifetimeS + ds
                 , p = vAdd pa.p cVel
                 , v = vAdd pa.v cDragVel
-                , oldPS = pa.p :: pa.oldPS |> List.take 20
+                , oldPS = pa.p :: pa.oldPS |> List.take 10
             }
 
 
@@ -190,7 +190,7 @@ viewParticle ({ nv, h } as pa) =
                         1
                         0.5
                         (clamp 0 1 <|
-                            rangeMap ( 10, 1 )
+                            rangeMap ( 10, 5 )
                                 ( 1, 0 )
                                 (pa.v |> vToPolar |> first)
                         )
