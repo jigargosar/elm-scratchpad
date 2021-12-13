@@ -88,6 +88,7 @@ type alias Seconds =
 type alias Particle =
     { nv : Vec
     , h : Float
+    , ip : Vec
     , p : Vec
     , v : Vec
     , maxLifetimeS : Seconds
@@ -97,9 +98,14 @@ type alias Particle =
 
 initParticle : Vec -> Float -> Particle
 initParticle nv h =
+    let
+        ip =
+            nv |> vScale 10
+    in
     { nv = nv
     , h = h
-    , p = nv |> vScale 10
+    , ip = ip
+    , p = ip
     , v = nv |> vToPolar |> mapFirst (mul 50) |> vFromPolar
     , maxLifetimeS = 2
     , lifetimeS = 0
