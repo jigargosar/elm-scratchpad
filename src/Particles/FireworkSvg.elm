@@ -130,17 +130,16 @@ particleStep ds pa =
 
     else
         let
-            ( speed, angle ) =
-                pa.v |> vToPolar
-
-            dragSpeed =
-                (speed * 0.1) * ds
+            dragV =
+                pa.v |> vScale ds |> vScale -0.1
         in
         Just
             { pa
                 | lifetimeS = pa.lifetimeS + ds
                 , p = vAdd pa.p (vScale ds pa.v)
-                , v = ( speed - dragSpeed |> atLeast 0, angle ) |> vFromPolar
+
+                --, v = ( speed - dragSpeed |> atLeast 0, angle ) |> vFromPolar
+                , v = vAdd pa.v dragV
             }
 
 
