@@ -104,7 +104,7 @@ initParticle nv h =
     { nv = nv
     , h = h
     , p = nv |> vScale (maxLen * 0.1)
-    , v = nv
+    , v = nv |> vToPolar |> mapFirst (mul 50) |> vFromPolar
     , maxLifetimeS = 2
     , lifetimeS = 0
     }
