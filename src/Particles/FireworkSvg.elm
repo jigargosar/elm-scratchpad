@@ -86,6 +86,7 @@ type alias Particle =
     , h : Float
     , ip : Vec
     , p : Vec
+    , oldPS : List Vec
     , v : Vec
     , maxLifetimeS : Seconds
     , lifetimeS : Seconds
@@ -111,6 +112,7 @@ initParticle nv h =
     , h = h
     , ip = initialPosition
     , p = initialPosition
+    , oldPS = [ initialPosition ]
     , v = iv
     , maxLifetimeS = 2
     , lifetimeS = 0
@@ -148,6 +150,7 @@ particleStep ds pa =
                 | lifetimeS = pa.lifetimeS + ds
                 , p = vAdd pa.p cVel
                 , v = vAdd pa.v cDragVel
+                , oldPS = pa.p :: pa.oldPS |> List.take 100
             }
 
 
