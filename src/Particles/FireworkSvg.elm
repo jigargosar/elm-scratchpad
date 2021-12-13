@@ -112,7 +112,7 @@ initParticle nv h =
     , ip = initialPosition
     , p = initialPosition
     , v = iv
-    , maxLifetimeS = 5
+    , maxLifetimeS = 2
     , lifetimeS = 0
     }
 
@@ -171,12 +171,13 @@ viewParticle ({ nv, h } as pa) =
             pa.lifetimeS / pa.maxLifetimeS
 
         lifetimeOpacity =
-            clamp 0 1 <| rangeMap ( 0.8, 1 ) ( 1, 0 ) nl
+            clamp 0 1 <| rangeMap ( 0.7, 1 ) ( 1, 0 ) nl
     in
     viewTrail h
         pa.ip
         pa.p
-        [ SA.opacity <| fromFloat <| lifetimeOpacity ]
+        [ SA.opacity <| fromFloat <| lifetimeOpacity
+        ]
 
 
 
