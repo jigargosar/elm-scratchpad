@@ -114,7 +114,7 @@ initParticle nv h =
     , p = initialPosition
     , oldPS = [ initialPosition ]
     , v = iv
-    , maxLifetimeS = 5
+    , maxLifetimeS = 1
     , lifetimeS = 0
     }
 
