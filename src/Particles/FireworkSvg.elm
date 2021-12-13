@@ -108,13 +108,13 @@ initParticle nv h =
         initialDisplacement =
             vScale 0 iv
 
-        ip =
+        initialPosition =
             vAdd originP initialDisplacement
     in
     { nv = nv
     , h = h
-    , ip = ip
-    , p = ip
+    , ip = initialPosition
+    , p = initialPosition
     , v = iv
     , maxLifetimeS = 2
     , lifetimeS = 0
