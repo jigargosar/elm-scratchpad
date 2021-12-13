@@ -90,8 +90,8 @@ type alias Particle =
     , h : Float
     , p : Vec
     , v : Vec
-    , maxLifetime : Seconds
-    , lifetime : Seconds
+    , maxLifetimeS : Seconds
+    , lifetimeS : Seconds
     }
 
 
@@ -105,8 +105,8 @@ initParticle nv h =
     , h = h
     , p = nv |> vScale (maxLen * 0.1)
     , v = nv
-    , maxLifetime = 2
-    , lifetime = 0
+    , maxLifetimeS = 2
+    , lifetimeS = 0
     }
 
 
@@ -123,9 +123,9 @@ updatePS ds ps =
         nps
 
 
-particleStep : Float -> Particle -> Maybe Particle
+particleStep : Seconds -> Particle -> Maybe Particle
 particleStep ds pa =
-    if pa.lifetime + ds > pa.maxLifetime then
+    if pa.lifetimeS + ds > pa.maxLifetimeS then
         Nothing
 
     else
@@ -135,7 +135,7 @@ particleStep ds pa =
         in
         Just
             { pa
-                | lifetime = pa.lifetime + ds
+                | lifetimeS = pa.lifetimeS + ds
                 , p = vAdd pa.p (vScale (ds * 50) pa.v)
                 , v = vScale 0.97 pa.v
             }
@@ -164,7 +164,7 @@ viewParticle _ ({ nv, h } as pa) =
             100
 
         nl =
-            pa.lifetime / pa.maxLifetime
+            pa.lifetimeS / pa.maxLifetimeS
     in
     viewTrail h
         vInitial
