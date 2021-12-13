@@ -100,13 +100,13 @@ initParticle : Vec -> Float -> Particle
 initParticle nv h =
     let
         ip =
-            nv |> vScale 10
+            vScale 10 nv
     in
     { nv = nv
     , h = h
     , ip = ip
     , p = ip
-    , v = nv |> vToPolar |> mapFirst (mul 50) |> vFromPolar
+    , v = vScale 50 nv
     , maxLifetimeS = 2
     , lifetimeS = 0
     }

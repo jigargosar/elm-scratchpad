@@ -424,6 +424,11 @@ vMap2 fn a b =
     vec (fn a.x b.x) (fn a.y b.y)
 
 
+vMapR : (Float -> Float) -> Vec -> Vec
+vMapR fn =
+    vToPolar >> mapFirst fn >> vFromPolar
+
+
 
 -- SVG
 
