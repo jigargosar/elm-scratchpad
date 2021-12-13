@@ -143,7 +143,7 @@ particleStep ds pa =
                 vScale ds pa.v
 
             cDragVel =
-                cVel |> vScale -3
+                cVel |> vScale -2
         in
         Just
             { pa
