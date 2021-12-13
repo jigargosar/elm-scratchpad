@@ -171,17 +171,20 @@ viewParticle ({ nv, h } as pa) =
             pa.lifetimeS / pa.maxLifetimeS
 
         lifetimeOpacity =
-            clamp 0 1 <| rangeMap ( 0, 1 ) ( 1, 0 ) nl
+            clamp 0 1 <| rangeMap ( 0.8, 1 ) ( 1, 0 ) nl
     in
-    --viewTrail h
-    --    pa.ip
-    --    pa.p
-    --    [ SA.opacity <| fromFloat <| lifetimeOpacity ]
-    circle (pa.v |> vToPolar |> first |> mul 0.05)
-        [ xf [ mv pa.p ]
-        , fill <| hsla h 1 0.5 1
-        , SA.opacity <| fromFloat <| lifetimeOpacity
-        ]
+    viewTrail h
+        pa.ip
+        pa.p
+        [ SA.opacity <| fromFloat <| lifetimeOpacity ]
+
+
+
+--circle (pa.v |> vToPolar |> first |> mul 0.05)
+--    [ xf [ mv pa.p ]
+--    , fill <| hsla h 1 0.5 1
+--    , SA.opacity <| fromFloat <| lifetimeOpacity
+--    ]
 
 
 randomHue : Generator Float
