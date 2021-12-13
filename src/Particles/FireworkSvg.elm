@@ -112,7 +112,7 @@ initParticle nv h =
     , ip = initialPosition
     , p = initialPosition
     , v = iv
-    , maxLifetimeS = 2
+    , maxLifetimeS = 5
     , lifetimeS = 0
     }
 
@@ -141,7 +141,7 @@ particleStep ds pa =
                 vScale ds pa.v
 
             cDragVel =
-                cVel |> vScale -0.5
+                cVel |> vScale -0.6
         in
         Just
             { pa
