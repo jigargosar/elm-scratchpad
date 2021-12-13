@@ -150,7 +150,7 @@ particleStep ds pa =
                 | lifetimeS = pa.lifetimeS + ds
                 , p = vAdd pa.p cVel
                 , v = vAdd pa.v cDragVel
-                , oldPS = pa.p :: pa.oldPS |> List.take 100
+                , oldPS = pa.p :: pa.oldPS |> List.take 20
             }
 
 
@@ -175,12 +175,23 @@ viewParticle ({ nv, h } as pa) =
 
         lifetimeOpacity =
             clamp 0 1 <| rangeMap ( 0.7, 1 ) ( 1, 0 ) nl
+
+        vt =
+            viewTrail h
+                pa.ip
+                pa.p
+                [ SA.opacity <| fromFloat <| lifetimeOpacity
+                ]
+
+        vl =
+            vPolyline (pa.p :: pa.oldPS)
+                [ stroke <| hsla h 1 0.5 lifetimeOpacity
+                , strokeW 2
+                , xf [ mv pa.p ]
+                ]
     in
-    viewTrail h
-        pa.ip
-        pa.p
-        [ SA.opacity <| fromFloat <| lifetimeOpacity
-        ]
+    vt
+        |> always vl
 
 
 
