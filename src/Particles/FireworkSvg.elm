@@ -171,19 +171,13 @@ randomParticles =
 viewParticle : Float -> Particle -> Svg msg
 viewParticle _ ({ nv, h } as pa) =
     let
-        vInitial =
-            nv |> vScale (maxLen * 0.1)
-
-        maxLen =
-            100
-
         nl =
             pa.lifetimeS / pa.maxLifetimeS
     in
     viewTrail h
-        vInitial
+        pa.ip
         pa.p
-        [ SA.opacity <| fromFloat <| rangeMap ( 0.2, 1 ) ( 1, 0 ) nl
+        [ SA.opacity <| fromFloat <| clamp 0 1 <| rangeMap ( 0.8, 1 ) ( 1, 0 ) nl
         ]
 
 
