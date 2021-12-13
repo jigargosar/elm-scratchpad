@@ -190,7 +190,7 @@ viewParticle ({ nv, h } as pa) =
                         1
                         0.5
                         (clamp 0 1 <|
-                            rangeMap ( 10, 2 )
+                            rangeMap ( 10, 1 )
                                 ( 1, 0 )
                                 (pa.v |> vToPolar |> first)
                         )
