@@ -130,17 +130,17 @@ particleStep ds pa =
 
     else
         let
-            cv =
+            cVel =
                 vScale ds pa.v
 
-            cDragV =
-                cv |> vScale -0.1
+            cDragVel =
+                cVel |> vScale -0.1
         in
         Just
             { pa
                 | lifetimeS = pa.lifetimeS + ds
-                , p = vAdd pa.p cv
-                , v = vAdd pa.v cDragV
+                , p = vAdd pa.p cVel
+                , v = vAdd pa.v cDragVel
             }
 
 
