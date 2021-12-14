@@ -3,7 +3,7 @@ module EasingCharts exposing (..)
 import Chart as C
 import Chart.Attributes as CA
 import Chart.Events as CE
-import Chart.Svg as CS exposing (Axis)
+import Chart.Svg exposing (Axis)
 import Ease
 import Html as H
 import Svg as S
