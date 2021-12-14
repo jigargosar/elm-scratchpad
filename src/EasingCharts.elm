@@ -55,15 +55,6 @@ main =
         ]
 
 
-easeReturn : Ease.Easing -> Ease.Easing
-easeReturn e t =
-    if t < 0.5 then
-        e (t * 2)
-
-    else
-        Ease.reverse e ((t - 0.5) * 2)
-
-
 xySeries =
     C.series .x
         [ C.interpolated .y [ CA.monotone ] [] ]

@@ -3,6 +3,7 @@ module Utils exposing (..)
 import Browser exposing (Document)
 import Color
 import Dict exposing (Dict)
+import Ease
 import Float.Extra
 import Html exposing (Attribute, Html)
 import Html.Attributes exposing (style)
@@ -320,6 +321,15 @@ normSamples : Int -> List Float
 normSamples ct =
     List.range 1 ct
         |> List.map (toFloat >> norm 1 (toFloat ct))
+
+
+easeReturn : Ease.Easing -> Ease.Easing
+easeReturn e t =
+    if t < 0.5 then
+        e (t * 2)
+
+    else
+        Ease.reverse e ((t - 0.5) * 2)
 
 
 sqr =
