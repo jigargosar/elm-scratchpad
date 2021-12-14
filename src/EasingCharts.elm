@@ -17,18 +17,6 @@ type alias TRBL =
     }
 
 
-trblAll n =
-    TRBL n n n n
-
-
-cpa n =
-    CA.padding <| trblAll n
-
-
-cma n =
-    CA.margin <| trblAll n
-
-
 type alias Container data msg =
     { width : Float
     , height : Float
