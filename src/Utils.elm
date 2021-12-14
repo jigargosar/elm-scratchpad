@@ -524,6 +524,14 @@ rgb r g b =
     Color.rgb r g b |> Color.toCssString
 
 
+type alias TRBL =
+    { top : Float
+    , right : Float
+    , bottom : Float
+    , left : Float
+    }
+
+
 bgc =
     style "background-color"
 

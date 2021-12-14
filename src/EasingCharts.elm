@@ -9,14 +9,6 @@ import Svg as S
 import Utils exposing (..)
 
 
-type alias TRBL =
-    { top : Float
-    , right : Float
-    , bottom : Float
-    , left : Float
-    }
-
-
 type alias Container data msg =
     { width : Float
     , height : Float
