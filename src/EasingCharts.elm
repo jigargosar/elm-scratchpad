@@ -44,18 +44,33 @@ main =
             ]
             [ C.xLabels [ CA.withGrid ]
             , C.yLabels [ CA.withGrid ]
+            , sampleFnToSeries <| Ease.reverse Ease.outSine
+            , xySeries
+                (normSamples 100
+                    |> List.map (\x -> { x = lerp -1 1 x, y = easeReturn Ease.outSine x })
+                )
 
-            --, sampleFnToSeries Ease.inOutBack
-            --, sampleFnToSeries Ease.inOutBounce
-            , sampleFnToSeries Ease.inOutExpo
+            --, sampleFnToSeries <| easeReturn Ease.outCirc
             ]
         ]
 
 
-sampleFnToSeries fn =
+easeReturn : Ease.Easing -> Ease.Easing
+easeReturn e t =
+    if t < 0.5 then
+        e (t * 2)
+
+    else
+        Ease.reverse e ((t - 0.5) * 2)
+
+
+xySeries =
     C.series .x
         [ C.interpolated .y [ CA.monotone ] [] ]
-        (sampleFn fn)
+
+
+sampleFnToSeries fn =
+    xySeries (sampleFn fn)
 
 
 sampleFn : (Float -> a) -> List { x : Float, y : a }
