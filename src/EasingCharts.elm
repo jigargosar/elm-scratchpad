@@ -51,9 +51,7 @@ chart =
 main =
     div [ paf 50 ]
         [ chart
-            [ CA.height 300
-            , CA.width 300
-            , CA.domain [ \a -> { a | min = 0, max = 1 } ]
+            [ CA.domain [ \a -> { a | min = 0, max = 1 } ]
             , CA.range [ \a -> { a | min = 0, max = 1 } ]
             ]
             [ C.xLabels [ CA.withGrid ]
