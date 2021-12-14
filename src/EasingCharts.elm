@@ -56,8 +56,7 @@ main =
 
 
 xySeries =
-    C.series .x
-        [ C.interpolated .y [ CA.monotone ] [] ]
+    C.series .x [ C.interpolated .y [ CA.monotone ] [] ]
 
 
 sampleFnToSeries fn =
