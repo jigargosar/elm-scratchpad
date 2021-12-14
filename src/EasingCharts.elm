@@ -55,6 +55,10 @@ main =
         ]
 
 
+xyBy fn x =
+    { x = x, y = fn x }
+
+
 xySeries =
     C.series .x
         [ C.interpolated .y [ CA.monotone ] [] ]
