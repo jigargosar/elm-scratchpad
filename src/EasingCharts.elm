@@ -30,17 +30,17 @@ main =
         [ C.chart
             [ CA.height 300
             , CA.width 300
-            , CA.padding { top = 0, bottom = 5, left = 10, right = 10 }
+            , CA.domain [ \a -> { a | min = 0, max = 1 } ]
+            , CA.range [ \a -> { a | min = 0, max = 1 } ]
             ]
             [ C.xLabels [ CA.withGrid ]
             , C.yLabels [ CA.withGrid ]
             , C.series .x
                 [ C.interpolated .y [ CA.monotone ] []
-                , C.interpolated .z [ CA.monotone ] []
                 ]
-                [ { x = 1, y = 2, z = 3 }
-                , { x = 3, y = 4, z = 1 }
-                , { x = 5, y = 2, z = 4 }
+                [ { x = 0, y = 0.2 }
+                , { x = 0.1, y = 0.3 }
+                , { x = 0.3, y = 0.4 }
                 ]
             ]
         ]
