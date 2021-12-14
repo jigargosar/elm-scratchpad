@@ -34,38 +34,9 @@ main =
             ]
             [ C.xLabels [ CA.withGrid ]
             , C.yLabels [ CA.withGrid ]
-            , C.bars
-                [ CA.x1 .x ]
-                [ C.bar .z [ CA.striped [] ]
-                , C.bar .y []
-                ]
-                [ { x = 3, y = 3, z = 1 }
-                , { x = 4, y = 2, z = 3 }
-                , { x = 5, y = 4, z = 2 }
-                ]
             , C.series .x
-                [ C.stacked
-                    [ C.interpolated .y [ CA.opacity 0.2 ] []
-                    , C.interpolated .z [ CA.opacity 1, CA.dotted [] ] []
-                    ]
-                ]
-                [ { x = 1, y = 1, z = 3 }
-                , { x = 2, y = 2, z = 1 }
-                , { x = 3, y = 2, z = 4 }
-                ]
-            , C.series .x
-                [ C.scatter .y [ CA.circle ]
-                , C.scatter .z [ CA.square ]
-                ]
-                [ { x = 1, y = 2, z = 3 }
-                , { x = 2, y = 3, z = 5 }
-                , { x = 3, y = 4, z = 2 }
-                , { x = 4, y = 1, z = 3 }
-                , { x = 5, y = 4, z = 1 }
-                ]
-            , C.series .x
-                [ C.interpolated .y [ CA.monotone ] [ CA.circle ]
-                , C.interpolated .z [ CA.monotone ] [ CA.square ]
+                [ C.interpolated .y [ CA.monotone ] []
+                , C.interpolated .z [ CA.monotone ] []
                 ]
                 [ { x = 1, y = 2, z = 3 }
                 , { x = 3, y = 4, z = 1 }
