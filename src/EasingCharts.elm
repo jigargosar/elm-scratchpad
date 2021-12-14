@@ -4,6 +4,7 @@ import Chart as C
 import Chart.Attributes as CA
 import Chart.Events as CE
 import Chart.Svg as CS exposing (Axis)
+import Ease
 import Html as H
 import Svg as S
 import Utils exposing (..)
@@ -33,11 +34,12 @@ main =
         [ chart
             [ CA.domain [ \a -> { a | min = 0, max = 1 } ]
             , CA.range [ \a -> { a | min = 0, max = 1 } ]
+            , CA.padding <| TRBL 20 20 20 20
             ]
             [ C.xLabels [ CA.withGrid ]
             , C.yLabels [ CA.withGrid ]
-            , sampleFnToSeries sqrt
-            , sampleFnToSeries sqr
+            , sampleFnToSeries Ease.inOutBack
+            , sampleFnToSeries Ease.inOutBack
             ]
         ]
 
