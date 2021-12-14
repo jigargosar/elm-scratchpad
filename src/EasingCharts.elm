@@ -36,16 +36,22 @@ main =
             , CA.height 300
             , CA.domain
                 [--\a -> { a | min = 0, max = 1 }
+                 --CA.lowest -0.25 CA.orLower
+                 --, CA.highest 1.25 CA.orHigher
                 ]
             , CA.range
                 [--\a -> { a | min = 0, max = 1 }
                 ]
-            , CA.padding <| TRBL 20 20 20 20
+
+            --, CA.padding <| TRBL 20 20 20 20
             ]
             [ C.xLabels [ CA.withGrid ]
             , C.yLabels [ CA.withGrid ]
             , sampleFnToSeries <| Ease.reverse Ease.outCubic
-            , sampleFnToSeries <| Ease.inOutBounce
+
+            --, sampleFnToSeries <| Ease.inOutBounce
+            --, sampleFnToSeries <| Ease.inOutElastic
+            , sampleFnToSeries <| Ease.inOutBack
             ]
         ]
 
