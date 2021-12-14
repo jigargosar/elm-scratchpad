@@ -55,15 +55,17 @@ main =
         ]
 
 
+xySeries : List { x : Float, y : Float } -> C.Element { x : Float, y : Float } msg
 xySeries =
     C.series .x [ C.interpolated .y [ CA.monotone ] [] ]
 
 
+sampleFnToSeries : (Float -> Float) -> C.Element { x : Float, y : Float } msg
 sampleFnToSeries fn =
     xySeries (sampleFn fn)
 
 
-sampleFn : (Float -> a) -> List { x : Float, y : a }
+sampleFn : (Float -> Float) -> List { x : Float, y : Float }
 sampleFn fn =
     normSamples 100 |> List.map (xyBy fn)
 
