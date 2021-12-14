@@ -66,6 +66,11 @@ main =
         ]
 
 
+sampleFn fn =
+    normSamples 100
+        |> List.map (\x -> { x = x, y = fn x })
+
+
 data : List { x : Float, y : Float }
 data =
     normSamples 100
