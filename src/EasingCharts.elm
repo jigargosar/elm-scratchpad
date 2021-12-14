@@ -44,10 +44,10 @@ main =
             ]
             [ C.xLabels [ CA.withGrid ]
             , C.yLabels [ CA.withGrid ]
-            , sampleFnToSeries <| Ease.reverse Ease.outSine
+            , sampleFnToSeries <| Ease.reverse Ease.outCubic
             , xySeries
                 (normSamples 100
-                    |> List.map (\x -> { x = lerp -1 1 x, y = easeReturn Ease.outSine x })
+                    |> List.map (\x -> { x = lerp -1 1 x, y = easeReturn Ease.outCubic x })
                 )
 
             --, sampleFnToSeries <| easeReturn Ease.outCirc
