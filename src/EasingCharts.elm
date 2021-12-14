@@ -59,8 +59,7 @@ main =
             [ C.xLabels [ CA.withGrid ]
             , C.yLabels [ CA.withGrid ]
             , C.series .x
-                [ C.interpolated .y [ CA.monotone ] []
-                ]
+                [ C.interpolated .y [ CA.monotone ] [] ]
                 (sampleFn sqr)
             ]
         ]
