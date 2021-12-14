@@ -677,6 +677,10 @@ pa =
     style "padding"
 
 
+paf =
+    fpx >> pa
+
+
 dFlex =
     style "display" "flex"
 

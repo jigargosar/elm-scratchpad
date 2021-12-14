@@ -26,7 +26,7 @@ cma n =
 
 
 main =
-    div [ pa <| fpx 50 ]
+    div [ paf 50 ]
         [ C.chart
             []
             [ C.xLabels []
