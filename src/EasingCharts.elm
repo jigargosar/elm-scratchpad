@@ -10,9 +10,9 @@ import Utils exposing (..)
 
 
 type alias TRBL =
-    { bottom : Float
-    , top : Float
+    { top : Float
     , right : Float
+    , bottom : Float
     , left : Float
     }
 
