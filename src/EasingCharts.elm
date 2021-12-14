@@ -58,15 +58,16 @@ main =
             ]
             [ C.xLabels [ CA.withGrid ]
             , C.yLabels [ CA.withGrid ]
-            , C.series .x
-                [ C.interpolated .y [ CA.monotone ] [] ]
-                (sampleFn sqr)
+            , sampleFnToSeries sqrt
+            , sampleFnToSeries sqr
             ]
         ]
 
 
-sqr x =
-    x ^ 2
+sampleFnToSeries fn =
+    C.series .x
+        [ C.interpolated .y [ CA.monotone ] [] ]
+        (sampleFn fn)
 
 
 sampleFn : (Float -> a) -> List { x : Float, y : a }

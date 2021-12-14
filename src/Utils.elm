@@ -322,6 +322,18 @@ normSamples ct =
         |> List.map (toFloat >> norm 1 (toFloat ct))
 
 
+sqr =
+    raiseTo 2
+
+
+raiseTo b a =
+    pow a b
+
+
+pow a b =
+    a ^ b
+
+
 adjacentUnitVectors : List Vec
 adjacentUnitVectors =
     [ vec -1 0
