@@ -32,14 +32,22 @@ chart =
 main =
     div [ paf 50 ]
         [ chart
-            [ CA.domain [ \a -> { a | min = 0, max = 1 } ]
-            , CA.range [ \a -> { a | min = 0, max = 1 } ]
+            [ CA.width 300
+            , CA.height 300
+            , CA.domain
+                [--\a -> { a | min = 0, max = 1 }
+                ]
+            , CA.range
+                [--\a -> { a | min = 0, max = 1 }
+                ]
             , CA.padding <| TRBL 20 20 20 20
             ]
             [ C.xLabels [ CA.withGrid ]
             , C.yLabels [ CA.withGrid ]
-            , sampleFnToSeries Ease.inOutBack
-            , sampleFnToSeries Ease.inOutBack
+
+            --, sampleFnToSeries Ease.inOutBack
+            --, sampleFnToSeries Ease.inOutBounce
+            , sampleFnToSeries Ease.inOutExpo
             ]
         ]
 
