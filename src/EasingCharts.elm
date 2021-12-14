@@ -61,17 +61,16 @@ main =
             , C.series .x
                 [ C.interpolated .y [ CA.monotone ] []
                 ]
-                data
+                (sampleFn sqr)
             ]
         ]
 
 
+sqr x =
+    x ^ 2
+
+
+sampleFn : (Float -> a) -> List { x : Float, y : a }
 sampleFn fn =
     normSamples 100
         |> List.map (\x -> { x = x, y = fn x })
-
-
-data : List { x : Float, y : Float }
-data =
-    normSamples 100
-        |> List.map (\x -> { x = x, y = x * x })
