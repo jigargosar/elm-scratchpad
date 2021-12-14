@@ -323,12 +323,6 @@ normSamples ct =
         |> List.map (toFloat >> norm 1 (toFloat ct))
 
 
-sampleRange : Int -> ( Float, Float ) -> List Float
-sampleRange ct coDomain =
-    List.range 1 ct
-        |> List.map (toFloat >> rangeMap ( 1, toFloat ct ) coDomain)
-
-
 easeReturn : Ease.Easing -> Ease.Easing
 easeReturn e t =
     if t < 0.5 then

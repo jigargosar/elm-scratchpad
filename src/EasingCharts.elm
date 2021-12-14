@@ -55,10 +55,6 @@ main =
         ]
 
 
-xyBy fn x =
-    { x = x, y = fn x }
-
-
 xySeries =
     C.series .x
         [ C.interpolated .y [ CA.monotone ] [] ]
@@ -70,5 +66,9 @@ sampleFnToSeries fn =
 
 sampleFn : (Float -> a) -> List { x : Float, y : a }
 sampleFn fn =
-    normSamples 100
-        |> List.map (\x -> { x = x, y = fn x })
+    normSamples 100 |> List.map (xyBy fn)
+
+
+xyBy : (b -> a) -> b -> { x : b, y : a }
+xyBy fn x =
+    { x = x, y = fn x }
