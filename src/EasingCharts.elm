@@ -50,7 +50,7 @@ chart =
 
 main =
     div [ paf 50 ]
-        [ C.chart
+        [ chart
             [ CA.height 300
             , CA.width 300
             , CA.domain [ \a -> { a | min = 0, max = 1 } ]
