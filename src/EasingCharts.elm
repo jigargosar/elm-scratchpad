@@ -61,9 +61,12 @@ main =
             , C.series .x
                 [ C.interpolated .y [ CA.monotone ] []
                 ]
-                [ { x = 0, y = 0.2 }
-                , { x = 0.1, y = 0.3 }
-                , { x = 0.3, y = 0.4 }
-                ]
+                data
             ]
         ]
+
+
+data : List { x : Float, y : Float }
+data =
+    normSamples 100
+        |> List.map (\x -> { x = x, y = x * x })
