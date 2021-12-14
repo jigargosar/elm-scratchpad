@@ -45,19 +45,14 @@ main =
             [ C.xLabels [ CA.withGrid ]
             , C.yLabels [ CA.withGrid ]
             , sampleFnToSeries <| Ease.reverse Ease.outCubic
-            , xySeries
-                (normSamples 100
-                    |> List.map (\x -> { x = lerp -1 1 x, y = easeReturn Ease.outCubic x })
-                )
-
-            --, sampleFnToSeries <| easeReturn Ease.outCirc
+            , sampleFnToSeries <| Ease.inOutBounce
             ]
         ]
 
 
 xySeries : List { x : Float, y : Float } -> C.Element { x : Float, y : Float } msg
 xySeries =
-    C.series .x [ C.interpolated .y [ CA.monotone ] [] ]
+    C.series .x [ C.interpolated .y [] [] ]
 
 
 sampleFnToSeries : (Float -> Float) -> C.Element { x : Float, y : Float } msg
@@ -67,7 +62,7 @@ sampleFnToSeries fn =
 
 sampleFn : (Float -> Float) -> List { x : Float, y : Float }
 sampleFn fn =
-    normSamples 100 |> List.map (xyBy fn)
+    normSamples 500 |> List.map (xyBy fn)
 
 
 xyBy : (b -> a) -> b -> { x : b, y : a }
