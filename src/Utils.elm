@@ -673,7 +673,7 @@ itemsCenter =
     style "align-items" "center"
 
 
-pAll =
+pa =
     style "padding"
 
 

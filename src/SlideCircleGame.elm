@@ -146,7 +146,7 @@ view { tiles, forceOverlay } =
                 * {box-sizing:border-box;}
                 html,body{display:grid;min-height:100%;background-color:#ddd;}
             """
-        , div [ pAll "10px" ]
+        , div [ pa "10px" ]
             [ Svg.svg
                 [ saWidth width
                 , saHeight height

@@ -188,7 +188,7 @@ revealAndSwapSelection game =
 
 view : Model -> Html Msg
 view { sim } =
-    div [ ffMonospace, fontSize "20px", pAll "20px" ]
+    div [ ffMonospace, fontSize "20px", pa "20px" ]
         [ viewSim sim
         , viewAllEmulatedSimStates |> Html.map (always Nop)
         , viewGameResults |> Html.map (always Nop)
@@ -298,7 +298,7 @@ viewDoors doors =
                 (\i door ->
                     div
                         [ onClick (DoorClicked <| i + 1)
-                        , pAll "10px"
+                        , pa "10px"
                         , dFlex
                         , fDCol
                         , gap "10px"
@@ -495,7 +495,7 @@ viewAllEmulatedSimStates =
         , dFlex
         , fDCol
         , gap "20px"
-        , pAll "20px"
+        , pa "20px"
         ]
         (List.map viewSim sims)
 

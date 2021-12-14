@@ -156,7 +156,7 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div [ fontSize "24px", dFlex, fDCol, gap "20px", pAll "20px" ]
+    div [ fontSize "24px", dFlex, fDCol, gap "20px", pa "20px" ]
         [ div [ dFlex, gap "20px" ]
             (model.search
                 |> List.map
