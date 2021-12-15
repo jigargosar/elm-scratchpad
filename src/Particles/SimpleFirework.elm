@@ -45,4 +45,4 @@ view model =
             secondsToFractionOverNowMills 3 model.animNow
     in
     svg [ viewBoxC 300 300, bgc gray, dBlock, noFill, noStroke ]
-        [ vPolyline [ vZero, vec 100 0 ] [ strokeW 2, stroke <| hsla 1 1 0.65 1 ] ]
+        [ vPolyline [ vZero, vec 140 0 ] [ strokeW 2, stroke <| hsla 1 1 0.65 1 ] ]
