@@ -53,7 +53,7 @@ view model =
     svg [ viewBoxC 300 300, bgc gray, dBlock, noFill, noStroke ]
         [ easeLine (staggerNorm 0 nl) 1 vZero (vec 140 0) Ease.inSine []
             |> to4
-        , easeLine (staggerNorm 0 nl) 0.1 vZero (vec 140 0) Ease.inSine [ xf [ mv2 0 10 ] ]
+        , easeLine (staggerNorm 0.1 nl) 0.1 vZero (vec 140 0) Ease.inSine [ xf [ mv2 0 10 ] ]
             |> to4
         ]
 
