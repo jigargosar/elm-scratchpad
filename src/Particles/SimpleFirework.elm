@@ -39,4 +39,5 @@ update msg model =
 
 view : Model -> Html Msg
 view _ =
-    div [] [ text "template" ]
+    svg [ viewBoxC 300 300, bgc gray, dBlock, noFill, noStroke ]
+        []
