@@ -52,8 +52,15 @@ view model =
     in
     svg [ viewBoxC 300 300, bgc gray, dBlock, noFill, noStroke ]
         [ easeLine nl 1 vZero (vec 140 0) Ease.inSine []
+            |> to4
         , easeLine nl 0.1 vZero (vec 140 0) Ease.inQuad [ xf [ mv2 0 10 ] ]
         ]
+
+
+to4 el =
+    normSamples 4
+        |> List.map (\i -> group [ xf [ rotateDeg (i * 270) ] ] [ el ])
+        |> group []
 
 
 easeLine nl hue is ie ease aa =
