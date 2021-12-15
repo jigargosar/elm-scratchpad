@@ -1,5 +1,6 @@
 module Particles.SimpleFirework exposing (main)
 
+import Ease
 import Time
 import Utils exposing (..)
 
@@ -47,8 +48,11 @@ view model =
         ( is, ie ) =
             ( vZero, vec 140 0 )
 
+        ease =
+            Ease.inSine
+
         ( s, e ) =
-            ( is, ie )
+            ( nl |> ease |> vLerp is ie, nl |> Ease.flip ease |> vLerp is ie )
     in
     svg [ viewBoxC 300 300, bgc gray, dBlock, noFill, noStroke ]
         [ vPolyline [ s, e ] [ strokeW 2, stroke <| hsla 1 1 0.65 1 ] ]
