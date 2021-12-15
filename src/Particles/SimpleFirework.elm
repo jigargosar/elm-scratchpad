@@ -44,15 +44,16 @@ view model =
     let
         nl =
             secondsToFractionOverNowMills 3 model.animNow
+    in
+    svg [ viewBoxC 300 300, bgc gray, dBlock, noFill, noStroke ]
+        [ easeLine nl 1 vZero (vec 140 0) Ease.inSine []
+        , easeLine nl 0.1 vZero (vec 140 0) Ease.inQuad [ xf [ mv2 0 10 ] ]
+        ]
 
-        ( is, ie ) =
-            ( vZero, vec 140 0 )
 
-        ease =
-            Ease.inSine
-
+easeLine nl hue is ie ease aa =
+    let
         ( s, e ) =
             ( nl |> ease |> vLerp is ie, nl |> Ease.flip ease |> vLerp is ie )
     in
-    svg [ viewBoxC 300 300, bgc gray, dBlock, noFill, noStroke ]
-        [ vPolyline [ s, e ] [ strokeW 2, stroke <| hsla 1 1 0.65 1 ] ]
+    vPolyline [ s, e ] (strokeW 2 :: stroke (hsla hue 1 0.65 1) :: aa)
