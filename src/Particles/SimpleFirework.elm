@@ -52,7 +52,7 @@ view model =
     in
     svg [ viewBoxC 300 300, bgc gray, dBlock, noFill, noStroke ]
         [ easeLine nl 1 vZero (vec 140 0) Ease.inSine [] |> to4
-        , easeLine nl 0.1 vZero (vec 140 0) Ease.inQuad [ xf [ mv2 0 10 ] ] |> to4
+        , easeLine nl 0.1 vZero (vec 140 0) Ease.inSine [ xf [ mv2 0 10 ] ] |> to4
         ]
 
 
