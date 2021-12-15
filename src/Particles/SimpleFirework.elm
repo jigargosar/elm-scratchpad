@@ -48,18 +48,17 @@ view : Model -> Html Msg
 view model =
     let
         nl =
-            secondsToFractionOverNowMills 1 model.animNow
+            secondsToFractionOverNowMills 2 model.animNow
     in
     svg [ viewBoxC 300 300, bgc gray, dBlock, noFill, noStroke ]
-        [ easeLine nl 1 vZero (vec 140 0) Ease.inSine []
-            |> to4
-        , easeLine nl 0.1 vZero (vec 140 0) Ease.inQuad [ xf [ mv2 0 10 ] ]
+        [ easeLine nl 1 vZero (vec 140 0) Ease.inSine [] |> to4
+        , easeLine nl 0.1 vZero (vec 140 0) Ease.inQuad [ xf [ mv2 0 10 ] ] |> to4
         ]
 
 
 to4 el =
-    normSamples 4
-        |> List.map (\i -> group [ xf [ rotateDeg (i * 270) ] ] [ el ])
+    List.range 0 3
+        |> List.map (\i -> group [ xf [ rotateDeg (toFloat i * 90) ] ] [ el ])
         |> group []
 
 
