@@ -1,5 +1,6 @@
 module Particles.SimpleFirework exposing (main)
 
+import Time
 import Utils exposing (..)
 
 
@@ -13,31 +14,35 @@ main =
 
 
 type alias Model =
-    {}
+    { animNow : Int }
 
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( {}, Cmd.none )
+    ( { animNow = 0 }, Cmd.none )
 
 
 type Msg
-    = Msg
+    = Frame Int
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Sub.none
+    Time.every (1000 / 35) (Time.posixToMillis >> Frame)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Msg ->
-            ( model, Cmd.none )
+        Frame animNow ->
+            ( { model | animNow = animNow }, Cmd.none )
 
 
 view : Model -> Html Msg
-view _ =
+view model =
+    let
+        nl =
+            secondsToFractionOverNowMills 3 model.animNow
+    in
     svg [ viewBoxC 300 300, bgc gray, dBlock, noFill, noStroke ]
         []
