@@ -1,5 +1,6 @@
 module Particles.SimpleFirework exposing (main)
 
+import Browser.Events
 import Ease
 import Time
 import Utils exposing (..)
@@ -29,7 +30,11 @@ type Msg
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Time.every (1000 / 35) (Time.posixToMillis >> Frame)
+    [ Time.every (1000 / 35) (Time.posixToMillis >> Frame)
+    , Browser.Events.onAnimationFrame (Time.posixToMillis >> Frame)
+        |> always Sub.none
+    ]
+        |> Sub.batch
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
