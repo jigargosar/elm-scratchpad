@@ -48,10 +48,24 @@ view : Model -> Html Msg
 view model =
     let
         nl =
-            secondsToFractionOverNowMills 1 model.animNow
+            secondsToFractionOverNowMills 2 model.animNow
     in
     svg [ viewBoxC 300 300, bgc gray, dBlock, noFill, noStroke ]
-        [ easeLine nl 1 vZero (vec 140 0) Ease.inSine []
+        [ easeLine
+            (rangeMap ( 0, 0.6 ) ( 0, 1 ) nl |> clamp 0 1)
+            0.1
+            vZero
+            (vec 140 0)
+            Ease.inSine
+            []
+            |> to4
+        , easeLine
+            (rangeMap ( 0.4, 1 ) ( 0, 1 ) nl |> clamp 0 1)
+            0.5
+            vZero
+            (vec 140 0)
+            Ease.inSine
+            []
             |> to4
         ]
 
