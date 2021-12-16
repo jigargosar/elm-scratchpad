@@ -1,5 +1,6 @@
 module TicTacToe exposing (main)
 
+import Html
 import Utils exposing (..)
 
 
@@ -39,4 +40,4 @@ update msg model =
 
 view : Model -> Html Msg
 view _ =
-    div [] [ text "Tic Tac Toe - Game" ]
+    div [] [ Html.h1 [] [ text "Tic Tac Toe - Game" ] ]
