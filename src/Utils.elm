@@ -464,7 +464,7 @@ svg =
 
 
 svgBlock aa =
-    svg (dBlock :: noFill :: noStroke :: aa)
+    svg (dBlock :: noFill :: noStroke :: noUserSelect :: aa)
 
 
 group =
