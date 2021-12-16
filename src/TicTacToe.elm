@@ -114,9 +114,14 @@ getWinner bd =
         gps =
             squareGridPositions 3
     in
+    -- columns
     groupEqBy first gps
+        -- rows
         ++ groupEqBy second gps
-        ++ [ ( ( 0, 0 ), [ ( 1, 1 ), ( 2, 2 ) ] )
+        ++ [ -- diagonal 1
+             ( ( 0, 0 ), [ ( 1, 1 ), ( 2, 2 ) ] )
+
+           -- diagonal 2
            , ( ( 2, 0 ), [ ( 1, 1 ), ( 0, 2 ) ] )
            ]
         |> findMapFirst (getWinnerFromConsGPS bd)
