@@ -1,6 +1,6 @@
 module Utils exposing (..)
 
-import Browser exposing (Document)
+import Browser
 import Color
 import Dict exposing (Dict)
 import Ease
@@ -594,6 +594,11 @@ stroke =
     SA.stroke
 
 
+withTitle : String -> List (Html msg) -> Document msg
+withTitle title body =
+    Document title body
+
+
 stylesNode : String -> Html msg
 stylesNode string =
     Html.node "style" [] [ Html.text string ]
@@ -781,6 +786,40 @@ noUserSelect =
 
 type alias Html msg =
     Html.Html msg
+
+
+{-| This data specifies the `<title>` and all of the nodes that should go in
+the `<body>`. This means you can update the title as your application changes.
+Maybe your "single-page app" navigates to a "different page", maybe a calendar
+app shows an accurate date in the title, etc.
+
+> **Note about CSS:** This looks similar to an `<html>` document, but this is
+> not the place to manage CSS assets. If you want to work with CSS, there are
+> a couple ways:
+>
+> 1.  Packages like [`rtfeldman/elm-css`][elm-css] give all of the features
+>     of CSS without any CSS files. You can add all the styles you need in your
+>     `view` function, and there is no need to worry about class names matching.
+>
+> 2.  Compile your Elm code to JavaScript with `elm make --output=elm.js` and
+>     then make your own HTML file that loads `elm.js` and the CSS file you want.
+>     With this approach, it does not matter where the CSS comes from. Write it
+>     by hand. Generate it. Whatever you want to do.
+>
+> 3.  If you need to change `<link>` tags dynamically, you can send messages
+>     out a port to do it in JavaScript.
+>
+> The bigger point here is that loading assets involves touching the `<head>`
+> as an implementation detail of browsers, but that does not mean it should be
+> the responsibility of the `view` function in Elm. So we do it differently!
+
+[elm-css]: /packages/rtfeldman/elm-css/latest/
+
+-}
+type alias Document msg =
+    { title : String
+    , body : List (Html msg)
+    }
 
 
 type alias Attribute msg =

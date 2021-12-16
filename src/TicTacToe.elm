@@ -1,8 +1,7 @@
 module TicTacToe exposing (main)
 
-import Browser exposing (Document)
+import Browser
 import Dict exposing (Dict)
-import Html
 import Utils exposing (..)
 
 
@@ -49,12 +48,10 @@ update msg model =
 
 view : Model -> Document Msg
 view model =
-    { title = "Tic Tac Toe - Game"
-    , body =
+    Document "Tic Tac Toe - Game"
         [ basicStylesNode
         , viewBoardSvg model.bd
         ]
-    }
 
 
 viewBoardSvg : BoardDict -> Html msg
