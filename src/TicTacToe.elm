@@ -101,6 +101,11 @@ makeMove gp bd =
             Nothing
 
 
+getWinner : BoardDict -> Maybe Mark
+getWinner bd =
+    Nothing
+
+
 getNextMarker : BoardDict -> Maybe Mark
 getNextMarker bd =
     let
