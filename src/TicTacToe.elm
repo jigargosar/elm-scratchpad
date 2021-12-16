@@ -65,9 +65,8 @@ view model =
 
 viewBoard bd =
     fRow [ h100 ]
-        [ svg
+        [ svgBlock
             [ viewBoxC 300 300
-            , dBlock
             , noFill
             , noStroke
             , ffMonospace

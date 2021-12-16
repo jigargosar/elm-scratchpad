@@ -463,6 +463,10 @@ svg =
     Svg.svg
 
 
+svgBlock aa =
+    svg (dBlock :: aa)
+
+
 group =
     Svg.g
 
