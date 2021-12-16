@@ -267,6 +267,15 @@ squareGridPositions sz =
     rangeWH sz sz
 
 
+gpToGridLocal : { a | gridSize : Float, cellSize : Float } -> Int2 -> Float2
+gpToGridLocal { gridSize, cellSize } ( x, y ) =
+    let
+        c0 =
+            -(gridSize / 2) + (cellSize / 2)
+    in
+    ( c0 + toFloat x * cellSize, c0 + toFloat y * cellSize )
+
+
 rangeN : Int -> List Int
 rangeN n =
     List.range 0 (n - 1)
