@@ -117,7 +117,6 @@ getWinner bd =
         _ =
             groupEqBy first gps
                 ++ groupEqBy second gps
-                ++ groupEqBy second gps
     in
     groupEqBy first (squareGridPositions 3)
         |> findMapFirst (getWinnerFromConsGPS bd)
