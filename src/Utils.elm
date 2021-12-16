@@ -7,6 +7,7 @@ import Ease
 import Float.Extra
 import Html exposing (Html)
 import Html.Attributes exposing (style)
+import Html.Events
 import Json.Decode as JD exposing (Decoder)
 import Random exposing (Generator)
 import Svg
@@ -1502,3 +1503,8 @@ bDocument :
     -> Program flags model msg
 bDocument =
     Browser.document
+
+
+notifyClick : msg -> Attribute msg
+notifyClick =
+    Html.Events.onClick

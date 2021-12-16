@@ -131,10 +131,6 @@ viewSymbolAt str gp =
             )
 
 
-notifyClick =
-    Html.Events.onClick
-
-
 mvInSquareGrid : { a | gridSize : Float, cellSize : Float } -> GPos -> Transform
 mvInSquareGrid { gridSize, cellSize } ( x, y ) =
     let
