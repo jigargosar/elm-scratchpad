@@ -108,9 +108,15 @@ getWinner bd =
 
 getWinnerInRow : Int -> BoardDict -> Maybe Mark
 getWinnerInRow row bd =
+    filterKey (\( _, y ) -> y == row) bd
+        |> Dict.values
+        |> getWinnerFromSlots
+
+
+getWinnerFromSlots : List Slot -> Maybe Mark
+getWinnerFromSlots slots =
     case
-        filterKey (\( _, y ) -> y == row) bd
-            |> Dict.values
+        slots
     of
         ((Marked mark) as h) :: t ->
             if List.all (eq h) t then
