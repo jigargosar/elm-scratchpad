@@ -135,9 +135,7 @@ getWinnerInCol col bd =
 
 getWinnerFromSlots : List Slot -> Maybe Mark
 getWinnerFromSlots slots =
-    case
-        slots
-    of
+    case slots of
         ((Marked mark) as h) :: t ->
             if List.all (eq h) t then
                 Just mark
