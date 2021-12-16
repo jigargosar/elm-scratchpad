@@ -23,7 +23,9 @@ init () =
     ( { bd =
             emptyBoardDict
                 |> withRollback (makeMove ( 0, 0 ))
+                |> withRollback (makeMove ( 0, 1 ))
                 |> withRollback (makeMove ( 1, 1 ))
+                |> withRollback (makeMove ( 0, 2 ))
                 |> withRollback (makeMove ( 2, 2 ))
       }
     , Cmd.none
