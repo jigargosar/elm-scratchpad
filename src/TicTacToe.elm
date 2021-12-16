@@ -54,7 +54,7 @@ view model =
         ]
 
 
-viewBoardSvg : BoardDict -> Html msg
+viewBoardSvg : BoardDict -> Html Msg
 viewBoardSvg bd =
     fRow [ h100, placeContentCenter ]
         [ svgBlock [ viewBoxC 300 300, ffMonospace ]
@@ -80,7 +80,7 @@ emptyBoardDict =
         |> Dict.fromList
 
 
-viewBD : BoardDict -> Svg msg
+viewBD : BoardDict -> Svg Msg
 viewBD bd =
     bd
         |> Dict.toList
@@ -88,7 +88,7 @@ viewBD bd =
         |> group []
 
 
-viewCellEntry : ( GPos, Marker ) -> Svg msg
+viewCellEntry : ( GPos, Marker ) -> Svg Msg
 viewCellEntry ( gp, marker ) =
     case marker of
         Cross ->
