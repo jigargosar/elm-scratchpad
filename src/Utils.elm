@@ -624,7 +624,9 @@ basicStylesNode =
     
                     html, body {
                         height:100%;
+                        color: #fafafa
                         background-color:#222;
+                        font-size: 20px;
                     }
                 """
 

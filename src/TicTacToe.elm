@@ -56,6 +56,7 @@ view model =
     Document "Tic Tac Toe - Game"
         [ basicStylesNode
         , viewBoardSvg model.bd
+        , div [] [ text <| Debug.toString <| getWinner model.bd ]
         ]
 
 
@@ -65,6 +66,7 @@ viewBoardSvg bd =
         [ sMaxHeight "100vh"
         , viewBoxC 300 300
         , ffMonospace
+        , fontSize "12px"
         ]
         [ viewBD bd
         ]
