@@ -1177,27 +1177,6 @@ scanApplyNHelp n fn x acc =
         scanApplyNHelp (n - 1) fn (fn x) (x :: acc)
 
 
-maybeFilter : (a -> Bool) -> Maybe a -> Maybe a
-maybeFilter pred =
-    Maybe.andThen
-        (\v ->
-            if pred v then
-                Just v
-
-            else
-                Nothing
-        )
-
-
-maybeFromPred : (a -> Bool) -> a -> Maybe a
-maybeFromPred pred v =
-    if pred v then
-        Just v
-
-    else
-        Nothing
-
-
 sumBy : (a -> number) -> List a -> number
 sumBy fn =
     List.foldl (fn >> add) 0
@@ -1493,6 +1472,41 @@ findFirst pred xs =
 
             else
                 findFirst pred t
+
+
+
+-- MAYBE HELPERS
+
+
+orElseLazy : (() -> Maybe a) -> Maybe a -> Maybe a
+orElseLazy fn mb =
+    case mb of
+        Nothing ->
+            fn ()
+
+        _ ->
+            mb
+
+
+maybeFilter : (a -> Bool) -> Maybe a -> Maybe a
+maybeFilter pred =
+    Maybe.andThen
+        (\v ->
+            if pred v then
+                Just v
+
+            else
+                Nothing
+        )
+
+
+maybeFromPred : (a -> Bool) -> a -> Maybe a
+maybeFromPred pred v =
+    if pred v then
+        Just v
+
+    else
+        Nothing
 
 
 

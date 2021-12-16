@@ -119,16 +119,6 @@ getWinner bd =
             )
 
 
-orElseLazy : (() -> Maybe a) -> Maybe a -> Maybe a
-orElseLazy fn mb =
-    case mb of
-        Nothing ->
-            fn ()
-
-        _ ->
-            mb
-
-
 getWinnerInRow : Int -> BoardDict -> Maybe Mark
 getWinnerInRow row bd =
     filterKey (\( _, y ) -> y == row) bd
