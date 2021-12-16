@@ -57,8 +57,7 @@ view _ =
 
 viewBoard =
     svg [ viewBoxC 300 300, dBlock, noFill, noStroke, ffMonospace ]
-        [ --words "X" [ fill "white", xf [ scale 10 ] ]
-          viewCrossAt ( 0, 0 )
+        [ viewCrossAt ( 0, 0 )
         , viewZeroAt ( 1, 1 )
         , viewCrossAt ( 2, 2 )
         ]
