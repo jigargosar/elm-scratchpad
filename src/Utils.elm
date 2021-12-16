@@ -744,6 +744,14 @@ sMaxHeight =
     style "max-height"
 
 
+vh100 =
+    sMaxHeight "100vh"
+
+
+vw100 =
+    sMaxWidth "100vw"
+
+
 sMaxWidth =
     style "max-width"
 

@@ -56,15 +56,12 @@ view model =
 
 viewBoardSvg : BoardDict -> Html Msg
 viewBoardSvg bd =
-    div []
-        [ svgBlock
-            [ sMaxHeight "100vh"
-            , sMaxWidth "100vh"
-            , viewBoxC 300 300
-            , ffMonospace
-            ]
-            [ viewBD bd
-            ]
+    svgBlock
+        [ vh100
+        , viewBoxC 300 300
+        , ffMonospace
+        ]
+        [ viewBD bd
         ]
 
 
