@@ -58,22 +58,19 @@ view model =
                     background-color:#222;
                 }
             """
-        , div
-            [ dFlex
-            , style "height" "100%"
-            , style "place-content" "center"
-            ]
-            [ viewBoard model.bd ]
+        , viewBoard model.bd
         ]
     }
 
 
 viewBoard bd =
-    svg [ viewBoxC 300 300, dBlock, noFill, noStroke, ffMonospace ]
-        [ bd
-            |> Dict.toList
-            |> List.map viewCellEntry
-            |> group []
+    div [ dFlex, placeContentCenter ]
+        [ svg [ viewBoxC 300 300, dBlock, noFill, noStroke, ffMonospace ]
+            [ bd
+                |> Dict.toList
+                |> List.map viewCellEntry
+                |> group []
+            ]
         ]
 
 

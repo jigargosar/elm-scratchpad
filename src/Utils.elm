@@ -699,6 +699,10 @@ gap =
     style "gap"
 
 
+placeContentCenter =
+    style "place-content" "center"
+
+
 contentCenter =
     style "justify-content" "center"
 
