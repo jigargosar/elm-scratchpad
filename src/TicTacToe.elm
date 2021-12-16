@@ -2,6 +2,7 @@ module TicTacToe exposing (main)
 
 import Browser
 import Dict exposing (Dict)
+import Html.Events
 import Utils exposing (..)
 
 
@@ -31,7 +32,7 @@ init () =
 
 
 type Msg
-    = Msg
+    = OnClick GPos
 
 
 subscriptions : Model -> Sub Msg
@@ -42,7 +43,7 @@ subscriptions _ =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Msg ->
+        OnClick _ ->
             ( model, Cmd.none )
 
 
@@ -103,12 +104,20 @@ viewCellEntry ( gp, marker ) =
             viewSymbolAt "" gp
 
 
-viewSymbolAt : String -> GPos -> Svg msg
+viewSymbolAt : String -> GPos -> Svg Msg
 viewSymbolAt str gp =
     [ square 100 [ fill "blue", stroke "black" ]
     , words str [ fill "white", xf [ scale 10 ] ]
     ]
-        |> group (xf [ mvInSquareGrid { gridSize = 300, cellSize = 100 } gp ] :: [])
+        |> group
+            (xf [ mvInSquareGrid { gridSize = 300, cellSize = 100 } gp ]
+                :: notifyClick (OnClick gp)
+                :: []
+            )
+
+
+notifyClick =
+    Html.Events.onClick
 
 
 mvInSquareGrid : { a | gridSize : Float, cellSize : Float } -> GPos -> Transform
