@@ -119,7 +119,17 @@ getNextMarker bd =
         emptyCt =
             Dict.filter (\_ -> eq Empty) bd |> Dict.size
     in
-    Nothing
+    if emptyCt <= Dict.size bd then
+        Just
+            (if modBy 2 (emptyCt - 1) == 0 then
+                Cross
+
+             else
+                Zero
+            )
+
+    else
+        Nothing
 
 
 viewBD : BoardDict -> Svg Msg
