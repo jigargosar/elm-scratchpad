@@ -1470,6 +1470,10 @@ getInDict dict key =
 -- LIST HELPERS
 
 
+allEq v ls =
+    List.all (eq v) ls
+
+
 groupEqBy : (a -> b) -> List a -> List ( a, List a )
 groupEqBy extract =
     groupBy (eqBy extract)

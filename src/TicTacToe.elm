@@ -135,7 +135,7 @@ getWinnerFromGPS : BoardDict -> List GPos -> Maybe Mark
 getWinnerFromGPS bd gps =
     case List.filterMap (getInDict bd) gps of
         ((Marked mark) as h) :: t ->
-            if List.all (eq h) t then
+            if allEq h t then
                 Just mark
 
             else
