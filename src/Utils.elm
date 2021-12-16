@@ -262,6 +262,10 @@ rangeWH w h =
         |> List.concatMap (\y -> rangeN w |> List.map (\x -> ( x, y )))
 
 
+squareGridPositions sz =
+    rangeWH sz sz
+
+
 rangeN : Int -> List Int
 rangeN n =
     List.range 0 (n - 1)

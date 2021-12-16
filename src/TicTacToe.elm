@@ -57,7 +57,10 @@ view _ =
 
 viewBoard =
     svg [ viewBoxC 300 300, dBlock, noFill, noStroke, ffMonospace ]
-        [ viewCrossAt ( 0, 0 )
+        [ squareGridPositions 3
+            |> List.map viewCrossAt
+            |> group []
+        , viewCrossAt ( 0, 0 )
         , viewZeroAt ( 1, 1 )
         , viewCrossAt ( 2, 2 )
         ]
