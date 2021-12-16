@@ -114,16 +114,16 @@ getWinner : BoardDict -> Maybe Mark
 getWinner bd =
     let
         columns =
-            rangeN 3 |> List.map (\x -> rangeN 3 |> List.map (\y -> ( x, y )))
+            times 3 (\x -> times 3 (\y -> ( x, y )))
 
         rows =
-            rangeN 3 |> List.map (\y -> rangeN 3 |> List.map (\x -> ( x, y )))
+            times 3 (\y -> times 3 (\x -> ( x, y )))
 
         diagonal1 =
-            rangeN 3 |> List.map (\n -> ( n, n ))
+            times 3 (\n -> ( n, n ))
 
         diagonal2 =
-            rangeN 3 |> List.map (\n -> ( n, 2 - n ))
+            times 3 (\n -> ( n, 2 - n ))
     in
     diagonal1
         :: diagonal2

@@ -282,6 +282,11 @@ rangeN n =
     List.range 0 (n - 1)
 
 
+times : Int -> (Int -> b) -> List b
+times n fn =
+    rangeN n |> List.map fn
+
+
 type alias Vec =
     { x : Float, y : Float }
 
