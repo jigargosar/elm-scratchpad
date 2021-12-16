@@ -43,8 +43,24 @@ subscriptions _ =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        OnClick _ ->
-            ( model, Cmd.none )
+        OnClick gp ->
+            ( updateOnGPClick gp model, Cmd.none )
+
+
+updateOnGPClick gp ({ bd } as model) =
+    let
+        fn s =
+            case s of
+                Cross ->
+                    Zero
+
+                Zero ->
+                    Empty
+
+                Empty ->
+                    Cross
+    in
+    { model | bd = Dict.update gp (Maybe.map fn) bd }
 
 
 view : Model -> Document Msg
