@@ -108,7 +108,7 @@ viewBD bd =
 
 viewCellEntry : ( GPos, Marker ) -> Svg Msg
 viewCellEntry ( gp, marker ) =
-    viewSymbol (symbolToString marker) gp
+    viewSymbolAt (symbolToString marker) gp
 
 
 symbolToString : Marker -> String
@@ -124,8 +124,8 @@ symbolToString marker =
             ""
 
 
-viewSymbol : String -> GPos -> Svg Msg
-viewSymbol str gp =
+viewSymbolAt : String -> GPos -> Svg Msg
+viewSymbolAt str gp =
     [ square 100 [ fill "blue", stroke "black" ]
     , words str [ fill "white", xf [ scale 10 ] ]
     ]
