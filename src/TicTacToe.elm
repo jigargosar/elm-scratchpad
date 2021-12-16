@@ -1,11 +1,12 @@
 module TicTacToe exposing (main)
 
+import Browser exposing (Document)
 import Html
 import Utils exposing (..)
 
 
 main =
-    bElement
+    Browser.document
         { init = init
         , subscriptions = subscriptions
         , update = update
@@ -38,6 +39,10 @@ update msg model =
             ( model, Cmd.none )
 
 
-view : Model -> Html Msg
+view : Model -> Document Msg
 view _ =
-    div [] [ Html.h1 [] [ text "Tic Tac Toe - Game" ] ]
+    { title = "Tic Tac Toe - Game"
+    , body = [ stylesNode """
+        html,body{height:100%; background-color:#222;}
+    """ ]
+    }
