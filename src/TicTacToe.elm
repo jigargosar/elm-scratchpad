@@ -113,6 +113,13 @@ getWinnerInRow row bd =
         |> getWinnerFromSlots
 
 
+getWinnerInCol : Int -> BoardDict -> Maybe Mark
+getWinnerInCol col bd =
+    filterKey (\( x, _ ) -> x == col) bd
+        |> Dict.values
+        |> getWinnerFromSlots
+
+
 getWinnerFromSlots : List Slot -> Maybe Mark
 getWinnerFromSlots slots =
     case
