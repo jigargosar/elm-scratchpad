@@ -59,18 +59,22 @@ viewBoard =
     svg [ viewBoxC 300 300, dBlock, noFill, noStroke, ffMonospace ]
         [ --words "X" [ fill "white", xf [ scale 10 ] ]
           viewCrossAt ( 0, 0 )
-        , viewCrossAt ( 1, 1 )
+        , viewZeroAt ( 1, 1 )
         , viewCrossAt ( 2, 2 )
         ]
 
 
 viewCrossAt gp =
-    viewCross [ xf [ mvInSquareGrid { gridSize = 300, cellSize = 100 } gp ] ]
+    viewSymbol "X" [ xf [ mvInSquareGrid { gridSize = 300, cellSize = 100 } gp ] ]
 
 
-viewCross aa =
+viewZeroAt gp =
+    viewSymbol "O" [ xf [ mvInSquareGrid { gridSize = 300, cellSize = 100 } gp ] ]
+
+
+viewSymbol str aa =
     [ square 100 [ fill "blue", stroke "black" ]
-    , words "X" [ fill "white", xf [ scale 10 ] ]
+    , words str [ fill "white", xf [ scale 10 ] ]
     ]
         |> group aa
 
