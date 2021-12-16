@@ -755,6 +755,14 @@ fDCol =
     style "flex-direction" "column"
 
 
+fRow aa =
+    div (dFlex :: aa)
+
+
+fCol aa =
+    div (dFlex :: fDCol :: aa)
+
+
 noUserSelect =
     style "user-select" "none"
 
