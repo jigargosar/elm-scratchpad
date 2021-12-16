@@ -58,7 +58,7 @@ view model =
     Document "Tic Tac Toe - Game"
         [ basicStylesNode
         , viewBoardSvg model.bd
-        , div [] [ text <| Debug.toString <| getWinner model.bd ]
+        , div [] [ text <| Debug.toString <| winningMark model.bd ]
         ]
 
 
@@ -98,7 +98,7 @@ emptyBoardDict =
 makeMove : GPos -> BoardDict -> Maybe BoardDict
 makeMove gp bd =
     case
-        ( getWinner bd
+        ( winningMark bd
         , Dict.get gp bd
         , getNextMark bd
         )
@@ -110,8 +110,8 @@ makeMove gp bd =
             Nothing
 
 
-getWinner : BoardDict -> Maybe Mark
-getWinner bd =
+winningMark : BoardDict -> Maybe Mark
+winningMark bd =
     let
         columns =
             times 3 (\x -> times 3 (\y -> ( x, y )))
@@ -125,7 +125,7 @@ getWinner bd =
         diagonal2 =
             times 3 (\n -> ( n, 2 - n ))
 
-        winnerFromGridPositions gps =
+        winningMarkFromGridPositions gps =
             case List.filterMap (getInDict bd) gps of
                 ((Marked mark) as h) :: t ->
                     if allEq h t then
@@ -140,7 +140,7 @@ getWinner bd =
     [ diagonal1, diagonal2 ]
         ++ columns
         ++ rows
-        |> List.filterMap winnerFromGridPositions
+        |> List.filterMap winningMarkFromGridPositions
         |> List.head
 
 
