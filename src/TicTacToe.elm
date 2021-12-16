@@ -124,22 +124,24 @@ getWinner bd =
 
         diagonal2 =
             times 3 (\n -> ( n, 2 - n ))
+
+        winnerFromGridPositions gps =
+            case List.filterMap (getInDict bd) gps of
+                ((Marked mark) as h) :: t ->
+                    if allEq h t then
+                        Just mark
+
+                    else
+                        Nothing
+
+                _ ->
+                    Nothing
     in
     [ diagonal1, diagonal2 ]
         ++ columns
         ++ rows
-        |> List.filterMap (winnerFromGPS bd)
+        |> List.filterMap winnerFromGridPositions
         |> List.head
-
-
-winnerFromGPS : BoardDict -> List GPos -> Maybe Mark
-winnerFromGPS bd gps =
-    case List.filterMap (getInDict bd) gps of
-        ((Marked mark) as h) :: t ->
-            maybeFromBool (allEq h t) mark
-
-        _ ->
-            Nothing
 
 
 getNextMark : BoardDict -> Maybe Mark
