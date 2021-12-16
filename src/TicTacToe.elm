@@ -58,12 +58,13 @@ view model =
                     background-color:#222;
                 }
             """
-        , viewBoard model.bd
+        , viewBoardSvg model.bd
         ]
     }
 
 
-viewBoard bd =
+viewBoardSvg : BoardDict -> Html msg
+viewBoardSvg bd =
     fRow [ h100, placeContentCenter ]
         [ svgBlock [ viewBoxC 300 300, ffMonospace ]
             [ viewBD bd

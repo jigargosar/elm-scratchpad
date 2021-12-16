@@ -669,6 +669,7 @@ ffMonospace =
     style "font-family" "monospace"
 
 
+style : String -> String -> Attribute msg
 style =
     Html.Attributes.style
 
@@ -759,32 +760,16 @@ fDCol =
     style "flex-direction" "column"
 
 
-fRow aa =
-    div (dFlex :: aa)
-
-
-fCol aa =
-    div (dFlex :: fDCol :: aa)
-
-
 noUserSelect =
     style "user-select" "none"
 
 
-text =
-    Html.text
+type alias Html msg =
+    Html.Html msg
 
 
-div =
-    Html.div
-
-
-type alias Html a =
-    Html.Html a
-
-
-type alias Attribute a =
-    Html.Attribute a
+type alias Attribute msg =
+    Html.Attribute msg
 
 
 type alias Svg a =
@@ -793,6 +778,26 @@ type alias Svg a =
 
 type alias Transform =
     TT.Transform
+
+
+text : String -> Html msg
+text =
+    Html.text
+
+
+div : List (Attribute msg) -> List (Html msg) -> Html msg
+div =
+    Html.div
+
+
+fRow : List (Attribute msg) -> List (Html msg) -> Html msg
+fRow aa =
+    div (dFlex :: aa)
+
+
+fCol : List (Attribute msg) -> List (Html msg) -> Html msg
+fCol aa =
+    div (dFlex :: fDCol :: aa)
 
 
 circle : Float -> List (Attribute msg) -> Svg msg
