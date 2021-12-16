@@ -1,6 +1,7 @@
 module TicTacToe exposing (main)
 
 import Browser exposing (Document)
+import Dict exposing (Dict)
 import Html
 import Utils exposing (..)
 
@@ -57,13 +58,44 @@ view _ =
 
 viewBoard =
     svg [ viewBoxC 300 300, dBlock, noFill, noStroke, ffMonospace ]
-        [ squareGridPositions 3
-            |> List.map viewEmptyCellAt
+        [ emptyBoardDict
+            |> Dict.toList
+            |> List.map viewCellEntry
             |> group []
         , viewCrossAt ( 0, 0 )
         , viewZeroAt ( 1, 1 )
         , viewCrossAt ( 2, 2 )
         ]
+
+
+type Marker
+    = Cross
+    | Zero
+    | Empty
+
+
+type alias BoardDict =
+    Dict GPos Marker
+
+
+emptyBoardDict : BoardDict
+emptyBoardDict =
+    squareGridPositions 3
+        |> List.map (pairTo Empty)
+        |> Dict.fromList
+
+
+viewCellEntry : ( GPos, Marker ) -> Svg msg
+viewCellEntry ( gp, marker ) =
+    case marker of
+        Cross ->
+            viewSymbolAt "X" gp
+
+        Zero ->
+            viewSymbolAt "0" gp
+
+        Empty ->
+            viewSymbolAt "" gp
 
 
 viewEmptyCellAt : GPos -> Svg msg
