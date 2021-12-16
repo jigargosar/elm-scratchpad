@@ -106,6 +106,23 @@ getWinner bd =
     Nothing
 
 
+getWinnerInRow : Int -> BoardDict -> Maybe Mark
+getWinnerInRow row bd =
+    case
+        filterKey (\( _, y ) -> y == row) bd
+            |> Dict.values
+    of
+        ((Marked mark) as h) :: t ->
+            if List.all (eq h) t then
+                Just mark
+
+            else
+                Nothing
+
+        _ ->
+            Nothing
+
+
 getNextMarker : BoardDict -> Maybe Mark
 getNextMarker bd =
     let
