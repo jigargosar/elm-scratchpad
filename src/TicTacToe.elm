@@ -108,11 +108,23 @@ viewBD bd =
 
 viewCellEntry : ( GPos, Marker ) -> Svg Msg
 viewCellEntry ( gp, marker ) =
-    viewSymbolAt (symbolToString marker) gp
+    viewSymbolAt marker gp
 
 
-symbolToString : Marker -> String
-symbolToString marker =
+viewSymbolAt : Marker -> GPos -> Svg Msg
+viewSymbolAt marker gp =
+    [ square 100 [ fill "blue", stroke "black" ]
+    , words (markerToString marker) [ fill "white", xf [ scale 10 ] ]
+    ]
+        |> group
+            (xf [ mvInSquareGrid { gridSize = 300, cellSize = 100 } gp ]
+                :: notifyClick (OnClick gp)
+                :: []
+            )
+
+
+markerToString : Marker -> String
+markerToString marker =
     case marker of
         Cross ->
             "X"
@@ -122,18 +134,6 @@ symbolToString marker =
 
         Empty ->
             ""
-
-
-viewSymbolAt : String -> GPos -> Svg Msg
-viewSymbolAt str gp =
-    [ square 100 [ fill "blue", stroke "black" ]
-    , words str [ fill "white", xf [ scale 10 ] ]
-    ]
-        |> group
-            (xf [ mvInSquareGrid { gridSize = 300, cellSize = 100 } gp ]
-                :: notifyClick (OnClick gp)
-                :: []
-            )
 
 
 mvInSquareGrid : { a | gridSize : Float, cellSize : Float } -> GPos -> Transform
