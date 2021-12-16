@@ -4,7 +4,7 @@ import Utils exposing (..)
 
 
 main =
-    bElement
+    bDocument
         { init = init
         , subscriptions = subscriptions
         , update = update
@@ -37,6 +37,8 @@ update msg model =
             ( model, Cmd.none )
 
 
-view : Model -> Html Msg
+view : Model -> Document Msg
 view _ =
-    div [] [ text "template" ]
+    Document "App Title"
+        [ basicStylesNode
+        ]

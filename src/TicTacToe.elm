@@ -1,13 +1,12 @@
 module TicTacToe exposing (main)
 
-import Browser
 import Dict exposing (Dict)
 import Html.Events
 import Utils exposing (..)
 
 
 main =
-    Browser.document
+    bDocument
         { init = init
         , subscriptions = subscriptions
         , update = update
