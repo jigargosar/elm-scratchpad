@@ -22,9 +22,9 @@ init : () -> ( Model, Cmd Msg )
 init () =
     ( { bd =
             emptyBoardDict
-                |> Dict.insert ( 0, 0 ) Cross
-                |> Dict.insert ( 1, 1 ) Zero
-                |> Dict.insert ( 2, 2 ) Cross
+                |> withRollback (makeMove ( 0, 0 ))
+                |> withRollback (makeMove ( 1, 1 ))
+                |> withRollback (makeMove ( 2, 2 ))
       }
     , Cmd.none
     )
@@ -49,16 +49,16 @@ update msg model =
 updateOnGPClick : GPos -> Model -> Model
 updateOnGPClick gp ({ bd } as model) =
     let
-        cycleMarker marker =
-            case marker of
-                Cross ->
-                    Zero
+        cycleMarker slot =
+            case slot of
+                Marked Cross ->
+                    Marked Zero
 
-                Zero ->
+                Marked Zero ->
                     Empty
 
                 Empty ->
-                    Cross
+                    Marked Cross
     in
     { model | bd = Dict.update gp (Maybe.map cycleMarker) bd }
 
@@ -82,14 +82,18 @@ viewBoardSvg bd =
         ]
 
 
-type Marker
+type Mark
     = Cross
     | Zero
+
+
+type Slot
+    = Marked Mark
     | Empty
 
 
 type alias BoardDict =
-    Dict GPos Marker
+    Dict GPos Slot
 
 
 emptyBoardDict : BoardDict
@@ -97,6 +101,25 @@ emptyBoardDict =
     squareGridPositions 3
         |> List.map (pairTo Empty)
         |> Dict.fromList
+
+
+makeMove : GPos -> BoardDict -> Maybe BoardDict
+makeMove gp bd =
+    case ( Dict.get gp bd, getNextMarker bd ) of
+        ( Just Empty, Just nextMarker ) ->
+            Just (Dict.insert gp (Marked nextMarker) bd)
+
+        _ ->
+            Nothing
+
+
+getNextMarker : BoardDict -> Maybe Mark
+getNextMarker bd =
+    let
+        emptyCt =
+            Dict.filter (\_ -> eq Empty) bd |> Dict.size
+    in
+    Nothing
 
 
 viewBD : BoardDict -> Svg Msg
@@ -107,15 +130,15 @@ viewBD bd =
         |> group []
 
 
-viewCellEntry : ( GPos, Marker ) -> Svg Msg
+viewCellEntry : ( GPos, Slot ) -> Svg Msg
 viewCellEntry ( gp, marker ) =
     viewMarkerAt marker gp
 
 
-viewMarkerAt : Marker -> GPos -> Svg Msg
+viewMarkerAt : Slot -> GPos -> Svg Msg
 viewMarkerAt marker gp =
     [ square 100 [ fill "blue", stroke "black" ]
-    , words (markerToString marker) [ fill "white", xf [ scale 10 ] ]
+    , words (slotToString marker) [ fill "white", xf [ scale 10 ] ]
     ]
         |> group
             (xf [ mvT <| gpToGridLocal { gridSize = 300, cellSize = 100 } gp ]
@@ -124,13 +147,13 @@ viewMarkerAt marker gp =
             )
 
 
-markerToString : Marker -> String
-markerToString marker =
-    case marker of
-        Cross ->
+slotToString : Slot -> String
+slotToString slot =
+    case slot of
+        Marked Cross ->
             "X"
 
-        Zero ->
+        Marked Zero ->
             "O"
 
         Empty ->
