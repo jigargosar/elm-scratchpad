@@ -263,6 +263,7 @@ rangeWH w h =
         |> List.concatMap (\y -> rangeN w |> List.map (\x -> ( x, y )))
 
 
+squareGridPositions : Int -> List GPos
 squareGridPositions sz =
     rangeWH sz sz
 
@@ -1458,6 +1459,30 @@ mapDocument tagger { title, body } =
 
 
 -- LIST HELPERS
+
+
+groupEqBy : (a -> b) -> List a -> List ( a, List a )
+groupEqBy extract =
+    groupBy (eqBy extract)
+
+
+groupBy : (a -> a -> Bool) -> List a -> List ( a, List a )
+groupBy pred list =
+    groupByHelp pred list []
+
+
+groupByHelp : (a -> a -> Bool) -> List a -> List ( a, List a ) -> List ( a, List a )
+groupByHelp pred pending done =
+    case pending of
+        [] ->
+            List.reverse done
+
+        h :: t ->
+            let
+                ( headLike, newPending ) =
+                    List.partition (pred h) t
+            in
+            groupByHelp pred newPending (( h, headLike ) :: done)
 
 
 findFirst : (a -> Bool) -> List a -> Maybe a
