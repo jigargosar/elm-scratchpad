@@ -39,4 +39,4 @@ update msg model =
 
 view : Model -> Html Msg
 view _ =
-    div [] [ text "template" ]
+    div [] [ text "Tic Tac Toe - Game" ]
