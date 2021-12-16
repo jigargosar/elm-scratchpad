@@ -117,6 +117,20 @@ getWinner bd =
                 List.filterMap (\c -> getWinnerInCol c bd) (rangeN 3)
                     |> List.head
             )
+        |> orElseLazy
+            (\_ ->
+                bd
+                    |> filterKey (\( x, y ) -> x + y == 2)
+                    |> Dict.values
+                    |> getWinnerFromSlots
+            )
+        |> orElseLazy
+            (\_ ->
+                bd
+                    |> filterKey (\( x, y ) -> x == y)
+                    |> Dict.values
+                    |> getWinnerFromSlots
+            )
 
 
 getWinnerInRow : Int -> BoardDict -> Maybe Mark
