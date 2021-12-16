@@ -48,19 +48,7 @@ update msg model =
 
 updateOnGPClick : GPos -> Model -> Model
 updateOnGPClick gp ({ bd } as model) =
-    let
-        cycleMarker slot =
-            case slot of
-                Marked Cross ->
-                    Marked Zero
-
-                Marked Zero ->
-                    Empty
-
-                Empty ->
-                    Marked Cross
-    in
-    { model | bd = Dict.update gp (Maybe.map cycleMarker) bd }
+    { model | bd = withRollback (makeMove gp) bd }
 
 
 view : Model -> Document Msg
