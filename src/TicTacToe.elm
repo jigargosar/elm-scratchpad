@@ -64,21 +64,25 @@ viewBoard =
         ]
 
 
-viewCrossAt gp =
-    viewSymbol "X" [ xf [ mvInSquareGrid { gridSize = 300, cellSize = 100 } gp ] ]
+viewCrossAt : GPos -> Svg msg
+viewCrossAt =
+    viewSymbolAt "X"
 
 
-viewZeroAt gp =
-    viewSymbol "O" [ xf [ mvInSquareGrid { gridSize = 300, cellSize = 100 } gp ] ]
+viewZeroAt : GPos -> Svg msg
+viewZeroAt =
+    viewSymbolAt "O"
 
 
-viewSymbol str aa =
+viewSymbolAt : String -> GPos -> Svg msg
+viewSymbolAt str gp =
     [ square 100 [ fill "blue", stroke "black" ]
     , words str [ fill "white", xf [ scale 10 ] ]
     ]
-        |> group aa
+        |> group (xf [ mvInSquareGrid { gridSize = 300, cellSize = 100 } gp ] :: [])
 
 
+mvInSquareGrid : { a | gridSize : Float, cellSize : Float } -> GPos -> Transform
 mvInSquareGrid { gridSize, cellSize } ( x, y ) =
     let
         c0 =

@@ -5,11 +5,11 @@ import Color
 import Dict exposing (Dict)
 import Ease
 import Float.Extra
-import Html exposing (Attribute, Html)
+import Html exposing (Html)
 import Html.Attributes exposing (style)
 import Json.Decode as JD exposing (Decoder)
 import Random exposing (Generator)
-import Svg exposing (Svg)
+import Svg
 import Svg.Attributes as SA
 import Svg.Keyed
 import TypedSvg.Attributes as TA
@@ -745,6 +745,14 @@ type alias Html a =
 
 type alias Attribute a =
     Html.Attribute a
+
+
+type alias Svg a =
+    Svg.Svg a
+
+
+type alias Transform =
+    TT.Transform
 
 
 circle : Float -> List (Attribute msg) -> Svg msg
