@@ -49,8 +49,8 @@ update msg model =
 updateOnGPClick : GPos -> Model -> Model
 updateOnGPClick gp ({ bd } as model) =
     let
-        fn s =
-            case s of
+        cycleMarker marker =
+            case marker of
                 Cross ->
                     Zero
 
@@ -60,7 +60,7 @@ updateOnGPClick gp ({ bd } as model) =
                 Empty ->
                     Cross
     in
-    { model | bd = Dict.update gp (Maybe.map fn) bd }
+    { model | bd = Dict.update gp (Maybe.map cycleMarker) bd }
 
 
 view : Model -> Document Msg
