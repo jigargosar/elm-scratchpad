@@ -113,60 +113,13 @@ getWinner bd =
     let
         gps =
             squareGridPositions 3
-
-        _ =
-            groupEqBy first gps
-                ++ groupEqBy second gps
     in
-    groupEqBy first (squareGridPositions 3)
+    groupEqBy first gps
+        ++ groupEqBy second gps
+        ++ [ ( ( 0, 0 ), [ ( 1, 1 ), ( 2, 2 ) ] )
+           , ( ( 2, 0 ), [ ( 1, 1 ), ( 0, 2 ) ] )
+           ]
         |> findMapFirst (getWinnerFromConsGPS bd)
-        |> orElseLazy
-            (\_ ->
-                List.filterMap (\c -> getWinnerInCol c bd) (rangeN 3)
-                    |> List.head
-            )
-        |> orElseLazy
-            (\_ ->
-                bd
-                    |> filterKey (\( x, y ) -> x + y == 2)
-                    |> Dict.values
-                    |> getWinnerFromSlots
-            )
-        |> orElseLazy
-            (\_ ->
-                bd
-                    |> filterKey (\( x, y ) -> x == y)
-                    |> Dict.values
-                    |> getWinnerFromSlots
-            )
-
-
-getWinnerInRow : Int -> BoardDict -> Maybe Mark
-getWinnerInRow row bd =
-    filterKey (\( _, y ) -> y == row) bd
-        |> Dict.values
-        |> getWinnerFromSlots
-
-
-getWinnerInCol : Int -> BoardDict -> Maybe Mark
-getWinnerInCol col bd =
-    filterKey (\( x, _ ) -> x == col) bd
-        |> Dict.values
-        |> getWinnerFromSlots
-
-
-getWinnerFromSlots : List Slot -> Maybe Mark
-getWinnerFromSlots slots =
-    case slots of
-        ((Marked mark) as h) :: t ->
-            if List.all (eq h) t then
-                Just mark
-
-            else
-                Nothing
-
-        _ ->
-            Nothing
 
 
 getWinnerFromConsGPS : BoardDict -> ( GPos, List GPos ) -> Maybe Mark
