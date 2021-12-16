@@ -46,6 +46,7 @@ update msg model =
             ( updateOnGPClick gp model, Cmd.none )
 
 
+updateOnGPClick : GPos -> Model -> Model
 updateOnGPClick gp ({ bd } as model) =
     let
         fn s =
