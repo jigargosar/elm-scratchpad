@@ -111,30 +111,33 @@ makeMove gp bd =
 getWinner : BoardDict -> Maybe Mark
 getWinner bd =
     let
-        gps =
-            squareGridPositions 3
+        columns =
+            List.range 0 2 |> List.map (\x -> List.range 0 2 |> List.map (\y -> ( x, y )))
+
+        rows =
+            List.range 0 2 |> List.map (\y -> List.range 0 2 |> List.map (\x -> ( x, y )))
+
+        diagonal1 =
+            List.range 0 2 |> List.map (\n -> ( n, n ))
+
+        diagonal2 =
+            List.range 0 2 |> List.map (\n -> ( n, 2 - n ))
     in
-    -- columns
-    groupEqBy first gps
-        -- rows
-        ++ groupEqBy second gps
-        ++ [ -- diagonal 1
-             ( ( 0, 0 ), [ ( 1, 1 ), ( 2, 2 ) ] )
-
-           -- diagonal 2
-           , ( ( 2, 0 ), [ ( 1, 1 ), ( 0, 2 ) ] )
-           ]
-        |> findMapFirst (getWinnerFromConsGPS bd)
+    diagonal1
+        :: diagonal2
+        :: columns
+        ++ rows
+        |> List.filterMap (getWinnerFromGPS bd)
+        |> List.head
 
 
-getWinnerFromConsGPS : BoardDict -> ( GPos, List GPos ) -> Maybe Mark
-getWinnerFromConsGPS bd ( h, t ) =
-    getWinnerFromGPS bd (h :: t)
+getInDict dict key =
+    Dict.get key dict
 
 
 getWinnerFromGPS : BoardDict -> List GPos -> Maybe Mark
-getWinnerFromGPS bd tgp =
-    case List.filterMap (\k -> Dict.get k bd) tgp of
+getWinnerFromGPS bd gps =
+    case List.filterMap (getInDict bd) gps of
         ((Marked mark) as h) :: t ->
             if List.all (eq h) t then
                 Just mark
