@@ -125,9 +125,8 @@ getWinner bd =
         diagonal2 =
             times 3 (\n -> ( n, 2 - n ))
     in
-    diagonal1
-        :: diagonal2
-        :: columns
+    [ diagonal1, diagonal2 ]
+        ++ columns
         ++ rows
         |> List.filterMap (winnerFromGPS bd)
         |> List.head
