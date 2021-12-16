@@ -64,8 +64,14 @@ view model =
 
 
 viewBoard bd =
-    div [ dFlex, sHeight "100%", placeContentCenter ]
-        [ svg [ viewBoxC 300 300, dBlock, noFill, noStroke, ffMonospace ]
+    div [ dFlex, sHeight "100%" ]
+        [ svg
+            [ viewBoxC 300 300
+            , dBlock
+            , noFill
+            , noStroke
+            , ffMonospace
+            ]
             [ bd
                 |> Dict.toList
                 |> List.map viewCellEntry
