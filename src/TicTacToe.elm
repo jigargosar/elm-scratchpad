@@ -95,8 +95,13 @@ emptyBoardDict =
 
 makeMove : GPos -> BoardDict -> Maybe BoardDict
 makeMove gp bd =
-    case ( Dict.get gp bd, getNextMarker bd ) of
-        ( Just Empty, Just nextMarker ) ->
+    case
+        ( getWinner bd
+        , Dict.get gp bd
+        , getNextMarker bd
+        )
+    of
+        ( Nothing, Just Empty, Just nextMarker ) ->
             Just (Dict.insert gp (Marked nextMarker) bd)
 
         _ ->
