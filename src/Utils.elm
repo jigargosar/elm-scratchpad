@@ -1562,6 +1562,14 @@ maybeFromPred pred v =
         Nothing
 
 
+maybeFromBool bool v =
+    if bool then
+        Just v
+
+    else
+        Nothing
+
+
 
 -- Browser Helpers
 

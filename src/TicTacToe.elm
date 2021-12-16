@@ -127,19 +127,15 @@ getWinner bd =
         :: diagonal2
         :: columns
         ++ rows
-        |> List.filterMap (getWinnerFromGPS bd)
+        |> List.filterMap (winnerFromGPS bd)
         |> List.head
 
 
-getWinnerFromGPS : BoardDict -> List GPos -> Maybe Mark
-getWinnerFromGPS bd gps =
+winnerFromGPS : BoardDict -> List GPos -> Maybe Mark
+winnerFromGPS bd gps =
     case List.filterMap (getInDict bd) gps of
         ((Marked mark) as h) :: t ->
-            if allEq h t then
-                Just mark
-
-            else
-                Nothing
+            maybeFromBool (allEq h t) mark
 
         _ ->
             Nothing
