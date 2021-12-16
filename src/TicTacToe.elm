@@ -108,15 +108,20 @@ viewBD bd =
 
 viewCellEntry : ( GPos, Marker ) -> Svg Msg
 viewCellEntry ( gp, marker ) =
+    viewSymbolAt (symbolToString marker) gp
+
+
+symbolToString : Marker -> String
+symbolToString marker =
     case marker of
         Cross ->
-            viewSymbolAt "X" gp
+            "X"
 
         Zero ->
-            viewSymbolAt "O" gp
+            "O"
 
         Empty ->
-            viewSymbolAt "" gp
+            ""
 
 
 viewSymbolAt : String -> GPos -> Svg Msg
