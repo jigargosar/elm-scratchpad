@@ -98,11 +98,11 @@ makeMove gp bd =
     case
         ( getWinner bd
         , Dict.get gp bd
-        , getNextMarker bd
+        , getNextMark bd
         )
     of
-        ( Nothing, Just Empty, Just nextMarker ) ->
-            Just (Dict.insert gp (Marked nextMarker) bd)
+        ( Nothing, Just Empty, Just mark ) ->
+            Just (Dict.insert gp (Marked mark) bd)
 
         _ ->
             Nothing
@@ -141,8 +141,8 @@ winnerFromGPS bd gps =
             Nothing
 
 
-getNextMarker : BoardDict -> Maybe Mark
-getNextMarker bd =
+getNextMark : BoardDict -> Maybe Mark
+getNextMark bd =
     let
         emptyCt =
             Dict.filter (\_ -> eq Empty) bd |> Dict.size
