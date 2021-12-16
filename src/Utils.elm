@@ -788,13 +788,16 @@ nestedSvg w h xs =
 
 
 rect : Float -> Float -> List (Attribute msg) -> Svg msg
-rect w h xs =
+rect w h aa =
+    rectLT w h (Px.x (w / -2) :: Px.y (h / -2) :: aa)
+
+
+rectLT : Float -> Float -> List (Attribute msg) -> Svg msg
+rectLT w h aa =
     Svg.rect
         (saWidth w
             :: saHeight h
-            :: Px.x (w / -2)
-            :: Px.y (h / -2)
-            :: xs
+            :: aa
         )
         []
 
@@ -813,6 +816,10 @@ viewBoxC w h =
     TA.viewBox (-w / 2) (-h / 2) w h
 
 
+viewBoxLT w h =
+    TA.viewBox 0 0 w h
+
+
 wordsAlignXLeft =
     TA.textAnchor TT.AnchorStart
 
@@ -828,6 +835,11 @@ wordsAlignYTop =
 square : Float -> List (Attribute msg) -> Svg msg
 square sz =
     rect sz sz
+
+
+squareLT : Float -> List (Attribute msg) -> Svg msg
+squareLT sz =
+    rectLT sz sz
 
 
 words : String -> List (Svg.Attribute msg) -> Svg msg

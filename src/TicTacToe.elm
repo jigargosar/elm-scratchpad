@@ -58,12 +58,26 @@ view _ =
 viewBoard =
     svg [ viewBoxC 300 300, dBlock, noFill, noStroke, ffMonospace ]
         [ --words "X" [ fill "white", xf [ scale 10 ] ]
-          viewCross
+          viewCrossAt ( 0, 0 )
+        , viewCrossAt ( 1, 1 )
+        , viewCrossAt ( 2, 2 )
         ]
 
 
-viewCross =
+viewCrossAt gp =
+    viewCross [ xf [ mvInSquareGrid { gridSize = 300, cellSize = 100 } gp ] ]
+
+
+viewCross aa =
     [ square 100 [ fill "blue", stroke "black" ]
-    , words "O" [ fill "white", xf [ scale 10 ] ]
+    , words "X" [ fill "white", xf [ scale 10 ] ]
     ]
-        |> group []
+        |> group aa
+
+
+mvInSquareGrid { gridSize, cellSize } ( x, y ) =
+    let
+        c0 =
+            -(gridSize / 2) + (cellSize / 2)
+    in
+    mvT ( c0 + toFloat x * cellSize, c0 + toFloat y * cellSize )
