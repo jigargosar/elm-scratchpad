@@ -699,8 +699,20 @@ gap =
     style "gap"
 
 
+h100 =
+    sHeight "100%"
+
+
+w100 =
+    sWidth "100%"
+
+
 sHeight =
     style "height"
+
+
+sWidth =
+    style "width"
 
 
 sMaxHeight =

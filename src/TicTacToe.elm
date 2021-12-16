@@ -64,7 +64,7 @@ view model =
 
 
 viewBoard bd =
-    div [ dFlex, sHeight "100%", overflowHidden ]
+    div [ dFlex, h100 ]
         [ svg
             [ viewBoxC 300 300
             , dBlock
