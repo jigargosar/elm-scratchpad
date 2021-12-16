@@ -53,7 +53,11 @@ view model =
     , body =
         [ stylesNode
             """
-                html,body{
+                *, *::before, *::after {
+                    box-sizing: border-box;
+                }
+
+                html, body {
                     height:100%;
                     background-color:#222;
                 }
