@@ -103,7 +103,23 @@ makeMove gp bd =
 
 getWinner : BoardDict -> Maybe Mark
 getWinner bd =
-    Nothing
+    List.filterMap (\r -> getWinnerInRow r bd) (rangeN 3)
+        |> List.head
+        |> orElseLazy
+            (\_ ->
+                List.filterMap (\c -> getWinnerInCol c bd) (rangeN 3)
+                    |> List.head
+            )
+
+
+orElseLazy : (() -> Maybe a) -> Maybe a -> Maybe a
+orElseLazy fn mb =
+    case mb of
+        Nothing ->
+            fn ()
+
+        _ ->
+            mb
 
 
 getWinnerInRow : Int -> BoardDict -> Maybe Mark
