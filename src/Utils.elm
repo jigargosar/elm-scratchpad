@@ -744,6 +744,10 @@ sMaxHeight =
     style "max-height"
 
 
+sMaxWidth =
+    style "max-width"
+
+
 placeContentCenter =
     style "place-content" "center"
 
