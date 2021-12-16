@@ -58,12 +58,17 @@ view _ =
 viewBoard =
     svg [ viewBoxC 300 300, dBlock, noFill, noStroke, ffMonospace ]
         [ squareGridPositions 3
-            |> List.map viewCrossAt
+            |> List.map viewEmptyCellAt
             |> group []
         , viewCrossAt ( 0, 0 )
         , viewZeroAt ( 1, 1 )
         , viewCrossAt ( 2, 2 )
         ]
+
+
+viewEmptyCellAt : GPos -> Svg msg
+viewEmptyCellAt =
+    viewSymbolAt ""
 
 
 viewCrossAt : GPos -> Svg msg
