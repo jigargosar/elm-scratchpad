@@ -66,10 +66,7 @@ view model =
 viewBoard bd =
     fRow [ h100, placeContentCenter ]
         [ svgBlock [ viewBoxC 300 300, ffMonospace ]
-            [ bd
-                |> Dict.toList
-                |> List.map viewCellEntry
-                |> group []
+            [ viewBD bd
             ]
         ]
 
@@ -89,6 +86,14 @@ emptyBoardDict =
     squareGridPositions 3
         |> List.map (pairTo Empty)
         |> Dict.fromList
+
+
+viewBD : BoardDict -> Svg msg
+viewBD bd =
+    bd
+        |> Dict.toList
+        |> List.map viewCellEntry
+        |> group []
 
 
 viewCellEntry : ( GPos, Marker ) -> Svg msg
