@@ -64,7 +64,7 @@ view model =
 
 
 viewBoard bd =
-    fRow [ h100 ]
+    fRow [ h100, placeContentCenter ]
         [ svgBlock
             [ viewBoxC 300 300
             , ffMonospace
