@@ -110,8 +110,17 @@ makeMove gp bd =
 
 getWinner : BoardDict -> Maybe Mark
 getWinner bd =
-    List.filterMap (\r -> getWinnerInRow r bd) (rangeN 3)
-        |> List.head
+    let
+        gps =
+            squareGridPositions 3
+
+        _ =
+            groupEqBy first gps
+                ++ groupEqBy second gps
+                ++ groupEqBy second gps
+    in
+    groupEqBy first (squareGridPositions 3)
+        |> findMapFirst (getWinnerFromConsGPS bd)
         |> orElseLazy
             (\_ ->
                 List.filterMap (\c -> getWinnerInCol c bd) (rangeN 3)
@@ -133,11 +142,6 @@ getWinner bd =
             )
 
 
-rowGPS =
-    squareGridPositions 3
-        |> groupBy first
-
-
 getWinnerInRow : Int -> BoardDict -> Maybe Mark
 getWinnerInRow row bd =
     filterKey (\( _, y ) -> y == row) bd
@@ -155,6 +159,25 @@ getWinnerInCol col bd =
 getWinnerFromSlots : List Slot -> Maybe Mark
 getWinnerFromSlots slots =
     case slots of
+        ((Marked mark) as h) :: t ->
+            if List.all (eq h) t then
+                Just mark
+
+            else
+                Nothing
+
+        _ ->
+            Nothing
+
+
+getWinnerFromConsGPS : BoardDict -> ( GPos, List GPos ) -> Maybe Mark
+getWinnerFromConsGPS bd ( h, t ) =
+    getWinnerFromGPS bd (h :: t)
+
+
+getWinnerFromGPS : BoardDict -> List GPos -> Maybe Mark
+getWinnerFromGPS bd tgp =
+    case List.filterMap (\k -> Dict.get k bd) tgp of
         ((Marked mark) as h) :: t ->
             if List.all (eq h) t then
                 Just mark

@@ -1485,6 +1485,21 @@ groupByHelp pred pending done =
             groupByHelp pred newPending (( h, headLike ) :: done)
 
 
+findMapFirst : (a -> Maybe b) -> List a -> Maybe b
+findMapFirst toMaybeFn list =
+    case list of
+        [] ->
+            Nothing
+
+        h :: t ->
+            case toMaybeFn h of
+                Nothing ->
+                    findMapFirst toMaybeFn t
+
+                v ->
+                    v
+
+
 findFirst : (a -> Bool) -> List a -> Maybe a
 findFirst pred xs =
     case xs of
