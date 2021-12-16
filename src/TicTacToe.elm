@@ -131,10 +131,6 @@ getWinner bd =
         |> List.head
 
 
-getInDict dict key =
-    Dict.get key dict
-
-
 getWinnerFromGPS : BoardDict -> List GPos -> Maybe Mark
 getWinnerFromGPS bd gps =
     case List.filterMap (getInDict bd) gps of

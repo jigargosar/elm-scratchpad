@@ -1458,6 +1458,15 @@ mapDocument tagger { title, body } =
 
 
 
+-- DICT HELPERS
+
+
+getInDict : Dict comparable v -> comparable -> Maybe v
+getInDict dict key =
+    Dict.get key dict
+
+
+
 -- LIST HELPERS
 
 
