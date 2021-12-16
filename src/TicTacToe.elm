@@ -65,10 +65,7 @@ view model =
 
 viewBoard bd =
     fRow [ h100, placeContentCenter ]
-        [ svgBlock
-            [ viewBoxC 300 300
-            , ffMonospace
-            ]
+        [ svgBlock [ viewBoxC 300 300, ffMonospace ]
             [ bd
                 |> Dict.toList
                 |> List.map viewCellEntry
