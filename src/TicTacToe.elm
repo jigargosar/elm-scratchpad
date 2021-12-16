@@ -51,17 +51,7 @@ view : Model -> Document Msg
 view model =
     { title = "Tic Tac Toe - Game"
     , body =
-        [ stylesNode
-            """
-                *, *::before, *::after {
-                    box-sizing: border-box;
-                }
-
-                html, body {
-                    height:100%;
-                    background-color:#222;
-                }
-            """
+        [ basicStylesNode
         , viewBoardSvg model.bd
         ]
     }

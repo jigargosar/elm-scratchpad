@@ -599,6 +599,21 @@ stylesNode string =
     Html.node "style" [] [ Html.text string ]
 
 
+basicStylesNode : Html msg
+basicStylesNode =
+    stylesNode
+        """
+                    *, *::before, *::after {
+                        box-sizing: border-box;
+                    }
+    
+                    html, body {
+                        height:100%;
+                        background-color:#222;
+                    }
+                """
+
+
 overflowVisible =
     style "overflow" "visible"
 
