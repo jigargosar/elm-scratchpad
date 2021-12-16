@@ -121,7 +121,7 @@ getNextMarker bd =
     in
     if emptyCt <= Dict.size bd then
         Just
-            (if modBy 2 (emptyCt - 1) == 0 then
+            (if isEven (emptyCt - 1) then
                 Cross
 
              else

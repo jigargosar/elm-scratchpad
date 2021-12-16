@@ -1013,6 +1013,11 @@ sub =
     (-)
 
 
+isEven : Int -> Bool
+isEven x =
+    modBy 2 x == 0
+
+
 sign : number -> number
 sign x =
     case compare x 0 of
