@@ -58,7 +58,12 @@ view model =
                     background-color:#222;
                 }
             """
-        , viewBoard model.bd
+        , div
+            [ dFlex
+            , style "height" "100%"
+            , style "place-content" "center"
+            ]
+            [ viewBoard model.bd ]
         ]
     }
 
