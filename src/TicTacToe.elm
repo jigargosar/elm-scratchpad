@@ -42,7 +42,28 @@ update msg model =
 view : Model -> Document Msg
 view _ =
     { title = "Tic Tac Toe - Game"
-    , body = [ stylesNode """
-        html,body{height:100%; background-color:#222;}
-    """ ]
+    , body =
+        [ stylesNode
+            """
+                html,body{
+                    height:100%;
+                    background-color:#222;
+                }
+            """
+        , viewBoard
+        ]
     }
+
+
+viewBoard =
+    svg [ viewBoxC 300 300, dBlock, noFill, noStroke, ffMonospace ]
+        [ --words "X" [ fill "white", xf [ scale 10 ] ]
+          viewCross
+        ]
+
+
+viewCross =
+    [ square 100 [ fill "blue", stroke "black" ]
+    , words "O" [ fill "white", xf [ scale 10 ] ]
+    ]
+        |> group []
