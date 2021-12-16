@@ -117,7 +117,7 @@ viewMarkerAt marker gp =
     , words (markerToString marker) [ fill "white", xf [ scale 10 ] ]
     ]
         |> group
-            (xf [ mvInSquareGrid { gridSize = 300, cellSize = 100 } gp ]
+            (xf [ mvT <| gpToGridLocal { gridSize = 300, cellSize = 100 } gp ]
                 :: notifyClick (OnClick gp)
                 :: []
             )
@@ -136,10 +136,10 @@ markerToString marker =
             ""
 
 
-mvInSquareGrid : { a | gridSize : Float, cellSize : Float } -> GPos -> Transform
-mvInSquareGrid { gridSize, cellSize } ( x, y ) =
+gpToGridLocal : { a | gridSize : Float, cellSize : Float } -> Int2 -> Float2
+gpToGridLocal { gridSize, cellSize } ( x, y ) =
     let
         c0 =
             -(gridSize / 2) + (cellSize / 2)
     in
-    mvT ( c0 + toFloat x * cellSize, c0 + toFloat y * cellSize )
+    ( c0 + toFloat x * cellSize, c0 + toFloat y * cellSize )
