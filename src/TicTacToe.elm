@@ -16,12 +16,19 @@ main =
 
 
 type alias Model =
-    {}
+    { bd : BoardDict }
 
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( {}, Cmd.none )
+    ( { bd =
+            emptyBoardDict
+                |> Dict.insert ( 0, 0 ) Cross
+                |> Dict.insert ( 1, 1 ) Zero
+                |> Dict.insert ( 2, 2 ) Cross
+      }
+    , Cmd.none
+    )
 
 
 type Msg
@@ -41,7 +48,7 @@ update msg model =
 
 
 view : Model -> Document Msg
-view _ =
+view model =
     { title = "Tic Tac Toe - Game"
     , body =
         [ stylesNode
@@ -51,20 +58,17 @@ view _ =
                     background-color:#222;
                 }
             """
-        , viewBoard
+        , viewBoard model.bd
         ]
     }
 
 
-viewBoard =
+viewBoard bd =
     svg [ viewBoxC 300 300, dBlock, noFill, noStroke, ffMonospace ]
-        [ emptyBoardDict
+        [ bd
             |> Dict.toList
             |> List.map viewCellEntry
             |> group []
-        , viewCrossAt ( 0, 0 )
-        , viewZeroAt ( 1, 1 )
-        , viewCrossAt ( 2, 2 )
         ]
 
 
@@ -92,25 +96,10 @@ viewCellEntry ( gp, marker ) =
             viewSymbolAt "X" gp
 
         Zero ->
-            viewSymbolAt "0" gp
+            viewSymbolAt "O" gp
 
         Empty ->
             viewSymbolAt "" gp
-
-
-viewEmptyCellAt : GPos -> Svg msg
-viewEmptyCellAt =
-    viewSymbolAt ""
-
-
-viewCrossAt : GPos -> Svg msg
-viewCrossAt =
-    viewSymbolAt "X"
-
-
-viewZeroAt : GPos -> Svg msg
-viewZeroAt =
-    viewSymbolAt "O"
 
 
 viewSymbolAt : String -> GPos -> Svg msg
