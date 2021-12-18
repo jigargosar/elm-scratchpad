@@ -57,6 +57,9 @@ viewTrailPoint p n =
         to =
             p.to |> toPolar |> mapFirst (mul n) |> fromPolar
 
+        oa =
+            n * n * n
+
         refIdAttr =
             SA.id "a_particle"
 
@@ -79,7 +82,7 @@ viewTrailPoint p n =
             []
         , Svg.animate
             [ SA.attributeName "opacity"
-            , SA.values "1;1;0"
+            , valuesFromFloat [ oa, oa, 0 ]
             , SA.keyTimes "0;0.7;1"
             , beginAttr
             , durAttr
@@ -87,6 +90,10 @@ viewTrailPoint p n =
             ]
             []
         ]
+
+
+valuesFromFloat =
+    List.map fromFloat >> String.join ";" >> SA.values
 
 
 valuesFloat2 : List Float2 -> Svg.Attribute msg
