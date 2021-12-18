@@ -16,21 +16,13 @@ main =
         [ viewParticle ( 100, 100 ) ]
 
 
-join sep ( a, b ) =
-    a ++ sep ++ b
-
-
-joinFloat2 sep =
-    mapEach fromFloat >> join sep
-
-
 viewParticle to =
     Svg.circle [ Px.r 10, fill <| hsl 1 1 0.5 ]
         [ Svg.animateTransform
             [ SA.id "a_mv"
             , SA.attributeName "transform"
             , SA.type_ "translate"
-            , SA.values ([ ( 0, 0 ), to ] |> List.map (joinFloat2 " ") |> String.join ";")
+            , SA.values ([ ( 0, 0 ), to ] |> valuesFromFloat2List)
             , SA.dur "2s"
             , SA.begin "0s;a_mv.end+0.5s"
             , SA.fill "freeze"
@@ -51,3 +43,21 @@ viewParticle to =
             ]
             []
         ]
+
+
+valuesFloat2 : List Float2 -> Svg.Attribute msg
+valuesFloat2 =
+    valuesFromFloat2List >> SA.values
+
+
+join sep ( a, b ) =
+    a ++ sep ++ b
+
+
+joinFloat2 sep =
+    mapEach fromFloat >> join sep
+
+
+valuesFromFloat2List : List Float2 -> String
+valuesFromFloat2List =
+    List.map (joinFloat2 " ") >> String.join ";"
