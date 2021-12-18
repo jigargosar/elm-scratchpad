@@ -37,7 +37,7 @@ particles =
                 randomDest
                 randomNorm
     in
-    Random.step (Random.list 20 gen) (Random.initialSeed 0)
+    Random.step (Random.list 50 gen) (Random.initialSeed 0)
         |> first
 
 
