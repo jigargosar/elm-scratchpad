@@ -15,11 +15,11 @@ main =
         ]
         [ Svg.circle [ Px.r 10, fill <| hsl 1 1 0.5 ]
             [ Svg.animate
-                [ SA.id "self"
+                [ SA.id "a_cx"
                 , SA.attributeName "cx"
                 , SA.values "0;100"
                 , SA.dur "2s"
-                , SA.begin "0s;self.end+0.5s"
+                , SA.begin "0s;a_cx.end+0.5s"
                 , SA.fill "freeze"
 
                 --, TA.repeatCount TT.RepeatIndefinite
