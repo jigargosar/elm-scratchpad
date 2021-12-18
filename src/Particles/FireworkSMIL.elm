@@ -31,9 +31,10 @@ particles =
     let
         randomRadius =
             Random.Extra.frequency
-                ( 80, Random.float 10 100 )
-                [ ( 10, Random.Float.normal 0 10 )
-                , ( 10, Random.Float.normal 100 10 )
+                ( 80, Random.float 60 100 )
+                [ ( 10, Random.Float.normal 30 10 )
+
+                --, ( 10, Random.Float.normal 100 10 )
                 ]
                 |> Random.map abs
 
@@ -47,7 +48,7 @@ particles =
                 randomDest
                 randomNorm
     in
-    Random.step (Random.list 50 gen) (Random.initialSeed 0)
+    Random.step (Random.list 60 gen) (Random.initialSeed 0)
         |> first
 
 
