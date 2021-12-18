@@ -45,11 +45,6 @@ viewParticle to =
         ]
 
 
-valuesFloat2 : List Float2 -> Svg.Attribute msg
-valuesFloat2 =
-    valuesFromFloat2List >> SA.values
-
-
 join sep ( a, b ) =
     a ++ sep ++ b
 
