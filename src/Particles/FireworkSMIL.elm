@@ -69,7 +69,7 @@ viewTrailPoint p n =
         durAttr =
             SA.dur "2s"
     in
-    Svg.circle [ Px.r 2, fill <| hsl p.h 1 0.5 ]
+    Svg.circle [ Px.r 1, fill <| hsla p.h 1 0.5 oa ]
         [ Svg.animateTransform
             [ refIdAttr
             , SA.attributeName "transform"
@@ -82,7 +82,9 @@ viewTrailPoint p n =
             []
         , Svg.animate
             [ SA.attributeName "opacity"
-            , valuesFromFloat [ oa, oa, 0 ]
+
+            --, valuesFromFloat [ oa, oa, 0 ]
+            , SA.values "1;1;0"
             , SA.keyTimes "0;0.7;1"
             , beginAttr
             , durAttr
