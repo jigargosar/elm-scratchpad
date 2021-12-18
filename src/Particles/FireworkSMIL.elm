@@ -22,7 +22,7 @@ viewParticle to =
             [ SA.id "a_mv"
             , SA.attributeName "transform"
             , SA.type_ "translate"
-            , SA.values ([ ( 0, 0 ), to ] |> valuesFromFloat2List)
+            , valuesFloat2 [ ( 0, 0 ), to ]
             , SA.dur "2s"
             , SA.begin "0s;a_mv.end+0.5s"
             , SA.fill "freeze"
@@ -43,6 +43,11 @@ viewParticle to =
             ]
             []
         ]
+
+
+valuesFloat2 : List Float2 -> Svg.Attribute msg
+valuesFloat2 =
+    valuesFromFloat2List >> SA.values
 
 
 valuesFromFloat2List : List Float2 -> String
