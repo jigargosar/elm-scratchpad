@@ -77,7 +77,7 @@ viewTrailPoint p n =
             , valuesFloat2 [ ( 0, 0 ), to ]
             , durAttr
             , beginAttr
-            , SA.fill "freeze"
+            , fill "freeze"
             ]
             []
         , Svg.animate
@@ -88,7 +88,7 @@ viewTrailPoint p n =
             , SA.keyTimes "0;0.7;1"
             , beginAttr
             , durAttr
-            , SA.fill "freeze"
+            , fill "freeze"
             ]
             []
         ]
