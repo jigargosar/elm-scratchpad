@@ -22,7 +22,7 @@ main =
                 , SA.from "0"
                 , SA.to "100"
                 , SA.dur "2s"
-                , SA.begin "0s;self.end+0.5s"
+                , SA.begin "0s;self.end+2s"
 
                 --, TA.repeatCount TT.RepeatIndefinite
                 ]
