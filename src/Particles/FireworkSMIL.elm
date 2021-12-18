@@ -1,6 +1,6 @@
 module Particles.FireworkSMIL exposing (main)
 
-import Random
+import Random exposing (Generator)
 import Svg
 import Svg.Attributes as SA
 import Tuple exposing (pair)
@@ -22,23 +22,29 @@ main =
 
 
 type alias Particle =
-    { to : Float2 }
+    { to : Float2
+    , h : Float
+    }
 
 
+particles : List Particle
 particles =
     let
         randomDest =
             Random.map (pair 100 >> fromPolar) randomAngle
 
+        gen : Generator Particle
         gen =
-            Random.map Particle
+            Random.map2 Particle
                 randomDest
+                randomNorm
     in
     Random.step (Random.list 100 gen) (Random.initialSeed 0)
         |> first
 
 
-viewParticle { to } =
+viewParticle : Particle -> Svg msg
+viewParticle { to, h } =
     let
         refIdAttr =
             SA.id "a_mv"
@@ -49,7 +55,7 @@ viewParticle { to } =
         durAttr =
             SA.dur "2s"
     in
-    Svg.circle [ Px.r 2, fill <| hsl 1 1 0.5 ]
+    Svg.circle [ Px.r 2, fill <| hsl h 1 0.5 ]
         [ Svg.animateTransform
             [ refIdAttr
             , SA.attributeName "transform"
