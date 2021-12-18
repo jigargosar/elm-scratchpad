@@ -17,10 +17,14 @@ main =
             [ Svg.animate
                 [ SA.id "self"
                 , SA.attributeName "cx"
-                , SA.values "0,100"
+
+                --, SA.values "0;100"
+                , SA.from "0"
+                , SA.to "100"
                 , SA.dur "2s"
-                , SA.begin "0s,self.end+0.5s"
-                , TA.repeatCount TT.RepeatIndefinite
+                , SA.begin "0s;self.end+0.5s"
+
+                --, TA.repeatCount TT.RepeatIndefinite
                 ]
                 []
             ]
