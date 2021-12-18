@@ -1,6 +1,7 @@
 module Particles.FireworkSMIL exposing (main)
 
 import Random exposing (Generator)
+import Random.Extra
 import Random.Float
 import Svg
 import Svg.Attributes as SA
@@ -28,10 +29,13 @@ type alias Particle =
 particles : List Particle
 particles =
     let
+        randomRadius =
+            Random.Extra.frequency
+                ( 1, Random.Float.normal 80 20 )
+                [ ( 1, Random.float 20 100 ) ]
+
         randomDest =
-            Random.pair
-                (Random.Float.normal 80 20)
-                randomAngle
+            Random.pair randomRadius randomAngle
                 |> Random.map fromPolar
 
         gen : Generator Particle
