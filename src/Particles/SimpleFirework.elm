@@ -50,7 +50,14 @@ view model =
         nl =
             secondsToFractionOverNowMills 2 model.animNow
     in
-    svg [ viewBoxC 300 300, bgc gray, dBlock, noFill, noStroke ]
+    svg
+        [ viewBoxC 300 300
+        , sMaxWidth "500px"
+        , bgc gray
+        , dBlock
+        , noFill
+        , noStroke
+        ]
         [ easeLine
             (rangeMap ( 0, 0.6 ) ( 0, 1 ) nl |> clamp 0 1)
             0.1
