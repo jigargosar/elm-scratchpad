@@ -3,6 +3,7 @@ module Particles.FireworkSMIL exposing (main)
 import Random
 import Svg
 import Svg.Attributes as SA
+import Tuple exposing (pair)
 import TypedSvg.Attributes as TA
 import TypedSvg.Attributes.InPx as Px
 import TypedSvg.Types as TT
@@ -26,9 +27,12 @@ type alias Particle =
 
 particles =
     let
+        randomDest =
+            Random.map (pair 100 >> fromPolar) randomAngle
+
         gen =
             Random.map Particle
-                (Random.constant ( 100, -100 ))
+                randomDest
     in
     Random.step (Random.list 100 gen) (Random.initialSeed 0)
         |> first
