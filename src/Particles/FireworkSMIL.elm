@@ -94,7 +94,7 @@ viewTrailPoint p ( pn, n ) =
             SA.dur "2s"
     in
     --Svg.circle [ Px.r 1, fill <| hsla p.h 1 0.5 oa ]
-    Svg.polyline [ TA.points [ to, pto ], stroke <| hsla p.h 1 0.5 oa ]
+    Svg.polyline [ TA.points [ pto, to ], stroke <| hsla p.h 1 0.5 oa ]
         [ --Svg.animateTransform
           --[ refIdAttr
           --, SA.attributeName "transform"
