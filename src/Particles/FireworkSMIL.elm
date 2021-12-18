@@ -40,13 +40,13 @@ particles =
                 randomDest
                 randomNorm
     in
-    Random.step (Random.list 100 gen) (Random.initialSeed 0)
+    Random.step (Random.list 20 gen) (Random.initialSeed 0)
         |> first
 
 
 viewParticle : Particle -> Svg msg
 viewParticle p =
-    normSamples 10
+    normSamples 30
         |> List.map (viewTrailPoint p)
         |> group []
 
