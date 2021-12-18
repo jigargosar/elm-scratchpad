@@ -1,4 +1,4 @@
-module Particles.FireworkSIML exposing (main)
+module Particles.FireworkSMIL exposing (main)
 
 import Svg
 import TypedSvg.Attributes.InPx as Px
