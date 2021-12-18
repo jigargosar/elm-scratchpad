@@ -27,7 +27,7 @@ viewParticle to =
         durAttr =
             SA.dur "2s"
     in
-    Svg.circle [ Px.r 10, fill <| hsl 1 1 0.5 ]
+    Svg.circle [ Px.r 2, fill <| hsl 1 1 0.5 ]
         [ Svg.animateTransform
             [ refIdAttr
             , SA.attributeName "transform"
