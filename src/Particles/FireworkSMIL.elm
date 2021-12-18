@@ -1,6 +1,7 @@
 module Particles.FireworkSMIL exposing (main)
 
 import Random exposing (Generator)
+import Random.Float
 import Svg
 import Svg.Attributes as SA
 import Tuple exposing (pair)
@@ -28,7 +29,9 @@ particles : List Particle
 particles =
     let
         randomDest =
-            Random.pair (Random.float 30 100) randomAngle
+            Random.pair
+                (Random.Float.normal 80 20)
+                randomAngle
                 |> Random.map fromPolar
 
         gen : Generator Particle
