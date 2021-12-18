@@ -51,6 +51,7 @@ viewParticle p =
         |> group []
 
 
+viewTrailPoint : Particle -> Float -> Svg msg
 viewTrailPoint p n =
     let
         to =
