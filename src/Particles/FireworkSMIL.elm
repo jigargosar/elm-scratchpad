@@ -4,9 +4,6 @@ import Random exposing (Generator)
 import Svg
 import Svg.Attributes as SA
 import Tuple exposing (pair)
-import TypedSvg.Attributes as TA
-import TypedSvg.Attributes.InPx as Px
-import TypedSvg.Types as TT
 import Utils exposing (..)
 
 
