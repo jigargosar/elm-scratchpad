@@ -16,13 +16,17 @@ main =
         [ viewParticle ( 100, 100 ) ]
 
 
+join sep ( a, b ) =
+    a ++ sep ++ b
+
+
 viewParticle to =
     Svg.circle [ Px.r 10, fill <| hsl 1 1 0.5 ]
         [ Svg.animateTransform
             [ SA.id "a_mv"
             , SA.attributeName "transform"
             , SA.type_ "translate"
-            , SA.values ([ "0 0", "100 0" ] |> String.join ";")
+            , SA.values ([ "0 0", to |> mapEach fromFloat |> join " " ] |> String.join ";")
             , SA.dur "2s"
             , SA.begin "0s;a_mv.end+0.5s"
             , SA.fill "freeze"
