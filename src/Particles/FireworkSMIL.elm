@@ -64,7 +64,7 @@ viewTrailPoint p n =
             SA.id "a_particle"
 
         beginAttr =
-            SA.begin "0s;a_particle.end+0.5s"
+            SA.begin "0s;a_particle.end+0.0s"
 
         durAttr =
             SA.dur "2s"
