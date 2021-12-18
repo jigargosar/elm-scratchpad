@@ -30,7 +30,7 @@ viewParticle to =
             [ SA.id "a_mv"
             , SA.attributeName "transform"
             , SA.type_ "translate"
-            , SA.values ([ "0 0", to |> joinFloat2 " " ] |> String.join ";")
+            , SA.values ([ ( 0, 0 ), to ] |> List.map (joinFloat2 " ") |> String.join ";")
             , SA.dur "2s"
             , SA.begin "0s;a_mv.end+0.5s"
             , SA.fill "freeze"
