@@ -25,5 +25,17 @@ main =
                 --, TA.repeatCount TT.RepeatIndefinite
                 ]
                 []
+            , Svg.animate
+                [ SA.id "a_op"
+                , SA.attributeName "opacity"
+                , SA.values "1;1;0"
+                , SA.keyTimes "0;0.7;1"
+                , SA.dur "2s"
+                , SA.begin "0s;a_op.end+0.5s"
+                , SA.fill "freeze"
+
+                --, TA.repeatCount TT.RepeatIndefinite
+                ]
+                []
             ]
         ]
