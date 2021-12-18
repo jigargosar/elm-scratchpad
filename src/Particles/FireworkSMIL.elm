@@ -45,8 +45,17 @@ particles =
 
 
 viewParticle : Particle -> Svg msg
-viewParticle { to, h } =
+viewParticle p =
+    normSamples 10
+        |> List.map (viewTrailPoint p)
+        |> group []
+
+
+viewTrailPoint p n =
     let
+        to =
+            p.to |> toPolar |> mapFirst (mul n) |> fromPolar
+
         refIdAttr =
             SA.id "a_particle"
 
@@ -56,41 +65,7 @@ viewParticle { to, h } =
         durAttr =
             SA.dur "2s"
     in
-    Svg.circle [ Px.r 2, fill <| hsl h 1 0.5 ]
-        [ Svg.animateTransform
-            [ refIdAttr
-            , SA.attributeName "transform"
-            , SA.type_ "translate"
-            , valuesFloat2 [ ( 0, 0 ), to ]
-            , durAttr
-            , beginAttr
-            , SA.fill "freeze"
-            ]
-            []
-        , Svg.animate
-            [ SA.attributeName "opacity"
-            , SA.values "1;1;0"
-            , SA.keyTimes "0;0.7;1"
-            , beginAttr
-            , durAttr
-            , SA.fill "freeze"
-            ]
-            []
-        ]
-
-
-viewTrailPoint h to =
-    let
-        refIdAttr =
-            SA.id "a_particle"
-
-        beginAttr =
-            SA.begin "0s;a_particle.end+0.5s"
-
-        durAttr =
-            SA.dur "2s"
-    in
-    Svg.circle [ Px.r 2, fill <| hsl h 1 0.5 ]
+    Svg.circle [ Px.r 2, fill <| hsl p.h 1 0.5 ]
         [ Svg.animateTransform
             [ refIdAttr
             , SA.attributeName "transform"
