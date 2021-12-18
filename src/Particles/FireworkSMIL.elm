@@ -44,15 +44,23 @@ particles =
         |> first
 
 
+samples =
+    normSamples 10
+
+
+samplePairs =
+    List.map2 pair samples (List.drop 1 samples)
+
+
 viewParticle : Particle -> Svg msg
 viewParticle p =
-    normSamples 10
+    samplePairs
         |> List.map (viewTrailPoint p)
         |> group []
 
 
-viewTrailPoint : Particle -> Float -> Svg msg
-viewTrailPoint p n =
+viewTrailPoint : Particle -> Float2 -> Svg msg
+viewTrailPoint p ( n, nn ) =
     let
         to =
             p.to |> toPolar |> mapFirst (mul n) |> fromPolar
