@@ -65,7 +65,8 @@ view model =
 viewBoardSvg : BoardDict -> Html Msg
 viewBoardSvg bd =
     svgBlock
-        [ sWidth "min(500px, 100%)"
+        [ sMaxHeight "100vh"
+        , sMaxWidth "400px"
         , viewBoxC 300 300
         , ffMonospace
         , fontSize "12px"
