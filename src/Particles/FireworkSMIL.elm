@@ -31,7 +31,7 @@ particles =
     let
         randomRadius =
             Random.Extra.frequency
-                ( 80, Random.float 60 100 )
+                ( 80, Random.float 10 100 )
                 [ ( 10, Random.Float.normal 30 10 )
 
                 --, ( 10, Random.Float.normal 100 10 )
@@ -48,16 +48,18 @@ particles =
                 randomDest
                 randomNorm
     in
-    Random.step (Random.list 60 gen) (Random.initialSeed 0)
+    Random.step (Random.list 200 gen) (Random.initialSeed 0)
         |> first
 
 
 samples =
-    normSamples 10
+    normSamples 20
 
 
 samplePairs =
     List.map2 pair samples (List.drop 1 samples)
+        |> List.reverse
+        |> List.take 1
 
 
 viewParticle : Particle -> Svg msg
@@ -92,7 +94,7 @@ viewTrailPoint p ( pn, n ) =
     Svg.polyline
         [ --TA.points [ pto, to ]
           stroke <| hsla p.h 1 0.5 oa
-        , strokeW 2
+        , strokeW 5
         ]
         [ --Svg.animateTransform
           --[ refIdAttr
