@@ -31,8 +31,11 @@ particles =
     let
         randomRadius =
             Random.Extra.frequency
-                ( 1, Random.Float.normal 80 20 )
-                [ ( 1, Random.float 20 100 ) ]
+                ( 80, Random.float 10 100 )
+                [ ( 10, Random.Float.normal 0 10 )
+                , ( 10, Random.Float.normal 100 10 )
+                ]
+                |> Random.map abs
 
         randomDest =
             Random.pair randomRadius randomAngle
@@ -49,7 +52,7 @@ particles =
 
 
 samples =
-    normSamples 10
+    normSamples 20
 
 
 samplePairs =
@@ -88,6 +91,7 @@ viewTrailPoint p ( pn, n ) =
     Svg.polyline
         [ --TA.points [ pto, to ]
           stroke <| hsla p.h 1 0.5 oa
+        , strokeW 2
         ]
         [ --Svg.animateTransform
           --[ refIdAttr
@@ -120,7 +124,7 @@ viewTrailPoint p ( pn, n ) =
 
             --, valuesFromFloat [ oa, oa, 0 ]
             , SA.values "1;1;0"
-            , SA.keyTimes "0;0.7;1"
+            , SA.keyTimes "0;0.8;1"
             , beginAttr
             , durAttr
             , fill "freeze"
