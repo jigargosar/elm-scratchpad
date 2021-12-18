@@ -80,13 +80,29 @@ viewTrailPoint p ( pn, n ) =
         durAttr =
             SA.dur "2s"
     in
-    Svg.circle [ Px.r 1, fill <| hsla p.h 1 0.5 oa ]
-        --Svg.polyline [ TA.points [ to, pto ], stroke <| hsla p.h 1 0.5 oa ]
-        [ Svg.animateTransform
+    --Svg.circle [ Px.r 1, fill <| hsla p.h 1 0.5 oa ]
+    Svg.polyline [ TA.points [ to, pto ], stroke <| hsla p.h 1 0.5 oa ]
+        [ --Svg.animateTransform
+          --[ refIdAttr
+          --, SA.attributeName "transform"
+          --, SA.type_ "translate"
+          --, valuesFloat2 [ ( 0, 0 ), to ]
+          --, durAttr
+          --, beginAttr
+          --, fill "freeze"
+          --]
+          --[]
+          Svg.animate
             [ refIdAttr
-            , SA.attributeName "transform"
-            , SA.type_ "translate"
-            , valuesFloat2 [ ( 0, 0 ), to ]
+            , SA.attributeName "points"
+            , [ [ ( 0, 0 ), ( 0, 0 ) ]
+              , [ pto, to ]
+              ]
+                |> List.map (List.map (joinFloat2 ",") >> String.join " ")
+                |> String.join ";"
+                |> SA.values
+
+            --, SA.values "0,0 10,10; 0,0 100,100;"
             , durAttr
             , beginAttr
             , fill "freeze"
