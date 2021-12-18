@@ -17,7 +17,7 @@ main =
             [ Svg.animate
                 [ SA.id "self"
                 , SA.attributeName "cx"
-                , SA.values "0;100"
+                , SA.by "100"
 
                 --, SA.from "0"
                 --, SA.to "100"
