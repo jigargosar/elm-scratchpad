@@ -52,7 +52,7 @@ particles =
 
 
 samples =
-    normSamples 20
+    normSamples 10
 
 
 samplePairs =
