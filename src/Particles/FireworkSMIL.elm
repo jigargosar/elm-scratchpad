@@ -13,7 +13,7 @@ main =
         [ viewBoxC 300 300
         , sMaxWidth "500px"
         ]
-        [ viewParticle ( 100, 100 ) ]
+        [ viewParticle ( 100, -100 ) ]
 
 
 viewParticle to =
