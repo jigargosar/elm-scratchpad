@@ -48,10 +48,10 @@ viewParticle : Particle -> Svg msg
 viewParticle { to, h } =
     let
         refIdAttr =
-            SA.id "a_mv"
+            SA.id "a_particle"
 
         beginAttr =
-            SA.begin "0s;a_mv.end+0.5s"
+            SA.begin "0s;a_particle.end+0.5s"
 
         durAttr =
             SA.dur "2s"
