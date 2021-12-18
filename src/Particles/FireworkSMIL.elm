@@ -23,6 +23,7 @@ main =
                 , SA.to "100"
                 , SA.dur "2s"
                 , SA.begin "0s;self.end+2s"
+                , SA.fill "freeze"
 
                 --, TA.repeatCount TT.RepeatIndefinite
                 ]
