@@ -45,11 +45,24 @@ particles =
 
 
 samples =
-    normSamples 10
+    normSamples 20
 
 
 samplePairs =
     List.map2 pair samples (List.drop 1 samples)
+
+
+
+--|> dropAlternates []
+
+
+dropAlternates acc xs =
+    case xs of
+        _ :: h :: rest ->
+            dropAlternates (h :: acc) rest
+
+        _ ->
+            acc
 
 
 viewParticle : Particle -> Svg msg
