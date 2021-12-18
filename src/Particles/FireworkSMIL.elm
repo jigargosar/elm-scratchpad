@@ -46,7 +46,7 @@ particles =
 
 viewParticle : Particle -> Svg msg
 viewParticle p =
-    normSamples 30
+    normSamples 10
         |> List.map (viewTrailPoint p)
         |> group []
 
