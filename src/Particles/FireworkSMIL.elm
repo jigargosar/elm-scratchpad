@@ -27,7 +27,8 @@ type alias Particle =
 particles =
     let
         gen =
-            Random.constant <| Particle ( 100, -100 )
+            Random.map Particle
+                (Random.constant ( 100, -100 ))
     in
     Random.step (Random.list 100 gen) (Random.initialSeed 0)
         |> first
