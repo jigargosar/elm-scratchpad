@@ -45,14 +45,14 @@ viewParticle to =
         ]
 
 
+valuesFromFloat2List : List Float2 -> String
+valuesFromFloat2List =
+    List.map (joinFloat2 " ") >> String.join ";"
+
+
 join sep ( a, b ) =
     a ++ sep ++ b
 
 
 joinFloat2 sep =
     mapEach fromFloat >> join sep
-
-
-valuesFromFloat2List : List Float2 -> String
-valuesFromFloat2List =
-    List.map (joinFloat2 " ") >> String.join ";"
