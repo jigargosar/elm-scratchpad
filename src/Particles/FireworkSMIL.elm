@@ -18,6 +18,9 @@ main =
 
 viewParticle to =
     let
+        refIdAttr =
+            SA.id "a_mv"
+
         beginAttr =
             SA.begin "0s;a_mv.end+0.5s"
 
@@ -26,7 +29,7 @@ viewParticle to =
     in
     Svg.circle [ Px.r 10, fill <| hsl 1 1 0.5 ]
         [ Svg.animateTransform
-            [ SA.id "a_mv"
+            [ refIdAttr
             , SA.attributeName "transform"
             , SA.type_ "translate"
             , valuesFloat2 [ ( 0, 0 ), to ]
@@ -36,8 +39,7 @@ viewParticle to =
             ]
             []
         , Svg.animate
-            [ SA.id "a_op"
-            , SA.attributeName "opacity"
+            [ SA.attributeName "opacity"
             , SA.values "1;1;0"
             , SA.keyTimes "0;0.7;1"
             , beginAttr
