@@ -28,7 +28,7 @@ particles : List Particle
 particles =
     let
         randomDest =
-            Random.pair (Random.float 10 100) randomAngle
+            Random.pair (Random.float 30 100) randomAngle
                 |> Random.map fromPolar
 
         gen : Generator Particle
