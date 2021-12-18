@@ -1,5 +1,6 @@
 module Particles.FireworkSMIL exposing (main)
 
+import Random
 import Svg
 import Svg.Attributes as SA
 import TypedSvg.Attributes as TA
@@ -13,10 +14,19 @@ main =
         [ viewBoxC 300 300
         , sMaxWidth "500px"
         ]
-        [ [ ( 100, -100 ) ]
+        [ particles
             |> List.map viewParticle
             |> group []
         ]
+
+
+particles =
+    let
+        gen =
+            Random.constant ( 100, -100 )
+    in
+    Random.step (Random.list 100 gen) (Random.initialSeed 0)
+        |> first
 
 
 viewParticle to =
