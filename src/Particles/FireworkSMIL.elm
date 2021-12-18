@@ -20,16 +20,20 @@ main =
         ]
 
 
+type alias Particle =
+    { to : Float2 }
+
+
 particles =
     let
         gen =
-            Random.constant ( 100, -100 )
+            Random.constant <| Particle ( 100, -100 )
     in
     Random.step (Random.list 100 gen) (Random.initialSeed 0)
         |> first
 
 
-viewParticle to =
+viewParticle { to } =
     let
         refIdAttr =
             SA.id "a_mv"
