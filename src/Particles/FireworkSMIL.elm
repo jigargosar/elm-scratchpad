@@ -65,6 +65,9 @@ viewTrailPoint p ( pn, n ) =
         to =
             p.to |> toPolar |> mapFirst (mul n) |> fromPolar
 
+        pto =
+            p.to |> toPolar |> mapFirst (mul pn) |> fromPolar
+
         oa =
             n * n * n
 
@@ -78,6 +81,7 @@ viewTrailPoint p ( pn, n ) =
             SA.dur "2s"
     in
     Svg.circle [ Px.r 1, fill <| hsla p.h 1 0.5 oa ]
+        --Svg.polyline [ TA.points [ to, pto ], stroke <| hsla p.h 1 0.5 oa ]
         [ Svg.animateTransform
             [ refIdAttr
             , SA.attributeName "transform"
