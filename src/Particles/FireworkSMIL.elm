@@ -60,7 +60,7 @@ viewParticle p =
 
 
 viewTrailPoint : Particle -> Float2 -> Svg msg
-viewTrailPoint p ( n, nn ) =
+viewTrailPoint p ( pn, n ) =
     let
         to =
             p.to |> toPolar |> mapFirst (mul n) |> fromPolar
