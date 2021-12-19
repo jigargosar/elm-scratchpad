@@ -29,7 +29,7 @@ init () =
         demoTasks =
             let
                 toBucketId i =
-                    List.drop (modBy 3 i) initialBuckets
+                    List.drop (modBy 3 (i * i * i)) initialBuckets
                         |> List.head
                         |> Maybe.withDefault defaultBucket
                         |> .id
