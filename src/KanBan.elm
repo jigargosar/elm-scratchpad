@@ -71,16 +71,16 @@ viewBucketColumn b =
                 [ text <| fromInt (List.length b.items) ++ " items" ]
             ]
         , fCol [ gap "20px" ]
-            (List.map viewTaskItem b.items)
+            (List.map (viewTaskItem b) b.items)
         ]
 
 
-viewTaskItem : Task -> Html msg
-viewTaskItem t =
+viewTaskItem : Bucket -> Task -> Html msg
+viewTaskItem b t =
     div
         [ bgc black
         , pa "10px"
         , style "border-radius" "5px"
-        , style "border-left" "5px solid green"
+        , style "border-left" ("5px solid " ++ b.color)
         ]
         [ text t.title ]
