@@ -631,6 +631,10 @@ ttu =
     style "text-transform" "uppercase"
 
 
+fg =
+    style "color"
+
+
 basicStylesNode : Html msg
 basicStylesNode =
     stylesNode """

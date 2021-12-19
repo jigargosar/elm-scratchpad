@@ -21,5 +21,5 @@ main =
 viewColumn t =
     div []
         [ div [ fontSize "22px", ttu, bold ] [ text t ]
-        , div [ fontSize "18px", style "color" <| grayN 0.4 ] [ text "1 items" ]
+        , div [ fontSize "18px", fg (grayN 0.4) ] [ text "1 items" ]
         ]
