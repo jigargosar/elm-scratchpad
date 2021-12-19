@@ -18,6 +18,17 @@ main =
         |> div []
 
 
+type alias Task =
+    { title : String
+    }
+
+
+type alias Bucket =
+    { title : String
+    , items : List Task
+    }
+
+
 viewColumn t =
     div []
         [ div [ fontSize "22px", ttu, bold ] [ text t ]
