@@ -47,7 +47,11 @@ init () =
             in
             times 10
                 (\i ->
-                    Task (TaskId (fromInt i)) ("Demo Task #" ++ fromInt i) (toBucketId i) -i
+                    { id = TaskId (fromInt i)
+                    , title = "Demo Task #" ++ fromInt i
+                    , bucketId = toBucketId i
+                    , sortOrder = -i
+                    }
                 )
     in
     ( { taskDict = demoTasks |> dictBy (.id >> (\(TaskId id) -> id))
