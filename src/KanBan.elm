@@ -3,6 +3,8 @@ module KanBan exposing (main)
 import Dict exposing (Dict)
 import Html exposing (span)
 import Html.Attributes as HA
+import Html.Events as HE
+import Json.Decode as JD
 import Random
 import Utils exposing (..)
 
@@ -62,7 +64,7 @@ init () =
 
 
 type Msg
-    = Msg
+    = NOP
     | InputChanged String
     | OnInputSubmit
     | CreateTask String TaskId
@@ -76,7 +78,7 @@ subscriptions _ =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Msg ->
+        NOP ->
             ( model, Cmd.none )
 
         InputChanged input ->
@@ -199,7 +201,7 @@ initialBuckets =
     ]
 
 
-viewBucketColumn : Bucket -> List Task -> Html msg
+viewBucketColumn : Bucket -> List Task -> Html Msg
 viewBucketColumn b tasks =
     fCol [ gap "20px" ]
         [ div []
@@ -212,7 +214,7 @@ viewBucketColumn b tasks =
         ]
 
 
-viewTaskItem : Bucket -> Task -> Html msg
+viewTaskItem : Bucket -> Task -> Html Msg
 viewTaskItem b t =
     div
         [ bgc (grayN 0.13)
@@ -222,4 +224,10 @@ viewTaskItem b t =
         , style "box-shadow" ("1px 2px 0px 1px " ++ hsla 0 0 0 1)
         , HA.draggable "true"
         ]
-        [ span [ HA.draggable "false", style "user-select" "text" ] [ text t.title ] ]
+        [ span
+            [ HA.draggable "false"
+            , style "user-select" "text"
+            , HE.preventDefaultOn "dragstart" (JD.succeed ( NOP, True ))
+            ]
+            [ text t.title ]
+        ]

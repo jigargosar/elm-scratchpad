@@ -1,4 +1,4 @@
-module TCBON.MandelbrotSetWebGL exposing (..)
+module TCBON.MandelbrotSetWebGL exposing (main)
 
 import Browser exposing (Document, UrlRequest(..))
 import Browser.Dom
