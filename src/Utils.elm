@@ -1538,13 +1538,13 @@ allEq v ls =
     List.all (eq v) ls
 
 
-groupEqBy : (a -> b) -> List a -> List ( a, List a )
-groupEqBy extract =
-    groupBy (eqBy extract)
+groupBy : (a -> b) -> List a -> List ( a, List a )
+groupBy extract =
+    groupWith (eqBy extract)
 
 
-groupBy : (a -> a -> Bool) -> List a -> List ( a, List a )
-groupBy pred list =
+groupWith : (a -> a -> Bool) -> List a -> List ( a, List a )
+groupWith pred list =
     groupByHelp pred list []
 
 

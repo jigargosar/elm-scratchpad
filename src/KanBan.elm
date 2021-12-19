@@ -98,6 +98,24 @@ createTask title taskId taskDict =
         taskDict
 
 
+updateTaskSortOrder : TaskDict -> TaskDict
+updateTaskSortOrder td =
+    td
+        |> Dict.values
+        |> groupBy .bucketId
+        |> List.concatMap
+            (\( h, t ) ->
+                (h :: t)
+                    |> List.sortBy .sortOrder
+                    |> List.indexedMap setSortOrder
+            )
+        |> dictBy (.id >> (\(TaskId id) -> id))
+
+
+setSortOrder i m =
+    { m | sortOrder = i }
+
+
 createTaskCmd : String -> Cmd Msg
 createTaskCmd title =
     Random.generate (CreateTask title) randomTaskId
