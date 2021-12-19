@@ -226,8 +226,7 @@ viewTaskItem b t =
         , style "cursor" "move"
         ]
         [ span
-            [ HA.draggable "false"
-            , style "user-select" "text"
+            [ style "user-select" "text"
             , style "cursor" "auto"
             ]
             [ text t.title ]
