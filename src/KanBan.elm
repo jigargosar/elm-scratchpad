@@ -44,9 +44,9 @@ rangeStartSize s sz =
 
 emptyBuckets : List Bucket
 emptyBuckets =
-    [ Bucket "Todo" "red" []
-    , Bucket "Ongoing" "yellow" []
-    , Bucket "Done" "green" []
+    [ Bucket "Todo" (hsl 0 0.7 0.5) []
+    , Bucket "Ongoing" (hsl 0.14 0.7 0.5) []
+    , Bucket "Done" (hsl 0.32 0.7 0.5) []
     ]
 
 
@@ -80,7 +80,7 @@ viewTaskItem b t =
     div
         [ bgc black
         , pa "10px"
-        , style "border-radius" "5px"
+        , style "border-radius" "10px"
         , style "border-left" ("5px solid " ++ b.color)
         ]
         [ text t.title ]
