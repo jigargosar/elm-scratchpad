@@ -19,4 +19,4 @@ main =
 
 
 viewColumn t =
-    div [ style "text-transform" "uppercase" ] [ text t ]
+    div [ ttu ] [ text t ]

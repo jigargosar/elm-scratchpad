@@ -627,6 +627,10 @@ stylesNode string =
     Html.node "style" [] [ Html.text string ]
 
 
+ttu =
+    style "text-transform" "uppercase"
+
+
 basicStylesNode : Html msg
 basicStylesNode =
     stylesNode """
