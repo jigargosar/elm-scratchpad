@@ -124,7 +124,10 @@ view model =
                 , style "grid-auto-flow" "column"
                 ]
                 (initialBuckets
-                    |> List.map (\b -> viewBucketColumn b (sortedTasksInBucketWithId b.id model.taskDict))
+                    |> List.map
+                        (\b ->
+                            viewBucketColumn b (sortedTasksInBucketWithId b.id model.taskDict)
+                        )
                 )
             ]
         ]
