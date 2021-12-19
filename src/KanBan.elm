@@ -1,5 +1,7 @@
 module KanBan exposing (main)
 
+import Dict
+import Random
 import Utils exposing (..)
 
 
@@ -53,16 +55,25 @@ view _ =
             , style "grid-auto-flow" "column"
             , bgc (grayN 0.18)
             ]
-            (buckets
-                |> List.map viewBucketColumn
+            (demoTasks
+                |> groupEqBy .bucketId
+                |> List.sortBy (first >> .bucketId >> sortOrderOfBucketWithId >> Maybe.withDefault Random.maxInt)
+                |> List.filterMap
+                    (\( h, t ) ->
+                        bucketWithId h.bucketId
+                            |> Maybe.map
+                                (\b ->
+                                    viewBucketColumn b (h :: t)
+                                )
+                    )
             )
         ]
 
 
-tasks =
+demoTasks =
     let
         toBucketId i =
-            List.drop (modBy 3 i) emptyBuckets
+            List.drop (modBy 3 i) initialBuckets
                 |> List.head
                 |> Maybe.withDefault defaultBucket
                 |> .id
@@ -71,26 +82,6 @@ tasks =
         (\i ->
             Task (TaskId (fromInt i)) ("Demo Task #" ++ fromInt i) (toBucketId i)
         )
-
-
-buckets =
-    emptyBuckets
-        |> List.indexedMap
-            (\bi b ->
-                { b
-                    | items =
-                        rangeStartSize ((bi * 4) + 1) 4
-                            |> List.map
-                                (\ti ->
-                                    Task (TaskId (fromInt ti)) ("Demo Task #" ++ fromInt ti) b.id
-                                )
-                            |> List.take (bi + 2)
-                }
-            )
-
-
-rangeStartSize s sz =
-    List.range s (s + sz)
 
 
 type TaskId
@@ -110,34 +101,48 @@ type BucketId
 
 type alias Bucket =
     { id : BucketId
+    , sortOrder : Int
     , title : String
     , color : String
-    , items : List Task
     }
 
 
 defaultBucket =
-    Bucket (BucketId "Todo") "Todo" (hsl 0 0.7 0.5) []
+    Bucket (BucketId "Todo") 0 "Todo" (hsl 0 0.7 0.5)
 
 
-emptyBuckets : List Bucket
-emptyBuckets =
+initialBuckets : List Bucket
+initialBuckets =
     [ defaultBucket
-    , Bucket (BucketId "Ongoing") "Ongoing" (hsl 0.14 0.7 0.5) []
-    , Bucket (BucketId "Done") "Done" (hsl 0.32 0.7 0.5) []
+    , Bucket (BucketId "Ongoing") 1 "Ongoing" (hsl 0.14 0.7 0.5)
+    , Bucket (BucketId "Done") 2 "Done" (hsl 0.32 0.7 0.5)
     ]
 
 
-viewBucketColumn : Bucket -> Html msg
-viewBucketColumn b =
+sortOrderOfBucketWithId : BucketId -> Maybe Int
+sortOrderOfBucketWithId =
+    bucketWithId >> Maybe.map .sortOrder
+
+
+bucketWithId : BucketId -> Maybe Bucket
+bucketWithId (BucketId bucketId) =
+    let
+        bucketDict =
+            List.foldl (insertBy (.id >> (\(BucketId id) -> id))) Dict.empty initialBuckets
+    in
+    Dict.get bucketId bucketDict
+
+
+viewBucketColumn : Bucket -> List Task -> Html msg
+viewBucketColumn b tasks =
     fCol [ gap "20px" ]
         [ div []
             [ div [ fontSize "22px", ttu, bold ] [ text b.title ]
             , div [ fontSize "18px", fg (grayN 0.6) ]
-                [ text <| fromInt (List.length b.items) ++ " items" ]
+                [ text <| fromInt (List.length tasks) ++ " items" ]
             ]
         , fCol [ gap "20px" ]
-            (List.map (viewTaskItem b) b.items)
+            (List.map (viewTaskItem b) tasks)
         ]
 
 
