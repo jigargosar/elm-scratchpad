@@ -10,6 +10,7 @@ import Html.Attributes exposing (style)
 import Html.Events
 import Json.Decode as JD exposing (Decoder)
 import Random exposing (Generator)
+import Random.Char
 import Svg
 import Svg.Attributes as SA
 import Svg.Keyed
@@ -1676,6 +1677,16 @@ type alias Generator a =
     Random.Generator a
 
 
-randomId : Random.Generator String
+randomDigitChar =
+    Random.Char.char (Char.toCode '0') (Char.toCode '9')
+
+
+randomId : Generator String
 randomId =
-    Random.int 0 Random.maxInt |> Random.map fromInt
+    Random.weighted ( 10, randomDigitChar )
+        [ ( 26, Random.Char.lowerCaseLatin )
+        , ( 26, Random.Char.upperCaseLatin )
+        ]
+        |> Random.andThen identity
+        |> Random.list 20
+        |> Random.map String.fromList
