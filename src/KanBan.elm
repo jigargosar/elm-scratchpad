@@ -7,10 +7,16 @@ main =
     Document "Kanban"
         [ basicStylesNode
         , div [ dGrid, style "grid-auto-flow" "column" ]
-            [ div [] [ text "Todo" ]
-            , div [] [ text "Ongoing" ]
-            , div [] [ text "Done" ]
-            ]
+            ([ "Todo"
+             , "Ongoing"
+             , "Done"
+             ]
+                |> List.map viewColumn
+            )
         ]
         |> .body
         |> div []
+
+
+viewColumn t =
+    div [ style "text-transform" "uppercase" ] [ text t ]
