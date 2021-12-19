@@ -26,14 +26,15 @@ main =
 
 
 buckets =
-    bucketTitles
+    emptyBuckets
         |> List.indexedMap
-            (\bi t ->
-                Bucket t
-                    (rangeStartSize ((bi * 4) + 1) 4
-                        |> List.map (\ti -> Task ("Demo Task #" ++ fromInt ti))
-                        |> List.take (bi + 2)
-                    )
+            (\bi b ->
+                { b
+                    | items =
+                        rangeStartSize ((bi * 4) + 1) 4
+                            |> List.map (\ti -> Task ("Demo Task #" ++ fromInt ti))
+                            |> List.take (bi + 2)
+                }
             )
 
 
@@ -41,10 +42,11 @@ rangeStartSize s sz =
     List.range s (s + sz)
 
 
-bucketTitles =
-    [ "Todo"
-    , "Ongoing"
-    , "Done"
+emptyBuckets : List Bucket
+emptyBuckets =
+    [ Bucket "Todo" "green" []
+    , Bucket "Ongoing" "green" []
+    , Bucket "Done" "green" []
     ]
 
 
@@ -55,6 +57,7 @@ type alias Task =
 
 type alias Bucket =
     { title : String
+    , color : String
     , items : List Task
     }
 
