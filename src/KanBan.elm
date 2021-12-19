@@ -78,9 +78,9 @@ rangeStartSize s sz =
 
 emptyBuckets : List Bucket
 emptyBuckets =
-    [ Bucket "Todo" (hsl 0 0.7 0.5) []
-    , Bucket "Ongoing" (hsl 0.14 0.7 0.5) []
-    , Bucket "Done" (hsl 0.32 0.7 0.5) []
+    [ Bucket (BucketId "Todo") "Todo" (hsl 0 0.7 0.5) []
+    , Bucket (BucketId "Ongoing") "Ongoing" (hsl 0.14 0.7 0.5) []
+    , Bucket (BucketId "Done") "Done" (hsl 0.32 0.7 0.5) []
     ]
 
 
@@ -89,8 +89,13 @@ type alias Task =
     }
 
 
+type BucketId
+    = BucketId String
+
+
 type alias Bucket =
-    { title : String
+    { id : BucketId
+    , title : String
     , color : String
     , items : List Task
     }
