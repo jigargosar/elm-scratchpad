@@ -78,5 +78,6 @@ viewTaskItem t =
         [ bgc black
         , pa "10px"
         , style "border-radius" "5px"
+        , style "border-left" "5px solid green"
         ]
         [ text t.title ]
