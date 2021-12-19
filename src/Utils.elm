@@ -753,6 +753,10 @@ tac =
     style "text-align" "center"
 
 
+bold =
+    style "font-weight" "bold"
+
+
 gap =
     style "gap"
 

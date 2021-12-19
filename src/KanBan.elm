@@ -6,7 +6,7 @@ import Utils exposing (..)
 main =
     Document "Kanban"
         [ basicStylesNode
-        , div [ dGrid, style "grid-auto-flow" "column" ]
+        , div [ pa "20px", gap "20px", dGrid, style "grid-auto-flow" "column" ]
             ([ "Todo"
              , "Ongoing"
              , "Done"
@@ -19,4 +19,4 @@ main =
 
 
 viewColumn t =
-    div [ ttu ] [ text t ]
+    div [ ttu, bold ] [ text t ]
