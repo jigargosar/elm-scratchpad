@@ -22,7 +22,7 @@ main =
             )
         ]
         |> .body
-        |> div [ dGrid ]
+        |> div []
 
 
 buckets =
