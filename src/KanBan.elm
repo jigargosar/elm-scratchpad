@@ -90,7 +90,7 @@ update msg model =
 createTask : String -> TaskId -> TaskDict -> TaskDict
 createTask title taskId taskDict =
     insertBy (.id >> (\(TaskId id) -> id))
-        (Task taskId title defaultBucket.id Random.maxInt)
+        (Task taskId title defaultBucket.id maxInt)
         taskDict
 
 

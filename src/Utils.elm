@@ -1066,6 +1066,14 @@ sub =
     (-)
 
 
+maxInt =
+    Random.maxInt
+
+
+minInt =
+    Random.minInt
+
+
 isEven : Int -> Bool
 isEven x =
     modBy 2 x == 0
