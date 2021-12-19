@@ -96,11 +96,11 @@ createTask title taskId taskDict =
     insertBy (.id >> (\(TaskId id) -> id))
         (Task taskId title defaultBucket.id maxInt)
         taskDict
-        |> updateTaskSortOrder
+        |> normalizeTaskSortOrder
 
 
-updateTaskSortOrder : TaskDict -> TaskDict
-updateTaskSortOrder taskDict =
+normalizeTaskSortOrder : TaskDict -> TaskDict
+normalizeTaskSortOrder taskDict =
     taskDict
         |> Dict.values
         |> groupBy .bucketId
