@@ -143,10 +143,6 @@ randomTaskId =
     randomId |> Random.map TaskId
 
 
-randomId =
-    Random.int 0 Random.maxInt |> Random.map fromInt
-
-
 type alias Task =
     { id : TaskId
     , title : String

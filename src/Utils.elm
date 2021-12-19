@@ -1666,3 +1666,16 @@ notifyClick =
 
 onInput =
     Html.Events.onInput
+
+
+
+-- RANDOM UTILS
+
+
+type alias Generator a =
+    Random.Generator a
+
+
+randomId : Random.Generator String
+randomId =
+    Random.int 0 Random.maxInt |> Random.map fromInt
