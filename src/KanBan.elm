@@ -70,6 +70,7 @@ view _ =
         ]
 
 
+demoTasks : List Task
 demoTasks =
     let
         toBucketId i =
