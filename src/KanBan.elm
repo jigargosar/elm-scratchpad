@@ -61,17 +61,22 @@ type alias Bucket =
 
 viewBucketColumn : Bucket -> Html msg
 viewBucketColumn b =
-    fCol [ gap "10px" ]
+    fCol [ gap "20px" ]
         [ div []
             [ div [ fontSize "22px", ttu, bold ] [ text b.title ]
             , div [ fontSize "18px", fg (grayN 0.6) ]
                 [ text <| fromInt (List.length b.items) ++ " items" ]
             ]
-        , fCol [ gap "10px" ]
+        , fCol [ gap "20px" ]
             (List.map viewTaskItem b.items)
         ]
 
 
 viewTaskItem : Task -> Html msg
 viewTaskItem t =
-    div [ bgc black, pa "5px", style "border-radius" "5px" ] [ text t.title ]
+    div
+        [ bgc black
+        , pa "10px"
+        , style "border-radius" "5px"
+        ]
+        [ text t.title ]
