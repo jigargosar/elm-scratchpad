@@ -1,7 +1,7 @@
 module KanBan exposing (main)
 
 import Dict exposing (Dict)
-import Html
+import Html exposing (span)
 import Html.Attributes as HA
 import Random
 import Utils exposing (..)
@@ -222,4 +222,4 @@ viewTaskItem b t =
         , style "box-shadow" ("1px 2px 0px 1px " ++ hsla 0 0 0 1)
         , HA.draggable "true"
         ]
-        [ text t.title ]
+        [ span [ HA.draggable "false", style "user-select" "text" ] [ text t.title ] ]
