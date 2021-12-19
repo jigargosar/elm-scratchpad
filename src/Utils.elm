@@ -648,7 +648,7 @@ basicStylesNode =
 
 html, body {
     height:100%;
-    color: #fafafa
+    color: #fafafa;
     background-color:#222;
     font-size: 20px;
     font-family:-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif;

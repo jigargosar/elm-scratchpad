@@ -64,4 +64,4 @@ viewBucketColumn b =
 
 viewTaskItem : Task -> Html msg
 viewTaskItem t =
-    div [] [ text t.title ]
+    div [ bgc black, pa "5px", style "border-radius" "5px" ] [ text t.title ]
