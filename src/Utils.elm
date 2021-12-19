@@ -1024,6 +1024,10 @@ eq =
     (==)
 
 
+propEq extract v from =
+    extract from == v
+
+
 eqBy fn a b =
     fn a == fn b
 

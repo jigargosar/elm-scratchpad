@@ -22,6 +22,12 @@ type alias TaskDict =
     Dict String Task
 
 
+tasksWithBucketId : BucketId -> TaskDict -> List Task
+tasksWithBucketId bucketId taskDict =
+    Dict.values taskDict
+        |> List.filter (propEq .bucketId bucketId)
+
+
 init : () -> ( Model, Cmd Msg )
 init () =
     let
@@ -77,18 +83,8 @@ view model =
             , style "grid-auto-flow" "column"
             , bgc (grayN 0.18)
             ]
-            (model.taskDict
-                |> Dict.values
-                |> groupEqBy .bucketId
-                |> List.sortBy (first >> .bucketId >> sortOrderOfBucketWithId >> Maybe.withDefault Random.maxInt)
-                |> List.filterMap
-                    (\( h, t ) ->
-                        bucketWithId h.bucketId
-                            |> Maybe.map
-                                (\b ->
-                                    viewBucketColumn b (h :: t)
-                                )
-                    )
+            (initialBuckets
+                |> List.map (\b -> viewBucketColumn b (tasksWithBucketId b.id model.taskDict))
             )
         ]
 
