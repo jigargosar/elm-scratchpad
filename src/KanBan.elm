@@ -21,4 +21,5 @@ main =
 viewColumn t =
     div []
         [ div [ ttu, bold ] [ text t ]
+        , div [ style "color" <| grayN 0.4 ] [ text "1 items" ]
         ]
