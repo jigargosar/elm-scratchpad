@@ -82,12 +82,7 @@ update msg model =
             ( { model | input = "" }, createTaskCmd model.input )
 
         CreateTask title taskId ->
-            ( { model
-                | taskDict =
-                    insertBy (.id >> (\(TaskId id) -> id))
-                        (Task taskId title defaultBucket.id Random.maxInt)
-                        model.taskDict
-              }
+            ( { model | taskDict = createTask title taskId model.taskDict }
             , Cmd.none
             )
 
