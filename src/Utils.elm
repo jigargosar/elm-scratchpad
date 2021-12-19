@@ -68,6 +68,20 @@ type alias KeyEvent =
     }
 
 
+onEnter tag =
+    Html.Events.on "keydown"
+        (keyEventDecoder
+            |> JD.andThen
+                (\e ->
+                    if e.key == "Enter" then
+                        JD.succeed tag
+
+                    else
+                        JD.fail "not enter"
+                )
+        )
+
+
 keyEventDecoder : Decoder KeyEvent
 keyEventDecoder =
     JD.succeed KeyEvent
@@ -1640,3 +1654,7 @@ bDocument =
 notifyClick : msg -> Attribute msg
 notifyClick =
     Html.Events.onClick
+
+
+onInput =
+    Html.Events.onInput

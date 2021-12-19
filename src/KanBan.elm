@@ -3,6 +3,7 @@ module KanBan exposing (main)
 import Dict exposing (Dict)
 import Html
 import Html.Attributes as HA
+import Random
 import Utils exposing (..)
 
 
@@ -59,6 +60,8 @@ init () =
 type Msg
     = Msg
     | InputChanged String
+    | OnInputSubmit
+    | CreateTask String TaskId
 
 
 subscriptions : Model -> Sub Msg
@@ -74,6 +77,23 @@ update msg model =
 
         InputChanged input ->
             ( { model | input = input }, Cmd.none )
+
+        OnInputSubmit ->
+            ( { model | input = "" }, createTaskCmd model.input )
+
+        CreateTask title taskId ->
+            ( { model
+                | taskDict =
+                    insertBy (.id >> (\(TaskId id) -> id))
+                        (Task taskId title defaultBucket.id Random.maxInt)
+                        model.taskDict
+              }
+            , Cmd.none
+            )
+
+
+createTaskCmd str =
+    Random.generate (CreateTask str) randomTaskId
 
 
 view : Model -> Document Msg
@@ -91,6 +111,8 @@ view model =
                 [ Html.input
                     [ HA.placeholder "What's on your mind?"
                     , autofocus True
+                    , onInput InputChanged
+                    , onEnter OnInputSubmit
                     ]
                     []
                 ]
@@ -109,6 +131,14 @@ view model =
 
 type TaskId
     = TaskId String
+
+
+randomTaskId =
+    randomId |> Random.map TaskId
+
+
+randomId =
+    Random.int 0 Random.maxInt |> Random.map fromInt
 
 
 type alias Task =
