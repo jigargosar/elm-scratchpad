@@ -7,15 +7,19 @@ main =
     Document "Kanban"
         [ basicStylesNode
         , div [ pa "20px", gap "20px", dGrid, style "grid-auto-flow" "column" ]
-            ([ "Todo"
-             , "Ongoing"
-             , "Done"
-             ]
+            (bucketTitles
                 |> List.map viewColumn
             )
         ]
         |> .body
         |> div []
+
+
+bucketTitles =
+    [ "Todo"
+    , "Ongoing"
+    , "Done"
+    ]
 
 
 type alias Task =
