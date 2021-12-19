@@ -68,7 +68,7 @@ buckets =
                         rangeStartSize ((bi * 4) + 1) 4
                             |> List.map
                                 (\ti ->
-                                    Task (TaskId (fromInt ti)) ("Demo Task #" ++ fromInt ti)
+                                    Task (TaskId (fromInt ti)) ("Demo Task #" ++ fromInt ti) b.id
                                 )
                             |> List.take (bi + 2)
                 }
@@ -94,6 +94,7 @@ type TaskId
 type alias Task =
     { id : TaskId
     , title : String
+    , bucketId : BucketId
     }
 
 
