@@ -4,6 +4,41 @@ import Utils exposing (..)
 
 
 main =
+    bDocument
+        { init = init
+        , subscriptions = subscriptions
+        , update = update
+        , view = view
+        }
+
+
+type alias Model =
+    {}
+
+
+init : () -> ( Model, Cmd Msg )
+init () =
+    ( {}, Cmd.none )
+
+
+type Msg
+    = Msg
+
+
+subscriptions : Model -> Sub Msg
+subscriptions _ =
+    Sub.none
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        Msg ->
+            ( model, Cmd.none )
+
+
+view : Model -> Document Msg
+view _ =
     Document "Kanban"
         [ basicStylesNode
         , stylesNode """
@@ -16,13 +51,12 @@ main =
             , gap "20px"
             , dGrid
             , style "grid-auto-flow" "column"
+            , bgc (grayN 0.18)
             ]
             (buckets
                 |> List.map viewBucketColumn
             )
         ]
-        |> .body
-        |> div [ bgc (grayN 0.18) ]
 
 
 buckets =
