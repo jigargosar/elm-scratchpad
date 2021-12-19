@@ -1,6 +1,7 @@
 module KanBan exposing (main)
 
 import Dict exposing (Dict)
+import Html
 import Utils exposing (..)
 
 
@@ -76,16 +77,20 @@ view model =
 
             }
         """
-        , div
-            [ pa "20px"
-            , gap "20px"
-            , dGrid
-            , style "grid-auto-flow" "column"
-            , bgc (grayN 0.18)
+        , div [ bgc (grayN 0.18) ]
+            [ div []
+                [ Html.input [] []
+                ]
+            , div
+                [ pa "20px"
+                , gap "20px"
+                , dGrid
+                , style "grid-auto-flow" "column"
+                ]
+                (initialBuckets
+                    |> List.map (\b -> viewBucketColumn b (sortedTasksInBucketWithId b.id model.taskDict))
+                )
             ]
-            (initialBuckets
-                |> List.map (\b -> viewBucketColumn b (sortedTasksInBucketWithId b.id model.taskDict))
-            )
         ]
 
 
