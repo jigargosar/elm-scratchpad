@@ -113,6 +113,7 @@ view model =
                     , autofocus True
                     , onInput InputChanged
                     , onEnter OnInputSubmit
+                    , HA.value model.input
                     ]
                     []
                 ]
