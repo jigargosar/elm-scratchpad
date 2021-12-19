@@ -629,21 +629,23 @@ stylesNode string =
 
 basicStylesNode : Html msg
 basicStylesNode =
-    stylesNode
-        """
-                    *, *::before, *::after {
-                        box-sizing: border-box;
-                        margin:0;
-                        padding:0;
-                    }
-    
-                    html, body {
-                        height:100%;
-                        color: #fafafa
-                        background-color:#222;
-                        font-size: 20px;
-                    }
-                """
+    stylesNode """
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin:0;
+    padding:0;
+}
+
+html, body {
+    height:100%;
+    color: #fafafa
+    background-color:#222;
+    font-size: 20px;
+    font-family:Roboto;
+}
+"""
 
 
 overflowVisible =
