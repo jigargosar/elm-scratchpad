@@ -1,6 +1,6 @@
 module KanBan exposing (main)
 
-import Dict
+import Dict exposing (Dict)
 import Random
 import Utils exposing (..)
 
@@ -15,12 +15,19 @@ main =
 
 
 type alias Model =
-    {}
+    { taskDict : TaskDict }
+
+
+type alias TaskDict =
+    Dict String Task
 
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( {}, Cmd.none )
+    ( { taskDict = demoTasks |> dictBy (.id >> (\(TaskId id) -> id))
+      }
+    , Cmd.none
+    )
 
 
 type Msg

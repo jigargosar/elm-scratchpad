@@ -1281,6 +1281,11 @@ insertBy keyFn v =
     Dict.insert (keyFn v) v
 
 
+dictBy : (v -> comparable) -> List v -> Dict comparable v
+dictBy keyFn =
+    List.foldl (insertBy keyFn) Dict.empty
+
+
 
 -- CRI
 
