@@ -79,7 +79,7 @@ viewTaskItem : Bucket -> Task -> Html msg
 viewTaskItem b t =
     div
         [ bgc black
-        , pa "10px"
+        , pa "20px"
         , style "border-radius" "10px"
         , style "border-left" ("10px solid " ++ b.color)
         ]
