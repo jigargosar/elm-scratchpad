@@ -22,8 +22,8 @@ type alias TaskDict =
     Dict String Task
 
 
-tasksWithBucketId : BucketId -> TaskDict -> List Task
-tasksWithBucketId bucketId taskDict =
+tasksInBucketWithId : BucketId -> TaskDict -> List Task
+tasksInBucketWithId bucketId taskDict =
     Dict.values taskDict
         |> List.filter (propEq .bucketId bucketId)
 
@@ -84,7 +84,7 @@ view model =
             , bgc (grayN 0.18)
             ]
             (initialBuckets
-                |> List.map (\b -> viewBucketColumn b (tasksWithBucketId b.id model.taskDict))
+                |> List.map (\b -> viewBucketColumn b (tasksInBucketWithId b.id model.taskDict))
             )
         ]
 
