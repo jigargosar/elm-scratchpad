@@ -648,6 +648,7 @@ basicStylesNode =
 
 html, body {
     height:100%;
+    display:grid;
 }
 
 body {
