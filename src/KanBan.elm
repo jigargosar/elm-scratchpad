@@ -2,6 +2,7 @@ module KanBan exposing (main)
 
 import Dict exposing (Dict)
 import Html
+import Html.Attributes as HA
 import Utils exposing (..)
 
 
@@ -75,11 +76,16 @@ view model =
         , stylesNode """
             input{
                 font-size: inherit;
+                padding: 0.5rem;
             }
         """
         , div [ bgc (grayN 0.18) ]
-            [ div []
-                [ Html.input [] []
+            [ fCol []
+                [ Html.input
+                    [ HA.placeholder "What's on your mind?"
+                    , autofocus True
+                    ]
+                    []
                 ]
             , div
                 [ pa "20px"
