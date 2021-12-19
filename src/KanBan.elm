@@ -19,4 +19,6 @@ main =
 
 
 viewColumn t =
-    div [ ttu, bold ] [ text t ]
+    div []
+        [ div [ ttu, bold ] [ text t ]
+        ]
