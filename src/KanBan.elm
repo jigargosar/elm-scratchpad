@@ -73,8 +73,8 @@ view model =
     Document "Kanban"
         [ basicStylesNode
         , stylesNode """
-            html,body{
-
+            input{
+                font-size: inherit;
             }
         """
         , div [ bgc (grayN 0.18) ]
