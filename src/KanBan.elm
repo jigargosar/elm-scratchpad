@@ -59,6 +59,20 @@ view _ =
         ]
 
 
+tasks =
+    let
+        toBucketId i =
+            List.drop (modBy 3 i) emptyBuckets
+                |> List.head
+                |> Maybe.withDefault defaultBucket
+                |> .id
+    in
+    times 10
+        (\i ->
+            Task (TaskId (fromInt i)) ("Demo Task #" ++ fromInt i) (toBucketId i)
+        )
+
+
 buckets =
     emptyBuckets
         |> List.indexedMap
@@ -77,14 +91,6 @@ buckets =
 
 rangeStartSize s sz =
     List.range s (s + sz)
-
-
-emptyBuckets : List Bucket
-emptyBuckets =
-    [ Bucket (BucketId "Todo") "Todo" (hsl 0 0.7 0.5) []
-    , Bucket (BucketId "Ongoing") "Ongoing" (hsl 0.14 0.7 0.5) []
-    , Bucket (BucketId "Done") "Done" (hsl 0.32 0.7 0.5) []
-    ]
 
 
 type TaskId
@@ -108,6 +114,18 @@ type alias Bucket =
     , color : String
     , items : List Task
     }
+
+
+defaultBucket =
+    Bucket (BucketId "Todo") "Todo" (hsl 0 0.7 0.5) []
+
+
+emptyBuckets : List Bucket
+emptyBuckets =
+    [ defaultBucket
+    , Bucket (BucketId "Ongoing") "Ongoing" (hsl 0.14 0.7 0.5) []
+    , Bucket (BucketId "Done") "Done" (hsl 0.32 0.7 0.5) []
+    ]
 
 
 viewBucketColumn : Bucket -> Html msg
