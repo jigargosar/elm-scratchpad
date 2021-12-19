@@ -47,7 +47,7 @@ update msg model =
 
 
 view : Model -> Document Msg
-view _ =
+view model =
     Document "Kanban"
         [ basicStylesNode
         , stylesNode """
@@ -62,7 +62,8 @@ view _ =
             , style "grid-auto-flow" "column"
             , bgc (grayN 0.18)
             ]
-            (demoTasks
+            (model.taskDict
+                |> Dict.values
                 |> groupEqBy .bucketId
                 |> List.sortBy (first >> .bucketId >> sortOrderOfBucketWithId >> Maybe.withDefault Random.maxInt)
                 |> List.filterMap
