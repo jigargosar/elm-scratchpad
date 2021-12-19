@@ -20,11 +20,15 @@ buckets =
         |> List.indexedMap
             (\bi t ->
                 Bucket t
-                    (List.range 0 3
-                        |> List.map (\ti -> Task ("Demo Task #" ++ fromInt (bi * ti)))
+                    (rangeStartSize ((bi * 4) + 1) 4
+                        |> List.map (\ti -> Task ("Demo Task #" ++ fromInt ti))
                         |> List.take (bi + 2)
                     )
             )
+
+
+rangeStartSize s sz =
+    List.range s (s + sz)
 
 
 bucketTitles =
