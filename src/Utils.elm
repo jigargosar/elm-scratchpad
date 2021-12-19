@@ -1677,16 +1677,22 @@ type alias Generator a =
     Random.Generator a
 
 
+randomDigitChar : Generator Char
 randomDigitChar =
     Random.Char.char (Char.toCode '0') (Char.toCode '9')
 
 
 randomId : Generator String
 randomId =
+    randomAlphaNumericStringOfLength 20
+
+
+randomAlphaNumericStringOfLength : Int -> Generator String
+randomAlphaNumericStringOfLength length =
     Random.weighted ( 10, randomDigitChar )
         [ ( 26, Random.Char.lowerCaseLatin )
         , ( 26, Random.Char.upperCaseLatin )
         ]
         |> Random.andThen identity
-        |> Random.list 20
+        |> Random.list length
         |> Random.map String.fromList
