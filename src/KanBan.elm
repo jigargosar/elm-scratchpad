@@ -7,12 +7,24 @@ main =
     Document "Kanban"
         [ basicStylesNode
         , div [ pa "20px", gap "20px", dGrid, style "grid-auto-flow" "column" ]
-            (bucketTitles
-                |> List.map viewColumn
+            (buckets
+                |> List.map viewBucketColumn
             )
         ]
         |> .body
         |> div []
+
+
+buckets =
+    bucketTitles
+        |> List.indexedMap
+            (\bi t ->
+                Bucket t
+                    (List.range 0 3
+                        |> List.map (\ti -> Task ("Demo Task #" ++ fromInt (bi * ti)))
+                        |> List.take (bi + 2)
+                    )
+            )
 
 
 bucketTitles =
@@ -33,8 +45,10 @@ type alias Bucket =
     }
 
 
-viewColumn t =
+viewBucketColumn : Bucket -> Html msg
+viewBucketColumn b =
     div []
-        [ div [ fontSize "22px", ttu, bold ] [ text t ]
-        , div [ fontSize "18px", fg (grayN 0.4) ] [ text "1 items" ]
+        [ div [ fontSize "22px", ttu, bold ] [ text b.title ]
+        , div [ fontSize "18px", fg (grayN 0.4) ]
+            [ text <| fromInt (List.length b.items) ++ "items" ]
         ]
