@@ -92,6 +92,13 @@ update msg model =
             )
 
 
+createTask : String -> TaskId -> TaskDict -> TaskDict
+createTask title taskId taskDict =
+    insertBy (.id >> (\(TaskId id) -> id))
+        (Task taskId title defaultBucket.id Random.maxInt)
+        taskDict
+
+
 createTaskCmd str =
     Random.generate (CreateTask str) randomTaskId
 
