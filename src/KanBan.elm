@@ -223,7 +223,7 @@ viewTaskItem b t =
         , style "border-left" ("10px solid " ++ b.color)
         , style "box-shadow" ("1px 2px 0px 1px " ++ hsla 0 0 0 1)
         , HA.draggable "true"
-        , style "cursor" "pointer"
+        , style "cursor" "move"
         ]
         [ span
             [ HA.draggable "false"
