@@ -8,7 +8,7 @@ main =
         [ basicStylesNode
         , stylesNode """
             html,body{
-                background-color: #333;
+
             }
         """
         , div
@@ -22,7 +22,7 @@ main =
             )
         ]
         |> .body
-        |> div []
+        |> div [ bgc (grayN 0.18) ]
 
 
 buckets =
