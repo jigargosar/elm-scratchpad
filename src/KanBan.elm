@@ -44,8 +44,8 @@ rangeStartSize s sz =
 
 emptyBuckets : List Bucket
 emptyBuckets =
-    [ Bucket "Todo" "green" []
-    , Bucket "Ongoing" "green" []
+    [ Bucket "Todo" "red" []
+    , Bucket "Ongoing" "yellow" []
     , Bucket "Done" "green" []
     ]
 
