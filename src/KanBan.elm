@@ -1,7 +1,6 @@
 module KanBan exposing (main)
 
 import Dict exposing (Dict)
-import Random
 import Utils exposing (..)
 
 
