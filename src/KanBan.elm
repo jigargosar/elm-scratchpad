@@ -7,7 +7,7 @@ main =
     Document "Kanban"
         [ basicStylesNode
         , stylesNode """
-            body{
+            html,body{
                 background-color: #333;
             }
         """
