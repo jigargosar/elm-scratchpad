@@ -647,7 +647,7 @@ html, body {
     color: #fafafa
     background-color:#222;
     font-size: 20px;
-    font-family:Roboto;
+    font-family:-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
 }
 """
 
