@@ -24,6 +24,21 @@ type alias TaskDict =
 
 init : () -> ( Model, Cmd Msg )
 init () =
+    let
+        demoTasks : List Task
+        demoTasks =
+            let
+                toBucketId i =
+                    List.drop (modBy 3 i) initialBuckets
+                        |> List.head
+                        |> Maybe.withDefault defaultBucket
+                        |> .id
+            in
+            times 10
+                (\i ->
+                    Task (TaskId (fromInt i)) ("Demo Task #" ++ fromInt i) (toBucketId i)
+                )
+    in
     ( { taskDict = demoTasks |> dictBy (.id >> (\(TaskId id) -> id))
       }
     , Cmd.none
@@ -76,21 +91,6 @@ view model =
                     )
             )
         ]
-
-
-demoTasks : List Task
-demoTasks =
-    let
-        toBucketId i =
-            List.drop (modBy 3 i) initialBuckets
-                |> List.head
-                |> Maybe.withDefault defaultBucket
-                |> .id
-    in
-    times 10
-        (\i ->
-            Task (TaskId (fromInt i)) ("Demo Task #" ++ fromInt i) (toBucketId i)
-        )
 
 
 type TaskId
