@@ -227,7 +227,6 @@ viewTaskItem b t =
         [ span
             [ HA.draggable "false"
             , style "user-select" "text"
-            , HE.preventDefaultOn "dragstart" (JD.succeed ( NOP, True ))
             ]
             [ text t.title ]
         ]
