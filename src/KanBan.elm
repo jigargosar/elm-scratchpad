@@ -64,7 +64,7 @@ viewBucketColumn b =
     fCol [ gap "10px" ]
         [ div []
             [ div [ fontSize "22px", ttu, bold ] [ text b.title ]
-            , div [ fontSize "18px", fg (grayN 0.4) ]
+            , div [ fontSize "18px", fg (grayN 0.6) ]
                 [ text <| fromInt (List.length b.items) ++ " items" ]
             ]
         , fCol [ gap "10px" ]
