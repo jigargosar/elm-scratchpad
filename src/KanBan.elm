@@ -6,7 +6,17 @@ import Utils exposing (..)
 main =
     Document "Kanban"
         [ basicStylesNode
-        , div [ pa "20px", gap "20px", dGrid, style "grid-auto-flow" "column" ]
+        , stylesNode """
+            body{
+                background-color: #333;
+            }
+        """
+        , div
+            [ pa "20px"
+            , gap "20px"
+            , dGrid
+            , style "grid-auto-flow" "column"
+            ]
             (buckets
                 |> List.map viewBucketColumn
             )
