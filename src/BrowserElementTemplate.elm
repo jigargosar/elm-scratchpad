@@ -22,7 +22,7 @@ init () =
 
 
 type Msg
-    = Msg
+    = NOP
 
 
 subscriptions : Model -> Sub Msg
@@ -33,7 +33,7 @@ subscriptions _ =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Msg ->
+        NOP ->
             ( model, Cmd.none )
 
 
