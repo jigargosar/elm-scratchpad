@@ -98,8 +98,9 @@ createTask title taskId taskDict =
         taskDict
 
 
-createTaskCmd str =
-    Random.generate (CreateTask str) randomTaskId
+createTaskCmd : String -> Cmd Msg
+createTaskCmd title =
+    Random.generate (CreateTask title) randomTaskId
 
 
 view : Model -> Document Msg
