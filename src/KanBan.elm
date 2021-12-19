@@ -125,18 +125,19 @@ initialBuckets =
     ]
 
 
-sortOrderOfBucketWithId : BucketId -> Maybe Int
-sortOrderOfBucketWithId =
-    bucketWithId >> Maybe.map .sortOrder
 
-
-bucketWithId : BucketId -> Maybe Bucket
-bucketWithId (BucketId bucketId) =
-    let
-        bucketDict =
-            List.foldl (insertBy (.id >> (\(BucketId id) -> id))) Dict.empty initialBuckets
-    in
-    Dict.get bucketId bucketDict
+--sortOrderOfBucketWithId : BucketId -> Maybe Int
+--sortOrderOfBucketWithId =
+--    bucketWithId >> Maybe.map .sortOrder
+--
+--
+--bucketWithId : BucketId -> Maybe Bucket
+--bucketWithId (BucketId bucketId) =
+--    let
+--        bucketDict =
+--            List.foldl (insertBy (.id >> (\(BucketId id) -> id))) Dict.empty initialBuckets
+--    in
+--    Dict.get bucketId bucketDict
 
 
 viewBucketColumn : Bucket -> List Task -> Html msg
