@@ -78,7 +78,7 @@ viewBucketColumn b =
 viewTaskItem : Bucket -> Task -> Html msg
 viewTaskItem b t =
     div
-        [ bgc black
+        [ bgc (grayN 0.13)
         , pa "20px"
         , style "border-radius" "10px"
         , style "border-left" ("10px solid " ++ b.color)
