@@ -21,10 +21,11 @@ type alias TaskDict =
     Dict String Task
 
 
-tasksInBucketWithId : BucketId -> TaskDict -> List Task
-tasksInBucketWithId bucketId taskDict =
+sortedTasksInBucketWithId : BucketId -> TaskDict -> List Task
+sortedTasksInBucketWithId bucketId taskDict =
     Dict.values taskDict
         |> List.filter (propEq .bucketId bucketId)
+        |> List.sortBy .sortOrder
 
 
 init : () -> ( Model, Cmd Msg )
@@ -83,7 +84,7 @@ view model =
             , bgc (grayN 0.18)
             ]
             (initialBuckets
-                |> List.map (\b -> viewBucketColumn b (tasksInBucketWithId b.id model.taskDict))
+                |> List.map (\b -> viewBucketColumn b (sortedTasksInBucketWithId b.id model.taskDict))
             )
         ]
 
