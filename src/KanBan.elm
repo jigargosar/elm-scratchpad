@@ -16,7 +16,9 @@ main =
 
 
 type alias Model =
-    { taskDict : TaskDict }
+    { taskDict : TaskDict
+    , input : String
+    }
 
 
 type alias TaskDict =
@@ -48,6 +50,7 @@ init () =
                 )
     in
     ( { taskDict = demoTasks |> dictBy (.id >> (\(TaskId id) -> id))
+      , input = ""
       }
     , Cmd.none
     )
@@ -55,6 +58,7 @@ init () =
 
 type Msg
     = Msg
+    | InputChanged String
 
 
 subscriptions : Model -> Sub Msg
@@ -67,6 +71,9 @@ update msg model =
     case msg of
         Msg ->
             ( model, Cmd.none )
+
+        InputChanged input ->
+            ( { model | input = input }, Cmd.none )
 
 
 view : Model -> Document Msg
