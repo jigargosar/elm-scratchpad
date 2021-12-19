@@ -51,4 +51,11 @@ viewBucketColumn b =
         [ div [ fontSize "22px", ttu, bold ] [ text b.title ]
         , div [ fontSize "18px", fg (grayN 0.4) ]
             [ text <| fromInt (List.length b.items) ++ "items" ]
+        , div []
+            (List.map viewTaskItem b.items)
         ]
+
+
+viewTaskItem : Task -> Html msg
+viewTaskItem t =
+    div [] [ text t.title ]
