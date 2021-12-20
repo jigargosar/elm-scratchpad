@@ -136,7 +136,7 @@ update msg model =
         OnMouseMove mouseEvent ->
             ( case model.drag of
                 Dragging _ taskId ->
-                    { model | drag = Dragging mouseEvent.page taskId }
+                    { model | drag = Dragging mouseEvent.pageXY taskId }
 
                 _ ->
                     model

@@ -50,9 +50,9 @@ keyDecoder =
 
 type alias MouseEvent =
     { modifiers : Modifiers
-    , offset : Float2
+    , offsetXY : Float2
     , currentTarget : Maybe CurrentTarget
-    , page : Float2
+    , pageXY : Float2
     }
 
 

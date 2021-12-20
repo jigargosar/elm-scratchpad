@@ -290,7 +290,7 @@ update msg model =
                 NotDragging ->
                     let
                         v =
-                            vFromFloat2 e.page
+                            vFromFloat2 e.pageXY
                     in
                     { model | drag = Dragging v v model.mandel }
 
@@ -307,7 +307,7 @@ update msg model =
                 Dragging s _ _ ->
                     let
                         end =
-                            vFromFloat2 e.page
+                            vFromFloat2 e.pageXY
                     in
                     { model | drag = Dragging s end (panWithCanvasStartAndEnd s end model.canvas model.mandel) }
             , Cmd.none
