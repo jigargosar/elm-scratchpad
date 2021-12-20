@@ -386,6 +386,5 @@ viewTaskItem mbDragging b t =
                                )
                )
         )
-        [ span [ userSelectText, cursorText ]
-            [ text t.title ]
+        [ span [ userSelectText, cursorText ] [ text t.title ]
         ]
