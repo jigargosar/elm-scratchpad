@@ -703,6 +703,14 @@ cursorGrabbing =
     style "cursor" "grabbing"
 
 
+cursorText =
+    style "cursor" "text"
+
+
+userSelectText =
+    style "user-select" "text"
+
+
 positionRelative =
     style "position" "relative"
 

@@ -291,8 +291,8 @@ viewDraggedTaskItem ( b, t ) =
                ]
         )
         [ span
-            ([ style "user-select" "text"
-             , style "cursor" "text"
+            ([ userSelectText
+             , cursorText
              ]
                 ++ [ style "cursor" "inherit"
                    ]
