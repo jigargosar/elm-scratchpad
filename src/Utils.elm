@@ -53,6 +53,7 @@ type alias MouseEvent =
     , offsetXY : Float2
     , currentTarget : Maybe CurrentTarget
     , pageXY : Float2
+    , clientXY : Float2
     }
 
 
@@ -70,6 +71,7 @@ mouseEventDecoder =
         |> jdAndMap offsetXYDecoder
         |> jdAndMap (JD.field "currentTarget" (JD.maybe currentTargetDecoder))
         |> jdAndMap pageXYDecoder
+        |> jdAndMap clientXYDecoder
 
 
 currentTargetDecoder : Decoder CurrentTarget
@@ -195,6 +197,13 @@ pageXYDecoder =
     JD.map2 Tuple.pair
         (JD.field "pageX" JD.float)
         (JD.field "pageY" JD.float)
+
+
+clientXYDecoder : Decoder Float2
+clientXYDecoder =
+    JD.map2 Tuple.pair
+        (JD.field "clientX" JD.float)
+        (JD.field "clientY" JD.float)
 
 
 arrowKeyToDir : String -> Maybe Dir4
