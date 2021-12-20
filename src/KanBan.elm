@@ -65,7 +65,7 @@ type alias Dragging =
     { pageXY : Float2
     , clientXY : Float2
     , dragged : { id : TaskId, size : Float2 }
-    , draggedOver : Maybe TaskId
+    , draggedOver : Maybe { id : TaskId, leftTop : Float2, size : Float2 }
     }
 
 
@@ -131,7 +131,7 @@ type Msg
     | OnInputSubmit
     | CreateTask String TaskId
     | OnMouseMove MouseEvent
-    | MouseMovedOverTask TaskId MouseEvent
+    | MouseMovedOverTask TaskId CurrentTarget
 
 
 subscriptions : Model -> Sub Msg
@@ -173,7 +173,7 @@ update msg model =
             , Cmd.none
             )
 
-        MouseMovedOverTask taskId mouseEvent ->
+        MouseMovedOverTask taskId currentTarget ->
             ( case model.drag of
                 NotDragging ->
                     model
@@ -183,7 +183,12 @@ update msg model =
                         | drag =
                             DraggingTag
                                 { dragging
-                                    | draggedOver = Just taskId
+                                    | draggedOver =
+                                        Just
+                                            { id = taskId
+                                            , size = currentTarget.offsetSize
+                                            , leftTop = currentTarget.rootOffsetLeftTop
+                                            }
                                 }
                     }
             , Cmd.none
@@ -395,7 +400,7 @@ viewTaskItem mbDraggedTaskId b t =
                                 else
                                     [ HE.on "mousemove"
                                         (JD.map (MouseMovedOverTask t.id)
-                                            mouseEventDecoder
+                                            currentTargetDecoder
                                             |> JD.map (Debug.log "mousemove")
                                         )
                                     ]
