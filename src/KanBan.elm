@@ -342,16 +342,16 @@ viewTaskItem mbDraggedTaskId b t =
                                     ]
 
                                 else
-                                    []
+                                    [ HE.on "mousemove"
+                                        (JD.map (MouseMovedOverTask t.id)
+                                            mouseEventDecoder
+                                            |> JD.map (Debug.log "me mo")
+                                        )
+                                    ]
                                )
 
                     Nothing ->
-                        [ HE.on "mousemove"
-                            (JD.map (MouseMovedOverTask t.id)
-                                mouseEventDecoder
-                                |> JD.map (Debug.log "me mo")
-                            )
-                        ]
+                        []
                )
         )
         [ span [ userSelectText, cursorText ]
