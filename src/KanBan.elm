@@ -36,7 +36,7 @@ draggedTaskId model =
             Nothing
 
 
-draggedTaskDetails : Model -> Maybe ( ( { pageXY : Float2, clientXY : Float2 }, Float2 ), ( Bucket, Task ) )
+draggedTaskDetails : Model -> Maybe ( ( Dragging, Float2 ), ( Bucket, Task ) )
 draggedTaskDetails model =
     case model.drag of
         DraggingTag mousePosition (TaskId id) ->
@@ -58,7 +58,9 @@ type Drag
 
 
 type alias Dragging =
-    { pageXY : Float2, clientXY : Float2 }
+    { pageXY : Float2
+    , clientXY : Float2
+    }
 
 
 type alias TaskDict =
@@ -313,7 +315,7 @@ viewBucketColumn mbDraggedTaskId b tasks =
         ]
 
 
-viewDraggedTaskItem : ( ( { pageXY : Float2, clientXY : Float2 }, Float2 ), ( Bucket, Task ) ) -> Html Msg
+viewDraggedTaskItem : ( ( Dragging, Float2 ), ( Bucket, Task ) ) -> Html Msg
 viewDraggedTaskItem ( ( md, ( w, h ) ), ( b, t ) ) =
     let
         ( x, y ) =
