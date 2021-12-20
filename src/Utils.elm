@@ -57,7 +57,7 @@ type alias MouseEvent =
 
 
 type alias CurrentTarget =
-    { leftTop : Float2
+    { offsetLeftTop : Float2
     , offsetSize : Float2
     }
 
