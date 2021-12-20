@@ -388,7 +388,7 @@ viewTaskItem mbDragging b t =
         )
         [ span [ userSelectText, cursorText ] [ text t.title ]
         ]
-        |> placeAbove [ div [ positionAbsolute, left0, top0 ] [ text "HELLO" ] ]
+        |> placeAbove [ div [ positionAbsolute, left0, top0, w100 ] [ text "HELLO" ] ]
 
 
 left0 =
