@@ -50,13 +50,7 @@ type alias Dragging =
     { pageXY : Float2
     , clientXY : Float2
     , dragged : { id : TaskId, size : Float2 }
-    , draggedOver :
-        Maybe
-            { id : TaskId
-
-            --, leftTop : Float2
-            --, size : Float2
-            }
+    , draggedOver : Maybe { id : TaskId, leftTop : Float2, size : Float2 }
     }
 
 
@@ -116,8 +110,7 @@ type Msg
     | OnInputSubmit
     | CreateTask String TaskId
     | OnMouseMove MouseEvent
-      --| MouseMovedOverTask TaskId CurrentTarget
-    | MouseMovedOverTask TaskId
+    | MouseMovedOverTask TaskId CurrentTarget
 
 
 subscriptions : Model -> Sub Msg
@@ -159,7 +152,7 @@ update msg model =
             , Cmd.none
             )
 
-        MouseMovedOverTask taskId ->
+        MouseMovedOverTask taskId currentTarget ->
             ( case model.drag of
                 Nothing ->
                     model
@@ -172,9 +165,8 @@ update msg model =
                                     | draggedOver =
                                         Just
                                             { id = taskId
-
-                                            --, size = currentTarget.offsetSize
-                                            --, leftTop = currentTarget.rootOffsetLeftTop
+                                            , size = currentTarget.offsetSize
+                                            , leftTop = currentTarget.rootOffsetLeftTop
                                             }
                                 }
                     }
@@ -392,8 +384,8 @@ viewTaskItem mbDragging b t =
 
                                 else
                                     [ HE.on "mousemove"
-                                        (JD.succeed (MouseMovedOverTask t.id)
-                                            --currentTargetDecoder
+                                        (JD.map (MouseMovedOverTask t.id)
+                                            (JD.field "currentTarget" currentTargetDecoder)
                                             |> JD.map (Debug.log "mousemove")
                                         )
                                     ]
