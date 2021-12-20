@@ -30,7 +30,7 @@ draggedTaskId : Model -> Maybe TaskId
 draggedTaskId model =
     case model.drag of
         DraggingTag { dragged } ->
-            Just dragged
+            Just dragged.id
 
         _ ->
             Nothing
@@ -42,7 +42,7 @@ draggedTaskDetails model =
         DraggingTag dragging ->
             let
                 (TaskId id) =
-                    dragging.dragged
+                    dragging.dragged.id
             in
             Dict.get id model.taskDict
                 |> Maybe.andThen
@@ -64,7 +64,8 @@ type Drag
 type alias Dragging =
     { pageXY : Float2
     , clientXY : Float2
-    , dragged : TaskId
+    , dragged : { id : TaskId, size : Float2 }
+    , draggedOver : Maybe TaskId
     }
 
 
@@ -112,7 +113,8 @@ init () =
                                 DraggingTag
                                     { pageXY = ( 300, 500 )
                                     , clientXY = ( 300, 500 )
-                                    , dragged = t.id
+                                    , dragged = { id = t.id, size = ( 263, 66 ) }
+                                    , draggedOver = Nothing
                                     }
                             )
                      )
@@ -172,7 +174,20 @@ update msg model =
             )
 
         MouseMovedOverTask taskId mouseEvent ->
-            ( model, Cmd.none )
+            ( case model.drag of
+                NotDragging ->
+                    model
+
+                DraggingTag dragging ->
+                    { model
+                        | drag =
+                            DraggingTag
+                                { dragging
+                                    | draggedOver = Just taskId
+                                }
+                    }
+            , Cmd.none
+            )
 
 
 createTask : String -> TaskId -> TaskDict -> TaskDict
