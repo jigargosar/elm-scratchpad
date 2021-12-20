@@ -3,8 +3,6 @@ module KanBan exposing (main)
 import Dict exposing (Dict)
 import Html exposing (span)
 import Html.Attributes as HA
-import Html.Events as HE
-import Json.Decode as JD
 import Random
 import Utils exposing (..)
 
@@ -23,6 +21,28 @@ type alias Model =
     , input : String
     , drag : Drag
     }
+
+
+draggedTaskId : Model -> Maybe TaskId
+draggedTaskId model =
+    case model.drag of
+        Dragging taskId ->
+            Just taskId
+
+        _ ->
+            Nothing
+
+
+draggedTaskDetails : Model -> Maybe ( Bucket, Task )
+draggedTaskDetails model =
+    draggedTaskId model
+        |> Maybe.andThen (\(TaskId id) -> Dict.get id model.taskDict)
+        |> Maybe.andThen
+            (\t ->
+                initialBuckets
+                    |> findFirst (propEq .id t.bucketId)
+                    |> Maybe.map (pairTo t)
+            )
 
 
 type Drag
@@ -166,21 +186,24 @@ view model =
                 (initialBuckets
                     |> List.map
                         (\b ->
-                            viewBucketColumn (draggedTaskId model) b (sortedTasksInBucketWithId b.id model.taskDict)
+                            viewBucketColumn (draggedTaskId model)
+                                b
+                                (sortedTasksInBucketWithId b.id model.taskDict)
                         )
                 )
+            , draggedTaskDetails model
+                |> Maybe.map viewDraggedTaskItem
+                |> viewMaybe
             ]
         ]
 
 
-draggedTaskId : Model -> Maybe TaskId
-draggedTaskId model =
-    case model.drag of
-        Dragging taskId ->
-            Just taskId
+viewMaybe =
+    Maybe.withDefault noView
 
-        _ ->
-            Nothing
+
+noView =
+    text ""
 
 
 type TaskId
@@ -233,6 +256,28 @@ viewBucketColumn mbDraggedTaskId b tasks =
             ]
         , fCol [ gap "20px" ]
             (List.map (viewTaskItem mbDraggedTaskId b) tasks)
+        ]
+
+
+viewDraggedTaskItem : ( Bucket, Task ) -> Html Msg
+viewDraggedTaskItem ( b, t ) =
+    div
+        ([ bgc (grayN 0.13)
+         , pa "20px"
+         , style "border-radius" "10px"
+         , style "border-left" ("10px solid " ++ b.color)
+         , style "box-shadow" ("1px 2px 0px 1px " ++ hsla 0 0 0 1)
+         , HA.draggable "true"
+         , style "cursor" "grab"
+         , style "opacity" "0.3"
+         ]
+            ++ []
+        )
+        [ span
+            [ style "user-select" "text"
+            , style "cursor" "text"
+            ]
+            [ text t.title ]
         ]
 
 
