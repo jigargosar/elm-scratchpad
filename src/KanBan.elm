@@ -36,7 +36,7 @@ draggedTaskId model =
             Nothing
 
 
-draggedTaskDetails : Model -> Maybe ( ( { pageXY : Float2, offsetXY : Float2 }, Float2 ), ( Bucket, Task ) )
+draggedTaskDetails : Model -> Maybe ( ( { pageXY : Float2, clientXY : Float2 }, Float2 ), ( Bucket, Task ) )
 draggedTaskDetails model =
     case model.drag of
         Dragging mousePosition (TaskId id) ->
@@ -54,7 +54,7 @@ draggedTaskDetails model =
 
 type Drag
     = NotDragging
-    | Dragging { pageXY : Float2, offsetXY : Float2 } TaskId
+    | Dragging { pageXY : Float2, clientXY : Float2 } TaskId
 
 
 type alias TaskDict =
@@ -99,8 +99,8 @@ init () =
                         |> Maybe.map
                             (.id
                                 >> Dragging
-                                    { offsetXY = ( 300, 500 )
-                                    , pageXY = ( 300, 500 )
+                                    { pageXY = ( 300, 500 )
+                                    , clientXY = ( 300, 500 )
                                     }
                             )
                      )
@@ -151,8 +151,8 @@ update msg model =
                     { model
                         | drag =
                             Dragging
-                                { offsetXY = mouseEvent.offsetXY
-                                , pageXY = mouseEvent.pageXY
+                                { pageXY = mouseEvent.pageXY
+                                , clientXY = mouseEvent.clientXY
                                 }
                                 taskId
                     }
@@ -311,11 +311,11 @@ viewBucketColumn mbDraggedTaskId b tasks =
         ]
 
 
-viewDraggedTaskItem : ( ( { pageXY : Float2, offsetXY : Float2 }, Float2 ), ( Bucket, Task ) ) -> Html Msg
+viewDraggedTaskItem : ( ( { pageXY : Float2, clientXY : Float2 }, Float2 ), ( Bucket, Task ) ) -> Html Msg
 viewDraggedTaskItem ( ( md, ( w, h ) ), ( b, t ) ) =
     let
         ( x, y ) =
-            md.pageXY
+            md.clientXY
     in
     div
         ([ bgc (grayN 0.13)
