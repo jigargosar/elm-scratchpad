@@ -97,7 +97,7 @@ mandelRender xyRange =
     [ renderDefs
     , mandelGenerate xyRange
         |> List.map renderInt2
-        |> group [ pointerEventsNone ]
+        |> group [ noPointerEvents ]
     ]
         |> Svg.svg
             [ mandelViewBox

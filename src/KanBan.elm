@@ -294,6 +294,7 @@ viewDraggedTaskItem ( ( ( x, y ), ( w, h ) ), ( b, t ) ) =
          ]
             ++ [ HA.draggable "false"
                , cursorGrabbing
+               , noPointerEvents
                , style "opacity" "0.9"
                , positionFixed
                , style "left" <| fpx (x - (w / 2))
@@ -324,16 +325,24 @@ viewTaskItem mbDraggedTaskId b t =
          ]
             ++ (case mbDraggedTaskId of
                     Just id ->
-                        if id == t.id then
-                            [ style "opacity" "0.3"
-                            , HA.draggable "false"
-                            ]
+                        [ HA.draggable "false"
+                        , cursorGrabbing
+                        ]
+                            ++ (if id == t.id then
+                                    [ style "opacity" "0.3"
+                                    ]
 
-                        else
-                            []
+                                else
+                                    []
+                               )
 
                     Nothing ->
-                        [ HE.on "mousemove" (JD.map (MouseMovedOverTask t.id) mouseEventDecoder) ]
+                        [ HE.on "mousemove"
+                            (JD.map (MouseMovedOverTask t.id)
+                                mouseEventDecoder
+                                |> JD.map (Debug.log "me mo")
+                            )
+                        ]
                )
         )
         [ span [ userSelectText, cursorText ]

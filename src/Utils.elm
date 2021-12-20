@@ -805,7 +805,7 @@ attrHeight =
     Html.Attributes.height
 
 
-pointerEventsNone =
+noPointerEvents =
     style "pointer-events" "none"
 
 
