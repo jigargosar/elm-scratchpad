@@ -51,9 +51,13 @@ keyDecoder =
 type alias MouseEvent =
     { modifiers : Modifiers
     , offset : Float2
-    , currentTargetOffsetSize : Float2
+    , currentTarget : Maybe CurrentTarget
     , page : Float2
     }
+
+
+type alias CurrentTarget =
+    { offsetSize : Float2 }
 
 
 mouseEventDecoder : Decoder MouseEvent
@@ -61,8 +65,14 @@ mouseEventDecoder =
     JD.succeed MouseEvent
         |> jdAndMap modifiersDecoder
         |> jdAndMap offsetXYDecoder
-        |> jdAndMap (JD.field "currentTarget" offsetSizeDecoder)
+        |> jdAndMap (JD.field "currentTarget" (JD.maybe currentTargetDecoder))
         |> jdAndMap pageXYDecoder
+
+
+currentTargetDecoder : Decoder CurrentTarget
+currentTargetDecoder =
+    JD.succeed CurrentTarget
+        |> jdAndMap offsetSizeDecoder
 
 
 type alias KeyEvent =
