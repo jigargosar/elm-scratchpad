@@ -58,6 +58,7 @@ type alias MouseEvent =
 
 type alias CurrentTarget =
     { offsetLeftTop : Float2
+    , rootOffsetLeftTop : Float2
     , offsetSize : Float2
     }
 
@@ -75,6 +76,7 @@ currentTargetDecoder : Decoder CurrentTarget
 currentTargetDecoder =
     JD.succeed CurrentTarget
         |> jdAndMap offsetLeftTopDecoder
+        |> jdAndMap rootOffsetLeftTopDecoder
         |> jdAndMap offsetSizeDecoder
 
 
@@ -83,6 +85,17 @@ offsetLeftTopDecoder =
     JD.map2 Tuple.pair
         (JD.field "offsetLeft" JD.float)
         (JD.field "offsetTop" JD.float)
+
+
+rootOffsetLeftTopDecoder : Decoder Float2
+rootOffsetLeftTopDecoder =
+    offsetLeftTopDecoder
+        |> JD.andThen
+            (\xy ->
+                JD.field "offsetParent"
+                    (JD.nullable (JD.lazy (\_ -> rootOffsetLeftTopDecoder)))
+                    |> JD.map (Maybe.map (map2 add xy) >> Maybe.withDefault xy)
+            )
 
 
 type alias KeyEvent =
