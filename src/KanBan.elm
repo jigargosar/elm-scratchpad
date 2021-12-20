@@ -29,8 +29,8 @@ type alias Model =
 draggedTaskId : Model -> Maybe TaskId
 draggedTaskId model =
     case model.drag of
-        DraggingTag _ taskId ->
-            Just taskId
+        DraggingTag { dragged } ->
+            Just dragged
 
         _ ->
             Nothing
@@ -39,13 +39,17 @@ draggedTaskId model =
 draggedTaskDetails : Model -> Maybe ( ( Dragging, Float2 ), ( Bucket, Task ) )
 draggedTaskDetails model =
     case model.drag of
-        DraggingTag mousePosition (TaskId id) ->
+        DraggingTag dragging ->
+            let
+                (TaskId id) =
+                    dragging.dragged
+            in
             Dict.get id model.taskDict
                 |> Maybe.andThen
                     (\t ->
                         initialBuckets
                             |> findFirst (propEq .id t.bucketId)
-                            |> Maybe.map (pairTo t >> pair ( mousePosition, ( 263, 66 ) ))
+                            |> Maybe.map (pairTo t >> pair ( dragging, ( 263, 66 ) ))
                     )
 
         _ ->
@@ -54,12 +58,13 @@ draggedTaskDetails model =
 
 type Drag
     = NotDragging
-    | DraggingTag Dragging TaskId
+    | DraggingTag Dragging
 
 
 type alias Dragging =
     { pageXY : Float2
     , clientXY : Float2
+    , dragged : TaskId
     }
 
 
@@ -103,10 +108,11 @@ init () =
                     ((demoTasks
                         |> List.head
                         |> Maybe.map
-                            (.id
-                                >> DraggingTag
+                            (\t ->
+                                DraggingTag
                                     { pageXY = ( 300, 500 )
                                     , clientXY = ( 300, 500 )
+                                    , dragged = t.id
                                     }
                             )
                      )
@@ -150,14 +156,14 @@ update msg model =
 
         OnMouseMove mouseEvent ->
             ( case model.drag of
-                DraggingTag _ taskId ->
+                DraggingTag dragging ->
                     { model
                         | drag =
                             DraggingTag
-                                { pageXY = mouseEvent.pageXY
-                                , clientXY = mouseEvent.clientXY
+                                { dragging
+                                    | pageXY = mouseEvent.pageXY
+                                    , clientXY = mouseEvent.clientXY
                                 }
-                                taskId
                     }
 
                 _ ->
@@ -243,7 +249,7 @@ view model =
                 NotDragging ->
                     noView
 
-                DraggingTag _ _ ->
+                DraggingTag _ ->
                     stylesNode """
                     * {
                       cursor: grabbing!important;
