@@ -293,7 +293,6 @@ viewDraggedTaskItem ( ( ( x, y ), ( w, h ) ), ( b, t ) ) =
          , cursorGrab
          ]
             ++ [ HA.draggable "false"
-               , cursorGrabbing
                , noPointerEvents
                , style "opacity" "0.9"
                , positionFixed
@@ -326,7 +325,6 @@ viewTaskItem mbDraggedTaskId b t =
             ++ (case mbDraggedTaskId of
                     Just id ->
                         [ HA.draggable "false"
-                        , cursorGrabbing
                         ]
                             ++ (if id == t.id then
                                     [ style "opacity" "0.3"
