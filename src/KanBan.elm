@@ -312,7 +312,9 @@ viewTaskItem mbDraggedTaskId b t =
          , cursorGrab
          ]
             ++ (if mbDraggedTaskId == Just t.id then
-                    [ style "opacity" "0.3" ]
+                    [ style "opacity" "0.3"
+                    , HA.draggable "false"
+                    ]
 
                 else
                     []
