@@ -22,24 +22,14 @@ main =
 type alias Model =
     { taskDict : TaskDict
     , input : String
-    , drag : Drag
+    , drag : Maybe Dragging
     }
-
-
-draggedTaskId : Model -> Maybe TaskId
-draggedTaskId model =
-    case model.drag of
-        DraggingTag { dragged } ->
-            Just dragged.id
-
-        _ ->
-            Nothing
 
 
 draggedTaskDetails : Model -> Maybe ( Dragging, ( Bucket, Task ) )
 draggedTaskDetails model =
     case model.drag of
-        DraggingTag dragging ->
+        Just dragging ->
             let
                 (TaskId id) =
                     dragging.dragged.id
@@ -54,11 +44,6 @@ draggedTaskDetails model =
 
         _ ->
             Nothing
-
-
-type Drag
-    = NotDragging
-    | DraggingTag Dragging
 
 
 type alias Dragging =
@@ -104,21 +89,15 @@ init () =
     ( { taskDict = demoTasks |> dictBy (.id >> (\(TaskId id) -> id))
       , input = ""
       , drag =
-            NotDragging
-                |> always
-                    ((demoTasks
-                        |> List.head
-                        |> Maybe.map
-                            (\t ->
-                                DraggingTag
-                                    { pageXY = ( 300, 500 )
-                                    , clientXY = ( 300, 500 )
-                                    , dragged = { id = t.id, size = ( 263, 66 ) }
-                                    , draggedOver = Nothing
-                                    }
-                            )
-                     )
-                        |> Maybe.withDefault NotDragging
+            demoTasks
+                |> List.head
+                |> Maybe.map
+                    (\t ->
+                        { pageXY = ( 300, 500 )
+                        , clientXY = ( 300, 500 )
+                        , dragged = { id = t.id, size = ( 263, 66 ) }
+                        , draggedOver = Nothing
+                        }
                     )
       }
     , Cmd.none
@@ -158,10 +137,10 @@ update msg model =
 
         OnMouseMove mouseEvent ->
             ( case model.drag of
-                DraggingTag dragging ->
+                Just dragging ->
                     { model
                         | drag =
-                            DraggingTag
+                            Just
                                 { dragging
                                     | pageXY = mouseEvent.pageXY
                                     , clientXY = mouseEvent.clientXY
@@ -175,13 +154,13 @@ update msg model =
 
         MouseMovedOverTask taskId currentTarget ->
             ( case model.drag of
-                NotDragging ->
+                Nothing ->
                     model
 
-                DraggingTag dragging ->
+                Just dragging ->
                     { model
                         | drag =
-                            DraggingTag
+                            Just
                                 { dragging
                                     | draggedOver =
                                         Just
@@ -257,7 +236,7 @@ view model =
                 (initialBuckets
                     |> List.map
                         (\b ->
-                            viewBucketColumn (draggedTaskId model)
+                            viewBucketColumn model.drag
                                 b
                                 (sortedTasksInBucketWithId b.id model.taskDict)
                         )
@@ -266,10 +245,10 @@ view model =
                 |> Maybe.map viewDraggedTaskItem
                 |> viewMaybe
             , case model.drag of
-                NotDragging ->
+                Nothing ->
                     noView
 
-                DraggingTag _ ->
+                Just _ ->
                     stylesNode """
                     * {
                       cursor: grabbing!important;
@@ -328,8 +307,8 @@ initialBuckets =
     ]
 
 
-viewBucketColumn : Maybe TaskId -> Bucket -> List Task -> Html Msg
-viewBucketColumn mbDraggedTaskId b tasks =
+viewBucketColumn : Maybe Dragging -> Bucket -> List Task -> Html Msg
+viewBucketColumn mbDragging b tasks =
     fCol [ gap "20px" ]
         [ div []
             [ div [ fontSize "22px", ttu, bold ] [ text b.title ]
@@ -337,7 +316,7 @@ viewBucketColumn mbDraggedTaskId b tasks =
                 [ text <| fromInt (List.length tasks) ++ " items" ]
             ]
         , fCol [ gap "20px" ]
-            (List.map (viewTaskItem mbDraggedTaskId b) tasks)
+            (List.map (viewTaskItem mbDragging b) tasks)
         ]
 
 
@@ -378,8 +357,8 @@ viewDraggedTaskItem ( dr, ( b, t ) ) =
         ]
 
 
-viewTaskItem : Maybe TaskId -> Bucket -> Task -> Html Msg
-viewTaskItem mbDraggedTaskId b t =
+viewTaskItem : Maybe Dragging -> Bucket -> Task -> Html Msg
+viewTaskItem mbDragging b t =
     div
         ([ bgc (grayN 0.13)
          , pa "20px"
@@ -389,11 +368,11 @@ viewTaskItem mbDraggedTaskId b t =
          , HA.draggable "true"
          , cursorGrab
          ]
-            ++ (case mbDraggedTaskId of
-                    Just id ->
+            ++ (case mbDragging of
+                    Just dragging ->
                         [ HA.draggable "false"
                         ]
-                            ++ (if id == t.id then
+                            ++ (if dragging.dragged.id == t.id then
                                     [ style "opacity" "0.3"
                                     ]
 
