@@ -220,6 +220,7 @@ view model =
                 , gap "20px"
                 , dGrid
                 , style "grid-auto-flow" "column"
+                , positionRelative
                 ]
                 (initialBuckets
                     |> List.map
