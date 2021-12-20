@@ -365,13 +365,13 @@ viewTaskItem mbDragging b t =
          , style "border-radius" "10px"
          , style "border-left" ("10px solid " ++ b.color)
          , style "box-shadow" ("1px 2px 0px 1px " ++ hsla 0 0 0 1)
-         , HA.draggable "true"
-         , cursorGrab
          ]
             ++ (case mbDragging of
+                    Nothing ->
+                        [ HA.draggable "true", cursorGrab ]
+
                     Just dragging ->
-                        [ HA.draggable "false"
-                        ]
+                        []
                             ++ (if dragging.dragged.id == t.id then
                                     [ style "opacity" "0.3"
                                     ]
@@ -384,9 +384,6 @@ viewTaskItem mbDragging b t =
                                         )
                                     ]
                                )
-
-                    Nothing ->
-                        []
                )
         )
         [ span [ userSelectText, cursorText ]
