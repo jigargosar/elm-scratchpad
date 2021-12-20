@@ -28,28 +28,32 @@ type alias Model =
 draggedTaskId : Model -> Maybe TaskId
 draggedTaskId model =
     case model.drag of
-        Dragging taskId ->
+        Dragging _ taskId ->
             Just taskId
 
         _ ->
             Nothing
 
 
-draggedTaskDetails : Model -> Maybe ( Bucket, Task )
+draggedTaskDetails : Model -> Maybe ( Float2, ( Bucket, Task ) )
 draggedTaskDetails model =
-    draggedTaskId model
-        |> Maybe.andThen (\(TaskId id) -> Dict.get id model.taskDict)
-        |> Maybe.andThen
-            (\t ->
-                initialBuckets
-                    |> findFirst (propEq .id t.bucketId)
-                    |> Maybe.map (pairTo t)
-            )
+    case model.drag of
+        Dragging mousePosition (TaskId id) ->
+            Dict.get id model.taskDict
+                |> Maybe.andThen
+                    (\t ->
+                        initialBuckets
+                            |> findFirst (propEq .id t.bucketId)
+                            |> Maybe.map (pairTo t >> pair mousePosition)
+                    )
+
+        _ ->
+            Nothing
 
 
 type Drag
     = NotDragging
-    | Dragging TaskId
+    | Dragging Float2 TaskId
 
 
 type alias TaskDict =
@@ -89,7 +93,7 @@ init () =
       , drag =
             NotDragging
                 |> always
-                    ((demoTasks |> List.head |> Maybe.map (.id >> Dragging))
+                    ((demoTasks |> List.head |> Maybe.map (.id >> Dragging ( 100, 500 )))
                         |> Maybe.withDefault NotDragging
                     )
       }
@@ -129,8 +133,8 @@ update msg model =
 
         OnMouseMove mouseEvent ->
             ( case model.drag of
-                Dragging _ ->
-                    model
+                Dragging _ taskId ->
+                    { model | drag = Dragging mouseEvent.page taskId }
 
                 _ ->
                     model
@@ -272,8 +276,8 @@ viewBucketColumn mbDraggedTaskId b tasks =
         ]
 
 
-viewDraggedTaskItem : ( Bucket, Task ) -> Html Msg
-viewDraggedTaskItem ( b, t ) =
+viewDraggedTaskItem : ( Float2, ( Bucket, Task ) ) -> Html Msg
+viewDraggedTaskItem ( ( x, y ), ( b, t ) ) =
     div
         ([ bgc (grayN 0.13)
          , pa "20px"
@@ -287,8 +291,8 @@ viewDraggedTaskItem ( b, t ) =
                , cursorGrabbing
                , style "opacity" "0.3"
                , positionFixed
-               , style "top" "500px"
-               , style "left" "100px"
+               , style "left" <| fpx x
+               , style "top" <| fpx y
                ]
         )
         [ span

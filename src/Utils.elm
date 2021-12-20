@@ -236,6 +236,10 @@ map2 fn ( a, b ) ( c, d ) =
     ( fn a c, fn b d )
 
 
+pair =
+    Tuple.pair
+
+
 pairTo : a -> b -> ( b, a )
 pairTo b a =
     ( a, b )
