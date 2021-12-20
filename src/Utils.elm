@@ -695,6 +695,14 @@ positionFixed =
     style "position" "fixed"
 
 
+cursorGrab =
+    style "cursor" "grab"
+
+
+cursorGrabbing =
+    style "cursor" "grabbing"
+
+
 positionRelative =
     style "position" "relative"
 
