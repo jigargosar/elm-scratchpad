@@ -29,7 +29,7 @@ type alias Model =
 draggedTaskId : Model -> Maybe TaskId
 draggedTaskId model =
     case model.drag of
-        Dragging _ taskId ->
+        DraggingTag _ taskId ->
             Just taskId
 
         _ ->
@@ -39,7 +39,7 @@ draggedTaskId model =
 draggedTaskDetails : Model -> Maybe ( ( { pageXY : Float2, clientXY : Float2 }, Float2 ), ( Bucket, Task ) )
 draggedTaskDetails model =
     case model.drag of
-        Dragging mousePosition (TaskId id) ->
+        DraggingTag mousePosition (TaskId id) ->
             Dict.get id model.taskDict
                 |> Maybe.andThen
                     (\t ->
@@ -54,7 +54,11 @@ draggedTaskDetails model =
 
 type Drag
     = NotDragging
-    | Dragging { pageXY : Float2, clientXY : Float2 } TaskId
+    | DraggingTag Dragging TaskId
+
+
+type alias Dragging =
+    { pageXY : Float2, clientXY : Float2 }
 
 
 type alias TaskDict =
@@ -98,7 +102,7 @@ init () =
                         |> List.head
                         |> Maybe.map
                             (.id
-                                >> Dragging
+                                >> DraggingTag
                                     { pageXY = ( 300, 500 )
                                     , clientXY = ( 300, 500 )
                                     }
@@ -144,10 +148,10 @@ update msg model =
 
         OnMouseMove mouseEvent ->
             ( case model.drag of
-                Dragging _ taskId ->
+                DraggingTag _ taskId ->
                     { model
                         | drag =
-                            Dragging
+                            DraggingTag
                                 { pageXY = mouseEvent.pageXY
                                 , clientXY = mouseEvent.clientXY
                                 }
@@ -237,7 +241,7 @@ view model =
                 NotDragging ->
                     noView
 
-                Dragging _ _ ->
+                DraggingTag _ _ ->
                     stylesNode """
                     * {
                       cursor: grabbing!important;
