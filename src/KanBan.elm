@@ -1,8 +1,10 @@
 module KanBan exposing (main)
 
+import Browser.Events
 import Dict exposing (Dict)
 import Html exposing (span)
 import Html.Attributes as HA
+import Json.Decode as JD
 import Random
 import Utils exposing (..)
 
@@ -100,11 +102,12 @@ type Msg
     | InputChanged String
     | OnInputSubmit
     | CreateTask String TaskId
+    | OnMouseMove MouseEvent
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Sub.none
+    Browser.Events.onMouseMove (JD.map OnMouseMove mouseEventDecoder)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -121,6 +124,16 @@ update msg model =
 
         CreateTask title taskId ->
             ( { model | taskDict = createTask title taskId model.taskDict }
+            , Cmd.none
+            )
+
+        OnMouseMove mouseEvent ->
+            ( case model.drag of
+                Dragging _ ->
+                    model
+
+                _ ->
+                    model
             , Cmd.none
             )
 
