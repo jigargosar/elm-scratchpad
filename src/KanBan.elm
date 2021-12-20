@@ -122,10 +122,7 @@ type Msg
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Browser.Events.onMouseMove
-        (JD.map OnMouseMove mouseEventDecoder
-            |> JD.map (Debug.log "BE MM")
-        )
+    Browser.Events.onMouseMove (JD.map OnMouseMove mouseEventDecoder)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
