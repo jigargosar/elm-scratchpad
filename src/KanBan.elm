@@ -36,7 +36,7 @@ draggedTaskId model =
             Nothing
 
 
-draggedTaskDetails : Model -> Maybe ( ( Dragging, Float2 ), ( Bucket, Task ) )
+draggedTaskDetails : Model -> Maybe ( Dragging, ( Bucket, Task ) )
 draggedTaskDetails model =
     case model.drag of
         DraggingTag dragging ->
@@ -49,7 +49,7 @@ draggedTaskDetails model =
                     (\t ->
                         initialBuckets
                             |> findFirst (propEq .id t.bucketId)
-                            |> Maybe.map (pairTo t >> pair ( dragging, ( 263, 66 ) ))
+                            |> Maybe.map (pairTo t >> pair dragging)
                     )
 
         _ ->
@@ -336,11 +336,14 @@ viewBucketColumn mbDraggedTaskId b tasks =
         ]
 
 
-viewDraggedTaskItem : ( ( Dragging, Float2 ), ( Bucket, Task ) ) -> Html Msg
-viewDraggedTaskItem ( ( md, ( w, h ) ), ( b, t ) ) =
+viewDraggedTaskItem : ( Dragging, ( Bucket, Task ) ) -> Html Msg
+viewDraggedTaskItem ( dr, ( b, t ) ) =
     let
         ( x, y ) =
-            md.clientXY
+            dr.clientXY
+
+        ( w, h ) =
+            dr.dragged.size
     in
     div
         ([ bgc (grayN 0.13)
