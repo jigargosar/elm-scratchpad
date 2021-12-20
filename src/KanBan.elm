@@ -36,7 +36,7 @@ draggedTaskId model =
             Nothing
 
 
-draggedTaskDetails : Model -> Maybe ( ( Float2, Float2 ), ( Bucket, Task ) )
+draggedTaskDetails : Model -> Maybe ( ( { pageXY : Float2, offsetXY : Float2 }, Float2 ), ( Bucket, Task ) )
 draggedTaskDetails model =
     case model.drag of
         Dragging mousePosition (TaskId id) ->
@@ -54,7 +54,7 @@ draggedTaskDetails model =
 
 type Drag
     = NotDragging
-    | Dragging Float2 TaskId
+    | Dragging { pageXY : Float2, offsetXY : Float2 } TaskId
 
 
 type alias TaskDict =
@@ -94,7 +94,16 @@ init () =
       , drag =
             NotDragging
                 |> always
-                    ((demoTasks |> List.head |> Maybe.map (.id >> Dragging ( 300, 500 )))
+                    ((demoTasks
+                        |> List.head
+                        |> Maybe.map
+                            (.id
+                                >> Dragging
+                                    { offsetXY = ( 300, 500 )
+                                    , pageXY = ( 300, 500 )
+                                    }
+                            )
+                     )
                         |> Maybe.withDefault NotDragging
                     )
       }
@@ -113,7 +122,10 @@ type Msg
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Browser.Events.onMouseMove (JD.map OnMouseMove mouseEventDecoder)
+    Browser.Events.onMouseMove
+        (JD.map OnMouseMove mouseEventDecoder
+            |> JD.map (Debug.log "BE MM")
+        )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -136,7 +148,14 @@ update msg model =
         OnMouseMove mouseEvent ->
             ( case model.drag of
                 Dragging _ taskId ->
-                    { model | drag = Dragging mouseEvent.pageXY taskId }
+                    { model
+                        | drag =
+                            Dragging
+                                { offsetXY = mouseEvent.offsetXY
+                                , pageXY = mouseEvent.pageXY
+                                }
+                                taskId
+                    }
 
                 _ ->
                     model
@@ -292,8 +311,12 @@ viewBucketColumn mbDraggedTaskId b tasks =
         ]
 
 
-viewDraggedTaskItem : ( ( Float2, Float2 ), ( Bucket, Task ) ) -> Html Msg
-viewDraggedTaskItem ( ( ( x, y ), ( w, h ) ), ( b, t ) ) =
+viewDraggedTaskItem : ( ( { pageXY : Float2, offsetXY : Float2 }, Float2 ), ( Bucket, Task ) ) -> Html Msg
+viewDraggedTaskItem ( ( md, ( w, h ) ), ( b, t ) ) =
+    let
+        ( x, y ) =
+            md.pageXY
+    in
     div
         ([ bgc (grayN 0.13)
          , pa "20px"
@@ -309,6 +332,8 @@ viewDraggedTaskItem ( ( ( x, y ), ( w, h ) ), ( b, t ) ) =
                , positionFixed
                , style "left" <| fpx (x - (w / 2))
                , style "top" <| fpx (y - (h / 2))
+               , style "left" <| fpx x
+               , style "top" <| fpx y
                , styleWidthFPx w
                , styleHeightFPx h
                ]
