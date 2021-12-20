@@ -332,8 +332,6 @@ viewDraggedTaskItem ( ( md, ( w, h ) ), ( b, t ) ) =
                , positionFixed
                , style "left" <| fpx (x - (w / 2))
                , style "top" <| fpx (y - (h / 2))
-               , style "left" <| fpx x
-               , style "top" <| fpx y
                , styleWidthFPx w
                , styleHeightFPx h
                ]
