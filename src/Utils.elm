@@ -57,7 +57,9 @@ type alias MouseEvent =
 
 
 type alias CurrentTarget =
-    { offsetSize : Float2 }
+    { leftTop : Float2
+    , offsetSize : Float2
+    }
 
 
 mouseEventDecoder : Decoder MouseEvent
@@ -72,7 +74,15 @@ mouseEventDecoder =
 currentTargetDecoder : Decoder CurrentTarget
 currentTargetDecoder =
     JD.succeed CurrentTarget
+        |> jdAndMap offsetLeftTopDecoder
         |> jdAndMap offsetSizeDecoder
+
+
+offsetLeftTopDecoder : Decoder Float2
+offsetLeftTopDecoder =
+    JD.map2 Tuple.pair
+        (JD.field "offsetLeft" JD.float)
+        (JD.field "offsetTop" JD.float)
 
 
 type alias KeyEvent =
