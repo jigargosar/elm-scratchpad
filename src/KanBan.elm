@@ -363,10 +363,10 @@ viewTaskItem mbDraggedTaskId b t =
                                     ]
 
                                 else
-                                    [ HE.on "mousemove"
+                                    [ HE.on "mouseover"
                                         (JD.map (MouseMovedOverTask t.id)
                                             mouseEventDecoder
-                                            |> JD.map (Debug.log "me mo")
+                                            |> JD.map (Debug.log "mouseover")
                                         )
                                     ]
                                )
