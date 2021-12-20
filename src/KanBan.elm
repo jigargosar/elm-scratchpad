@@ -4,6 +4,7 @@ import Browser.Events
 import Dict exposing (Dict)
 import Html exposing (span)
 import Html.Attributes as HA
+import Html.Events as HE
 import Json.Decode as JD
 import Random
 import Utils exposing (..)
@@ -107,6 +108,7 @@ type Msg
     | OnInputSubmit
     | CreateTask String TaskId
     | OnMouseMove MouseEvent
+    | MouseMovedOverTask TaskId MouseEvent
 
 
 subscriptions : Model -> Sub Msg
@@ -140,6 +142,9 @@ update msg model =
                     model
             , Cmd.none
             )
+
+        MouseMovedOverTask taskId mouseEvent ->
+            ( model, Cmd.none )
 
 
 createTask : String -> TaskId -> TaskDict -> TaskDict
@@ -317,13 +322,18 @@ viewTaskItem mbDraggedTaskId b t =
          , HA.draggable "true"
          , cursorGrab
          ]
-            ++ (if mbDraggedTaskId == Just t.id then
-                    [ style "opacity" "0.3"
-                    , HA.draggable "false"
-                    ]
+            ++ (case mbDraggedTaskId of
+                    Just id ->
+                        if id == t.id then
+                            [ style "opacity" "0.3"
+                            , HA.draggable "false"
+                            ]
 
-                else
-                    []
+                        else
+                            []
+
+                    Nothing ->
+                        [ HE.on "mousemove" (JD.map (MouseMovedOverTask t.id) mouseEventDecoder) ]
                )
         )
         [ span [ userSelectText, cursorText ]
