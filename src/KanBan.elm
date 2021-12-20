@@ -166,11 +166,21 @@ view model =
                 (initialBuckets
                     |> List.map
                         (\b ->
-                            viewBucketColumn b (sortedTasksInBucketWithId b.id model.taskDict)
+                            viewBucketColumn (draggedTaskId model) b (sortedTasksInBucketWithId b.id model.taskDict)
                         )
                 )
             ]
         ]
+
+
+draggedTaskId : Model -> Maybe TaskId
+draggedTaskId model =
+    case model.drag of
+        Dragging taskId ->
+            Just taskId
+
+        _ ->
+            Nothing
 
 
 type TaskId
@@ -213,8 +223,8 @@ initialBuckets =
     ]
 
 
-viewBucketColumn : Bucket -> List Task -> Html Msg
-viewBucketColumn b tasks =
+viewBucketColumn : Maybe TaskId -> Bucket -> List Task -> Html Msg
+viewBucketColumn mbDraggedTaskId b tasks =
     fCol [ gap "20px" ]
         [ div []
             [ div [ fontSize "22px", ttu, bold ] [ text b.title ]
@@ -222,12 +232,12 @@ viewBucketColumn b tasks =
                 [ text <| fromInt (List.length tasks) ++ " items" ]
             ]
         , fCol [ gap "20px" ]
-            (List.map (viewTaskItem b) tasks)
+            (List.map (viewTaskItem mbDraggedTaskId b) tasks)
         ]
 
 
-viewTaskItem : Bucket -> Task -> Html Msg
-viewTaskItem b t =
+viewTaskItem : Maybe TaskId -> Bucket -> Task -> Html Msg
+viewTaskItem mbDraggedTaskId b t =
     div
         [ bgc (grayN 0.13)
         , pa "20px"
