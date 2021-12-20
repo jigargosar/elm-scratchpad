@@ -248,7 +248,7 @@ viewTaskItem mbDraggedTaskId b t =
          , style "cursor" "grab"
          ]
             ++ (if mbDraggedTaskId == Just t.id then
-                    []
+                    [ style "opacity" "0.3" ]
 
                 else
                     []
