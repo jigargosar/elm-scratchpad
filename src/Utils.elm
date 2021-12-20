@@ -892,6 +892,10 @@ pa =
     style "padding"
 
 
+ma =
+    style "margin"
+
+
 paf =
     fpx >> pa
 
