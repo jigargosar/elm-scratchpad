@@ -271,7 +271,7 @@ viewDraggedTaskItem ( b, t ) =
          , style "cursor" "grab"
          , style "opacity" "0.3"
          ]
-            ++ []
+            ++ [ style "cursor" "grabbing" ]
         )
         [ span
             [ style "user-select" "text"
