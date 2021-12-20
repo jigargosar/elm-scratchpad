@@ -221,7 +221,12 @@ view model =
                     noView
 
                 Dragging _ _ ->
-                    stylesNode """ *{ cursor: grabbing!important; } """
+                    stylesNode """
+                    * {
+                      cursor: grabbing!important;
+                      user-select:none!important;
+                    }
+                    """
             ]
         ]
 
