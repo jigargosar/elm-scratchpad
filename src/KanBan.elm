@@ -50,7 +50,13 @@ type alias Dragging =
     { pageXY : Float2
     , clientXY : Float2
     , dragged : { id : TaskId, size : Float2 }
-    , draggedOver : Maybe { id : TaskId, leftTop : Float2, size : Float2 }
+    , draggedOver :
+        Maybe
+            { id : TaskId
+
+            --, leftTop : Float2
+            --, size : Float2
+            }
     }
 
 
@@ -110,7 +116,8 @@ type Msg
     | OnInputSubmit
     | CreateTask String TaskId
     | OnMouseMove MouseEvent
-    | MouseMovedOverTask TaskId CurrentTarget
+      --| MouseMovedOverTask TaskId CurrentTarget
+    | MouseMovedOverTask TaskId
 
 
 subscriptions : Model -> Sub Msg
@@ -152,7 +159,7 @@ update msg model =
             , Cmd.none
             )
 
-        MouseMovedOverTask taskId currentTarget ->
+        MouseMovedOverTask taskId ->
             ( case model.drag of
                 Nothing ->
                     model
@@ -165,8 +172,9 @@ update msg model =
                                     | draggedOver =
                                         Just
                                             { id = taskId
-                                            , size = currentTarget.offsetSize
-                                            , leftTop = currentTarget.rootOffsetLeftTop
+
+                                            --, size = currentTarget.offsetSize
+                                            --, leftTop = currentTarget.rootOffsetLeftTop
                                             }
                                 }
                     }
@@ -384,8 +392,8 @@ viewTaskItem mbDragging b t =
 
                                 else
                                     [ HE.on "mousemove"
-                                        (JD.map (MouseMovedOverTask t.id)
-                                            currentTargetDecoder
+                                        (JD.succeed (MouseMovedOverTask t.id)
+                                            --currentTargetDecoder
                                             |> JD.map (Debug.log "mousemove")
                                         )
                                     ]
