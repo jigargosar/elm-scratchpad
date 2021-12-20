@@ -283,8 +283,9 @@ viewDraggedTaskItem ( b, t ) =
          , HA.draggable "true"
          , cursorGrab
          ]
-            ++ [ style "opacity" "0.3"
+            ++ [ HA.draggable "false"
                , cursorGrabbing
+               , style "opacity" "0.3"
                , positionFixed
                , style "top" "500px"
                , style "left" "100px"
