@@ -282,18 +282,16 @@ viewDraggedTaskItem ( b, t ) =
          , style "box-shadow" ("1px 2px 0px 1px " ++ hsla 0 0 0 1)
          , HA.draggable "true"
          , cursorGrab
-         , style "opacity" "0.3"
          ]
-            ++ [ cursorGrabbing
+            ++ [ style "opacity" "0.3"
+               , cursorGrabbing
                , positionFixed
                , style "top" "500px"
                , style "left" "100px"
                ]
         )
         [ span
-            ([ userSelectText
-             , cursorText
-             ]
+            ([ userSelectText, cursorText ]
                 ++ [ style "cursor" "inherit"
                    ]
             )
@@ -310,7 +308,7 @@ viewTaskItem mbDraggedTaskId b t =
          , style "border-left" ("10px solid " ++ b.color)
          , style "box-shadow" ("1px 2px 0px 1px " ++ hsla 0 0 0 1)
          , HA.draggable "true"
-         , style "cursor" "grab"
+         , cursorGrab
          ]
             ++ (if mbDraggedTaskId == Just t.id then
                     [ style "opacity" "0.3" ]
@@ -319,9 +317,6 @@ viewTaskItem mbDraggedTaskId b t =
                     []
                )
         )
-        [ span
-            [ style "user-select" "text"
-            , style "cursor" "text"
-            ]
+        [ span [ userSelectText, cursorText ]
             [ text t.title ]
         ]
