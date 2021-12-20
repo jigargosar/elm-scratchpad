@@ -35,7 +35,7 @@ draggedTaskId model =
             Nothing
 
 
-draggedTaskDetails : Model -> Maybe ( Float2, ( Bucket, Task ) )
+draggedTaskDetails : Model -> Maybe ( ( Float2, Float2 ), ( Bucket, Task ) )
 draggedTaskDetails model =
     case model.drag of
         Dragging mousePosition (TaskId id) ->
@@ -44,7 +44,7 @@ draggedTaskDetails model =
                     (\t ->
                         initialBuckets
                             |> findFirst (propEq .id t.bucketId)
-                            |> Maybe.map (pairTo t >> pair mousePosition)
+                            |> Maybe.map (pairTo t >> pair ( mousePosition, ( 263, 66 ) ))
                     )
 
         _ ->
@@ -93,7 +93,7 @@ init () =
       , drag =
             NotDragging
                 |> always
-                    ((demoTasks |> List.head |> Maybe.map (.id >> Dragging ( 100, 500 )))
+                    ((demoTasks |> List.head |> Maybe.map (.id >> Dragging ( 300, 500 )))
                         |> Maybe.withDefault NotDragging
                     )
       }
@@ -276,8 +276,8 @@ viewBucketColumn mbDraggedTaskId b tasks =
         ]
 
 
-viewDraggedTaskItem : ( Float2, ( Bucket, Task ) ) -> Html Msg
-viewDraggedTaskItem ( ( x, y ), ( b, t ) ) =
+viewDraggedTaskItem : ( ( Float2, Float2 ), ( Bucket, Task ) ) -> Html Msg
+viewDraggedTaskItem ( ( ( x, y ), ( w, h ) ), ( b, t ) ) =
     div
         ([ bgc (grayN 0.13)
          , pa "20px"
@@ -289,10 +289,12 @@ viewDraggedTaskItem ( ( x, y ), ( b, t ) ) =
          ]
             ++ [ HA.draggable "false"
                , cursorGrabbing
-               , style "opacity" "0.3"
+               , style "opacity" "0.9"
                , positionFixed
-               , style "left" <| fpx (x - 10)
-               , style "top" <| fpx (y - 10)
+               , style "left" <| fpx (x - (w / 2))
+               , style "top" <| fpx (y - (h / 2))
+               , styleWidthFPx w
+               , styleHeightFPx h
                ]
         )
         [ span
