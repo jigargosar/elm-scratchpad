@@ -292,7 +292,7 @@ viewDraggedTaskItem ( b, t ) =
         )
         [ span
             ([ userSelectText, cursorText ]
-                ++ [ style "cursor" "inherit"
+                ++ [ cursorInherit
                    ]
             )
             [ text t.title ]

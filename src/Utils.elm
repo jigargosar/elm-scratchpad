@@ -707,6 +707,10 @@ cursorText =
     style "cursor" "text"
 
 
+cursorInherit =
+    style "cursor" "inherit"
+
+
 userSelectText =
     style "user-select" "text"
 
