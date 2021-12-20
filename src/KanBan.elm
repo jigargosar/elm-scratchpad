@@ -291,8 +291,8 @@ viewDraggedTaskItem ( ( x, y ), ( b, t ) ) =
                , cursorGrabbing
                , style "opacity" "0.3"
                , positionFixed
-               , style "left" <| fpx x
-               , style "top" <| fpx y
+               , style "left" <| fpx (x - 10)
+               , style "top" <| fpx (y - 10)
                ]
         )
         [ span
