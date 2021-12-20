@@ -216,6 +216,12 @@ view model =
             , draggedTaskDetails model
                 |> Maybe.map viewDraggedTaskItem
                 |> viewMaybe
+            , case model.drag of
+                NotDragging ->
+                    noView
+
+                Dragging _ _ ->
+                    stylesNode """ *{ cursor: grabbing!important; } """
             ]
         ]
 
