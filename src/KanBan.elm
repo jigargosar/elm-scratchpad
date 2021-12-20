@@ -284,12 +284,19 @@ viewDraggedTaskItem ( b, t ) =
          , style "cursor" "grab"
          , style "opacity" "0.3"
          ]
-            ++ [ style "cursor" "grabbing" ]
+            ++ [ style "cursor" "grabbing"
+               , positionFixed
+               , style "top" "500px"
+               , style "left" "100px"
+               ]
         )
         [ span
-            [ style "user-select" "text"
-            , style "cursor" "text"
-            ]
+            ([ style "user-select" "text"
+             , style "cursor" "text"
+             ]
+                ++ [ style "cursor" "inherit"
+                   ]
+            )
             [ text t.title ]
         ]
 

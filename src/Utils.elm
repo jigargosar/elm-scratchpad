@@ -691,6 +691,10 @@ positionAbsolute =
     style "position" "absolute"
 
 
+positionFixed =
+    style "position" "fixed"
+
+
 positionRelative =
     style "position" "relative"
 
