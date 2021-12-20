@@ -21,7 +21,13 @@ main =
 type alias Model =
     { taskDict : TaskDict
     , input : String
+    , drag : Drag
     }
+
+
+type Drag
+    = NotDragging
+    | Dragging TaskId
 
 
 type alias TaskDict =
@@ -58,6 +64,12 @@ init () =
     in
     ( { taskDict = demoTasks |> dictBy (.id >> (\(TaskId id) -> id))
       , input = ""
+      , drag =
+            NotDragging
+                |> always
+                    ((demoTasks |> List.head |> Maybe.map (.id >> Dragging))
+                        |> Maybe.withDefault NotDragging
+                    )
       }
     , Cmd.none
     )
