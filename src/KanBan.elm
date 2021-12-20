@@ -386,7 +386,7 @@ viewTaskItem mbDragging b t =
                                     [ HE.on "mousemove"
                                         (JD.map (MouseMovedOverTask t.id)
                                             (JD.field "currentTarget" currentTargetDecoder)
-                                            |> JD.map (Debug.log "mousemove")
+                                         --|> JD.map (Debug.log "mousemove")
                                         )
                                     ]
                                )
