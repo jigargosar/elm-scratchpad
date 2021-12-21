@@ -377,19 +377,16 @@ viewTaskItem mbDragging b t =
                         [ HA.draggable "true", cursorGrab ]
 
                     Just dragging ->
-                        []
-                            ++ (if dragging.dragged.id == t.id then
-                                    [ opacity 0.3
-                                    ]
+                        if dragging.dragged.id == t.id then
+                            [ opacity 0.3 ]
 
-                                else
-                                    [ HE.on "mousemove"
-                                        (JD.map (MouseMovedOverTask t.id)
-                                            (JD.field "currentTarget" currentTargetDecoder)
-                                         --|> JD.map (Debug.log "mousemove")
-                                        )
-                                    ]
-                               )
+                        else
+                            [ HE.on "mousemove"
+                                (JD.map (MouseMovedOverTask t.id)
+                                    (JD.field "currentTarget" currentTargetDecoder)
+                                 --|> JD.map (Debug.log "mousemove")
+                                )
+                            ]
                )
         )
         [ span [ userSelectText, cursorText ] [ text t.title ]
