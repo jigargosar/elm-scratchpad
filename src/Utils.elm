@@ -1804,3 +1804,7 @@ bottom0 =
 
 right0 =
     style "right" "0"
+
+
+opacity =
+    style "opacity"
