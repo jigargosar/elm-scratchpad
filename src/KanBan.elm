@@ -396,10 +396,18 @@ viewTaskItem mbDragging b t =
 
                         Just draggedOver ->
                             if draggedOver.id == t.id then
+                                let
+                                    nearTop =
+                                        False
+                                in
                                 placeOverContent
                                     [ div
                                         [ positionAbsolute
-                                        , bottom100
+                                        , if nearTop then
+                                            bottom100
+
+                                          else
+                                            top100
                                         , w100
                                         , bgc "dodgerblue"
                                         , styleHeight "2px"
