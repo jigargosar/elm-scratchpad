@@ -359,12 +359,6 @@ viewDraggedTaskItem ( dr, ( b, t ) ) =
 
 viewTaskItem : Maybe Dragging -> Bucket -> Task -> Html Msg
 viewTaskItem mbDragging b t =
-    let
-        mbDraggedOverId =
-            mbDragging
-                |> Maybe.andThen .draggedOver
-                |> Maybe.map .id
-    in
     div
         ([ bgc (grayN 0.13)
          , pa "20px"
@@ -391,21 +385,31 @@ viewTaskItem mbDragging b t =
         )
         [ span [ userSelectText, cursorText ] [ text t.title ]
         ]
-        |> (if mbDraggedOverId == Just t.id then
-                placeOverContent
-                    [ div
-                        [ positionAbsolute
-                        , bottom100
-                        , w100
-                        , bgc "dodgerblue"
-                        , styleHeight "2px"
-                        , ma "8px auto"
-                        ]
-                        []
-                    ]
+        |> (case mbDragging of
+                Nothing ->
+                    identity
 
-            else
-                identity
+                Just dragging ->
+                    case dragging.draggedOver of
+                        Nothing ->
+                            identity
+
+                        Just draggedOver ->
+                            if draggedOver.id == t.id then
+                                placeOverContent
+                                    [ div
+                                        [ positionAbsolute
+                                        , bottom100
+                                        , w100
+                                        , bgc "dodgerblue"
+                                        , styleHeight "2px"
+                                        , ma "8px auto"
+                                        ]
+                                        []
+                                    ]
+
+                            else
+                                identity
            )
 
 
