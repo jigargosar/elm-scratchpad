@@ -340,7 +340,7 @@ viewDraggedTaskItem ( dr, ( b, t ) ) =
          ]
             ++ [ HA.draggable "false"
                , noPointerEvents
-               , opacity "0.9"
+               , opacity 0.9
                , positionFixed
                , style "left" <| fpx (x - (w / 2))
                , style "top" <| fpx (y - (h / 2))
@@ -379,7 +379,7 @@ viewTaskItem mbDragging b t =
                     Just dragging ->
                         []
                             ++ (if dragging.dragged.id == t.id then
-                                    [ opacity "0.3"
+                                    [ opacity 0.3
                                     ]
 
                                 else

@@ -1807,4 +1807,4 @@ right0 =
 
 
 opacity =
-    style "opacity"
+    fromFloat >> style "opacity"
