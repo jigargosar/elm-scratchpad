@@ -397,8 +397,20 @@ viewTaskItem mbDragging b t =
                         Just draggedOver ->
                             if draggedOver.id == t.id then
                                 let
+                                    ( _, my ) =
+                                        dragging.pageXY
+
+                                    ( _, ty ) =
+                                        draggedOver.leftTop
+
+                                    ( _, th ) =
+                                        draggedOver.size
+
+                                    cy =
+                                        ty + th / 2
+
                                     nearTop =
-                                        False
+                                        my <= cy
                                 in
                                 placeOverContent
                                     [ div
