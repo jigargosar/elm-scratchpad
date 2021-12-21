@@ -412,37 +412,5 @@ viewTaskItem mbDragging b t =
            )
 
 
-bottom100 =
-    style "bottom" "100%"
-
-
-top100 =
-    style "top" "100%"
-
-
-left100 =
-    style "left" "100%"
-
-
-right100 =
-    style "right" "100%"
-
-
-left0 =
-    style "left" "0"
-
-
-top0 =
-    style "top" "0"
-
-
-bottom0 =
-    style "bottom" "0"
-
-
-right0 =
-    style "right" "0"
-
-
 placeOverContent rest base =
     div [ positionRelative ] (base :: rest)
