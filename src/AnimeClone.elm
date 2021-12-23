@@ -50,7 +50,7 @@ view : Model -> Document Msg
 view model =
     Document "Anime"
         [ basicStylesNode
-        , div []
+        , div [ overflowHidden ]
             (initialParticles
                 |> List.map (animateParticle 0 model.animClock >> viewParticle)
             )
@@ -60,12 +60,13 @@ view model =
 type alias Particle =
     { charge : String
     , cycles : Int
+    , x : Float
     }
 
 
 initialParticles : List Particle
 initialParticles =
-    [ { charge = "0%", cycles = 120 } ]
+    [ { charge = "0%", cycles = 120, x = 100 } ]
 
 
 animateParticle : Int -> Int -> Particle -> Particle
@@ -203,7 +204,7 @@ type Loop
 
 viewParticle : Particle -> Html msg
 viewParticle p =
-    div []
+    div [ style "transform" ("translateX(" ++ fromFloat p.x ++ "px)") ]
         [ div [] [ text p.charge ]
         , div [] [ text <| fromInt p.cycles ]
         ]
