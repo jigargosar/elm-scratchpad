@@ -1,7 +1,6 @@
 module AnimeClone exposing (main)
 
 import Browser.Events
-import Time
 import Utils exposing (..)
 
 
