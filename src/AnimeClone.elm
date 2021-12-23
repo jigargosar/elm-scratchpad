@@ -125,8 +125,14 @@ computeAnimated config start now obj =
             (toFloat (now - (start + delay)) / toFloat duration)
                 |> clamp 0 1
 
+        from =
+            config.from args
+
+        to =
+            config.to args
+
         value =
-            config.interpolator (config.from args) (config.to args) frac
+            config.interpolator from to frac
     in
     config.setter value obj
 
