@@ -84,11 +84,11 @@ animateParticle start now indexLength particle =
 
 
 applyAnimations :
-    List ({ index : Int, length : Int } -> b -> c -> a -> a)
-    -> b
-    -> c
-    -> List a
-    -> List a
+    List ({ index : Int, length : Int } -> Int -> Int -> o -> o)
+    -> Int
+    -> Int
+    -> List o
+    -> List o
 applyAnimations animFns start now objects =
     let
         indexLength i =
