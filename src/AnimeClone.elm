@@ -81,8 +81,32 @@ animateParticle start now indexLength particle =
         |> computeAnimated cyclesAnimConfig start indexLength now
 
 
-foo : List (Int -> { index : Int, length : Int } -> Int -> Particle -> Particle)
-foo =
+computeAnimatedList :
+    List (Int -> Int -> { index : Int, length : Int } -> a -> a)
+    -> Int
+    -> Int
+    -> List a
+    -> List a
+computeAnimatedList animList start now list =
+    List.indexedMap
+        (\i a ->
+            List.foldl
+                (\fn ->
+                    fn start now { index = i, length = List.length list }
+                )
+                a
+                animList
+        )
+        list
+
+
+applyAll : List (a -> a) -> a -> a
+applyAll fns a =
+    List.foldl (\fn -> fn) a fns
+
+
+particleAnimations : List (Int -> { index : Int, length : Int } -> Int -> Particle -> Particle)
+particleAnimations =
     [ computeAnimated moveXAnimConfig
     , computeAnimated chargeAnimConfig
     , computeAnimated cyclesAnimConfig
