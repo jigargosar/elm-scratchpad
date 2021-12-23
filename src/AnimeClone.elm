@@ -14,21 +14,26 @@ initialParticle =
     { charge = "80%", cycles = 120 }
 
 
+particleAnimationConfig : AnimConfig Particle Int
+particleAnimationConfig =
+    { from = .obj >> .cycles
+    , to = always 130
+    , duration = always 1800
+    , delay = always 0
+    , setter = \v o -> { o | cycles = v }
+    , interpolator = lerpInt
+    }
+
+
 anime =
-    animatedObjectAt 0
-        0
-        { from = .obj >> .cycles
-        , to = always 130
-        , duration = always 1800
-        , delay = always 0
-        , setter = \v o -> { o | cycles = v }
-        , interpolator = lerpInt
-        }
+    computeAnimated particleAnimationConfig
         initialParticle
+        0
+        0
 
 
-animatedObjectAt : Int -> Int -> AnimConfig o v -> o -> o
-animatedObjectAt start now config obj =
+computeAnimated : AnimConfig o v -> o -> Int -> Int -> o
+computeAnimated config obj start now =
     let
         args : Args o
         args =
