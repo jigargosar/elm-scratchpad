@@ -84,12 +84,12 @@ animateParticle start now indexLength particle =
 moveXAnimConfig : AnimConfig Particle Float
 moveXAnimConfig =
     { from = .obj >> .x
-    , to = always 100
+    , to = always 200
     , duration = always 1800
-    , delay = .index >> mul 100 >> always 5000
+    , delay = .index >> mul 500
     , setter = \v o -> { o | x = v }
     , interpolator = lerp
-    , direction = always Normal
+    , direction = always Alternate
     , loop = always <| Infinite
     }
 
@@ -146,7 +146,7 @@ computeAnimated config start { index, length } now obj =
             config.loop args
 
         fr =
-            toFloat (now - (start - delay)) / toFloat duration
+            toFloat (now - (start + delay)) / toFloat duration
 
         maxIterations =
             case loop of
@@ -187,7 +187,11 @@ computeAnimated config start { index, length } now obj =
                             1 - frac
                         )
     in
-    config.setter value obj
+    if now > start + delay then
+        config.setter value obj
+
+    else
+        obj
 
 
 type alias Args o =
