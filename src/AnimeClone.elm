@@ -52,7 +52,7 @@ view model =
         [ basicStylesNode
         , div []
             (initialParticles
-                |> List.map (animateParticle 0 model.animClock >> viewParticle)
+                |> List.indexedMap (\i -> animateParticle 0 model.animClock { index = i, length = List.length initialParticles } >> viewParticle)
             )
         ]
 
@@ -70,15 +70,15 @@ initialParticles =
         p =
             { charge = "0%", cycles = 120, x = 0 }
     in
-    times 10 (\i -> p)
+    times 10 (\_ -> p)
 
 
-animateParticle : Int -> Int -> Particle -> Particle
-animateParticle start now particle =
+animateParticle : Int -> Int -> { index : Int, length : Int } -> Particle -> Particle
+animateParticle start now indexLength particle =
     particle
-        |> computeAnimated moveXAnimConfig start now
-        |> computeAnimated chargeAnimConfig start now
-        |> computeAnimated cyclesAnimConfig start now
+        |> computeAnimated moveXAnimConfig start indexLength now
+        |> computeAnimated chargeAnimConfig start indexLength now
+        |> computeAnimated cyclesAnimConfig start indexLength now
 
 
 moveXAnimConfig : AnimConfig Particle Float
@@ -129,8 +129,8 @@ lerpPctString a b =
     lerpInt (toInt a) (toInt b) >> String.fromInt >> (\s -> s ++ "%")
 
 
-computeAnimated : AnimConfig o v -> Int -> Int -> o -> o
-computeAnimated config start now obj =
+computeAnimated : AnimConfig o v -> Int -> { index : Int, length : Int } -> Int -> o -> o
+computeAnimated config start { index, length } now obj =
     let
         args : Args o
         args =
