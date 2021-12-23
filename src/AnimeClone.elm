@@ -76,6 +76,19 @@ animateParticle start now particle =
         |> computeAnimated cyclesAnimConfig start now
 
 
+moveXAnimConfig : AnimConfig Particle String
+moveXAnimConfig =
+    { from = .obj >> .charge
+    , to = always "100%"
+    , duration = always 1800
+    , delay = always 0
+    , setter = \v o -> { o | charge = v }
+    , interpolator = lerpPctString
+    , direction = always Alternate
+    , loop = always <| Times 3
+    }
+
+
 chargeAnimConfig : AnimConfig Particle String
 chargeAnimConfig =
     { from = .obj >> .charge
