@@ -89,17 +89,16 @@ applyAnimations :
     -> c
     -> List a
     -> List a
-applyAnimations animList start now list =
-    List.indexedMap
-        (\i a ->
-            List.foldl
-                (\fn ->
-                    fn { index = i, length = List.length list } start now
-                )
-                a
-                animList
-        )
-        list
+applyAnimations animFns start now list =
+    let
+        indexLength i =
+            { index = i, length = List.length list }
+
+        animFnsForIndex i =
+            animFns
+                |> List.map (\fn -> fn (indexLength i) start now)
+    in
+    List.indexedMap (\i -> applyAll (animFnsForIndex i)) list
 
 
 applyAll : List (a -> a) -> a -> a
