@@ -57,13 +57,10 @@ view : Model -> Document Msg
 view model =
     Document "Anime"
         [ basicStylesNode
-        , let
-            ps : List Particle
-            ps =
-                [ initialParticle ]
-                    |> List.map (animateParticle 0 model.animClock)
-          in
-          div [] (List.map viewParticle ps)
+        , div []
+            (initialParticles
+                |> List.map (animateParticle 0 model.animClock >> viewParticle)
+            )
         ]
 
 
@@ -73,9 +70,9 @@ type alias Particle =
     }
 
 
-initialParticle : Particle
-initialParticle =
-    { charge = "0%", cycles = 120 }
+initialParticles : List Particle
+initialParticles =
+    [ { charge = "0%", cycles = 120 } ]
 
 
 cyclesAnimConfig : AnimConfig Particle Int
