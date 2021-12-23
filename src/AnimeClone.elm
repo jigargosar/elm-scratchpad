@@ -15,7 +15,7 @@ initialParticle =
 
 
 anime =
-    animate 0
+    animatedObjectAt 0
         0
         { from = .obj >> .cycles
         , to = always 130
@@ -27,9 +27,27 @@ anime =
         initialParticle
 
 
-animate : Int -> Int -> AnimConfig o v -> o -> o
-animate start now config obj =
-    Debug.todo "todo"
+animatedObjectAt : Int -> Int -> AnimConfig o v -> o -> o
+animatedObjectAt start now config obj =
+    let
+        args : Args o
+        args =
+            Args obj 0 1
+
+        duration =
+            config.duration args
+
+        delay =
+            config.delay args
+
+        frac =
+            (toFloat (now - (start + delay)) / toFloat duration)
+                |> clamp 0 1
+
+        value =
+            config.interpolator (config.from args) (config.to args) frac
+    in
+    config.setter value obj
 
 
 type alias Args o =
