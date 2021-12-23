@@ -81,6 +81,14 @@ animateParticle start now indexLength particle =
         |> computeAnimated cyclesAnimConfig start indexLength now
 
 
+foo : List (Int -> { index : Int, length : Int } -> Int -> Particle -> Particle)
+foo =
+    [ computeAnimated moveXAnimConfig
+    , computeAnimated chargeAnimConfig
+    , computeAnimated cyclesAnimConfig
+    ]
+
+
 moveXAnimConfig : AnimConfig Particle Float
 moveXAnimConfig =
     { from = .obj >> .x
