@@ -1,5 +1,7 @@
 module AnimeClone exposing (main)
 
+import Browser.Events
+import Time
 import Utils exposing (..)
 
 
@@ -13,21 +15,22 @@ main =
 
 
 type alias Model =
-    {}
+    { clock : Int }
 
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( {}, Cmd.none )
+    ( { clock = 0 }, Cmd.none )
 
 
 type Msg
     = NOP
+    | OnDeltaMilli Int
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Sub.none
+    Browser.Events.onAnimationFrameDelta (round >> OnDeltaMilli)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -35,6 +38,9 @@ update msg model =
     case msg of
         NOP ->
             ( model, Cmd.none )
+
+        OnDeltaMilli deltaMs ->
+            ( { model | clock = deltaMs }, Cmd.none )
 
 
 view : Model -> Document Msg
