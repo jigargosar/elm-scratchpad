@@ -3,6 +3,56 @@ module AnimeClone exposing (main)
 import Utils exposing (..)
 
 
+main =
+    bDocument
+        { init = init
+        , subscriptions = subscriptions
+        , update = update
+        , view = view
+        }
+
+
+type alias Model =
+    {}
+
+
+init : () -> ( Model, Cmd Msg )
+init () =
+    ( {}, Cmd.none )
+
+
+type Msg
+    = NOP
+
+
+subscriptions : Model -> Sub Msg
+subscriptions _ =
+    Sub.none
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        NOP ->
+            ( model, Cmd.none )
+
+
+view : Model -> Document Msg
+view _ =
+    Document "App Title"
+        [ basicStylesNode
+        , let
+            p : Particle
+            p =
+                computeAnimated particleAnimationConfig
+                    initialParticle
+                    0
+                    2000
+          in
+          div [] [ viewParticle p ]
+        ]
+
+
 type alias Particle =
     { charge : String
     , cycles : Int
@@ -63,18 +113,6 @@ type alias AnimConfig o v =
     , setter : v -> o -> o
     , interpolator : v -> v -> Float -> v
     }
-
-
-main =
-    let
-        p : Particle
-        p =
-            computeAnimated particleAnimationConfig
-                initialParticle
-                0
-                2000
-    in
-    div [] [ viewParticle p ]
 
 
 viewParticle p =
