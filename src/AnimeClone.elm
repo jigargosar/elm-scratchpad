@@ -89,16 +89,16 @@ applyAnimations :
     -> c
     -> List a
     -> List a
-applyAnimations animFns start now list =
+applyAnimations animFns start now objects =
     let
         indexLength i =
-            { index = i, length = List.length list }
+            { index = i, length = List.length objects }
 
         animFnsForIndex i =
             animFns
                 |> List.map (\fn -> fn (indexLength i) start now)
     in
-    List.indexedMap (\i -> applyAll (animFnsForIndex i)) list
+    List.indexedMap (\i -> applyAll (animFnsForIndex i)) objects
 
 
 applyAll : List (a -> a) -> a -> a
