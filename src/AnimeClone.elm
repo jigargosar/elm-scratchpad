@@ -84,6 +84,7 @@ chargeAnimConfig =
     , setter = \v o -> { o | charge = v }
     , interpolator = lerpPctString
     , direction = always Reverse
+    , loop = always <| Times 1
     }
 
 
@@ -96,6 +97,7 @@ cyclesAnimConfig =
     , setter = \v o -> { o | cycles = v }
     , interpolator = lerpInt
     , direction = always Alternate
+    , loop = always Infinite
     }
 
 
@@ -163,6 +165,7 @@ type alias AnimConfig o v =
     , setter : v -> o -> o
     , interpolator : v -> v -> Float -> v
     , direction : Args o -> Direction
+    , loop : Args o -> Loop
     }
 
 
@@ -170,6 +173,11 @@ type Direction
     = Normal
     | Reverse
     | Alternate
+
+
+type Loop
+    = Infinite
+    | Times Int
 
 
 viewParticle : Particle -> Html msg
