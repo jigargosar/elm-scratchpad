@@ -123,9 +123,19 @@ computeAnimated config start now obj =
         delay =
             config.delay args
 
+        loop =
+            config.loop args
+
+        fr =
+            toFloat (now - (start + delay)) / toFloat duration
+
         frac =
-            (toFloat (now - (start + delay)) / toFloat duration)
-                |> clamp 0 1
+            case loop of
+                Infinite ->
+                    fr - toFloat (floor fr)
+
+                Times int ->
+                    fr |> clamp 0 1
 
         from =
             config.from args
@@ -142,7 +152,7 @@ computeAnimated config start now obj =
                     config.interpolator from to frac
 
                 Reverse ->
-                    config.interpolator to from frac
+                    config.interpolator from to (1 - frac)
 
                 Alternate ->
                     config.interpolator from to frac
