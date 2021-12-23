@@ -24,12 +24,12 @@ init () =
 
 type Msg
     = NOP
-    | OnDeltaMilli Int
+    | OnAnimationFrameDeltaMilli Int
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Browser.Events.onAnimationFrameDelta (round >> OnDeltaMilli)
+    Browser.Events.onAnimationFrameDelta (round >> OnAnimationFrameDeltaMilli)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -38,9 +38,9 @@ update msg model =
         NOP ->
             ( model, Cmd.none )
 
-        OnDeltaMilli deltaMsRaw ->
+        OnAnimationFrameDeltaMilli animationFrameDeltaMilli ->
             ( { model
-                | animClock = model.animClock + clamp 0 100 deltaMsRaw
+                | animClock = model.animClock + clamp 0 100 animationFrameDeltaMilli
               }
             , Cmd.none
             )
