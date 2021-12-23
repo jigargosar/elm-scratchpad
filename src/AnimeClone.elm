@@ -66,26 +66,27 @@ type alias Particle =
 
 initialParticles : List Particle
 initialParticles =
-    [ { charge = "0%", cycles = 120, x = 100 } ]
+    [ { charge = "0%", cycles = 120, x = 0 } ]
 
 
 animateParticle : Int -> Int -> Particle -> Particle
 animateParticle start now particle =
     particle
+        |> computeAnimated moveXAnimConfig start now
         |> computeAnimated chargeAnimConfig start now
         |> computeAnimated cyclesAnimConfig start now
 
 
-moveXAnimConfig : AnimConfig Particle String
+moveXAnimConfig : AnimConfig Particle Float
 moveXAnimConfig =
-    { from = .obj >> .charge
-    , to = always "100%"
+    { from = .obj >> .x
+    , to = always 100
     , duration = always 1800
     , delay = always 0
-    , setter = \v o -> { o | charge = v }
-    , interpolator = lerpPctString
+    , setter = \v o -> { o | x = v }
+    , interpolator = lerp
     , direction = always Alternate
-    , loop = always <| Times 3
+    , loop = always <| Infinite
     }
 
 
