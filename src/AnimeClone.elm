@@ -76,9 +76,9 @@ initialParticles =
 animateParticle : Int -> Int -> { index : Int, length : Int } -> Particle -> Particle
 animateParticle start now indexLength particle =
     particle
-        |> computeAnimated moveXAnimConfig start indexLength now
-        |> computeAnimated chargeAnimConfig start indexLength now
-        |> computeAnimated cyclesAnimConfig start indexLength now
+        |> computeAnimated moveXAnimConfig indexLength start now
+        |> computeAnimated chargeAnimConfig indexLength start now
+        |> computeAnimated cyclesAnimConfig indexLength start now
 
 
 computeAnimatedList :
@@ -105,7 +105,7 @@ applyAll fns a =
     List.foldl (<|) a fns
 
 
-particleAnimations : List (Int -> { index : Int, length : Int } -> Int -> Particle -> Particle)
+particleAnimations : List ({ index : Int, length : Int } -> Int -> Int -> Particle -> Particle)
 particleAnimations =
     [ computeAnimated moveXAnimConfig
     , computeAnimated chargeAnimConfig
@@ -161,8 +161,8 @@ lerpPctString a b =
     lerpInt (toInt a) (toInt b) >> String.fromInt >> (\s -> s ++ "%")
 
 
-computeAnimated : AnimConfig o v -> Int -> { index : Int, length : Int } -> Int -> o -> o
-computeAnimated config start { index, length } now obj =
+computeAnimated : AnimConfig o v -> { index : Int, length : Int } -> Int -> Int -> o -> o
+computeAnimated config { index, length } start now obj =
     let
         args : Args o
         args =
