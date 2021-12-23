@@ -55,7 +55,7 @@ animateParticle start now particle =
 
 view : Model -> Document Msg
 view model =
-    Document "App Title"
+    Document "Anime"
         [ basicStylesNode
         , let
             ps : List Particle
