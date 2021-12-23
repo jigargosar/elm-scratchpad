@@ -46,6 +46,13 @@ update msg model =
             )
 
 
+animateParticle : Int -> Int -> Particle -> Particle
+animateParticle start now particle =
+    particle
+        |> computeAnimated cyclesAnimConfig start now
+        |> computeAnimated chargeAnimConfig start now
+
+
 view : Model -> Document Msg
 view model =
     Document "App Title"
