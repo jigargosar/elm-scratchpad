@@ -46,13 +46,6 @@ update msg model =
             )
 
 
-animateParticle : Int -> Int -> Particle -> Particle
-animateParticle start now particle =
-    particle
-        |> computeAnimated cyclesAnimConfig start now
-        |> computeAnimated chargeAnimConfig start now
-
-
 view : Model -> Document Msg
 view model =
     Document "Anime"
@@ -75,16 +68,11 @@ initialParticles =
     [ { charge = "0%", cycles = 120 } ]
 
 
-cyclesAnimConfig : AnimConfig Particle Int
-cyclesAnimConfig =
-    { from = .obj >> .cycles
-    , to = always 130
-    , duration = always 1800
-    , delay = always 0
-    , setter = \v o -> { o | cycles = v }
-    , interpolator = lerpInt
-    , direction = always Alternate
-    }
+animateParticle : Int -> Int -> Particle -> Particle
+animateParticle start now particle =
+    particle
+        |> computeAnimated chargeAnimConfig start now
+        |> computeAnimated cyclesAnimConfig start now
 
 
 chargeAnimConfig : AnimConfig Particle String
@@ -95,6 +83,18 @@ chargeAnimConfig =
     , delay = always 0
     , setter = \v o -> { o | charge = v }
     , interpolator = lerpPctString
+    , direction = always Reverse
+    }
+
+
+cyclesAnimConfig : AnimConfig Particle Int
+cyclesAnimConfig =
+    { from = .obj >> .cycles
+    , to = always 130
+    , duration = always 1800
+    , delay = always 0
+    , setter = \v o -> { o | cycles = v }
+    , interpolator = lerpInt
     , direction = always Alternate
     }
 
