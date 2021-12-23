@@ -15,13 +15,23 @@ initialParticle =
 
 
 anime =
-    animateProperty
+    initAnime
         { from = .obj >> .cycles
         , to = always 130
         , duration = always 1800
         , delay = always 0
         , setter = \v o -> { o | cycles = v }
         }
+        initialParticle
+
+
+type Anime
+    = Anime
+
+
+initAnime : AnimConfig o v -> o -> Anime
+initAnime config obj =
+    Anime
 
 
 type alias Args o =
@@ -38,15 +48,6 @@ type alias AnimConfig o v =
     , delay : Args o -> Int
     , setter : v -> o -> o
     }
-
-
-type alias System o v =
-    {}
-
-
-animateProperty : AnimConfig o v -> System o v
-animateProperty config =
-    Debug.todo "return animation system"
 
 
 main =
