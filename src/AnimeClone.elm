@@ -53,7 +53,7 @@ view model =
         , let
             p : Particle
             p =
-                computeAnimated particleAnimationConfig
+                computeAnimated cyclesAnimConfig
                     initialParticle
                     0
                     model.animClock
@@ -73,8 +73,8 @@ initialParticle =
     { charge = "80%", cycles = 120 }
 
 
-particleAnimationConfig : AnimConfig Particle Int
-particleAnimationConfig =
+cyclesAnimConfig : AnimConfig Particle Int
+cyclesAnimConfig =
     { from = .obj >> .cycles
     , to = always 130
     , duration = always 1800
