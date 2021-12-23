@@ -83,8 +83,8 @@ chargeAnimConfig =
     , delay = always 0
     , setter = \v o -> { o | charge = v }
     , interpolator = lerpPctString
-    , direction = always Reverse
-    , loop = always <| Times 1
+    , direction = always Alternate
+    , loop = always <| Times 3
     }
 
 
@@ -129,14 +129,17 @@ computeAnimated config start now obj =
         fr =
             toFloat (now - (start + delay)) / toFloat duration
 
-        frac =
+        maxIterations =
             case loop of
                 Infinite ->
-                    fr - toFloat (floor fr)
+                    maxInt
 
                 Times times ->
-                    (fr - toFloat (min (times - 1) (floor fr)))
-                        |> clamp 0 1
+                    times - 1
+
+        frac =
+            (fr - toFloat (min maxIterations (floor fr)))
+                |> clamp 0 1
 
         from =
             config.from args
@@ -158,7 +161,7 @@ computeAnimated config start now obj =
                 Alternate ->
                     config.interpolator from
                         to
-                        (if isEven (floor fr) then
+                        (if isEven (min maxIterations (floor fr)) then
                             frac
 
                          else
