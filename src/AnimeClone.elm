@@ -83,6 +83,7 @@ cyclesAnimConfig =
     , delay = always 0
     , setter = \v o -> { o | cycles = v }
     , interpolator = lerpInt
+    , direction = always Alternate
     }
 
 
@@ -94,6 +95,7 @@ chargeAnimConfig =
     , delay = always 0
     , setter = \v o -> { o | charge = v }
     , interpolator = lerpPctString
+    , direction = always Alternate
     }
 
 
@@ -143,7 +145,14 @@ type alias AnimConfig o v =
     , delay : Args o -> Int
     , setter : v -> o -> o
     , interpolator : v -> v -> Float -> v
+    , direction : Args o -> Direction
     }
+
+
+type Direction
+    = Normal
+    | Reverse
+    | Alternate
 
 
 viewParticle : Particle -> Html msg
