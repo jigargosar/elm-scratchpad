@@ -84,6 +84,17 @@ cyclesAnimConfig =
     }
 
 
+chargeAnimConfig : AnimConfig Particle String
+chargeAnimConfig =
+    { from = .obj >> .charge
+    , to = always "100%"
+    , duration = always 1800
+    , delay = always 0
+    , setter = \v o -> { o | charge = v }
+    , interpolator = Debug.todo "todo"
+    }
+
+
 computeAnimated : AnimConfig o v -> o -> Int -> Int -> o
 computeAnimated config obj start now =
     let
