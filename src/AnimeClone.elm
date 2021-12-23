@@ -72,7 +72,7 @@ main =
             computeAnimated particleAnimationConfig
                 initialParticle
                 0
-                0
+                2000
     in
     div [] [ viewParticle p ]
 
