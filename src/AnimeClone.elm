@@ -15,12 +15,12 @@ main =
 
 
 type alias Model =
-    { clock : Int }
+    { animClock : Int }
 
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { clock = 0 }, Cmd.none )
+    ( { animClock = 0 }, Cmd.none )
 
 
 type Msg
@@ -39,12 +39,16 @@ update msg model =
         NOP ->
             ( model, Cmd.none )
 
-        OnDeltaMilli deltaMs ->
-            ( { model | clock = deltaMs }, Cmd.none )
+        OnDeltaMilli deltaMsRaw ->
+            ( { model
+                | animClock = model.animClock + clamp 0 100 deltaMsRaw
+              }
+            , Cmd.none
+            )
 
 
 view : Model -> Document Msg
-view _ =
+view model =
     Document "App Title"
         [ basicStylesNode
         , let
@@ -53,7 +57,7 @@ view _ =
                 computeAnimated particleAnimationConfig
                     initialParticle
                     0
-                    2000
+                    model.animClock
           in
           div [] [ viewParticle p ]
         ]
