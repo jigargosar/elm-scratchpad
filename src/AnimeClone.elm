@@ -102,7 +102,7 @@ computeAnimatedList animList start now list =
 
 applyAll : List (a -> a) -> a -> a
 applyAll fns a =
-    List.foldl (\fn -> fn) a fns
+    List.foldl (<|) a fns
 
 
 particleAnimations : List (Int -> { index : Int, length : Int } -> Int -> Particle -> Particle)
