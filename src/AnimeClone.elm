@@ -58,11 +58,12 @@ view model =
     Document "App Title"
         [ basicStylesNode
         , let
-            p : Particle
-            p =
-                animateParticle 0 model.animClock initialParticle
+            ps : List Particle
+            ps =
+                [ initialParticle ]
+                    |> List.map (animateParticle 0 model.animClock)
           in
-          div [] [ viewParticle p ]
+          div [] (List.map viewParticle ps)
         ]
 
 
