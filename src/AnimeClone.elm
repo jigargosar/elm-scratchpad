@@ -52,7 +52,9 @@ view model =
         [ basicStylesNode
         , div []
             (initialParticles
-                |> List.indexedMap (\i -> animateParticle 0 model.animClock { index = i, length = List.length initialParticles } >> viewParticle)
+                |> applyAnimations particleAnimations 0 model.animClock
+                |> List.map viewParticle
+             --|> List.indexedMap (\i -> animateParticle 0 model.animClock { index = i, length = List.length initialParticles } >> viewParticle)
             )
         ]
 
@@ -76,23 +78,23 @@ initialParticles =
 animateParticle : Int -> Int -> { index : Int, length : Int } -> Particle -> Particle
 animateParticle start now indexLength particle =
     particle
-        |> computeAnimated moveXAnimConfig indexLength start now
-        |> computeAnimated chargeAnimConfig indexLength start now
-        |> computeAnimated cyclesAnimConfig indexLength start now
+        |> applySingleAnimation moveXAnimConfig indexLength start now
+        |> applySingleAnimation chargeAnimConfig indexLength start now
+        |> applySingleAnimation cyclesAnimConfig indexLength start now
 
 
-computeAnimatedList :
-    List (Int -> Int -> { index : Int, length : Int } -> a -> a)
-    -> Int
-    -> Int
+applyAnimations :
+    List ({ index : Int, length : Int } -> b -> c -> a -> a)
+    -> b
+    -> c
     -> List a
     -> List a
-computeAnimatedList animList start now list =
+applyAnimations animList start now list =
     List.indexedMap
         (\i a ->
             List.foldl
                 (\fn ->
-                    fn start now { index = i, length = List.length list }
+                    fn { index = i, length = List.length list } start now
                 )
                 a
                 animList
@@ -107,9 +109,9 @@ applyAll fns a =
 
 particleAnimations : List ({ index : Int, length : Int } -> Int -> Int -> Particle -> Particle)
 particleAnimations =
-    [ computeAnimated moveXAnimConfig
-    , computeAnimated chargeAnimConfig
-    , computeAnimated cyclesAnimConfig
+    [ applySingleAnimation moveXAnimConfig
+    , applySingleAnimation chargeAnimConfig
+    , applySingleAnimation cyclesAnimConfig
     ]
 
 
@@ -161,8 +163,8 @@ lerpPctString a b =
     lerpInt (toInt a) (toInt b) >> String.fromInt >> (\s -> s ++ "%")
 
 
-computeAnimated : AnimConfig o v -> { index : Int, length : Int } -> Int -> Int -> o -> o
-computeAnimated config { index, length } start now obj =
+applySingleAnimation : AnimConfig o v -> { index : Int, length : Int } -> Int -> Int -> o -> o
+applySingleAnimation config { index, length } start now obj =
     let
         args : Args o
         args =
