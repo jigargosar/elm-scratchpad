@@ -156,7 +156,14 @@ computeAnimated config start now obj =
                     config.interpolator from to (1 - frac)
 
                 Alternate ->
-                    config.interpolator from to frac
+                    config.interpolator from
+                        to
+                        (if isEven (floor fr) then
+                            frac
+
+                         else
+                            1 - frac
+                        )
     in
     config.setter value obj
 
