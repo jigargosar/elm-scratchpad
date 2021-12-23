@@ -15,23 +15,21 @@ initialParticle =
 
 
 anime =
-    initAnime
+    animate 0
+        0
         { from = .obj >> .cycles
         , to = always 130
         , duration = always 1800
         , delay = always 0
         , setter = \v o -> { o | cycles = v }
+        , interpolator = lerpInt
         }
         initialParticle
 
 
-type Anime
-    = Anime
-
-
-initAnime : AnimConfig o v -> o -> Anime
-initAnime config obj =
-    Anime
+animate : Int -> Int -> AnimConfig o v -> o -> o
+animate start now config obj =
+    Debug.todo "todo"
 
 
 type alias Args o =
@@ -47,6 +45,7 @@ type alias AnimConfig o v =
     , duration : Args o -> Int
     , delay : Args o -> Int
     , setter : v -> o -> o
+    , interpolator : v -> v -> Float -> v
     }
 
 

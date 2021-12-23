@@ -27,6 +27,10 @@ lerp a b x =
     (x * (b - a)) + a
 
 
+lerpInt a b =
+    lerp (toFloat a) (toFloat b) >> round
+
+
 norm a b x =
     (x - a) / (b - a)
 
