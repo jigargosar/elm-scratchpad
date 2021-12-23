@@ -86,7 +86,7 @@ moveXAnimConfig =
     { from = .obj >> .x
     , to = always 100
     , duration = always 1800
-    , delay = always 0
+    , delay = .index >> mul 100
     , setter = \v o -> { o | x = v }
     , interpolator = lerp
     , direction = always Alternate
