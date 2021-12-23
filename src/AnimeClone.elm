@@ -131,8 +131,19 @@ computeAnimated config start now obj =
         to =
             config.to args
 
+        direction =
+            config.direction args
+
         value =
-            config.interpolator from to frac
+            case direction of
+                Normal ->
+                    config.interpolator from to frac
+
+                Reverse ->
+                    config.interpolator to from frac
+
+                Alternate ->
+                    config.interpolator from to frac
     in
     config.setter value obj
 
