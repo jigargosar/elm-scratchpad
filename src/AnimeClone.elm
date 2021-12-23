@@ -53,10 +53,9 @@ view model =
         , let
             p : Particle
             p =
-                computeAnimated cyclesAnimConfig
-                    initialParticle
-                    0
-                    model.animClock
+                initialParticle
+                    |> computeAnimated cyclesAnimConfig 0 model.animClock
+                    |> computeAnimated chargeAnimConfig 0 model.animClock
           in
           div [] [ viewParticle p ]
         ]
@@ -70,7 +69,7 @@ type alias Particle =
 
 initialParticle : Particle
 initialParticle =
-    { charge = "80%", cycles = 120 }
+    { charge = "0%", cycles = 120 }
 
 
 cyclesAnimConfig : AnimConfig Particle Int
@@ -91,12 +90,21 @@ chargeAnimConfig =
     , duration = always 1800
     , delay = always 0
     , setter = \v o -> { o | charge = v }
-    , interpolator = Debug.todo "todo"
+    , interpolator = lerpPctString
     }
 
 
-computeAnimated : AnimConfig o v -> o -> Int -> Int -> o
-computeAnimated config obj start now =
+lerpPctString : String -> String -> Float -> String
+lerpPctString a b =
+    let
+        toInt =
+            String.slice 0 -1 >> String.toInt >> Maybe.withDefault 0
+    in
+    lerpInt (toInt a) (toInt b) >> String.fromInt >> (\s -> s ++ "%")
+
+
+computeAnimated : AnimConfig o v -> Int -> Int -> o -> o
+computeAnimated config start now obj =
     let
         args : Args o
         args =
@@ -135,5 +143,9 @@ type alias AnimConfig o v =
     }
 
 
+viewParticle : Particle -> Html msg
 viewParticle p =
-    text <| fromInt p.cycles
+    div []
+        [ div [] [ text p.charge ]
+        , div [] [ text <| fromInt p.cycles ]
+        ]
