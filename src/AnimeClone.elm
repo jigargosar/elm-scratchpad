@@ -60,9 +60,7 @@ view model =
         , let
             p : Particle
             p =
-                initialParticle
-                    |> computeAnimated cyclesAnimConfig 0 model.animClock
-                    |> computeAnimated chargeAnimConfig 0 model.animClock
+                animateParticle 0 model.animClock initialParticle
           in
           div [] [ viewParticle p ]
         ]
