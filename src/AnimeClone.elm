@@ -134,8 +134,9 @@ computeAnimated config start now obj =
                 Infinite ->
                     fr - toFloat (floor fr)
 
-                Times int ->
-                    fr |> clamp 0 1
+                Times times ->
+                    (fr - toFloat (min (times - 1) (floor fr)))
+                        |> clamp 0 1
 
         from =
             config.from args
