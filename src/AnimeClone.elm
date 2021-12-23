@@ -86,10 +86,10 @@ moveXAnimConfig =
     { from = .obj >> .x
     , to = always 100
     , duration = always 1800
-    , delay = .index >> mul 100
+    , delay = .index >> mul 100 >> always 5000
     , setter = \v o -> { o | x = v }
     , interpolator = lerp
-    , direction = always Alternate
+    , direction = always Normal
     , loop = always <| Infinite
     }
 
@@ -134,7 +134,7 @@ computeAnimated config start { index, length } now obj =
     let
         args : Args o
         args =
-            Args obj 0 1
+            Args obj index length
 
         duration =
             config.duration args
@@ -146,7 +146,7 @@ computeAnimated config start { index, length } now obj =
             config.loop args
 
         fr =
-            toFloat (now - (start + delay)) / toFloat duration
+            toFloat (now - (start - delay)) / toFloat duration
 
         maxIterations =
             case loop of
