@@ -25,13 +25,6 @@ particleAnimationConfig =
     }
 
 
-anime =
-    computeAnimated particleAnimationConfig
-        initialParticle
-        0
-        0
-
-
 computeAnimated : AnimConfig o v -> o -> Int -> Int -> o
 computeAnimated config obj start now =
     let
@@ -73,4 +66,16 @@ type alias AnimConfig o v =
 
 
 main =
-    div [] []
+    let
+        p : Particle
+        p =
+            computeAnimated particleAnimationConfig
+                initialParticle
+                0
+                0
+    in
+    div [] [ viewParticle p ]
+
+
+viewParticle p =
+    text <| fromInt p.cycles
