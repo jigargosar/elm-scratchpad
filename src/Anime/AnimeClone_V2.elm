@@ -36,12 +36,20 @@ init () =
                     [ setDuration 1800
                     , loopForever
                     , alternateDirection
+                    , setEasing Ease.outBack
                     ]
             in
             times 10
                 (\i ->
                     { x = 0
-                    , xa = anim (defaultAttrs ++ [ fromTo 0 270, setDelay <| i * 500 ])
+                    , xa =
+                        anim
+                            (defaultAttrs
+                                ++ [ fromTo 0 270
+
+                                   --, setDelay <| i * 500
+                                   ]
+                            )
                     }
                 )
     in
@@ -141,6 +149,11 @@ setDelay delay a =
 setDuration : Int -> AnimAttr
 setDuration duration a =
     { a | duration = duration }
+
+
+setEasing : Ease.Easing -> AnimAttr
+setEasing easing a =
+    { a | easing = easing }
 
 
 loopForever : AnimAttr
