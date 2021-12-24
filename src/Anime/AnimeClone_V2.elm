@@ -38,6 +38,9 @@ initParticleWithLengthAndIndex len i =
             , setEasing Ease.outBack
             , setEasing Ease.linear
             ]
+
+        _ =
+            len + i
     in
     { x = 0
     , xa =
