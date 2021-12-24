@@ -137,16 +137,17 @@ type Loop
 
 type alias Particle =
     { x : Float
+    , xa : Anim
     }
 
 
 initialParticles : List Particle
 initialParticles =
     let
-        p =
-            { x = 0 }
+        xa =
+            initAnim 0
     in
-    times 10 (\_ -> p)
+    times 10 (\_ -> { x = 0, xa = { xa | from = 0, to = 100 } })
 
 
 viewParticle : Particle -> Html msg
