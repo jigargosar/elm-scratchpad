@@ -50,6 +50,7 @@ init () =
                                    --, setDelay <| i * 500
                                    ]
                             )
+                    , aa = anim (defaultAttrs ++ [ fromTo -360 360 ])
                     }
                 )
     in
@@ -212,6 +213,7 @@ valueAt { from, to, start, duration, delay, direction, loop, easing } now =
 type alias Particle =
     { x : Float
     , xa : Anim
+    , aa : Anim
     }
 
 
