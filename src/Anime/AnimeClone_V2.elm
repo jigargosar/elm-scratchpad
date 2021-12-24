@@ -52,7 +52,7 @@ initParticle il =
                    ]
             )
     , a = 0
-    , aa = anim (defaultAttrs ++ [ fromToStaggered il -360 360 ])
+    , aa = anim (defaultAttrs ++ [ setTo <| staggerWithinRange ( -360, 360 ) il ])
     }
 
 
@@ -158,6 +158,15 @@ fromTo from to a =
     { a | from = from, to = to }
 
 
+staggerWithinRange : Float2 -> IndexLength -> Float
+staggerWithinRange ( from, to ) il =
+    let
+        frac =
+            toFloat il.index / (toFloat il.length - 1)
+    in
+    lerp from to frac
+
+
 fromToStaggered : IndexLength -> Float -> Float -> Anim -> Anim
 fromToStaggered il from to =
     let
@@ -165,6 +174,11 @@ fromToStaggered il from to =
             toFloat il.index / (toFloat il.length - 1)
     in
     fromTo 0 (lerp from to frac)
+
+
+setTo : Float -> AnimAttr
+setTo to a =
+    { a | to = to }
 
 
 setDelay : Int -> AnimAttr
