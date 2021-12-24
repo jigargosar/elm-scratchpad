@@ -27,36 +27,38 @@ particlesForRendering model =
         |> List.map (updateParticleAnim model.animClock)
 
 
+initParticleAtIndex : Int -> Particle
+initParticleAtIndex i =
+    let
+        defaultAttrs =
+            [ setDuration 1800
+
+            --, loopForever
+            , alternateDirection
+            , setEasing Ease.outBack
+            , setEasing Ease.linear
+            ]
+    in
+    { x = 0
+    , xa =
+        anim
+            (defaultAttrs
+                ++ [ fromTo 0 270
+
+                   --, setDelay <| i * 500
+                   ]
+            )
+    , a = 0
+    , aa = anim (defaultAttrs ++ [ fromTo -360 360 ])
+    }
+
+
 init : () -> ( Model, Cmd Msg )
 init () =
     let
         initialParticles : List Particle
         initialParticles =
-            let
-                defaultAttrs =
-                    [ setDuration 1800
-
-                    --, loopForever
-                    , alternateDirection
-                    , setEasing Ease.outBack
-                    , setEasing Ease.linear
-                    ]
-            in
-            times 10
-                (\i ->
-                    { x = 0
-                    , xa =
-                        anim
-                            (defaultAttrs
-                                ++ [ fromTo 0 270
-
-                                   --, setDelay <| i * 500
-                                   ]
-                            )
-                    , a = 0
-                    , aa = anim (defaultAttrs ++ [ fromTo -360 360 ])
-                    }
-                )
+            times 10 initParticleAtIndex
     in
     ( { animClock = 0
       , particles = initialParticles
