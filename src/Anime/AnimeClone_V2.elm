@@ -96,6 +96,16 @@ anim fns =
         |> applyAll fns
 
 
+fromTo : Float -> Float -> AnimAttr
+fromTo from to a =
+    { a | from = from, to = to }
+
+
+setDelay : Int -> AnimAttr
+setDelay delay a =
+    { a | delay = delay }
+
+
 loopForever : AnimAttr
 loopForever a =
     { a | loop = LoopForever }
@@ -157,11 +167,12 @@ type alias Particle =
 
 initialParticles : List Particle
 initialParticles =
-    let
-        xa =
-            anim [ loopForever, alternateDirection ]
-    in
-    times 10 (\i -> { x = 0, xa = { xa | from = 0, to = 100, delay = i * 500 } })
+    times 10
+        (\i ->
+            { x = 0
+            , xa = anim [ setDelay <| i * 100, fromTo 0 270, loopForever, alternateDirection ]
+            }
+        )
 
 
 updateParticleAnim : Int -> Particle -> Particle
