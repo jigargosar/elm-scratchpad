@@ -28,7 +28,7 @@ particlesForRendering model =
 
 
 initParticle : IndexLength -> Particle
-initParticle { index, length } =
+initParticle il =
     let
         defaultAttrs =
             [ setDuration 1800
@@ -38,6 +38,9 @@ initParticle { index, length } =
             , setEasing Ease.outBack
             , setEasing Ease.linear
             ]
+
+        _ =
+            il
     in
     { x = 0
     , xa =
