@@ -19,6 +19,12 @@ type alias Model =
     }
 
 
+particlesForRendering : Model -> List Particle
+particlesForRendering model =
+    model.particles
+        |> List.map (updateParticleAnim model.animClock)
+
+
 init : () -> ( Model, Cmd Msg )
 init () =
     let
@@ -74,8 +80,7 @@ view model =
     Document "Anime V2"
         [ basicStylesNode
         , div []
-            (model.particles
-                |> List.map (updateParticleAnim model.animClock)
+            (particlesForRendering model
                 |> List.map viewParticle
             )
         ]
