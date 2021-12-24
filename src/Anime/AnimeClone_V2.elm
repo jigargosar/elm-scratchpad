@@ -174,8 +174,7 @@ initialParticles : List Particle
 initialParticles =
     let
         defaultAttrs =
-            [ fromTo 0 270
-            , setDuration 1800
+            [ setDuration 1800
             , loopForever
             , alternateDirection
             ]
@@ -183,9 +182,7 @@ initialParticles =
     times 10
         (\i ->
             { x = 0
-            , xa =
-                anim
-                    (defaultAttrs ++ [ setDelay <| i * 500 ])
+            , xa = anim (defaultAttrs ++ [ fromTo 0 270, setDelay <| i * 500 ])
             }
         )
 
