@@ -59,7 +59,10 @@ view _ =
 
 
 type alias Anim =
-    { duration : Int
+    { from : Float
+    , to : Float
+    , start : Float
+    , duration : Int
     , delay : Int
     , direction : Direction
     , loop : Loop
