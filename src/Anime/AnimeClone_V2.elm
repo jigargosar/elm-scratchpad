@@ -51,7 +51,7 @@ init () =
                                    ]
                             )
                     , a = 0
-                    , aa = anim (defaultAttrs ++ [ fromTo 0 360 ])
+                    , aa = anim (defaultAttrs ++ [ fromTo 0 (360 * 2) ])
                     }
                 )
     in
