@@ -93,7 +93,7 @@ update msg model =
             )
 
         OnClick ->
-            ( model, Cmd.none )
+            ( { model | animClock = 0 }, Cmd.none )
 
 
 view : Model -> Document Msg
