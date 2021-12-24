@@ -14,12 +14,35 @@ main =
 
 
 type alias Model =
-    { animClock : Int }
+    { animClock : Int
+    , particles : List Particle
+    }
 
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { animClock = 0 }, Cmd.none )
+    let
+        initialParticles : List Particle
+        initialParticles =
+            let
+                defaultAttrs =
+                    [ setDuration 1800
+                    , loopForever
+                    , alternateDirection
+                    ]
+            in
+            times 10
+                (\i ->
+                    { x = 0
+                    , xa = anim (defaultAttrs ++ [ fromTo 0 270, setDelay <| i * 500 ])
+                    }
+                )
+    in
+    ( { animClock = 0
+      , particles = initialParticles
+      }
+    , Cmd.none
+    )
 
 
 type Msg
@@ -51,7 +74,7 @@ view model =
     Document "Anime V2"
         [ basicStylesNode
         , div []
-            (initialParticles
+            (model.particles
                 |> List.map (updateParticleAnim model.animClock >> viewParticle)
             )
         ]
@@ -168,23 +191,6 @@ type alias Particle =
     { x : Float
     , xa : Anim
     }
-
-
-initialParticles : List Particle
-initialParticles =
-    let
-        defaultAttrs =
-            [ setDuration 1800
-            , loopForever
-            , alternateDirection
-            ]
-    in
-    times 10
-        (\i ->
-            { x = 0
-            , xa = anim (defaultAttrs ++ [ fromTo 0 270, setDelay <| i * 500 ])
-            }
-        )
 
 
 updateParticleAnim : Int -> Particle -> Particle
