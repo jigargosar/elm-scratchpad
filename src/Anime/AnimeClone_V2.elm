@@ -164,7 +164,7 @@ fromToStaggered il from to =
         frac =
             toFloat il.index / (toFloat il.length - 1)
     in
-    fromTo from (lerp from to frac)
+    fromTo 0 (lerp from to frac)
 
 
 setDelay : Int -> AnimAttr
