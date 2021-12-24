@@ -52,7 +52,7 @@ initParticle il =
                    ]
             )
     , a = 0
-    , aa = anim (defaultAttrs ++ [ setTo <| staggerWithinRange ( -360, 360 ) il ])
+    , aa = anim (defaultAttrs ++ [ setTo <| staggerRange ( -360, 360 ) il ])
     }
 
 
@@ -158,8 +158,8 @@ fromTo from to a =
     { a | from = from, to = to }
 
 
-staggerWithinRange : Float2 -> IndexLength -> Float
-staggerWithinRange ( from, to ) il =
+staggerRange : Float2 -> IndexLength -> Float
+staggerRange ( from, to ) il =
     let
         frac =
             toFloat il.index / (toFloat il.length - 1)
