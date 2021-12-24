@@ -47,7 +47,7 @@ initParticle il =
         anim
             (defaultAttrs
                 ++ [ fromTo 0 270
-                   , setDelay <| round <| staggerBy 500 il
+                   , setDelay <| round <| stagger 500 il
                    ]
             )
     , a = 0
@@ -166,8 +166,8 @@ staggerRange ( from, to ) il =
     lerp from to frac
 
 
-staggerBy : Float -> IndexLength -> Float
-staggerBy offset il =
+stagger : Float -> IndexLength -> Float
+stagger offset il =
     offset * toFloat il.index
 
 
