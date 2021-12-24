@@ -37,6 +37,7 @@ init () =
                     , loopForever
                     , alternateDirection
                     , setEasing Ease.outBack
+                    , setEasing Ease.linear
                     ]
             in
             times 10
@@ -51,7 +52,7 @@ init () =
                                    ]
                             )
                     , a = 0
-                    , aa = anim (defaultAttrs ++ [ fromTo 0 (360 * 2) ])
+                    , aa = anim (defaultAttrs ++ [ fromTo -360 360 ])
                     }
                 )
     in
