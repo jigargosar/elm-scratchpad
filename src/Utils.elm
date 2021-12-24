@@ -354,11 +354,6 @@ type alias IndexLength =
     { index : Int, length : Int }
 
 
-indexLengthToFrac : IndexLength -> Float
-indexLengthToFrac il =
-    toFloat il.index / toFloat il.length
-
-
 timesWithIndexAndLength : Int -> (IndexLength -> b) -> List b
 timesWithIndexAndLength n fn =
     rangeN n |> List.map (\i -> fn { index = i, length = n })

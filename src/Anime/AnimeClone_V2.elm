@@ -61,7 +61,7 @@ init () =
     let
         initialParticles : List Particle
         initialParticles =
-            timesWithIndexAndLength 11 initParticle
+            timesWithIndexAndLength 6 initParticle
     in
     ( { animClock = 0
       , particles = initialParticles
@@ -160,7 +160,11 @@ fromTo from to a =
 
 fromToStaggered : IndexLength -> Float -> Float -> Anim -> Anim
 fromToStaggered il from to =
-    fromTo from (lerp from to (indexLengthToFrac il))
+    let
+        frac =
+            toFloat il.index / (toFloat il.length - 1)
+    in
+    fromTo from (lerp from to frac)
 
 
 setDelay : Int -> AnimAttr
