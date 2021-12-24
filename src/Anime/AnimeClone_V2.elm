@@ -172,17 +172,20 @@ type alias Particle =
 
 initialParticles : List Particle
 initialParticles =
+    let
+        defaultAttrs =
+            [ fromTo 0 270
+            , setDuration 1800
+            , loopForever
+            , alternateDirection
+            ]
+    in
     times 10
         (\i ->
             { x = 0
             , xa =
                 anim
-                    [ setDelay <| i * 500
-                    , fromTo 0 270
-                    , setDuration 1800
-                    , loopForever
-                    , alternateDirection
-                    ]
+                    (defaultAttrs ++ [ setDelay <| i * 500 ])
             }
         )
 
