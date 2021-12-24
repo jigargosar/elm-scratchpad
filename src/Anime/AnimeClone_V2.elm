@@ -47,13 +47,12 @@ update msg model =
 
 
 view : Model -> Document Msg
-view _ =
+view model =
     Document "Anime V2"
         [ basicStylesNode
         , div []
             (initialParticles
-                --|> applyAnimations particleAnimations 0 model.animClock
-                |> List.map viewParticle
+                |> List.map (updateParticleAnim model.animClock >> viewParticle)
             )
         ]
 
@@ -148,6 +147,11 @@ initialParticles =
             initAnim 0
     in
     times 10 (\_ -> { x = 0, xa = { xa | from = 0, to = 100 } })
+
+
+updateParticleAnim : Int -> Particle -> Particle
+updateParticleAnim now p =
+    { p | x = valueAt p.xa now }
 
 
 viewParticle : Particle -> Html msg
