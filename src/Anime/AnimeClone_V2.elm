@@ -27,8 +27,8 @@ particlesForRendering model =
         |> List.map (updateParticleAnim model.animClock)
 
 
-initParticleWithLengthAndIndex : Int -> Int -> Particle
-initParticleWithLengthAndIndex len i =
+initParticle : IndexLength -> Particle
+initParticle { index, length } =
     let
         defaultAttrs =
             [ setDuration 1800
@@ -38,9 +38,6 @@ initParticleWithLengthAndIndex len i =
             , setEasing Ease.outBack
             , setEasing Ease.linear
             ]
-
-        _ =
-            len + i
     in
     { x = 0
     , xa =
@@ -64,7 +61,7 @@ init () =
 
         initialParticles : List Particle
         initialParticles =
-            times len (initParticleWithLengthAndIndex len)
+            timesWithIndexAndLength len initParticle
     in
     ( { animClock = 0
       , particles = initialParticles
