@@ -59,12 +59,9 @@ initParticle il =
 init : () -> ( Model, Cmd Msg )
 init () =
     let
-        len =
-            10
-
         initialParticles : List Particle
         initialParticles =
-            timesWithIndexAndLength len initParticle
+            timesWithIndexAndLength 10 initParticle
     in
     ( { animClock = 0
       , particles = initialParticles
