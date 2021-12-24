@@ -52,7 +52,7 @@ initParticle il =
                    ]
             )
     , a = 0
-    , aa = anim (defaultAttrs ++ [ fromTo -360 360 ])
+    , aa = anim (defaultAttrs ++ [ fromToStaggered il -360 360 ])
     }
 
 
@@ -158,8 +158,8 @@ fromTo from to a =
     { a | from = from, to = to }
 
 
-staggerFromTo : IndexLength -> Float -> Float -> Anim -> Anim
-staggerFromTo il from to =
+fromToStaggered : IndexLength -> Float -> Float -> Anim -> Anim
+fromToStaggered il from to =
     fromTo from (lerp from to (indexLengthToFrac il))
 
 
