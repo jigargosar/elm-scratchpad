@@ -27,8 +27,8 @@ particlesForRendering model =
         |> List.map (updateParticleAnim model.animClock)
 
 
-initParticleAtIndex : Int -> Particle
-initParticleAtIndex i =
+initParticleWithLengthAndIndex : Int -> Int -> Particle
+initParticleWithLengthAndIndex len i =
     let
         defaultAttrs =
             [ setDuration 1800
@@ -56,9 +56,12 @@ initParticleAtIndex i =
 init : () -> ( Model, Cmd Msg )
 init () =
     let
+        len =
+            10
+
         initialParticles : List Particle
         initialParticles =
-            times 10 initParticleAtIndex
+            times len (initParticleWithLengthAndIndex len)
     in
     ( { animClock = 0
       , particles = initialParticles
