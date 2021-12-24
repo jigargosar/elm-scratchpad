@@ -81,6 +81,49 @@ initAnim start =
     }
 
 
+valueAt : Anim -> Int -> Float
+valueAt { from, to, start, duration, delay, direction, loop } now =
+    let
+        fr =
+            toFloat (now - (start + delay)) / toFloat duration
+
+        maxIterations =
+            case loop of
+                Infinite ->
+                    maxInt
+
+                Times times ->
+                    times - 1
+
+        frac =
+            (fr - toFloat (min maxIterations (floor fr)))
+                |> clamp 0 1
+
+        value =
+            case direction of
+                Normal ->
+                    lerp from to frac
+
+                Reverse ->
+                    lerp from to (1 - frac)
+
+                Alternate ->
+                    lerp from
+                        to
+                        (if isEven (min maxIterations (floor fr)) then
+                            frac
+
+                         else
+                            1 - frac
+                        )
+    in
+    if now > start + delay then
+        value
+
+    else
+        from
+
+
 type Direction
     = Normal
     | Reverse
