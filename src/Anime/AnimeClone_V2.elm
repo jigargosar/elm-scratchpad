@@ -1,6 +1,7 @@
 module Anime.AnimeClone_V2 exposing (main)
 
 import Browser.Events
+import Ease
 import Utils exposing (..)
 
 
@@ -94,6 +95,7 @@ type alias Anim =
     , delay : Int
     , direction : Direction
     , loop : Loop
+    , easing : Ease.Easing
     }
 
 
@@ -121,6 +123,7 @@ anim fns =
     , delay = 0
     , direction = DirectionNormal
     , loop = LoopFor 1
+    , easing = Ease.linear
     }
         |> applyAll fns
 
@@ -151,7 +154,7 @@ alternateDirection a =
 
 
 valueAt : Anim -> Int -> Float
-valueAt { from, to, start, duration, delay, direction, loop } now =
+valueAt { from, to, start, duration, delay, direction, loop, easing } now =
     if now >= start + delay then
         let
             fr =
@@ -166,25 +169,25 @@ valueAt { from, to, start, duration, delay, direction, loop } now =
                         times - 1
 
             frac =
-                (fr - toFloat (min maxIterations (floor fr)))
-                    |> clamp 0 1
+                fr - toFloat (min maxIterations (floor fr))
 
+            --|> clamp 0 1
             value =
                 case direction of
                     DirectionNormal ->
-                        lerp from to frac
+                        lerp from to (easing frac)
 
                     DirectionReverse ->
-                        lerp from to (1 - frac)
+                        lerp from to (Ease.reverse easing frac)
 
                     DirectionAlternate ->
                         lerp from
                             to
                             (if isEven (min maxIterations (floor fr)) then
-                                frac
+                                easing frac
 
                              else
-                                1 - frac
+                                Ease.reverse easing frac
                             )
         in
         value
