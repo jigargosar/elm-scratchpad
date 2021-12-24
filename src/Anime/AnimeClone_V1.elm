@@ -1,4 +1,4 @@
-module AnimeClone exposing (main)
+module Anime.AnimeClone_V1 exposing (main)
 
 import Browser.Events
 import Utils exposing (..)
