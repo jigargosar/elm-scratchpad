@@ -69,6 +69,18 @@ type alias Anim =
     }
 
 
+startAnim : Int -> Anim
+startAnim start =
+    { from = 0
+    , to = 1
+    , start = start
+    , duration = 1800
+    , delay = 0
+    , direction = Normal
+    , loop = Times 1
+    }
+
+
 type Direction
     = Normal
     | Reverse
