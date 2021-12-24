@@ -31,15 +31,22 @@ initParticle : IndexLength -> Particle
 initParticle il =
     let
         defaultAttrs =
-            [ setDuration 1000
+            [ [ setDuration 1800
 
-            --, loopForever
-            , alternateDirection
-            , setEasing Ease.linear
-            , setEasing Ease.outBack
-            , setEasing Ease.outBounce
-            , setEasing Ease.outElastic
+              --, loopForever
+              , alternateDirection
+              ]
+            , [ setEasing Ease.linear
+              , setDelay <| round <| stagger 500 il
+              ]
+            , [ setEasing Ease.linear
+              , setDelay 0
+              ]
+            , [ setEasing Ease.outElastic
+              , setDelay <| round <| staggerFromCenter 100 il
+              ]
             ]
+                |> List.concat
 
         _ =
             il
@@ -47,12 +54,7 @@ initParticle il =
     { x = 0
     , xa =
         anim
-            (defaultAttrs
-                ++ [ fromTo 0 270
-                   , setDelay <| round <| stagger 500 il
-                   , setDelay <| round <| staggerFromCenter 100 il
-                   ]
-            )
+            ([ defaultAttrs, [ fromTo 0 270 ] ] |> List.concat)
     , a = 0
     , aa =
         anim
