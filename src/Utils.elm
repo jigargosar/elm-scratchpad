@@ -359,9 +359,9 @@ indexLengthToFrac il =
     toFloat il.index / toFloat il.length
 
 
-timesWithIndexAndLength : Int -> (IndexLength -> Int -> b) -> List b
+timesWithIndexAndLength : Int -> (IndexLength -> b) -> List b
 timesWithIndexAndLength n fn =
-    rangeN n |> List.indexedMap (\i -> fn { index = i, length = n })
+    rangeN n |> List.map (\i -> fn { index = i, length = n })
 
 
 type alias Vec =
