@@ -47,7 +47,7 @@ update msg model =
 
 
 view : Model -> Document Msg
-view model =
+view _ =
     Document "Anime V2"
         [ basicStylesNode
         , div []
