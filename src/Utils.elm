@@ -1816,3 +1816,12 @@ right0 =
 
 opacity =
     fromFloat >> style "opacity"
+
+
+
+-- LIST UTILS
+
+
+applyAll : List (a -> a) -> a -> a
+applyAll fns a =
+    List.foldl (<|) a fns

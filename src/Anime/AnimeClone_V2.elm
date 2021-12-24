@@ -68,16 +68,15 @@ type alias Anim =
     }
 
 
-initAnim : Int -> Anim
-initAnim start =
-    { from = 0
-    , to = 1
-    , start = start
-    , duration = 1800
-    , delay = 0
-    , direction = Normal
-    , loop = Times 1
-    }
+type Direction
+    = DirectionNormal
+    | DirectionReverse
+    | DirectionAlternate
+
+
+type Loop
+    = LoopForever
+    | LoopFor Int
 
 
 type alias AnimAttr =
@@ -91,15 +90,20 @@ anim fns =
     , start = 0
     , duration = 1800
     , delay = 0
-    , direction = Normal
-    , loop = Times 1
+    , direction = DirectionNormal
+    , loop = LoopFor 1
     }
         |> applyAll fns
 
 
-applyAll : List (a -> a) -> a -> a
-applyAll fns a =
-    List.foldl (<|) a fns
+loopForever : AnimAttr
+loopForever a =
+    { a | loop = LoopForever }
+
+
+alternateDirection : AnimAttr
+alternateDirection a =
+    { a | direction = DirectionAlternate }
 
 
 valueAt : Anim -> Int -> Float
@@ -111,10 +115,10 @@ valueAt { from, to, start, duration, delay, direction, loop } now =
 
             maxIterations =
                 case loop of
-                    Infinite ->
+                    LoopForever ->
                         maxInt
 
-                    Times times ->
+                    LoopFor times ->
                         times - 1
 
             frac =
@@ -123,13 +127,13 @@ valueAt { from, to, start, duration, delay, direction, loop } now =
 
             value =
                 case direction of
-                    Normal ->
+                    DirectionNormal ->
                         lerp from to frac
 
-                    Reverse ->
+                    DirectionReverse ->
                         lerp from to (1 - frac)
 
-                    Alternate ->
+                    DirectionAlternate ->
                         lerp from
                             to
                             (if isEven (min maxIterations (floor fr)) then
@@ -145,17 +149,6 @@ valueAt { from, to, start, duration, delay, direction, loop } now =
         from
 
 
-type Direction
-    = Normal
-    | Reverse
-    | Alternate
-
-
-type Loop
-    = Infinite
-    | Times Int
-
-
 type alias Particle =
     { x : Float
     , xa : Anim
@@ -165,12 +158,8 @@ type alias Particle =
 initialParticles : List Particle
 initialParticles =
     let
-        da : Anim
-        da =
-            initAnim 0
-
         xa =
-            { da | loop = Infinite, direction = Alternate }
+            anim [ loopForever, alternateDirection ]
     in
     times 10 (\i -> { x = 0, xa = { xa | from = 0, to = 100, delay = i * 500 } })
 
