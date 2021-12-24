@@ -48,7 +48,7 @@ update msg model =
 
 view : Model -> Document Msg
 view model =
-    Document "Anime"
+    Document "Anime V2"
         [ basicStylesNode
         , div []
             (initialParticles
