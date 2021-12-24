@@ -31,12 +31,14 @@ initParticle : IndexLength -> Particle
 initParticle il =
     let
         defaultAttrs =
-            [ setDuration 1800
+            [ setDuration 1000
 
             --, loopForever
             , alternateDirection
-            , setEasing Ease.outBack
             , setEasing Ease.linear
+            , setEasing Ease.outBack
+            , setEasing Ease.outBounce
+            , setEasing Ease.outElastic
             ]
 
         _ =
@@ -48,10 +50,17 @@ initParticle il =
             (defaultAttrs
                 ++ [ fromTo 0 270
                    , setDelay <| round <| stagger 500 il
+                   , setDelay <| round <| staggerFromCenter 100 il
                    ]
             )
     , a = 0
-    , aa = anim (defaultAttrs ++ [ setTo <| staggerRange ( -360, 360 ) il ])
+    , aa =
+        anim
+            (defaultAttrs
+                ++ [ setTo <| staggerRange ( -360, 360 ) il
+                   , setTo 0
+                   ]
+            )
     }
 
 
@@ -171,14 +180,17 @@ stagger offset il =
     offset * toFloat il.index
 
 
-
---staggerFromCenter: Float -> IndexLength -> Float
---staggerFromCenter offset il =
---    let
---            frac =
---                toFloat il.index / (toFloat il.length - 1)
---    in
---
+staggerFromCenter : Float -> IndexLength -> Float
+staggerFromCenter offset il =
+    let
+        frac =
+            (toFloat il.index - (toFloat (il.length - 1) / 2))
+                |> abs
+                |> round
+                |> toFloat
+                |> mul offset
+    in
+    frac
 
 
 setTo : Float -> AnimAttr
