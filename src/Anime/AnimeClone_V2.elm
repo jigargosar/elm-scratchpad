@@ -77,6 +77,7 @@ viewParticle p =
     div
         [ style "transform" ("translateX(" ++ fromFloat p.x ++ "px)")
         , bgc <| hsl 0.2 1 0.5
+        , borderRadius "10px"
         , styleWidth "50px"
         , styleHeight "50px"
         , ma "10px"

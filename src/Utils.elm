@@ -636,6 +636,10 @@ type alias TRBL =
     }
 
 
+borderRadius =
+    style "border-radius"
+
+
 bgc =
     style "background-color"
 
