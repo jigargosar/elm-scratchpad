@@ -58,6 +58,25 @@ view _ =
         ]
 
 
+type alias Anim =
+    { duration : Int
+    , delay : Int
+    , direction : Direction
+    , loop : Loop
+    }
+
+
+type Direction
+    = Normal
+    | Reverse
+    | Alternate
+
+
+type Loop
+    = Infinite
+    | Times Int
+
+
 type alias Particle =
     { x : Float
     }
