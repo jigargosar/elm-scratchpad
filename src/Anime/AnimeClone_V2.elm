@@ -34,7 +34,8 @@ init () =
             let
                 defaultAttrs =
                     [ setDuration 1800
-                    , loopForever
+
+                    --, loopForever
                     , alternateDirection
                     , setEasing Ease.outBack
                     , setEasing Ease.linear
@@ -171,7 +172,13 @@ alternateDirection a =
 
 valueAt : Anim -> Int -> Float
 valueAt { from, to, start, duration, delay, direction, loop, easing } now =
-    if now >= start + delay then
+    if now < start + delay then
+        from
+
+    else if now > start + delay + duration then
+        to
+
+    else
         let
             fr =
                 toFloat (now - (start + delay)) / toFloat duration
@@ -207,9 +214,6 @@ valueAt { from, to, start, duration, delay, direction, loop, easing } now =
                             )
         in
         value
-
-    else
-        from
 
 
 type alias Particle =
