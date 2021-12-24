@@ -143,10 +143,14 @@ type alias Particle =
 initialParticles : List Particle
 initialParticles =
     let
-        xa =
+        da : Anim
+        da =
             initAnim 0
+
+        xa =
+            { da | loop = Infinite, direction = Alternate }
     in
-    times 10 (\_ -> { x = 0, xa = { xa | from = 0, to = 100 } })
+    times 10 (\i -> { x = 0, xa = { xa | from = 0, to = 100, delay = i * 500 } })
 
 
 updateParticleAnim : Int -> Particle -> Particle
