@@ -80,6 +80,28 @@ initAnim start =
     }
 
 
+type alias AnimAttr =
+    Anim -> Anim
+
+
+anim : List AnimAttr -> Anim
+anim fns =
+    { from = 0
+    , to = 1
+    , start = 0
+    , duration = 1800
+    , delay = 0
+    , direction = Normal
+    , loop = Times 1
+    }
+        |> applyAll fns
+
+
+applyAll : List (a -> a) -> a -> a
+applyAll fns a =
+    List.foldl (<|) a fns
+
+
 valueAt : Anim -> Int -> Float
 valueAt { from, to, start, duration, delay, direction, loop } now =
     if now >= start + delay then
