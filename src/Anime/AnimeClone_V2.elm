@@ -59,9 +59,7 @@ view _ =
 
 
 type alias Particle =
-    { charge : String
-    , cycles : Int
-    , x : Float
+    { x : Float
     }
 
 
@@ -69,7 +67,7 @@ initialParticles : List Particle
 initialParticles =
     let
         p =
-            { charge = "0%", cycles = 120, x = 0 }
+            { x = 0 }
     in
     times 10 (\_ -> p)
 
@@ -79,11 +77,8 @@ viewParticle p =
     div
         [ style "transform" ("translateX(" ++ fromFloat p.x ++ "px)")
         , bgc <| hsl 0.2 1 0.5
-        , fg transparent
         , styleWidth "50px"
         , styleHeight "50px"
         , ma "10px"
         ]
-        [ div [] [ text p.charge ]
-        , div [] [ text <| fromInt p.cycles ]
-        ]
+        []
