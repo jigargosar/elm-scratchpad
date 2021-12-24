@@ -61,7 +61,7 @@ init () =
     let
         initialParticles : List Particle
         initialParticles =
-            timesWithIndexAndLength 10 initParticle
+            timesWithIndexAndLength 11 initParticle
     in
     ( { animClock = 0
       , particles = initialParticles
