@@ -51,7 +51,7 @@ init () =
                                    ]
                             )
                     , a = 0
-                    , aa = anim (defaultAttrs ++ [ fromTo -360 360 ])
+                    , aa = anim (defaultAttrs ++ [ fromTo 0 360 ])
                     }
                 )
     in
@@ -221,7 +221,10 @@ type alias Particle =
 
 updateParticleAnim : Int -> Particle -> Particle
 updateParticleAnim now p =
-    { p | x = valueAt p.xa now }
+    { p
+        | x = valueAt p.xa now
+        , a = valueAt p.aa now
+    }
 
 
 viewParticle : Particle -> Html msg
@@ -234,9 +237,12 @@ viewParticle p =
                 |> String.join " "
             )
         , bgc <| hsl 0.2 1 0.5
+        , fg black
         , borderRadius "10px"
         , styleWidth "50px"
         , styleHeight "50px"
         , ma "10px"
+        , dGrid
+        , placeContentCenter
         ]
-        []
+        [ div [ fontSize "25px" ] [ text "A" ] ]
