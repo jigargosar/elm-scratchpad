@@ -161,6 +161,15 @@ fromTo from to a =
     { a | from = from, to = to }
 
 
+staggerFromTo : IndexLength -> Float -> Float -> Anim -> Anim
+staggerFromTo il from to =
+    let
+        frac =
+            toFloat il.index / toFloat il.length
+    in
+    fromTo from (lerp from to frac)
+
+
 setDelay : Int -> AnimAttr
 setDelay delay a =
     { a | delay = delay }
