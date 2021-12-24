@@ -171,6 +171,16 @@ stagger offset il =
     offset * toFloat il.index
 
 
+
+--staggerFromCenter: Float -> IndexLength -> Float
+--staggerFromCenter offset il =
+--    let
+--            frac =
+--                toFloat il.index / (toFloat il.length - 1)
+--    in
+--
+
+
 setTo : Float -> AnimAttr
 setTo to a =
     { a | to = to }
