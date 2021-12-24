@@ -2,6 +2,7 @@ module Anime.AnimeClone_V2 exposing (main)
 
 import Browser.Events
 import Ease
+import Json.Decode as JD
 import Utils exposing (..)
 
 
@@ -67,11 +68,15 @@ init () =
 type Msg
     = NOP
     | OnAnimationFrameDeltaMilli Int
+    | OnClick
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Browser.Events.onAnimationFrameDelta (round >> OnAnimationFrameDeltaMilli)
+    [ Browser.Events.onAnimationFrameDelta (round >> OnAnimationFrameDeltaMilli)
+    , Browser.Events.onClick (JD.succeed OnClick)
+    ]
+        |> Sub.batch
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -86,6 +91,9 @@ update msg model =
               }
             , Cmd.none
             )
+
+        OnClick ->
+            ( model, Cmd.none )
 
 
 view : Model -> Document Msg
