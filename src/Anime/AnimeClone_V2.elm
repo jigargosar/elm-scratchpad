@@ -69,8 +69,8 @@ type alias Anim =
     }
 
 
-startAnim : Int -> Anim
-startAnim start =
+initAnim : Int -> Anim
+initAnim start =
     { from = 0
     , to = 1
     , start = start
