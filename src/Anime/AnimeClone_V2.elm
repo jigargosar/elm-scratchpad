@@ -106,6 +106,11 @@ setDelay delay a =
     { a | delay = delay }
 
 
+setDuration : Int -> AnimAttr
+setDuration duration a =
+    { a | duration = duration }
+
+
 loopForever : AnimAttr
 loopForever a =
     { a | loop = LoopForever }
@@ -170,7 +175,14 @@ initialParticles =
     times 10
         (\i ->
             { x = 0
-            , xa = anim [ setDelay <| i * 100, fromTo 0 270, loopForever, alternateDirection ]
+            , xa =
+                anim
+                    [ setDelay <| i * 500
+                    , fromTo 0 270
+                    , setDuration 1800
+                    , loopForever
+                    , alternateDirection
+                    ]
             }
         )
 
