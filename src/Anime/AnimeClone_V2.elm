@@ -75,7 +75,8 @@ view model =
         [ basicStylesNode
         , div []
             (model.particles
-                |> List.map (updateParticleAnim model.animClock >> viewParticle)
+                |> List.map (updateParticleAnim model.animClock)
+                |> List.map viewParticle
             )
         ]
 
