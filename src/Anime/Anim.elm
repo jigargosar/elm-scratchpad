@@ -144,6 +144,28 @@ reverseDirection a =
     { a | direction = DirectionReverse }
 
 
+type AnimStage
+    = NotStarted
+    | Running
+    | Ended
+
+
+getStage : Anim -> AnimClock -> AnimStage
+getStage { duration, delay, direction, loop } { start, current } =
+    let
+        elapsed =
+            current - start
+    in
+    if elapsed < delay then
+        NotStarted
+
+    else if elapsed > delay + duration then
+        Ended
+
+    else
+        Running
+
+
 valueAt : Anim -> AnimClock -> Float
 valueAt { from, to, duration, delay, direction, loop, easing } ac =
     let
