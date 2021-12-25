@@ -213,11 +213,8 @@ valueAtHelp { from, to, duration, delay, direction, loop, easing } ac =
         iterationCount =
             (elapsed // duration) + 1
 
-        fr =
-            toFloat elapsed / toFloat duration
-
         frac =
-            (fr - toFloat (floor fr))
+            (toFloat (modBy duration elapsed) / toFloat duration)
                 |> clamp 0 1
     in
     case direction of
@@ -236,6 +233,11 @@ valueAtHelp { from, to, duration, delay, direction, loop, easing } ac =
                  else
                     Ease.reverse easing frac
                 )
+
+
+getFractionalPart : Float -> Float
+getFractionalPart n =
+    n - toFloat (floor n)
 
 
 staggerRange : Float2 -> IndexLength -> Float
