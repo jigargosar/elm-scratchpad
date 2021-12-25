@@ -207,26 +207,23 @@ valueAtHelp { from, to, duration, delay, direction, loop, easing } ac =
         frac =
             (fr - toFloat (min maxIterations (floor fr)))
                 |> clamp 0 1
-
-        value =
-            case direction of
-                DirectionNormal ->
-                    lerp from to (easing frac)
-
-                DirectionReverse ->
-                    lerp from to (Ease.reverse easing frac)
-
-                DirectionAlternate ->
-                    lerp from
-                        to
-                        (if isEven (min maxIterations (floor fr)) then
-                            easing frac
-
-                         else
-                            Ease.reverse easing frac
-                        )
     in
-    value
+    case direction of
+        DirectionNormal ->
+            lerp from to (easing frac)
+
+        DirectionReverse ->
+            lerp from to (Ease.reverse easing frac)
+
+        DirectionAlternate ->
+            lerp from
+                to
+                (if isEven (min maxIterations (floor fr)) then
+                    easing frac
+
+                 else
+                    Ease.reverse easing frac
+                )
 
 
 staggerRange : Float2 -> IndexLength -> Float
