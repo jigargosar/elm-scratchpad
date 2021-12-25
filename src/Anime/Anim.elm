@@ -216,6 +216,21 @@ valueAtWhenRunning { from, to, duration, delay, direction, loop, easing } ac =
         frac =
             (toFloat (modBy duration elapsed) / toFloat duration)
                 |> clamp 0 1
+
+        directionalEasing =
+            case direction of
+                DirectionNormal ->
+                    easing
+
+                DirectionReverse ->
+                    Ease.reverse easing
+
+                DirectionAlternate ->
+                    if isOdd iterationCount then
+                        easing
+
+                    else
+                        Ease.reverse easing
     in
     case direction of
         DirectionNormal ->
