@@ -147,7 +147,7 @@ reverseDirection a =
 type AnimStage
     = NotStarted
     | Running
-    | Ended
+    | Ended Int
 
 
 getStage : Anim -> AnimClock -> AnimStage
@@ -166,7 +166,7 @@ getStage { duration, delay, direction, loop } { start, current } =
 
             LoopFor times ->
                 if elapsed >= delay + (times * duration) then
-                    Ended
+                    Ended (times - 1)
 
                 else
                     Running
@@ -178,7 +178,7 @@ valueAt a c =
         NotStarted ->
             a.from
 
-        Ended ->
+        Ended endIterationIndex ->
             valueAtHelp a c
 
         Running ->
