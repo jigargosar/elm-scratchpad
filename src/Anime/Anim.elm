@@ -209,14 +209,32 @@ valueAtWhenRunning { from, to, duration, delay, direction, loop, easing } ac =
             (ac.current - (ac.start + delay))
                 -- need to ensure elapsed is positive, in case of delay
                 |> atLeast 0
+    in
+    let
+        iterationCount =
+            (elapsed // duration) + 1
 
+        applyEasing =
+            case direction of
+                DirectionNormal ->
+                    easing
+
+                DirectionReverse ->
+                    Ease.reverse easing
+
+                DirectionAlternate ->
+                    if isOdd iterationCount then
+                        easing
+
+                    else
+                        Ease.reverse easing
+    in
+    let
         frac =
             (toFloat (modBy duration elapsed) / toFloat duration)
                 |> clamp 0 1
     in
-    frac
-        |> applyEasingDirection elapsed duration direction easing
-        |> lerp from to
+    lerp from to (applyEasing frac)
 
 
 applyEasingDirection : Int -> Int -> Direction -> Ease.Easing -> Ease.Easing
