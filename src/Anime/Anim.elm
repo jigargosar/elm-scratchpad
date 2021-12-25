@@ -199,11 +199,11 @@ valueAt a c =
                         a.from
 
         Running ->
-            valueAtHelp a c
+            runningValueHelp a c
 
 
-valueAtHelp : Anim -> AnimClock -> Float
-valueAtHelp { from, to, duration, delay, direction, loop, easing } ac =
+runningValueHelp : Anim -> AnimClock -> Float
+runningValueHelp { from, to, duration, delay, direction, loop, easing } ac =
     let
         elapsed =
             (ac.current - (ac.start + delay))
