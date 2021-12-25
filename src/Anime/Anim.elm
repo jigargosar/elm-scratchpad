@@ -210,29 +210,34 @@ valueAtWhenRunning { from, to, duration, delay, direction, loop, easing } ac =
                 -- need to ensure elapsed is positive, in case of delay
                 |> atLeast 0
 
-        iterationCount =
-            (elapsed // duration) + 1
-
         frac =
             (toFloat (modBy duration elapsed) / toFloat duration)
                 |> clamp 0 1
-
-        applyDirection =
-            case direction of
-                DirectionNormal ->
-                    identity
-
-                DirectionReverse ->
-                    Ease.reverse
-
-                DirectionAlternate ->
-                    if isOdd iterationCount then
-                        identity
-
-                    else
-                        Ease.reverse
     in
-    lerp from to (applyDirection easing frac)
+    frac
+        |> applyEasingDirection elapsed duration direction easing
+        |> lerp from to
+
+
+applyEasingDirection : Int -> Int -> Direction -> Ease.Easing -> Ease.Easing
+applyEasingDirection elapsed duration direction easing =
+    let
+        iterationCount =
+            (elapsed // duration) + 1
+    in
+    case direction of
+        DirectionNormal ->
+            easing
+
+        DirectionReverse ->
+            Ease.reverse easing
+
+        DirectionAlternate ->
+            if isOdd iterationCount then
+                easing
+
+            else
+                Ease.reverse easing
 
 
 staggerRange : Float2 -> IndexLength -> Float
