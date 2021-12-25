@@ -127,7 +127,7 @@ loopForever a =
 
 loopTimes : Int -> AnimAttr
 loopTimes times a =
-    { a | loop = LoopFor times }
+    { a | loop = LoopFor (times |> atLeast 0) }
 
 
 
@@ -150,6 +150,11 @@ type AnimStage
     | Ended Int
 
 
+type Iteration
+    = IterationEven
+    | IterationOdd
+
+
 getStage : Anim -> AnimClock -> AnimStage
 getStage { duration, delay, direction, loop } { start, current } =
     let
@@ -166,7 +171,7 @@ getStage { duration, delay, direction, loop } { start, current } =
 
             LoopFor times ->
                 if elapsed >= delay + (times * duration) then
-                    Ended (times - 1)
+                    Ended times
 
                 else
                     Running
@@ -178,7 +183,7 @@ valueAt a c =
         NotStarted ->
             a.from
 
-        Ended endIterationIndex ->
+        Ended iterations ->
             case a.direction of
                 DirectionNormal ->
                     a.to
@@ -187,11 +192,11 @@ valueAt a c =
                     a.from
 
                 DirectionAlternate ->
-                    if isEven endIterationIndex then
-                        a.to
+                    if isEven iterations then
+                        a.from
 
                     else
-                        a.from
+                        a.to
 
         Running ->
             valueAtHelp a c

@@ -33,10 +33,10 @@ initParticle il =
     let
         defaultAttrs =
             [ A.setDuration 1800
-            , A.loopForever
+            , A.loopTimes 1
             , A.alternateDirection
             , A.setEasing Ease.linear
-            , A.setDelay <| round <| (A.staggerFromCenter 200 il + 1000)
+            , A.setDelay <| round <| (A.staggerFromCenter 200 il + 500)
             ]
     in
     { x = 0
