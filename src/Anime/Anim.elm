@@ -159,7 +159,7 @@ getStage { duration, delay, direction, loop } { start, current } =
     if elapsed < delay then
         NotStarted
 
-    else if elapsed > delay + duration then
+    else if elapsed >= delay + duration then
         Ended
 
     else
