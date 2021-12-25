@@ -56,25 +56,13 @@ initParticle : IndexLength -> Particle
 initParticle il =
     let
         defaultAttrs =
-            [ [ setDuration 1800
-
-              --, loopForever
-              , alternateDirection
-              ]
-            , [ setEasing Ease.linear
-              , setDelay <| round <| stagger 500 il
-              ]
-            , [ setEasing Ease.linear
-              , setDelay 0
-              ]
-            , [ setEasing Ease.outElastic
-              , setDelay <| round <| staggerFromCenter 100 il
-              ]
+            [ setDuration 1800
+            , loopForever
+            , loopTimes 10
+            , alternateDirection
+            , setEasing Ease.outElastic
+            , setDelay <| round <| staggerFromCenter 100 il
             ]
-                |> List.concat
-
-        _ =
-            il
     in
     { x = 0
     , xa =
@@ -238,13 +226,14 @@ setEasing easing a =
     { a | easing = easing }
 
 
-
---noinspection ElmUnusedSymbol
-
-
 loopForever : AnimAttr
 loopForever a =
     { a | loop = LoopForever }
+
+
+loopTimes : Int -> AnimAttr
+loopTimes times a =
+    { a | loop = LoopFor times }
 
 
 alternateDirection : AnimAttr
