@@ -207,7 +207,7 @@ valueAtHelp { from, to, duration, delay, direction, loop, easing } ac =
     let
         elapsed =
             (ac.current - (ac.start + delay))
-                -- need to ensure elapsed is positive, was precomputed in stage
+                -- need to ensure elapsed is positive, in case of delay
                 |> atLeast 0
 
         iterationCount =
