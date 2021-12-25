@@ -167,7 +167,20 @@ getStage { duration, delay, direction, loop } { start, current } =
 
 
 valueAt : Anim -> AnimClock -> Float
-valueAt { from, to, duration, delay, direction, loop, easing } ac =
+valueAt a c =
+    case getStage a c of
+        NotStarted ->
+            a.from
+
+        Ended ->
+            valueAtHelp a c
+
+        Running ->
+            valueAtHelp a c
+
+
+valueAtHelp : Anim -> AnimClock -> Float
+valueAtHelp { from, to, duration, delay, direction, loop, easing } ac =
     let
         now =
             ac.current
