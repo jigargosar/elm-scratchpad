@@ -237,27 +237,6 @@ valueAtWhenRunning { from, to, duration, delay, direction, loop, easing } ac =
     lerp from to frac
 
 
-applyEasingDirection : Int -> Int -> Direction -> Ease.Easing -> Ease.Easing
-applyEasingDirection elapsed duration direction easing =
-    let
-        iterationCount =
-            (elapsed // duration) + 1
-    in
-    case direction of
-        DirectionNormal ->
-            easing
-
-        DirectionReverse ->
-            Ease.reverse easing
-
-        DirectionAlternate ->
-            if isOdd iterationCount then
-                easing
-
-            else
-                Ease.reverse easing
-
-
 staggerRange : Float2 -> IndexLength -> Float
 staggerRange ( from, to ) il =
     let
