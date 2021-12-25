@@ -266,6 +266,12 @@ valueAt { from, to, duration, delay, direction, loop, easing } ac =
             (now - (start + delay))
                 |> atLeast 0
 
+        currentIteration =
+            floor (toFloat elapsed / toFloat duration)
+
+        currentIterationFrac =
+            fr - toFloat (min maxIterations (floor fr))
+
         fr =
             toFloat elapsed / toFloat duration
 
