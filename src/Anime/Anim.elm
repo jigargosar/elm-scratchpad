@@ -160,20 +160,16 @@ getStage { duration, delay, direction, loop } { start, current } =
         NotStarted
 
     else
-        let
-            hasEnded =
-                case loop of
-                    LoopForever ->
-                        False
+        case loop of
+            LoopForever ->
+                Running
 
-                    LoopFor times ->
-                        elapsed >= delay + (times * duration)
-        in
-        if hasEnded then
-            Ended
+            LoopFor times ->
+                if elapsed >= delay + (times * duration) then
+                    Ended
 
-        else
-            Running
+                else
+                    Running
 
 
 valueAt : Anim -> AnimClock -> Float
