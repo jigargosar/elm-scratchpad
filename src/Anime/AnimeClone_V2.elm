@@ -1,5 +1,6 @@
 module Anime.AnimeClone_V2 exposing (main)
 
+import Anime.Anim as A
 import Browser.Events
 import Ease
 import Json.Decode as JD
@@ -16,34 +17,9 @@ main =
 
 
 type alias Model =
-    { animClock : AnimClock
+    { animClock : A.AnimClock
     , particles : List Particle
     }
-
-
-type alias AnimClock =
-    { start : Int
-    , current : Int
-    }
-
-
-animClockInit : AnimClock
-animClockInit =
-    AnimClock 0 0
-
-
-animClockUpdateOnDelta : AnimClockDelta -> AnimClock -> AnimClock
-animClockUpdateOnDelta (AnimClockDelta deltaMilli) ac =
-    { ac | current = ac.current + clamp 0 100 deltaMilli }
-
-
-type AnimClockDelta
-    = AnimClockDelta Int
-
-
-animClockSubscription : (AnimClockDelta -> msg) -> Sub msg
-animClockSubscription tag =
-    Browser.Events.onAnimationFrameDelta (round >> AnimClockDelta >> tag)
 
 
 particlesForRendering : Model -> List Particle
@@ -56,23 +32,23 @@ initParticle : IndexLength -> Particle
 initParticle il =
     let
         defaultAttrs =
-            [ setDuration 1800
-            , loopTimes 1
-            , reverseDirection
-            , setEasing Ease.linear
-            , setDelay <| round <| (staggerFromCenter 100 il + 1000)
+            [ A.setDuration 1800
+            , A.loopTimes 1
+            , A.reverseDirection
+            , A.setEasing Ease.linear
+            , A.setDelay <| round <| (A.staggerFromCenter 100 il + 1000)
             ]
     in
     { x = 0
     , xa =
-        anim
-            ([ defaultAttrs, [ fromTo 0 270 ] ] |> List.concat)
+        A.anim
+            ([ defaultAttrs, [ A.fromTo 0 270 ] ] |> List.concat)
     , a = 0
     , aa =
-        anim
+        A.anim
             (defaultAttrs
-                ++ [ setTo <| staggerRange ( -360, 360 ) il
-                   , setTo 0
+                ++ [ A.setTo <| A.staggerRange ( -360, 360 ) il
+                   , A.setTo 0
                    ]
             )
     }
@@ -85,7 +61,7 @@ init () =
         initialParticles =
             timesWithIndexAndLength 6 initParticle
     in
-    ( { animClock = animClockInit
+    ( { animClock = A.animClockInit
       , particles = initialParticles
       }
     , Cmd.none
@@ -94,13 +70,13 @@ init () =
 
 type Msg
     = NOP
-    | OnAnimClockDelta AnimClockDelta
+    | OnAnimClockDelta A.AnimClockDelta
     | OnClick
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    [ animClockSubscription OnAnimClockDelta
+    [ A.animClockSubscription OnAnimClockDelta
     , Browser.Events.onClick (JD.succeed OnClick)
     ]
         |> Sub.batch
@@ -114,13 +90,13 @@ update msg model =
 
         OnAnimClockDelta delta ->
             ( { model
-                | animClock = animClockUpdateOnDelta delta model.animClock
+                | animClock = A.animClockUpdateOnDelta delta model.animClock
               }
             , Cmd.none
             )
 
         OnClick ->
-            ( { model | animClock = animClockInit }, Cmd.none )
+            ( { model | animClock = A.animClockInit }, Cmd.none )
 
 
 view : Model -> Document Msg
@@ -134,193 +110,19 @@ view model =
         ]
 
 
-type alias Anim =
-    { from : Float
-    , to : Float
-    , duration : Int
-    , delay : Int
-    , direction : Direction
-    , loop : Loop
-    , easing : Ease.Easing
-    }
-
-
-type Direction
-    = DirectionNormal
-    | DirectionReverse
-    | DirectionAlternate
-
-
-type Loop
-    = LoopForever
-    | LoopFor Int
-
-
-type alias AnimAttr =
-    Anim -> Anim
-
-
-anim : List AnimAttr -> Anim
-anim fns =
-    { from = 0
-    , to = 1
-    , duration = 1800
-    , delay = 0
-    , direction = DirectionNormal
-    , loop = LoopFor 1
-    , easing = Ease.linear
-    }
-        |> applyAll fns
-
-
-fromTo : Float -> Float -> AnimAttr
-fromTo from to a =
-    { a | from = from, to = to }
-
-
-staggerRange : Float2 -> IndexLength -> Float
-staggerRange ( from, to ) il =
-    let
-        frac =
-            toFloat il.index / (toFloat il.length - 1)
-    in
-    lerp from to frac
-
-
-stagger : Float -> IndexLength -> Float
-stagger offset il =
-    offset * toFloat il.index
-
-
-staggerFromCenter : Float -> IndexLength -> Float
-staggerFromCenter offset il =
-    let
-        frac =
-            (toFloat il.index - (toFloat (il.length - 1) / 2))
-                |> abs
-                |> round
-                |> toFloat
-                |> mul offset
-    in
-    frac
-
-
-setTo : Float -> AnimAttr
-setTo to a =
-    { a | to = to }
-
-
-setDelay : Int -> AnimAttr
-setDelay delay a =
-    { a | delay = delay }
-
-
-setDuration : Int -> AnimAttr
-setDuration duration a =
-    { a | duration = duration }
-
-
-setEasing : Ease.Easing -> AnimAttr
-setEasing easing a =
-    { a | easing = easing }
-
-
-loopForever : AnimAttr
-loopForever a =
-    { a | loop = LoopForever }
-
-
-loopTimes : Int -> AnimAttr
-loopTimes times a =
-    { a | loop = LoopFor times }
-
-
-alternateDirection : AnimAttr
-alternateDirection a =
-    { a | direction = DirectionAlternate }
-
-
-reverseDirection : AnimAttr
-reverseDirection a =
-    { a | direction = DirectionReverse }
-
-
-valueAt : Anim -> AnimClock -> Float
-valueAt { from, to, duration, delay, direction, loop, easing } ac =
-    let
-        now =
-            ac.current
-
-        start =
-            ac.start
-    in
-    --if now < start + delay then
-    --    from
-    --
-    --else if now > start + delay + duration then
-    --    to
-    --
-    --else
-    let
-        elapsed =
-            (now - (start + delay))
-                |> atLeast 0
-
-        currentIteration =
-            floor (toFloat elapsed / toFloat duration)
-
-        currentIterationFrac =
-            fr - toFloat (min maxIterations (floor fr))
-
-        fr =
-            toFloat elapsed / toFloat duration
-
-        maxIterations =
-            case loop of
-                LoopForever ->
-                    maxInt
-
-                LoopFor times ->
-                    times - 1
-
-        frac =
-            (fr - toFloat (min maxIterations (floor fr)))
-                |> clamp 0 1
-
-        value =
-            case direction of
-                DirectionNormal ->
-                    lerp from to (easing frac)
-
-                DirectionReverse ->
-                    lerp from to (Ease.reverse easing frac)
-
-                DirectionAlternate ->
-                    lerp from
-                        to
-                        (if isEven (min maxIterations (floor fr)) then
-                            easing frac
-
-                         else
-                            Ease.reverse easing frac
-                        )
-    in
-    value
-
-
 type alias Particle =
     { x : Float
-    , xa : Anim
+    , xa : A.Anim
     , a : Float
-    , aa : Anim
+    , aa : A.Anim
     }
 
 
-updateParticleAnim : AnimClock -> Particle -> Particle
+updateParticleAnim : A.AnimClock -> Particle -> Particle
 updateParticleAnim ac p =
     { p
-        | x = valueAt p.xa ac
-        , a = valueAt p.aa ac
+        | x = A.valueAt p.xa ac
+        , a = A.valueAt p.aa ac
     }
 
 
