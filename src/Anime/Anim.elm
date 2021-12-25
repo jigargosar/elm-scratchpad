@@ -1,4 +1,26 @@
-module Anime.Anim exposing (..)
+module Anime.Anim exposing
+    ( Anim
+    , AnimAttr
+    , AnimClock
+    , AnimClockDelta
+    , alternateDirection
+    , anim
+    , animClockInit
+    , animClockSubscription
+    , animClockUpdateOnDelta
+    , fromTo
+    , loopForever
+    , loopTimes
+    , reverseDirection
+    , setDelay
+    , setDuration
+    , setEasing
+    , setTo
+    , stagger
+    , staggerFromCenter
+    , staggerRange
+    , valueAt
+    )
 
 import Browser.Events
 import Ease
