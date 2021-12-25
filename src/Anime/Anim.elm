@@ -182,22 +182,9 @@ valueAt a c =
 valueAtHelp : Anim -> AnimClock -> Float
 valueAtHelp { from, to, duration, delay, direction, loop, easing } ac =
     let
-        now =
-            ac.current
-
-        start =
-            ac.start
-    in
-    --if now < start + delay then
-    --    from
-    --
-    --else if now > start + delay + duration then
-    --    to
-    --
-    --else
-    let
         elapsed =
-            (now - (start + delay))
+            (ac.current - (ac.start + delay))
+                -- need to ensure elapsed is positive, was precomputed in stage
                 |> atLeast 0
 
         currentIteration =
