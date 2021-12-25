@@ -74,6 +74,16 @@ type Loop
     | LoopFor Int
 
 
+getMaxIterations : Loop -> Int
+getMaxIterations loop =
+    case loop of
+        LoopForever ->
+            maxInt
+
+        LoopFor times ->
+            times - 1
+
+
 type alias AnimAttr =
     Anim -> Anim
 
@@ -159,7 +169,7 @@ getStage { duration, delay, direction, loop } { start, current } =
     if elapsed < delay then
         NotStarted
 
-    else if elapsed >= delay + duration then
+    else if elapsed >= delay + (getMaxIterations loop * duration) then
         Ended
 
     else
