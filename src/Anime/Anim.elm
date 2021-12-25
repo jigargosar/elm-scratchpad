@@ -232,9 +232,10 @@ valueAtWhenRunning { from, to, duration, delay, direction, loop, easing } ac =
     let
         frac =
             (toFloat (modBy duration elapsed) / toFloat duration)
-                |> clamp 0 1
+                --|> clamp 0 1
+                |> applyEasing
     in
-    lerp from to (applyEasing frac)
+    lerp from to frac
 
 
 applyEasingDirection : Int -> Int -> Direction -> Ease.Easing -> Ease.Easing
