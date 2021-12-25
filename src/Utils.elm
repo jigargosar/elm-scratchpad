@@ -1169,6 +1169,11 @@ isEven x =
     modBy 2 x == 0
 
 
+isOdd : Int -> Bool
+isOdd =
+    isEven >> not
+
+
 sign : number -> number
 sign x =
     case compare x 0 of

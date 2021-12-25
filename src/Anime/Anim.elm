@@ -192,11 +192,11 @@ valueAt a c =
                     a.from
 
                 DirectionAlternate ->
-                    if isEven iterations then
-                        a.from
+                    if isOdd iterations then
+                        a.to
 
                     else
-                        a.to
+                        a.from
 
         Running ->
             valueAtHelp a c
