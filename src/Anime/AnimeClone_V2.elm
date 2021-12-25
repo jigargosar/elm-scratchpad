@@ -58,10 +58,9 @@ initParticle il =
         defaultAttrs =
             [ setDuration 1800
             , loopForever
-            , reverseDirection
+            , alternateDirection
             , setEasing Ease.linear
-
-            --, setDelay <| round <| staggerFromCenter 500 il
+            , setDelay <| round <| staggerFromCenter 100 il
             ]
     in
     { x = 0
@@ -255,47 +254,52 @@ valueAt { from, to, duration, delay, direction, loop, easing } ac =
         start =
             ac.start
     in
-    if now < start + delay then
-        from
+    --if now < start + delay then
+    --    from
+    --
+    --else if now > start + delay + duration then
+    --    to
+    --
+    --else
+    let
+        elapsed =
+            (now - (start + delay))
+                |> atLeast 0
 
-    else if now > start + delay + duration then
-        to
+        fr =
+            toFloat elapsed / toFloat duration
 
-    else
-        let
-            fr =
-                toFloat (now - (start + delay)) / toFloat duration
+        maxIterations =
+            case loop of
+                LoopForever ->
+                    maxInt
 
-            maxIterations =
-                case loop of
-                    LoopForever ->
-                        maxInt
+                LoopFor times ->
+                    times - 1
 
-                    LoopFor times ->
-                        times - 1
+        frac =
+            (fr - toFloat (min maxIterations (floor fr)))
+                |> clamp 0 1
 
-            frac =
-                fr - toFloat (min maxIterations (floor fr))
+        value =
+            case direction of
+                DirectionNormal ->
+                    lerp from to (easing frac)
 
-            value =
-                case direction of
-                    DirectionNormal ->
-                        lerp from to (easing frac)
+                DirectionReverse ->
+                    lerp from to (Ease.reverse easing frac)
 
-                    DirectionReverse ->
-                        lerp from to (Ease.reverse easing frac)
+                DirectionAlternate ->
+                    lerp from
+                        to
+                        (if isEven (min maxIterations (floor fr)) then
+                            easing frac
 
-                    DirectionAlternate ->
-                        lerp from
-                            to
-                            (if isEven (min maxIterations (floor fr)) then
-                                easing frac
-
-                             else
-                                Ease.reverse easing frac
-                            )
-        in
-        value
+                         else
+                            Ease.reverse easing frac
+                        )
+    in
+    value
 
 
 type alias Particle =
