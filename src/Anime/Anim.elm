@@ -217,42 +217,22 @@ valueAtWhenRunning { from, to, duration, delay, direction, loop, easing } ac =
             (toFloat (modBy duration elapsed) / toFloat duration)
                 |> clamp 0 1
 
-        directionalEasing =
+        applyDirection =
             case direction of
                 DirectionNormal ->
-                    easing
+                    identity
 
                 DirectionReverse ->
-                    Ease.reverse easing
+                    Ease.reverse
 
                 DirectionAlternate ->
                     if isOdd iterationCount then
-                        easing
+                        identity
 
                     else
-                        Ease.reverse easing
+                        Ease.reverse
     in
-    case direction of
-        DirectionNormal ->
-            lerp from to (easing frac)
-
-        DirectionReverse ->
-            lerp from to (Ease.reverse easing frac)
-
-        DirectionAlternate ->
-            lerp from
-                to
-                (if isOdd iterationCount then
-                    easing frac
-
-                 else
-                    Ease.reverse easing frac
-                )
-
-
-getFractionalPart : Float -> Float
-getFractionalPart n =
-    n - toFloat (floor n)
+    lerp from to (applyDirection easing frac)
 
 
 staggerRange : Float2 -> IndexLength -> Float

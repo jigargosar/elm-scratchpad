@@ -1187,6 +1187,15 @@ sign x =
             1
 
 
+getFractionalPart : Float -> Float
+getFractionalPart n =
+    n - toFloat (floor n)
+
+
+
+-- TUPLE UTILS
+
+
 first =
     Tuple.first
 
