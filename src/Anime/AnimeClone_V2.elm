@@ -16,9 +16,34 @@ main =
 
 
 type alias Model =
-    { animClock : Int
+    { animClock : AnimClock
     , particles : List Particle
     }
+
+
+type alias AnimClock =
+    { start : Int
+    , current : Int
+    }
+
+
+animClockInit : AnimClock
+animClockInit =
+    AnimClock 0 0
+
+
+animClockUpdateOnDelta : AnimClockDelta -> AnimClock -> AnimClock
+animClockUpdateOnDelta (AnimClockDelta deltaMilli) ac =
+    { ac | current = ac.current + clamp 0 100 deltaMilli }
+
+
+type AnimClockDelta
+    = AnimClockDelta Int
+
+
+animClockSubscription : (AnimClockDelta -> msg) -> Sub msg
+animClockSubscription tag =
+    Browser.Events.onAnimationFrameDelta (round >> AnimClockDelta >> tag)
 
 
 particlesForRendering : Model -> List Particle
@@ -73,7 +98,7 @@ init () =
         initialParticles =
             timesWithIndexAndLength 6 initParticle
     in
-    ( { animClock = 0
+    ( { animClock = animClockInit
       , particles = initialParticles
       }
     , Cmd.none
@@ -82,13 +107,13 @@ init () =
 
 type Msg
     = NOP
-    | OnAnimationFrameDeltaMilli Int
+    | OnAnimClockDelta AnimClockDelta
     | OnClick
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    [ Browser.Events.onAnimationFrameDelta (round >> OnAnimationFrameDeltaMilli)
+    [ animClockSubscription OnAnimClockDelta
     , Browser.Events.onClick (JD.succeed OnClick)
     ]
         |> Sub.batch
@@ -100,15 +125,15 @@ update msg model =
         NOP ->
             ( model, Cmd.none )
 
-        OnAnimationFrameDeltaMilli animationFrameDeltaMilli ->
+        OnAnimClockDelta delta ->
             ( { model
-                | animClock = model.animClock + clamp 0 100 animationFrameDeltaMilli
+                | animClock = animClockUpdateOnDelta delta model.animClock
               }
             , Cmd.none
             )
 
         OnClick ->
-            ( { model | animClock = 0 }, Cmd.none )
+            ( { model | animClock = animClockInit }, Cmd.none )
 
 
 view : Model -> Document Msg
@@ -125,7 +150,6 @@ view model =
 type alias Anim =
     { from : Float
     , to : Float
-    , start : Int
     , duration : Int
     , delay : Int
     , direction : Direction
@@ -153,7 +177,6 @@ anim : List AnimAttr -> Anim
 anim fns =
     { from = 0
     , to = 1
-    , start = 0
     , duration = 1800
     , delay = 0
     , direction = DirectionNormal
@@ -215,6 +238,10 @@ setEasing easing a =
     { a | easing = easing }
 
 
+
+--noinspection ElmUnusedSymbol
+
+
 loopForever : AnimAttr
 loopForever a =
     { a | loop = LoopForever }
@@ -225,8 +252,15 @@ alternateDirection a =
     { a | direction = DirectionAlternate }
 
 
-valueAt : Anim -> Int -> Float
-valueAt { from, to, start, duration, delay, direction, loop, easing } now =
+valueAt : Anim -> AnimClock -> Float
+valueAt { from, to, duration, delay, direction, loop, easing } ac =
+    let
+        now =
+            ac.current
+
+        start =
+            ac.start
+    in
     if now < start + delay then
         from
 
@@ -279,11 +313,11 @@ type alias Particle =
     }
 
 
-updateParticleAnim : Int -> Particle -> Particle
-updateParticleAnim now p =
+updateParticleAnim : AnimClock -> Particle -> Particle
+updateParticleAnim ac p =
     { p
-        | x = valueAt p.xa now
-        , a = valueAt p.aa now
+        | x = valueAt p.xa ac
+        , a = valueAt p.aa ac
     }
 
 
