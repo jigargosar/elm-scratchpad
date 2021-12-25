@@ -210,6 +210,9 @@ valueAtHelp { from, to, duration, delay, direction, loop, easing } ac =
                 -- need to ensure elapsed is positive, was precomputed in stage
                 |> atLeast 0
 
+        iteration =
+            floor fr + 1
+
         fr =
             toFloat elapsed / toFloat duration
 
@@ -227,7 +230,7 @@ valueAtHelp { from, to, duration, delay, direction, loop, easing } ac =
         DirectionAlternate ->
             lerp from
                 to
-                (if isEven (floor fr) then
+                (if isOdd iteration then
                     easing frac
 
                  else
