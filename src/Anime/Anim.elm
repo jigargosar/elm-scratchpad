@@ -74,16 +74,6 @@ type Loop
     | LoopFor Int
 
 
-getMaxIterations : Loop -> Int
-getMaxIterations loop =
-    case loop of
-        LoopForever ->
-            maxInt
-
-        LoopFor times ->
-            times - 1
-
-
 type alias AnimAttr =
     Anim -> Anim
 
@@ -169,11 +159,21 @@ getStage { duration, delay, direction, loop } { start, current } =
     if elapsed < delay then
         NotStarted
 
-    else if elapsed >= delay + (getMaxIterations loop * duration) then
-        Ended
-
     else
-        Running
+        let
+            hasEnded =
+                case loop of
+                    LoopForever ->
+                        False
+
+                    LoopFor times ->
+                        elapsed >= delay + (times * duration)
+        in
+        if hasEnded then
+            Ended
+
+        else
+            Running
 
 
 valueAt : Anim -> AnimClock -> Float
