@@ -60,7 +60,8 @@ initParticle il =
             , loopForever
             , reverseDirection
             , setEasing Ease.linear
-            , setDelay <| round <| staggerFromCenter 500 il
+
+            --, setDelay <| round <| staggerFromCenter 500 il
             ]
     in
     { x = 0
