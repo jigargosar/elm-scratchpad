@@ -116,6 +116,10 @@ setEasing easing a =
     { a | easing = easing }
 
 
+
+--noinspection ElmUnusedSymbol
+
+
 loopForever : AnimAttr
 loopForever a =
     { a | loop = LoopForever }
@@ -124,6 +128,10 @@ loopForever a =
 loopTimes : Int -> AnimAttr
 loopTimes times a =
     { a | loop = LoopFor times }
+
+
+
+--noinspection ElmUnusedSymbol
 
 
 alternateDirection : AnimAttr
@@ -206,6 +214,10 @@ staggerRange ( from, to ) il =
             toFloat il.index / (toFloat il.length - 1)
     in
     lerp from to frac
+
+
+
+--noinspection ElmUnusedSymbol
 
 
 stagger : Float -> IndexLength -> Float
