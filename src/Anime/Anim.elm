@@ -210,25 +210,11 @@ valueAtHelp { from, to, duration, delay, direction, loop, easing } ac =
                 -- need to ensure elapsed is positive, was precomputed in stage
                 |> atLeast 0
 
-        currentIteration =
-            floor (toFloat elapsed / toFloat duration)
-
-        currentIterationFrac =
-            fr - toFloat (min maxIterations (floor fr))
-
         fr =
             toFloat elapsed / toFloat duration
 
-        maxIterations =
-            case loop of
-                LoopForever ->
-                    maxInt
-
-                LoopFor times ->
-                    times - 1
-
         frac =
-            (fr - toFloat (min maxIterations (floor fr)))
+            (fr - toFloat (floor fr))
                 |> clamp 0 1
     in
     case direction of
@@ -241,7 +227,7 @@ valueAtHelp { from, to, duration, delay, direction, loop, easing } ac =
         DirectionAlternate ->
             lerp from
                 to
-                (if isEven (min maxIterations (floor fr)) then
+                (if isEven (floor fr) then
                     easing frac
 
                  else

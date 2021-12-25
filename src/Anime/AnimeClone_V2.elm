@@ -33,9 +33,9 @@ initParticle il =
     let
         defaultAttrs =
             [ A.setDuration 1800
-            , A.loopTimes 1
+            , A.loopTimes 500
             , A.alternateDirection
-            , A.setEasing Ease.linear
+            , A.setEasing Ease.outBounce
             , A.setDelay <| round <| (A.staggerFromCenter 200 il + 500)
             ]
     in
