@@ -36,7 +36,7 @@ initParticle il =
             , A.loopForever
             , A.alternateDirection
             , A.setEasing Ease.linear
-            , A.setDelay <| round <| (A.staggerFromCenter 100 il + 1000)
+            , A.setDelay <| round <| (A.staggerFromCenter 200 il + 1000)
             ]
     in
     { x = 0

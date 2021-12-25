@@ -179,7 +179,19 @@ valueAt a c =
             a.from
 
         Ended endIterationIndex ->
-            valueAtHelp a c
+            case a.direction of
+                DirectionNormal ->
+                    a.to
+
+                DirectionReverse ->
+                    a.from
+
+                DirectionAlternate ->
+                    if isEven endIterationIndex then
+                        a.to
+
+                    else
+                        a.from
 
         Running ->
             valueAtHelp a c
