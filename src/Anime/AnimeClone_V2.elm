@@ -277,7 +277,6 @@ valueAt { from, to, duration, delay, direction, loop, easing } ac =
             frac =
                 fr - toFloat (min maxIterations (floor fr))
 
-            --|> clamp 0 1
             value =
                 case direction of
                     DirectionNormal ->
