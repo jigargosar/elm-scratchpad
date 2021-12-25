@@ -58,10 +58,9 @@ initParticle il =
         defaultAttrs =
             [ setDuration 1800
             , loopForever
-            , loopTimes 10
-            , alternateDirection
-            , setEasing Ease.outElastic
-            , setDelay <| round <| staggerFromCenter 100 il
+            , reverseDirection
+            , setEasing Ease.linear
+            , setDelay <| round <| staggerFromCenter 500 il
             ]
     in
     { x = 0
@@ -239,6 +238,11 @@ loopTimes times a =
 alternateDirection : AnimAttr
 alternateDirection a =
     { a | direction = DirectionAlternate }
+
+
+reverseDirection : AnimAttr
+reverseDirection a =
+    { a | direction = DirectionReverse }
 
 
 valueAt : Anim -> AnimClock -> Float
