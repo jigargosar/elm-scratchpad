@@ -30,7 +30,8 @@
             "mdgriffith/elm-ui": "1.1.8",
             "mpizenberg/elm-pointer-events": "4.0.2",
             "terezka/elm-charts": "3.0.0",
-            "the-sett/ai-search": "5.0.0"
+            "the-sett/ai-search": "5.0.0",
+            "yotamDvir/elm-pivot": "3.1.0"
         },
         "indirect": {
             "danhandrea/elm-time-extra": "1.1.0",

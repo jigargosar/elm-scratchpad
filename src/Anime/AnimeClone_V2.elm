@@ -4,6 +4,7 @@ import Anime.Anim as A
 import Browser.Events
 import Ease
 import Json.Decode as JD
+import Pivot exposing (Pivot)
 import Utils exposing (..)
 
 
@@ -18,12 +19,20 @@ main =
 
 type alias Model =
     { animClock : A.AnimClock
+    , examples : Pivot Example
     }
+
+
+type Example
+    = Example1
+    | Example2
 
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { animClock = A.animClockInit }
+    ( { animClock = A.animClockInit
+      , examples = Pivot.fromCons Example1 [ Example2 ]
+      }
     , Cmd.none
     )
 
@@ -64,12 +73,28 @@ view model =
     Document "Anime V2"
         [ basicStylesNode
         , div [ fg green ]
-            [ viewStaggerRangeValueExample model.animClock
-                |> viewExampleWithTitle "Range Value"
-            , viewStaggerFromCenterExample model.animClock
-                |> viewExampleWithTitle "FROM VALUE"
-            ]
+            (model.examples
+                |> Pivot.mapCS
+                    (viewSelectedExample model.animClock)
+                    (viewExample model.animClock)
+                |> Pivot.toList
+            )
         ]
+
+
+viewSelectedExample =
+    viewExample
+
+
+viewExample animClock eg =
+    case eg of
+        Example1 ->
+            viewStaggerRangeValueExample animClock
+                |> viewExampleWithTitle "Range Value"
+
+        Example2 ->
+            viewStaggerFromCenterExample animClock
+                |> viewExampleWithTitle "FROM VALUE"
 
 
 viewStaggerFromCenterExample : A.AnimClock -> Html msg
