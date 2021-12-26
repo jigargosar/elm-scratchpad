@@ -95,7 +95,7 @@ viewExample isSelected animClock eg =
 
         ExampleStaggeringFromCenter ->
             viewStaggerFromCenterExample animClock
-                |> viewExampleWithTitle "FROM VALUE"
+                |> viewExampleWithTitle "From Value"
 
 
 viewStaggerFromCenterExample : A.AnimClock -> Html msg
