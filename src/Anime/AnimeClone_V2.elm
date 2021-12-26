@@ -105,7 +105,9 @@ view model =
         [ basicStylesNode
         , div [ fg green ]
             [ viewStaggerRangeValueExample model.animClock
+                |> viewExampleWithTitle "Range Value"
             , viewStaggerFromCenterExample model.animClock
+                |> viewExampleWithTitle "FROM VALUE"
             ]
         , div []
             (particlesForRendering model
@@ -155,7 +157,6 @@ viewStaggerFromCenterExample ac =
                 ]
         )
         |> fCol [ gap "10px", pa "10px" ]
-        |> viewExampleWithTitle "FROM VALUE"
 
 
 viewStaggerRangeValueExample : A.AnimClock -> Html msg
@@ -200,7 +201,6 @@ viewStaggerRangeValueExample ac =
                 ]
         )
         |> fCol [ gap "10px", pa "10px" ]
-        |> viewExampleWithTitle "Range Value"
 
 
 viewExampleWithTitle title el =
