@@ -97,23 +97,27 @@ viewExample isSelected animClock eg =
         , pb "20px"
         , sMaxWidth "600px"
         ]
-        [ div
-            [ if isSelected then
-                fgCurrentColor
-
-              else
-                fg (whiteA 0.9)
-            , pa "20px"
-            , ttu
-            , fontSize "20px"
-            ]
-            [ text info.title ]
+        [ viewExampleTitle isSelected info.title
         , fRow [ contentCenter ]
             [ div [ styleWidth "350px" ]
                 [ info.view isSelected animClock
                 ]
             ]
         ]
+
+
+viewExampleTitle isSelected t =
+    div
+        [ if isSelected then
+            fgCurrentColor
+
+          else
+            fg (whiteA 0.9)
+        , pa "20px"
+        , ttu
+        , fontSize "20px"
+        ]
+        [ text t ]
 
 
 exampleInfo example =
