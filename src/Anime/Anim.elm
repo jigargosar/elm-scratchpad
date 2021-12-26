@@ -9,12 +9,12 @@ module Anime.Anim exposing
     , animClockSubscription
     , animClockUpdateOnDelta
     , duration
+    , ease
     , fromTo
     , loopForever
     , loopTimes
     , reverseDirection
     , setDelay
-    , setEasing
     , setTo
     , stagger
     , staggerFromCenter
@@ -112,8 +112,8 @@ duration duration_ a =
     { a | duration = duration_ }
 
 
-setEasing : Ease.Easing -> AnimAttr
-setEasing easing a =
+ease : Ease.Easing -> AnimAttr
+ease easing a =
     { a | easing = easing }
 
 
