@@ -169,11 +169,7 @@ viewStaggerRangeValueExample ac =
                     ]
 
                 dx =
-                    A.valueOf
-                        (A.fromTo 0 270
-                            :: commonAttrs
-                        )
-                        ac
+                    A.valueOf (A.fromTo 0 270 :: commonAttrs) ac
 
                 da =
                     A.valueOf
