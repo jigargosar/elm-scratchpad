@@ -133,7 +133,7 @@ viewStaggerFromCenterExample ac =
     timesWithIndexAndLength 6
         (\il ->
             let
-                x =
+                dx =
                     A.valueOf
                         [ A.fromTo 0 270
                         , A.duration 1800
@@ -150,7 +150,7 @@ viewStaggerFromCenterExample ac =
                     , bgc green
                     ]
                 , viewSquare
-                    [ style "transform" ("translateX(" ++ fromFloat x ++ "px)")
+                    [ style "transform" ("translateX(" ++ fromFloat dx ++ "px)")
                     , bgc green
                     ]
                 ]
