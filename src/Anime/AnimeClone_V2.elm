@@ -140,9 +140,10 @@ viewStaggerFromCenterExample ac =
                         , A.setDelay <| round <| (A.staggerFromCenter 200 il + 500)
                         ]
                         ac
+                        |> fpx
             in
             div
-                [ style "transform" ("translateX(" ++ fromFloat x ++ "px)")
+                [ style "transform" ("translateX(" ++ x ++ ")")
                 , bgc <| hsl 0.2 1 0.5
                 , fg black
                 , borderRadius "10px"
