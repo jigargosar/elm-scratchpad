@@ -25,6 +25,7 @@ type alias Model =
 
 type Example
     = Example_Staggering_Basics
+    | Example_Staggering_StartValue
     | Example_Staggering_Range
     | Example_Staggering_FromCenter
 
@@ -155,6 +156,16 @@ viewExampleTitle isSelected t =
 exampleInfo : Example -> { title : String, view : Bool -> A.AnimClock -> Html msg }
 exampleInfo example =
     case example of
+        Example_Staggering_Basics ->
+            { title = "Staggering basics"
+            , view = viewStaggeringBasicsExample
+            }
+
+        Example_Staggering_StartValue ->
+            { title = "start value"
+            , view = viewStaggeringStartValueExample
+            }
+
         Example_Staggering_Range ->
             { title = "Range Value"
             , view = viewStaggerRangeValueExample
@@ -163,11 +174,6 @@ exampleInfo example =
         Example_Staggering_FromCenter ->
             { title = "From Value"
             , view = viewStaggerFromCenterExample
-            }
-
-        Example_Staggering_Basics ->
-            { title = "Staggering basics"
-            , view = viewStaggeringBasicsExample
             }
 
 
