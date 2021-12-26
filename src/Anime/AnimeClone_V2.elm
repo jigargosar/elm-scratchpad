@@ -180,6 +180,16 @@ viewStaggerRangeValueExample ac =
             in
             div [ positionRelative ]
                 [ viewSquare [ smallSizeStyles, shadowElStyles ]
+                , div [ positionAbsolute, pa "0 0 38px 0" ]
+                    [ text
+                        ([ "rotate = -360 + ((360-(-360))/"
+                         , fromInt (il.length - 1)
+                         , "*"
+                         , fromInt il.index
+                         ]
+                            |> String.join ""
+                        )
+                    ]
                 , viewSquare
                     [ smallSizeStyles
                     , [ style "transform"
