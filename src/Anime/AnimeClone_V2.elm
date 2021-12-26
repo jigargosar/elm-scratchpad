@@ -126,7 +126,7 @@ exampleInfo example =
 
 
 viewStaggerFromCenterExample : Bool -> A.AnimClock -> Html msg
-viewStaggerFromCenterExample isSelected ac =
+viewStaggerFromCenterExample _ ac =
     timesWithIndexAndLength 6
         (\il ->
             let
