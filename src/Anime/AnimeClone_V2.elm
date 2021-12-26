@@ -99,7 +99,11 @@ viewExample isSelected animClock eg =
         ]
         [ div
             [ pa "20px"
-            , fgCurrentColor
+            , if isSelected then
+                fgCurrentColor
+
+              else
+                fg <| hsla 0 0 1 0.9
             , ttu
             , fontSize "20px"
             ]
