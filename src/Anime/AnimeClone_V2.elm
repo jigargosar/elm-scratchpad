@@ -156,6 +156,14 @@ viewStaggerFromCenterExample ac =
                 ]
         )
         |> fCol [ gap "10px", pa "10px" ]
+        |> viewExampleWithTitle green "FROM VALUE"
+
+
+viewExampleWithTitle fgColor title el =
+    div [ pa "10px 20px" ]
+        [ div [ fg fgColor, ttu ] [ text title ]
+        , el
+        ]
 
 
 green =
