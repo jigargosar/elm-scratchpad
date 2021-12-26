@@ -126,7 +126,7 @@ updateParticleAnim ac p =
     }
 
 
-viewStaggerFromCenterExample : A.AnimClock -> List (Html msg)
+viewStaggerFromCenterExample : A.AnimClock -> Html msg
 viewStaggerFromCenterExample ac =
     timesWithIndexAndLength 10
         (\il ->
@@ -154,6 +154,7 @@ viewStaggerFromCenterExample ac =
                 ]
                 [ div [ fontSize "25px" ] [ text "A" ] ]
         )
+        |> div []
 
 
 viewParticle : Particle -> Html msg
