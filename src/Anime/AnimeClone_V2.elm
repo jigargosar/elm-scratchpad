@@ -92,8 +92,24 @@ viewExample isSelected animClock eg =
         info =
             exampleInfo eg
     in
-    info.view isSelected animClock
-        |> viewExampleWithTitle isSelected info.title
+    div
+        [ style "border-bottom" "1px solid rgba(0,0,0,0.65)"
+        , pb "20px"
+        , sMaxWidth "600px"
+        ]
+        [ div
+            [ pa "20px"
+            , fgCurrentColor
+            , ttu
+            , fontSize "20px"
+            ]
+            [ text info.title ]
+        , fRow [ contentCenter ]
+            [ div [ styleWidth "350px" ]
+                [ info.view isSelected animClock
+                ]
+            ]
+        ]
 
 
 exampleInfo example =
@@ -177,17 +193,6 @@ viewStaggerRangeValueExample isSelected ac =
                 ]
         )
         |> fCol [ gap "10px" ]
-
-
-viewExampleWithTitle isSelected title el =
-    div
-        [ style "border-bottom" "1px solid rgba(0,0,0,0.65)"
-        , pb "20px"
-        , sMaxWidth "600px"
-        ]
-        [ div [ pa "20px", fgCurrentColor, ttu, fontSize "20px" ] [ text title ]
-        , fRow [ contentCenter ] [ div [ styleWidth "350px" ] [ el ] ]
-        ]
 
 
 green =
