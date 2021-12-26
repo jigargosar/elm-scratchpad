@@ -166,7 +166,7 @@ viewStaggerRangeValueExample ac =
             let
                 commonAttrs =
                     [ A.duration 1200
-                    , A.ease Ease.outCubic
+                    , A.ease Ease.inOutQuad
                     ]
 
                 dx =
@@ -204,9 +204,13 @@ viewStaggerRangeValueExample ac =
 
 
 viewExampleWithTitle title el =
-    div [ pa "10px 20px" ]
+    div
+        [ pa "20px 20px"
+        , style "border-bottom" "1px solid rgba(0,0,0,0.65)"
+        , sMaxWidth "500px"
+        ]
         [ div [ fgCurrentColor, ttu, fontSize "20px" ] [ text title ]
-        , el
+        , fRow [ contentCenter ] [ div [ styleWidth "300px" ] [ el ] ]
         ]
 
 
@@ -231,6 +235,7 @@ viewLabel t aa =
         ([ positionAbsolute
          , opacity 0.3
          , fontSize "16px"
+         , style "white-space" "nowrap"
          ]
             ++ aa
         )
