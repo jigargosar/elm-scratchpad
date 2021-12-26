@@ -8,12 +8,12 @@ module Anime.Anim exposing
     , animClockInit
     , animClockSubscription
     , animClockUpdateOnDelta
+    , duration
     , fromTo
     , loopForever
     , loopTimes
     , reverseDirection
     , setDelay
-    , setDuration
     , setEasing
     , setTo
     , stagger
@@ -107,9 +107,9 @@ setDelay delay a =
     { a | delay = delay }
 
 
-setDuration : Int -> AnimAttr
-setDuration duration a =
-    { a | duration = duration }
+duration : Int -> AnimAttr
+duration duration_ a =
+    { a | duration = duration_ }
 
 
 setEasing : Ease.Easing -> AnimAttr
@@ -140,6 +140,10 @@ alternateDirection a =
     { a | direction = DirectionAlternate }
 
 
+
+--noinspection ElmUnusedSymbol
+
+
 reverseDirection : AnimAttr
 reverseDirection a =
     { a | direction = DirectionReverse }
@@ -151,13 +155,8 @@ type AnimStage
     | Ended Int
 
 
-type Iteration
-    = IterationEven
-    | IterationOdd
-
-
 getStage : Anim -> AnimClock -> AnimStage
-getStage { duration, delay, direction, loop } { start, current } =
+getStage ({ delay, direction, loop } as a) { start, current } =
     let
         elapsed =
             current - start
@@ -171,7 +170,7 @@ getStage { duration, delay, direction, loop } { start, current } =
                 Running
 
             LoopFor times ->
-                if elapsed >= delay + (times * duration) then
+                if elapsed >= delay + (times * a.duration) then
                     Ended times
 
                 else
@@ -209,7 +208,7 @@ valueAt a c =
 
 
 valueAtWhenRunning : Anim -> AnimClock -> Float
-valueAtWhenRunning { from, to, duration, delay, direction, loop, easing } ac =
+valueAtWhenRunning ({ from, to, delay, direction, loop, easing } as a) ac =
     let
         elapsed =
             (ac.current - (ac.start + delay))
@@ -218,7 +217,7 @@ valueAtWhenRunning { from, to, duration, delay, direction, loop, easing } ac =
     in
     let
         iterationCount =
-            (elapsed // duration) + 1
+            (elapsed // a.duration) + 1
 
         applyEasing =
             case direction of
@@ -237,7 +236,7 @@ valueAtWhenRunning { from, to, duration, delay, direction, loop, easing } ac =
     in
     let
         frac =
-            (toFloat (modBy duration elapsed) / toFloat duration)
+            (toFloat (modBy a.duration elapsed) / toFloat a.duration)
                 |> applyEasing
     in
     lerp from to frac

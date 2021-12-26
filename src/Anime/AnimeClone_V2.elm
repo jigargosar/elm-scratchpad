@@ -32,7 +32,7 @@ initParticle : IndexLength -> Particle
 initParticle il =
     let
         defaultAttrs =
-            [ A.setDuration 1800
+            [ A.duration 1800
             , A.loopTimes 1
             , A.alternateDirection
             , A.setEasing Ease.outElastic
@@ -136,7 +136,7 @@ viewStaggerFromCenterExample ac =
                 x =
                     A.valueOf
                         [ A.fromTo 0 270
-                        , A.setDuration 1800
+                        , A.duration 1800
                         , A.setEasing Ease.outElastic
                         , A.setDelay <| round <| A.staggerFromCenter 200 il
                         ]
@@ -189,7 +189,7 @@ viewParticle p =
     in
     let
         defaultAttrs =
-            [ A.setDuration 1800
+            [ A.duration 1800
             , A.loopTimes 1
             , A.alternateDirection
             , A.setEasing Ease.outElastic
