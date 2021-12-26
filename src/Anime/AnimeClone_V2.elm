@@ -189,7 +189,7 @@ viewStaggerRangeValueExample ac =
             div [ positionRelative ]
                 [ viewSquare [ smallSizeStyles, shadowElStyles ]
                 , div
-                    [ pa "0 0 0 38px"
+                    [ pl "4ch"
                     , positionAbsolute
                     , opacity 0.4
                     , fontSize "16px"
