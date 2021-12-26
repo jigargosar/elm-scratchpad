@@ -103,7 +103,7 @@ view : Model -> Document Msg
 view model =
     Document "Anime V2"
         [ basicStylesNode
-        , viewStaggerFromCenterExample model.animClock
+        , div [ fg green ] [ viewStaggerFromCenterExample model.animClock ]
         , div []
             (particlesForRendering model
                 |> List.map viewParticle
@@ -146,22 +146,22 @@ viewStaggerFromCenterExample ac =
                 [ viewSquare
                     [ positionAbsolute
                     , left0
-                    , bgc "currentColor"
+                    , bgCurrentColor
                     , opacity 0.2
                     ]
                 , viewSquare
-                    [ bgc "currentColor"
+                    [ bgCurrentColor
                     , style "transform" ("translateX(" ++ fromFloat dx ++ "px)")
                     ]
                 ]
         )
         |> fCol [ gap "10px", pa "10px" ]
-        |> viewExampleWithTitle green "FROM VALUE"
+        |> viewExampleWithTitle "FROM VALUE"
 
 
-viewExampleWithTitle fgColor title el =
-    div [ pa "10px 20px", fg fgColor ]
-        [ div [ fg "currentColor", ttu ] [ text title ]
+viewExampleWithTitle title el =
+    div [ pa "10px 20px" ]
+        [ div [ fgCurrentColor, ttu ] [ text title ]
         , el
         ]
 

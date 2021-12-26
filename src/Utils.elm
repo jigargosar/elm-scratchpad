@@ -711,6 +711,14 @@ fg =
     style "color"
 
 
+fgCurrentColor =
+    fg "currentColor"
+
+
+bgCurrentColor =
+    bgc "currentColor"
+
+
 basicStylesNode : Html msg
 basicStylesNode =
     stylesNode """
