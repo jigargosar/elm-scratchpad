@@ -147,15 +147,19 @@ viewStaggerFromCenterExample ac =
                     [ positionAbsolute
                     , left0
                     , opacity 0.2
-                    , bgc <| hsl 0.42 1 0.5
+                    , bgc green
                     ]
                 , viewSquare
                     [ style "transform" ("translateX(" ++ fromFloat x ++ "px)")
-                    , bgc <| hsl 0.42 1 0.5
+                    , bgc green
                     ]
                 ]
         )
         |> fCol [ gap "10px", pa "10px" ]
+
+
+green =
+    hsl 0.42 1 0.5
 
 
 viewSquare attrs =
