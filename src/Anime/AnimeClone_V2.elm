@@ -207,7 +207,7 @@ viewExampleWithTitle title el =
     div
         [ pa "20px 20px"
         , style "border-bottom" "1px solid rgba(0,0,0,0.65)"
-        , sMaxWidth "500px"
+        , sMaxWidth "600px"
         ]
         [ div [ fgCurrentColor, ttu, fontSize "20px" ] [ text title ]
         , fRow [ contentCenter ] [ div [ styleWidth "300px" ] [ el ] ]
