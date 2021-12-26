@@ -36,7 +36,8 @@ init () =
       , examples =
             Pivot.fromCons
                 Example_Staggering_Basics
-                [ Example_Staggering_Range
+                [ Example_Staggering_StartValue
+                , Example_Staggering_Range
                 , Example_Staggering_FromCenter
                 ]
       }
