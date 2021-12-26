@@ -142,13 +142,24 @@ viewStaggerFromCenterExample ac =
                         ]
                         ac
             in
-            div
-                [ style "transform" ("translateX(" ++ fromFloat x ++ "px)")
-                , bgc <| hsl 0.42 1 0.5
-                , styleWidth "50px"
-                , styleHeight "50px"
+            div [ positionRelative ]
+                [ div
+                    [ positionAbsolute
+                    , left0
+                    , opacity 0.2
+                    , bgc <| hsl 0.42 1 0.5
+                    , styleWidth "50px"
+                    , styleHeight "50px"
+                    ]
+                    []
+                , div
+                    [ style "transform" ("translateX(" ++ fromFloat x ++ "px)")
+                    , bgc <| hsl 0.42 1 0.5
+                    , styleWidth "50px"
+                    , styleHeight "50px"
+                    ]
+                    []
                 ]
-                []
         )
         |> fCol [ gap "10px", pa "10px" ]
 
