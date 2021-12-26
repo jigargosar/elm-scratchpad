@@ -99,10 +99,14 @@ viewExample isSelected animClock eg =
 exampleInfo example =
     case example of
         ExampleStaggeringRange ->
-            { title = "Range Value", view = viewStaggerRangeValueExample }
+            { title = "Range Value"
+            , view = viewStaggerRangeValueExample
+            }
 
         ExampleStaggeringFromCenter ->
-            { title = "From Value", view = viewStaggerFromCenterExample }
+            { title = "From Value"
+            , view = viewStaggerFromCenterExample
+            }
 
 
 viewStaggerFromCenterExample : Bool -> A.AnimClock -> Html msg
