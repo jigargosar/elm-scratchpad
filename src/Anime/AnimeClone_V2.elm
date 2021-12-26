@@ -144,8 +144,7 @@ viewStaggerFromCenterExample ac =
             in
             div
                 [ style "transform" ("translateX(" ++ fromFloat x ++ "px)")
-                , bgc <| hsl 0.2 1 0.5
-                , borderRadius "10px"
+                , bgc <| hsl 0.42 1 0.5
                 , styleWidth "50px"
                 , styleHeight "50px"
                 ]
