@@ -188,13 +188,7 @@ viewStaggerRangeValueExample ac =
             in
             div [ positionRelative ]
                 [ viewSquare [ smallSizeStyles, shadowElStyles ]
-                , div
-                    [ pl "4ch"
-                    , positionAbsolute
-                    , opacity 0.4
-                    , fontSize "16px"
-                    ]
-                    [ text labelText ]
+                , viewLabel labelText [ pl "4ch" ]
                 , viewSquare
                     [ smallSizeStyles
                     , [ style "transform"
@@ -232,6 +226,18 @@ smallSizeStyles =
 
 viewSquare attrs =
     div (bgCurrentColor :: List.concat attrs) []
+
+
+viewLabel t aa =
+    div
+        ([ pl "4ch"
+         , positionAbsolute
+         , opacity 0.3
+         , fontSize "16px"
+         ]
+            ++ aa
+        )
+        [ text t ]
 
 
 viewParticle : Particle -> Html msg
