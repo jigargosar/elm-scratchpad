@@ -104,7 +104,7 @@ view model =
     Document "Anime V2"
         [ basicStylesNode
         , div [ fg green ]
-            [ viewStaggerFromCenterExample model.animClock
+            [ viewStaggerRangeValueExample model.animClock
             , viewStaggerFromCenterExample model.animClock
             ]
         , div []
@@ -163,18 +163,23 @@ viewStaggerRangeValueExample ac =
     timesWithIndexAndLength 6
         (\il ->
             let
+                commonAttrs =
+                    [ A.duration 1200
+                    , A.ease Ease.outCubic
+                    ]
+
                 dx =
                     A.valueOf
-                        [ A.fromTo 0 270
-                        , A.duration 1800
-                        ]
+                        (A.fromTo 0 270
+                            :: commonAttrs
+                        )
                         ac
 
                 da =
                     A.valueOf
-                        [ A.fromTo 0 (A.staggerRange ( -360, 360 ) il)
-                        , A.duration 1800
-                        ]
+                        (A.fromTo 0 (A.staggerRange ( -360, 360 ) il)
+                            :: commonAttrs
+                        )
                         ac
             in
             div [ positionRelative ]
@@ -211,7 +216,7 @@ shadowElStyles =
 
 
 smallSizeStyles =
-    [ styleWidth "25px", styleHeight "25px" ]
+    [ styleWidth "20px", styleHeight "20px" ]
 
 
 viewSquare attrs =
