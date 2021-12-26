@@ -247,6 +247,7 @@ viewSquare attrs =
     div (bgCurrentColor :: List.concat attrs) []
 
 
+viewLabel : Bool -> String -> List (Attribute msg) -> Html msg
 viewLabel isSelected t aa =
     div
         ([ positionAbsolute
