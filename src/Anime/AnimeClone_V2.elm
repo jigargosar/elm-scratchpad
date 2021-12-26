@@ -91,11 +91,11 @@ viewExample isSelected animClock eg =
     case eg of
         ExampleStaggeringRange ->
             viewStaggerRangeValueExample isSelected animClock
-                |> viewExampleWithTitle "Range Value"
+                |> viewExampleWithTitle isSelected "Range Value"
 
         ExampleStaggeringFromCenter ->
             viewStaggerFromCenterExample animClock
-                |> viewExampleWithTitle "From Value"
+                |> viewExampleWithTitle isSelected "From Value"
 
 
 viewStaggerFromCenterExample : A.AnimClock -> Html msg
@@ -168,7 +168,7 @@ viewStaggerRangeValueExample isSelected ac =
         |> fCol [ gap "10px" ]
 
 
-viewExampleWithTitle title el =
+viewExampleWithTitle isSelected title el =
     div
         [ style "border-bottom" "1px solid rgba(0,0,0,0.65)"
         , pb "20px"
