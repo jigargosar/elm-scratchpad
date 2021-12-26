@@ -106,6 +106,7 @@ viewExample isSelected animClock eg =
         ]
 
 
+viewExampleTitle : Bool -> String -> Html msg
 viewExampleTitle isSelected t =
     div
         [ if isSelected then
