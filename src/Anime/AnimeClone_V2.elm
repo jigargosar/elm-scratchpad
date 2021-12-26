@@ -75,18 +75,15 @@ view model =
         , div [ fg green ]
             (model.examples
                 |> Pivot.mapCS
-                    (viewSelectedExample model.animClock)
-                    (viewExample model.animClock)
+                    (viewExample True model.animClock)
+                    (viewExample False model.animClock)
                 |> Pivot.toList
             )
         ]
 
 
-viewSelectedExample =
-    viewExample
-
-
-viewExample animClock eg =
+viewExample : Bool -> A.AnimClock -> Example -> Html msg
+viewExample isSelected animClock eg =
     case eg of
         Example1 ->
             viewStaggerRangeValueExample animClock
