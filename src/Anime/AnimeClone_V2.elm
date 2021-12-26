@@ -143,25 +143,29 @@ viewStaggerFromCenterExample ac =
                         ac
             in
             div [ positionRelative ]
-                [ div
+                [ viewSquare
                     [ positionAbsolute
                     , left0
                     , opacity 0.2
                     , bgc <| hsl 0.42 1 0.5
-                    , styleWidth "50px"
-                    , styleHeight "50px"
                     ]
-                    []
-                , div
+                , viewSquare
                     [ style "transform" ("translateX(" ++ fromFloat x ++ "px)")
                     , bgc <| hsl 0.42 1 0.5
-                    , styleWidth "50px"
-                    , styleHeight "50px"
                     ]
-                    []
                 ]
         )
         |> fCol [ gap "10px", pa "10px" ]
+
+
+viewSquare attrs =
+    div
+        ([ styleWidth "25px"
+         , styleHeight "25px"
+         ]
+            ++ attrs
+        )
+        []
 
 
 viewParticle : Particle -> Html msg
