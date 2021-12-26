@@ -179,16 +179,16 @@ viewStaggerRangeValueExample ac =
                         ac
 
                 labelText =
-                    [ "rotate = -360 + ((360-(-360))/"
+                    [ "rotate = -360 + ((360 - (-360)) / "
                     , fromInt (il.length - 1)
-                    , "*"
+                    , ") * "
                     , fromInt il.index
                     ]
-                        |> String.join " "
+                        |> String.join ""
             in
             div [ positionRelative ]
                 [ viewSquare [ smallSizeStyles, shadowElStyles ]
-                , viewLabel labelText [ pl "4ch" ]
+                , viewLabel labelText [ pl "32px" ]
                 , viewSquare
                     [ smallSizeStyles
                     , [ transforms
