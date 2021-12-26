@@ -24,8 +24,9 @@ type alias Model =
 
 
 type Example
-    = Example_Staggering_FromCenter
+    = Example_Staggering_Basics
     | Example_Staggering_Range
+    | Example_Staggering_FromCenter
 
 
 init : () -> ( Model, Cmd Msg )
@@ -33,8 +34,9 @@ init () =
     ( { animClock = A.animClockInit
       , examples =
             Pivot.fromCons
-                Example_Staggering_Range
-                [ Example_Staggering_FromCenter
+                Example_Staggering_Basics
+                [ Example_Staggering_Range
+                , Example_Staggering_FromCenter
                 ]
       }
     , Cmd.none
@@ -163,6 +165,45 @@ exampleInfo example =
             , view = viewStaggerFromCenterExample
             }
 
+        Example_Staggering_Basics ->
+            { title = "Staggering basics"
+            , view = viewStaggeringBasicsExample
+            }
+
+
+viewStaggeringBasicsExample : Bool -> A.AnimClock -> Html msg
+viewStaggeringBasicsExample isSelected ac =
+    timesWithIndexAndLength 6
+        (\il ->
+            let
+                dx =
+                    A.valueOf
+                        [ A.fromTo 0 270
+                        , A.duration 1800
+                        , A.ease Ease.outElastic
+                        , A.delay <| round <| A.stagger 100 il
+                        ]
+                        ac
+
+                labelText =
+                    [ "delay = (100 * "
+                    , fromInt il.index
+                    , ") ms"
+                    ]
+                        |> String.join ""
+            in
+            div [ positionRelative ]
+                [ viewSquare [ smallSizeStyles, shadowElStyles ]
+                , viewLabel isSelected labelText
+                , viewSquare
+                    [ smallSizeStyles
+                    , [ style "transform" ("translateX(" ++ fromFloat dx ++ "px)")
+                      ]
+                    ]
+                ]
+        )
+        |> fCol [ gap "10px" ]
+
 
 viewStaggerFromCenterExample : Bool -> A.AnimClock -> Html msg
 viewStaggerFromCenterExample _ ac =
@@ -220,7 +261,7 @@ viewStaggerRangeValueExample isSelected ac =
             in
             div [ positionRelative ]
                 [ viewSquare [ smallSizeStyles, shadowElStyles ]
-                , viewLabel isSelected labelText [ pl "32px" ]
+                , viewLabel isSelected labelText
                 , viewSquare
                     [ smallSizeStyles
                     , [ transforms
@@ -250,8 +291,8 @@ viewSquare attrs =
     div (bgCurrentColor :: List.concat attrs) []
 
 
-viewLabel : Bool -> String -> List (Attribute msg) -> Html msg
-viewLabel isSelected t aa =
+viewLabel : Bool -> String -> Html msg
+viewLabel isSelected t =
     div
         ([ positionAbsolute
          , opacity
@@ -265,6 +306,6 @@ viewLabel isSelected t aa =
          , fontSize "16px"
          , style "white-space" "nowrap"
          ]
-            ++ aa
+            ++ [ pl "32px" ]
         )
         [ text t ]
