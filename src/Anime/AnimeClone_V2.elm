@@ -191,12 +191,10 @@ viewStaggerRangeValueExample ac =
                 , viewLabel labelText [ pl "4ch" ]
                 , viewSquare
                     [ smallSizeStyles
-                    , [ style "transform"
-                            ([ "translateX(" ++ fromFloat dx ++ "px)"
-                             , "rotate(" ++ fromFloat da ++ "deg)"
-                             ]
-                                |> String.join " "
-                            )
+                    , [ transforms
+                            [ "translateX(" ++ fromFloat dx ++ "px)"
+                            , "rotate(" ++ fromFloat da ++ "deg)"
+                            ]
                       ]
                     ]
                 ]

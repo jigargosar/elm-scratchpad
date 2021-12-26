@@ -925,6 +925,10 @@ ma =
     style "margin"
 
 
+transforms =
+    String.join " " >> style "transform"
+
+
 paf =
     fpx >> pa
 
