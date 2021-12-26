@@ -843,6 +843,10 @@ transitionTransform =
     style "transition" "transform 300ms"
 
 
+transitionOpacity =
+    style "transition" "opacity 300ms"
+
+
 ffMonospace =
     style "font-family" "monospace"
 

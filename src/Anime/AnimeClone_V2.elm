@@ -258,6 +258,7 @@ viewLabel isSelected t aa =
              else
                 0
             )
+         , transitionOpacity
          , fontSize "16px"
          , style "white-space" "nowrap"
          ]
