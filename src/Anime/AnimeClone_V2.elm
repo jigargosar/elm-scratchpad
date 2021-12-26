@@ -216,7 +216,7 @@ viewStaggerRangeValueExample isSelected ac =
             in
             div [ positionRelative ]
                 [ viewSquare [ smallSizeStyles, shadowElStyles ]
-                , viewBool isSelected (viewLabel labelText [ pl "32px" ])
+                , viewLabel isSelected labelText [ pl "32px" ]
                 , viewSquare
                     [ smallSizeStyles
                     , [ transforms
@@ -246,10 +246,16 @@ viewSquare attrs =
     div (bgCurrentColor :: List.concat attrs) []
 
 
-viewLabel t aa =
+viewLabel isSelected t aa =
     div
         ([ positionAbsolute
-         , opacity 0.3
+         , opacity
+            (if isSelected then
+                0.3
+
+             else
+                0
+            )
          , fontSize "16px"
          , style "white-space" "nowrap"
          ]
