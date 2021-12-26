@@ -137,7 +137,6 @@ viewStaggerFromCenterExample ac =
                     A.valueOf
                         [ A.fromTo 0 270
                         , A.setDuration 1800
-                        , A.loopTimes 1
                         , A.setEasing Ease.outElastic
                         , A.setDelay <| round <| (A.staggerFromCenter 200 il + 500)
                         ]
