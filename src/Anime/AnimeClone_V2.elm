@@ -24,8 +24,8 @@ type alias Model =
 
 
 type Example
-    = ExampleStaggeringFromCenter
-    | ExampleStaggeringRange
+    = Example_Staggering_FromCenter
+    | Example_Staggering_Range
 
 
 init : () -> ( Model, Cmd Msg )
@@ -33,8 +33,8 @@ init () =
     ( { animClock = A.animClockInit
       , examples =
             Pivot.fromCons
-                ExampleStaggeringRange
-                [ ExampleStaggeringFromCenter
+                Example_Staggering_Range
+                [ Example_Staggering_FromCenter
                 ]
       }
     , Cmd.none
@@ -153,12 +153,12 @@ viewExampleTitle isSelected t =
 exampleInfo : Example -> { title : String, view : Bool -> A.AnimClock -> Html msg }
 exampleInfo example =
     case example of
-        ExampleStaggeringRange ->
+        Example_Staggering_Range ->
             { title = "Range Value"
             , view = viewStaggerRangeValueExample
             }
 
-        ExampleStaggeringFromCenter ->
+        Example_Staggering_FromCenter ->
             { title = "From Value"
             , view = viewStaggerFromCenterExample
             }
