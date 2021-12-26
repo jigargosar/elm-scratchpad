@@ -76,7 +76,7 @@ view model =
             (model.examples
                 |> Pivot.mapCS
                     (viewExample True model.animClock)
-                    (viewExample False model.animClock)
+                    (viewExample False A.animClockInit)
                 |> Pivot.toList
             )
         ]
