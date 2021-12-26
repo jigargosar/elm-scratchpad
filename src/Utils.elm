@@ -1872,3 +1872,12 @@ applyAll fns a =
 noView : Html msg
 noView =
     text ""
+
+
+viewBool : Bool -> Html msg -> Html msg
+viewBool bool x =
+    if bool then
+        x
+
+    else
+        noView

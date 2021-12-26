@@ -87,7 +87,7 @@ viewExample : Bool -> A.AnimClock -> Example -> Html msg
 viewExample isSelected animClock eg =
     case eg of
         Example1 ->
-            viewStaggerRangeValueExample animClock
+            viewStaggerRangeValueExample isSelected animClock
                 |> viewExampleWithTitle "Range Value"
 
         Example2 ->
@@ -121,8 +121,8 @@ viewStaggerFromCenterExample ac =
         |> fCol [ gap "10px" ]
 
 
-viewStaggerRangeValueExample : A.AnimClock -> Html msg
-viewStaggerRangeValueExample ac =
+viewStaggerRangeValueExample : Bool -> A.AnimClock -> Html msg
+viewStaggerRangeValueExample isSelected ac =
     timesWithIndexAndLength 6
         (\il ->
             let
@@ -151,7 +151,7 @@ viewStaggerRangeValueExample ac =
             in
             div [ positionRelative ]
                 [ viewSquare [ smallSizeStyles, shadowElStyles ]
-                , viewLabel labelText [ pl "32px" ]
+                , viewBool isSelected (viewLabel labelText [ pl "32px" ])
                 , viewSquare
                     [ smallSizeStyles
                     , [ transforms
