@@ -177,19 +177,24 @@ viewStaggerRangeValueExample ac =
                             :: commonAttrs
                         )
                         ac
+
+                labelText =
+                    [ "rotate = -360 + ((360-(-360))/"
+                    , fromInt (il.length - 1)
+                    , "*"
+                    , fromInt il.index
+                    ]
+                        |> String.join ""
             in
             div [ positionRelative ]
                 [ viewSquare [ smallSizeStyles, shadowElStyles ]
-                , div [ positionAbsolute, pa "0 0 38px 0" ]
-                    [ text
-                        ([ "rotate = -360 + ((360-(-360))/"
-                         , fromInt (il.length - 1)
-                         , "*"
-                         , fromInt il.index
-                         ]
-                            |> String.join ""
-                        )
+                , div
+                    [ pa "0 0 0 38px"
+                    , positionAbsolute
+                    , opacity 0.4
+                    , fontSize "16px"
                     ]
+                    [ text labelText ]
                 , viewSquare
                     [ smallSizeStyles
                     , [ style "transform"
@@ -208,7 +213,7 @@ viewStaggerRangeValueExample ac =
 
 viewExampleWithTitle title el =
     div [ pa "10px 20px" ]
-        [ div [ fgCurrentColor, ttu ] [ text title ]
+        [ div [ fgCurrentColor, ttu, fontSize "20px" ] [ text title ]
         , el
         ]
 
