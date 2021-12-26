@@ -126,8 +126,81 @@ updateParticleAnim ac p =
     }
 
 
+viewStaggerFromCenterExample =
+    let
+        il : IndexLength
+        il =
+            IndexLength 0 10
+
+        ac : A.AnimClock
+        ac =
+            A.animClockInit
+    in
+    let
+        defaultAttrs =
+            [ A.setDuration 1800
+            , A.loopTimes 1
+            , A.alternateDirection
+            , A.setEasing Ease.outElastic
+            , A.setDelay <| round <| (A.staggerFromCenter 200 il + 500)
+            ]
+
+        xa =
+            A.anim
+                ([ defaultAttrs, [ A.fromTo 0 270 ] ] |> List.concat)
+
+        x =
+            A.valueAt xa ac
+    in
+    div
+        [ style "transform"
+            ([ "translateX(" ++ fromFloat x ++ "px)"
+             , "rotate(" ++ fromFloat 0 ++ "deg)"
+             ]
+                |> String.join " "
+            )
+        , bgc <| hsl 0.2 1 0.5
+        , fg black
+        , borderRadius "10px"
+        , styleWidth "50px"
+        , styleHeight "50px"
+        , ma "10px"
+        , dGrid
+        , placeContentCenter
+        ]
+        [ div [ fontSize "25px" ] [ text "A" ] ]
+
+
 viewParticle : Particle -> Html msg
 viewParticle p =
+    let
+        il : IndexLength
+        il =
+            IndexLength 0 10
+    in
+    let
+        defaultAttrs =
+            [ A.setDuration 1800
+            , A.loopTimes 1
+            , A.alternateDirection
+            , A.setEasing Ease.outElastic
+            , A.setDelay <| round <| (A.staggerFromCenter 200 il + 500)
+            ]
+
+        _ =
+            { x =
+                A.anim
+                    ([ defaultAttrs, [ A.fromTo 0 270 ] ] |> List.concat)
+            , a =
+                A.anim
+                    (defaultAttrs
+                        ++ [ A.setTo <| A.staggerRange ( -360, 360 ) il
+
+                           --, A.setTo 0
+                           ]
+                    )
+            }
+    in
     div
         [ style "transform"
             ([ "translateX(" ++ fromFloat p.x ++ "px)"
