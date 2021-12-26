@@ -143,15 +143,11 @@ viewStaggerFromCenterExample ac =
                         ac
             in
             div [ positionRelative ]
-                [ viewSquare
-                    [ positionAbsolute
-                    , left0
-                    , bgCurrentColor
-                    , opacity 0.2
-                    ]
+                [ viewSquare [ smallSizeStyles, shadowElStyles ]
                 , viewSquare
-                    [ bgCurrentColor
-                    , style "transform" ("translateX(" ++ fromFloat dx ++ "px)")
+                    [ smallSizeStyles
+                    , [ style "transform" ("translateX(" ++ fromFloat dx ++ "px)")
+                      ]
                     ]
                 ]
         )
@@ -170,14 +166,16 @@ green =
     hsl 0.42 1 0.5
 
 
+shadowElStyles =
+    [ positionAbsolute, left0, opacity 0.2 ]
+
+
+smallSizeStyles =
+    [ styleWidth "25px", styleHeight "25px" ]
+
+
 viewSquare attrs =
-    div
-        ([ styleWidth "25px"
-         , styleHeight "25px"
-         ]
-            ++ attrs
-        )
-        []
+    div (bgCurrentColor :: List.concat attrs) []
 
 
 viewParticle : Particle -> Html msg
