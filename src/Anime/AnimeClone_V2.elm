@@ -98,12 +98,12 @@ viewExample isSelected animClock eg =
         , sMaxWidth "600px"
         ]
         [ div
-            [ pa "20px"
-            , if isSelected then
+            [ if isSelected then
                 fgCurrentColor
 
               else
                 fg (whiteA 0.9)
+            , pa "20px"
             , ttu
             , fontSize "20px"
             ]
