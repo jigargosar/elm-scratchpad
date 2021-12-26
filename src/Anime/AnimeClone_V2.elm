@@ -96,8 +96,10 @@ viewExample isSelected animClock eg =
         [ style "border-bottom" "1px solid rgba(0,0,0,0.65)"
         , pb "20px"
         , sMaxWidth "600px"
+        , positionRelative
         ]
-        [ viewExampleTitle isSelected info.title
+        [ div [ positionAbsolute, w100, h100, bgCurrentColor, opacity 0.05 ] []
+        , viewExampleTitle isSelected info.title
         , fRow [ contentCenter ]
             [ div [ styleWidth "350px" ]
                 [ info.view isSelected animClock
