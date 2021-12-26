@@ -98,7 +98,20 @@ viewExample isSelected animClock eg =
         , sMaxWidth "600px"
         , positionRelative
         ]
-        [ div [ positionAbsolute, w100, h100, bgCurrentColor, opacity 0.05 ] []
+        [ div
+            [ positionAbsolute
+            , w100
+            , h100
+            , bgCurrentColor
+            , opacity
+                (if isSelected then
+                    0.05
+
+                 else
+                    0
+                )
+            ]
+            []
         , viewExampleTitle isSelected info.title
         , fRow [ contentCenter ]
             [ div [ styleWidth "350px" ]
