@@ -156,7 +156,7 @@ viewStaggerFromCenterExample ac =
                     ]
                 ]
         )
-        |> fCol [ gap "10px", pa "10px" ]
+        |> fCol [ gap "10px" ]
 
 
 viewStaggerRangeValueExample : A.AnimClock -> Html msg
@@ -200,17 +200,17 @@ viewStaggerRangeValueExample ac =
                     ]
                 ]
         )
-        |> fCol [ gap "10px", pa "10px" ]
+        |> fCol [ gap "10px" ]
 
 
 viewExampleWithTitle title el =
     div
-        [ pa "20px 20px"
-        , style "border-bottom" "1px solid rgba(0,0,0,0.65)"
+        [ style "border-bottom" "1px solid rgba(0,0,0,0.65)"
+        , pb "20px"
         , sMaxWidth "600px"
         ]
-        [ div [ fgCurrentColor, ttu, fontSize "20px" ] [ text title ]
-        , fRow [ contentCenter ] [ div [ styleWidth "300px" ] [ el ] ]
+        [ div [ pa "20px", fgCurrentColor, ttu, fontSize "20px" ] [ text title ]
+        , fRow [ contentCenter ] [ div [ styleWidth "350px" ] [ el ] ]
         ]
 
 
