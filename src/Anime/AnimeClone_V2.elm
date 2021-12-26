@@ -186,10 +186,38 @@ viewStaggeringBasicsExample isSelected ac =
                         ac
 
                 labelText =
-                    [ "delay = (100 * "
-                    , fromInt il.index
-                    , ") ms"
+                    [ "delay = (100 * ", fromInt il.index, ") ms" ]
+                        |> String.join ""
+            in
+            div [ positionRelative ]
+                [ viewSquare [ smallSizeStyles, shadowElStyles ]
+                , viewLabel isSelected labelText
+                , viewSquare
+                    [ smallSizeStyles
+                    , [ style "transform" ("translateX(" ++ fromFloat dx ++ "px)")
+                      ]
                     ]
+                ]
+        )
+        |> fCol [ gap "10px" ]
+
+
+viewStaggeringStartValueExample : Bool -> A.AnimClock -> Html msg
+viewStaggeringStartValueExample isSelected ac =
+    timesWithIndexAndLength 6
+        (\il ->
+            let
+                dx =
+                    A.valueOf
+                        [ A.fromTo 0 270
+                        , A.duration 1800
+                        , A.ease Ease.outElastic
+                        , A.delay <| round <| (500 + A.stagger 100 il)
+                        ]
+                        ac
+
+                labelText =
+                    [ "delay = 500 + (100 * ", fromInt il.index, ") ms" ]
                         |> String.join ""
             in
             div [ positionRelative ]
