@@ -126,31 +126,23 @@ updateParticleAnim ac p =
     }
 
 
+viewStaggerFromCenterExample : A.AnimClock -> List (Html msg)
 viewStaggerFromCenterExample ac =
-    let
-        vp il =
+    timesWithIndexAndLength 10
+        (\il ->
             let
-                defaultAttrs =
-                    [ A.setDuration 1800
-                    , A.loopTimes 1
-                    , A.setEasing Ease.outElastic
-                    , A.setDelay <| round <| (A.staggerFromCenter 200 il + 500)
-                    ]
-
                 x =
-                    A.valueAt
-                        (A.anim
-                            ([ defaultAttrs, [ A.fromTo 0 270 ] ] |> List.concat)
-                        )
+                    A.valueOf
+                        [ A.fromTo 0 270
+                        , A.setDuration 1800
+                        , A.loopTimes 1
+                        , A.setEasing Ease.outElastic
+                        , A.setDelay <| round <| (A.staggerFromCenter 200 il + 500)
+                        ]
                         ac
             in
             div
-                [ style "transform"
-                    ([ "translateX(" ++ fromFloat x ++ "px)"
-                     , "rotate(" ++ fromFloat 0 ++ "deg)"
-                     ]
-                        |> String.join " "
-                    )
+                [ style "transform" ("translateX(" ++ fromFloat x ++ "px)")
                 , bgc <| hsl 0.2 1 0.5
                 , fg black
                 , borderRadius "10px"
@@ -161,8 +153,7 @@ viewStaggerFromCenterExample ac =
                 , placeContentCenter
                 ]
                 [ div [ fontSize "25px" ] [ text "A" ] ]
-    in
-    vp (IndexLength 0 0)
+        )
 
 
 viewParticle : Particle -> Html msg

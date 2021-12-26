@@ -20,6 +20,7 @@ module Anime.Anim exposing
     , staggerFromCenter
     , staggerRange
     , valueAt
+    , valueOf
     )
 
 import Browser.Events
@@ -175,6 +176,11 @@ getStage { duration, delay, direction, loop } { start, current } =
 
                 else
                     Running
+
+
+valueOf : List AnimAttr -> AnimClock -> Float
+valueOf attrs =
+    valueAt (anim attrs)
 
 
 valueAt : Anim -> AnimClock -> Float
