@@ -146,17 +146,13 @@ viewStaggerFromCenterExample ac =
             div
                 [ style "transform" ("translateX(" ++ fromFloat x ++ "px)")
                 , bgc <| hsl 0.2 1 0.5
-                , fg black
                 , borderRadius "10px"
                 , styleWidth "50px"
                 , styleHeight "50px"
-                , ma "10px"
-                , dGrid
-                , placeContentCenter
                 ]
-                [ div [ fontSize "25px" ] [ text "A" ] ]
+                []
         )
-        |> div []
+        |> fCol [ gap "10px" ]
 
 
 viewParticle : Particle -> Html msg
