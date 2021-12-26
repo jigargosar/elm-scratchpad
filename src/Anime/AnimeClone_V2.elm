@@ -98,20 +98,7 @@ viewExample isSelected animClock eg =
         , sMaxWidth "600px"
         , positionRelative
         ]
-        [ div
-            [ positionAbsolute
-            , w100
-            , h100
-            , bgCurrentColor
-            , opacity
-                (if isSelected then
-                    0.05
-
-                 else
-                    0
-                )
-            ]
-            []
+        [ viewExampleBackground isSelected
         , viewExampleTitle isSelected info.title
         , fRow [ contentCenter ]
             [ div [ styleWidth "350px" ]
@@ -119,6 +106,24 @@ viewExample isSelected animClock eg =
                 ]
             ]
         ]
+
+
+viewExampleBackground : Bool -> Html msg
+viewExampleBackground isSelected =
+    div
+        [ positionAbsolute
+        , w100
+        , h100
+        , bgCurrentColor
+        , opacity
+            (if isSelected then
+                0.05
+
+             else
+                0
+            )
+        ]
+        []
 
 
 viewExampleTitle : Bool -> String -> Html msg
