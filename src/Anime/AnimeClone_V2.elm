@@ -88,27 +88,25 @@ view model =
 
 viewExample : Bool -> A.AnimClock -> Example -> Html msg
 viewExample isSelected animClock eg =
-    case eg of
-        ExampleStaggeringRange ->
-            viewStaggerRangeValueExample isSelected animClock
-                |> viewExampleWithTitle isSelected "Range Value"
-
-        ExampleStaggeringFromCenter ->
-            viewStaggerFromCenterExample animClock
-                |> viewExampleWithTitle isSelected "From Value"
+    let
+        info =
+            exampleInfo eg
+    in
+    info.view isSelected animClock
+        |> viewExampleWithTitle isSelected info.title
 
 
 exampleInfo example =
     case example of
         ExampleStaggeringRange ->
-            { title = "Range Value" }
+            { title = "Range Value", view = viewStaggerRangeValueExample }
 
         ExampleStaggeringFromCenter ->
-            { title = "From Value" }
+            { title = "From Value", view = viewStaggerFromCenterExample }
 
 
-viewStaggerFromCenterExample : A.AnimClock -> Html msg
-viewStaggerFromCenterExample ac =
+viewStaggerFromCenterExample : Bool -> A.AnimClock -> Html msg
+viewStaggerFromCenterExample isSelected ac =
     timesWithIndexAndLength 6
         (\il ->
             let
