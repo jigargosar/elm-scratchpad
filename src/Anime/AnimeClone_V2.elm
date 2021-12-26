@@ -103,7 +103,7 @@ viewExample isSelected animClock eg =
                 fgCurrentColor
 
               else
-                fg <| whiteA 0.9
+                fg (whiteA 0.9)
             , ttu
             , fontSize "20px"
             ]
