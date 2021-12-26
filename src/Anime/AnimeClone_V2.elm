@@ -103,7 +103,10 @@ view : Model -> Document Msg
 view model =
     Document "Anime V2"
         [ basicStylesNode
-        , div [ fg green ] [ viewStaggerFromCenterExample model.animClock ]
+        , div [ fg green ]
+            [ viewStaggerFromCenterExample model.animClock
+            , viewStaggerFromCenterExample model.animClock
+            ]
         , div []
             (particlesForRendering model
                 |> List.map viewParticle
