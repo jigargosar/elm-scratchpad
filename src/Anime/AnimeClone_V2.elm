@@ -149,6 +149,7 @@ viewExampleTitle isSelected t =
         [ text t ]
 
 
+exampleInfo : Example -> { title : String, view : Bool -> A.AnimClock -> Html msg }
 exampleInfo example =
     case example of
         ExampleStaggeringRange ->
