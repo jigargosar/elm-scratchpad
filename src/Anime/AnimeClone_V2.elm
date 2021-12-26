@@ -103,10 +103,12 @@ view : Model -> Document Msg
 view model =
     Document "Anime V2"
         [ basicStylesNode
+        , viewStaggerFromCenterExample model.animClock
         , div []
             (particlesForRendering model
                 |> List.map viewParticle
             )
+            |> always noView
         ]
 
 
@@ -128,7 +130,7 @@ updateParticleAnim ac p =
 
 viewStaggerFromCenterExample : A.AnimClock -> Html msg
 viewStaggerFromCenterExample ac =
-    timesWithIndexAndLength 10
+    timesWithIndexAndLength 6
         (\il ->
             let
                 x =

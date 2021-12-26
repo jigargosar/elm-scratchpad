@@ -1843,3 +1843,12 @@ opacity =
 applyAll : List (a -> a) -> a -> a
 applyAll fns a =
     List.foldl (<|) a fns
+
+
+
+-- HTML UTILS
+
+
+noView : Html msg
+noView =
+    text ""
