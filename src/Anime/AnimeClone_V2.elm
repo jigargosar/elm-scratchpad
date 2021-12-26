@@ -103,6 +103,7 @@ viewExample isSelected animClock eg =
         , sMaxWidth "600px"
         , positionRelative
         , notifyClick (ExampleClicked eg)
+        , cursorPointer
         ]
         [ viewExampleBackground isSelected
         , viewExampleTitle isSelected info.title

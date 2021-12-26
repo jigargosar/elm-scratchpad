@@ -769,6 +769,10 @@ positionFixed =
     style "position" "fixed"
 
 
+cursorPointer =
+    style "cursor" "pointer"
+
+
 cursorGrab =
     style "cursor" "grab"
 
