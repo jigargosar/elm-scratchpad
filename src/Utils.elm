@@ -617,6 +617,11 @@ hsla h s l a =
     Color.hsla h s l a |> Color.toCssString
 
 
+whiteA : Float -> String
+whiteA =
+    hsla 1 1 1
+
+
 black =
     grayN 0.1
 
