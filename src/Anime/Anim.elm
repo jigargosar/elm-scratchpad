@@ -8,13 +8,13 @@ module Anime.Anim exposing
     , animClockInit
     , animClockSubscription
     , animClockUpdateOnDelta
+    , delay
     , duration
     , ease
     , fromTo
     , loopForever
     , loopTimes
     , reverseDirection
-    , setDelay
     , setTo
     , stagger
     , staggerFromCenter
@@ -102,9 +102,9 @@ setTo to a =
     { a | to = to }
 
 
-setDelay : Int -> AnimAttr
-setDelay delay a =
-    { a | delay = delay }
+delay : Int -> AnimAttr
+delay delay_ a =
+    { a | delay = delay_ }
 
 
 duration : Int -> AnimAttr
@@ -156,12 +156,12 @@ type AnimStage
 
 
 getStage : Anim -> AnimClock -> AnimStage
-getStage ({ delay, direction, loop } as a) { start, current } =
+getStage ({ direction, loop } as a) { start, current } =
     let
         elapsed =
             current - start
     in
-    if elapsed < delay then
+    if elapsed < a.delay then
         NotStarted
 
     else
@@ -170,7 +170,7 @@ getStage ({ delay, direction, loop } as a) { start, current } =
                 Running
 
             LoopFor times ->
-                if elapsed >= delay + (times * a.duration) then
+                if elapsed >= a.delay + (times * a.duration) then
                     Ended times
 
                 else
@@ -208,10 +208,10 @@ valueAt a c =
 
 
 valueAtWhenRunning : Anim -> AnimClock -> Float
-valueAtWhenRunning ({ from, to, delay, direction, loop, easing } as a) ac =
+valueAtWhenRunning ({ from, to, direction, loop, easing } as a) ac =
     let
         elapsed =
-            (ac.current - (ac.start + delay))
+            (ac.current - (ac.start + a.delay))
                 -- need to ensure elapsed is positive, in case of delay
                 |> atLeast 0
     in

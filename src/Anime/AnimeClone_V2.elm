@@ -36,7 +36,7 @@ initParticle il =
             , A.loopTimes 1
             , A.alternateDirection
             , A.ease Ease.outElastic
-            , A.setDelay <| round <| (A.staggerFromCenter 200 il + 500)
+            , A.delay <| round <| (A.staggerFromCenter 200 il + 500)
             ]
     in
     { x = 0
@@ -138,7 +138,7 @@ viewStaggerFromCenterExample ac =
                         [ A.fromTo 0 270
                         , A.duration 1800
                         , A.ease Ease.outElastic
-                        , A.setDelay <| round <| A.staggerFromCenter 200 il
+                        , A.delay <| round <| A.staggerFromCenter 200 il
                         ]
                         ac
             in
@@ -193,7 +193,7 @@ viewParticle p =
             , A.loopTimes 1
             , A.alternateDirection
             , A.ease Ease.outElastic
-            , A.setDelay <| round <| (A.staggerFromCenter 200 il + 500)
+            , A.delay <| round <| (A.staggerFromCenter 200 il + 500)
             ]
 
         _ =
