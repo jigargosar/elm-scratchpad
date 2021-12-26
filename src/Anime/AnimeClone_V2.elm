@@ -44,6 +44,7 @@ type Msg
     = NOP
     | OnAnimClockDelta A.AnimClockDelta
     | OnClick
+    | ExampleClicked Example
 
 
 subscriptions : Model -> Sub Msg
@@ -70,6 +71,11 @@ update msg model =
         OnClick ->
             ( { model | animClock = A.animClockInit }, Cmd.none )
 
+        ExampleClicked example ->
+            ( { model | examples = withRollback (Pivot.firstWith (eq example)) model.examples }
+            , Cmd.none
+            )
+
 
 view : Model -> Document Msg
 view model =
@@ -77,7 +83,6 @@ view model =
         [ basicStylesNode
         , div [ fg green ]
             (model.examples
-                |> Pivot.goToEnd
                 |> Pivot.mapCS
                     (viewExample True model.animClock)
                     (viewExample False A.animClockInit)
@@ -86,7 +91,7 @@ view model =
         ]
 
 
-viewExample : Bool -> A.AnimClock -> Example -> Html msg
+viewExample : Bool -> A.AnimClock -> Example -> Html Msg
 viewExample isSelected animClock eg =
     let
         info =
@@ -97,6 +102,7 @@ viewExample isSelected animClock eg =
         , pb "20px"
         , sMaxWidth "600px"
         , positionRelative
+        , notifyClick (ExampleClicked eg)
         ]
         [ viewExampleBackground isSelected
         , viewExampleTitle isSelected info.title
