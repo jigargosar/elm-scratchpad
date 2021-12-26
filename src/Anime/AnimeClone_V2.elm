@@ -152,7 +152,7 @@ viewStaggerFromCenterExample ac =
                 ]
                 []
         )
-        |> fCol [ gap "10px" ]
+        |> fCol [ gap "10px", pa "10px" ]
 
 
 viewParticle : Particle -> Html msg
