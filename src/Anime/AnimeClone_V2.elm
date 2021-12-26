@@ -74,6 +74,7 @@ view model =
         [ basicStylesNode
         , div [ fg green ]
             (model.examples
+                |> Pivot.goToEnd
                 |> Pivot.mapCS
                     (viewExample True model.animClock)
                     (viewExample False A.animClockInit)
