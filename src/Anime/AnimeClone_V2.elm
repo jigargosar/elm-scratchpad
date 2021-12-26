@@ -141,6 +141,7 @@ viewExampleTitle isSelected t =
 
           else
             fg (whiteA 0.9)
+        , transitionFG
         , pa "20px"
         , ttu
         , fontSize "20px"
