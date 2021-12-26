@@ -146,12 +146,12 @@ viewStaggerFromCenterExample ac =
                 [ viewSquare
                     [ positionAbsolute
                     , left0
+                    , bgc "currentColor"
                     , opacity 0.2
-                    , bgc green
                     ]
                 , viewSquare
-                    [ style "transform" ("translateX(" ++ fromFloat dx ++ "px)")
-                    , bgc green
+                    [ bgc "currentColor"
+                    , style "transform" ("translateX(" ++ fromFloat dx ++ "px)")
                     ]
                 ]
         )
@@ -160,8 +160,8 @@ viewStaggerFromCenterExample ac =
 
 
 viewExampleWithTitle fgColor title el =
-    div [ pa "10px 20px" ]
-        [ div [ fg fgColor, ttu ] [ text title ]
+    div [ pa "10px 20px", fg fgColor ]
+        [ div [ fg "currentColor", ttu ] [ text title ]
         , el
         ]
 
