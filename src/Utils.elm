@@ -847,6 +847,10 @@ transitionOpacity =
     style "transition" "opacity 300ms"
 
 
+transitionFG =
+    style "transition" "color 300ms"
+
+
 ffMonospace =
     style "font-family" "monospace"
 
