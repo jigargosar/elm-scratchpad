@@ -126,49 +126,43 @@ updateParticleAnim ac p =
     }
 
 
-viewStaggerFromCenterExample =
+viewStaggerFromCenterExample ac =
     let
-        il : IndexLength
-        il =
-            IndexLength 0 10
+        vp il =
+            let
+                defaultAttrs =
+                    [ A.setDuration 1800
+                    , A.loopTimes 1
+                    , A.setEasing Ease.outElastic
+                    , A.setDelay <| round <| (A.staggerFromCenter 200 il + 500)
+                    ]
 
-        ac : A.AnimClock
-        ac =
-            A.animClockInit
+                x =
+                    A.valueAt
+                        (A.anim
+                            ([ defaultAttrs, [ A.fromTo 0 270 ] ] |> List.concat)
+                        )
+                        ac
+            in
+            div
+                [ style "transform"
+                    ([ "translateX(" ++ fromFloat x ++ "px)"
+                     , "rotate(" ++ fromFloat 0 ++ "deg)"
+                     ]
+                        |> String.join " "
+                    )
+                , bgc <| hsl 0.2 1 0.5
+                , fg black
+                , borderRadius "10px"
+                , styleWidth "50px"
+                , styleHeight "50px"
+                , ma "10px"
+                , dGrid
+                , placeContentCenter
+                ]
+                [ div [ fontSize "25px" ] [ text "A" ] ]
     in
-    let
-        defaultAttrs =
-            [ A.setDuration 1800
-            , A.loopTimes 1
-            , A.alternateDirection
-            , A.setEasing Ease.outElastic
-            , A.setDelay <| round <| (A.staggerFromCenter 200 il + 500)
-            ]
-
-        xa =
-            A.anim
-                ([ defaultAttrs, [ A.fromTo 0 270 ] ] |> List.concat)
-
-        x =
-            A.valueAt xa ac
-    in
-    div
-        [ style "transform"
-            ([ "translateX(" ++ fromFloat x ++ "px)"
-             , "rotate(" ++ fromFloat 0 ++ "deg)"
-             ]
-                |> String.join " "
-            )
-        , bgc <| hsl 0.2 1 0.5
-        , fg black
-        , borderRadius "10px"
-        , styleWidth "50px"
-        , styleHeight "50px"
-        , ma "10px"
-        , dGrid
-        , placeContentCenter
-        ]
-        [ div [ fontSize "25px" ] [ text "A" ] ]
+    vp (IndexLength 0 0)
 
 
 viewParticle : Particle -> Html msg
