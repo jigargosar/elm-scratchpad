@@ -184,7 +184,7 @@ viewStaggerRangeValueExample ac =
                     , "*"
                     , fromInt il.index
                     ]
-                        |> String.join ""
+                        |> String.join " "
             in
             div [ positionRelative ]
                 [ viewSquare [ smallSizeStyles, shadowElStyles ]
@@ -200,7 +200,7 @@ viewStaggerRangeValueExample ac =
                 ]
         )
         |> fCol [ gap "10px", pa "10px" ]
-        |> viewExampleWithTitle "FROM VALUE"
+        |> viewExampleWithTitle "Range Value"
 
 
 viewExampleWithTitle title el =
@@ -228,8 +228,7 @@ viewSquare attrs =
 
 viewLabel t aa =
     div
-        ([ pl "4ch"
-         , positionAbsolute
+        ([ positionAbsolute
          , opacity 0.3
          , fontSize "16px"
          ]
