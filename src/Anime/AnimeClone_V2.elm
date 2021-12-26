@@ -158,6 +158,43 @@ viewStaggerFromCenterExample ac =
         |> viewExampleWithTitle "FROM VALUE"
 
 
+viewStaggerRangeValueExample : A.AnimClock -> Html msg
+viewStaggerRangeValueExample ac =
+    timesWithIndexAndLength 6
+        (\il ->
+            let
+                dx =
+                    A.valueOf
+                        [ A.fromTo 0 270
+                        , A.duration 1800
+                        ]
+                        ac
+
+                da =
+                    A.valueOf
+                        [ A.fromTo 0 (A.staggerRange ( -360, 360 ) il)
+                        , A.duration 1800
+                        ]
+                        ac
+            in
+            div [ positionRelative ]
+                [ viewSquare [ smallSizeStyles, shadowElStyles ]
+                , viewSquare
+                    [ smallSizeStyles
+                    , [ style "transform"
+                            ([ "translateX(" ++ fromFloat dx ++ "px)"
+                             , "rotate(" ++ fromFloat da ++ "deg)"
+                             ]
+                                |> String.join " "
+                            )
+                      ]
+                    ]
+                ]
+        )
+        |> fCol [ gap "10px", pa "10px" ]
+        |> viewExampleWithTitle "FROM VALUE"
+
+
 viewExampleWithTitle title el =
     div [ pa "10px 20px" ]
         [ div [ fgCurrentColor, ttu ] [ text title ]
