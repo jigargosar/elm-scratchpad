@@ -227,12 +227,8 @@ staggeredValue2 common aa bb clock fn =
         )
 
 
-value : List AnimAttr -> Clock -> Float
-value attrs c =
-    let
-        il =
-            IndexLength 0 1
-    in
+valueWithIndexLength : IndexLength -> List AnimAttr -> Clock -> Float
+valueWithIndexLength il attrs c =
     let
         initAnim : List AnimAttr -> Anim
         initAnim fns =
@@ -266,6 +262,11 @@ value attrs c =
                 |> applyDirectionToFrac iteration a.direction
                 |> a.easing
                 |> lerp a.from a.to
+
+
+value : List AnimAttr -> Clock -> Float
+value =
+    valueWithIndexLength (IndexLength 0 1)
 
 
 applyDirectionToFrac : Int -> Direction -> Float -> Float
