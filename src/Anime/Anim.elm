@@ -143,7 +143,7 @@ loopForever a =
 
 loopFor : Int -> AnimAttr
 loopFor times a =
-    { a | loop = LoopFor (times |> atLeast 0) }
+    { a | loop = LoopFor (times |> atLeast 1) }
 
 
 
