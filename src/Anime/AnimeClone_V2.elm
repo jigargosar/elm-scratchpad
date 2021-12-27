@@ -47,13 +47,13 @@ init () =
 
 type Msg
     = NOP
-    | OnAnimClockDelta A.ClockMsg
+    | OnClockMsg A.ClockMsg
     | ExampleClicked Example
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    [ A.clockSubscription OnAnimClockDelta
+    [ A.clockSubscription OnClockMsg
     ]
         |> Sub.batch
 
@@ -64,9 +64,9 @@ update msg model =
         NOP ->
             ( model, Cmd.none )
 
-        OnAnimClockDelta delta ->
+        OnClockMsg clockMsg ->
             ( { model
-                | animClock = A.updateClock delta model.animClock
+                | animClock = A.updateClock clockMsg model.animClock
               }
             , Cmd.none
             )
