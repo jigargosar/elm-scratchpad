@@ -102,7 +102,7 @@ viewExample isSelected animClock eg =
         [ style "border-bottom" "1px solid rgba(0,0,0,0.65)"
         , pb "20px"
         , sMaxWidth "600px"
-        , positionRelative
+        , relative
         , notifyClick (ExampleClicked eg)
         , cursorPointer
         ]
@@ -119,7 +119,7 @@ viewExample isSelected animClock eg =
 viewExampleBackground : Bool -> Html msg
 viewExampleBackground isSelected =
     div
-        [ positionAbsolute
+        [ absolute
         , w100
         , h100
         , bgCurrentColor
@@ -182,7 +182,7 @@ viewStaggeringBasicsExample isSelected ac =
                 |> String.join ""
 
         viewWithDX dx index =
-            div [ positionRelative ]
+            div [ relative ]
                 [ viewSquare [ smallSizeStyles, shadowElStyles ]
                 , viewLabel isSelected (labelText index)
                 , viewSquare [ smallSizeStyles, [ transforms [ translateX dx ] ] ]
@@ -209,7 +209,7 @@ viewStaggeringStartValueExample isSelected ac =
                 |> String.join ""
 
         viewWithDX dx index =
-            div [ positionRelative ]
+            div [ relative ]
                 [ viewSquare [ smallSizeStyles, shadowElStyles ]
                 , viewLabel isSelected (labelText index)
                 , viewSquare [ smallSizeStyles, [ transforms [ translateX dx ] ] ]
@@ -232,7 +232,7 @@ viewStaggerFromCenterExample : Bool -> A.Clock -> Html msg
 viewStaggerFromCenterExample _ ac =
     let
         viewWithDX dx _ =
-            div [ positionRelative ]
+            div [ relative ]
                 [ viewSquare [ smallSizeStyles, shadowElStyles ]
                 , viewSquare [ smallSizeStyles, [ transforms [ translateX dx ] ] ]
                 ]
@@ -265,7 +265,7 @@ viewStaggerRangeValueExample isSelected clock =
                 |> String.join ""
 
         viewWithDXAndDA dx da index =
-            div [ positionRelative ]
+            div [ relative ]
                 [ viewSquare [ smallSizeStyles, shadowElStyles ]
                 , viewLabel isSelected (labelText index)
                 , viewSquare
@@ -289,7 +289,7 @@ viewStaggerRangeValueExample isSelected clock =
 
 
 shadowElStyles =
-    [ positionAbsolute, left0, opacity 0.2 ]
+    [ absolute, left0, opacity 0.2 ]
 
 
 smallSizeStyles =
@@ -303,7 +303,7 @@ viewSquare attrs =
 viewLabel : Bool -> String -> Html msg
 viewLabel isSelected t =
     div
-        ([ positionAbsolute
+        ([ absolute
          , opacity
             (if isSelected then
                 0.3

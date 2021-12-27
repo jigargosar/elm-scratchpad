@@ -774,7 +774,7 @@ fontSize =
     style "font-size"
 
 
-positionAbsolute =
+absolute =
     style "position" "absolute"
 
 
@@ -806,7 +806,7 @@ userSelectText =
     style "user-select" "text"
 
 
-positionRelative =
+relative =
     style "position" "relative"
 
 

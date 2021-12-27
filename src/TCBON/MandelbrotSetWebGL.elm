@@ -435,7 +435,7 @@ viewEl model =
         [ stylesNode "html,body{height:100%; background-color:#444; overflow:hidden;}"
         , Html.Lazy.lazy4 viewMandelGL model.canvas mandel model.maxT model.colorPow
         , div
-            [ positionAbsolute
+            [ absolute
             , style "width" "100%"
             , style "color" "#f0f0f0"
             , style "text-shadow" "#111 1px 1px 1px"
@@ -487,7 +487,7 @@ viewMandelGL canvas mandel maxT colorPow =
         , Wheel.onWheel OnCanvasWheel
         , tabindex 0
         , autofocus True
-        , positionAbsolute
+        , absolute
         ]
         [ WebGL.entity vertexShader
             fragmentShader
