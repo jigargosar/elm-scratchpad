@@ -73,25 +73,16 @@ type Direction
     | DirectionAlternate
 
 
-applyDirectionToFrac : Int -> Direction -> Float -> Float
-applyDirectionToFrac iteration direction frac =
-    let
-        shouldReverse =
-            case direction of
-                DirectionNormal ->
-                    False
+shouldReverse iteration direction =
+    case direction of
+        DirectionNormal ->
+            False
 
-                DirectionReverse ->
-                    True
+        DirectionReverse ->
+            True
 
-                DirectionAlternate ->
-                    isEven iteration
-    in
-    if shouldReverse then
-        1 - frac
-
-    else
-        frac
+        DirectionAlternate ->
+            isEven iteration
 
 
 type Loop
@@ -234,16 +225,26 @@ value attrs c =
             a.from
 
         Ended { iteration } ->
-            1
-                |> applyDirectionToFrac iteration a.direction
-                |> a.easing
-                |> lerp a.from a.to
+            if shouldReverse iteration a.direction then
+                a.from
+
+            else
+                a.to
 
         Running { frac, iteration } ->
             frac
                 |> applyDirectionToFrac iteration a.direction
                 |> a.easing
                 |> lerp a.from a.to
+
+
+applyDirectionToFrac : Int -> Direction -> Float -> Float
+applyDirectionToFrac iteration direction frac =
+    if shouldReverse iteration direction then
+        1 - frac
+
+    else
+        frac
 
 
 staggerRange : Float2 -> IndexLength -> Float
