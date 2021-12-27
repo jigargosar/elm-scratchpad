@@ -647,6 +647,10 @@ grayN n =
     rgb n n n
 
 
+green =
+    hsl 0.42 1 0.5
+
+
 rgb r g b =
     Color.rgb r g b |> Color.toCssString
 

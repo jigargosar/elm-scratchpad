@@ -301,10 +301,6 @@ viewStaggerRangeValueExample isSelected ac =
         )
 
 
-green =
-    hsl 0.42 1 0.5
-
-
 shadowElStyles =
     [ positionAbsolute, left0, opacity 0.2 ]
 
