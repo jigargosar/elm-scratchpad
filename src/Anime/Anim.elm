@@ -37,6 +37,11 @@ animClockInit =
     AnimClock 0 0
 
 
+animClockElapsed : AnimClock -> Int
+animClockElapsed c =
+    c.current - c.start
+
+
 animClockUpdateOnDelta : AnimClockDelta -> AnimClock -> AnimClock
 animClockUpdateOnDelta (AnimClockDelta deltaMilli) ac =
     { ac | current = ac.current + clamp 0 100 deltaMilli }
@@ -165,12 +170,8 @@ type AnimStage
     | Ended Int
 
 
-getStage : Anim -> AnimClock -> AnimStage
-getStage a { start, current } =
-    let
-        elapsed =
-            current - start
-    in
+getStage : Anim -> Int -> AnimStage
+getStage a elapsed =
     if elapsed < a.delay then
         NotStarted
 
@@ -194,7 +195,7 @@ value attrs =
 
 valueAtHelp : Anim -> AnimClock -> Float
 valueAtHelp a c =
-    case getStage a c of
+    case getStage a (animClockElapsed c) of
         NotStarted ->
             a.from
 
