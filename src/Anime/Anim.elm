@@ -218,7 +218,7 @@ valueAtHelp a c =
 
 
 valueAtWhenRunning : Anim -> AnimClock -> Float
-valueAtWhenRunning ({ direction, loop, easing } as a) ac =
+valueAtWhenRunning ({ direction, easing } as a) ac =
     let
         elapsed =
             (ac.current - (ac.start + a.delay))
