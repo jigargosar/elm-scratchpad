@@ -223,7 +223,9 @@ staggeredValue2 :
 staggeredValue2 common aa bb clock fn =
     mapWithIndexAndLength
         (\il ->
-            fn (value (common ++ aa) clock) (value (common ++ bb) clock)
+            fn
+                (valueWithIndexLength il (common ++ aa) clock)
+                (valueWithIndexLength il (common ++ bb) clock)
         )
 
 
