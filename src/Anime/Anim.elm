@@ -4,7 +4,6 @@ module Anime.Anim exposing
     , AnimClock
     , AnimClockDelta
     , alternateDirection
-    , anim
     , animClockInit
     , animClockSubscription
     , animClockUpdateOnDelta
@@ -19,8 +18,7 @@ module Anime.Anim exposing
     , stagger
     , staggerFromCenter
     , staggerRange
-    , valueAt
-    , valueOf
+    , value
     )
 
 import Browser.Events
@@ -177,13 +175,13 @@ getStage ({ direction, loop } as a) { start, current } =
                     Running
 
 
-valueOf : List AnimAttr -> AnimClock -> Float
-valueOf attrs =
-    valueAt (anim attrs)
+value : List AnimAttr -> AnimClock -> Float
+value attrs =
+    valueAtHelp (anim attrs)
 
 
-valueAt : Anim -> AnimClock -> Float
-valueAt a c =
+valueAtHelp : Anim -> AnimClock -> Float
+valueAtHelp a c =
     case getStage a c of
         NotStarted ->
             a.from

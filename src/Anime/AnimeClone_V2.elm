@@ -184,7 +184,7 @@ viewStaggeringBasicsExample isSelected ac =
         (\il ->
             let
                 dx =
-                    A.valueOf
+                    A.value
                         [ A.fromTo 0 270
                         , A.duration 1800
                         , A.ease Ease.outElastic
@@ -215,7 +215,7 @@ viewStaggeringStartValueExample isSelected ac =
         (\il ->
             let
                 dx =
-                    A.valueOf
+                    A.value
                         [ A.fromTo 0 270
                         , A.duration 1800
                         , A.ease Ease.outElastic
@@ -246,7 +246,7 @@ viewStaggerFromCenterExample _ ac =
         (\il ->
             let
                 dx =
-                    A.valueOf
+                    A.value
                         [ A.fromTo 0 270
                         , A.duration 1800
                         , A.ease Ease.outElastic
@@ -277,10 +277,10 @@ viewStaggerRangeValueExample isSelected ac =
                     ]
 
                 dx =
-                    A.valueOf (A.fromTo 0 270 :: commonAttrs) ac
+                    A.value (A.fromTo 0 270 :: commonAttrs) ac
 
                 da =
-                    A.valueOf
+                    A.value
                         (A.fromTo 0 (A.staggerRange ( -360, 360 ) il)
                             :: commonAttrs
                         )
