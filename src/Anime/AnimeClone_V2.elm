@@ -27,6 +27,7 @@ type Example
     | Example_Staggering_Range
     | Example_Staggering_FromCenter
     | Example_Staggering_Direction
+    | Example_Staggering_Easing
 
 
 init : () -> ( Model, Cmd Msg )
@@ -39,6 +40,7 @@ init () =
                 , Example_Staggering_Range
                 , Example_Staggering_FromCenter
                 , Example_Staggering_Direction
+                , Example_Staggering_Easing
                 ]
       }
     , Cmd.none
@@ -180,6 +182,11 @@ exampleInfo example =
             , view = viewStaggeringReverseDirectionExample
             }
 
+        Example_Staggering_Easing ->
+            { title = "Easing"
+            , view = viewStaggeringEasingExample
+            }
+
 
 viewStaggeringBasicsExample : Bool -> A.Clock -> Html msg
 viewStaggeringBasicsExample isSelected ac =
@@ -319,6 +326,31 @@ viewStaggeringReverseDirectionExample isSelected ac =
                 , A.duration 1800
                 , A.ease Ease.outElastic
                 , A.staggerDelay (A.staggerReverse 100)
+                ]
+                viewWithDX
+                ac
+        )
+
+
+viewStaggeringEasingExample : Bool -> A.Clock -> Html msg
+viewStaggeringEasingExample _ ac =
+    let
+        length =
+            6
+
+        viewWithDX dx _ =
+            div [ relative ]
+                [ viewSquare [ smallSizeStyles, shadowElStyles ]
+                , viewSquare [ smallSizeStyles, [ transforms [ translateX dx ] ] ]
+                ]
+    in
+    fCol [ gap "10px" ]
+        (rangeN length
+            |> A.mapListForOneValue
+                [ A.to 270
+                , A.duration 1800
+                , A.ease Ease.outElastic
+                , A.staggerDelay (A.staggerEase 300 Ease.outQuad)
                 ]
                 viewWithDX
                 ac

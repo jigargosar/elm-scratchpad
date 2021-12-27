@@ -17,6 +17,7 @@ module Anime.Anim exposing
     , reverseDirection
     , stagger
     , staggerDelay
+    , staggerEase
     , staggerFromCenter
     , staggerRange
     , staggerReverse
@@ -325,6 +326,12 @@ stagger offset il =
 staggerReverse : Float -> IndexLength -> Float
 staggerReverse offset il =
     offset * toFloat ((il.length - 1) - il.index)
+
+
+staggerEase : Float -> Ease.Easing -> IndexLength -> Float
+staggerEase offset easing il =
+    easing (toFloat il.index / toFloat (il.length - 1))
+        |> mul (toFloat (il.length - 1) * offset)
 
 
 staggerFromCenter : Float -> IndexLength -> Float
