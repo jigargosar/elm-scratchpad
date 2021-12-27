@@ -274,7 +274,7 @@ viewStaggerRangeValueExample isSelected ac =
             ]
                 |> String.join ""
 
-        viewLine dx da index =
+        viewWithDXAndDA dx da index =
             div [ positionRelative ]
                 [ viewSquare [ smallSizeStyles, shadowElStyles ]
                 , viewLabel isSelected (labelText index)
@@ -297,7 +297,7 @@ viewStaggerRangeValueExample isSelected ac =
                 (A.to 270 :: commonAttr)
                 (A.staggerTo (A.staggerRange ( -360, 360 )) :: commonAttr)
                 ac
-                viewLine
+                viewWithDXAndDA
         )
 
 
