@@ -325,7 +325,7 @@ viewStaggeringReverseDirectionExample isSelected ac =
                 [ A.to 270
                 , A.duration 1800
                 , A.ease Ease.outElastic
-                , A.staggerDelay (A.staggerReverse 150)
+                , A.staggerDelay (A.staggerReverse 100)
                 ]
                 viewWithDX
                 ac
