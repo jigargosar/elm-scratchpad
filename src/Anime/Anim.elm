@@ -166,7 +166,7 @@ reverseDirection a =
 
 type AnimStage
     = NotStarted
-    | Running
+    | Running { frac : Float, iteration : Int }
     | Ended Int
 
 
@@ -176,16 +176,24 @@ getStage a elapsed =
         NotStarted
 
     else
+        let
+            iterationCount =
+                (elapsed // a.duration) + 1
+        in
+        let
+            frac =
+                toFloat (modBy a.duration elapsed) / toFloat a.duration
+        in
         case a.loop of
             LoopForever ->
-                Running
+                Running { frac = frac, iteration = iterationCount }
 
             LoopFor times ->
                 if elapsed >= a.delay + (times * a.duration) then
                     Ended times
 
                 else
-                    Running
+                    Running { frac = frac, iteration = iterationCount }
 
 
 value : List AnimAttr -> AnimClock -> Float
@@ -214,7 +222,7 @@ valueAtHelp a c =
                     else
                         a.from
 
-        Running ->
+        Running _ ->
             valueAtWhenRunning a c
 
 
