@@ -4,13 +4,13 @@ module Anime.Anim exposing
     , AnimClock
     , AnimClockDelta
     , alternateDirection
-    , animClockInit
     , animClockSubscription
     , animClockUpdateOnDelta
     , delay
     , duration
     , ease
     , fromTo
+    , initClock
     , loopFor
     , loopForever
     , reverseDirection
@@ -32,8 +32,8 @@ type alias AnimClock =
     }
 
 
-animClockInit : AnimClock
-animClockInit =
+initClock : AnimClock
+initClock =
     AnimClock 0 0
 
 

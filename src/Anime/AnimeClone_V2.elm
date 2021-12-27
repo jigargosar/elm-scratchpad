@@ -32,7 +32,7 @@ type Example
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { animClock = A.animClockInit
+    ( { animClock = A.initClock
       , examples =
             Pivot.fromCons
                 Example_Staggering_Basics
@@ -74,7 +74,7 @@ update msg model =
             )
 
         OnClick ->
-            ( { model | animClock = A.animClockInit }, Cmd.none )
+            ( { model | animClock = A.initClock }, Cmd.none )
 
         ExampleClicked example ->
             ( { model | examples = withRollback (Pivot.firstWith (eq example)) model.examples }
@@ -90,7 +90,7 @@ view model =
             (model.examples
                 |> Pivot.mapCS
                     (viewExample True model.animClock)
-                    (viewExample False A.animClockInit)
+                    (viewExample False A.initClock)
                 |> Pivot.toList
             )
         ]
