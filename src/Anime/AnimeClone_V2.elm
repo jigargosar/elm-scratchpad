@@ -282,10 +282,7 @@ viewStaggerRangeValueExample isSelected clock =
                 , viewLabel isSelected (labelText index)
                 , viewSquare
                     [ smallSizeStyles
-                    , [ transforms
-                            [ translateX dx
-                            , rotateDeg da
-                            ]
+                    , [ transforms [ translateX dx, rotateDeg da ]
                       ]
                     ]
                 ]
