@@ -187,8 +187,7 @@ viewStaggeringBasicsExample isSelected ac =
                 , viewLabel isSelected (labelText index)
                 , viewSquare
                     [ smallSizeStyles
-                    , [ transforms [ translateX dx ]
-                      ]
+                    , [ transforms [ translateX dx ] ]
                     ]
                 ]
     in
@@ -216,11 +215,7 @@ viewStaggeringStartValueExample isSelected ac =
             div [ positionRelative ]
                 [ viewSquare [ smallSizeStyles, shadowElStyles ]
                 , viewLabel isSelected (labelText index)
-                , viewSquare
-                    [ smallSizeStyles
-                    , [ transforms [ translateX dx ]
-                      ]
-                    ]
+                , viewSquare [ smallSizeStyles, [ transforms [ translateX dx ] ] ]
                 ]
     in
     fCol [ gap "10px" ]
@@ -242,11 +237,7 @@ viewStaggerFromCenterExample _ ac =
         viewWithDX dx _ =
             div [ positionRelative ]
                 [ viewSquare [ smallSizeStyles, shadowElStyles ]
-                , viewSquare
-                    [ smallSizeStyles
-                    , [ transforms [ translateX dx ]
-                      ]
-                    ]
+                , viewSquare [ smallSizeStyles, [ transforms [ translateX dx ] ] ]
                 ]
     in
     fCol [ gap "10px" ]
