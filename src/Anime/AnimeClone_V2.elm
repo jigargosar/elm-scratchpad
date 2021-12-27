@@ -54,7 +54,7 @@ type Msg
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    [ A.animClockSubscription OnAnimClockDelta
+    [ A.clockSubscription OnAnimClockDelta
     , Browser.Events.onClick (JD.succeed OnClick)
     ]
         |> Sub.batch
@@ -68,7 +68,7 @@ update msg model =
 
         OnAnimClockDelta delta ->
             ( { model
-                | animClock = A.animClockUpdateOnDelta delta model.animClock
+                | animClock = A.updateClock delta model.animClock
               }
             , Cmd.none
             )

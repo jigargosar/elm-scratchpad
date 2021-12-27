@@ -4,8 +4,7 @@ module Anime.Anim exposing
     , AnimClock
     , AnimClockDelta
     , alternateDirection
-    , animClockSubscription
-    , animClockUpdateOnDelta
+    , clockSubscription
     , delay
     , duration
     , ease
@@ -18,6 +17,7 @@ module Anime.Anim exposing
     , staggerFromCenter
     , staggerRange
     , to
+    , updateClock
     , value
     )
 
@@ -42,8 +42,8 @@ animClockElapsed c =
     c.current - c.start
 
 
-animClockUpdateOnDelta : AnimClockDelta -> AnimClock -> AnimClock
-animClockUpdateOnDelta (AnimClockDelta deltaMilli) ac =
+updateClock : AnimClockDelta -> AnimClock -> AnimClock
+updateClock (AnimClockDelta deltaMilli) ac =
     { ac | current = ac.current + clamp 0 100 deltaMilli }
 
 
@@ -51,8 +51,8 @@ type AnimClockDelta
     = AnimClockDelta Int
 
 
-animClockSubscription : (AnimClockDelta -> msg) -> Sub msg
-animClockSubscription tag =
+clockSubscription : (AnimClockDelta -> msg) -> Sub msg
+clockSubscription tag =
     Browser.Events.onAnimationFrameDelta (round >> AnimClockDelta >> tag)
 
 
