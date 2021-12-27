@@ -278,25 +278,8 @@ viewStaggerRangeValueExample isSelected ac =
                     |> String.join ""
          in
          rangeN length
-            |> mapWithIndexAndLength
-                (\il index ->
-                    let
-                        commonAttrs =
-                            [ A.duration 1200
-                            , A.ease Ease.inOutQuad
-                            ]
-
-                        dx =
-                            A.value (A.to 270 :: commonAttrs) ac
-
-                        da =
-                            A.value
-                                (A.to (A.staggerRange ( -360, 360 ) il)
-                                    :: A.toStaggered (A.staggerRange ( -360, 360 ))
-                                    :: commonAttrs
-                                )
-                                ac
-                    in
+            |> A.staggeredValue2
+                (\dx da index ->
                     div [ positionRelative ]
                         [ viewSquare [ smallSizeStyles, shadowElStyles ]
                         , viewLabel isSelected (labelText index)
@@ -310,6 +293,44 @@ viewStaggerRangeValueExample isSelected ac =
                             ]
                         ]
                 )
+                [ A.to 270 ]
+                [ A.toStaggered (A.staggerRange ( -360, 360 )) ]
+                [ A.duration 1200
+                , A.ease Ease.inOutQuad
+                ]
+                ac
+         --    |> mapWithIndexAndLength
+         --        (\il index ->
+         --            let
+         --                commonAttrs =
+         --                    [ A.duration 1200
+         --                    , A.ease Ease.inOutQuad
+         --                    ]
+         --
+         --                dx =
+         --                    A.value (A.to 270 :: commonAttrs) ac
+         --
+         --                da =
+         --                    A.value
+         --                        (A.to (A.staggerRange ( -360, 360 ) il)
+         --                            :: A.toStaggered (A.staggerRange ( -360, 360 ))
+         --                            :: commonAttrs
+         --                        )
+         --                        ac
+         --            in
+         --            div [ positionRelative ]
+         --                [ viewSquare [ smallSizeStyles, shadowElStyles ]
+         --                , viewLabel isSelected (labelText index)
+         --                , viewSquare
+         --                    [ smallSizeStyles
+         --                    , [ transforms
+         --                            [ "translateX(" ++ fromFloat dx ++ "px)"
+         --                            , "rotate(" ++ fromFloat da ++ "deg)"
+         --                            ]
+         --                      ]
+         --                    ]
+         --                ]
+         --        )
         )
 
 

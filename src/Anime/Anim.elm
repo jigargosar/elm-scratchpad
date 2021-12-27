@@ -16,6 +16,7 @@ module Anime.Anim exposing
     , stagger
     , staggerFromCenter
     , staggerRange
+    , staggeredValue2
     , to
     , toStaggered
     , updateClock
@@ -222,6 +223,21 @@ stageAt a c =
 
                 else
                     Ended { iteration = maxIterations }
+
+
+staggeredValue2 :
+    (Float -> Float -> a -> b)
+    -> List AnimAttr
+    -> List AnimAttr
+    -> List AnimAttr
+    -> Clock
+    -> List a
+    -> List b
+staggeredValue2 fn aa bb common c =
+    mapWithIndexAndLength
+        (\il ->
+            fn (value (common ++ aa) c) (value (common ++ bb) c)
+        )
 
 
 value : List AnimAttr -> Clock -> Float
