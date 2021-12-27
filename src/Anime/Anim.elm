@@ -259,11 +259,15 @@ applyDirectionToFrac iteration direction frac =
 
 staggerRange : Float2 -> IndexLength -> Float
 staggerRange ( from, to_ ) il =
-    let
-        frac =
-            toFloat il.index / (toFloat il.length - 1)
-    in
-    lerp from to_ frac
+    if il.length <= 1 then
+        from
+
+    else
+        let
+            frac =
+                toFloat il.index / (toFloat il.length - 1)
+        in
+        lerp from to_ frac
 
 
 
@@ -277,12 +281,16 @@ stagger offset il =
 
 staggerFromCenter : Float -> IndexLength -> Float
 staggerFromCenter offset il =
-    let
-        frac =
-            (toFloat il.index - (toFloat (il.length - 1) / 2))
-                |> abs
-                |> round
-                |> toFloat
-                |> mul offset
-    in
-    frac
+    if il.length <= 1 then
+        offset
+
+    else
+        let
+            frac =
+                (toFloat il.index - (toFloat (il.length - 1) / 2))
+                    |> abs
+                    |> round
+                    |> toFloat
+                    |> mul offset
+        in
+        frac
