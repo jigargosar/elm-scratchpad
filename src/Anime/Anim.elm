@@ -229,6 +229,17 @@ valueAtWhenRunning a ac =
         iterationCount =
             (elapsed // a.duration) + 1
 
+        shouldReverse =
+            case a.direction of
+                DirectionNormal ->
+                    False
+
+                DirectionReverse ->
+                    True
+
+                DirectionAlternate ->
+                    isEven iterationCount
+
         applyEasing =
             case a.direction of
                 DirectionNormal ->
