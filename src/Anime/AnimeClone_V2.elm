@@ -261,7 +261,7 @@ viewStaggerFromCenterExample _ ac =
 
 
 viewStaggerRangeValueExample : Bool -> A.Clock -> Html msg
-viewStaggerRangeValueExample isSelected ac =
+viewStaggerRangeValueExample isSelected clock =
     let
         length =
             6
@@ -296,7 +296,7 @@ viewStaggerRangeValueExample isSelected ac =
             |> A.mapListFor2Values
                 (A.to 270 :: common)
                 (A.staggerTo (A.staggerRange ( -360, 360 )) :: common)
-                ac
+                clock
                 viewWithDXAndDA
         )
 
