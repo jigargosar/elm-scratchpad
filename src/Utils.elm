@@ -359,6 +359,15 @@ timesWithIndexAndLength n fn =
     rangeN n |> List.map (\i -> fn { index = i, length = n })
 
 
+mapWithIndexAndLength : (IndexLength -> a -> b) -> List c -> List a -> List b
+mapWithIndexAndLength fn list =
+    let
+        length =
+            List.length list
+    in
+    List.indexedMap (\i -> fn { index = i, length = length })
+
+
 type alias Vec =
     { x : Float, y : Float }
 
