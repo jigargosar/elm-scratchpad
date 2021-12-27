@@ -288,6 +288,36 @@ viewStaggerRangeValueExample isSelected clock =
         )
 
 
+viewStaggeringReverseDirectionExample : Bool -> A.Clock -> Html msg
+viewStaggeringReverseDirectionExample isSelected ac =
+    let
+        length =
+            6
+
+        labelText index =
+            [ "delay = (100 * ", fromInt (length - 1 - index), ") ms" ]
+                |> String.join ""
+
+        viewWithDX dx index =
+            div [ relative ]
+                [ viewSquare [ smallSizeStyles, shadowElStyles ]
+                , viewLabel isSelected (labelText index)
+                , viewSquare [ smallSizeStyles, [ transforms [ translateX dx ] ] ]
+                ]
+    in
+    fCol [ gap "10px" ]
+        (rangeN length
+            |> A.mapListForOneValue
+                [ A.to 270
+                , A.duration 1800
+                , A.ease Ease.outElastic
+                , A.staggerDelay (A.staggerReverse 100)
+                ]
+                viewWithDX
+                ac
+        )
+
+
 shadowElStyles =
     [ absolute, left0, opacity 0.2 ]
 
