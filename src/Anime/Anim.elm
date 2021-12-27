@@ -19,6 +19,7 @@ module Anime.Anim exposing
     , staggerDelay
     , staggerFromCenter
     , staggerRange
+    , staggerReverse
     , staggerTo
     , to
     , updateClock
@@ -319,6 +320,11 @@ staggerRange ( from, to_ ) il =
 stagger : Float -> IndexLength -> Float
 stagger offset il =
     offset * toFloat il.index
+
+
+staggerReverse : Float -> IndexLength -> Float
+staggerReverse offset il =
+    offset * toFloat ((il.length - 1) - il.index)
 
 
 staggerFromCenter : Float -> IndexLength -> Float
