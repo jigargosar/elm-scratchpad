@@ -330,8 +330,12 @@ staggerReverse offset il =
 
 staggerEase : Float -> Ease.Easing -> IndexLength -> Float
 staggerEase offset easing il =
-    easing (toFloat il.index / toFloat (il.length - 1))
-        |> mul (toFloat (il.length - 1) * offset)
+    if il.length <= 1 then
+        offset
+
+    else
+        easing (toFloat il.index / toFloat (il.length - 1))
+            |> mul (toFloat (il.length - 1) * offset)
 
 
 staggerFromCenter : Float -> IndexLength -> Float
