@@ -183,8 +183,7 @@ getStage a c =
         let
             frac =
                 toFloat (modBy a.duration elapsed) / toFloat a.duration
-        in
-        let
+
             iterationCount =
                 (elapsed // a.duration) + 1
         in
