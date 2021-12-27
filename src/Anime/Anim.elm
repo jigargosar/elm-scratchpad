@@ -181,23 +181,23 @@ getStage a clock =
 
     else
         let
-            iterationCount =
-                (elapsed // a.duration) + 1
-        in
-        let
             frac =
                 toFloat (modBy a.duration elapsed) / toFloat a.duration
+        in
+        let
+            iterationCount =
+                (elapsed // a.duration) + 1
         in
         case a.loop of
             LoopForever ->
                 Running { frac = frac, iteration = iterationCount }
 
             LoopFor times ->
-                if elapsed >= a.delay + (times * a.duration) then
-                    Ended times
+                if iterationCount <= times then
+                    Running { frac = frac, iteration = iterationCount }
 
                 else
-                    Running { frac = frac, iteration = iterationCount }
+                    Ended times
 
 
 value : List AnimAttr -> AnimClock -> Float
