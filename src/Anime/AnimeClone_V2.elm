@@ -288,14 +288,14 @@ viewStaggerRangeValueExample isSelected ac =
                     ]
                 ]
 
-        commonAttr =
+        common =
             [ A.duration 1200, A.ease Ease.inOutQuad ]
     in
     fCol [ gap "10px" ]
         (rangeN length
             |> A.mapListFor2Values
-                (A.to 270 :: commonAttr)
-                (A.staggerTo (A.staggerRange ( -360, 360 )) :: commonAttr)
+                (A.to 270 :: common)
+                (A.staggerTo (A.staggerRange ( -360, 360 )) :: common)
                 ac
                 viewWithDXAndDA
         )
