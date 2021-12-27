@@ -167,7 +167,7 @@ reverseDirection a =
 type AnimStage
     = NotStarted
     | Running { frac : Float, iteration : Int }
-    | Ended Int
+    | Ended { iteration : Int }
 
 
 getStage : Anim -> Int -> AnimStage
@@ -200,7 +200,7 @@ getStage a clock =
                     Running { frac = frac, iteration = iterationCount }
 
                 else
-                    Ended times
+                    Ended { iteration = times }
 
 
 value : List AnimAttr -> AnimClock -> Float
@@ -214,7 +214,7 @@ valueAtHelp a c =
         NotStarted ->
             a.from
 
-        Ended iterations ->
+        Ended { iteration } ->
             case a.direction of
                 DirectionNormal ->
                     a.to
@@ -223,7 +223,7 @@ valueAtHelp a c =
                     a.from
 
                 DirectionAlternate ->
-                    if isOdd iterations then
+                    if isOdd iteration then
                         a.to
 
                     else
