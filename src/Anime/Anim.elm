@@ -215,14 +215,14 @@ valueAtHelp a c =
             a.from
 
         Ended { iteration } ->
-            valueAtWhenRunning a { frac = 1, iteration = iteration }
+            valueAtFractionAndIteration a { frac = 1, iteration = iteration }
 
         Running fi ->
-            valueAtWhenRunning a fi
+            valueAtFractionAndIteration a fi
 
 
-valueAtWhenRunning : Anim -> { frac : Float, iteration : Int } -> Float
-valueAtWhenRunning a { frac, iteration } =
+valueAtFractionAndIteration : Anim -> { frac : Float, iteration : Int } -> Float
+valueAtFractionAndIteration a { frac, iteration } =
     let
         iterationCount =
             iteration
