@@ -222,17 +222,16 @@ stageAt a c =
 mapListFor2Values :
     List AnimAttr
     -> List AnimAttr
-    -> List AnimAttr
     -> Clock
     -> (Float -> Float -> a -> b)
     -> List a
     -> List b
-mapListFor2Values commonAttrs attrs1 attrs2 clock fn =
+mapListFor2Values attrs1 attrs2 clock fn =
     mapWithIndexAndLength
         (\il ->
             fn
-                (valueWithIndexLength il (commonAttrs ++ attrs1) clock)
-                (valueWithIndexLength il (commonAttrs ++ attrs2) clock)
+                (valueWithIndexLength il attrs1 clock)
+                (valueWithIndexLength il attrs2 clock)
         )
 
 

@@ -273,13 +273,15 @@ viewStaggerRangeValueExample isSelected ac =
             , fromInt index
             ]
                 |> String.join ""
+
+        commonAttr =
+            [ A.duration 1200, A.ease Ease.inOutQuad ]
     in
     fCol [ gap "10px" ]
         (rangeN length
             |> A.mapListFor2Values
-                [ A.duration 1200, A.ease Ease.inOutQuad ]
-                [ A.to 270 ]
-                [ A.staggerTo (A.staggerRange ( -360, 360 )) ]
+                (A.to 270 :: commonAttr)
+                (A.staggerTo (A.staggerRange ( -360, 360 )) :: commonAttr)
                 ac
                 (\dx da index ->
                     div [ positionRelative ]
