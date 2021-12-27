@@ -284,7 +284,7 @@ viewStaggerRangeValueExample isSelected clock =
                     [ smallSizeStyles
                     , [ transforms
                             [ translateX dx
-                            , "rotate(" ++ fromFloat da ++ "deg)"
+                            , rotateDeg da
                             ]
                       ]
                     ]
@@ -338,3 +338,8 @@ viewLabel isSelected t =
 translateX : Float -> String
 translateX dx =
     "translateX(" ++ fromFloat dx ++ "px)"
+
+
+rotateDeg : Float -> String
+rotateDeg da =
+    "rotate(" ++ fromFloat da ++ "deg)"
