@@ -166,7 +166,7 @@ type AnimStage
 
 
 getStage : Anim -> AnimClock -> AnimStage
-getStage ({ direction, loop } as a) { start, current } =
+getStage a { start, current } =
     let
         elapsed =
             current - start
@@ -175,7 +175,7 @@ getStage ({ direction, loop } as a) { start, current } =
         NotStarted
 
     else
-        case loop of
+        case a.loop of
             LoopForever ->
                 Running
 
