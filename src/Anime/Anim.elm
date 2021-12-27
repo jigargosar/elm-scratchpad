@@ -208,8 +208,11 @@ value attrs c =
     let
         a =
             anim attrs
+
+        elapsed =
+            animClockElapsed c
     in
-    case getStage a (animClockElapsed c) of
+    case getStage a elapsed of
         NotStarted ->
             a.from
 
