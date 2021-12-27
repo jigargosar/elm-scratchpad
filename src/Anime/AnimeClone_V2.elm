@@ -267,9 +267,13 @@ viewStaggerFromCenterExample _ ac =
 viewStaggerRangeValueExample : Bool -> A.Clock -> Html msg
 viewStaggerRangeValueExample isSelected ac =
     fCol [ gap "10px" ]
-        (rangeN 6
+        (let
+            length =
+                6
+         in
+         rangeN length
             |> mapWithIndexAndLength
-                (\il _ ->
+                (\il index ->
                     let
                         commonAttrs =
                             [ A.duration 1200
@@ -288,9 +292,9 @@ viewStaggerRangeValueExample isSelected ac =
 
                         labelText =
                             [ "rotate = -360 + ((360 - (-360)) / "
-                            , fromInt (il.length - 1)
+                            , fromInt (length - 1)
                             , ") * "
-                            , fromInt il.index
+                            , fromInt index
                             ]
                                 |> String.join ""
                     in
