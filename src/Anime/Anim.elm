@@ -240,25 +240,19 @@ valueAtWhenRunning a ac =
                 DirectionAlternate ->
                     isEven iterationCount
 
-        applyEasing =
-            case a.direction of
-                DirectionNormal ->
-                    a.easing
+        applyDirection : Float -> Float
+        applyDirection n =
+            if shouldReverse then
+                1 - n
 
-                DirectionReverse ->
-                    Ease.reverse a.easing
-
-                DirectionAlternate ->
-                    if isOdd iterationCount then
-                        a.easing
-
-                    else
-                        Ease.reverse a.easing
+            else
+                n
     in
     let
         frac =
             (toFloat (modBy a.duration elapsed) / toFloat a.duration)
-                |> applyEasing
+                |> applyDirection
+                |> a.easing
     in
     lerp a.from a.to frac
 
