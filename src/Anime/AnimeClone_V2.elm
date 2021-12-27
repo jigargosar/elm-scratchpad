@@ -278,7 +278,7 @@ viewStaggerRangeValueExample isSelected ac =
     in
     fCol [ gap "10px" ]
         (rangeN length
-            |> A.mapListForStaggeredValues2
+            |> A.mapListFor2Values
                 [ A.duration 1200, A.ease Ease.inOutQuad ]
                 [ A.to 270 ]
                 [ A.toStaggered (A.staggerRange ( -360, 360 )) ]
