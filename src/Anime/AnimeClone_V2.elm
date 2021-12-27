@@ -270,6 +270,14 @@ viewStaggerRangeValueExample isSelected ac =
         (let
             length =
                 6
+
+            labelText index =
+                [ "rotate = -360 + ((360 - (-360)) / "
+                , fromInt (length - 1)
+                , ") * "
+                , fromInt index
+                ]
+                    |> String.join ""
          in
          rangeN length
             |> mapWithIndexAndLength
@@ -289,18 +297,10 @@ viewStaggerRangeValueExample isSelected ac =
                                     :: commonAttrs
                                 )
                                 ac
-
-                        labelText =
-                            [ "rotate = -360 + ((360 - (-360)) / "
-                            , fromInt (length - 1)
-                            , ") * "
-                            , fromInt index
-                            ]
-                                |> String.join ""
                     in
                     div [ positionRelative ]
                         [ viewSquare [ smallSizeStyles, shadowElStyles ]
-                        , viewLabel isSelected labelText
+                        , viewLabel isSelected (labelText index)
                         , viewSquare
                             [ smallSizeStyles
                             , [ transforms
