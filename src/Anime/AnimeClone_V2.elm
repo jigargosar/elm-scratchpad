@@ -246,7 +246,6 @@ viewStaggerFromCenterExample _ ac =
                 , A.ease Ease.outElastic
                 , A.staggerDelay (A.staggerFromCenter 200)
                 ]
-                ac
                 (\dx _ ->
                     div [ positionRelative ]
                         [ viewSquare [ smallSizeStyles, shadowElStyles ]
@@ -257,6 +256,7 @@ viewStaggerFromCenterExample _ ac =
                             ]
                         ]
                 )
+                ac
         )
 
 
@@ -295,8 +295,8 @@ viewStaggerRangeValueExample isSelected clock =
         (A.mapListFor2Values
             (A.to 270 :: common)
             (A.staggerTo (A.staggerRange ( -360, 360 )) :: common)
-            clock
             viewWithDXAndDA
+            clock
             (rangeN length)
         )
 
