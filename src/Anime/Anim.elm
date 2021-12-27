@@ -204,12 +204,11 @@ getStage a clock =
 
 
 value : List AnimAttr -> AnimClock -> Float
-value attrs =
-    valueAtHelp (anim attrs)
-
-
-valueAtHelp : Anim -> AnimClock -> Float
-valueAtHelp a c =
+value attrs c =
+    let
+        a =
+            anim attrs
+    in
     case getStage a (animClockElapsed c) of
         NotStarted ->
             a.from
