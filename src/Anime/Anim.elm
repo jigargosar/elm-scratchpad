@@ -234,18 +234,16 @@ value attrs c =
             a.from
 
         Ended { iteration } ->
-            valueAtFractionAndIteration a { frac = 1, iteration = iteration }
+            1
+                |> applyDirectionToFrac iteration a.direction
+                |> a.easing
+                |> lerp a.from a.to
 
-        Running fi ->
-            valueAtFractionAndIteration a fi
-
-
-valueAtFractionAndIteration : Anim -> { frac : Float, iteration : Int } -> Float
-valueAtFractionAndIteration a { frac, iteration } =
-    frac
-        |> applyDirectionToFrac iteration a.direction
-        |> a.easing
-        |> lerp a.from a.to
+        Running { frac, iteration } ->
+            frac
+                |> applyDirectionToFrac iteration a.direction
+                |> a.easing
+                |> lerp a.from a.to
 
 
 staggerRange : Float2 -> IndexLength -> Float
