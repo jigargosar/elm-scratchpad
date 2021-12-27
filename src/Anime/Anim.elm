@@ -221,7 +221,7 @@ valueAtWhenRunning : Anim -> AnimClock -> Float
 valueAtWhenRunning a ac =
     let
         elapsed =
-            (ac.current - (ac.start + a.delay))
+            (ac.current - ac.start - a.delay)
                 -- need to ensure elapsed is positive, in case of delay
                 |> atLeast 0
     in
