@@ -266,46 +266,47 @@ viewStaggerFromCenterExample _ ac =
 
 viewStaggerRangeValueExample : Bool -> A.Clock -> Html msg
 viewStaggerRangeValueExample isSelected ac =
-    timesWithIndexAndLength 6
-        (\il ->
-            let
-                commonAttrs =
-                    [ A.duration 1200
-                    , A.ease Ease.inOutQuad
-                    ]
+    fCol [ gap "10px" ]
+        (timesWithIndexAndLength 6
+            (\il ->
+                let
+                    commonAttrs =
+                        [ A.duration 1200
+                        , A.ease Ease.inOutQuad
+                        ]
 
-                dx =
-                    A.value (A.to 270 :: commonAttrs) ac
+                    dx =
+                        A.value (A.to 270 :: commonAttrs) ac
 
-                da =
-                    A.value
-                        (A.to (A.staggerRange ( -360, 360 ) il)
-                            :: commonAttrs
-                        )
-                        ac
+                    da =
+                        A.value
+                            (A.to (A.staggerRange ( -360, 360 ) il)
+                                :: commonAttrs
+                            )
+                            ac
 
-                labelText =
-                    [ "rotate = -360 + ((360 - (-360)) / "
-                    , fromInt (il.length - 1)
-                    , ") * "
-                    , fromInt il.index
+                    labelText =
+                        [ "rotate = -360 + ((360 - (-360)) / "
+                        , fromInt (il.length - 1)
+                        , ") * "
+                        , fromInt il.index
+                        ]
+                            |> String.join ""
+                in
+                div [ positionRelative ]
+                    [ viewSquare [ smallSizeStyles, shadowElStyles ]
+                    , viewLabel isSelected labelText
+                    , viewSquare
+                        [ smallSizeStyles
+                        , [ transforms
+                                [ "translateX(" ++ fromFloat dx ++ "px)"
+                                , "rotate(" ++ fromFloat da ++ "deg)"
+                                ]
+                          ]
+                        ]
                     ]
-                        |> String.join ""
-            in
-            div [ positionRelative ]
-                [ viewSquare [ smallSizeStyles, shadowElStyles ]
-                , viewLabel isSelected labelText
-                , viewSquare
-                    [ smallSizeStyles
-                    , [ transforms
-                            [ "translateX(" ++ fromFloat dx ++ "px)"
-                            , "rotate(" ++ fromFloat da ++ "deg)"
-                            ]
-                      ]
-                    ]
-                ]
+            )
         )
-        |> fCol [ gap "10px" ]
 
 
 green =
