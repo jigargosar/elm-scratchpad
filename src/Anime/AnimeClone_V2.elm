@@ -48,14 +48,12 @@ init () =
 type Msg
     = NOP
     | OnAnimClockDelta A.ClockMsg
-    | OnClick
     | ExampleClicked Example
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
     [ A.clockSubscription OnAnimClockDelta
-    , Browser.Events.onClick (JD.succeed OnClick)
     ]
         |> Sub.batch
 
@@ -73,11 +71,13 @@ update msg model =
             , Cmd.none
             )
 
-        OnClick ->
-            ( { model | animClock = A.initClock }, Cmd.none )
-
         ExampleClicked example ->
-            ( { model | examples = withRollback (Pivot.firstWith (eq example)) model.examples }
+            ( case Pivot.firstWith (eq example) model.examples of
+                Nothing ->
+                    model
+
+                Just examples ->
+                    { model | examples = examples, animClock = A.initClock }
             , Cmd.none
             )
 
