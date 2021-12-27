@@ -218,7 +218,7 @@ valueAtHelp a c =
 
 
 valueAtWhenRunning : Anim -> AnimClock -> Float
-valueAtWhenRunning ({ direction, easing } as a) ac =
+valueAtWhenRunning a ac =
     let
         elapsed =
             (ac.current - (ac.start + a.delay))
@@ -230,19 +230,19 @@ valueAtWhenRunning ({ direction, easing } as a) ac =
             (elapsed // a.duration) + 1
 
         applyEasing =
-            case direction of
+            case a.direction of
                 DirectionNormal ->
-                    easing
+                    a.easing
 
                 DirectionReverse ->
-                    Ease.reverse easing
+                    Ease.reverse a.easing
 
                 DirectionAlternate ->
                     if isOdd iterationCount then
-                        easing
+                        a.easing
 
                     else
-                        Ease.reverse easing
+                        Ease.reverse a.easing
     in
     let
         frac =
