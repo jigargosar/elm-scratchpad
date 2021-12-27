@@ -308,11 +308,8 @@ viewStaggeringReverseDirectionExample isSelected ac =
         length =
             6
 
-        delayOffset =
-            120
-
         labelText index =
-            [ "delay = (", fromInt delayOffset, " * ", fromInt (length - 1 - index), ") ms" ]
+            [ "delay = (100 * ", fromInt (length - 1 - index), ") ms" ]
                 |> String.join ""
 
         viewWithDX dx index =
@@ -328,7 +325,7 @@ viewStaggeringReverseDirectionExample isSelected ac =
                 [ A.to 270
                 , A.duration 1800
                 , A.ease Ease.outElastic
-                , A.staggerDelay (A.staggerReverse delayOffset)
+                , A.staggerDelay (A.staggerReverse 100)
                 ]
                 viewWithDX
                 ac
