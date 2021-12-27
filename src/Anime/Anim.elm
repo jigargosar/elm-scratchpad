@@ -94,8 +94,8 @@ type alias AnimAttr =
     Anim -> Anim
 
 
-anim : List AnimAttr -> Anim
-anim fns =
+initAnim : List AnimAttr -> Anim
+initAnim fns =
     { from = 0
     , to = 1
     , duration = 1800
@@ -218,7 +218,7 @@ value : List AnimAttr -> AnimClock -> Float
 value attrs c =
     let
         a =
-            anim attrs
+            initAnim attrs
     in
     case getStage a c of
         NotStarted ->
