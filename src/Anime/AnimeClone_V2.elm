@@ -187,7 +187,7 @@ viewStaggeringBasicsExample isSelected ac =
                 , viewLabel isSelected (labelText index)
                 , viewSquare
                     [ smallSizeStyles
-                    , [ style "transform" ("translateX(" ++ fromFloat dx ++ "px)")
+                    , [ transforms [ "translateX(" ++ fromFloat dx ++ "px)" ]
                       ]
                     ]
                 ]
@@ -218,7 +218,7 @@ viewStaggeringStartValueExample isSelected ac =
                 , viewLabel isSelected (labelText index)
                 , viewSquare
                     [ smallSizeStyles
-                    , [ style "transform" ("translateX(" ++ fromFloat dx ++ "px)")
+                    , [ transforms [ "translateX(" ++ fromFloat dx ++ "px)" ]
                       ]
                     ]
                 ]
@@ -244,7 +244,7 @@ viewStaggerFromCenterExample _ ac =
                 [ viewSquare [ smallSizeStyles, shadowElStyles ]
                 , viewSquare
                     [ smallSizeStyles
-                    , [ style "transform" ("translateX(" ++ fromFloat dx ++ "px)")
+                    , [ transforms [ "translateX(" ++ fromFloat dx ++ "px)" ]
                       ]
                     ]
                 ]
