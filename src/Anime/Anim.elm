@@ -96,19 +96,6 @@ type alias AnimAttr =
     IndexLength -> Anim -> Anim
 
 
-initAnim : List AnimAttr -> Anim
-initAnim fns =
-    { from = 0
-    , to = 1
-    , duration = 1800
-    , delay = 0
-    , direction = DirectionNormal
-    , loop = LoopFor 1
-    , easing = Ease.linear
-    }
-        |> applyAll (List.map ((|>) (IndexLength 0 1)) fns)
-
-
 
 --noinspection ElmUnusedSymbol
 
@@ -242,6 +229,23 @@ staggeredValue2 common aa bb clock fn =
 
 value : List AnimAttr -> Clock -> Float
 value attrs c =
+    let
+        il =
+            IndexLength 0 1
+    in
+    let
+        initAnim : List AnimAttr -> Anim
+        initAnim fns =
+            { from = 0
+            , to = 1
+            , duration = 1800
+            , delay = 0
+            , direction = DirectionNormal
+            , loop = LoopFor 1
+            , easing = Ease.linear
+            }
+                |> applyAll (List.map ((|>) il) fns)
+    in
     let
         a =
             initAnim attrs
