@@ -186,7 +186,7 @@ viewStaggeringBasicsExample isSelected ac =
                 dx =
                     A.value
                         [ A.to 270
-                        , A.loopFor 1
+                        , A.loopFor 2
                         , A.duration 1800
                         , A.ease Ease.outElastic
                         , A.delay <| round <| A.stagger 100 il
