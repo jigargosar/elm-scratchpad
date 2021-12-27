@@ -226,17 +226,17 @@ stageAt a c =
 
 
 staggeredValue2 :
-    (Float -> Float -> a -> b)
-    -> List AnimAttr
+    List AnimAttr
     -> List AnimAttr
     -> List AnimAttr
     -> Clock
+    -> (Float -> Float -> a -> b)
     -> List a
     -> List b
-staggeredValue2 fn aa bb common c =
+staggeredValue2 common aa bb clock fn =
     mapWithIndexAndLength
         (\il ->
-            fn (value (common ++ aa) c) (value (common ++ bb) c)
+            fn (value (common ++ aa) clock) (value (common ++ bb) clock)
         )
 
 

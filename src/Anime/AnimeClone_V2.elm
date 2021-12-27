@@ -279,6 +279,12 @@ viewStaggerRangeValueExample isSelected ac =
          in
          rangeN length
             |> A.staggeredValue2
+                [ A.duration 1200
+                , A.ease Ease.inOutQuad
+                ]
+                [ A.to 270 ]
+                [ A.toStaggered (A.staggerRange ( -360, 360 )) ]
+                ac
                 (\dx da index ->
                     div [ positionRelative ]
                         [ viewSquare [ smallSizeStyles, shadowElStyles ]
@@ -293,12 +299,6 @@ viewStaggerRangeValueExample isSelected ac =
                             ]
                         ]
                 )
-                [ A.to 270 ]
-                [ A.toStaggered (A.staggerRange ( -360, 360 )) ]
-                [ A.duration 1200
-                , A.ease Ease.inOutQuad
-                ]
-                ac
          --    |> mapWithIndexAndLength
          --        (\il index ->
          --            let
