@@ -218,7 +218,7 @@ valueAtHelp a c =
 
 
 valueAtWhenRunning : Anim -> AnimClock -> Float
-valueAtWhenRunning ({ from, direction, loop, easing } as a) ac =
+valueAtWhenRunning ({ direction, loop, easing } as a) ac =
     let
         elapsed =
             (ac.current - (ac.start + a.delay))
@@ -249,7 +249,7 @@ valueAtWhenRunning ({ from, direction, loop, easing } as a) ac =
             (toFloat (modBy a.duration elapsed) / toFloat a.duration)
                 |> applyEasing
     in
-    lerp from a.to frac
+    lerp a.from a.to frac
 
 
 staggerRange : Float2 -> IndexLength -> Float
