@@ -37,8 +37,8 @@ initClock =
     Clock 0 0
 
 
-animClockElapsed : Clock -> Int
-animClockElapsed c =
+clockElapsed : Clock -> Int
+clockElapsed c =
     c.current - c.start
 
 
@@ -186,7 +186,7 @@ stageAt : Anim -> Clock -> AnimStage
 stageAt a c =
     let
         elapsed =
-            animClockElapsed c - a.delay
+            clockElapsed c - a.delay
     in
     if elapsed <= 0 then
         NotStarted
