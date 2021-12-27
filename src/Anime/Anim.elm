@@ -12,11 +12,11 @@ module Anime.Anim exposing
     , initClock
     , loopFor
     , loopForever
+    , mapList2
     , reverseDirection
     , stagger
     , staggerFromCenter
     , staggerRange
-    , staggeredValue2
     , to
     , toStaggered
     , updateClock
@@ -212,7 +212,7 @@ stageAt a c =
                     Ended { iteration = maxIterations }
 
 
-staggeredValue2 :
+mapList2 :
     List AnimAttr
     -> List AnimAttr
     -> List AnimAttr
@@ -220,7 +220,7 @@ staggeredValue2 :
     -> (Float -> Float -> a -> b)
     -> List a
     -> List b
-staggeredValue2 common aa bb clock fn =
+mapList2 common aa bb clock fn =
     mapWithIndexAndLength
         (\il ->
             fn
