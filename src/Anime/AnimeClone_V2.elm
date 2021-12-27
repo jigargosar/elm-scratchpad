@@ -176,33 +176,33 @@ exampleInfo example =
 
 viewStaggeringBasicsExample : Bool -> A.Clock -> Html msg
 viewStaggeringBasicsExample isSelected ac =
-    timesWithIndexAndLength 6
-        (\il ->
-            let
-                dx =
-                    A.value
-                        [ A.to 270
-                        , A.duration 1800
-                        , A.ease Ease.outElastic
-                        , A.delay <| round <| A.stagger 100 il
-                        ]
-                        ac
+    let
+        labelText index =
+            [ "delay = (100 * ", fromInt index, ") ms" ]
+                |> String.join ""
 
-                labelText =
-                    [ "delay = (100 * ", fromInt il.index, ") ms" ]
-                        |> String.join ""
-            in
+        viewWithDX dx index =
             div [ positionRelative ]
                 [ viewSquare [ smallSizeStyles, shadowElStyles ]
-                , viewLabel isSelected labelText
+                , viewLabel isSelected (labelText index)
                 , viewSquare
                     [ smallSizeStyles
                     , [ style "transform" ("translateX(" ++ fromFloat dx ++ "px)")
                       ]
                     ]
                 ]
+    in
+    fCol [ gap "10px" ]
+        (rangeN 6
+            |> A.mapListForOneValue
+                [ A.to 270
+                , A.duration 1800
+                , A.ease Ease.outElastic
+                , A.staggerDelay (A.stagger 100)
+                ]
+                viewWithDX
+                ac
         )
-        |> fCol [ gap "10px" ]
 
 
 viewStaggeringStartValueExample : Bool -> A.Clock -> Html msg
