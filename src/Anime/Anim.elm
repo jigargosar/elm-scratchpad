@@ -17,6 +17,7 @@ module Anime.Anim exposing
     , staggerFromCenter
     , staggerRange
     , to
+    , toStaggered
     , updateClock
     , value
     )
@@ -104,7 +105,7 @@ initAnim fns =
     , loop = LoopFor 1
     , easing = Ease.linear
     }
-        |> applyAll (List.map ((|>) (IndexLength 0 0)) fns)
+        |> applyAll (List.map ((|>) (IndexLength 0 1)) fns)
 
 
 
@@ -123,6 +124,15 @@ fromTo from to_ _ a =
 to : Float -> AnimAttr
 to to_ _ a =
     { a | to = to_ }
+
+
+type alias StaggeredValue =
+    IndexLength -> Float
+
+
+toStaggered : StaggeredValue -> AnimAttr
+toStaggered sv il a =
+    { a | to = sv il }
 
 
 delay : Int -> AnimAttr

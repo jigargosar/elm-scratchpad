@@ -292,6 +292,7 @@ viewStaggerRangeValueExample isSelected ac =
                         da =
                             A.value
                                 (A.to (A.staggerRange ( -360, 360 ) il)
+                                    --:: A.toStaggered (A.staggerRange ( -360, 360 ))
                                     :: commonAttrs
                                 )
                                 ac
