@@ -292,12 +292,12 @@ viewStaggerRangeValueExample isSelected clock =
             [ A.duration 1200, A.ease Ease.inOutQuad ]
     in
     fCol [ gap "10px" ]
-        (rangeN length
-            |> A.mapListFor2Values
-                (A.to 270 :: common)
-                (A.staggerTo (A.staggerRange ( -360, 360 )) :: common)
-                clock
-                viewWithDXAndDA
+        (A.mapListFor2Values
+            (A.to 270 :: common)
+            (A.staggerTo (A.staggerRange ( -360, 360 )) :: common)
+            clock
+            viewWithDXAndDA
+            (rangeN length)
         )
 
 
