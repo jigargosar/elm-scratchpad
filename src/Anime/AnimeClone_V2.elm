@@ -264,20 +264,20 @@ viewStaggerFromCenterExample _ ac =
 
 viewStaggerRangeValueExample : Bool -> A.Clock -> Html msg
 viewStaggerRangeValueExample isSelected ac =
-    fCol [ gap "10px" ]
-        (let
-            length =
-                6
+    let
+        length =
+            6
 
-            labelText index =
-                [ "rotate = -360 + ((360 - (-360)) / "
-                , fromInt (length - 1)
-                , ") * "
-                , fromInt index
-                ]
-                    |> String.join ""
-         in
-         rangeN length
+        labelText index =
+            [ "rotate = -360 + ((360 - (-360)) / "
+            , fromInt (length - 1)
+            , ") * "
+            , fromInt index
+            ]
+                |> String.join ""
+    in
+    fCol [ gap "10px" ]
+        (rangeN length
             |> A.mapListForStaggeredValues2
                 [ A.duration 1200, A.ease Ease.inOutQuad ]
                 [ A.to 270 ]
@@ -297,38 +297,6 @@ viewStaggerRangeValueExample isSelected ac =
                             ]
                         ]
                 )
-         --    |> mapWithIndexAndLength
-         --        (\il index ->
-         --            let
-         --                commonAttrs =
-         --                    [ A.duration 1200
-         --                    , A.ease Ease.inOutQuad
-         --                    ]
-         --
-         --                dx =
-         --                    A.value (A.to 270 :: commonAttrs) ac
-         --
-         --                da =
-         --                    A.value
-         --                        (A.to (A.staggerRange ( -360, 360 ) il)
-         --                            :: A.toStaggered (A.staggerRange ( -360, 360 ))
-         --                            :: commonAttrs
-         --                        )
-         --                        ac
-         --            in
-         --            div [ positionRelative ]
-         --                [ viewSquare [ smallSizeStyles, shadowElStyles ]
-         --                , viewLabel isSelected (labelText index)
-         --                , viewSquare
-         --                    [ smallSizeStyles
-         --                    , [ transforms
-         --                            [ "translateX(" ++ fromFloat dx ++ "px)"
-         --                            , "rotate(" ++ fromFloat da ++ "deg)"
-         --                            ]
-         --                      ]
-         --                    ]
-         --                ]
-         --        )
         )
 
 
