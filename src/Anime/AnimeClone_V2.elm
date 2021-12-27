@@ -279,9 +279,7 @@ viewStaggerRangeValueExample isSelected ac =
          in
          rangeN length
             |> A.staggeredValue2
-                [ A.duration 1200
-                , A.ease Ease.inOutQuad
-                ]
+                [ A.duration 1200, A.ease Ease.inOutQuad ]
                 [ A.to 270 ]
                 [ A.toStaggered (A.staggerRange ( -360, 360 )) ]
                 ac
