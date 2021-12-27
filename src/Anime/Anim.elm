@@ -215,21 +215,7 @@ valueAtHelp a c =
             a.from
 
         Ended { iteration } ->
-            (case a.direction of
-                DirectionNormal ->
-                    a.to
-
-                DirectionReverse ->
-                    a.from
-
-                DirectionAlternate ->
-                    if isOdd iteration then
-                        a.to
-
-                    else
-                        a.from
-            )
-                |> always (valueAtWhenRunning a { frac = 1, iteration = iteration })
+            valueAtWhenRunning a { frac = 1, iteration = iteration }
 
         Running fi ->
             valueAtWhenRunning a fi
