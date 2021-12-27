@@ -279,7 +279,7 @@ viewStaggerRangeValueExample isSelected ac =
             |> A.mapListFor2Values
                 [ A.duration 1200, A.ease Ease.inOutQuad ]
                 [ A.to 270 ]
-                [ A.toStaggered (A.staggerRange ( -360, 360 )) ]
+                [ A.staggerTo (A.staggerRange ( -360, 360 )) ]
                 ac
                 (\dx da index ->
                     div [ positionRelative ]

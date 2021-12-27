@@ -19,8 +19,8 @@ module Anime.Anim exposing
     , staggerDelay
     , staggerFromCenter
     , staggerRange
+    , staggerTo
     , to
-    , toStaggered
     , updateClock
     , value
     )
@@ -120,8 +120,8 @@ type alias StaggeredValue =
     IndexLength -> Float
 
 
-toStaggered : StaggeredValue -> AnimAttr
-toStaggered sv il a =
+staggerTo : StaggeredValue -> AnimAttr
+staggerTo sv il a =
     { a | to = sv il }
 
 
