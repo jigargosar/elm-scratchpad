@@ -171,8 +171,12 @@ type AnimStage
 
 
 getStage : Anim -> Int -> AnimStage
-getStage a elapsed =
-    if elapsed < a.delay then
+getStage a clock =
+    let
+        elapsed =
+            clock - a.delay
+    in
+    if elapsed <= 0 then
         NotStarted
 
     else
