@@ -238,28 +238,29 @@ viewStaggeringStartValueExample isSelected ac =
 
 viewStaggerFromCenterExample : Bool -> A.Clock -> Html msg
 viewStaggerFromCenterExample _ ac =
-    timesWithIndexAndLength 6
-        (\il ->
-            let
-                dx =
-                    A.value
-                        [ A.to 270
-                        , A.duration 1800
-                        , A.ease Ease.outElastic
-                        , A.delay <| round <| A.staggerFromCenter 200 il
+    fCol [ gap "10px" ]
+        (timesWithIndexAndLength 6
+            (\il ->
+                let
+                    dx =
+                        A.value
+                            [ A.to 270
+                            , A.duration 1800
+                            , A.ease Ease.outElastic
+                            , A.delay <| round <| A.staggerFromCenter 200 il
+                            ]
+                            ac
+                in
+                div [ positionRelative ]
+                    [ viewSquare [ smallSizeStyles, shadowElStyles ]
+                    , viewSquare
+                        [ smallSizeStyles
+                        , [ style "transform" ("translateX(" ++ fromFloat dx ++ "px)")
+                          ]
                         ]
-                        ac
-            in
-            div [ positionRelative ]
-                [ viewSquare [ smallSizeStyles, shadowElStyles ]
-                , viewSquare
-                    [ smallSizeStyles
-                    , [ style "transform" ("translateX(" ++ fromFloat dx ++ "px)")
-                      ]
                     ]
-                ]
+            )
         )
-        |> fCol [ gap "10px" ]
 
 
 viewStaggerRangeValueExample : Bool -> A.Clock -> Html msg
