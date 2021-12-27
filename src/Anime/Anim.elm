@@ -95,6 +95,10 @@ fromTo from to a =
     { a | from = from, to = to }
 
 
+
+--noinspection ElmUnusedSymbol
+
+
 setTo : Float -> AnimAttr
 setTo to a =
     { a | to = to }
