@@ -12,6 +12,7 @@ module Anime.Anim exposing
     , initClock
     , loopFor
     , loopForever
+    , mapListFor
     , mapListFor2Values
     , reverseDirection
     , stagger
@@ -226,6 +227,19 @@ mapListFor2Values commonAttrs attrs1 attrs2 clock fn =
             fn
                 (valueWithIndexLength il (commonAttrs ++ attrs1) clock)
                 (valueWithIndexLength il (commonAttrs ++ attrs2) clock)
+        )
+
+
+mapListFor :
+    List AnimAttr
+    -> Clock
+    -> (Float -> a -> b)
+    -> List a
+    -> List b
+mapListFor attrs1 clock fn =
+    mapWithIndexAndLength
+        (\il ->
+            fn (valueWithIndexLength il attrs1 clock)
         )
 
 
