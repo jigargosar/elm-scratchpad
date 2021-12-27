@@ -26,6 +26,7 @@ type Example
     | Example_Staggering_StartValue
     | Example_Staggering_Range
     | Example_Staggering_FromCenter
+    | Example_Staggering_Direction
 
 
 init : () -> ( Model, Cmd Msg )
@@ -37,6 +38,7 @@ init () =
                 [ Example_Staggering_StartValue
                 , Example_Staggering_Range
                 , Example_Staggering_FromCenter
+                , Example_Staggering_Direction
                 ]
       }
     , Cmd.none
@@ -171,6 +173,11 @@ exampleInfo example =
         Example_Staggering_FromCenter ->
             { title = "From Value"
             , view = viewStaggerFromCenterExample
+            }
+
+        Example_Staggering_Direction ->
+            { title = "Direction"
+            , view = viewStaggeringReverseDirectionExample
             }
 
 
