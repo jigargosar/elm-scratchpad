@@ -170,11 +170,11 @@ type AnimStage
     | Ended { iteration : Int }
 
 
-getStage : Anim -> Int -> AnimStage
-getStage a clock =
+getStage : Anim -> AnimClock -> AnimStage
+getStage a c =
     let
         elapsed =
-            clock - a.delay
+            animClockElapsed c - a.delay
     in
     if elapsed <= 0 then
         NotStarted
@@ -208,11 +208,8 @@ value attrs c =
     let
         a =
             anim attrs
-
-        elapsed =
-            animClockElapsed c
     in
-    case getStage a elapsed of
+    case getStage a c of
         NotStarted ->
             a.from
 
