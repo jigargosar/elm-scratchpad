@@ -18,7 +18,7 @@ main =
 
 
 type alias Model =
-    { animClock : A.Clock
+    { clock : A.Clock
     , examples : Pivot Example
     }
 
@@ -32,7 +32,7 @@ type Example
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { animClock = A.initClock
+    ( { clock = A.initClock
       , examples =
             Pivot.fromCons
                 Example_Staggering_Basics
@@ -65,9 +65,7 @@ update msg model =
             ( model, Cmd.none )
 
         OnClockMsg clockMsg ->
-            ( { model
-                | animClock = A.updateClock clockMsg model.animClock
-              }
+            ( { model | clock = A.updateClock clockMsg model.clock }
             , Cmd.none
             )
 
@@ -77,7 +75,7 @@ update msg model =
                     model
 
                 Just examples ->
-                    { model | examples = examples, animClock = A.initClock }
+                    { model | examples = examples, clock = A.initClock }
             , Cmd.none
             )
 
@@ -89,7 +87,7 @@ view model =
         , div [ fg green ]
             (model.examples
                 |> Pivot.mapCS
-                    (viewExample True model.animClock)
+                    (viewExample True model.clock)
                     (viewExample False A.initClock)
                 |> Pivot.toList
             )
