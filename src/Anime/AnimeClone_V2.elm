@@ -18,7 +18,7 @@ main =
 
 
 type alias Model =
-    { animClock : A.AnimClock
+    { animClock : A.Clock
     , examples : Pivot Example
     }
 
@@ -47,7 +47,7 @@ init () =
 
 type Msg
     = NOP
-    | OnAnimClockDelta A.AnimClockDelta
+    | OnAnimClockDelta A.ClockMsg
     | OnClick
     | ExampleClicked Example
 
@@ -96,7 +96,7 @@ view model =
         ]
 
 
-viewExample : Bool -> A.AnimClock -> Example -> Html Msg
+viewExample : Bool -> A.Clock -> Example -> Html Msg
 viewExample isSelected animClock eg =
     let
         info =
@@ -154,7 +154,7 @@ viewExampleTitle isSelected t =
         [ text t ]
 
 
-exampleInfo : Example -> { title : String, view : Bool -> A.AnimClock -> Html msg }
+exampleInfo : Example -> { title : String, view : Bool -> A.Clock -> Html msg }
 exampleInfo example =
     case example of
         Example_Staggering_Basics ->
@@ -178,7 +178,7 @@ exampleInfo example =
             }
 
 
-viewStaggeringBasicsExample : Bool -> A.AnimClock -> Html msg
+viewStaggeringBasicsExample : Bool -> A.Clock -> Html msg
 viewStaggeringBasicsExample isSelected ac =
     timesWithIndexAndLength 6
         (\il ->
@@ -209,7 +209,7 @@ viewStaggeringBasicsExample isSelected ac =
         |> fCol [ gap "10px" ]
 
 
-viewStaggeringStartValueExample : Bool -> A.AnimClock -> Html msg
+viewStaggeringStartValueExample : Bool -> A.Clock -> Html msg
 viewStaggeringStartValueExample isSelected ac =
     timesWithIndexAndLength 6
         (\il ->
@@ -240,7 +240,7 @@ viewStaggeringStartValueExample isSelected ac =
         |> fCol [ gap "10px" ]
 
 
-viewStaggerFromCenterExample : Bool -> A.AnimClock -> Html msg
+viewStaggerFromCenterExample : Bool -> A.Clock -> Html msg
 viewStaggerFromCenterExample _ ac =
     timesWithIndexAndLength 6
         (\il ->
@@ -266,7 +266,7 @@ viewStaggerFromCenterExample _ ac =
         |> fCol [ gap "10px" ]
 
 
-viewStaggerRangeValueExample : Bool -> A.AnimClock -> Html msg
+viewStaggerRangeValueExample : Bool -> A.Clock -> Html msg
 viewStaggerRangeValueExample isSelected ac =
     timesWithIndexAndLength 6
         (\il ->

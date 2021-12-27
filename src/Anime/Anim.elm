@@ -1,8 +1,8 @@
 module Anime.Anim exposing
     ( Anim
     , AnimAttr
-    , AnimClock
-    , AnimClockDelta
+    , Clock
+    , ClockMsg
     , alternateDirection
     , clockSubscription
     , delay
@@ -26,34 +26,34 @@ import Ease
 import Utils exposing (..)
 
 
-type alias AnimClock =
+type alias Clock =
     { start : Int
     , current : Int
     }
 
 
-initClock : AnimClock
+initClock : Clock
 initClock =
-    AnimClock 0 0
+    Clock 0 0
 
 
-animClockElapsed : AnimClock -> Int
+animClockElapsed : Clock -> Int
 animClockElapsed c =
     c.current - c.start
 
 
-updateClock : AnimClockDelta -> AnimClock -> AnimClock
-updateClock (AnimClockDelta deltaMilli) ac =
+updateClock : ClockMsg -> Clock -> Clock
+updateClock (OnClockDelta deltaMilli) ac =
     { ac | current = ac.current + clamp 0 100 deltaMilli }
 
 
-type AnimClockDelta
-    = AnimClockDelta Int
+type ClockMsg
+    = OnClockDelta Int
 
 
-clockSubscription : (AnimClockDelta -> msg) -> Sub msg
+clockSubscription : (ClockMsg -> msg) -> Sub msg
 clockSubscription tag =
-    Browser.Events.onAnimationFrameDelta (round >> AnimClockDelta >> tag)
+    Browser.Events.onAnimationFrameDelta (round >> OnClockDelta >> tag)
 
 
 type alias Anim =
@@ -182,7 +182,7 @@ type AnimStage
     | Ended { iteration : Int }
 
 
-stageAt : Anim -> AnimClock -> AnimStage
+stageAt : Anim -> Clock -> AnimStage
 stageAt a c =
     let
         elapsed =
@@ -214,7 +214,7 @@ stageAt a c =
                     Ended { iteration = maxIterations }
 
 
-value : List AnimAttr -> AnimClock -> Float
+value : List AnimAttr -> Clock -> Float
 value attrs c =
     let
         a =
