@@ -229,21 +229,15 @@ valueAtHelp a c =
                     else
                         a.from
 
-        Running _ ->
-            valueAtWhenRunning a c
+        Running fi ->
+            valueAtWhenRunning a fi
 
 
-valueAtWhenRunning : Anim -> AnimClock -> Float
-valueAtWhenRunning a ac =
-    let
-        elapsed =
-            (ac.current - ac.start - a.delay)
-                -- need to ensure elapsed is positive, in case of delay
-                |> atLeast 0
-    in
+valueAtWhenRunning : Anim -> { frac : Float, iteration : Int } -> Float
+valueAtWhenRunning a { frac, iteration } =
     let
         iterationCount =
-            (elapsed // a.duration) + 1
+            iteration
 
         shouldReverse =
             case a.direction of
@@ -264,13 +258,10 @@ valueAtWhenRunning a ac =
             else
                 n
     in
-    let
-        frac =
-            (toFloat (modBy a.duration elapsed) / toFloat a.duration)
-                |> applyDirection
-                |> a.easing
-    in
-    lerp a.from a.to frac
+    frac
+        |> applyDirection
+        |> a.easing
+        |> lerp a.from a.to
 
 
 staggerRange : Float2 -> IndexLength -> Float
