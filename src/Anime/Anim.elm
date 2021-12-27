@@ -16,6 +16,7 @@ module Anime.Anim exposing
     , mapListFor2Values
     , reverseDirection
     , stagger
+    , staggerDelay
     , staggerFromCenter
     , staggerRange
     , to
@@ -127,6 +128,11 @@ toStaggered sv il a =
 delay : Int -> AnimAttr
 delay delay_ _ a =
     { a | delay = delay_ }
+
+
+staggerDelay : StaggeredValue -> AnimAttr
+staggerDelay sv il a =
+    { a | delay = sv il |> round }
 
 
 duration : Int -> AnimAttr
