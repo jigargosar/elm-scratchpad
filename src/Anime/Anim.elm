@@ -73,6 +73,27 @@ type Direction
     | DirectionAlternate
 
 
+applyDirectionToFrac : Int -> Direction -> Float -> Float
+applyDirectionToFrac iteration direction frac =
+    let
+        shouldReverse =
+            case direction of
+                DirectionNormal ->
+                    False
+
+                DirectionReverse ->
+                    True
+
+                DirectionAlternate ->
+                    isEven iteration
+    in
+    if shouldReverse then
+        1 - frac
+
+    else
+        frac
+
+
 type Loop
     = LoopForever
     | LoopFor Int
