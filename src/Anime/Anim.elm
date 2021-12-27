@@ -91,7 +91,7 @@ type Loop
 
 
 type alias AnimAttr =
-    Anim -> Anim
+    IndexLength -> Anim -> Anim
 
 
 initAnim : List AnimAttr -> Anim
@@ -104,7 +104,7 @@ initAnim fns =
     , loop = LoopFor 1
     , easing = Ease.linear
     }
-        |> applyAll fns
+        |> applyAll (List.map ((|>) (IndexLength 0 0)) fns)
 
 
 
@@ -112,7 +112,7 @@ initAnim fns =
 
 
 fromTo : Float -> Float -> AnimAttr
-fromTo from to_ a =
+fromTo from to_ _ a =
     { a | from = from, to = to_ }
 
 
@@ -121,22 +121,22 @@ fromTo from to_ a =
 
 
 to : Float -> AnimAttr
-to to_ a =
+to to_ _ a =
     { a | to = to_ }
 
 
 delay : Int -> AnimAttr
-delay delay_ a =
+delay delay_ _ a =
     { a | delay = delay_ }
 
 
 duration : Int -> AnimAttr
-duration duration_ a =
+duration duration_ _ a =
     { a | duration = duration_ }
 
 
 ease : Ease.Easing -> AnimAttr
-ease easing a =
+ease easing _ a =
     { a | easing = easing }
 
 
@@ -145,7 +145,7 @@ ease easing a =
 
 
 loopForever : AnimAttr
-loopForever a =
+loopForever _ a =
     { a | loop = LoopForever }
 
 
@@ -154,7 +154,7 @@ loopForever a =
 
 
 loopFor : Int -> AnimAttr
-loopFor times a =
+loopFor times _ a =
     { a | loop = LoopFor (times |> atLeast 1) }
 
 
@@ -163,7 +163,7 @@ loopFor times a =
 
 
 alternateDirection : AnimAttr
-alternateDirection a =
+alternateDirection _ a =
     { a | direction = DirectionAlternate }
 
 
@@ -172,7 +172,7 @@ alternateDirection a =
 
 
 reverseDirection : AnimAttr
-reverseDirection a =
+reverseDirection _ a =
     { a | direction = DirectionReverse }
 
 

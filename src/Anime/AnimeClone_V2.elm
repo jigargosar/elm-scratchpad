@@ -1,9 +1,7 @@
 module Anime.AnimeClone_V2 exposing (main)
 
 import Anime.Anim as A
-import Browser.Events
 import Ease
-import Json.Decode as JD
 import Pivot exposing (Pivot)
 import Utils exposing (..)
 
