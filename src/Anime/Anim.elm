@@ -222,9 +222,6 @@ value attrs c =
 valueAtFractionAndIteration : Anim -> { frac : Float, iteration : Int } -> Float
 valueAtFractionAndIteration a { frac, iteration } =
     let
-        iterationCount =
-            iteration
-
         shouldReverse =
             case a.direction of
                 DirectionNormal ->
@@ -234,7 +231,7 @@ valueAtFractionAndIteration a { frac, iteration } =
                     True
 
                 DirectionAlternate ->
-                    isEven iterationCount
+                    isEven iteration
 
         applyDirection : Float -> Float
         applyDirection n =
