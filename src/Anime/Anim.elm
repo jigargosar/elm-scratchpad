@@ -203,15 +203,15 @@ getStage a c =
             LoopForever ->
                 Running { frac = frac, iteration = iterationCount }
 
-            LoopFor times ->
-                if times <= 0 then
+            LoopFor maxIterations ->
+                if maxIterations <= 0 then
                     NotStarted
 
-                else if iterationCount <= times then
+                else if iterationCount <= maxIterations then
                     Running { frac = frac, iteration = iterationCount }
 
                 else
-                    Ended { iteration = times }
+                    Ended { iteration = maxIterations }
 
 
 value : List AnimAttr -> AnimClock -> Float
