@@ -11,13 +11,13 @@ module Anime.Anim exposing
     , duration
     , ease
     , fromTo
+    , loopFor
     , loopForever
-    , loopTimes
     , reverseDirection
-    , setTo
     , stagger
     , staggerFromCenter
     , staggerRange
+    , to
     , value
     )
 
@@ -90,18 +90,22 @@ anim fns =
         |> applyAll fns
 
 
+
+--noinspection ElmUnusedSymbol
+
+
 fromTo : Float -> Float -> AnimAttr
-fromTo from to a =
-    { a | from = from, to = to }
+fromTo from to_ a =
+    { a | from = from, to = to_ }
 
 
 
 --noinspection ElmUnusedSymbol
 
 
-setTo : Float -> AnimAttr
-setTo to a =
-    { a | to = to }
+to : Float -> AnimAttr
+to to_ a =
+    { a | to = to_ }
 
 
 delay : Int -> AnimAttr
@@ -128,8 +132,12 @@ loopForever a =
     { a | loop = LoopForever }
 
 
-loopTimes : Int -> AnimAttr
-loopTimes times a =
+
+--noinspection ElmUnusedSymbol
+
+
+loopFor : Int -> AnimAttr
+loopFor times a =
     { a | loop = LoopFor (times |> atLeast 0) }
 
 
@@ -210,7 +218,7 @@ valueAtHelp a c =
 
 
 valueAtWhenRunning : Anim -> AnimClock -> Float
-valueAtWhenRunning ({ from, to, direction, loop, easing } as a) ac =
+valueAtWhenRunning ({ from, direction, loop, easing } as a) ac =
     let
         elapsed =
             (ac.current - (ac.start + a.delay))
@@ -241,16 +249,16 @@ valueAtWhenRunning ({ from, to, direction, loop, easing } as a) ac =
             (toFloat (modBy a.duration elapsed) / toFloat a.duration)
                 |> applyEasing
     in
-    lerp from to frac
+    lerp from a.to frac
 
 
 staggerRange : Float2 -> IndexLength -> Float
-staggerRange ( from, to ) il =
+staggerRange ( from, to_ ) il =
     let
         frac =
             toFloat il.index / (toFloat il.length - 1)
     in
-    lerp from to frac
+    lerp from to_ frac
 
 
 
