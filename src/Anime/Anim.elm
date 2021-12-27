@@ -193,7 +193,10 @@ getStage a clock =
                 Running { frac = frac, iteration = iterationCount }
 
             LoopFor times ->
-                if iterationCount <= times then
+                if times <= 0 then
+                    NotStarted
+
+                else if iterationCount <= times then
                     Running { frac = frac, iteration = iterationCount }
 
                 else
