@@ -220,12 +220,12 @@ mapListForStaggeredValues2 :
     -> (Float -> Float -> a -> b)
     -> List a
     -> List b
-mapListForStaggeredValues2 common aa bb clock fn =
+mapListForStaggeredValues2 commonAttrs attrs1 attrs2 clock fn =
     mapWithIndexAndLength
         (\il ->
             fn
-                (valueWithIndexLength il (common ++ aa) clock)
-                (valueWithIndexLength il (common ++ bb) clock)
+                (valueWithIndexLength il (commonAttrs ++ attrs1) clock)
+                (valueWithIndexLength il (commonAttrs ++ attrs2) clock)
         )
 
 
