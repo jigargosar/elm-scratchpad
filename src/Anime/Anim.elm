@@ -12,8 +12,8 @@ module Anime.Anim exposing
     , initClock
     , loopFor
     , loopForever
-    , mapListFor
     , mapListFor2Values
+    , mapListForOneValue
     , reverseDirection
     , stagger
     , staggerDelay
@@ -235,13 +235,13 @@ mapListFor2Values attrs1 attrs2 clock fn =
         )
 
 
-mapListFor :
+mapListForOneValue :
     List AnimAttr
     -> Clock
     -> (Float -> a -> b)
     -> List a
     -> List b
-mapListFor attrs1 clock fn =
+mapListForOneValue attrs1 clock fn =
     mapWithIndexAndLength
         (\il ->
             fn (valueWithIndexLength il attrs1 clock)

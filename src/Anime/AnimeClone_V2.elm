@@ -240,7 +240,7 @@ viewStaggerFromCenterExample : Bool -> A.Clock -> Html msg
 viewStaggerFromCenterExample _ ac =
     fCol [ gap "10px" ]
         (rangeN 6
-            |> A.mapListFor
+            |> A.mapListForOneValue
                 [ A.to 270
                 , A.duration 1800
                 , A.ease Ease.outElastic
