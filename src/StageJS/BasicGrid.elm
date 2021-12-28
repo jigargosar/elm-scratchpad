@@ -1,6 +1,5 @@
 module StageJS.BasicGrid exposing (main)
 
-import Anime.Anim as A
 import Browser.Events
 import Ease
 import Html.Events
@@ -104,17 +103,8 @@ view model =
                             [ fill cell.color
                             , opacity 0.7
                             , let
-                                clock =
-                                    A.clockFromElapsedMillis (model.elapsed - cell.animStart)
-
-                                commonAttrs =
-                                    [ A.duration 1800
-                                    , A.ease Ease.inOutSine
-                                    , A.alternateDirection
-                                    ]
-
                                 skewX =
-                                    A.value (A.fromToF2 cell.skewX :: commonAttrs) clock
+                                    0
 
                                 rotation =
                                     tweenValueAt model.clock cell.rotation
