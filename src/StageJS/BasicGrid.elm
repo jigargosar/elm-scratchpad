@@ -41,7 +41,7 @@ randomizeAllHues cs =
                 |> Random.uniform 0
     in
     Random.list (List.length cs) randomHue
-        |> Random.map (List.map2 (\c h -> { c | color = hsl h 1 0.6 }) cs)
+        |> Random.map (List.map2 (\c h -> { c | color = hsl h 0.9 0.55 }) cs)
         |> stepWithInitialSeed 0
 
 
