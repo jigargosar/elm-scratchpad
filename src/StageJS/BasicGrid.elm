@@ -101,7 +101,7 @@ view model =
 
                                 commonAttrs =
                                     [ A.duration 1800
-                                    , A.ease Ease.inOutExpo
+                                    , A.ease Ease.inOutSine
                                     , A.alternateDirection
                                     ]
 
