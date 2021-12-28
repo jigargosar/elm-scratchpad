@@ -24,10 +24,7 @@ cells : List Cell
 cells =
     squareGridPositions cellsInRow
         |> List.map (\gp -> Cell gp black)
-
-
-
---|> randomizeAllHues
+        |> randomizeAllHues
 
 
 randomizeAllHues : List Cell -> List Cell
@@ -39,7 +36,7 @@ randomizeAllHues cs =
 
 randomColor : Generator String
 randomColor =
-    randomHue |> Random.map (\h -> hsl h 0.9 0.55)
+    randomHue |> Random.map (\h -> hsl h 1 0.5)
 
 
 randomHue : Generator Float
@@ -63,7 +60,7 @@ main =
                         cc =
                             gpToGridLocal { gridSize = gridSize, cellSize = cellSize } cell.gp
                     in
-                    square cellSize [ fill cell.color, xf [ mvT cc, scale 0.9 ] ]
+                    square cellSize [ fill cell.color, opacity 0.6, xf [ mvT cc, scale 0.9 ] ]
                 )
             |> group []
         ]
