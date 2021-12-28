@@ -76,9 +76,5 @@ main =
         ]
 
 
-translateF2 ( x, y ) =
-    "translate(" ++ fpx x ++ "," ++ fpx y ++ ")"
-
-
 gpToCellCenter gp =
     gpToGridLocal { gridSize = gridSize, cellSize = cellSize } gp

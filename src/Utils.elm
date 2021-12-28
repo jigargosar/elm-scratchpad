@@ -976,6 +976,10 @@ transforms =
     String.join " " >> style "transform"
 
 
+translateF2 ( x, y ) =
+    "translate(" ++ fpx x ++ "," ++ fpx y ++ ")"
+
+
 paf =
     fpx >> pa
 
