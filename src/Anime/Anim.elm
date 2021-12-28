@@ -4,6 +4,7 @@ module Anime.Anim exposing
     , Clock
     , ClockMsg
     , alternateDirection
+    , clockFromMillis
     , clockSubscription
     , delay
     , duration
@@ -41,6 +42,11 @@ type alias Clock =
 initClock : Clock
 initClock =
     Clock 0 0
+
+
+clockFromMillis : Int -> Clock
+clockFromMillis =
+    Clock 0
 
 
 clockElapsed : Clock -> Int

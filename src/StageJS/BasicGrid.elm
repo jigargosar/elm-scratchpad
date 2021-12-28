@@ -1,5 +1,6 @@
 module StageJS.BasicGrid exposing (..)
 
+import Anime.Anim as Anim
 import Browser
 import Browser.Events
 import Random
@@ -54,6 +55,10 @@ randomHue =
 
 
 main =
+    animationApp (round >> Anim.clockFromMillis view)
+
+
+view clock =
     div []
         [ basicStylesNode
         , basicSvg
