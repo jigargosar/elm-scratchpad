@@ -117,7 +117,7 @@ view model =
                                     --|> mapEach (mul (A.value commonAttrs clock))
                                     |> translateF2
                                 , "skewX(" ++ fTurn skewX ++ ")"
-                                , "rotation(" ++ fDeg rotation ++ ")"
+                                , "rotate(" ++ fDeg rotation ++ ")"
                                 , scaleF 0.9
 
                                 --, scaleF (0.9 * frac)
