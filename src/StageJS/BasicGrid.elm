@@ -25,6 +25,7 @@ type alias Cell =
     , color : String
     , skewX : Float
     , skewY : Float
+    , animStart : Int
     }
 
 
@@ -34,6 +35,7 @@ initCellAt gp =
     , color = black
     , skewX = 0
     , skewY = 0
+    , animStart = 0
     }
 
 
