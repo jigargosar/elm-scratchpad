@@ -73,7 +73,11 @@ view clock =
                             , opacity 0.7
                             , transitionTransform
                             , transforms
-                                [ translateF2 (gpToCellCenter cell.gp)
+                                [ if Anim.value [] clock == 0 then
+                                    translateF2 ( 0, 0 )
+
+                                  else
+                                    translateF2 (gpToCellCenter cell.gp)
                                 , scaleF 0.9
                                 ]
                             ]
