@@ -29,9 +29,14 @@ cells =
 
 randomizeAllHues : List Cell -> List Cell
 randomizeAllHues cs =
-    Random.list (List.length cs) randomHue
-        |> Random.map (List.map2 (\c h -> { c | color = hsl h 0.9 0.55 }) cs)
+    Random.list (List.length cs) randomColor
+        |> Random.map (List.map2 (\cell color -> { cell | color = color }) cs)
         |> stepWithInitialSeed 0
+
+
+randomColor : Generator String
+randomColor =
+    randomHue |> Random.map (\h -> hsl h 0.9 0.55)
 
 
 randomHue : Generator Float
