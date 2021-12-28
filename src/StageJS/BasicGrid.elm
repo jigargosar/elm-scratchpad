@@ -34,11 +34,6 @@ randomizeAllHues cs =
         |> stepWithInitialSeed 0
 
 
-stepWithInitialSeed : Int -> Random.Generator a -> a
-stepWithInitialSeed i gen =
-    Random.step gen (Random.initialSeed i) |> first
-
-
 main =
     basicSvg [ viewBoxC gridSize gridSize ]
         [ cells

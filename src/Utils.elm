@@ -1838,6 +1838,11 @@ type alias Generator a =
     Random.Generator a
 
 
+stepWithInitialSeed : Int -> Random.Generator a -> a
+stepWithInitialSeed i gen =
+    Random.step gen (Random.initialSeed i) |> first
+
+
 randomDigitChar : Generator Char
 randomDigitChar =
     Random.Char.char (Char.toCode '0') (Char.toCode '9')
