@@ -83,7 +83,10 @@ view clock =
                                         clock
                               in
                               transforms
-                                [ translateF2 (gpToCellCenter cell.gp |> mapEach (mul frac))
+                                [ cell.gp
+                                    |> gpToCellCenter
+                                    |> mapEach (mul frac)
+                                    |> translateF2
 
                                 --, scaleF (0.9 * frac)
                                 , scaleF 0.9
