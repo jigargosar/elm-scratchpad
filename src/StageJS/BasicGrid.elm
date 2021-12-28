@@ -17,14 +17,14 @@ gridSize =
 
 
 type alias Cell =
-    { gp : Int2 }
+    { gp : Int2, hue : Float }
 
 
 cells : List Cell
 cells =
     squareGridPositions cellsInRow
         |> List.map
-            (\gp -> Cell gp)
+            (\gp -> Cell gp 0.42)
 
 
 main =
@@ -36,12 +36,7 @@ main =
                         cc =
                             gpToGridLocal { gridSize = gridSize, cellSize = cellSize } cell.gp
                     in
-                    square cellSize [ fill green, xf [ mvT cc ] ]
+                    square cellSize [ fill <| hsl cell.hue 1 0.5, xf [ mvT cc ] ]
                 )
             |> group []
         ]
-
-
-randomColor : Generator String
-randomColor =
-    randomNorm |> Random.map (\h -> hsl h 1 0.5)
