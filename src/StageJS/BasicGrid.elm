@@ -65,7 +65,11 @@ main =
                             cc =
                                 gpToGridLocal { gridSize = gridSize, cellSize = cellSize } cell.gp
                         in
-                        square cellSize [ fill cell.color, opacity 0.7, xf [ mvT cc, scale 0.9 ] ]
+                        square cellSize
+                            [ fill cell.color
+                            , opacity 0.7
+                            , xf [ mvT cc, scale 0.9 ]
+                            ]
                     )
                 |> group []
             ]
