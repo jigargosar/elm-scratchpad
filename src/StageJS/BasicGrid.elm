@@ -66,7 +66,11 @@ update msg model =
                     List.map
                         (\cell ->
                             if cell.gp == gp then
-                                { cell | skewX = ( 0, 0.3 ) }
+                                let
+                                    ( _, v ) =
+                                        cell.skewX
+                                in
+                                { cell | skewX = ( v, 0.3 ) }
 
                             else
                                 cell
@@ -112,7 +116,7 @@ view model =
                                     |> gpToCellCenter
                                     |> mapEach (mul frac)
                                     |> translateF2
-                                , "skewX(" ++ fDeg skewX ++ ")"
+                                , "skewX(" ++ fTurn skewX ++ ")"
                                 , scaleF 0.9
 
                                 --, scaleF (0.9 * frac)
@@ -150,7 +154,7 @@ initCellAt : Int2 -> Cell
 initCellAt gp =
     { gp = gp
     , color = black
-    , skewX = ( 0, 45 )
+    , skewX = ( 0, 0.8 )
     , skewY = ( 0, 0 )
     , animStart = 0
     }
