@@ -67,7 +67,7 @@ main =
                             , transitionTransform
                             , transforms
                                 [ translateF2 (gpToCellCenter cell.gp)
-                                , "scale(0.9)"
+                                , scaleF 0.9
                                 ]
                             ]
                     )

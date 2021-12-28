@@ -980,6 +980,10 @@ translateF2 ( x, y ) =
     "translate(" ++ fpx x ++ "," ++ fpx y ++ ")"
 
 
+scaleF f =
+    "scale(" ++ fromFloat f ++ ")"
+
+
 paf =
     fpx >> pa
 
