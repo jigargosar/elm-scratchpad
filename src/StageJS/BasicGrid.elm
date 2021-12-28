@@ -29,20 +29,21 @@ cells =
 
 randomizeAllHues : List Cell -> List Cell
 randomizeAllHues cs =
-    let
-        sampleCount =
-            10
-
-        randomHue : Generator Float
-        randomHue =
-            normSamples (sampleCount + 1)
-                |> List.drop 1
-                |> List.take (sampleCount - 1)
-                |> Random.uniform 0
-    in
     Random.list (List.length cs) randomHue
         |> Random.map (List.map2 (\c h -> { c | color = hsl h 0.9 0.55 }) cs)
         |> stepWithInitialSeed 0
+
+
+randomHue : Generator Float
+randomHue =
+    let
+        sampleCount =
+            10
+    in
+    normSamples (sampleCount + 1)
+        |> List.drop 1
+        |> List.take (sampleCount - 1)
+        |> Random.uniform 0
 
 
 main =
