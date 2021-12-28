@@ -197,15 +197,16 @@ tweenValueAt (TweenClock now) t =
         elapsed =
             now - start
     in
-    if elapsed <= 0 then
-        t.from
-
-    else if elapsed >= t.duration then
-        t.to
-
-    else
-        (toFloat elapsed / toFloat t.duration)
-            |> lerp t.from t.to
+    --if elapsed <= 0 then
+    --    t.from
+    --
+    --else if elapsed >= t.duration then
+    --    t.to
+    --
+    --else
+    (toFloat elapsed / toFloat t.duration)
+        |> clamp 0 1
+        |> lerp t.from t.to
 
 
 type alias Cell =
