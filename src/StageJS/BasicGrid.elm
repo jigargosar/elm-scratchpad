@@ -107,6 +107,9 @@ view model =
 
                                 skewX =
                                     A.value (A.fromToF2 cell.skewX :: commonAttrs) clock
+
+                                rotation =
+                                    tweenValueAt initialTweenClock cell.rotation
                               in
                               transforms
                                 [ cell.gp
@@ -114,6 +117,7 @@ view model =
                                     --|> mapEach (mul (A.value commonAttrs clock))
                                     |> translateF2
                                 , "skewX(" ++ fTurn skewX ++ ")"
+                                , "rotation(" ++ fDeg rotation ++ ")"
                                 , scaleF 0.9
 
                                 --, scaleF (0.9 * frac)
@@ -162,6 +166,11 @@ initialTweenClock =
 tweenTo : Float -> List TweenAttr -> TweenClock -> Tween -> Tween
 tweenTo to attrs clock (Tween from) =
     Tween to
+
+
+tweenValueAt : TweenClock -> Tween -> Float
+tweenValueAt clock (Tween from) =
+    from
 
 
 type alias Cell =
