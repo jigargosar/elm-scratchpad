@@ -17,20 +17,20 @@ gridSize =
 
 
 type alias Cell =
-    { gp : Int2, hue : Float }
+    { gp : Int2, color : String }
 
 
 cells : List Cell
 cells =
     squareGridPositions cellsInRow
-        |> List.map (\gp -> Cell gp 0.42)
+        |> List.map (\gp -> Cell gp black)
         |> randomizeAllHues
 
 
 randomizeAllHues : List Cell -> List Cell
 randomizeAllHues cs =
     Random.list (List.length cs) randomNorm
-        |> Random.map (List.map2 (\c h -> { c | hue = h }) cs)
+        |> Random.map (List.map2 (\c h -> { c | color = hsl h 1 0.6 }) cs)
         |> stepWithInitialSeed 0
 
 
@@ -43,7 +43,7 @@ main =
                         cc =
                             gpToGridLocal { gridSize = gridSize, cellSize = cellSize } cell.gp
                     in
-                    square cellSize [ fill <| hsl cell.hue 1 0.6, xf [ mvT cc ] ]
+                    square cellSize [ fill cell.color, xf [ mvT cc ] ]
                 )
             |> group []
         ]
