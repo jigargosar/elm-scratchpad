@@ -249,9 +249,13 @@ randomizeCell clock cell =
                 |> Random.constant
             )
         |> Random.Extra.andMap
-            (cell.rotation
-                |> tweenTo 360 [ TweenDuration 1800 ] clock
-                |> Random.constant
+            (Random.map2
+                (\r d ->
+                    cell.rotation
+                        |> tweenTo r [ TweenDuration d ] clock
+                )
+                (Random.float -360 360)
+                (Random.int 1000 2000)
             )
 
 
