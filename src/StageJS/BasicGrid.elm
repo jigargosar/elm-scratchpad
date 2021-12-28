@@ -114,7 +114,7 @@ view model =
                                     |> gpToCellCenter
                                     --|> mapEach (mul (A.value commonAttrs clock))
                                     |> translateF2
-                                , "skewX(" ++ fTurn skewX ++ ")"
+                                , "skewX(" ++ fDeg skewX ++ ")"
                                 , "rotate(" ++ fDeg rotation ++ ")"
                                 , scaleF 0.9
 
