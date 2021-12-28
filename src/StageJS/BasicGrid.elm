@@ -63,13 +63,14 @@ view model =
                                 clock =
                                     A.clockFromElapsedMillis (model.elapsed - cell.animStart)
 
+                                commonAttrs =
+                                    [ A.duration 1800
+                                    , A.ease Ease.inOutExpo
+                                    , A.alternateDirection
+                                    ]
+
                                 frac =
-                                    A.value
-                                        [ A.duration 1800
-                                        , A.ease Ease.inOutExpo
-                                        , A.alternateDirection
-                                        ]
-                                        clock
+                                    A.value commonAttrs clock
                               in
                               transforms
                                 [ cell.gp
