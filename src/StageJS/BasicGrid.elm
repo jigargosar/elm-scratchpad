@@ -24,6 +24,19 @@ cells : List Cell
 cells =
     squareGridPositions cellsInRow
         |> List.map (\gp -> Cell gp 0.42)
+        |> randomizeAllHues
+
+
+randomizeAllHues : List Cell -> List Cell
+randomizeAllHues cs =
+    Random.list (List.length cs) randomNorm
+        |> Random.map (List.map2 (\c h -> { c | hue = h }) cs)
+        |> stepWithInitialSeed 0
+
+
+stepWithInitialSeed : Int -> Random.Generator a -> a
+stepWithInitialSeed i gen =
+    Random.step gen (Random.initialSeed i) |> first
 
 
 main =
