@@ -48,7 +48,7 @@ main =
                         cc =
                             gpToGridLocal { gridSize = gridSize, cellSize = cellSize } cell.gp
                     in
-                    square cellSize [ fill <| hsl cell.hue 1 0.5, xf [ mvT cc ] ]
+                    square cellSize [ fill <| hsl cell.hue 1 0.6, xf [ mvT cc ] ]
                 )
             |> group []
         ]
