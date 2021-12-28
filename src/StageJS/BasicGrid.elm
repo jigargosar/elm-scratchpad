@@ -8,7 +8,7 @@ gc =
 
 
 main =
-    basicSvg []
+    basicSvg [ viewBoxC (gc.gridSize * gc.cellSize) (gc.gridSize * gc.cellSize) ]
         [ squareGridPositions gc.gridSize
             |> List.map
                 (\gp ->
