@@ -20,6 +20,7 @@ main =
 
 type alias Model =
     { elapsed : Int
+    , clock : TweenClock
     , cells : List Cell
     }
 
@@ -34,6 +35,7 @@ init () =
                 |> randomizeAllHues
     in
     ( { elapsed = 0
+      , clock = initialTweenClock
       , cells = cells
       }
     , Cmd.none
@@ -58,7 +60,12 @@ update msg model =
             ( model, Cmd.none )
 
         OnDeltaMS delta ->
-            ( { model | elapsed = model.elapsed + delta }, Cmd.none )
+            ( { model
+                | elapsed = model.elapsed + delta
+                , clock = updateClock delta model.clock
+              }
+            , Cmd.none
+            )
 
         MouseEnteredGP gp ->
             ( { model
@@ -109,7 +116,7 @@ view model =
                                     A.value (A.fromToF2 cell.skewX :: commonAttrs) clock
 
                                 rotation =
-                                    tweenValueAt initialTweenClock cell.rotation
+                                    tweenValueAt model.clock cell.rotation
                               in
                               transforms
                                 [ cell.gp
@@ -169,6 +176,11 @@ type TweenClock
 
 initialTweenClock =
     TweenClock 0
+
+
+updateClock : Int -> TweenClock -> TweenClock
+updateClock ms (TweenClock elapsed) =
+    elapsed + ms |> TweenClock
 
 
 tweenTo : Float -> List TweenAttr -> TweenClock -> Tween -> Tween
