@@ -1,10 +1,10 @@
 module StageJS.BasicGrid exposing (main)
 
 import Browser.Events
-import Ease
 import Html.Events
 import Json.Decode as JD
-import Random
+import Random exposing (Seed)
+import Random.Extra
 import Utils exposing (..)
 
 
@@ -21,6 +21,7 @@ type alias Model =
     { elapsed : Int
     , clock : TweenClock
     , cells : List Cell
+    , seed : Seed
     }
 
 
@@ -36,6 +37,7 @@ init () =
     ( { elapsed = 0
       , clock = initialTweenClock
       , cells = cells
+      , seed = Random.initialSeed 0
       }
     , Cmd.none
     )
@@ -67,18 +69,23 @@ update msg model =
             )
 
         MouseEnteredGP gp ->
-            ( { model
-                | cells =
+            let
+                cellsGen =
                     List.map
                         (\cell ->
                             if cell.gp == gp then
-                                cell
+                                Random.constant cell
 
                             else
-                                cell
+                                Random.constant cell
                         )
                         model.cells
-              }
+                        |> Random.Extra.combine
+
+                ( cells, seed ) =
+                    Random.step cellsGen model.seed
+            in
+            ( { model | cells = cells, seed = seed }
             , Cmd.none
             )
 
