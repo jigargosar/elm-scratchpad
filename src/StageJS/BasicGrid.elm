@@ -16,14 +16,25 @@ gridSize =
     300
 
 
+type alias Cell =
+    { gp : Int2 }
+
+
+cells : List Cell
+cells =
+    squareGridPositions cellsInRow
+        |> List.map
+            (\gp -> Cell gp)
+
+
 main =
     basicSvg [ viewBoxC gridSize gridSize ]
-        [ squareGridPositions cellsInRow
+        [ cells
             |> List.map
-                (\gp ->
+                (\cell ->
                     let
                         cc =
-                            gpToGridLocal { gridSize = gridSize, cellSize = cellSize } gp
+                            gpToGridLocal { gridSize = gridSize, cellSize = cellSize } cell.gp
                     in
                     square cellSize [ fill green, xf [ mvT cc ] ]
                 )
