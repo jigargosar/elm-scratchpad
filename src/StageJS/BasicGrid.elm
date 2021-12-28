@@ -1,13 +1,88 @@
 module StageJS.BasicGrid exposing (..)
 
 import Anime.Anim as A
+import Browser.Events
 import Ease
 import Random
 import Utils exposing (..)
 
 
 main =
-    animationApp (round >> A.clockFromElapsedMillis >> view)
+    bDocument
+        { init = init
+        , subscriptions = subscriptions
+        , update = update
+        , view = view
+        }
+
+
+type alias Model =
+    { elapsed : Int }
+
+
+init : () -> ( Model, Cmd Msg )
+init () =
+    ( { elapsed = 0 }, Cmd.none )
+
+
+type Msg
+    = NOP
+    | OnDeltaMS Int
+
+
+subscriptions : Model -> Sub Msg
+subscriptions _ =
+    Browser.Events.onAnimationFrameDelta (round >> clamp 0 100 >> OnDeltaMS)
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        NOP ->
+            ( model, Cmd.none )
+
+        OnDeltaMS delta ->
+            ( { model | elapsed = model.elapsed + delta }, Cmd.none )
+
+
+view : Model -> Document Msg
+view _ =
+    Document "App Title"
+        [ basicStylesNode
+        , basicSvg
+            [ viewBoxC gridSize gridSize
+            , bgcTransparent
+            ]
+            [ cells
+                |> List.map
+                    (\cell ->
+                        square cellSize
+                            [ fill cell.color
+                            , opacity 0.7
+                            , let
+                                frac =
+                                    A.value
+                                        [ A.duration 1800
+                                        , A.ease Ease.inOutExpo
+                                        , A.alternateDirection
+                                        , A.loopForever
+                                        ]
+                                        clock
+                              in
+                              transforms
+                                [ cell.gp
+                                    |> gpToCellCenter
+                                    |> mapEach (mul frac)
+                                    |> translateF2
+
+                                --, scaleF (0.9 * frac)
+                                , scaleF 0.9
+                                ]
+                            ]
+                    )
+                |> group []
+            ]
+        ]
 
 
 cellsInRow =
@@ -70,45 +145,6 @@ randomHue =
         |> List.drop 1
         |> List.take (sampleCount - 1)
         |> Random.uniform 0
-
-
-view clock =
-    div []
-        [ basicStylesNode
-        , basicSvg
-            [ viewBoxC gridSize gridSize
-            , bgcTransparent
-            ]
-            [ cells
-                |> List.map
-                    (\cell ->
-                        square cellSize
-                            [ fill cell.color
-                            , opacity 0.7
-                            , let
-                                frac =
-                                    A.value
-                                        [ A.duration 1800
-                                        , A.ease Ease.inOutExpo
-                                        , A.alternateDirection
-                                        , A.loopForever
-                                        ]
-                                        clock
-                              in
-                              transforms
-                                [ cell.gp
-                                    |> gpToCellCenter
-                                    |> mapEach (mul frac)
-                                    |> translateF2
-
-                                --, scaleF (0.9 * frac)
-                                , scaleF 0.9
-                                ]
-                            ]
-                    )
-                |> group []
-            ]
-        ]
 
 
 gpToCellCenter gp =
