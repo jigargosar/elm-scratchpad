@@ -95,6 +95,7 @@ view model =
         , basicSvg
             [ viewBoxC gridSize gridSize
             , bgcTransparent
+            , overflowVisible
             ]
             [ model.cells
                 |> List.map
