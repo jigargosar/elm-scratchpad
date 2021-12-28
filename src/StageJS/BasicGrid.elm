@@ -139,12 +139,29 @@ gridSize =
 
 
 type Tween
-    = Tween
+    = Tween Float
 
 
 tweenFixed : Float -> Tween
-tweenFixed _ =
+tweenFixed =
     Tween
+
+
+type TweenAttr
+    = TweenDuration Int
+
+
+type TweenClock
+    = TweenClock Int
+
+
+initialTweenClock =
+    TweenClock 0
+
+
+tweenTo : Float -> List TweenAttr -> TweenClock -> Tween -> Tween
+tweenTo to attrs clock (Tween from) =
+    Tween to
 
 
 type alias Cell =
@@ -163,7 +180,9 @@ initCellAt gp =
     , color = black
     , skewX = ( 0, 0.15 )
     , skewY = ( 0, 0.15 )
-    , rotation = tweenFixed 0
+    , rotation =
+        tweenFixed 0
+            |> tweenTo 360 [] initialTweenClock
     , animStart = 0
     }
 
