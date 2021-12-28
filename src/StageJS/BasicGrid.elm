@@ -138,11 +138,21 @@ gridSize =
     300
 
 
+type Tween
+    = Tween
+
+
+tweenFixed : Float -> Tween
+tweenFixed _ =
+    Tween
+
+
 type alias Cell =
     { gp : Int2
     , color : String
     , skewX : Float2
     , skewY : Float2
+    , rotation : Tween
     , animStart : Int
     }
 
@@ -153,6 +163,7 @@ initCellAt gp =
     , color = black
     , skewX = ( 0, 0.15 )
     , skewY = ( 0, 0.15 )
+    , rotation = tweenFixed 0
     , animStart = 0
     }
 
