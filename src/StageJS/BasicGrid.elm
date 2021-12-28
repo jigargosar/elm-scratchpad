@@ -3,6 +3,8 @@ module StageJS.BasicGrid exposing (main)
 import Anime.Anim as A
 import Browser.Events
 import Ease
+import Html.Events
+import Json.Decode as JD
 import Random
 import Utils exposing (..)
 
@@ -41,6 +43,7 @@ init () =
 type Msg
     = NOP
     | OnDeltaMS Int
+    | MouseEnteredGP Int2
 
 
 subscriptions : Model -> Sub Msg
@@ -56,6 +59,22 @@ update msg model =
 
         OnDeltaMS delta ->
             ( { model | elapsed = model.elapsed + delta }, Cmd.none )
+
+        MouseEnteredGP gp ->
+            ( { model
+                | cells =
+                    List.map
+                        (\cell ->
+                            if cell.gp == gp then
+                                { cell | skewX = ( 0, 0.3 ) }
+
+                            else
+                                cell
+                        )
+                        model.cells
+              }
+            , Cmd.none
+            )
 
 
 view : Model -> Document Msg
@@ -93,11 +112,12 @@ view model =
                                     |> gpToCellCenter
                                     |> mapEach (mul frac)
                                     |> translateF2
+                                , "skewX(" ++ fDeg skewX ++ ")"
                                 , scaleF 0.9
-                                , "skewX(" ++ fromFloat skewX ++ ")"
 
                                 --, scaleF (0.9 * frac)
                                 ]
+                            , Html.Events.on "mouseenter" (JD.succeed (MouseEnteredGP cell.gp))
                             ]
                     )
                 |> group []
@@ -130,7 +150,7 @@ initCellAt : Int2 -> Cell
 initCellAt gp =
     { gp = gp
     , color = black
-    , skewX = ( 0, 0 )
+    , skewX = ( 0, 45 )
     , skewY = ( 0, 0 )
     , animStart = 0
     }
