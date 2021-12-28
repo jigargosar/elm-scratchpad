@@ -142,8 +142,8 @@ type Tween
     = Tween Float
 
 
-tweenFixed : Float -> Tween
-tweenFixed =
+tween : Float -> Tween
+tween =
     Tween
 
 
@@ -180,9 +180,7 @@ initCellAt gp =
     , color = black
     , skewX = ( 0, 0.15 )
     , skewY = ( 0, 0.15 )
-    , rotation =
-        tweenFixed 0
-            |> tweenTo 360 [] initialTweenClock
+    , rotation = tween 0 |> tweenTo 360 [] initialTweenClock
     , animStart = 0
     }
 
