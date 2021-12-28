@@ -4,7 +4,7 @@ module Anime.Anim exposing
     , Clock
     , ClockMsg
     , alternateDirection
-    , clockFromMillis
+    , clockFromElapsedMillis
     , clockSubscription
     , delay
     , duration
@@ -23,6 +23,7 @@ module Anime.Anim exposing
     , staggerRange
     , staggerReverse
     , staggerTo
+    , startClockAt
     , to
     , updateClock
     , value
@@ -44,9 +45,14 @@ initClock =
     Clock 0 0
 
 
-clockFromMillis : Int -> Clock
-clockFromMillis =
+clockFromElapsedMillis : Int -> Clock
+clockFromElapsedMillis =
     Clock 0
+
+
+startClockAt : Int -> Clock
+startClockAt ms =
+    Clock ms ms
 
 
 clockElapsed : Clock -> Int

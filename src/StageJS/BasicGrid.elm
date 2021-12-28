@@ -69,7 +69,7 @@ randomHue =
 
 
 main =
-    animationApp (round >> A.clockFromMillis >> view)
+    animationApp (round >> A.clockFromElapsedMillis >> view)
 
 
 view clock =
