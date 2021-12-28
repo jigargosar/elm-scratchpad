@@ -1,6 +1,7 @@
 module Utils exposing (..)
 
 import Browser
+import Browser.Events
 import Color
 import Dict exposing (Dict)
 import Ease
@@ -1827,6 +1828,16 @@ bDocument :
     -> Program flags model msg
 bDocument =
     Browser.document
+
+
+animationApp : (Float -> Html Float) -> Program () Float Float
+animationApp vfn =
+    Browser.element
+        { init = \() -> ( 0, Cmd.none )
+        , subscriptions = \_ -> Browser.Events.onAnimationFrameDelta (clamp 0 100)
+        , update = \delta elapsed -> ( elapsed + delta, Cmd.none )
+        , view = vfn
+        }
 
 
 notifyClick : msg -> Attribute msg

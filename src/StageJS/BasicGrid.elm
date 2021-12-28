@@ -1,11 +1,13 @@
 module StageJS.BasicGrid exposing (..)
 
 import Anime.Anim as A
-import Browser
-import Browser.Events
 import Ease
 import Random
 import Utils exposing (..)
+
+
+main =
+    animationApp (round >> A.clockFromElapsedMillis >> view)
 
 
 cellsInRow =
@@ -70,10 +72,6 @@ randomHue =
         |> Random.uniform 0
 
 
-main =
-    animationApp (round >> A.clockFromElapsedMillis >> view)
-
-
 view clock =
     div []
         [ basicStylesNode
@@ -115,13 +113,3 @@ view clock =
 
 gpToCellCenter gp =
     gpToGridLocal { gridSize = gridSize, cellSize = cellSize } gp
-
-
-animationApp : (Float -> Html Float) -> Program () Float Float
-animationApp vfn =
-    Browser.element
-        { init = \() -> ( 0, Cmd.none )
-        , subscriptions = \_ -> Browser.Events.onAnimationFrameDelta (clamp 0 100)
-        , update = \delta elapsed -> ( elapsed + delta, Cmd.none )
-        , view = vfn
-        }
