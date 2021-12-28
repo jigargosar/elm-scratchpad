@@ -1,5 +1,6 @@
 module StageJS.BasicGrid exposing (..)
 
+import Random
 import Utils exposing (..)
 
 
@@ -28,3 +29,8 @@ main =
                 )
             |> group []
         ]
+
+
+randomColor : Generator String
+randomColor =
+    randomNorm |> Random.map (\h -> hsl h 1 0.5)
