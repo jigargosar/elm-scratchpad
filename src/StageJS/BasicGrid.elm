@@ -74,7 +74,7 @@ update msg model =
                     List.map
                         (\cell ->
                             if cell.gp == gp then
-                                Random.constant cell
+                                randomizeCell model.clock cell
 
                             else
                                 Random.constant cell
@@ -232,6 +232,27 @@ initCellAt gp =
     , skewY = tween 0 |> tweenTo 15 [ TweenDuration 1800 ] initialTweenClock
     , rotation = tween 0 |> tweenTo 360 [ TweenDuration 1800 ] initialTweenClock
     }
+
+
+randomizeCell : TweenClock -> Cell -> Generator Cell
+randomizeCell clock cell =
+    Random.constant (Cell cell.gp)
+        |> Random.Extra.andMap randomColor
+        |> Random.Extra.andMap
+            (cell.skewX
+                |> tweenTo 15 [ TweenDuration 1800 ] clock
+                |> Random.constant
+            )
+        |> Random.Extra.andMap
+            (cell.skewY
+                |> tweenTo 15 [ TweenDuration 1800 ] clock
+                |> Random.constant
+            )
+        |> Random.Extra.andMap
+            (cell.rotation
+                |> tweenTo 360 [ TweenDuration 1800 ] clock
+                |> Random.constant
+            )
 
 
 randomizeAllHues : List Cell -> List Cell
