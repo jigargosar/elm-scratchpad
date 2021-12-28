@@ -23,8 +23,8 @@ gridSize =
 type alias Cell =
     { gp : Int2
     , color : String
-    , skewX : Float
-    , skewY : Float
+    , skewX : Float2
+    , skewY : Float2
     , animStart : Int
     }
 
@@ -33,8 +33,8 @@ initCellAt : Int2 -> Cell
 initCellAt gp =
     { gp = gp
     , color = black
-    , skewX = 0
-    , skewY = 0
+    , skewX = ( 0, 0 )
+    , skewY = ( 0, 0 )
     , animStart = 0
     }
 
