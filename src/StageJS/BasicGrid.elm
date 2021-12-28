@@ -65,12 +65,20 @@ main =
                             [ fill cell.color
                             , opacity 0.7
                             , transitionTransform
+                            , transforms
+                                [ translateF2 (gpToCellCenter cell.gp)
+                                , "scale(0.9)"
+                                ]
                             , xf [ mvT (gpToCellCenter cell.gp), scale 0.9 ]
                             ]
                     )
                 |> group []
             ]
         ]
+
+
+translateF2 ( x, y ) =
+    "translate(" ++ fpx x ++ "," ++ fpx y ++ ")"
 
 
 gpToCellCenter gp =
