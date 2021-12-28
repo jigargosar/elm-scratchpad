@@ -24,10 +24,7 @@ main =
                         cc =
                             gpToGridLocal { gridSize = gridSize, cellSize = cellSize } gp
                     in
-                    square cellSize
-                        [ fill green
-                        , xf [ mvT cc ]
-                        ]
+                    square cellSize [ fill green, xf [ mvT cc ] ]
                 )
             |> group []
         ]
