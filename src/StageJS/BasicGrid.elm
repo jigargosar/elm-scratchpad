@@ -70,7 +70,7 @@ update msg model =
                                     ( _, v ) =
                                         cell.skewX
                                 in
-                                { cell | skewX = ( v, 0.3 ) }
+                                { cell | skewX = ( v, 0.3 ), animStart = model.elapsed }
 
                             else
                                 cell
@@ -114,7 +114,7 @@ view model =
                               transforms
                                 [ cell.gp
                                     |> gpToCellCenter
-                                    |> mapEach (mul frac)
+                                    --|> mapEach (mul frac)
                                     |> translateF2
                                 , "skewX(" ++ fTurn skewX ++ ")"
                                 , scaleF 0.9
