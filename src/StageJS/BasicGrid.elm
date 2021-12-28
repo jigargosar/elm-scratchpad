@@ -73,9 +73,9 @@ view model =
                                     |> gpToCellCenter
                                     |> mapEach (mul frac)
                                     |> translateF2
+                                , scaleF 0.9
 
                                 --, scaleF (0.9 * frac)
-                                --, scaleF 0.9
                                 ]
                             ]
                     )
