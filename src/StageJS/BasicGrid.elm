@@ -72,11 +72,7 @@ update msg model =
                     List.map
                         (\cell ->
                             if cell.gp == gp then
-                                { cell
-                                    | animStart = model.elapsed
-                                    , skewX = swap cell.skewX
-                                    , skewY = swap cell.skewY
-                                }
+                                cell
 
                             else
                                 cell
@@ -215,10 +211,9 @@ tweenValueAt (TweenClock now) t =
 type alias Cell =
     { gp : Int2
     , color : String
-    , skewX : Float2
-    , skewY : Float2
+    , skewX : Tween
+    , skewY : Tween
     , rotation : Tween
-    , animStart : Int
     }
 
 
@@ -226,10 +221,9 @@ initCellAt : Int2 -> Cell
 initCellAt gp =
     { gp = gp
     , color = black
-    , skewX = ( 0, 0.15 )
-    , skewY = ( 0, 0.15 )
+    , skewX = tween 0 |> tweenTo 15 [ TweenDuration 1800 ] initialTweenClock
+    , skewY = tween 0 |> tweenTo 15 [ TweenDuration 1800 ] initialTweenClock
     , rotation = tween 0 |> tweenTo 360 [ TweenDuration 1800 ] initialTweenClock
-    , animStart = 0
     }
 
 
