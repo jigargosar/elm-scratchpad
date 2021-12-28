@@ -60,13 +60,16 @@ view model =
                             [ fill cell.color
                             , opacity 0.7
                             , let
+                                clock =
+                                    A.clockFromElapsedMillis (model.elapsed - cell.animStart)
+
                                 frac =
                                     A.value
                                         [ A.duration 1800
                                         , A.ease Ease.inOutExpo
                                         , A.alternateDirection
                                         ]
-                                        (A.clockFromElapsedMillis (model.elapsed - cell.animStart))
+                                        clock
                               in
                               transforms
                                 [ cell.gp
