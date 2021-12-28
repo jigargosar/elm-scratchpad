@@ -23,7 +23,6 @@ module Anime.Anim exposing
     , staggerRange
     , staggerReverse
     , staggerTo
-    , startClockAt
     , to
     , updateClock
     , value

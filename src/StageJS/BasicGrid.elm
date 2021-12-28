@@ -46,7 +46,7 @@ update msg model =
 
 
 view : Model -> Document Msg
-view _ =
+view model =
     Document "App Title"
         [ basicStylesNode
         , basicSvg
@@ -65,9 +65,8 @@ view _ =
                                         [ A.duration 1800
                                         , A.ease Ease.inOutExpo
                                         , A.alternateDirection
-                                        , A.loopForever
                                         ]
-                                        clock
+                                        (A.clockFromElapsedMillis (model.elapsed - cell.animStart))
                               in
                               transforms
                                 [ cell.gp
@@ -76,7 +75,7 @@ view _ =
                                     |> translateF2
 
                                 --, scaleF (0.9 * frac)
-                                , scaleF 0.9
+                                --, scaleF 0.9
                                 ]
                             ]
                     )
