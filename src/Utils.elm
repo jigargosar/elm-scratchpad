@@ -571,6 +571,15 @@ svgBlock aa =
         )
 
 
+basicSvgAttrs aa =
+    dBlock
+        :: noFill
+        :: noStroke
+        :: noUserSelect
+        :: bgc gray
+        :: aa
+
+
 group =
     Svg.g
 
