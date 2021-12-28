@@ -4,5 +4,5 @@ import Utils exposing (..)
 
 
 main =
-    svg (basicSvgAttrs [])
+    basicSvg []
         []

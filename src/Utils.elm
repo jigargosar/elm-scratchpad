@@ -571,6 +571,10 @@ svgBlock aa =
         )
 
 
+basicSvg aa =
+    basicSvgAttrs aa |> svg
+
+
 basicSvgAttrs aa =
     dBlock
         :: noFill
