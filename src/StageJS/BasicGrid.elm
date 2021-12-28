@@ -1,4 +1,4 @@
-module StageJS.BasicGrid exposing (..)
+module StageJS.BasicGrid exposing (main)
 
 import Anime.Anim as A
 import Browser.Events
@@ -17,12 +17,25 @@ main =
 
 
 type alias Model =
-    { elapsed : Int }
+    { elapsed : Int
+    , cells : List Cell
+    }
 
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { elapsed = 0 }, Cmd.none )
+    let
+        cells : List Cell
+        cells =
+            squareGridPositions cellsInRow
+                |> List.map initCellAt
+                |> randomizeAllHues
+    in
+    ( { elapsed = 0
+      , cells = cells
+      }
+    , Cmd.none
+    )
 
 
 type Msg
@@ -53,7 +66,7 @@ view model =
             [ viewBoxC gridSize gridSize
             , bgcTransparent
             ]
-            [ cells
+            [ model.cells
                 |> List.map
                     (\cell ->
                         square cellSize
@@ -121,13 +134,6 @@ initCellAt gp =
     , skewY = ( 0, 0 )
     , animStart = 0
     }
-
-
-cells : List Cell
-cells =
-    squareGridPositions cellsInRow
-        |> List.map initCellAt
-        |> randomizeAllHues
 
 
 randomizeAllHues : List Cell -> List Cell
