@@ -142,13 +142,21 @@ gridSize =
     300
 
 
-type Tween
-    = Tween Float
+type alias Tween =
+    { from : Float
+    , to : Float
+    , duration : Int
+    , start : TweenClock
+    }
 
 
 tween : Float -> Tween
-tween =
-    Tween
+tween val =
+    { from = val
+    , to = val
+    , duration = 0
+    , start = initialTweenClock
+    }
 
 
 type TweenAttr
@@ -164,13 +172,13 @@ initialTweenClock =
 
 
 tweenTo : Float -> List TweenAttr -> TweenClock -> Tween -> Tween
-tweenTo to attrs clock (Tween from) =
-    Tween to
+tweenTo to attrs clock t =
+    { t | to = to, from = tweenValueAt clock t, start = clock }
 
 
 tweenValueAt : TweenClock -> Tween -> Float
-tweenValueAt clock (Tween from) =
-    from
+tweenValueAt clock t =
+    t.to
 
 
 type alias Cell =
