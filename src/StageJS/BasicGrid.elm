@@ -1,8 +1,9 @@
 module StageJS.BasicGrid exposing (..)
 
-import Anime.Anim as Anim
+import Anime.Anim as A
 import Browser
 import Browser.Events
+import Ease
 import Random
 import Utils exposing (..)
 
@@ -55,7 +56,7 @@ randomHue =
 
 
 main =
-    animationApp (round >> Anim.clockFromMillis >> view)
+    animationApp (round >> A.clockFromMillis >> view)
 
 
 view clock =
@@ -71,13 +72,20 @@ view clock =
                         square cellSize
                             [ fill cell.color
                             , opacity 0.7
-                            , transitionTransform
-                            , transforms
-                                [ if Anim.value [] clock == 0 then
-                                    translateF2 ( 0, 0 )
+                            , let
+                                frac =
+                                    A.value
+                                        [ A.duration 1800
+                                        , A.ease Ease.inOutExpo
+                                        , A.alternateDirection
+                                        , A.loopForever
+                                        ]
+                                        clock
+                              in
+                              transforms
+                                [ translateF2 (gpToCellCenter cell.gp |> mapEach (mul frac))
 
-                                  else
-                                    translateF2 (gpToCellCenter cell.gp)
+                                --, scaleF (0.9 * frac)
                                 , scaleF 0.9
                                 ]
                             ]
