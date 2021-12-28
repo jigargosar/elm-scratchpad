@@ -15,17 +15,19 @@ gridSize =
     300
 
 
-gc : { gridSize : Float, cellSize : Float }
-gc =
-    { gridSize = gridSize, cellSize = cellSize }
-
-
 main =
-    basicSvg [ viewBoxC gc.gridSize gc.gridSize ]
+    basicSvg [ viewBoxC gridSize gridSize ]
         [ squareGridPositions cellsInRow
             |> List.map
                 (\gp ->
-                    square gc.cellSize [ fill green, xf [ mvT (gpToGridLocal gc gp) ] ]
+                    let
+                        cc =
+                            gpToGridLocal { gridSize = gridSize, cellSize = cellSize } gp
+                    in
+                    square cellSize
+                        [ fill green
+                        , xf [ mvT cc ]
+                        ]
                 )
             |> group []
         ]
