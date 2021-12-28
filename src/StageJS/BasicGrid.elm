@@ -14,5 +14,9 @@ main =
                 (\gp ->
                     square gc.cellSize [ fill green, xf [ mvT (gpToGridLocal gc gp) ] ]
                 )
-            |> group []
+            |> group
+                [ xf
+                    [ mv2 (gc.gridSize * gc.cellSize * -0.5) (gc.gridSize * gc.cellSize * -0.5)
+                    ]
+                ]
         ]
