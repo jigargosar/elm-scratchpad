@@ -174,6 +174,18 @@ initialTweenClock =
 tweenTo : Float -> List TweenAttr -> TweenClock -> Tween -> Tween
 tweenTo to attrs clock t =
     { t | to = to, from = tweenValueAt clock t, start = clock }
+        |> applyTweenAttrs attrs
+
+
+applyTweenAttrs : List TweenAttr -> Tween -> Tween
+applyTweenAttrs attrs tInitial =
+    let
+        applyAttr a t =
+            case a of
+                TweenDuration ms ->
+                    { t | duration = ms }
+    in
+    List.foldl applyAttr tInitial attrs
 
 
 tweenValueAt : TweenClock -> Tween -> Float
