@@ -69,7 +69,6 @@ main =
                                 [ translateF2 (gpToCellCenter cell.gp)
                                 , "scale(0.9)"
                                 ]
-                            , xf [ mvT (gpToCellCenter cell.gp), scale 0.9 ]
                             ]
                     )
                 |> group []
