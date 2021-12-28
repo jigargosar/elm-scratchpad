@@ -66,11 +66,11 @@ update msg model =
                     List.map
                         (\cell ->
                             if cell.gp == gp then
-                                let
-                                    ( _, v ) =
-                                        cell.skewX
-                                in
-                                { cell | skewX = ( v, 0.3 ), animStart = model.elapsed }
+                                { cell
+                                    | animStart = model.elapsed
+                                    , skewX = swap cell.skewX
+                                    , skewY = swap cell.skewY
+                                }
 
                             else
                                 cell
@@ -154,8 +154,8 @@ initCellAt : Int2 -> Cell
 initCellAt gp =
     { gp = gp
     , color = black
-    , skewX = ( 0, 0.1 )
-    , skewY = ( 0, 0 )
+    , skewX = ( 0, 0.15 )
+    , skewY = ( 0, 0.15 )
     , animStart = 0
     }
 

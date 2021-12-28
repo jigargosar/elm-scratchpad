@@ -1281,6 +1281,10 @@ mapBoth =
     Tuple.mapBoth
 
 
+swap ( a, b ) =
+    ( b, a )
+
+
 mapEach : (a -> x) -> ( a, a ) -> ( x, x )
 mapEach fn =
     mapBoth fn fn
