@@ -4,19 +4,15 @@ import Utils exposing (..)
 
 
 gc =
-    { gridSize = 10, cellSize = 10 }
+    { gridSize = 300, cellSize = 30 }
 
 
 main =
-    basicSvg [ viewBoxC (gc.gridSize * gc.cellSize) (gc.gridSize * gc.cellSize) ]
-        [ squareGridPositions gc.gridSize
+    basicSvg [ viewBoxC gc.gridSize gc.gridSize ]
+        [ squareGridPositions (gc.gridSize // gc.cellSize)
             |> List.map
                 (\gp ->
                     square gc.cellSize [ fill green, xf [ mvT (gpToGridLocal gc gp) ] ]
                 )
-            |> group
-                [ xf
-                    [ mv2 (gc.gridSize * gc.cellSize * -0.5) (gc.gridSize * gc.cellSize * -0.5)
-                    ]
-                ]
+            |> group []
         ]
