@@ -71,6 +71,9 @@ view model =
 
                                 frac =
                                     A.value commonAttrs clock
+
+                                skewX =
+                                    A.value (A.fromToF2 cell.skewX :: commonAttrs) clock
                               in
                               transforms
                                 [ cell.gp
@@ -78,6 +81,7 @@ view model =
                                     |> mapEach (mul frac)
                                     |> translateF2
                                 , scaleF 0.9
+                                , "skewX(" ++ fromFloat skewX ++ ")"
 
                                 --, scaleF (0.9 * frac)
                                 ]

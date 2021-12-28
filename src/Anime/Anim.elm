@@ -9,7 +9,9 @@ module Anime.Anim exposing
     , delay
     , duration
     , ease
+    , from
     , fromTo
+    , fromToF2
     , initClock
     , loopFor
     , loopForever
@@ -116,8 +118,13 @@ type alias AnimAttr =
 
 
 fromTo : Float -> Float -> AnimAttr
-fromTo from to_ _ a =
-    { a | from = from, to = to_ }
+fromTo from_ to_ _ a =
+    { a | from = from_, to = to_ }
+
+
+fromToF2 : Float2 -> AnimAttr
+fromToF2 ( f, t ) =
+    fromTo f t
 
 
 
@@ -127,6 +134,11 @@ fromTo from to_ _ a =
 to : Float -> AnimAttr
 to to_ _ a =
     { a | to = to_ }
+
+
+from : Float -> AnimAttr
+from from_ _ a =
+    { a | from = from_ }
 
 
 type alias StaggeredValue =
@@ -313,16 +325,16 @@ applyDirectionToFrac iteration direction frac =
 
 
 staggerRange : Float2 -> IndexLength -> Float
-staggerRange ( from, to_ ) il =
+staggerRange ( from_, to_ ) il =
     if il.length <= 1 then
-        from
+        from_
 
     else
         let
             frac =
                 toFloat il.index / (toFloat il.length - 1)
         in
-        lerp from to_ frac
+        lerp from_ to_ frac
 
 
 

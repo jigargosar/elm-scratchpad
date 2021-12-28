@@ -853,6 +853,11 @@ fpx n =
     fromFloat n ++ "px"
 
 
+fDeg : Float -> String
+fDeg n =
+    fromFloat n ++ "deg"
+
+
 ipx : Int -> String
 ipx n =
     fromInt n ++ "px"
