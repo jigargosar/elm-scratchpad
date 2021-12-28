@@ -64,6 +64,7 @@ main =
                         square cellSize
                             [ fill cell.color
                             , opacity 0.7
+                            , transitionTransform
                             , xf [ mvT (gpToCellCenter cell.gp), scale 0.9 ]
                             ]
                     )
