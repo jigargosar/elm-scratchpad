@@ -189,8 +189,23 @@ applyTweenAttrs attrs tInitial =
 
 
 tweenValueAt : TweenClock -> Tween -> Float
-tweenValueAt clock t =
-    t.to
+tweenValueAt (TweenClock now) t =
+    let
+        (TweenClock start) =
+            t.start
+
+        elapsed =
+            now - start
+    in
+    if elapsed <= 0 then
+        t.from
+
+    else if elapsed >= t.duration then
+        t.to
+
+    else
+        (toFloat elapsed / toFloat t.duration)
+            |> lerp t.from t.to
 
 
 type alias Cell =
