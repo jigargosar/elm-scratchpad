@@ -23,8 +23,7 @@ type alias Cell =
 cells : List Cell
 cells =
     squareGridPositions cellsInRow
-        |> List.map
-            (\gp -> Cell gp 0.42)
+        |> List.map (\gp -> Cell gp 0.42)
 
 
 main =
