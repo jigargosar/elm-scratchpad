@@ -154,7 +154,7 @@ initCellAt : Int2 -> Cell
 initCellAt gp =
     { gp = gp
     , color = black
-    , skewX = ( 0, 0.8 )
+    , skewX = ( 0, 0.1 )
     , skewY = ( 0, 0 )
     , animStart = 0
     }
