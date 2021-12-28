@@ -1,5 +1,7 @@
 module StageJS.BasicGrid exposing (..)
 
+import Browser
+import Browser.Events
 import Random
 import Utils exposing (..)
 
@@ -78,3 +80,13 @@ main =
 
 gpToCellCenter gp =
     gpToGridLocal { gridSize = gridSize, cellSize = cellSize } gp
+
+
+animationApp : (Float -> Html Float) -> Program () Float Float
+animationApp vfn =
+    Browser.element
+        { init = \() -> ( 0, Cmd.none )
+        , subscriptions = \_ -> Browser.Events.onAnimationFrameDelta (clamp 0 100)
+        , update = \delta elapsed -> ( elapsed + delta, Cmd.none )
+        , view = vfn
+        }
