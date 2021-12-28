@@ -21,13 +21,26 @@ gridSize =
 
 
 type alias Cell =
-    { gp : Int2, color : String }
+    { gp : Int2
+    , color : String
+    , skewX : Float
+    , skewY : Float
+    }
+
+
+initCellAt : Int2 -> Cell
+initCellAt gp =
+    { gp = gp
+    , color = black
+    , skewX = 0
+    , skewY = 0
+    }
 
 
 cells : List Cell
 cells =
     squareGridPositions cellsInRow
-        |> List.map (\gp -> Cell gp black)
+        |> List.map initCellAt
         |> randomizeAllHues
 
 
