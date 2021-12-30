@@ -331,6 +331,10 @@ randomColor =
     randomHue |> Random.map (\h -> hsl h 1 0.5)
 
 
+
+-- colors = [black, white, orange , red, green, purple, blue]
+
+
 randomHue : Generator Float
 randomHue =
     let
