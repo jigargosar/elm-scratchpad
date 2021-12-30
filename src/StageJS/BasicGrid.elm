@@ -303,8 +303,29 @@ randomCellAt clock =
 
 randomizeCell : TweenClock -> Cell -> Generator Cell
 randomizeCell clock cell =
-    randomCellAt clock
-        |> Random.map (\fn -> fn cell.gp)
+    let
+        randomInInterval : Float2 -> Generator Float
+        randomInInterval ( a, b ) =
+            Random.float a b
+    in
+    Random.map5
+        (\duration color rotation skewX skewY ->
+            let
+                tweenToHelp to =
+                    tweenTo to [ TweenDuration duration ] clock
+            in
+            { cell
+                | color = color
+                , rotation = cell.rotation |> tweenToHelp rotation
+                , skewX = cell.skewX |> tweenToHelp skewX
+                , skewY = cell.skewY |> tweenToHelp skewY
+            }
+        )
+        (Random.int 1000 2000)
+        randomColor
+        (randomInInterval ( -pi, pi ))
+        (randomInInterval ( 0, 0.4 ))
+        (randomInInterval ( 0, 0.4 ))
 
 
 
