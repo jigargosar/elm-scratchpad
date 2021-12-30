@@ -276,8 +276,8 @@ randomCellAt =
                             initialTweenClock
                 )
 
-        randomTweenRange : Float2 -> Generator Tween
-        randomTweenRange range =
+        randomTweenWithValueInRange : Float2 -> Generator Tween
+        randomTweenWithValueInRange range =
             randomRange range |> tweenFromRandomFloat
     in
     Random.map2
@@ -289,7 +289,7 @@ randomCellAt =
             { cell | color = color, rotation = rotation }
         )
         randomColor
-        (randomTweenRange ( -180, 180 ))
+        (randomTweenWithValueInRange ( -180, 180 ))
 
 
 randomizeCell : TweenClock -> Cell -> Generator Cell
