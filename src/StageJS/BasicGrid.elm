@@ -293,27 +293,33 @@ randomCellAt clock =
 
 randomizeCell : TweenClock -> Cell -> Generator Cell
 randomizeCell clock cell =
-    Random.constant (Cell cell.gp)
-        |> Random.Extra.andMap randomColor
-        |> Random.Extra.andMap
-            (cell.skewX
-                |> tweenTo 15 [ TweenDuration 1800 ] clock
-                |> Random.constant
-            )
-        |> Random.Extra.andMap
-            (cell.skewY
-                |> tweenTo 15 [ TweenDuration 1800 ] clock
-                |> Random.constant
-            )
-        |> Random.Extra.andMap
-            (Random.map2
-                (\r d ->
-                    cell.rotation
-                        |> tweenTo r [ TweenDuration d ] clock
-                )
-                (Random.float -pi pi)
-                (Random.int 1000 2000)
-            )
+    randomCellAt clock
+        |> Random.map (\fn -> fn cell.gp)
+
+
+
+--Random.constant (Cell cell.gp)
+--    |> Random.Extra.andMap randomColor
+--    |> Random.Extra.andMap
+--        (cell.skewX
+--            |> tweenTo 15 [ TweenDuration 1800 ] clock
+--            |> Random.constant
+--        )
+--    |> Random.Extra.andMap
+--        (cell.skewY
+--            |> tweenTo 15 [ TweenDuration 1800 ] clock
+--            |> Random.constant
+--        )
+--    |> Random.Extra.andMap
+--        (Random.map2
+--            (\r d ->
+--                cell.rotation
+--                    |> tweenTo r [ TweenDuration d ] clock
+--            )
+--            (Random.float -pi pi)
+--            (Random.int 1000 2000)
+--        )
+--
 
 
 randomColor : Generator String
