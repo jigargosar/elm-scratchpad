@@ -27,8 +27,7 @@ main =
 
 
 type alias Model =
-    { elapsed : Int
-    , clock : TweenClock
+    { clock : TweenClock
     , cells : List Cell
     , seed : Seed
     }
@@ -43,8 +42,7 @@ init () =
                 |> List.map initCellAt
                 |> randomizeAllHues
     in
-    ( { elapsed = 0
-      , clock = initialTweenClock
+    ( { clock = initialTweenClock
       , cells = cells
       , seed = Random.initialSeed 0
       }
@@ -70,10 +68,7 @@ update msg model =
             ( model, Cmd.none )
 
         OnDeltaMS delta ->
-            ( { model
-                | elapsed = model.elapsed + delta
-                , clock = updateClock delta model.clock
-              }
+            ( { model | clock = updateClock delta model.clock }
             , Cmd.none
             )
 
