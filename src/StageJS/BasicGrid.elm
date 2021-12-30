@@ -343,6 +343,34 @@ rainbow =
     [ "black", "white", "blue", "purple", "red", "orange", "yellow", "green" ]
 
 
+wPurple =
+    "#BF00FF"
+
+
+wGreen =
+    "#BFFF00"
+
+
+wYellow =
+    "#FAFA00"
+
+
+wOrange =
+    "#FFBF00"
+
+
+wPink =
+    "#FF00BF"
+
+
+wBlue =
+    "#00BFFF"
+
+
+wGreen2 =
+    "#00FFBF"
+
+
 
 --  rainbow : [ 'dark', 'light', 'blue', 'purple', 'red', 'orange', 'yellow', 'green' ],
 -- colors = [black, white, orange , red, green, purple, blue]
