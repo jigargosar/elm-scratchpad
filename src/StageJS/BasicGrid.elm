@@ -121,8 +121,8 @@ view model =
             [ viewBoxC gridSize gridSize
             , bgcTransparent
             , overflowVisible
-            , sMaxWidth "100vh"
-            , sMaxHeight "100vw"
+            , sMaxWidth "100vw"
+            , sMaxHeight "100vh"
             , pa "10vmin"
             , ma "auto"
             ]
