@@ -337,54 +337,6 @@ sampleRainbow =
         |> Random.map (Maybe.withDefault "black")
 
 
-rainbow =
-    [ "black", "white", "blue", "purple", "red", "orange", "yellow", "green" ]
-
-
-wPurple =
-    "#BF00FF"
-
-
-wGreen_lime =
-    "#BFFF00"
-
-
-wYellow =
-    "#FAFA00"
-
-
-wOrange =
-    "#FFBF00"
-
-
-wPink =
-    "#FF00BF"
-
-
-wBlue =
-    "#00BFFF"
-
-
-wGreen2_sea =
-    "#00FFBF"
-
-
-wBlack =
-    "#202020"
-
-
-wGray =
-    "#2b2b2b"
-
-
-wLightGray =
-    "#373737"
-
-
-wWhite =
-    "#fcfcfc"
-
-
 wRainbow =
     [ wPurple
     , wGreen_lime

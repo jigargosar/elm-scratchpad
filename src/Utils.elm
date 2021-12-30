@@ -1980,6 +1980,71 @@ viewBool bool x =
 
 
 -- COLOR UTILS
+--  rainbow : [ 'dark', 'light', 'blue', 'purple', 'red', 'orange', 'yellow', 'green' ],
+-- colors = [black, white, orange , red, green, purple, blue]
+
+
+rainbow =
+    [ "black", "white", "blue", "purple", "red", "orange", "yellow", "green" ]
+
+
+wPurple =
+    "#BF00FF"
+
+
+wGreen_lime =
+    "#BFFF00"
+
+
+wYellow =
+    "#FAFA00"
+
+
+wOrange =
+    "#FFBF00"
+
+
+wPink =
+    "#FF00BF"
+
+
+wBlue =
+    "#00BFFF"
+
+
+wGreen2_sea =
+    "#00FFBF"
+
+
+wBlack =
+    "#202020"
+
+
+wGray =
+    "#2b2b2b"
+
+
+wLightGray =
+    "#373737"
+
+
+wWhite =
+    "#fcfcfc"
+
+
+windowsAccentColorRainbow__ =
+    [ wPurple
+    , wGreen_lime
+    , wYellow
+    , wOrange
+    , wPink
+    , wBlue
+    , wGreen2_sea
+    , wBlack
+    , wGray
+    , wLightGray
+    , wWhite
+    ]
 
 
 randomColor__ : Generator String
