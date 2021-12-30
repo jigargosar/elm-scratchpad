@@ -279,10 +279,10 @@ randomCellAt =
         (\color rotation skewX skewY ->
             \gp ->
                 { gp = gp
-                , color = color -- black
-                , skewX = skewX -- tween 0 |> tweenTo 0.4 [ TweenDuration 1800 ] initialTweenClock
-                , skewY = skewY -- tween 0 |> tweenTo 0.4 [ TweenDuration 1800 ] initialTweenClock
-                , rotation = rotation -- tween 0 |> tweenTo 360 [ TweenDuration 1800 ] initialTweenClock
+                , color = color
+                , skewX = skewX
+                , skewY = skewY
+                , rotation = rotation
                 }
         )
         randomColor
