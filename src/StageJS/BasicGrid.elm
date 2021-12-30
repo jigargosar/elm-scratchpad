@@ -249,12 +249,12 @@ type alias Cell =
 
 randomGridCells : Generator (List Cell)
 randomGridCells =
-    Random.list cellCount randomCellAt
+    Random.list cellCount (randomCellAt initialTweenClock)
         |> Random.map (List.map2 (\p cf -> cf p) (squareGridPositions cellsInRow))
 
 
-randomCellAt : Generator (Int2 -> Cell)
-randomCellAt =
+randomCellAt : TweenClock -> Generator (Int2 -> Cell)
+randomCellAt clock =
     let
         randomInInterval : Float2 -> Generator Float
         randomInInterval ( a, b ) =
@@ -267,7 +267,7 @@ randomCellAt =
                     tween 0
                         |> tweenTo to
                             [ TweenDuration duration ]
-                            initialTweenClock
+                            clock
                 )
                 (Random.int 1000 2000)
 
