@@ -126,35 +126,34 @@ view model =
 
 
 viewCell : TweenClock -> Cell -> Svg Msg
-viewCell clock =
-    \cell ->
-        square cellSize
-            [ fill cell.color
-            , opacity 0.7
-            , let
-                skewX =
-                    tweenValueAt clock cell.skewX
+viewCell clock cell =
+    square cellSize
+        [ fill cell.color
+        , opacity 0.7
+        , let
+            skewX =
+                tweenValueAt clock cell.skewX
 
-                skewY =
-                    tweenValueAt clock cell.skewY
+            skewY =
+                tweenValueAt clock cell.skewY
 
-                rotation =
-                    tweenValueAt clock cell.rotation
-              in
-              transforms
-                [ cell.gp
-                    |> gpToCellCenter
-                    --|> mapEach (mul (A.value commonAttrs clock))
-                    |> translateF2
-                , "skewX(" ++ fRad skewX ++ ")"
-                , "skewY(" ++ fRad skewY ++ ")"
-                , "rotate(" ++ fRad rotation ++ ")"
-                , scaleF 0.9
+            rotation =
+                tweenValueAt clock cell.rotation
+          in
+          transforms
+            [ cell.gp
+                |> gpToCellCenter
+                --|> mapEach (mul (A.value commonAttrs clock))
+                |> translateF2
+            , "skewX(" ++ fRad skewX ++ ")"
+            , "skewY(" ++ fRad skewY ++ ")"
+            , "rotate(" ++ fRad rotation ++ ")"
+            , scaleF 0.9
 
-                --, scaleF (0.9 * frac)
-                ]
-            , Html.Events.on "mouseenter" (JD.succeed (MouseEnteredGP cell.gp))
+            --, scaleF (0.9 * frac)
             ]
+        , Html.Events.on "mouseenter" (JD.succeed (MouseEnteredGP cell.gp))
+        ]
 
 
 cellsInRow =
