@@ -12,6 +12,7 @@ import Html.Events
 import Json.Decode as JD exposing (Decoder)
 import Random exposing (Generator)
 import Random.Char
+import Random.Extra
 import Svg
 import Svg.Attributes as SA
 import Svg.Keyed
@@ -1874,6 +1875,14 @@ onInput =
 
 type alias Generator a =
     Random.Generator a
+
+
+rAndMap =
+    Random.Extra.andMap
+
+
+rCombine =
+    Random.Extra.combine
 
 
 stepWithInitialSeed : Int -> Random.Generator a -> a

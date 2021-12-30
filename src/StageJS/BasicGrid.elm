@@ -4,7 +4,6 @@ import Browser.Events
 import Html.Events
 import Json.Decode as JD
 import Random exposing (Seed)
-import Random.Extra
 import Utils exposing (..)
 
 
@@ -52,7 +51,7 @@ init () =
         randomGridCells =
             squareGridPositions cellsInRow
                 |> List.map (initCellAt >> randomizeCell clock)
-                |> Random.Extra.combine
+                |> rCombine
 
         ( cells, seed ) =
             Random.step randomGridCells initialSeed
@@ -99,7 +98,7 @@ update msg model =
                                 Random.constant cell
                         )
                         model.cells
-                        |> Random.Extra.combine
+                        |> rCombine
 
                 ( cells, seed ) =
                     Random.step cellsGen model.seed
@@ -300,10 +299,6 @@ randomizeCell clock cell =
         |> rAndMap (randomInInterval ( -pi, pi ))
         |> rAndMap (randomInInterval ( 0, 0.4 ))
         |> rAndMap (randomInInterval ( 0, 0.4 ))
-
-
-rAndMap =
-    Random.Extra.andMap
 
 
 
