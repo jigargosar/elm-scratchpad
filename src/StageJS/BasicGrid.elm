@@ -131,6 +131,12 @@ viewCell clock cell =
         [ fill cell.color
         , opacity 0.7
         , let
+            scaleX =
+                tweenValueAt clock cell.scaleX
+
+            scaleY =
+                tweenValueAt clock cell.scaleY
+
             skewX =
                 tweenValueAt clock cell.skewX
 
@@ -145,6 +151,8 @@ viewCell clock cell =
                 |> gpToCellCenter
                 --|> mapEach (mul (A.value commonAttrs clock))
                 |> translateF2
+            , "scaleX(" ++ fRad scaleX ++ ")"
+            , "scaleY(" ++ fRad scaleY ++ ")"
             , "skewX(" ++ fRad skewX ++ ")"
             , "skewY(" ++ fRad skewY ++ ")"
             , "rotate(" ++ fRad rotation ++ ")"
