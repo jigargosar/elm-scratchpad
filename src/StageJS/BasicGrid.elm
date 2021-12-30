@@ -132,8 +132,8 @@ view model =
                                     |> gpToCellCenter
                                     --|> mapEach (mul (A.value commonAttrs clock))
                                     |> translateF2
-                                , "skewX(" ++ fDeg skewX ++ ")"
-                                , "rotate(" ++ fDeg rotation ++ ")"
+                                , "skewX(" ++ fRad skewX ++ ")"
+                                , "rotate(" ++ fRad rotation ++ ")"
                                 , scaleF 0.9
 
                                 --, scaleF (0.9 * frac)
@@ -289,7 +289,7 @@ randomCellAt =
             { cell | color = color, rotation = rotation }
         )
         randomColor
-        (randomTweenWithValueInRange ( -180, 180 ))
+        (randomTweenWithValueInRange ( -pi, pi ))
 
 
 randomizeCell : TweenClock -> Cell -> Generator Cell

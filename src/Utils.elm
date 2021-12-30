@@ -858,6 +858,11 @@ fDeg n =
     fromFloat n ++ "deg"
 
 
+fRad : Float -> String
+fRad n =
+    fromFloat n ++ "rad"
+
+
 fTurn : Float -> String
 fTurn n =
     fromFloat n ++ "turn"
