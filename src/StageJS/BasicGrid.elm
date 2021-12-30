@@ -10,8 +10,8 @@ import Utils exposing (..)
 
 {-
    TODO:
+   [x] randomize all props
    * fix w colors
-   * randomize all props
 
 
 
