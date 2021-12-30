@@ -293,7 +293,7 @@ randomizeCell clock cell =
             , skewY = cell.skewY |> tweenToHelp skewY
             }
         )
-        |> rAndMap (Random.int 1000 2000)
+        |> rAndMap (Random.int 2000 5000)
         |> rAndMap randomColor
         |> rAndMap (randomInInterval ( 0.9, 1.4 ))
         |> rAndMap (randomInInterval ( 0.9, 1.4 ))
