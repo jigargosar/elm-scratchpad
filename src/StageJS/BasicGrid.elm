@@ -335,7 +335,7 @@ randomColor =
 
 sampleRainbow : Random.Generator String
 sampleRainbow =
-    Random.Extra.sample rainbow
+    Random.Extra.sample wRainbow
         |> Random.map (Maybe.withDefault "black")
 
 
@@ -385,6 +385,21 @@ wLightGray =
 
 wWhite =
     "#fcfcfc"
+
+
+wRainbow =
+    [ wPurple
+    , wGreen_lime
+    , wYellow
+    , wOrange
+    , wPink
+    , wBlue
+    , wGreen2_sea
+    , wBlack
+    , wGray
+    , wLightGray
+    , wWhite
+    ]
 
 
 
