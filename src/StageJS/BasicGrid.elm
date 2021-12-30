@@ -286,7 +286,7 @@ randomCellAt =
             { cell | color = color, rotation = rotation }
         )
         randomColor
-        (randomTweenRange 360)
+        (randomTweenRange ( -180, 180 ))
 
 
 randomizeCell : TweenClock -> Cell -> Generator Cell
