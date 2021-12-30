@@ -282,11 +282,12 @@ randomCellAt =
     in
     Random.map2
         (\color rotation gp ->
-            let
-                cell =
-                    initCellAt gp
-            in
-            { cell | color = color, rotation = rotation }
+            { gp = gp
+            , color = color -- black
+            , skewX = tween 0 |> tweenTo 15 [ TweenDuration 1800 ] initialTweenClock
+            , skewY = tween 0 |> tweenTo 15 [ TweenDuration 1800 ] initialTweenClock
+            , rotation = rotation -- tween 0 |> tweenTo 360 [ TweenDuration 1800 ] initialTweenClock
+            }
         )
         randomColor
         (randomTweenWithValueInInterval ( -pi, pi ))
