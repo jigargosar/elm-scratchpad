@@ -261,6 +261,16 @@ randomGridCells =
 
 randomCellAt : Generator (Int2 -> Cell)
 randomCellAt =
+    let
+        randomRotation : Generator Tween
+        randomRotation =
+            Random.constant
+                (tween 0
+                    |> tweenTo 360
+                        [ TweenDuration 1800 ]
+                        initialTweenClock
+                )
+    in
     Random.map2
         (\color _ gp ->
             let
