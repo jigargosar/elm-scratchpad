@@ -263,8 +263,8 @@ initCellAt : Int2 -> Cell
 initCellAt gp =
     { gp = gp
     , color = black
-    , scaleX = tween 0
-    , scaleY = tween 0
+    , scaleX = tween 1
+    , scaleY = tween 1
     , rotation = tween 0
     , skewX = tween 0
     , skewY = tween 0
