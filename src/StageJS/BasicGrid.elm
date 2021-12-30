@@ -152,8 +152,8 @@ viewCell clock cell =
                 --|> mapEach (mul (A.value commonAttrs clock))
                 |> translateF2
             , scaleF 0.9
-            , "scaleX(" ++ fRad scaleX ++ ")"
-            , "scaleY(" ++ fRad scaleY ++ ")"
+            , "scaleX(" ++ fromFloat scaleX ++ ")"
+            , "scaleY(" ++ fromFloat scaleY ++ ")"
             , "skewX(" ++ fRad skewX ++ ")"
             , "skewY(" ++ fRad skewY ++ ")"
             , "rotate(" ++ fRad rotation ++ ")"
