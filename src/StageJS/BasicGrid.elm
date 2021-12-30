@@ -383,6 +383,10 @@ wLightGray =
     "#373737"
 
 
+wWhite =
+    "#fcfcfc"
+
+
 
 --  rainbow : [ 'dark', 'light', 'blue', 'purple', 'red', 'orange', 'yellow', 'green' ],
 -- colors = [black, white, orange , red, green, purple, blue]
