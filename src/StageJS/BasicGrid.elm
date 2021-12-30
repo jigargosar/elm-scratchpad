@@ -347,7 +347,7 @@ wPurple =
     "#BF00FF"
 
 
-wGreen =
+wGreen_lime =
     "#BFFF00"
 
 
@@ -367,7 +367,7 @@ wBlue =
     "#00BFFF"
 
 
-wGreen2 =
+wGreen2_sea =
     "#00FFBF"
 
 
