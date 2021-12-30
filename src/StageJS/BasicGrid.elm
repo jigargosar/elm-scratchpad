@@ -47,10 +47,16 @@ init () =
             squareGridPositions cellsInRow
                 |> List.map initCellAt
                 |> randomizeCellColors
+
+        initialSeed =
+            Random.initialSeed 0
+
+        ( _, seed ) =
+            Random.step randomGridCells initialSeed
     in
     ( { clock = initialTweenClock
       , cells = cells
-      , seed = Random.initialSeed 0
+      , seed = seed
       }
     , Cmd.none
     )
@@ -143,6 +149,10 @@ view model =
 
 cellsInRow =
     10
+
+
+cellCount =
+    cellsInRow ^ 2
 
 
 cellSize =
@@ -244,9 +254,15 @@ initCellAt gp =
     }
 
 
-randomCellAt : Int -> Generator Cell
-randomCellAt gp =
-    Debug.todo "todo"
+randomGridCells : Generator (List Cell)
+randomGridCells =
+    Random.list cellCount randomCellAt
+        |> Random.map (List.map2 (\p cf -> cf p) (squareGridPositions cellsInRow))
+
+
+randomCellAt : Generator (Int2 -> Cell)
+randomCellAt =
+    Random.constant initCellAt
 
 
 randomizeCell : TweenClock -> Cell -> Generator Cell
