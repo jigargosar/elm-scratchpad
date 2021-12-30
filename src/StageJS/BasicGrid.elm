@@ -261,44 +261,6 @@ initCellAt gp =
     }
 
 
-randomCellAt : TweenClock -> Generator (Int2 -> Cell)
-randomCellAt clock =
-    let
-        randomInInterval : Float2 -> Generator Float
-        randomInInterval ( a, b ) =
-            Random.float a b
-
-        tweenFromRandomFloat : Generator Float -> Generator Tween
-        tweenFromRandomFloat =
-            Random.map2
-                (\duration to ->
-                    tween 0
-                        |> tweenTo to
-                            [ TweenDuration duration ]
-                            clock
-                )
-                (Random.int 1000 2000)
-
-        randomTweenWithValueInInterval : Float2 -> Generator Tween
-        randomTweenWithValueInInterval range =
-            randomInInterval range |> tweenFromRandomFloat
-    in
-    Random.map4
-        (\color rotation skewX skewY ->
-            \gp ->
-                { gp = gp
-                , color = color
-                , skewX = skewX
-                , skewY = skewY
-                , rotation = rotation
-                }
-        )
-        randomColor
-        (randomTweenWithValueInInterval ( -pi, pi ))
-        (randomTweenWithValueInInterval ( 0, 0.4 ))
-        (randomTweenWithValueInInterval ( 0, 0.4 ))
-
-
 randomizeCell : TweenClock -> Cell -> Generator Cell
 randomizeCell clock cell =
     let
