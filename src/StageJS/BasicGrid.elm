@@ -295,7 +295,7 @@ randomizeCell clock cell =
             }
         )
         |> rAndMap (Random.int 2000 5000)
-        |> rAndMap randomColor
+        |> rAndMap sampleRainbow
         |> rAndMap (randomInInterval ( 0.9, 1.4 ))
         |> rAndMap (randomInInterval ( 0.9, 1.4 ))
         |> rAndMap (randomInInterval ( -pi, pi ))
