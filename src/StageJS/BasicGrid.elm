@@ -52,7 +52,11 @@ init () =
         randomGridCells : Generator (List Cell)
         randomGridCells =
             squareGridPositions cellsInRow
-                |> List.map (initCellAt >> randomizeCell clock)
+                |> List.map
+                    (initCellAt
+                        >> Random.constant
+                     -->> randomizeCell clock
+                    )
                 |> rCombine
 
         ( cells, seed ) =
@@ -263,7 +267,7 @@ type alias Cell =
 initCellAt : Int2 -> Cell
 initCellAt gp =
     { gp = gp
-    , color = black
+    , color = wWhite
     , scaleX = tween 1
     , scaleY = tween 1
     , rotation = tween 0
