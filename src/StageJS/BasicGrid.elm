@@ -266,16 +266,19 @@ randomCellAt =
         randomRange ( a, b ) =
             Random.float a b
 
+        tweenFromRandomFloat : Generator Float -> Generator Tween
+        tweenFromRandomFloat =
+            Random.map
+                (\to ->
+                    tween 0
+                        |> tweenTo to
+                            [ TweenDuration 1800 ]
+                            initialTweenClock
+                )
+
         randomTweenRange : Float2 -> Generator Tween
         randomTweenRange range =
-            randomRange range
-                |> Random.map
-                    (\to ->
-                        tween 0
-                            |> tweenTo to
-                                [ TweenDuration 1800 ]
-                                initialTweenClock
-                    )
+            randomRange range |> tweenFromRandomFloat
     in
     Random.map2
         (\color rotation gp ->
