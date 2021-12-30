@@ -115,7 +115,7 @@ update msg model =
 
 view : Model -> Document Msg
 view model =
-    Document "Grid - StageJS Example Clone"
+    Document "Basic Grid - StageJS Example Clone"
         [ basicStylesNode
         , basicSvg
             [ viewBoxC gridSize gridSize
