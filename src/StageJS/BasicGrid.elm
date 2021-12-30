@@ -14,8 +14,11 @@ import Utils exposing (..)
    * fix w colors
    * randomize all props
 
+
+
    MAYBE:
    * refactor list item randomization process (in update)
+   * remove initial color's and rotation's, or perhaps just rotation.
 
 -}
 
