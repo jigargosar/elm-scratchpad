@@ -42,18 +42,22 @@ type alias Model =
 init : () -> ( Model, Cmd Msg )
 init () =
     let
-        --cells : List Cell
-        --cells =
-        --    squareGridPositions cellsInRow
-        --        |> List.map initCellAt
-        --        |> randomizeCellColors
+        clock =
+            initialTweenClock
+
         initialSeed =
             Random.initialSeed 0
+
+        randomGridCells : Generator (List Cell)
+        randomGridCells =
+            squareGridPositions cellsInRow
+                |> List.map (initCellAt >> randomizeCell clock)
+                |> Random.Extra.combine
 
         ( cells, seed ) =
             Random.step randomGridCells initialSeed
     in
-    ( { clock = initialTweenClock
+    ( { clock = clock
       , cells = cells
       , seed = seed
       }
@@ -245,12 +249,6 @@ type alias Cell =
     , skewY : Tween
     , rotation : Tween
     }
-
-
-randomGridCells : Generator (List Cell)
-randomGridCells =
-    Random.list cellCount (randomCellAt initialTweenClock)
-        |> Random.map (List.map2 (\p cf -> cf p) (squareGridPositions cellsInRow))
 
 
 initCellAt : Int2 -> Cell
