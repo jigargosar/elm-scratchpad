@@ -371,6 +371,18 @@ wGreen2_sea =
     "#00FFBF"
 
 
+wBlack =
+    "#202020"
+
+
+wGray =
+    "#2b2b2b"
+
+
+wLightGray =
+    "#373737"
+
+
 
 --  rainbow : [ 'dark', 'light', 'blue', 'purple', 'red', 'orange', 'yellow', 'green' ],
 -- colors = [black, white, orange , red, green, purple, blue]
