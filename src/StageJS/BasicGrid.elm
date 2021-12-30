@@ -253,6 +253,16 @@ randomGridCells =
         |> Random.map (List.map2 (\p cf -> cf p) (squareGridPositions cellsInRow))
 
 
+initCellAt : Int2 -> Cell
+initCellAt gp =
+    { gp = gp
+    , color = black
+    , skewX = tween 0
+    , skewY = tween 0
+    , rotation = tween 0
+    }
+
+
 randomCellAt : TweenClock -> Generator (Int2 -> Cell)
 randomCellAt clock =
     let
