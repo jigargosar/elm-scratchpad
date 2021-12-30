@@ -245,9 +245,9 @@ tweenValueAt (TweenClock now) t =
 type alias Cell =
     { gp : Int2
     , color : String
+    , rotation : Tween
     , skewX : Tween
     , skewY : Tween
-    , rotation : Tween
     }
 
 
@@ -255,9 +255,9 @@ initCellAt : Int2 -> Cell
 initCellAt gp =
     { gp = gp
     , color = black
+    , rotation = tween 0
     , skewX = tween 0
     , skewY = tween 0
-    , rotation = tween 0
     }
 
 
