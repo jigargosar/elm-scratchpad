@@ -283,13 +283,17 @@ randomizeCell clock cell =
             , skewY = cell.skewY |> tweenToHelp skewY
             }
         )
-        |> Random.Extra.andMap (Random.int 1000 2000)
-        |> Random.Extra.andMap randomColor
-        |> Random.Extra.andMap (randomInInterval ( 0.9, 1.4 ))
-        |> Random.Extra.andMap (randomInInterval ( 0.9, 1.4 ))
-        |> Random.Extra.andMap (randomInInterval ( -pi, pi ))
-        |> Random.Extra.andMap (randomInInterval ( 0, 0.4 ))
-        |> Random.Extra.andMap (randomInInterval ( 0, 0.4 ))
+        |> rAndMap (Random.int 1000 2000)
+        |> rAndMap randomColor
+        |> rAndMap (randomInInterval ( 0.9, 1.4 ))
+        |> rAndMap (randomInInterval ( 0.9, 1.4 ))
+        |> rAndMap (randomInInterval ( -pi, pi ))
+        |> rAndMap (randomInInterval ( 0, 0.4 ))
+        |> rAndMap (randomInInterval ( 0, 0.4 ))
+
+
+rAndMap =
+    Random.Extra.andMap
 
 
 
