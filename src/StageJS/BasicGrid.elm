@@ -298,13 +298,6 @@ randomizeCell clock cell =
             )
 
 
-randomizeCellColors : List Cell -> List Cell
-randomizeCellColors cs =
-    Random.list (List.length cs) randomColor
-        |> Random.map (List.map2 (\cell color -> { cell | color = color }) cs)
-        |> stepWithInitialSeed 0
-
-
 randomColor : Generator String
 randomColor =
     randomHue |> Random.map (\h -> hsl h 1 0.5)
