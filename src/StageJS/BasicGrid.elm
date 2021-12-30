@@ -117,16 +117,16 @@ view : Model -> Document Msg
 view model =
     Document "Basic Grid - StageJS Example Clone"
         [ basicStylesNode
-        , fRow [ pa "10vmin", sMaxHeight "100vh" ]
-            [ basicSvg
-                [ viewBoxC gridSize gridSize
-                , bgcTransparent
-                , overflowVisible
-                ]
-                [ model.cells
-                    |> List.map (viewCell model.clock)
-                    |> group []
-                ]
+        , basicSvg
+            [ viewBoxC gridSize gridSize
+            , bgcTransparent
+            , overflowVisible
+            , sMaxWidth "100vh"
+            , sMaxHeight "100vw"
+            ]
+            [ model.cells
+                |> List.map (viewCell model.clock)
+                |> group []
             ]
         ]
 
