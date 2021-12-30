@@ -262,13 +262,14 @@ randomCellAt =
 
         tweenFromRandomFloat : Generator Float -> Generator Tween
         tweenFromRandomFloat =
-            Random.map
-                (\to ->
+            Random.map2
+                (\duration to ->
                     tween 0
                         |> tweenTo to
-                            [ TweenDuration 1800 ]
+                            [ TweenDuration duration ]
                             initialTweenClock
                 )
+                (Random.int 1000 2000)
 
         randomTweenWithValueInInterval : Float2 -> Generator Tween
         randomTweenWithValueInInterval range =
