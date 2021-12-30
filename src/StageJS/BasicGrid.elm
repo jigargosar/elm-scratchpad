@@ -268,24 +268,28 @@ randomizeCell clock cell =
         randomInInterval ( a, b ) =
             Random.float a b
     in
-    Random.map5
-        (\duration color rotation skewX skewY ->
+    Random.constant
+        (\duration color scaleX scaleY rotation skewX skewY ->
             let
                 tweenToHelp to =
                     tweenTo to [ TweenDuration duration ] clock
             in
-            { cell
-                | color = color
-                , rotation = cell.rotation |> tweenToHelp rotation
-                , skewX = cell.skewX |> tweenToHelp skewX
-                , skewY = cell.skewY |> tweenToHelp skewY
+            { gp = cell.gp
+            , color = color
+            , scaleX = cell.scaleX |> tweenToHelp scaleX
+            , scaleY = cell.scaleY |> tweenToHelp scaleY
+            , rotation = cell.rotation |> tweenToHelp rotation
+            , skewX = cell.skewX |> tweenToHelp skewX
+            , skewY = cell.skewY |> tweenToHelp skewY
             }
         )
-        (Random.int 1000 2000)
-        randomColor
-        (randomInInterval ( -pi, pi ))
-        (randomInInterval ( 0, 0.4 ))
-        (randomInInterval ( 0, 0.4 ))
+        |> Random.Extra.andMap (Random.int 1000 2000)
+        |> Random.Extra.andMap randomColor
+        |> Random.Extra.andMap (randomInInterval ( 0.9, 1.4 ))
+        |> Random.Extra.andMap (randomInInterval ( 0.9, 1.4 ))
+        |> Random.Extra.andMap (randomInInterval ( -pi, pi ))
+        |> Random.Extra.andMap (randomInInterval ( 0, 0.4 ))
+        |> Random.Extra.andMap (randomInInterval ( 0, 0.4 ))
 
 
 
