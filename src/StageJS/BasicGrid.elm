@@ -123,6 +123,8 @@ view model =
             , overflowVisible
             , sMaxWidth "100vh"
             , sMaxHeight "100vw"
+            , pa "10vmin"
+            , ma "auto"
             ]
             [ model.cells
                 |> List.map (viewCell model.clock)
