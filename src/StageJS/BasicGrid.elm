@@ -262,7 +262,9 @@ randomGridCells =
 
 randomCellAt : Generator (Int2 -> Cell)
 randomCellAt =
-    Random.constant initCellAt
+    Random.map2 (\_ _ -> initCellAt)
+        (Random.constant ())
+        (Random.constant ())
 
 
 randomizeCell : TweenClock -> Cell -> Generator Cell
