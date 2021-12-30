@@ -8,6 +8,15 @@ import Random.Extra
 import Utils exposing (..)
 
 
+
+{-
+   TODO:
+   * fix w colors
+   * randomize all props
+
+-}
+
+
 main =
     bDocument
         { init = init
