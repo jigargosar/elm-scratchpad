@@ -247,16 +247,6 @@ type alias Cell =
     }
 
 
-initCellAt : Int2 -> Cell
-initCellAt gp =
-    { gp = gp
-    , color = black
-    , skewX = tween 0 |> tweenTo 15 [ TweenDuration 1800 ] initialTweenClock
-    , skewY = tween 0 |> tweenTo 15 [ TweenDuration 1800 ] initialTweenClock
-    , rotation = tween 0 |> tweenTo 360 [ TweenDuration 1800 ] initialTweenClock
-    }
-
-
 randomGridCells : Generator (List Cell)
 randomGridCells =
     Random.list cellCount randomCellAt
