@@ -119,39 +119,42 @@ view model =
             , overflowVisible
             ]
             [ model.cells
-                |> List.map
-                    (\cell ->
-                        square cellSize
-                            [ fill cell.color
-                            , opacity 0.7
-                            , let
-                                skewX =
-                                    tweenValueAt model.clock cell.skewX
-
-                                skewY =
-                                    tweenValueAt model.clock cell.skewY
-
-                                rotation =
-                                    tweenValueAt model.clock cell.rotation
-                              in
-                              transforms
-                                [ cell.gp
-                                    |> gpToCellCenter
-                                    --|> mapEach (mul (A.value commonAttrs clock))
-                                    |> translateF2
-                                , "skewX(" ++ fRad skewX ++ ")"
-                                , "skewY(" ++ fRad skewY ++ ")"
-                                , "rotate(" ++ fRad rotation ++ ")"
-                                , scaleF 0.9
-
-                                --, scaleF (0.9 * frac)
-                                ]
-                            , Html.Events.on "mouseenter" (JD.succeed (MouseEnteredGP cell.gp))
-                            ]
-                    )
+                |> List.map (viewCell model.clock)
                 |> group []
             ]
         ]
+
+
+viewCell : TweenClock -> Cell -> Svg Msg
+viewCell clock =
+    \cell ->
+        square cellSize
+            [ fill cell.color
+            , opacity 0.7
+            , let
+                skewX =
+                    tweenValueAt clock cell.skewX
+
+                skewY =
+                    tweenValueAt clock cell.skewY
+
+                rotation =
+                    tweenValueAt clock cell.rotation
+              in
+              transforms
+                [ cell.gp
+                    |> gpToCellCenter
+                    --|> mapEach (mul (A.value commonAttrs clock))
+                    |> translateF2
+                , "skewX(" ++ fRad skewX ++ ")"
+                , "skewY(" ++ fRad skewY ++ ")"
+                , "rotate(" ++ fRad rotation ++ ")"
+                , scaleF 0.9
+
+                --, scaleF (0.9 * frac)
+                ]
+            , Html.Events.on "mouseenter" (JD.succeed (MouseEnteredGP cell.gp))
+            ]
 
 
 cellsInRow =
