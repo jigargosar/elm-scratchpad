@@ -43,7 +43,7 @@ init () =
         cells =
             squareGridPositions cellsInRow
                 |> List.map initCellAt
-                |> randomizeAllHues
+                |> randomizeCellColors
     in
     ( { clock = initialTweenClock
       , cells = cells
@@ -266,8 +266,8 @@ randomizeCell clock cell =
             )
 
 
-randomizeAllHues : List Cell -> List Cell
-randomizeAllHues cs =
+randomizeCellColors : List Cell -> List Cell
+randomizeCellColors cs =
     Random.list (List.length cs) randomColor
         |> Random.map (List.map2 (\cell color -> { cell | color = color }) cs)
         |> stepWithInitialSeed 0
