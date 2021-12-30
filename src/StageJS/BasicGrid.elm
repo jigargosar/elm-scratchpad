@@ -121,6 +121,7 @@ view model =
             [ viewBoxC gridSize gridSize
             , bgcTransparent
             , overflowVisible
+            , sMaxHeight "100vh"
             ]
             [ model.cells
                 |> List.map (viewCell model.clock)
