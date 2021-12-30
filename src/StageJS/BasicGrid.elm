@@ -122,7 +122,10 @@ view model =
                             , opacity 0.7
                             , let
                                 skewX =
-                                    0
+                                    tweenValueAt model.clock cell.skewX
+
+                                skewY =
+                                    tweenValueAt model.clock cell.skewY
 
                                 rotation =
                                     tweenValueAt model.clock cell.rotation
@@ -133,6 +136,7 @@ view model =
                                     --|> mapEach (mul (A.value commonAttrs clock))
                                     |> translateF2
                                 , "skewX(" ++ fRad skewX ++ ")"
+                                , "skewY(" ++ fRad skewY ++ ")"
                                 , "rotate(" ++ fRad rotation ++ ")"
                                 , scaleF 0.9
 
@@ -284,8 +288,8 @@ randomCellAt =
         (\color rotation gp ->
             { gp = gp
             , color = color -- black
-            , skewX = tween 0 |> tweenTo 15 [ TweenDuration 1800 ] initialTweenClock
-            , skewY = tween 0 |> tweenTo 15 [ TweenDuration 1800 ] initialTweenClock
+            , skewX = tween 0 |> tweenTo 0.4 [ TweenDuration 1800 ] initialTweenClock
+            , skewY = tween 0 |> tweenTo 0.4 [ TweenDuration 1800 ] initialTweenClock
             , rotation = tween 0 -- rotation -- tween 0 |> tweenTo 360 [ TweenDuration 1800 ] initialTweenClock
             }
         )
@@ -313,7 +317,7 @@ randomizeCell clock cell =
                     cell.rotation
                         |> tweenTo r [ TweenDuration d ] clock
                 )
-                (Random.float -360 360)
+                (Random.float -pi pi)
                 (Random.int 1000 2000)
             )
 
