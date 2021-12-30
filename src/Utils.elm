@@ -1976,3 +1976,24 @@ viewBool bool x =
 
     else
         noView
+
+
+
+-- COLOR UTILS
+
+
+randomColor__ : Generator String
+randomColor__ =
+    randomHue__ |> Random.map (\h -> hsl h 1 0.5)
+
+
+randomHue__ : Generator Float
+randomHue__ =
+    let
+        sampleCount =
+            10
+    in
+    normSamples (sampleCount + 1)
+        |> List.drop 1
+        |> List.take (sampleCount - 1)
+        |> Random.uniform 0

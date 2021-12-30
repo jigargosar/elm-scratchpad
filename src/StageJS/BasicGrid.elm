@@ -5,7 +5,6 @@ import Html.Events
 import Json.Decode as JD
 import Random exposing (Seed)
 import Random.Extra
-import Random.List
 import Utils exposing (..)
 
 
@@ -332,11 +331,6 @@ randomizeCell clock cell =
 --
 
 
-randomColor : Generator String
-randomColor =
-    randomHue |> Random.map (\h -> hsl h 1 0.5)
-
-
 sampleRainbow : Random.Generator String
 sampleRainbow =
     Random.Extra.sample wRainbow
@@ -400,8 +394,9 @@ wRainbow =
     , wBlue
     , wGreen2_sea
     , wBlack
-    , wGray
-    , wLightGray
+
+    --, wGray
+    --, wLightGray
     , wWhite
     ]
 
@@ -409,18 +404,6 @@ wRainbow =
 
 --  rainbow : [ 'dark', 'light', 'blue', 'purple', 'red', 'orange', 'yellow', 'green' ],
 -- colors = [black, white, orange , red, green, purple, blue]
-
-
-randomHue : Generator Float
-randomHue =
-    let
-        sampleCount =
-            10
-    in
-    normSamples (sampleCount + 1)
-        |> List.drop 1
-        |> List.take (sampleCount - 1)
-        |> Random.uniform 0
 
 
 gpToCellCenter gp =
