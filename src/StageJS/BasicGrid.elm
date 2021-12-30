@@ -244,6 +244,11 @@ initCellAt gp =
     }
 
 
+randomCellAt : Int -> Generator Cell
+randomCellAt gp =
+    Debug.todo "todo"
+
+
 randomizeCell : TweenClock -> Cell -> Generator Cell
 randomizeCell clock cell =
     Random.constant (Cell cell.gp)
