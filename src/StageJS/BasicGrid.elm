@@ -345,10 +345,10 @@ wRainbow =
     , wPink
     , wBlue
     , wGreen2_sea
-    , wBlack
 
+    --, wBlack
     --, wGray
-    --, wLightGray
+    , wLightGray
     , wWhite
     ]
 
