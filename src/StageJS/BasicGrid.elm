@@ -158,10 +158,6 @@ cellsInRow =
     10
 
 
-cellCount =
-    cellsInRow ^ 2
-
-
 cellSize =
     30
 
@@ -245,6 +241,8 @@ tweenValueAt (TweenClock now) t =
 type alias Cell =
     { gp : Int2
     , color : String
+    , scaleX : Tween
+    , scaleY : Tween
     , rotation : Tween
     , skewX : Tween
     , skewY : Tween
@@ -255,6 +253,8 @@ initCellAt : Int2 -> Cell
 initCellAt gp =
     { gp = gp
     , color = black
+    , scaleX = tween 0
+    , scaleY = tween 0
     , rotation = tween 0
     , skewX = tween 0
     , skewY = tween 0
