@@ -274,17 +274,19 @@ randomCellAt =
         randomTweenWithValueInInterval range =
             randomInInterval range |> tweenFromRandomFloat
     in
-    Random.map2
-        (\color rotation gp ->
+    Random.map4
+        (\color rotation skewX skewY gp ->
             { gp = gp
             , color = color -- black
-            , skewX = tween 0 |> tweenTo 0.4 [ TweenDuration 1800 ] initialTweenClock
-            , skewY = tween 0 |> tweenTo 0.4 [ TweenDuration 1800 ] initialTweenClock
-            , rotation = tween 0 -- rotation -- tween 0 |> tweenTo 360 [ TweenDuration 1800 ] initialTweenClock
+            , skewX = skewX -- tween 0 |> tweenTo 0.4 [ TweenDuration 1800 ] initialTweenClock
+            , skewY = skewY -- tween 0 |> tweenTo 0.4 [ TweenDuration 1800 ] initialTweenClock
+            , rotation = rotation -- tween 0 |> tweenTo 360 [ TweenDuration 1800 ] initialTweenClock
             }
         )
         randomColor
         (randomTweenWithValueInInterval ( -pi, pi ))
+        (randomTweenWithValueInInterval ( 0, 0.4 ))
+        (randomTweenWithValueInInterval ( 0, 0.4 ))
 
 
 randomizeCell : TweenClock -> Cell -> Generator Cell
