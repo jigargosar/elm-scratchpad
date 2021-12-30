@@ -894,6 +894,10 @@ transitionFG =
     style "transition" "color 300ms"
 
 
+transitionFill =
+    style "transition" "fill 300ms"
+
+
 ffMonospace =
     style "font-family" "monospace"
 

@@ -134,6 +134,7 @@ viewCell clock cell =
     square cellSize
         [ fill cell.color
         , opacity 0.7
+        , transitionFill
         , let
             scaleX =
                 tweenValueAt clock cell.scaleX
