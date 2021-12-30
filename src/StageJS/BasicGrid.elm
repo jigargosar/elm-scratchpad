@@ -42,16 +42,15 @@ type alias Model =
 init : () -> ( Model, Cmd Msg )
 init () =
     let
-        cells : List Cell
-        cells =
-            squareGridPositions cellsInRow
-                |> List.map initCellAt
-                |> randomizeCellColors
-
+        --cells : List Cell
+        --cells =
+        --    squareGridPositions cellsInRow
+        --        |> List.map initCellAt
+        --        |> randomizeCellColors
         initialSeed =
             Random.initialSeed 0
 
-        ( _, seed ) =
+        ( cells, seed ) =
             Random.step randomGridCells initialSeed
     in
     ( { clock = initialTweenClock
@@ -262,8 +261,15 @@ randomGridCells =
 
 randomCellAt : Generator (Int2 -> Cell)
 randomCellAt =
-    Random.map2 (\_ _ -> initCellAt)
-        (Random.constant ())
+    Random.map2
+        (\color _ gp ->
+            let
+                cell =
+                    initCellAt gp
+            in
+            { cell | color = color }
+        )
+        randomColor
         (Random.constant ())
 
 
