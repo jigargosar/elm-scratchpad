@@ -81,8 +81,8 @@ main =
             ]
             [ group
                 [ xf
-                    [--
-                     --mv2 (width / -3) 0
+                    [ --
+                      mv2 (width / -3) 0
                     ]
                 ]
                 [ viewWalls initWalls
