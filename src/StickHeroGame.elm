@@ -57,7 +57,7 @@ randomWallAfter : Wall -> Generator Wall
 randomWallAfter { x, w } =
     Random.map2 Wall
         (Random.constant (x + w / 2 + initialWallGap))
-        (Random.constant (x + w / 2 + initialWallGap))
+        (Random.constant initialWallWidth)
 
 
 wallsToList : Walls -> List Wall
