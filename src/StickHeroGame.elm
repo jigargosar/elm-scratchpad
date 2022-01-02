@@ -50,7 +50,7 @@ step dt model =
                 case wallsTouchingEndOfStick stick model.walls of
                     Just walls ->
                         { model
-                            | phase = WalkingToCenterOfWall model.clock walls
+                            | phase = WalkingToCenterOfWall (wallsCurrentCX walls) walls
                             , sticks = stick :: model.sticks
                         }
 
@@ -63,13 +63,10 @@ step dt model =
             else
                 model
 
-        WalkingToCenterOfWall start walls ->
+        WalkingToCenterOfWall maxHeroX walls ->
             let
                 walkingSpeed =
                     0.05
-
-                maxHeroX =
-                    wallsCurrentCX walls
 
                 heroX =
                     model.heroX + dt * walkingSpeed
