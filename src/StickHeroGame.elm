@@ -72,7 +72,7 @@ update msg model =
         OnKeyDown key ->
             ( case ( model.phase, key ) of
                 ( Waiting, " " ) ->
-                    model
+                    { model | phase = Clicking }
 
                 _ ->
                     model
