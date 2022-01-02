@@ -64,17 +64,23 @@ step model =
                 walkingSpeed =
                     0.05
 
+                distanceWalked =
+                    elapsed * walkingSpeed
+
                 currentHeroX =
-                    wallsCurrentCX model.walls * (elapsed * walkingSpeed)
+                    wallsCurrentCX model.walls + distanceWalked
             in
             if currentHeroX < wallsCurrentCX walls then
                 model
 
             else
-                { model | walls = walls, phase = Waiting }
+                { model | walls = walls, phase = Transitioning model.clock }
 
         WalkingToEndOfStick start stick ->
-            model
+            { model | phase = Waiting }
+
+        Transitioning start ->
+            { model | phase = Waiting }
 
 
 type Phase
@@ -83,6 +89,7 @@ type Phase
     | Turning Float Stick
     | WalkingToCenterOfWall Float Walls
     | WalkingToEndOfStick Float Stick
+    | Transitioning Float
 
 
 init : () -> ( Model, Cmd Msg )
@@ -182,6 +189,9 @@ view model =
                     WalkingToCenterOfWall start _ ->
                         viewHero ((model.clock - start) * 0.05)
 
+                    WalkingToEndOfStick start _ ->
+                        viewHero ((model.clock - start) * 0.05)
+
                     _ ->
                         viewHero 0
                 , case model.phase of
@@ -273,6 +283,11 @@ type alias Stick =
     { x : Float, len : Float }
 
 
+stickX2 : Stick -> Float
+stickX2 { x, len } =
+    x + len
+
+
 type alias Wall =
     { x : Float, w : Float }
 
@@ -308,7 +323,7 @@ wallsTouchingEndOfStick stick (Walls _ after) =
     Array.get 0 after
         |> Maybe.andThen
             (\wall ->
-                if wallIsXInRange stick.x wall then
+                if wallIsXInRange (stickX2 stick) wall then
                     Just (Walls wall ((Array.toList >> List.drop 1 >> Array.fromList) after))
 
                 else
