@@ -726,10 +726,6 @@ attrY =
     SA.y
 
 
-attrPoints =
-    SA.points
-
-
 saWidth =
     SA.width << String.fromFloat
 
