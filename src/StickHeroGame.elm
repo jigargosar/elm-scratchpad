@@ -222,6 +222,7 @@ viewStick angleDeg stick =
         ]
         [ strokeW 2
         , stroke wGreen_lime
+        , stroke wWhite
         , xf [ mv2 stick.x 0, rotateDeg angleDeg ]
         ]
 
