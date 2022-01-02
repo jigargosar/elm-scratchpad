@@ -45,11 +45,15 @@ step model =
             else
                 model
 
+        Walking ->
+            model
+
 
 type Phase
     = Waiting
     | Stretching Float
     | Turning Float Stick
+    | Walking
 
 
 init : () -> ( Model, Cmd Msg )
