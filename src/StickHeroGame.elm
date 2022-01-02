@@ -118,7 +118,7 @@ view model =
                             [ ( 0, 0 )
                             , ( elapsed * stickGrowSpeed, 0 )
                             ]
-                            [ strokeW 5
+                            [ strokeW 2
                             , stroke wGreen_lime
                             , xf [ mv2 0 0, rotateDeg -90 ]
                             ]
