@@ -1919,6 +1919,11 @@ randomAlphaNumericStringOfLength length =
         |> Random.map String.fromList
 
 
+randomFloatT : Float2 -> Generator Float
+randomFloatT ( a, b ) =
+    Random.float a b
+
+
 
 -- STYLE HELPERS
 

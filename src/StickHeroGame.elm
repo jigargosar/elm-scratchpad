@@ -53,12 +53,7 @@ randomWallAfter : Wall -> Generator Wall
 randomWallAfter p =
     Random.map2 (\gap w -> { x = p.x + p.w / 2 + gap + w / 2, w = w })
         randomWallGap
-        randomWallWidth
-
-
-randomWallWidth : Generator Float
-randomWallWidth =
-    Random.constant initialWallWidth
+        (randomFloatT wallWidthRange)
 
 
 randomWallGap : Generator Float
