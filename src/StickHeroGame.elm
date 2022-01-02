@@ -177,8 +177,12 @@ view model =
                 [ xf [ mv2 (width / -3) 0 ]
                 , transforms
                     [ "translate(-33.33%,0)"
+                    , case model.phase of
+                        Transitioning start ->
+                            translateF2 ( (model.clock - start) * -0.05, 0 )
 
-                    --, translateF2 ( -model.clock * 0.05, 0 )
+                        _ ->
+                            translateF2 ( 0, 0 )
                     ]
                 ]
                 [ viewWalls model.walls
