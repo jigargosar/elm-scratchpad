@@ -22,6 +22,7 @@ type alias Model =
     , phase : Phase
     , walls : Walls
     , sticks : List Stick
+    , xOffset : Float
     }
 
 
@@ -106,6 +107,7 @@ init () =
       , phase = Turning 0 (Stick (wallX2 initialWall) 50)
       , walls = initWalls
       , sticks = []
+      , xOffset = 0
       }
     , Cmd.none
     )
@@ -177,12 +179,7 @@ view model =
                 [ xf [ mv2 (width / -3) 0 ]
                 , transforms
                     [ "translate(-33.33%,0)"
-                    , case model.phase of
-                        Transitioning start ->
-                            translateF2 ( (model.clock - start) * -0.05, 0 )
-
-                        _ ->
-                            translateF2 ( 0, 0 )
+                    , translateF2 ( model.xOffset, 0 )
                     ]
                 ]
                 [ viewWalls model.walls
