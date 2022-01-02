@@ -40,7 +40,7 @@ step model =
                     turningAngleInDegreesSince start model
             in
             if angleDeg >= 0 then
-                case wallTouchingEndOfStick stick model.walls of
+                case wallsTouchingEndOfStick stick model.walls of
                     Just walls ->
                         { model
                             | phase = WalkingToCenterOfWall model.clock walls
@@ -56,12 +56,22 @@ step model =
             else
                 model
 
-        WalkingToCenterOfWall start _ ->
+        WalkingToCenterOfWall start walls ->
             let
                 elapsed =
                     model.clock - start
+
+                walkingSpeed =
+                    0.05
+
+                currentHeroX =
+                    wallsCurrentCX model.walls * (elapsed * walkingSpeed)
             in
-            model
+            if currentHeroX < wallsCurrentCX walls then
+                model
+
+            else
+                { model | walls = walls, phase = Waiting }
 
         WalkingToEndOfStick start stick ->
             model
@@ -267,6 +277,11 @@ type alias Wall =
     { x : Float, w : Float }
 
 
+wallIsXInRange : Float -> Wall -> Bool
+wallIsXInRange n { x, w } =
+    n >= x - w / 2 && n <= x + w / 2
+
+
 initialWall : Wall
 initialWall =
     Wall 0 initialWallWidth
@@ -288,14 +303,27 @@ type Walls
     = Walls Wall (Array Wall)
 
 
-wallTouchingEndOfStick : Stick -> Walls -> Maybe Walls
-wallTouchingEndOfStick stick walls =
-    Debug.todo "todo"
+wallsTouchingEndOfStick : Stick -> Walls -> Maybe Walls
+wallsTouchingEndOfStick stick (Walls _ after) =
+    Array.get 0 after
+        |> Maybe.andThen
+            (\wall ->
+                if wallIsXInRange stick.x wall then
+                    Just (Walls wall ((Array.toList >> List.drop 1 >> Array.fromList) after))
+
+                else
+                    Nothing
+            )
 
 
 wallsCurrentX2 : Walls -> Float
 wallsCurrentX2 =
     wallsCurrent >> wallX2
+
+
+wallsCurrentCX : Walls -> Float
+wallsCurrentCX =
+    wallsCurrent >> .x
 
 
 wallsCurrent : Walls -> Wall
