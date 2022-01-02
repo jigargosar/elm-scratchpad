@@ -135,8 +135,11 @@ view model =
                         let
                             turnSpeed =
                                 0.05
+
+                            angleDeg =
+                                -90 + ((model.clock - start) * turnSpeed)
                         in
-                        viewStick stick (-90 + ((model.clock - start) * turnSpeed))
+                        viewStick stick angleDeg
 
                     _ ->
                         noView
