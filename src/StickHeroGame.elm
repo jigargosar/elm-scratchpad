@@ -29,11 +29,23 @@ type alias Model =
 
 
 walkingSpeed =
-    0.05
+    0.1
 
 
 fallingSpeed =
-    0.05
+    0.1
+
+
+turnSpeed =
+    0.2
+
+
+stretchSpeed =
+    0.1
+
+
+transitionSpeed =
+    0.1
 
 
 heroWidth =
@@ -107,7 +119,7 @@ step dt model =
         Transitioning ->
             let
                 xOffset =
-                    model.xOffset + 0.05 * dt
+                    model.xOffset + transitionSpeed * dt
 
                 maxXOffset =
                     model.heroX
@@ -288,11 +300,8 @@ initStretchingStickWithStartTime start model =
         elapsed =
             model.clock - start
 
-        stickGrowSpeed =
-            0.05
-
         stickLength =
-            elapsed * stickGrowSpeed
+            elapsed * stretchSpeed
 
         xOffset =
             wallsCurrentX2 model.walls
@@ -331,10 +340,6 @@ wallGapRange =
 
 type alias Stick =
     { x : Float, len : Float, angleDeg : Float }
-
-
-turnSpeed =
-    0.1
 
 
 stickX2 : Stick -> Float
