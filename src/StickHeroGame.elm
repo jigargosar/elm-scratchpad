@@ -40,23 +40,16 @@ step model =
                     turningAngleInDegreesSince start model
             in
             if angleDeg >= 0 then
-                let
-                    maybeWall : Maybe Wall
-                    maybeWall =
-                        wallTouchingEndOfStick stick model.walls
-                in
-                case maybeWall of
-                    Just wall ->
+                case wallTouchingEndOfStick stick model.walls of
+                    Just walls ->
                         { model
-                            | phase =
-                                WalkingToCenterOfWall model.clock wall
+                            | phase = WalkingToCenterOfWall model.clock walls
                             , sticks = stick :: model.sticks
                         }
 
                     Nothing ->
                         { model
-                            | phase =
-                                WalkingToEndOfStick model.clock stick
+                            | phase = WalkingToEndOfStick model.clock stick
                             , sticks = stick :: model.sticks
                         }
 
@@ -78,7 +71,7 @@ type Phase
     = Waiting
     | Stretching Float
     | Turning Float Stick
-    | WalkingToCenterOfWall Float Wall
+    | WalkingToCenterOfWall Float Walls
     | WalkingToEndOfStick Float Stick
 
 
@@ -295,7 +288,7 @@ type Walls
     = Walls Wall (Array Wall)
 
 
-wallTouchingEndOfStick : Stick -> Walls -> Maybe Wall
+wallTouchingEndOfStick : Stick -> Walls -> Maybe Walls
 wallTouchingEndOfStick stick walls =
     Debug.todo "todo"
 
