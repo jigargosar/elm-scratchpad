@@ -85,7 +85,12 @@ main =
             [ viewBoxC width height
             , sMaxWidth "500px"
             ]
-            [ group [ xf [ mv2 (width / -3) 0 ] ]
+            [ group
+                [ xf
+                    [--
+                     --mv2 (width / -3) 0
+                    ]
+                ]
                 [ viewWalls initWalls
                 , viewHero
                 ]
