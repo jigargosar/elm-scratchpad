@@ -110,7 +110,7 @@ view model =
                 , transforms
                     [ "translate(-33.33%,0)"
 
-                    --, translateF2 ( -model.clock * transitionSpeed, 0 )
+                    --, translateF2 ( -model.clock * 0.05, 0 )
                     ]
                 ]
                 [ viewWalls walls
