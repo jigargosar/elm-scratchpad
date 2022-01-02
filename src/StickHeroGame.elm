@@ -63,9 +63,7 @@ randomWallAfter : Wall -> Generator Wall
 randomWallAfter prevWall =
     Random.map2
         (\wallGap wallWidth ->
-            { x = prevWall.x + prevWall.w / 2 + wallGap + wallWidth / 2
-            , w = wallWidth
-            }
+            newWallAfter prevWall { gap = wallGap, width = wallWidth }
         )
         (randomFloatT wallGapRange)
         (randomFloatT wallWidthRange
