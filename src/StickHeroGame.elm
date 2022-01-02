@@ -20,6 +20,11 @@ initialWallWidth =
     30
 
 
+initialWallGap : Float
+initialWallGap =
+    75
+
+
 type alias Wall =
     { x : Float, w : Float }
 
@@ -27,11 +32,6 @@ type alias Wall =
 initialWall : Wall
 initialWall =
     Wall 0 initialWallWidth
-
-
-initialWallGap : Float
-initialWallGap =
-    75
 
 
 type Walls
