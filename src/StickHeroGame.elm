@@ -70,7 +70,6 @@ step dt model =
                     Nothing ->
                         { model
                             | phase = WalkingToEndOfStick (stickX2 stick + heroWidth / 2) stick
-                            , sticks = model.sticks
                         }
 
             else
@@ -234,6 +233,15 @@ view model =
                     |> group []
                 , viewHero model.heroX model.heroY
                 , case model.phase of
+                    Waiting ->
+                        noView
+
+                    WalkingToCenterOfWall _ _ ->
+                        noView
+
+                    Transitioning ->
+                        noView
+
                     Stretching start ->
                         let
                             stick =
@@ -252,11 +260,13 @@ view model =
                         let
                             angleDeg =
                                 turningAngleInDegreesSince start model
+                                    + 90
+                                    |> clamp 0 90
                         in
                         viewStick angleDeg stick
 
-                    _ ->
-                        noView
+                    WalkingToEndOfStick _ stick ->
+                        viewStick 0 stick
                 ]
             , group [ opacity 0.01 ]
                 [ circle 100 [ fill wBlue ]
