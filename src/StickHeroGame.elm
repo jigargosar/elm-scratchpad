@@ -116,7 +116,7 @@ viewWall { x, w } =
             , fill white
             ]
             []
-        , rect 5 3 [ fill wPurple, xf [ mv2 0 (3 / 2) ] ]
+        , square 5 [ fill wPurple, xf [ mv2 0 (5 / 2) ] ]
         ]
 
 
