@@ -4,14 +4,6 @@ import Random
 import Utils exposing (..)
 
 
-width =
-    200
-
-
-height =
-    100
-
-
 wallHeight =
     50
 
@@ -80,9 +72,19 @@ wallsToList (Walls last prev) =
 
 
 main =
+    let
+        width =
+            200
+
+        height =
+            100
+    in
     div []
         [ basicStylesNode
-        , basicSvg [ viewBoxC width height, sMaxWidth "500px" ]
+        , basicSvg
+            [ viewBoxC width height
+            , sMaxWidth "500px"
+            ]
             [ group [ xf [ mv2 (width / -3) 0 ] ]
                 [ initWalls
                     |> viewWalls
