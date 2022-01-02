@@ -1,6 +1,9 @@
 module StickHeroGame exposing (main)
 
 import Random
+import Svg
+import Svg.Attributes as SA
+import TypedSvg.Attributes.InPx as Px
 import Utils exposing (..)
 
 
@@ -77,7 +80,7 @@ main =
             200
 
         height =
-            100
+            150
     in
     div []
         [ basicStylesNode
@@ -94,6 +97,7 @@ main =
                 [ viewWalls initWalls
                 , viewHero
                 ]
+            , circle 100 [ fill wPink, opacity 0.5 ]
             ]
         ]
 
@@ -107,7 +111,11 @@ viewWalls walls =
 
 
 viewWall { x, w } =
-    rect w wallHeight [ fill white, xf [ mv2 x (wallHeight / 2) ] ]
+    Svg.rect [ saWidth w, SA.height "50%", fill white, xf [ mv2 x 0 ] ] []
+
+
+
+--rect w wallHeight [ fill white, xf [ mv2 x (wallHeight / 2) ] ]
 
 
 viewHero =
