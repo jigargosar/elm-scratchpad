@@ -26,7 +26,8 @@ type alias Model =
 
 type Phase
     = Waiting
-    | Clicking Float
+    | Stretching Float
+    | Turning Float Stick
 
 
 init : () -> ( Model, Cmd Msg )
@@ -40,7 +41,7 @@ init () =
                 |> stepWithInitialSeed 0
     in
     ( { clock = 0
-      , phase = Clicking 0
+      , phase = Stretching 0
       , walls = initWalls
       }
     , Cmd.none
@@ -77,15 +78,22 @@ update msg model =
         OnKeyDown key ->
             ( case ( model.phase, key ) of
                 ( Waiting, " " ) ->
-                    { model | phase = Clicking model.clock }
+                    { model | phase = Stretching model.clock }
 
                 _ ->
                     model
             , Cmd.none
             )
 
-        OnKeyUp _ ->
-            ( model, Cmd.none )
+        OnKeyUp key ->
+            ( case ( model.phase, key ) of
+                ( Stretching _, " " ) ->
+                    { model | phase = Turning model.clock (Stick 0 10) }
+
+                _ ->
+                    model
+            , Cmd.none
+            )
 
 
 view : Model -> Document Msg
@@ -116,24 +124,12 @@ view model =
                 [ viewWalls walls
                 , viewHero
                 , case model.phase of
-                    Clicking start ->
+                    Stretching start ->
                         let
-                            elapsed =
-                                model.clock - start
-
-                            stickGrowSpeed =
-                                0.05
-
-                            stickLength =
-                                elapsed * stickGrowSpeed
-
-                            angleDeg =
-                                -90
-
-                            xOffset =
-                                wallsCurrentX2 walls
+                            stick =
+                                initStickWithStartTime start model
                         in
-                        viewStick xOffset stickLength angleDeg
+                        viewStick stick -90
 
                     _ ->
                         noView
@@ -146,14 +142,33 @@ view model =
         ]
 
 
-viewStick xOffset stickLength angleDeg =
+initStickWithStartTime : Float -> Model -> Stick
+initStickWithStartTime start model =
+    let
+        elapsed =
+            model.clock - start
+
+        stickGrowSpeed =
+            0.05
+
+        stickLength =
+            elapsed * stickGrowSpeed
+
+        xOffset =
+            wallsCurrentX2 model.walls
+    in
+    Stick xOffset stickLength
+
+
+viewStick : Stick -> Float -> Svg msg
+viewStick stick angleDeg =
     polyline
         [ ( 0, 0 )
-        , ( stickLength, 0 )
+        , ( stick.len, 0 )
         ]
         [ strokeW 2
         , stroke wGreen_lime
-        , xf [ mv2 xOffset 0, rotateDeg angleDeg ]
+        , xf [ mv2 stick.x 0, rotateDeg angleDeg ]
         ]
 
 
