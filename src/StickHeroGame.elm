@@ -42,6 +42,12 @@ type Walls
     = Walls Wall (Array Wall)
 
 
+wallsLast : Walls -> Wall
+wallsLast (Walls c after) =
+    Array.get (Array.length after - 1) after
+        |> Maybe.withDefault c
+
+
 initWalls : Walls
 initWalls =
     Walls initialWall Array.empty
