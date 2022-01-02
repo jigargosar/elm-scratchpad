@@ -47,9 +47,9 @@ initWalls =
 
 
 randomWallAfter : Wall -> Generator Wall
-randomWallAfter { x, w } =
-    Random.map2 Wall
-        (randomWallGap |> Random.map (\gap -> x + gap))
+randomWallAfter p =
+    Random.map2 (\gap w -> { x = p.x + p.w / 2 + gap + w / 2, w = w })
+        randomWallGap
         randomWallWidth
 
 
