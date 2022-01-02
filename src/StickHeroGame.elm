@@ -1,6 +1,7 @@
 module StickHeroGame exposing (main)
 
 import Array exposing (Array)
+import Browser.Events
 import Random
 import Svg
 import Utils exposing (..)
@@ -16,21 +17,22 @@ main =
 
 
 type alias Model =
-    {}
+    { elapsed : Float }
 
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( {}, Cmd.none )
+    ( { elapsed = 0 }, Cmd.none )
 
 
 type Msg
     = NOP
+    | OnClampedDelta Float
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Sub.none
+    Browser.Events.onAnimationFrameDelta (clamp 0 100 >> OnClampedDelta)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -38,6 +40,9 @@ update msg model =
     case msg of
         NOP ->
             ( model, Cmd.none )
+
+        OnClampedDelta delta ->
+            ( { model | elapsed = model.elapsed + delta }, Cmd.none )
 
 
 view : Model -> Document Msg
