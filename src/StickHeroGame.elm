@@ -263,7 +263,7 @@ turningAngleInDegreesSince : Float -> Model -> Float
 turningAngleInDegreesSince start model =
     let
         turnSpeed =
-            0.05
+            0.1
 
         elapsed =
             model.clock - start
