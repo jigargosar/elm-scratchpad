@@ -93,7 +93,8 @@ main =
                 [ viewWalls initWalls
                 , viewHero
                 ]
-            , circle 100 [ fill wPink, opacity 0.5 ]
+            , circle 100 [ fill wPink, opacity 0.1 ]
+            , circle 1 [ fill wPink, opacity 1 ]
             ]
         ]
 
