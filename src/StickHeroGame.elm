@@ -152,7 +152,12 @@ view model =
                 , model.sticks
                     |> List.map (viewStick 0)
                     |> group []
-                , viewHero 0
+                , case model.phase of
+                    Walking ->
+                        viewHero 0
+
+                    _ ->
+                        viewHero 0
                 , case model.phase of
                     Stretching start ->
                         let
