@@ -6,6 +6,72 @@ import Svg
 import Utils exposing (..)
 
 
+main =
+    bDocument
+        { init = init
+        , subscriptions = subscriptions
+        , update = update
+        , view = view
+        }
+
+
+type alias Model =
+    {}
+
+
+init : () -> ( Model, Cmd Msg )
+init () =
+    ( {}, Cmd.none )
+
+
+type Msg
+    = NOP
+
+
+subscriptions : Model -> Sub Msg
+subscriptions _ =
+    Sub.none
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        NOP ->
+            ( model, Cmd.none )
+
+
+view : Model -> Document Msg
+view _ =
+    Document "App Title"
+        [ basicStylesNode
+        , let
+            width =
+                200
+
+            height =
+                150
+          in
+          basicSvg
+            [ viewBoxC width height
+            , sMaxWidth "500px"
+            ]
+            [ group
+                [ xf
+                    [ --
+                      mv2 (width / -3) 0
+                    ]
+                ]
+                [ viewWalls initWalls
+                , viewHero
+                ]
+            , group [ opacity 0.01 ]
+                [ circle 100 [ fill wBlue ]
+                , circle 1 [ fill wPink ]
+                ]
+            ]
+        ]
+
+
 wallWidthRange =
     ( 15, 25 )
 
@@ -84,37 +150,6 @@ randomWallAfter prevWall =
 wallsToList : Walls -> List Wall
 wallsToList (Walls c after) =
     c :: Array.toList after
-
-
-main =
-    let
-        width =
-            200
-
-        height =
-            150
-    in
-    div []
-        [ basicStylesNode
-        , basicSvg
-            [ viewBoxC width height
-            , sMaxWidth "500px"
-            ]
-            [ group
-                [ xf
-                    [ --
-                      mv2 (width / -3) 0
-                    ]
-                ]
-                [ viewWalls initWalls
-                , viewHero
-                ]
-            , group [ opacity 0.01 ]
-                [ circle 100 [ fill wBlue ]
-                , circle 1 [ fill wPink ]
-                ]
-            ]
-        ]
 
 
 viewWalls : Walls -> Svg msg
