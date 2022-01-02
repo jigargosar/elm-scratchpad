@@ -152,6 +152,18 @@ view model =
         ]
 
 
+turningAngleInDegreesSince : Float -> Model -> Float
+turningAngleInDegreesSince start model =
+    let
+        turnSpeed =
+            0.05
+
+        elapsed =
+            model.clock - start
+    in
+    -90 + (elapsed * turnSpeed)
+
+
 initStickWithStartTime : Float -> Model -> Stick
 initStickWithStartTime start model =
     let
