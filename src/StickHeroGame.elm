@@ -53,10 +53,10 @@ addRandomWall =
 
 
 randomWallAfter : Wall -> Generator Wall
-randomWallAfter p =
+randomWallAfter prevWall =
     Random.map2
         (\wallGap wallWidth ->
-            { x = p.x + p.w / 2 + wallGap + wallWidth / 2
+            { x = prevWall.x + prevWall.w / 2 + wallGap + wallWidth / 2
             , w = wallWidth
             }
         )
