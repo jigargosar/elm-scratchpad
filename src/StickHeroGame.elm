@@ -10,6 +10,10 @@ wallWidthRange =
     ( 15, 25 )
 
 
+doubleScoreSquareWidth =
+    lerpRange wallWidthRange 0 / 2
+
+
 initialWallWidth =
     lerpRange wallWidthRange 1
 
@@ -116,7 +120,7 @@ viewWall { x, w } =
             , fill white
             ]
             []
-        , square 5 [ fill wPurple, xf [ mv2 0 (5 / 2) ] ]
+        , square doubleScoreSquareWidth [ fill wPurple, xf [ mv2 0 (doubleScoreSquareWidth / 2) ] ]
         ]
 
 
