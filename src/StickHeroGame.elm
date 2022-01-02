@@ -57,9 +57,12 @@ step dt model =
         Turning start stick ->
             let
                 angleDeg =
-                    turningAngleInDegreesSince start model
+                    stick.angleDeg + dt * turnSpeed
             in
-            if angleDeg >= 0 then
+            if angleDeg <= 0 then
+                { model | phase = Turning start { stick | angleDeg = angleDeg } }
+
+            else
                 case wallsTouchingEndOfStick stick model.walls of
                     Just walls ->
                         { model
@@ -71,9 +74,6 @@ step dt model =
                         { model
                             | phase = WalkingToEndOfStick (stickX2 stick + heroWidth / 2) stick
                         }
-
-            else
-                model
 
         WalkingToCenterOfWall maxHeroX walls ->
             let
@@ -229,7 +229,7 @@ view model =
                 ]
                 [ viewWalls model.walls
                 , model.sticks
-                    |> List.map (viewStick 0)
+                    |> List.map viewStick
                     |> group []
                 , viewHero model.heroX model.heroY
                 , case model.phase of
@@ -247,26 +247,16 @@ view model =
                             stick =
                                 initStretchingStickWithStartTime start model
                         in
-                        viewStick -90 stick
+                        viewStick stick
 
-                    Turning start stick ->
-                        let
-                            angleDeg =
-                                turningAngleInDegreesSince start model
-                        in
-                        viewStick angleDeg stick
+                    Turning _ stick ->
+                        viewStick stick
 
-                    Falling start stick ->
-                        let
-                            angleDeg =
-                                turningAngleInDegreesSince start model
-                                    + 90
-                                    |> clamp 0 90
-                        in
-                        viewStick angleDeg stick
+                    Falling _ stick ->
+                        viewStick stick
 
                     WalkingToEndOfStick _ stick ->
-                        viewStick 0 stick
+                        viewStick stick
                 ]
             , group [ opacity 0.01 ]
                 [ circle 100 [ fill wBlue ]
@@ -279,9 +269,6 @@ view model =
 turningAngleInDegreesSince : Float -> Model -> Float
 turningAngleInDegreesSince start model =
     let
-        turnSpeed =
-            0.1
-
         elapsed =
             model.clock - start
     in
@@ -306,8 +293,8 @@ initStretchingStickWithStartTime start model =
     { x = xOffset, len = stickLength, angleDeg = -90 }
 
 
-viewStick : Float -> Stick -> Svg msg
-viewStick angleDeg stick =
+viewStick : Stick -> Svg msg
+viewStick stick =
     polyline
         [ ( 0, 0 )
         , ( stick.len, 0 )
@@ -315,7 +302,7 @@ viewStick angleDeg stick =
         [ strokeW 2
         , stroke wGreen_lime
         , stroke wWhite
-        , xf [ mv2 stick.x 0, rotateDeg angleDeg ]
+        , xf [ mv2 stick.x 0, rotateDeg stick.angleDeg ]
         ]
 
 
@@ -337,6 +324,10 @@ wallGapRange =
 
 type alias Stick =
     { x : Float, len : Float, angleDeg : Float }
+
+
+turnSpeed =
+    0.1
 
 
 stickX2 : Stick -> Float
