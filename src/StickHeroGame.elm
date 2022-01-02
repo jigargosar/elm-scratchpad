@@ -17,7 +17,7 @@ main =
 
 
 type alias Model =
-    { elapsed : Float
+    { clock : Float
     , phase : Phase
     }
 
@@ -28,7 +28,7 @@ type Phase
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { elapsed = 0
+    ( { clock = 0
       , phase = Waiting
       }
     , Cmd.none
@@ -52,7 +52,7 @@ update msg model =
             ( model, Cmd.none )
 
         OnClampedDelta delta ->
-            ( { model | elapsed = model.elapsed + delta }, Cmd.none )
+            ( { model | clock = model.clock + delta }, Cmd.none )
 
 
 transitionSpeed =
@@ -76,7 +76,7 @@ view model =
                 [ xf [ mv2 (width / -3) 0 ]
                 , transforms
                     [ "translate(-33.33%,0)"
-                    , translateF2 ( -model.elapsed * transitionSpeed, 0 )
+                    , translateF2 ( -model.clock * transitionSpeed, 0 )
                     ]
                 ]
                 [ viewWalls initWalls
