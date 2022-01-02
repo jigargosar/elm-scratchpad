@@ -164,7 +164,7 @@ init () =
         initWalls =
             Walls Array.empty initialWall Array.empty
                 |> Random.constant
-                |> applyN 1000 addRandomWall
+                |> applyN 10 addRandomWall
                 |> stepWithInitialSeed 0
     in
     ( { clock = 0
