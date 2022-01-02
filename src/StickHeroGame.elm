@@ -24,6 +24,7 @@ type alias Model =
 
 type Phase
     = Waiting
+    | Clicking
 
 
 init : () -> ( Model, Cmd Msg )
@@ -52,7 +53,14 @@ update msg model =
             ( model, Cmd.none )
 
         OnClampedDelta delta ->
-            ( { model | clock = model.clock + delta }, Cmd.none )
+            ( case model.phase of
+                Waiting ->
+                    model
+
+                Clicking ->
+                    { model | clock = model.clock + delta }
+            , Cmd.none
+            )
 
 
 transitionSpeed =
