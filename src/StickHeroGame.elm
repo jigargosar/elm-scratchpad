@@ -21,6 +21,7 @@ type alias Model =
     { clock : Float
     , phase : Phase
     , walls : Walls
+    , sticks : List Stick
     }
 
 
@@ -30,11 +31,19 @@ step model =
         Waiting ->
             model
 
-        Stretching float ->
+        Stretching _ ->
             model
 
-        Turning float stick ->
-            model
+        Turning start stick ->
+            let
+                angleDeg =
+                    turningAngleInDegreesSince start model
+            in
+            if angleDeg >= 0 then
+                { model | phase = Waiting, sticks = stick :: model.sticks }
+
+            else
+                model
 
 
 type Phase
@@ -56,6 +65,7 @@ init () =
     ( { clock = 0
       , phase = Turning 0 (Stick (wallX2 initialWall) 50)
       , walls = initWalls
+      , sticks = []
       }
     , Cmd.none
     )
@@ -136,6 +146,9 @@ view model =
                     ]
                 ]
                 [ viewWalls walls
+                , model.sticks
+                    |> List.map (viewStick 0)
+                    |> group []
                 , viewHero
                 , case model.phase of
                     Stretching start ->
@@ -143,14 +156,14 @@ view model =
                             stick =
                                 initStickWithStartTime start model
                         in
-                        viewStick stick -90
+                        viewStick -90 stick
 
                     Turning start stick ->
                         let
                             angleDeg =
                                 turningAngleInDegreesSince start model
                         in
-                        viewStick stick angleDeg
+                        viewStick angleDeg stick
 
                     _ ->
                         noView
@@ -193,8 +206,8 @@ initStickWithStartTime start model =
     Stick xOffset stickLength
 
 
-viewStick : Stick -> Float -> Svg msg
-viewStick stick angleDeg =
+viewStick : Float -> Stick -> Svg msg
+viewStick angleDeg stick =
     polyline
         [ ( 0, 0 )
         , ( stick.len, 0 )
