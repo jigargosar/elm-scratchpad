@@ -17,12 +17,22 @@ main =
 
 
 type alias Model =
-    { elapsed : Float }
+    { elapsed : Float
+    , phase : Phase
+    }
+
+
+type Phase
+    = Waiting
 
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { elapsed = 0 }, Cmd.none )
+    ( { elapsed = 0
+      , phase = Waiting
+      }
+    , Cmd.none
+    )
 
 
 type Msg
