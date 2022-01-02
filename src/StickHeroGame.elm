@@ -108,7 +108,15 @@ viewWalls walls =
 
 viewWall : Wall -> Svg.Svg msg
 viewWall { x, w } =
-    Svg.rect [ Px.x (w / -2), saWidth w, Px.y 0, SA.height "50%", fill white, xf [ mv2 x 0 ] ] []
+    Svg.rect
+        [ Px.x (w / -2)
+        , saWidth w
+        , Px.y 0
+        , SA.height "50%"
+        , fill white
+        , xf [ mv2 x 0 ]
+        ]
+        []
 
 
 
