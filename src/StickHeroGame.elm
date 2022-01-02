@@ -24,8 +24,12 @@ initialWallWidth =
     lerpRange wallWidthRange 0.5
 
 
+wallGapRange =
+    ( 50, 100 )
+
+
 initialWallGap =
-    75
+    lerpRange wallGapRange 0.5
 
 
 type alias Wall =
@@ -51,14 +55,14 @@ initWalls =
 
 randomWallAfter : Wall -> Generator Wall
 randomWallAfter p =
-    Random.map2 (\gap w -> { x = p.x + p.w / 2 + gap + w / 2, w = w })
-        randomWallGap
+    Random.map2
+        (\wallGap wallWidth ->
+            { x = p.x + p.w / 2 + wallGap + wallWidth / 2
+            , w = wallWidth
+            }
+        )
+        (randomFloatT wallGapRange)
         (randomFloatT wallWidthRange)
-
-
-randomWallGap : Generator Float
-randomWallGap =
-    Random.constant initialWallGap
 
 
 addRandomWall : Generator Walls -> Generator Walls
