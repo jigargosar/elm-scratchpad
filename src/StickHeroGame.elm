@@ -67,10 +67,10 @@ step model =
                 distanceWalked =
                     elapsed * walkingSpeed
 
-                currentHeroX =
-                    wallsCurrentCX model.walls + distanceWalked
+                distanceBetweenWalls =
+                    wallsCurrentCX walls - wallsCurrentCX model.walls
             in
-            if currentHeroX < wallsCurrentCX walls then
+            if distanceWalked < distanceBetweenWalls then
                 model
 
             else
