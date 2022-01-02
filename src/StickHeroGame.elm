@@ -70,7 +70,14 @@ update msg model =
             )
 
         OnKeyDown key ->
-            ( model, Cmd.none )
+            ( case ( model.phase, key ) of
+                ( Waiting, " " ) ->
+                    model
+
+                _ ->
+                    model
+            , Cmd.none
+            )
 
         OnKeyUp key ->
             ( model, Cmd.none )
