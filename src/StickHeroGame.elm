@@ -16,7 +16,7 @@ wallWidthRange =
 
 
 initialWallWidth =
-    lerpRange wallWidthRange 0.5
+    lerpRange wallWidthRange 1
 
 
 wallGapRange =
@@ -41,7 +41,7 @@ initWalls =
     Walls initialWall []
         |> Random.constant
         |> applyN 1000 addRandomWall
-        |> stepWithInitialSeed 0
+        |> stepWithInitialSeed 3
 
 
 addRandomWall : Generator Walls -> Generator Walls
