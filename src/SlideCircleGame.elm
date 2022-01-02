@@ -1,4 +1,4 @@
-module SlideCircleGame exposing (..)
+module SlideCircleGame exposing (main)
 
 import Browser
 import Browser.Events

@@ -2,6 +2,7 @@ module StickHeroGame exposing (main)
 
 import Array exposing (Array)
 import Browser.Events
+import Json.Decode as JD
 import Random
 import Svg
 import Utils exposing (..)
@@ -39,11 +40,17 @@ init () =
 type Msg
     = NOP
     | OnClampedDelta Float
+    | OnKeyDown String
+    | OnKeyUp String
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Browser.Events.onAnimationFrameDelta (clamp 0 100 >> OnClampedDelta)
+    [ Browser.Events.onAnimationFrameDelta (clamp 0 100 >> OnClampedDelta)
+    , Browser.Events.onKeyDown (JD.map OnKeyDown keyDecoder)
+    , Browser.Events.onKeyUp (JD.map OnKeyUp keyDecoder)
+    ]
+        |> Sub.batch
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -61,6 +68,12 @@ update msg model =
                     { model | clock = model.clock + delta }
             , Cmd.none
             )
+
+        OnKeyDown key ->
+            ( model, Cmd.none )
+
+        OnKeyUp key ->
+            ( model, Cmd.none )
 
 
 transitionSpeed =
