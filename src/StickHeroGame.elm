@@ -60,10 +60,12 @@ main =
     div []
         [ basicStylesNode
         , basicSvg [ viewBoxC width height, sMaxWidth "500px" ]
-            [ initialWalls
-                |> applyN 10 addWall
-                |> viewWalls
-            , viewHero
+            [ group [ xf [ mv2 0 0 ] ]
+                [ initialWalls
+                    |> applyN 10 addWall
+                    |> viewWalls
+                , viewHero
+                ]
             ]
         ]
 
