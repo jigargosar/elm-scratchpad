@@ -24,6 +24,19 @@ type alias Model =
     }
 
 
+step : Model -> Model
+step model =
+    case model.phase of
+        Waiting ->
+            model
+
+        Stretching float ->
+            model
+
+        Turning float stick ->
+            model
+
+
 type Phase
     = Waiting
     | Stretching Float
@@ -72,6 +85,7 @@ update msg model =
 
         OnClampedDelta delta ->
             ( { model | clock = model.clock + delta }
+                |> step
             , Cmd.none
             )
 
