@@ -84,6 +84,10 @@ transitionSpeed =
 
 view : Model -> Document Msg
 view model =
+    let
+        walls =
+            initWalls
+    in
     Document "App Title"
         [ basicStylesNode
         , let
@@ -103,7 +107,7 @@ view model =
                     --, translateF2 ( -model.clock * transitionSpeed, 0 )
                     ]
                 ]
-                [ viewWalls initWalls
+                [ viewWalls walls
                 , viewHero
                 , case model.phase of
                     Clicking start ->
@@ -121,7 +125,7 @@ view model =
                                 -90
 
                             xOffset =
-                                0
+                                wallsCurrentX2 walls
                         in
                         viewStick xOffset stickLength angleDeg
 
@@ -138,12 +142,12 @@ view model =
 
 viewStick xOffset stickLength angleDeg =
     polyline
-        [ ( xOffset, 0 )
-        , ( xOffset + stickLength, 0 )
+        [ ( 0, 0 )
+        , ( stickLength, 0 )
         ]
         [ strokeW 2
         , stroke wGreen_lime
-        , xf [ mv2 0 0, rotateDeg angleDeg ]
+        , xf [ mv2 xOffset 0, rotateDeg angleDeg ]
         ]
 
 
@@ -172,6 +176,11 @@ initialWall =
     Wall 0 initialWallWidth
 
 
+wallX2 : Wall -> Float
+wallX2 { x, w } =
+    x + (w / 2)
+
+
 newWallAfter : Wall -> { gap : Float, width : Float } -> Wall
 newWallAfter prevWall attr =
     { x = prevWall.x + prevWall.w / 2 + attr.gap + attr.width / 2
@@ -181,6 +190,16 @@ newWallAfter prevWall attr =
 
 type Walls
     = Walls Wall (Array Wall)
+
+
+wallsCurrentX2 : Walls -> Float
+wallsCurrentX2 =
+    wallsCurrent >> wallX2
+
+
+wallsCurrent : Walls -> Wall
+wallsCurrent (Walls c _) =
+    c
 
 
 wallsLast : Walls -> Wall
