@@ -49,7 +49,7 @@ initWalls : Walls
 initWalls =
     Walls initialWall []
         |> Random.constant
-        |> applyN 10 addRandomWall
+        |> applyN 1000 addRandomWall
         |> stepWithInitialSeed 0
 
 
