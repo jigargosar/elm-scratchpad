@@ -113,15 +113,17 @@ view model =
 
                             stickGrowSpeed =
                                 0.05
+
+                            stickLength =
+                                elapsed * stickGrowSpeed
+
+                            angleDeg =
+                                -90
+
+                            xOffset =
+                                0
                         in
-                        polyline
-                            [ ( 0, 0 )
-                            , ( elapsed * stickGrowSpeed, 0 )
-                            ]
-                            [ strokeW 2
-                            , stroke wGreen_lime
-                            , xf [ mv2 0 0, rotateDeg -90 ]
-                            ]
+                        viewStick xOffset stickLength angleDeg
 
                     _ ->
                         noView
@@ -131,6 +133,17 @@ view model =
                 , circle 1 [ fill wPink ]
                 ]
             ]
+        ]
+
+
+viewStick xOffset stickLength angleDeg =
+    polyline
+        [ ( xOffset, 0 )
+        , ( xOffset + stickLength, 0 )
+        ]
+        [ strokeW 2
+        , stroke wGreen_lime
+        , xf [ mv2 0 0, rotateDeg angleDeg ]
         ]
 
 
