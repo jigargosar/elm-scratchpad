@@ -47,7 +47,7 @@ addWall : Walls -> Walls
 addWall (Walls lastWall prevWalls) =
     let
         nextWall =
-            Wall (lastWall.x + initialWallGap) initialWallWidth
+            Wall (lastWall.x + lastWall.w / 2 + initialWallGap) initialWallWidth
     in
     Walls nextWall (lastWall :: prevWalls)
 
