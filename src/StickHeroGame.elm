@@ -36,7 +36,7 @@ initWalls =
     Walls initialWall Array.empty
         |> Random.constant
         |> applyN 1000 addRandomWall
-        |> stepWithInitialSeed 3
+        |> stepWithInitialSeed 0
 
 
 addRandomWall : Generator Walls -> Generator Walls
