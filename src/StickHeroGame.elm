@@ -37,9 +37,10 @@ type Walls
     = Walls Wall (List Wall)
 
 
-initialWalls : Walls
-initialWalls =
+initWalls : Walls
+initWalls =
     Walls initialWall []
+        |> applyN 10 addWall
 
 
 addWall : Walls -> Walls
@@ -61,8 +62,7 @@ main =
         [ basicStylesNode
         , basicSvg [ viewBoxC width height, sMaxWidth "500px" ]
             [ group [ xf [ mv2 (width / -3) 0 ] ]
-                [ initialWalls
-                    |> applyN 10 addWall
+                [ initWalls
                     |> viewWalls
                 , viewHero
                 ]
