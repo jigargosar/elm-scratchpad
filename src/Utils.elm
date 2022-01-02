@@ -722,6 +722,10 @@ aHeight =
     SA.height
 
 
+aHeightF =
+    fromFloat >> aHeight
+
+
 attrX =
     SA.x
 

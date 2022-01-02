@@ -337,6 +337,20 @@ viewWall { x, w } =
 
 
 viewHero =
+    let
+        w =
+            15
+
+        h =
+            w
+    in
     group []
-        [ rect 15 15 [ fill wBlue ]
+        [ Svg.rect
+            [ attrXF (w / -2)
+            , aWidthF w
+            , attrYF -h
+            , aHeightF h
+            , fill wBlue
+            ]
+            []
         ]
