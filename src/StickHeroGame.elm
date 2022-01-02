@@ -58,6 +58,7 @@ view _ =
                     [ --
                       mv2 (width / -3) 0
                     ]
+                , transforms [ "translate(-33.33%,0)" ]
                 ]
                 [ viewWalls initWalls
                 , viewHero
