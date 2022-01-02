@@ -74,7 +74,7 @@ step dt model =
                 stick =
                     { stick_ | angleDeg = angleDeg }
             in
-            if angleDeg <= 0 then
+            if angleDeg < 0 then
                 { model | phase = Turning { stick | angleDeg = angleDeg } }
 
             else
