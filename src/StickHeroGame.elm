@@ -337,4 +337,6 @@ viewWall { x, w } =
 
 
 viewHero =
-    noView
+    group []
+        [ rect 15 15 [ fill wBlue ]
+        ]
