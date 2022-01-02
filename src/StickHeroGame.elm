@@ -65,24 +65,22 @@ step dt model =
 
         WalkingToCenterOfWall start walls ->
             let
-                elapsed =
-                    model.clock - start
-
                 walkingSpeed =
                     0.05
 
-                distanceWalked =
-                    elapsed * walkingSpeed
+                maxHeroX =
+                    wallsCurrentCX walls
 
-                distanceBetweenWalls =
-                    wallsCurrentCX walls - wallsCurrentCX model.walls
+                heroX =
+                    model.heroX + dt * walkingSpeed
             in
-            if distanceWalked < distanceBetweenWalls then
-                model
+            if heroX < maxHeroX then
+                { model | heroX = heroX }
 
             else
                 { model
-                    | walls = walls
+                    | heroX = maxHeroX
+                    , walls = walls
                     , phase = Transitioning (wallsCurrentCX walls)
                 }
 
