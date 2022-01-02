@@ -78,16 +78,19 @@ step dt model =
                 { model
                     | heroX = maxHeroX
                     , walls = walls
-                    , phase = Transitioning (wallsCurrentCX walls)
+                    , phase = Transitioning
                 }
 
         WalkingToEndOfStick start stick ->
             { model | phase = Waiting }
 
-        Transitioning maxXOffset ->
+        Transitioning ->
             let
                 xOffset =
                     model.xOffset + 0.05 * dt
+
+                maxXOffset =
+                    model.heroX
             in
             if xOffset >= maxXOffset then
                 { model
@@ -105,7 +108,7 @@ type Phase
     | Turning Float Stick
     | WalkingToCenterOfWall Float Walls
     | WalkingToEndOfStick Float Stick
-    | Transitioning Float
+    | Transitioning
 
 
 init : () -> ( Model, Cmd Msg )
