@@ -97,7 +97,7 @@ init () =
     let
         initWalls : Walls
         initWalls =
-            Walls initialWall Array.empty
+            Walls Array.empty initialWall Array.empty
                 |> Random.constant
                 |> applyN 1000 addRandomWall
                 |> stepWithInitialSeed 0
@@ -319,16 +319,16 @@ newWallAfter prevWall attr =
 
 
 type Walls
-    = Walls Wall (Array Wall)
+    = Walls (Array Wall) Wall (Array Wall)
 
 
 wallsTouchingEndOfStick : Stick -> Walls -> Maybe Walls
-wallsTouchingEndOfStick stick (Walls _ after) =
+wallsTouchingEndOfStick stick (Walls before c after) =
     Array.get 0 after
         |> Maybe.andThen
             (\wall ->
                 if wallIsXInRange (stickX2 stick) wall then
-                    Just (Walls wall ((Array.toList >> List.drop 1 >> Array.fromList) after))
+                    Just (Walls (Array.push c before) wall ((Array.toList >> List.drop 1 >> Array.fromList) after))
 
                 else
                     Nothing
@@ -346,19 +346,19 @@ wallsCurrentCX =
 
 
 wallsCurrent : Walls -> Wall
-wallsCurrent (Walls c _) =
+wallsCurrent (Walls _ c _) =
     c
 
 
 wallsLast : Walls -> Wall
-wallsLast (Walls c after) =
+wallsLast (Walls _ c after) =
     Array.get (Array.length after - 1) after
         |> Maybe.withDefault c
 
 
 wallsAppendIn : Walls -> Wall -> Walls
-wallsAppendIn (Walls c after) last =
-    Walls c (Array.push last after)
+wallsAppendIn (Walls before c after) last =
+    Walls before c (Array.push last after)
 
 
 addRandomWall : Generator Walls -> Generator Walls
@@ -382,8 +382,8 @@ randomWallAfter prevWall =
 
 
 wallsToList : Walls -> List Wall
-wallsToList (Walls c after) =
-    c :: Array.toList after
+wallsToList (Walls before c after) =
+    Array.toList before ++ [ c ] ++ Array.toList after
 
 
 viewWalls : Walls -> Svg msg
