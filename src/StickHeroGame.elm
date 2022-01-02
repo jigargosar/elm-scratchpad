@@ -20,6 +20,7 @@ main =
 type alias Model =
     { clock : Float
     , phase : Phase
+    , walls : Walls
     }
 
 
@@ -30,8 +31,17 @@ type Phase
 
 init : () -> ( Model, Cmd Msg )
 init () =
+    let
+        initWalls : Walls
+        initWalls =
+            Walls initialWall Array.empty
+                |> Random.constant
+                |> applyN 1000 addRandomWall
+                |> stepWithInitialSeed 0
+    in
     ( { clock = 0
       , phase = Clicking 0
+      , walls = initWalls
       }
     , Cmd.none
     )
@@ -74,7 +84,7 @@ update msg model =
             , Cmd.none
             )
 
-        OnKeyUp key ->
+        OnKeyUp _ ->
             ( model, Cmd.none )
 
 
@@ -86,7 +96,7 @@ view : Model -> Document Msg
 view model =
     let
         walls =
-            initWalls
+            model.walls
     in
     Document "App Title"
         [ basicStylesNode
@@ -215,14 +225,6 @@ wallsLast (Walls c after) =
 wallsAppendIn : Walls -> Wall -> Walls
 wallsAppendIn (Walls c after) last =
     Walls c (Array.push last after)
-
-
-initWalls : Walls
-initWalls =
-    Walls initialWall Array.empty
-        |> Random.constant
-        |> applyN 1000 addRandomWall
-        |> stepWithInitialSeed 0
 
 
 addRandomWall : Generator Walls -> Generator Walls
