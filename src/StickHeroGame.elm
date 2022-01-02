@@ -26,8 +26,13 @@ type alias Model =
     }
 
 
-step : Model -> Model
-step model =
+addDelta : Float -> Model -> Model
+addDelta delta model =
+    { model | clock = model.clock + delta }
+
+
+step : Float -> Model -> Model
+step dt model =
     case model.phase of
         Waiting ->
             model
@@ -75,13 +80,27 @@ step model =
                 model
 
             else
-                { model | walls = walls, phase = Transitioning model.clock }
+                { model
+                    | walls = walls
+                    , phase = Transitioning (wallsCurrentCX walls)
+                }
 
         WalkingToEndOfStick start stick ->
             { model | phase = Waiting }
 
-        Transitioning start ->
-            model
+        Transitioning maxXOffset ->
+            let
+                xOffset =
+                    model.xOffset + 0.05 * dt
+            in
+            if xOffset >= maxXOffset then
+                { model
+                    | xOffset = maxXOffset
+                    , phase = Waiting
+                }
+
+            else
+                { model | xOffset = xOffset }
 
 
 type Phase
@@ -136,8 +155,9 @@ update msg model =
             ( model, Cmd.none )
 
         OnClampedDelta delta ->
-            ( { model | clock = model.clock + delta }
-                |> step
+            ( model
+                |> step delta
+                |> addDelta delta
             , Cmd.none
             )
 
@@ -179,7 +199,7 @@ view model =
                 [ xf [ mv2 (width / -3) 0 ]
                 , transforms
                     [ "translate(-33.33%,0)"
-                    , translateF2 ( model.xOffset, 0 )
+                    , translateF2 ( -model.xOffset, 0 )
                     ]
                 ]
                 [ viewWalls model.walls
