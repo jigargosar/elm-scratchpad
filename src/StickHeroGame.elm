@@ -20,7 +20,6 @@ initialWallWidth =
     30
 
 
-initialWallGap : Float
 initialWallGap =
     75
 
