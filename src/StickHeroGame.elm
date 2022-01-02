@@ -27,6 +27,14 @@ type alias Model =
     }
 
 
+walkingSpeed =
+    0.05
+
+
+heroWidth =
+    15
+
+
 addDelta : Float -> Model -> Model
 addDelta delta model =
     { model | clock = model.clock + delta }
@@ -56,7 +64,7 @@ step dt model =
 
                     Nothing ->
                         { model
-                            | phase = WalkingToEndOfStick model.clock stick
+                            | phase = WalkingToEndOfStick (stickX2 stick + heroWidth / 2) stick
                             , sticks = stick :: model.sticks
                         }
 
@@ -65,9 +73,6 @@ step dt model =
 
         WalkingToCenterOfWall maxHeroX walls ->
             let
-                walkingSpeed =
-                    0.05
-
                 heroX =
                     model.heroX + dt * walkingSpeed
             in
@@ -81,8 +86,19 @@ step dt model =
                     , phase = Transitioning
                 }
 
-        WalkingToEndOfStick start stick ->
-            { model | phase = Waiting }
+        WalkingToEndOfStick maxHeroX stick ->
+            let
+                heroX =
+                    model.heroX + dt * walkingSpeed
+            in
+            if heroX < maxHeroX then
+                { model | heroX = heroX }
+
+            else
+                { model
+                    | heroX = maxHeroX
+                    , phase = Falling
+                }
 
         Transitioning ->
             let
@@ -101,6 +117,9 @@ step dt model =
             else
                 { model | xOffset = xOffset }
 
+        Falling ->
+            model
+
 
 type Phase
     = Waiting
@@ -109,6 +128,7 @@ type Phase
     | WalkingToCenterOfWall Float Walls
     | WalkingToEndOfStick Float Stick
     | Transitioning
+    | Falling
 
 
 init : () -> ( Model, Cmd Msg )
@@ -206,20 +226,7 @@ view model =
                 , model.sticks
                     |> List.map (viewStick 0)
                     |> group []
-                , let
-                    heroXOffset =
-                        case model.phase of
-                            WalkingToCenterOfWall start _ ->
-                                (model.clock - start) * 0.05
-
-                            WalkingToEndOfStick start _ ->
-                                (model.clock - start) * 0.05
-
-                            _ ->
-                                0
-                  in
-                  --viewHero (wallsCurrentCX model.walls + heroXOffset)
-                  viewHero model.heroX
+                , viewHero model.heroX
                 , case model.phase of
                     Stretching start ->
                         let
@@ -435,7 +442,7 @@ viewWall { x, w } =
 viewHero xOffset =
     let
         w =
-            15
+            heroWidth
 
         h =
             w
