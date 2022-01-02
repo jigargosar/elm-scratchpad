@@ -1,14 +1,9 @@
 module StickHeroGame exposing (main)
 
+import Array exposing (Array)
 import Random
 import Svg
-import Svg.Attributes as SA
-import TypedSvg.Attributes.InPx as Px
 import Utils exposing (..)
-
-
-wallHeight =
-    50
 
 
 wallWidthRange =
@@ -33,12 +28,12 @@ initialWall =
 
 
 type Walls
-    = Walls Wall (List Wall)
+    = Walls Wall (Array Wall)
 
 
 initWalls : Walls
 initWalls =
-    Walls initialWall []
+    Walls initialWall Array.empty
         |> Random.constant
         |> applyN 1000 addRandomWall
         |> stepWithInitialSeed 3
@@ -47,9 +42,9 @@ initWalls =
 addRandomWall : Generator Walls -> Generator Walls
 addRandomWall =
     Random.andThen
-        (\(Walls l p) ->
-            randomWallAfter l
-                |> Random.map (\n -> Walls n (l :: p))
+        (\(Walls c after) ->
+            randomWallAfter (Array.get (Array.length after - 1) after |> Maybe.withDefault c)
+                |> Random.map (\n -> Walls c (Array.push n after))
         )
 
 
@@ -66,8 +61,8 @@ randomWallAfter p =
 
 
 wallsToList : Walls -> List Wall
-wallsToList (Walls last prev) =
-    last :: prev
+wallsToList (Walls c after) =
+    c :: Array.toList after
 
 
 main =
