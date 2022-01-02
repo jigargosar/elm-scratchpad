@@ -61,7 +61,9 @@ randomWallAfter p =
             }
         )
         (randomFloatT wallGapRange)
-        (randomFloatT wallWidthRange)
+        (randomFloatT wallWidthRange
+         --|> always (Random.constant (first wallWidthRange))
+        )
 
 
 wallsToList : Walls -> List Wall
