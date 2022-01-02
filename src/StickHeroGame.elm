@@ -50,8 +50,8 @@ view _ =
           in
           basicSvg
             [ viewBoxC width height
-            , sMaxWidth "550px"
-            , sMaxHeight "95vh"
+            , sMaxWidth "100vw"
+            , sMaxHeight "100vh"
             ]
             [ group
                 [ xf
