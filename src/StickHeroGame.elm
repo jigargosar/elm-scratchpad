@@ -37,6 +37,11 @@ type Walls
     = Walls Wall (List Wall)
 
 
+initialWalls : Walls
+initialWalls =
+    Walls initialWall []
+
+
 addWall : Walls -> Walls
 addWall (Walls lastWall prevWalls) =
     let
@@ -46,16 +51,29 @@ addWall (Walls lastWall prevWalls) =
     Walls nextWall (lastWall :: prevWalls)
 
 
+wallsToList : Walls -> List Wall
+wallsToList (Walls last prev) =
+    last :: prev
+
+
 main =
     div []
         [ basicStylesNode
         , basicSvg [ viewBoxC width height, sMaxWidth "500px" ]
-            [ [ { x = 0, w = 20 }, { x = 75, w = 20 } ]
-                |> List.map viewWall
-                |> group []
+            [ initialWalls
+                |> applyN 10 addWall
+                |> viewWalls
             , viewHero
             ]
         ]
+
+
+viewWalls : Walls -> Svg msg
+viewWalls walls =
+    walls
+        |> wallsToList
+        |> List.map viewWall
+        |> group []
 
 
 viewWall { x, w } =
