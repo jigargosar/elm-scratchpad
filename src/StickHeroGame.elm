@@ -40,7 +40,10 @@ step model =
                     turningAngleInDegreesSince start model
             in
             if angleDeg >= 0 then
-                { model | phase = Walking, sticks = stick :: model.sticks }
+                { model
+                    | phase = Walking
+                    , sticks = stick :: model.sticks
+                }
 
             else
                 model
