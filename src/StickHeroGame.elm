@@ -131,6 +131,13 @@ view model =
                         in
                         viewStick stick -90
 
+                    Turning start stick ->
+                        let
+                            turnSpeed =
+                                0.05
+                        in
+                        viewStick stick (-90 + ((model.clock - start) * turnSpeed))
+
                     _ ->
                         noView
                 ]
