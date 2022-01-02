@@ -41,7 +41,7 @@ init () =
                 |> stepWithInitialSeed 0
     in
     ( { clock = 0
-      , phase = Stretching 0
+      , phase = Turning 0 (Stick (wallX2 initialWall) 50)
       , walls = initWalls
       }
     , Cmd.none
