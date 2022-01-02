@@ -45,8 +45,12 @@ update msg model =
             ( { model | elapsed = model.elapsed + delta }, Cmd.none )
 
 
+transitionSpeed =
+    0.05
+
+
 view : Model -> Document Msg
-view _ =
+view model =
     Document "App Title"
         [ basicStylesNode
         , let
@@ -60,7 +64,10 @@ view _ =
             ]
             [ group
                 [ xf [ mv2 (width / -3) 0 ]
-                , transforms [ "translate(-33.33%,0)" ]
+                , transforms
+                    [ "translate(-33.33%,0)"
+                    , translateF2 ( -model.elapsed * transitionSpeed, 0 )
+                    ]
                 ]
                 [ viewWalls initWalls
                 , viewHero
