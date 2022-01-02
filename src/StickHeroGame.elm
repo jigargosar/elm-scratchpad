@@ -93,7 +93,7 @@ main =
                 [ viewWalls initWalls
                 , viewHero
                 ]
-            , circle 100 [ fill wPink, opacity 0.1 ]
+            , circle 100 [ fill wPink, opacity 0.05 ]
             , circle 1 [ fill wPink, opacity 1 ]
             ]
         ]
@@ -110,16 +110,16 @@ viewWalls walls =
 viewWall : Wall -> Svg msg
 viewWall { x, w } =
     --rect w wallHeight [ fill white, xf [ mv2 x (wallHeight / 2) ] ]
-    group []
+    group [ xf [ mv2 x 0 ] ]
         [ Svg.rect
             [ attrXF (w / -2)
             , aWidthF w
             , attrYF 0
             , aHeight "50%"
             , fill white
-            , xf [ mv2 x 0 ]
             ]
             []
+        , rect 5 3 [ fill wPurple, xf [ mv2 0 (3 / 2) ] ]
         ]
 
 
