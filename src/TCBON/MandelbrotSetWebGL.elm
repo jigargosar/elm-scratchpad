@@ -475,8 +475,8 @@ viewMandelGL canvas mandel maxT colorPow =
                 |> mapEach round
     in
     WebGL.toHtml
-        [ attrWidth <| w * resolution
-        , attrHeight <| h * resolution
+        [ attrWidthI <| w * resolution
+        , attrHeightI <| h * resolution
         , style "transition" "width,height 300ms"
         , styleWidthIPx w
         , styleHeightIPx h

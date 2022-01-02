@@ -710,6 +710,26 @@ noStroke =
     stroke "none"
 
 
+aWidth =
+    SA.width
+
+
+aHeight =
+    SA.height
+
+
+attrX =
+    SA.x
+
+
+attrY =
+    SA.y
+
+
+attrPoints =
+    SA.points
+
+
 saWidth =
     SA.width << String.fromFloat
 
@@ -911,7 +931,11 @@ style =
     Html.Attributes.style
 
 
-attrWidth =
+attrHeightI =
+    Html.Attributes.height
+
+
+attrWidthI =
     Html.Attributes.width
 
 
@@ -923,10 +947,6 @@ tabindex =
 autofocus : Bool -> Attribute msg
 autofocus =
     Html.Attributes.autofocus
-
-
-attrHeight =
-    Html.Attributes.height
 
 
 noPointerEvents =
