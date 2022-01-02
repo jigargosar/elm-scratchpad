@@ -80,7 +80,7 @@ step model =
             { model | phase = Waiting }
 
         Transitioning start ->
-            { model | phase = Waiting }
+            model
 
 
 type Phase
@@ -185,15 +185,19 @@ view model =
                 , model.sticks
                     |> List.map (viewStick 0)
                     |> group []
-                , case model.phase of
-                    WalkingToCenterOfWall start _ ->
-                        viewHero ((model.clock - start) * 0.05)
+                , let
+                    heroXOffset =
+                        case model.phase of
+                            WalkingToCenterOfWall start _ ->
+                                (model.clock - start) * 0.05
 
-                    WalkingToEndOfStick start _ ->
-                        viewHero ((model.clock - start) * 0.05)
+                            WalkingToEndOfStick start _ ->
+                                (model.clock - start) * 0.05
 
-                    _ ->
-                        viewHero 0
+                            _ ->
+                                0
+                  in
+                  viewHero (wallsCurrentCX model.walls + heroXOffset)
                 , case model.phase of
                     Stretching start ->
                         let
