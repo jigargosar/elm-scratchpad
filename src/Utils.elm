@@ -29,6 +29,10 @@ lerp a b x =
     (x * (b - a)) + a
 
 
+lerpRange ( a, b ) =
+    lerp a b
+
+
 lerpInt a b =
     lerp (toFloat a) (toFloat b) >> round
 

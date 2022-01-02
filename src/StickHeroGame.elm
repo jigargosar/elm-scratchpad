@@ -16,8 +16,12 @@ wallHeight =
     50
 
 
+wallWidthRange =
+    ( 10, 30 )
+
+
 initialWallWidth =
-    30
+    lerpRange wallWidthRange 0.5
 
 
 initialWallGap =
