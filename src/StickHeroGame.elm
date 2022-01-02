@@ -70,6 +70,15 @@ randomWallGap =
     Debug.todo "todo"
 
 
+addRandomWall : Generator Walls -> Generator Walls
+addRandomWall =
+    Random.andThen
+        (\(Walls l p) ->
+            randomWallAfter l
+                |> Random.map (\n -> Walls n (l :: p))
+        )
+
+
 wallsToList : Walls -> List Wall
 wallsToList (Walls last prev) =
     last :: prev
