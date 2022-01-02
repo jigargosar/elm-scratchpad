@@ -25,13 +25,13 @@ type alias Model =
 
 type Phase
     = Waiting
-    | Clicking
+    | Clicking Float
 
 
 init : () -> ( Model, Cmd Msg )
 init () =
     ( { clock = 0
-      , phase = Waiting
+      , phase = Clicking 0
       }
     , Cmd.none
     )
@@ -60,19 +60,14 @@ update msg model =
             ( model, Cmd.none )
 
         OnClampedDelta delta ->
-            ( case model.phase of
-                Waiting ->
-                    model
-
-                Clicking ->
-                    { model | clock = model.clock + delta }
+            ( { model | clock = model.clock + delta }
             , Cmd.none
             )
 
         OnKeyDown key ->
             ( case ( model.phase, key ) of
                 ( Waiting, " " ) ->
-                    { model | phase = Clicking }
+                    { model | phase = Clicking model.clock }
 
                 _ ->
                     model
@@ -104,11 +99,32 @@ view model =
                 [ xf [ mv2 (width / -3) 0 ]
                 , transforms
                     [ "translate(-33.33%,0)"
-                    , translateF2 ( -model.clock * transitionSpeed, 0 )
+
+                    --, translateF2 ( -model.clock * transitionSpeed, 0 )
                     ]
                 ]
                 [ viewWalls initWalls
                 , viewHero
+                , case model.phase of
+                    Clicking start ->
+                        let
+                            elapsed =
+                                model.clock - start
+
+                            stickGrowSpeed =
+                                0.05
+                        in
+                        polyline
+                            [ ( 0, 0 )
+                            , ( elapsed * stickGrowSpeed, 0 )
+                            ]
+                            [ strokeW 5
+                            , stroke wGreen_lime
+                            , xf [ mv2 0 0, rotateDeg -90 ]
+                            ]
+
+                    _ ->
+                        noView
                 ]
             , group [ opacity 0.01 ]
                 [ circle 100 [ fill wBlue ]
