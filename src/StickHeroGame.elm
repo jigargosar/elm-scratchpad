@@ -23,10 +23,6 @@ wallGapRange =
     ( 40, 70 )
 
 
-initialWallGap =
-    lerpRange wallGapRange 0.5
-
-
 type alias Wall =
     { x : Float, w : Float }
 
@@ -110,6 +106,7 @@ viewWalls walls =
         |> group []
 
 
+viewWall : Wall -> Svg.Svg msg
 viewWall { x, w } =
     Svg.rect [ saWidth w, SA.height "50%", fill white, xf [ mv2 x 0 ] ] []
 
