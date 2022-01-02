@@ -48,7 +48,11 @@ step model =
             else
                 model
 
-        Walking _ ->
+        Walking start ->
+            let
+                elapsed =
+                    model.clock - start
+            in
             model
 
 
