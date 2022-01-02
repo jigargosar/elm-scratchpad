@@ -122,10 +122,6 @@ update msg model =
 
 view : Model -> Document Msg
 view model =
-    let
-        walls =
-            model.walls
-    in
     Document "App Title"
         [ basicStylesNode
         , let
@@ -145,7 +141,7 @@ view model =
                     --, translateF2 ( -model.clock * 0.05, 0 )
                     ]
                 ]
-                [ viewWalls walls
+                [ viewWalls model.walls
                 , model.sticks
                     |> List.map (viewStick 0)
                     |> group []
