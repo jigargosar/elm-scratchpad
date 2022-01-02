@@ -1,5 +1,6 @@
 module StickHeroGame exposing (main)
 
+import Random
 import Utils exposing (..)
 
 
@@ -50,6 +51,13 @@ addWall (Walls lastWall prevWalls) =
             Wall (lastWall.x + lastWall.w / 2 + initialWallGap) initialWallWidth
     in
     Walls nextWall (lastWall :: prevWalls)
+
+
+randomWallAfter : Wall -> Generator Wall
+randomWallAfter { x, w } =
+    Random.map2 Wall
+        (Random.constant (x + w / 2 + initialWallGap))
+        (Random.constant (x + w / 2 + initialWallGap))
 
 
 wallsToList : Walls -> List Wall
