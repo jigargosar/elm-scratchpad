@@ -146,7 +146,7 @@ init () =
                 |> stepWithInitialSeed 0
     in
     ( { clock = 0
-      , phase = Turning 0 (Stick (wallX2 initialWall) 50)
+      , phase = Turning 0 { x = wallX2 initialWall, len = 50, angleDeg = -90 }
       , walls = initWalls
       , heroX = 0
       , heroY = 0
@@ -199,7 +199,7 @@ update msg model =
         OnKeyUp key ->
             ( case ( model.phase, key ) of
                 ( Stretching start, " " ) ->
-                    { model | phase = Turning model.clock (initStickWithStartTime start model) }
+                    { model | phase = Turning model.clock (initStretchingStickWithStartTime start model) }
 
                 _ ->
                     model
@@ -245,7 +245,7 @@ view model =
                     Stretching start ->
                         let
                             stick =
-                                initStickWithStartTime start model
+                                initStretchingStickWithStartTime start model
                         in
                         viewStick -90 stick
 
@@ -288,8 +288,8 @@ turningAngleInDegreesSince start model =
     -90 + (elapsed * turnSpeed)
 
 
-initStickWithStartTime : Float -> Model -> Stick
-initStickWithStartTime start model =
+initStretchingStickWithStartTime : Float -> Model -> Stick
+initStretchingStickWithStartTime start model =
     let
         elapsed =
             model.clock - start
@@ -303,7 +303,7 @@ initStickWithStartTime start model =
         xOffset =
             wallsCurrentX2 model.walls
     in
-    Stick xOffset stickLength
+    { x = xOffset, len = stickLength, angleDeg = -90 }
 
 
 viewStick : Float -> Stick -> Svg msg
@@ -336,7 +336,7 @@ wallGapRange =
 
 
 type alias Stick =
-    { x : Float, len : Float }
+    { x : Float, len : Float, angleDeg : Float }
 
 
 stickX2 : Stick -> Float
