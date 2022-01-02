@@ -87,8 +87,8 @@ update msg model =
 
         OnKeyUp key ->
             ( case ( model.phase, key ) of
-                ( Stretching _, " " ) ->
-                    { model | phase = Turning model.clock (Stick 0 10) }
+                ( Stretching start, " " ) ->
+                    { model | phase = Turning model.clock (initStickWithStartTime start model) }
 
                 _ ->
                     model
