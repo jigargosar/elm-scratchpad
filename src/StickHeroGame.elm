@@ -152,7 +152,7 @@ view model =
                 , model.sticks
                     |> List.map (viewStick 0)
                     |> group []
-                , viewHero
+                , viewHero 0
                 , case model.phase of
                     Stretching start ->
                         let
@@ -336,7 +336,7 @@ viewWall { x, w } =
         ]
 
 
-viewHero =
+viewHero xOffset =
     let
         w =
             15
@@ -344,7 +344,7 @@ viewHero =
         h =
             w
     in
-    group []
+    group [ xf [ mv2 xOffset 0 ] ]
         [ Svg.rect
             [ attrXF (w / -2)
             , aWidthF w
