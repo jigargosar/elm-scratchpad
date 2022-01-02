@@ -40,19 +40,37 @@ step model =
                     turningAngleInDegreesSince start model
             in
             if angleDeg >= 0 then
-                { model
-                    | phase = Walking model.clock
-                    , sticks = stick :: model.sticks
-                }
+                let
+                    maybeWall : Maybe Wall
+                    maybeWall =
+                        wallTouchingEndOfStick stick model.walls
+                in
+                case maybeWall of
+                    Just wall ->
+                        { model
+                            | phase =
+                                WalkingToCenterOfWall model.clock wall
+                            , sticks = stick :: model.sticks
+                        }
+
+                    Nothing ->
+                        { model
+                            | phase =
+                                WalkingToEndOfStick model.clock stick
+                            , sticks = stick :: model.sticks
+                        }
 
             else
                 model
 
-        Walking start ->
+        WalkingToCenterOfWall start _ ->
             let
                 elapsed =
                     model.clock - start
             in
+            model
+
+        WalkingToEndOfStick start stick ->
             model
 
 
@@ -60,7 +78,8 @@ type Phase
     = Waiting
     | Stretching Float
     | Turning Float Stick
-    | Walking Float
+    | WalkingToCenterOfWall Float Wall
+    | WalkingToEndOfStick Float Stick
 
 
 init : () -> ( Model, Cmd Msg )
@@ -157,7 +176,7 @@ view model =
                     |> List.map (viewStick 0)
                     |> group []
                 , case model.phase of
-                    Walking start ->
+                    WalkingToCenterOfWall start _ ->
                         viewHero ((model.clock - start) * 0.05)
 
                     _ ->
@@ -274,6 +293,11 @@ newWallAfter prevWall attr =
 
 type Walls
     = Walls Wall (Array Wall)
+
+
+wallTouchingEndOfStick : Stick -> Walls -> Maybe Wall
+wallTouchingEndOfStick stick walls =
+    Debug.todo "todo"
 
 
 wallsCurrentX2 : Walls -> Float
