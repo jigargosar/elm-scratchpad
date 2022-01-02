@@ -167,6 +167,10 @@ wallGapRange =
     ( 40, 70 )
 
 
+type alias Stick =
+    { x : Float, len : Float }
+
+
 type alias Wall =
     { x : Float, w : Float }
 
