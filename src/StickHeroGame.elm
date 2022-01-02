@@ -41,33 +41,26 @@ type Walls
 initWalls : Walls
 initWalls =
     Walls initialWall []
-        |> applyN 10 addWall
-
-
-addWall : Walls -> Walls
-addWall (Walls lastWall prevWalls) =
-    let
-        nextWall =
-            Wall (lastWall.x + lastWall.w / 2 + initialWallGap) initialWallWidth
-    in
-    Walls nextWall (lastWall :: prevWalls)
+        |> Random.constant
+        |> applyN 10 addRandomWall
+        |> stepWithInitialSeed 0
 
 
 randomWallAfter : Wall -> Generator Wall
 randomWallAfter { x, w } =
     Random.map2 Wall
-        (Random.constant (x + w / 2 + initialWallGap))
-        (Random.constant initialWallWidth)
+        (randomWallGap |> Random.map (\gap -> x + gap))
+        randomWallWidth
 
 
 randomWallWidth : Generator Float
 randomWallWidth =
-    Debug.todo "todo"
+    Random.constant initialWallWidth
 
 
 randomWallGap : Generator Float
 randomWallGap =
-    Debug.todo "todo"
+    Random.constant initialWallGap
 
 
 addRandomWall : Generator Walls -> Generator Walls
