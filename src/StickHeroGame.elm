@@ -88,10 +88,6 @@ update msg model =
             ( model, Cmd.none )
 
 
-transitionSpeed =
-    0.05
-
-
 view : Model -> Document Msg
 view model =
     let
