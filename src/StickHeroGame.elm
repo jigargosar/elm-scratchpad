@@ -133,11 +133,8 @@ view model =
 
                     Turning start stick ->
                         let
-                            turnSpeed =
-                                0.05
-
                             angleDeg =
-                                -90 + ((model.clock - start) * turnSpeed)
+                                turningAngleInDegreesSince start model
                         in
                         viewStick stick angleDeg
 
