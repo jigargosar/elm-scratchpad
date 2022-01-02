@@ -101,7 +101,7 @@ step dt model =
             else
                 { model
                     | heroX = maxHeroX
-                    , phase = Falling model.clock stick
+                    , phase = Falling stick
                 }
 
         Transitioning ->
@@ -121,8 +121,15 @@ step dt model =
             else
                 { model | xOffset = xOffset }
 
-        Falling _ _ ->
-            { model | heroY = model.heroY + dt * fallingSpeed }
+        Falling stick ->
+            { model
+                | heroY = model.heroY + dt * fallingSpeed
+                , phase =
+                    Falling
+                        { stick
+                            | angleDeg = stick.angleDeg + dt * turnSpeed |> atMost 90
+                        }
+            }
 
 
 type Phase
@@ -132,7 +139,7 @@ type Phase
     | WalkingToCenterOfWall Float Walls
     | WalkingToEndOfStick Float Stick
     | Transitioning
-    | Falling Float Stick
+    | Falling Stick
 
 
 init : () -> ( Model, Cmd Msg )
@@ -252,7 +259,7 @@ view model =
                     Turning _ stick ->
                         viewStick stick
 
-                    Falling _ stick ->
+                    Falling stick ->
                         viewStick stick
 
                     WalkingToEndOfStick _ stick ->
