@@ -70,7 +70,7 @@ step dt model =
                     Nothing ->
                         { model
                             | phase = WalkingToEndOfStick (stickX2 stick + heroWidth / 2) stick
-                            , sticks = stick :: model.sticks
+                            , sticks = model.sticks
                         }
 
             else
