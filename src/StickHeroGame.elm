@@ -110,10 +110,10 @@ viewWall : Wall -> Svg msg
 viewWall { x, w } =
     --rect w wallHeight [ fill white, xf [ mv2 x (wallHeight / 2) ] ]
     Svg.rect
-        [ Px.x (w / -2)
-        , saWidth w
-        , Px.y 0
-        , SA.height "50%"
+        [ attrXF (w / -2)
+        , aWidthF w
+        , attrYF 0
+        , aHeight "50%"
         , fill white
         , xf [ mv2 x 0 ]
         ]

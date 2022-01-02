@@ -714,6 +714,10 @@ aWidth =
     SA.width
 
 
+aWidthF =
+    fromFloat >> aWidth
+
+
 aHeight =
     SA.height
 
@@ -722,8 +726,16 @@ attrX =
     SA.x
 
 
+attrXF =
+    fromFloat >> attrX
+
+
 attrY =
     SA.y
+
+
+attrYF =
+    fromFloat >> attrY
 
 
 saWidth =
