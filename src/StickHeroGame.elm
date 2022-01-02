@@ -78,9 +78,7 @@ randomWallAfter prevWall =
             newWallAfter prevWall { gap = wallGap, width = wallWidth }
         )
         (randomFloatT wallGapRange)
-        (randomFloatT wallWidthRange
-         --|> always (Random.constant (first wallWidthRange))
-        )
+        (randomFloatT wallWidthRange)
 
 
 wallsToList : Walls -> List Wall
