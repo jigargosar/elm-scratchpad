@@ -60,6 +60,16 @@ randomWallAfter { x, w } =
         (Random.constant initialWallWidth)
 
 
+randomWallWidth : Generator Float
+randomWallWidth =
+    Debug.todo "todo"
+
+
+randomWallGap : Generator Float
+randomWallGap =
+    Debug.todo "todo"
+
+
 wallsToList : Walls -> List Wall
 wallsToList (Walls last prev) =
     last :: prev
