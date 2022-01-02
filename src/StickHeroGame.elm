@@ -86,8 +86,7 @@ main =
             , sMaxWidth "500px"
             ]
             [ group [ xf [ mv2 (width / -3) 0 ] ]
-                [ initWalls
-                    |> viewWalls
+                [ viewWalls initWalls
                 , viewHero
                 ]
             ]
