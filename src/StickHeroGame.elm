@@ -84,8 +84,7 @@ main =
             [ viewBoxC width height
             , sMaxWidth "500px"
             ]
-            [ circle 100 [ fill wBlue, opacity 0.05 ]
-            , group
+            [ group
                 [ xf
                     [--
                      --mv2 (width / -3) 0
@@ -94,7 +93,10 @@ main =
                 [ viewWalls initWalls
                 , viewHero
                 ]
-            , circle 1 [ fill wPink, opacity 1 ]
+            , group [ opacity 0.01 ]
+                [ circle 100 [ fill wBlue ]
+                , circle 1 [ fill wPink ]
+                ]
             ]
         ]
 
