@@ -108,6 +108,7 @@ viewWalls walls =
 
 viewWall : Wall -> Svg.Svg msg
 viewWall { x, w } =
+    --rect w wallHeight [ fill white, xf [ mv2 x (wallHeight / 2) ] ]
     Svg.rect
         [ Px.x (w / -2)
         , saWidth w
@@ -117,10 +118,6 @@ viewWall { x, w } =
         , xf [ mv2 x 0 ]
         ]
         []
-
-
-
---rect w wallHeight [ fill white, xf [ mv2 x (wallHeight / 2) ] ]
 
 
 viewHero =
