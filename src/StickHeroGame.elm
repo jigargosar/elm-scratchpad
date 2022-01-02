@@ -21,6 +21,7 @@ type alias Model =
     { clock : Float
     , phase : Phase
     , walls : Walls
+    , heroX : Float
     , sticks : List Stick
     , xOffset : Float
     }
@@ -125,6 +126,7 @@ init () =
     ( { clock = 0
       , phase = Turning 0 (Stick (wallX2 initialWall) 50)
       , walls = initWalls
+      , heroX = 0
       , sticks = []
       , xOffset = 0
       }
@@ -218,7 +220,8 @@ view model =
                             _ ->
                                 0
                   in
-                  viewHero (wallsCurrentCX model.walls + heroXOffset)
+                  --viewHero (wallsCurrentCX model.walls + heroXOffset)
+                  viewHero model.heroX
                 , case model.phase of
                     Stretching start ->
                         let
