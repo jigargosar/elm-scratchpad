@@ -17,7 +17,7 @@ wallHeight =
 
 
 wallWidthRange =
-    ( 10, 30 )
+    ( 15, 25 )
 
 
 initialWallWidth =
@@ -25,7 +25,7 @@ initialWallWidth =
 
 
 wallGapRange =
-    ( 50, 100 )
+    ( 40, 70 )
 
 
 initialWallGap =
