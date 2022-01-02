@@ -46,7 +46,7 @@ view _ =
         [ basicStylesNode
         , let
             ( width, height ) =
-                ( 200, 260 )
+                ( 200, 200 )
           in
           basicSvg
             [ viewBoxC width height
