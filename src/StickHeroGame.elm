@@ -22,12 +22,17 @@ type alias Model =
     , phase : Phase
     , walls : Walls
     , heroX : Float
+    , heroY : Float
     , sticks : List Stick
     , xOffset : Float
     }
 
 
 walkingSpeed =
+    0.05
+
+
+fallingSpeed =
     0.05
 
 
@@ -118,7 +123,7 @@ step dt model =
                 { model | xOffset = xOffset }
 
         Falling ->
-            model
+            { model | heroY = model.heroY + dt * fallingSpeed }
 
 
 type Phase
@@ -145,6 +150,7 @@ init () =
       , phase = Turning 0 (Stick (wallX2 initialWall) 50)
       , walls = initWalls
       , heroX = 0
+      , heroY = 0
       , sticks = []
       , xOffset = 0
       }
