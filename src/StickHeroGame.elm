@@ -41,14 +41,14 @@ step model =
             in
             if angleDeg >= 0 then
                 { model
-                    | phase = Walking
+                    | phase = Walking model.clock
                     , sticks = stick :: model.sticks
                 }
 
             else
                 model
 
-        Walking ->
+        Walking _ ->
             model
 
 
@@ -56,7 +56,7 @@ type Phase
     = Waiting
     | Stretching Float
     | Turning Float Stick
-    | Walking
+    | Walking Float
 
 
 init : () -> ( Model, Cmd Msg )
@@ -153,8 +153,8 @@ view model =
                     |> List.map (viewStick 0)
                     |> group []
                 , case model.phase of
-                    Walking ->
-                        viewHero 0
+                    Walking start ->
+                        viewHero ((model.clock - start) * 0.05)
 
                     _ ->
                         viewHero 0
