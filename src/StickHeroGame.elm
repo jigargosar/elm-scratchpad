@@ -61,6 +61,7 @@ randomWallAfter p =
             }
         )
         (randomFloatT wallGapRange)
+        --(Random.constant (first wallWidthRange))
         (randomFloatT wallWidthRange)
 
 
