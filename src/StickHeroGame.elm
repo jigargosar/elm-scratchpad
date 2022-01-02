@@ -15,6 +15,37 @@ wallHeight =
     50
 
 
+initialWallWidth =
+    30
+
+
+type alias Wall =
+    { x : Float, w : Float }
+
+
+initialWall : Wall
+initialWall =
+    Wall 0 initialWallWidth
+
+
+initialWallGap : Float
+initialWallGap =
+    75
+
+
+type Walls
+    = Walls Wall (List Wall)
+
+
+addWall : Walls -> Walls
+addWall (Walls lastWall prevWalls) =
+    let
+        nextWall =
+            Wall (lastWall.x + initialWallGap) initialWallWidth
+    in
+    Walls nextWall (lastWall :: prevWalls)
+
+
 main =
     div []
         [ basicStylesNode
