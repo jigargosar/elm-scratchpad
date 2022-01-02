@@ -53,6 +53,15 @@ initWalls =
         |> stepWithInitialSeed 0
 
 
+addRandomWall : Generator Walls -> Generator Walls
+addRandomWall =
+    Random.andThen
+        (\(Walls l p) ->
+            randomWallAfter l
+                |> Random.map (\n -> Walls n (l :: p))
+        )
+
+
 randomWallAfter : Wall -> Generator Wall
 randomWallAfter p =
     Random.map2
@@ -63,15 +72,6 @@ randomWallAfter p =
         )
         (randomFloatT wallGapRange)
         (randomFloatT wallWidthRange)
-
-
-addRandomWall : Generator Walls -> Generator Walls
-addRandomWall =
-    Random.andThen
-        (\(Walls l p) ->
-            randomWallAfter l
-                |> Random.map (\n -> Walls n (l :: p))
-        )
 
 
 wallsToList : Walls -> List Wall
