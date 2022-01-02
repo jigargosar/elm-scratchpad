@@ -48,6 +48,11 @@ wallsLast (Walls c after) =
         |> Maybe.withDefault c
 
 
+wallsAppendIn : Walls -> Wall -> Walls
+wallsAppendIn (Walls c after) last =
+    Walls c (Array.push last after)
+
+
 initWalls : Walls
 initWalls =
     Walls initialWall Array.empty
@@ -59,9 +64,10 @@ initWalls =
 addRandomWall : Generator Walls -> Generator Walls
 addRandomWall =
     Random.andThen
-        (\(Walls c after) ->
-            randomWallAfter (Array.get (Array.length after - 1) after |> Maybe.withDefault c)
-                |> Random.map (\n -> Walls c (Array.push n after))
+        (\walls ->
+            wallsLast walls
+                |> randomWallAfter
+                |> Random.map (wallsAppendIn walls)
         )
 
 
