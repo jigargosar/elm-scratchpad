@@ -45,15 +45,13 @@ view _ =
     Document "App Title"
         [ basicStylesNode
         , let
-            width =
-                200
-
-            height =
-                150
+            ( width, height ) =
+                ( 200, 250 )
           in
           basicSvg
             [ viewBoxC width height
             , sMaxWidth "500px"
+            , sMaxHeight "90vh"
             ]
             [ group
                 [ xf
