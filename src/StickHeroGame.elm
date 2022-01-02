@@ -66,13 +66,16 @@ step dt model =
         Stretching _ ->
             model
 
-        Turning start stick ->
+        Turning stick_ ->
             let
                 angleDeg =
-                    stick.angleDeg + dt * turnSpeed
+                    stick_.angleDeg + dt * turnSpeed |> atMost 0
+
+                stick =
+                    { stick_ | angleDeg = angleDeg }
             in
             if angleDeg <= 0 then
-                { model | phase = Turning start { stick | angleDeg = angleDeg } }
+                { model | phase = Turning { stick | angleDeg = angleDeg } }
 
             else
                 case wallsTouchingEndOfStick stick model.walls of
@@ -147,7 +150,7 @@ step dt model =
 type Phase
     = Waiting
     | Stretching Float
-    | Turning Float Stick
+    | Turning Stick
     | WalkingToCenterOfWall Float Walls
     | WalkingToEndOfStick Float Stick
     | Transitioning
@@ -165,7 +168,7 @@ init () =
                 |> stepWithInitialSeed 0
     in
     ( { clock = 0
-      , phase = Turning 0 { x = wallX2 initialWall, len = 50, angleDeg = -90 }
+      , phase = Turning { x = wallX2 initialWall, len = 50, angleDeg = -90 }
       , walls = initWalls
       , heroX = 0
       , heroY = 0
@@ -218,7 +221,7 @@ update msg model =
         OnKeyUp key ->
             ( case ( model.phase, key ) of
                 ( Stretching start, " " ) ->
-                    { model | phase = Turning model.clock (initStretchingStickWithStartTime start model) }
+                    { model | phase = Turning (initStretchingStickWithStartTime start model) }
 
                 _ ->
                     model
@@ -268,7 +271,7 @@ view model =
                         in
                         viewStick stick
 
-                    Turning _ stick ->
+                    Turning stick ->
                         viewStick stick
 
                     Falling stick ->
@@ -283,15 +286,6 @@ view model =
                 ]
             ]
         ]
-
-
-turningAngleInDegreesSince : Float -> Model -> Float
-turningAngleInDegreesSince start model =
-    let
-        elapsed =
-            model.clock - start
-    in
-    -90 + (elapsed * turnSpeed)
 
 
 initStretchingStickWithStartTime : Float -> Model -> Stick
