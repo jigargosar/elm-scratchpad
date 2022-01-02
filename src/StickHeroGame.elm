@@ -106,7 +106,7 @@ viewWalls walls =
         |> group []
 
 
-viewWall : Wall -> Svg.Svg msg
+viewWall : Wall -> Svg msg
 viewWall { x, w } =
     --rect w wallHeight [ fill white, xf [ mv2 x (wallHeight / 2) ] ]
     Svg.rect
