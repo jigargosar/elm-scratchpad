@@ -462,8 +462,8 @@ randomWallSequenceAfter firstWall =
         gen =
             Debug.todo "todo"
 
-        reduce : { gap : Float, width : Float } -> ( Wall, List Wall ) -> ( Wall, List Wall )
-        reduce gw ( prevWall, acc ) =
+        reducer : { gap : Float, width : Float } -> ( Wall, List Wall ) -> ( Wall, List Wall )
+        reducer gw ( prevWall, acc ) =
             let
                 wall =
                     newWallAfter prevWall gw
@@ -476,7 +476,7 @@ randomWallSequenceAfter firstWall =
 
         fromGapWidthList : List { gap : Float, width : Float } -> List Wall
         fromGapWidthList =
-            List.foldl reduce ( firstWall, [] ) >> accToReturn
+            List.foldl reducer ( firstWall, [] ) >> accToReturn
     in
     Random.list 100 gen
         |> Random.map fromGapWidthList
