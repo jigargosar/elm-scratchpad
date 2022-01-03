@@ -548,6 +548,10 @@ initialWallCount =
     10
 
 
+minimumWallCount =
+    initialWallCount // 2
+
+
 wallsRandom : Generator Walls
 wallsRandom =
     randomWallSequenceAfter initialWallCount initialWall
@@ -556,7 +560,7 @@ wallsRandom =
 
 wallsEnsureSufficient : Walls -> Maybe (Generator Walls)
 wallsEnsureSufficient (Walls before c after) =
-    if List.length after <= initialWallCount then
+    if List.length after <= minimumWallCount then
         after
             |> listLast
             |> Maybe.withDefault c
