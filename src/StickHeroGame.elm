@@ -5,7 +5,6 @@ import Json.Decode as JD
 import Random exposing (Seed)
 import Svg
 import Svg.Lazy
-import Time
 import Utils exposing (..)
 
 
