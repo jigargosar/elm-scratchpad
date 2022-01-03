@@ -50,7 +50,7 @@ transitionSpeed =
 
 
 heroWidth =
-    10
+    5
 
 
 heroHeight =
@@ -356,7 +356,7 @@ wallWidthRange =
 
 
 doubleScoreSquareWidth =
-    lerpRange wallWidthRange 0 / 2
+    first wallWidthRange / 2
 
 
 initialWallWidth =
