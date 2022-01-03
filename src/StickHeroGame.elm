@@ -256,7 +256,7 @@ update msg model =
 
 view : Model -> Document Msg
 view model =
-    Document "App Title"
+    Document "Stick Hero"
         [ basicStylesNode
         , viewSvg model
         ]
