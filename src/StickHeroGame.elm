@@ -351,13 +351,17 @@ viewSvg model =
         , sMaxWidth "100vw"
         , sMaxHeight "100vh"
         ]
-        [ Svg.Lazy.lazy6 viewGameEntities
-            model.xOffset
-            model.sticks
-            model.phase
-            model.walls
-            model.heroX
-            model.heroY
+        [ group
+            [ xf
+                [ mvLeft (viewportWidth / 3)
+                , mvLeft model.xOffset
+                ]
+            ]
+            [ viewSticks model.sticks
+            , viewStickFromPhase model.phase
+            , viewWalls model.walls
+            , viewHero model.heroX model.heroY
+            ]
         , case model.phase of
             Over ->
                 group [ xf [ mvUp (viewportHeight / 4) ] ]
@@ -370,20 +374,6 @@ viewSvg model =
 
             _ ->
                 noView
-        ]
-
-
-viewGameEntities xOffset sticks phase walls heroX heroY =
-    group
-        [ xf
-            [ mvLeft (viewportWidth / 3)
-            , mvLeft xOffset
-            ]
-        ]
-        [ Svg.Lazy.lazy viewSticks sticks
-        , Svg.Lazy.lazy viewStickFromPhase phase
-        , Svg.Lazy.lazy viewWalls walls
-        , Svg.Lazy.lazy2 viewHero heroX heroY
         ]
 
 
