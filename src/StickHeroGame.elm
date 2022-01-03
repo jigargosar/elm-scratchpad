@@ -558,8 +558,8 @@ wallsEnsureSufficient (Walls before c after) =
             |> Maybe.withDefault c
             |> randomWallSequenceAfter initialWallCount
             |> Random.map
-                (\aa ->
-                    Walls before c (after ++ aa)
+                (\afterLast ->
+                    Walls before c (after ++ afterLast)
                 )
             |> Just
 
