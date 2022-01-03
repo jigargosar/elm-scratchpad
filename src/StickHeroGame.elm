@@ -358,7 +358,7 @@ viewSvg model =
                 ]
             ]
             [ viewSticks model.sticks
-            , viewStickFromPhase model.phase
+            , Svg.Lazy.lazy viewStickFromPhase model.phase
             , viewWalls model.walls
             , viewHero model.heroX model.heroY
             ]
