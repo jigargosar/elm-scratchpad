@@ -415,6 +415,10 @@ stickX2 { x, len } =
     x + len
 
 
+
+-- WALL
+
+
 type alias Wall =
     { x : Float, w : Float }
 
@@ -439,6 +443,10 @@ newWallAfter prevWall attr =
     { x = prevWall.x + prevWall.w / 2 + attr.gap + attr.width / 2
     , w = attr.width
     }
+
+
+
+-- WALLS
 
 
 type Walls
