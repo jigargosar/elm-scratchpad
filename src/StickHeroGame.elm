@@ -329,16 +329,16 @@ viewSvg model =
                 , mvLeft model.xOffset
                 ]
             ]
-            [ model.walls
-                |> wallsToList
-                |> List.map viewWall
-                |> group []
-            , model.sticks
+            [ model.sticks
                 |> List.map viewStick
                 |> group []
             , model.phase
                 |> stickFromPhase
                 |> maybeView viewStick
+            , model.walls
+                |> wallsToList
+                |> List.map viewWall
+                |> group []
             , viewHero model.heroX model.heroY
             ]
         , case model.phase of
@@ -363,7 +363,7 @@ viewHero xOffset yOffset =
             heroWidth
             heroHeight
             [ fill wBlue
-            , xf [ mvUp (heroHeight / 2 + 0.5) ]
+            , xf [ mvUp (heroHeight / 2) ]
             ]
         ]
 
@@ -415,14 +415,18 @@ stickX2 { x, len } =
 
 viewStick : Stick -> Svg msg
 viewStick stick =
+    let
+        sw =
+            2
+    in
     polyline
         [ ( 0, 0 )
         , ( stick.len, 0 )
         ]
-        [ strokeW 2
+        [ strokeW sw
         , stroke wGreen_lime
         , stroke wWhite
-        , xf [ mv2 stick.x 0, rotateDeg stick.angleDeg ]
+        , xf [ mv2 stick.x (sw / 2), rotateDeg stick.angleDeg ]
         ]
 
 
