@@ -127,15 +127,11 @@ step dt model =
             in
             case mbNextWalls of
                 Nothing ->
-                    { model
-                        | heroX = heroX
-                        , phase =
-                            if heroX == model.heroX then
-                                Falling stick
+                    if heroX == model.heroX then
+                        { model | phase = Falling stick }
 
-                            else
-                                Walking stick
-                    }
+                    else
+                        { model | heroX = heroX }
 
                 Just nextWalls ->
                     if heroX == model.heroX then
