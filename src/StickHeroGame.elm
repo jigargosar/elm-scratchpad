@@ -339,8 +339,7 @@ viewSvg model =
             , viewHero model.heroX model.heroY
             , model.phase
                 |> stickFromPhase
-                |> Maybe.map viewStick
-                |> Maybe.withDefault noView
+                |> maybeView viewStick
             ]
         , case model.phase of
             Over ->

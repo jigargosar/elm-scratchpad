@@ -2034,6 +2034,16 @@ viewBool bool x =
         noView
 
 
+maybeView : (a -> Html msg) -> Maybe a -> Html msg
+maybeView fn mb =
+    case mb of
+        Just x ->
+            fn x
+
+        Nothing ->
+            noView
+
+
 
 -- COLOR UTILS
 --  rainbow : [ 'dark', 'light', 'blue', 'purple', 'red', 'orange', 'yellow', 'green' ],
