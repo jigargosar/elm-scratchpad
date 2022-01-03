@@ -561,10 +561,13 @@ wallsRandom =
 wallsEnsureSufficient : Walls -> Maybe (Generator Walls)
 wallsEnsureSufficient (Walls before c after) =
     if List.length after <= minimumWallCount then
-        after
-            |> listLast
-            |> Maybe.withDefault c
-            |> randomWallSequenceAfter initialWallCount
+        let
+            lastWall =
+                after
+                    |> listLast
+                    |> Maybe.withDefault c
+        in
+        randomWallSequenceAfter initialWallCount lastWall
             |> Random.map
                 (\afterLast ->
                     Walls before c (after ++ afterLast)
