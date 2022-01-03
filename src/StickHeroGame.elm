@@ -64,7 +64,12 @@ step dt model =
             model
 
         Stretching _ ->
-            model
+            case uncons model.sticks of
+                Nothing ->
+                    Debug.todo "Invalid State: stretching stick not found"
+
+                Just ( stick, prevSticks ) ->
+                    { model | sticks = stretchStick dt stick :: prevSticks }
 
         Turning stick_ ->
             let
@@ -168,7 +173,9 @@ init () =
                 |> stepWithInitialSeed 0
     in
     ( { clock = 0
-      , phase = Turning { x = wallX2 initialWall, len = 50, angleDeg = -90 }
+      , phase =
+            --Turning { x = wallX2 initialWall, len = 50, angleDeg = -90 }
+            Waiting
       , walls = initWalls
       , heroX = 0
       , heroY = 0
@@ -348,6 +355,11 @@ initStretchingStick x =
             0
     in
     { x = x, len = dt * stretchSpeed, angleDeg = -90 }
+
+
+stretchStick : Float -> Stick -> Stick
+stretchStick dt stick =
+    { stick | len = stick.len + dt * stretchSpeed }
 
 
 stickX2 : Stick -> Float
