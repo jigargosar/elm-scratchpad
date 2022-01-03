@@ -4,7 +4,6 @@ import Browser.Events
 import Json.Decode as JD
 import Random exposing (Seed)
 import Svg
-import Svg.Lazy
 import Utils exposing (..)
 
 
@@ -357,9 +356,9 @@ viewSvg model =
                 , mvLeft model.xOffset
                 ]
             ]
-            [ Svg.Lazy.lazy viewSticks model.sticks
+            [ viewSticks model.sticks
             , viewStickFromPhase model.phase
-            , Svg.Lazy.lazy viewWalls model.walls
+            , viewWalls model.walls
             , viewHero model.heroX model.heroY
             ]
         , case model.phase of
@@ -380,7 +379,7 @@ viewSvg model =
 viewSticks : List Stick -> Svg msg
 viewSticks sticks =
     sticks
-        |> List.map (Svg.Lazy.lazy viewStick)
+        |> List.map viewStick
         |> group []
 
 
@@ -395,7 +394,7 @@ viewWalls : Walls -> Svg msg
 viewWalls walls =
     walls
         |> wallsToList
-        |> List.map (Svg.Lazy.lazy viewWall)
+        |> List.map viewWall
         |> group []
 
 
