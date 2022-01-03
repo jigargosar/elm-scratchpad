@@ -457,7 +457,17 @@ newWallAfter prevWall attr =
 
 randomWallSequenceAfter : Wall -> Generator (List Wall)
 randomWallSequenceAfter wall =
-    Debug.todo "todo"
+    let
+        gen : Generator { gap : Float, w : Float }
+        gen =
+            Debug.todo "todo"
+
+        reduce : List { gap : Float, w : Float } -> List Wall
+        reduce =
+            Debug.todo "todo"
+    in
+    Random.list 100 gen
+        |> Random.map reduce
 
 
 viewWall : Wall -> Svg msg

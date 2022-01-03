@@ -1,4 +1,4 @@
-module SlideTileGame exposing (..)
+module SlideTileGame exposing (main)
 
 import Browser
 import Browser.Events
