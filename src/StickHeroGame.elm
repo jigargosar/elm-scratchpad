@@ -541,7 +541,7 @@ type Walls
 
 
 initialWallCount =
-    1
+    10
 
 
 wallsRandom : Generator Walls
