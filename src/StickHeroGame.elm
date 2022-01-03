@@ -136,57 +136,6 @@ step dt model =
                     else
                         { model | heroX = heroX }
 
-        --let
-        --    angleDeg =
-        --        stick_.angleDeg + dt * turnSpeed |> atMost 0
-        --
-        --    stick =
-        --        { stick_ | angleDeg = angleDeg }
-        --in
-        --if angleDeg < 0 then
-        --    { model | phase = Turning { stick | angleDeg = angleDeg } }
-        --
-        --else
-        --    case wallsTouchingEndOfStick stick model.walls of
-        --        Just walls ->
-        --            { model
-        --                | phase = WalkingToCenterOfWall (wallsCurrentCX walls) walls
-        --                , sticks = stick :: model.sticks
-        --            }
-        --
-        --        Nothing ->
-        --            { model
-        --                | phase = WalkingToEndOfStick (stickX2 stick + heroWidth / 2) stick
-        --            }
-        WalkingToCenterOfWall maxHeroX walls ->
-            let
-                heroX =
-                    model.heroX + dt * walkingSpeed
-            in
-            if heroX < maxHeroX then
-                { model | heroX = heroX }
-
-            else
-                { model
-                    | heroX = maxHeroX
-                    , walls = walls
-                    , phase = Transitioning
-                }
-
-        WalkingToEndOfStick maxHeroX stick ->
-            let
-                heroX =
-                    model.heroX + dt * walkingSpeed
-            in
-            if heroX < maxHeroX then
-                { model | heroX = heroX }
-
-            else
-                { model
-                    | heroX = maxHeroX
-                    , phase = Falling stick
-                }
-
         Transitioning ->
             let
                 xOffset =
@@ -220,8 +169,6 @@ type Phase
     | Stretching
     | Turning
     | Walking
-    | WalkingToCenterOfWall Float Walls
-    | WalkingToEndOfStick Float Stick
     | Transitioning
     | Falling Stick
 
