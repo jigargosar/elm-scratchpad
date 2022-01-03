@@ -104,6 +104,7 @@ rootOffsetLeftTopDecoder =
 type alias KeyEvent =
     { modifiers : Modifiers
     , key : String
+    , repeat : Bool
     }
 
 
@@ -126,11 +127,17 @@ keyEventDecoder =
     JD.succeed KeyEvent
         |> jdAndMap modifiersDecoder
         |> jdAndMap keyDecoder
+        |> jdAndMap repeatDecoder
 
 
 keyDecoder : Decoder String
 keyDecoder =
     JD.field "key" JD.string
+
+
+repeatDecoder : Decoder Bool
+repeatDecoder =
+    JD.field "repeat" JD.bool
 
 
 keyMapDecoder : List ( KeyEvent -> Bool, KeyEvent -> a ) -> Decoder a
