@@ -545,7 +545,7 @@ type Walls
 
 
 initialAfterWallCount =
-    10
+    20
 
 
 minimumAfterWallCount =
