@@ -116,7 +116,7 @@ step dt model =
                                 | heroX = heroX
                                 , phase =
                                     if heroX == model.heroX then
-                                        Transitioning
+                                        Falling
 
                                     else
                                         Walking
@@ -145,23 +145,25 @@ step dt model =
                     model.heroX
             in
             if xOffset >= maxXOffset then
-                { model
-                    | xOffset = maxXOffset
-                    , phase = Waiting
-                }
+                { model | xOffset = maxXOffset, phase = Waiting }
 
             else
                 { model | xOffset = xOffset }
 
-        Falling stick ->
-            { model
-                | heroY = model.heroY + dt * fallingSpeed
-                , phase =
-                    Falling
-                        { stick
-                            | angleDeg = stick.angleDeg + dt * turnSpeed |> atMost 90
-                        }
-            }
+        Falling ->
+            case uncons model.sticks of
+                Nothing ->
+                    Debug.todo "Invalid State: stretching stick not found"
+
+                Just ( stick, prevSticks ) ->
+                    { model
+                        | sticks = fallStick dt stick :: prevSticks
+                        , heroY =
+                            model.heroY
+                                + dt
+                                * fallingSpeed
+                                |> atMost 100
+                    }
 
 
 type Phase
@@ -170,7 +172,7 @@ type Phase
     | Turning
     | Walking
     | Transitioning
-    | Falling Stick
+    | Falling
 
 
 init : () -> ( Model, Cmd Msg )
@@ -362,6 +364,17 @@ initStretchingStick x =
 stretchStick : Float -> Stick -> Stick
 stretchStick dt stick =
     { stick | len = stick.len + dt * stretchSpeed }
+
+
+fallStick : Float -> Stick -> Stick
+fallStick dt stick =
+    { stick
+        | angleDeg =
+            stick.angleDeg
+                + dt
+                * fallingSpeed
+                |> clamp 0 90
+    }
 
 
 turnStick : Float -> Stick -> Stick
