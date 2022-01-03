@@ -210,13 +210,8 @@ init () =
 initModelWithSeed : Seed -> Model
 initModelWithSeed initialSeed =
     let
-        gen =
-            Walls Array.empty initialWall Array.empty
-                |> Random.constant
-                |> applyN 100 addRandomWall
-
         ( walls, seed ) =
-            Random.step gen initialSeed
+            Random.step randomWalls initialSeed
     in
     { clock = 0
     , phase = Waiting
@@ -448,6 +443,13 @@ newWallAfter prevWall attr =
 
 type Walls
     = Walls (Array Wall) Wall (Array Wall)
+
+
+randomWalls : Generator Walls
+randomWalls =
+    Walls Array.empty initialWall Array.empty
+        |> Random.constant
+        |> applyN 100 addRandomWall
 
 
 wallsTouchingEndOfStick : Stick -> Walls -> Maybe Walls
