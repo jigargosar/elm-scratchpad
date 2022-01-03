@@ -515,14 +515,6 @@ wallsCurrent (Walls _ c _) =
     c
 
 
-wallsLast : Walls -> Wall
-wallsLast (Walls _ c after) =
-    after
-        |> List.reverse
-        |> List.head
-        |> Maybe.withDefault c
-
-
 randomWalls : Generator Walls
 randomWalls =
     Walls [] initialWall []
@@ -545,6 +537,13 @@ addRandomWall =
                 )
                 (randomFloatT wallGapRange)
                 (randomFloatT wallWidthRange)
+
+        wallsLast : Walls -> Wall
+        wallsLast (Walls _ c after) =
+            after
+                |> List.reverse
+                |> List.head
+                |> Maybe.withDefault c
     in
     Random.andThen
         (\walls ->
