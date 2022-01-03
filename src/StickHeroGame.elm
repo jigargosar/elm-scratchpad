@@ -139,9 +139,9 @@ stickFromPhase phase =
             Nothing
 
 
-ensureSufficientWalls : Model -> Model -> Model
-ensureSufficientWalls prevModel model =
-    if model.phase == Waiting && prevModel.phase /= Waiting then
+ensureSufficientWalls : Phase -> Model -> Model
+ensureSufficientWalls prevPhase model =
+    if model.phase == Waiting && prevPhase == Transitioning then
         case wallsEnsureSufficient model.walls of
             Nothing ->
                 model
@@ -282,7 +282,7 @@ update msg model =
         OnClampedDelta delta ->
             ( model
                 |> step delta
-                |> ensureSufficientWalls model
+                |> ensureSufficientWalls model.phase
                 |> addDelta delta
             , Cmd.none
             )
@@ -541,7 +541,7 @@ type Walls
 
 
 initialWallCount =
-    2
+    1
 
 
 wallsRandom : Generator Walls
