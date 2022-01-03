@@ -347,7 +347,7 @@ viewSvg model =
         , sMaxWidth "100vw"
         , sMaxHeight "100vh"
         ]
-        [ viewGameEntities
+        [ Svg.Lazy.lazy7 viewGameEntities
             viewportWidth
             model.xOffset
             model.sticks
