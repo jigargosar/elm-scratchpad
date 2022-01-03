@@ -256,9 +256,7 @@ view model =
             , bgc wBlack
             , fg wBlue
             , pa "1ch"
-            , fontSize "12px"
-
-            --, borderRadius "10%"
+            , fontSize "14px"
             ]
             [ text <| Debug.toString model.phase ]
         ]
