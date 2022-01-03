@@ -91,7 +91,7 @@ initModelWithSeed : Seed -> Model
 initModelWithSeed initialSeed =
     let
         ( walls, seed ) =
-            Random.step randomWalls initialSeed
+            Random.step wallsRandom initialSeed
     in
     { clock = 0
     , phase = Waiting
@@ -545,8 +545,8 @@ type Walls
     = Walls (List Wall) Wall (List Wall)
 
 
-randomWalls : Generator Walls
-randomWalls =
+wallsRandom : Generator Walls
+wallsRandom =
     let
         n =
             10
