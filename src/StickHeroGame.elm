@@ -545,14 +545,32 @@ type Walls
     = Walls (List Wall) Wall (List Wall)
 
 
+initialWallCount =
+    2
+
+
 wallsRandom : Generator Walls
 wallsRandom =
-    let
-        n =
-            10
-    in
-    randomWallSequenceAfter n initialWall
+    randomWallSequenceAfter initialWallCount initialWall
         |> Random.map (Walls [] initialWall)
+
+
+wallsEnsureSufficient : Walls -> Maybe (Generator Walls)
+wallsEnsureSufficient (Walls b c a) =
+    if List.length a < initialWallCount then
+        List.reverse a
+            |> List.head
+            |> Maybe.map
+                (\last ->
+                    randomWallSequenceAfter initialWallCount last
+                        |> Random.map
+                            (\aa ->
+                                Walls b c (a ++ aa)
+                            )
+                )
+
+    else
+        Nothing
 
 
 wallsSelectNextTouchingEndOfStick : Stick -> Walls -> Maybe Walls
