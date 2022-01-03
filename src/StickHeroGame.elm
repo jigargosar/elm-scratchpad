@@ -114,6 +114,31 @@ type Phase
     | Over
 
 
+stickFromPhase : Phase -> Maybe Stick
+stickFromPhase phase =
+    case phase of
+        Waiting ->
+            Nothing
+
+        Stretching stick ->
+            Just stick
+
+        Turning stick ->
+            Just stick
+
+        Walking stick ->
+            Just stick
+
+        Falling stick ->
+            Just stick
+
+        Transitioning ->
+            Nothing
+
+        Over ->
+            Nothing
+
+
 addDelta : Float -> Model -> Model
 addDelta delta model =
     { model | clock = model.clock + delta }
@@ -312,27 +337,10 @@ viewSvg model =
                 |> List.map viewStick
                 |> group []
             , viewHero model.heroX model.heroY
-            , case model.phase of
-                Waiting ->
-                    noView
-
-                Stretching stick ->
-                    viewStick stick
-
-                Turning stick ->
-                    viewStick stick
-
-                Walking stick ->
-                    viewStick stick
-
-                Falling stick ->
-                    viewStick stick
-
-                Transitioning ->
-                    noView
-
-                Over ->
-                    noView
+            , model.phase
+                |> stickFromPhase
+                |> Maybe.map viewStick
+                |> Maybe.withDefault noView
             ]
         , case model.phase of
             Over ->
