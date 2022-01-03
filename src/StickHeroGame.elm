@@ -359,9 +359,9 @@ viewSvg model =
                 , mvLeft model.xOffset
                 ]
             ]
-            [ viewSticks model.sticks
-            , Svg.Lazy.lazy viewStickFromPhase model.phase
-            , viewWalls model.walls
+            [ Svg.Lazy.lazy viewSticks model.sticks
+            , viewStickFromPhase model.phase
+            , Svg.Lazy.lazy viewWalls model.walls
             , viewHero model.heroX model.heroY
             ]
         , case model.phase of
