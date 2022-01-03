@@ -157,6 +157,9 @@ step dt model =
                     , heroY = heroY
                 }
 
+        Over ->
+            model
+
 
 type Phase
     = Waiting
