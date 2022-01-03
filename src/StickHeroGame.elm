@@ -448,13 +448,6 @@ wallX2 { x, w } =
     x + (w / 2)
 
 
-newWallAfter : Wall -> { gap : Float, width : Float } -> Wall
-newWallAfter prevWall attr =
-    { x = wallX2 prevWall + attr.gap + attr.width / 2
-    , w = attr.width
-    }
-
-
 type alias GapWidth =
     { gap : Float, width : Float }
 
@@ -465,6 +458,13 @@ randomGapWidth =
         GapWidth
         (randomFloatT wallGapRange)
         (randomFloatT wallWidthRange)
+
+
+newWallAfter : Wall -> GapWidth -> Wall
+newWallAfter prevWall attr =
+    { x = wallX2 prevWall + attr.gap + attr.width / 2
+    , w = attr.width
+    }
 
 
 randomWallSequenceAfter : Int -> Wall -> Generator (List Wall)
