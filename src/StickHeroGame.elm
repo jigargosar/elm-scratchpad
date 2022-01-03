@@ -481,8 +481,13 @@ type Walls
 
 wallsTouchingEndOfStick : Stick -> Walls -> Maybe Walls
 wallsTouchingEndOfStick stick =
+    wallsSelectNextContainingX (stickX2 stick)
+
+
+wallsSelectNextContainingX : Float -> Walls -> Maybe Walls
+wallsSelectNextContainingX x =
     wallsSelectNext
-        >> maybeFilter (wallsCurrentContainsX (stickX2 stick))
+        >> maybeFilter (wallsCurrentContainsX x)
 
 
 wallsSelectNext : Walls -> Maybe Walls
