@@ -363,7 +363,7 @@ viewHero xOffset yOffset =
             heroWidth
             heroHeight
             [ fill wBlue
-            , xf [ mvUp (heroHeight / 2 + 1) ]
+            , xf [ mvUp (heroHeight / 2 + 0.5) ]
             ]
         ]
 
