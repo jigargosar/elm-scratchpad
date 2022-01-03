@@ -362,19 +362,6 @@ viewHero xOffset yOffset =
         ]
 
 
-viewStick : Stick -> Svg msg
-viewStick stick =
-    polyline
-        [ ( 0, 0 )
-        , ( stick.len, 0 )
-        ]
-        [ strokeW 2
-        , stroke wGreen_lime
-        , stroke wWhite
-        , xf [ mv2 stick.x 0, rotateDeg stick.angleDeg ]
-        ]
-
-
 type alias Stick =
     { x : Float, len : Float, angleDeg : Float }
 
@@ -418,6 +405,19 @@ turnStick dt stick =
 stickX2 : Stick -> Float
 stickX2 { x, len } =
     x + len
+
+
+viewStick : Stick -> Svg msg
+viewStick stick =
+    polyline
+        [ ( 0, 0 )
+        , ( stick.len, 0 )
+        ]
+        [ strokeW 2
+        , stroke wGreen_lime
+        , stroke wWhite
+        , xf [ mv2 stick.x 0, rotateDeg stick.angleDeg ]
+        ]
 
 
 
