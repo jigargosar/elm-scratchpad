@@ -268,8 +268,6 @@ type Msg
 subscriptions : Model -> Sub Msg
 subscriptions _ =
     [ Browser.Events.onAnimationFrameDelta (clamp 0 100 >> OnClampedDelta)
-
-    --Time.every (1000 / 60) (Time.posixToMillis >> toFloat >> clamp 0 100 >> OnClampedDelta)
     , Browser.Events.onKeyDown (JD.map OnKeyDown keyEventDecoder)
     , Browser.Events.onKeyUp (JD.map OnKeyUp keyDecoder)
     ]
