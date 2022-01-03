@@ -80,6 +80,40 @@ type alias Model =
     }
 
 
+init : () -> ( Model, Cmd Msg )
+init () =
+    ( initModelWithSeed <| Random.initialSeed 0
+    , Cmd.none
+    )
+
+
+initModelWithSeed : Seed -> Model
+initModelWithSeed initialSeed =
+    let
+        ( walls, seed ) =
+            Random.step randomWalls initialSeed
+    in
+    { clock = 0
+    , phase = Waiting
+    , walls = walls
+    , heroX = 0
+    , heroY = 0
+    , sticks = []
+    , xOffset = 0
+    , seed = seed
+    }
+
+
+type Phase
+    = Waiting
+    | Stretching Stick
+    | Turning Stick
+    | Walking Stick
+    | Falling Stick
+    | Transitioning
+    | Over
+
+
 addDelta : Float -> Model -> Model
 addDelta delta model =
     { model | clock = model.clock + delta }
@@ -181,40 +215,6 @@ step dt model =
 
         Over ->
             model
-
-
-type Phase
-    = Waiting
-    | Stretching Stick
-    | Turning Stick
-    | Walking Stick
-    | Falling Stick
-    | Transitioning
-    | Over
-
-
-init : () -> ( Model, Cmd Msg )
-init () =
-    ( initModelWithSeed <| Random.initialSeed 0
-    , Cmd.none
-    )
-
-
-initModelWithSeed : Seed -> Model
-initModelWithSeed initialSeed =
-    let
-        ( walls, seed ) =
-            Random.step randomWalls initialSeed
-    in
-    { clock = 0
-    , phase = Waiting
-    , walls = walls
-    , heroX = 0
-    , heroY = 0
-    , sticks = []
-    , xOffset = 0
-    , seed = seed
-    }
 
 
 type Msg
