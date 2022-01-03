@@ -463,8 +463,12 @@ randomWallSequenceAfter firstWall =
             Debug.todo "todo"
 
         reduce : { gap : Float, width : Float } -> ( Wall, List Wall ) -> ( Wall, List Wall )
-        reduce =
-            Debug.todo "todo"
+        reduce gw ( prevWall, acc ) =
+            let
+                wall =
+                    newWallAfter prevWall gw
+            in
+            ( wall, wall :: acc )
 
         accToReturn : ( Wall, List Wall ) -> List Wall
         accToReturn _ =
