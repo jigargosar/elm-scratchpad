@@ -554,55 +554,10 @@ randomWalls : Generator Walls
 randomWalls =
     let
         n =
-            1
-
-        a () =
-            randomWallSequenceAfter n initialWall
-                |> Random.map (Walls [] initialWall)
-
-        b () =
-            Walls [] initialWall []
-                |> Random.constant
-                |> applyN n addRandomWall
-
-        _ =
-            \_ -> a
-
-        _ =
-            \_ -> b
+            10
     in
-    a ()
-
-
-addRandomWall : Generator Walls -> Generator Walls
-addRandomWall =
-    let
-        wallsAppendIn : Walls -> Wall -> Walls
-        wallsAppendIn (Walls before c after) last =
-            Walls before c (after ++ [ last ])
-
-        randomWallAfter : Wall -> Generator Wall
-        randomWallAfter prevWall =
-            Random.map2
-                (\wallGap wallWidth ->
-                    newWallAfter prevWall { gap = wallGap, width = wallWidth }
-                )
-                (randomFloatT wallGapRange)
-                (randomFloatT wallWidthRange)
-
-        wallsLast : Walls -> Wall
-        wallsLast (Walls _ c after) =
-            after
-                |> List.reverse
-                |> List.head
-                |> Maybe.withDefault c
-    in
-    Random.andThen
-        (\walls ->
-            wallsLast walls
-                |> randomWallAfter
-                |> Random.map (wallsAppendIn walls)
-        )
+    randomWallSequenceAfter n initialWall
+        |> Random.map (Walls [] initialWall)
 
 
 wallsToList : Walls -> List Wall
