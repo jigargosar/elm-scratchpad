@@ -349,18 +349,7 @@ viewSvg model =
                 , mvLeft model.xOffset
                 ]
             ]
-            [ model.sticks
-                |> List.map viewStick
-                |> group []
-            , model.phase
-                |> stickFromPhase
-                |> maybeView viewStick
-            , model.walls
-                |> wallsToList
-                |> List.map viewWall
-                |> group []
-            , viewHero model.heroX model.heroY
-            ]
+            (viewGameEntities model)
         , case model.phase of
             Over ->
                 group [ xf [ mvUp (viewportHeight / 4) ] ]
@@ -374,6 +363,22 @@ viewSvg model =
             _ ->
                 noView
         ]
+
+
+viewGameEntities : Model -> List (Svg msg)
+viewGameEntities model =
+    [ model.sticks
+        |> List.map viewStick
+        |> group []
+    , model.phase
+        |> stickFromPhase
+        |> maybeView viewStick
+    , model.walls
+        |> wallsToList
+        |> List.map viewWall
+        |> group []
+    , viewHero model.heroX model.heroY
+    ]
 
 
 viewHero : Float -> Float -> Svg msg
