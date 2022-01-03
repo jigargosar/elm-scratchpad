@@ -202,14 +202,14 @@ init () =
 type Msg
     = NOP
     | OnClampedDelta Float
-    | OnKeyDown String
+    | OnKeyDown KeyEvent
     | OnKeyUp String
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
     [ Browser.Events.onAnimationFrameDelta (clamp 0 100 >> OnClampedDelta)
-    , Browser.Events.onKeyDown (JD.map OnKeyDown keyDecoder)
+    , Browser.Events.onKeyDown (JD.map OnKeyDown keyEventDecoder)
     , Browser.Events.onKeyUp (JD.map OnKeyUp keyDecoder)
     ]
         |> Sub.batch
@@ -228,9 +228,9 @@ update msg model =
             , Cmd.none
             )
 
-        OnKeyDown key ->
-            ( case ( model.phase, key ) of
-                ( Waiting, " " ) ->
+        OnKeyDown e ->
+            ( case ( model.phase, e.key, e.repeat ) of
+                ( Waiting, " ", False ) ->
                     { model
                         | phase = Stretching
                         , sticks =
