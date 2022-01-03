@@ -116,21 +116,19 @@ step dt model =
                             let
                                 maxHeroX =
                                     stickX2 stick
-
-                                heroX =
-                                    model.heroX + dt * walkingSpeed |> atMost maxHeroX
                             in
-                            ( heroX, Nothing )
+                            ( model.heroX + dt * walkingSpeed |> atMost maxHeroX
+                            , Nothing
+                            )
 
                         Just nextWalls ->
                             let
                                 maxHeroX =
                                     wallsCurrentCX nextWalls
-
-                                heroX =
-                                    model.heroX + dt * walkingSpeed |> atMost maxHeroX
                             in
-                            ( heroX, Just nextWalls )
+                            ( model.heroX + dt * walkingSpeed |> atMost maxHeroX
+                            , Just nextWalls
+                            )
             in
             case wallsTouchingEndOfStick stick model.walls of
                 Nothing ->
