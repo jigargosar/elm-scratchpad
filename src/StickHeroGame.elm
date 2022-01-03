@@ -1,6 +1,5 @@
 module StickHeroGame exposing (main)
 
-import Array exposing (Array)
 import Browser.Events
 import Json.Decode as JD
 import Random exposing (Seed)
@@ -450,23 +449,23 @@ newWallAfter prevWall attr =
 
 
 type Walls
-    = Walls (Array Wall) Wall (Array Wall)
+    = Walls (List Wall) Wall (List Wall)
 
 
 randomWalls : Generator Walls
 randomWalls =
-    Walls Array.empty initialWall Array.empty
+    Walls [] initialWall []
         |> Random.constant
         |> applyN 100 addRandomWall
 
 
 wallsTouchingEndOfStick : Stick -> Walls -> Maybe Walls
 wallsTouchingEndOfStick stick (Walls before c after) =
-    Array.get 0 after
+    uncons after
         |> Maybe.andThen
-            (\wall ->
+            (\( wall, newAfter ) ->
                 if wallIsXInRange (stickX2 stick) wall then
-                    Just (Walls (Array.push c before) wall ((Array.toList >> List.drop 1 >> Array.fromList) after))
+                    Just (Walls (before ++ [ c ]) wall newAfter)
 
                 else
                     Nothing
@@ -490,13 +489,15 @@ wallsCurrent (Walls _ c _) =
 
 wallsLast : Walls -> Wall
 wallsLast (Walls _ c after) =
-    Array.get (Array.length after - 1) after
+    after
+        |> List.reverse
+        |> List.head
         |> Maybe.withDefault c
 
 
 wallsAppendIn : Walls -> Wall -> Walls
 wallsAppendIn (Walls before c after) last =
-    Walls before c (Array.push last after)
+    Walls before c (after ++ [ last ])
 
 
 addRandomWall : Generator Walls -> Generator Walls
@@ -521,7 +522,7 @@ randomWallAfter prevWall =
 
 wallsToList : Walls -> List Wall
 wallsToList (Walls before c after) =
-    Array.toList before ++ [ c ] ++ Array.toList after
+    before ++ [ c ] ++ after
 
 
 viewWall : Wall -> Svg msg
