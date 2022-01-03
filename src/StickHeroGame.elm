@@ -130,7 +130,7 @@ step dt model =
                             , Just nextWalls
                             )
             in
-            case wallsTouchingEndOfStick stick model.walls of
+            case mbNextWalls of
                 Nothing ->
                     { model
                         | heroX = heroX
