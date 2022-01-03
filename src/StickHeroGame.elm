@@ -471,8 +471,8 @@ randomWallSequenceAfter firstWall =
             ( wall, wall :: acc )
 
         accToReturn : ( Wall, List Wall ) -> List Wall
-        accToReturn _ =
-            Debug.todo "todo"
+        accToReturn =
+            second >> List.reverse
 
         fromGapWidthList : List { gap : Float, width : Float } -> List Wall
         fromGapWidthList =
