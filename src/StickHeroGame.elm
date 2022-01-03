@@ -541,7 +541,7 @@ type Walls
 
 
 initialWallCount =
-    1
+    2
 
 
 wallsRandom : Generator Walls
@@ -552,7 +552,7 @@ wallsRandom =
 
 wallsEnsureSufficient : Walls -> Maybe (Generator Walls)
 wallsEnsureSufficient (Walls b c a) =
-    if List.length a < initialWallCount then
+    if List.length a <= initialWallCount then
         List.reverse a
             |> List.head
             |> Maybe.map
