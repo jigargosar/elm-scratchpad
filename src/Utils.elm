@@ -1775,6 +1775,14 @@ getInDict dict key =
 -- LIST HELPERS
 
 
+listLast =
+    List.reverse >> List.head
+
+
+listLastOr default =
+    listLast >> Maybe.withDefault default
+
+
 allEq v ls =
     List.all (eq v) ls
 
