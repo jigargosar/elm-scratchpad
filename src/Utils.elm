@@ -53,11 +53,6 @@ allDir4 =
     [ Up, Down, Left, Right ]
 
 
-keyDecoder : Decoder String
-keyDecoder =
-    JD.field "key" JD.string
-
-
 type alias MouseEvent =
     { modifiers : Modifiers
     , pageXY : Float2
@@ -130,7 +125,12 @@ keyEventDecoder : Decoder KeyEvent
 keyEventDecoder =
     JD.succeed KeyEvent
         |> jdAndMap modifiersDecoder
-        |> jdAndMap (JD.field "key" JD.string)
+        |> jdAndMap keyDecoder
+
+
+keyDecoder : Decoder String
+keyDecoder =
+    JD.field "key" JD.string
 
 
 keyMapDecoder : List ( KeyEvent -> Bool, KeyEvent -> a ) -> Decoder a
