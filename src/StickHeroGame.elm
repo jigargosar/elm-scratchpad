@@ -141,7 +141,7 @@ stickFromPhase phase =
 
 ensureSufficientWalls : Phase -> Model -> Model
 ensureSufficientWalls prevPhase model =
-    if model.phase == Waiting && prevPhase == Transitioning then
+    if model.phase == Waiting && prevPhase /= Waiting then
         case wallsEnsureSufficient model.walls of
             Nothing ->
                 model
@@ -555,14 +555,15 @@ wallsEnsureSufficient (Walls b c a) =
     if List.length a <= initialWallCount then
         List.reverse a
             |> List.head
-            |> Maybe.map
-                (\last ->
+            |> Maybe.withDefault c
+            |> (\last ->
                     randomWallSequenceAfter initialWallCount last
                         |> Random.map
                             (\aa ->
                                 Walls b c (a ++ aa)
                             )
-                )
+               )
+            |> Just
 
     else
         Nothing
