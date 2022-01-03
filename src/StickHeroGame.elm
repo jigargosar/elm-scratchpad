@@ -258,30 +258,35 @@ view : Model -> Document Msg
 view model =
     Document "App Title"
         [ basicStylesNode
-        , let
-            ( width, height ) =
-                ( 200, 200 )
-          in
-          basicSvg
-            [ viewBoxC width height
-            , sMaxWidth "100vw"
-            , sMaxHeight "100vh"
+        , viewSvg model
+        ]
+
+
+viewSvg : Model -> Html msg
+viewSvg model =
+    let
+        ( width, height ) =
+            ( 200, 200 )
+    in
+    basicSvg
+        [ viewBoxC width height
+        , sMaxWidth "100vw"
+        , sMaxHeight "100vh"
+        ]
+        [ group
+            [ xf [ mv2 (width / -3) 0, mvLeft model.xOffset ] ]
+            [ model.walls
+                |> wallsToList
+                |> List.map viewWall
+                |> group []
+            , model.sticks
+                |> List.map viewStick
+                |> group []
+            , viewHero model.heroX model.heroY
             ]
-            [ group
-                [ xf [ mv2 (width / -3) 0, mvLeft model.xOffset ] ]
-                [ model.walls
-                    |> wallsToList
-                    |> List.map viewWall
-                    |> group []
-                , model.sticks
-                    |> List.map viewStick
-                    |> group []
-                , viewHero model.heroX model.heroY
-                ]
-            , group [ opacity 0.01 ]
-                [ circle 100 [ fill wBlue ]
-                , circle 1 [ fill wPink ]
-                ]
+        , group [ opacity 0.01 ]
+            [ circle 100 [ fill wBlue ]
+            , circle 1 [ fill wPink ]
             ]
         ]
 
