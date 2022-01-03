@@ -470,12 +470,12 @@ randomWallSequenceAfter firstWall =
         accToReturn _ =
             Debug.todo "todo"
 
-        foo : List { gap : Float, width : Float } -> List Wall
-        foo =
+        fromGapWidthList : List { gap : Float, width : Float } -> List Wall
+        fromGapWidthList =
             List.foldl reduce ( firstWall, [] ) >> accToReturn
     in
     Random.list 100 gen
-        |> Random.map foo
+        |> Random.map fromGapWidthList
 
 
 viewWall : Wall -> Svg msg
