@@ -482,11 +482,6 @@ wallsLast (Walls _ c after) =
         |> Maybe.withDefault c
 
 
-wallsAppendIn : Walls -> Wall -> Walls
-wallsAppendIn (Walls before c after) last =
-    Walls before c (after ++ [ last ])
-
-
 randomWalls : Generator Walls
 randomWalls =
     Walls [] initialWall []
@@ -502,6 +497,11 @@ addRandomWall =
                 |> randomWallAfter
                 |> Random.map (wallsAppendIn walls)
         )
+
+
+wallsAppendIn : Walls -> Wall -> Walls
+wallsAppendIn (Walls before c after) last =
+    Walls before c (after ++ [ last ])
 
 
 randomWallAfter : Wall -> Generator Wall
