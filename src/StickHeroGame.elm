@@ -236,7 +236,7 @@ update msg model =
                     { model | phase = Stretching (initStretchingStick (wallsCurrentX2 model.walls)) }
 
                 ( Over, " ", False ) ->
-                    { model | phase = Waiting }
+                    ( initModelWithSeed model.seed, Cmd.none )
 
                 _ ->
                     model
