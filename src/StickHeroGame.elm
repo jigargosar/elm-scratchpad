@@ -130,15 +130,11 @@ step dt model =
                         heroX =
                             model.heroX + dt * walkingSpeed |> atMost maxHeroX
                     in
-                    { model
-                        | heroX = heroX
-                        , phase =
-                            if heroX == model.heroX then
-                                Transitioning
+                    if heroX == model.heroX then
+                        { model | walls = nextWalls, phase = Transitioning }
 
-                            else
-                                Walking
-                    }
+                    else
+                        { model | heroX = heroX }
 
         --let
         --    angleDeg =
