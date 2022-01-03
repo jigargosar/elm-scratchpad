@@ -367,18 +367,30 @@ viewSvg model =
 
 viewGameEntities : Model -> List (Svg msg)
 viewGameEntities model =
-    [ model.sticks
+    [ viewSticks model.sticks
+    , viewStickFromPhase model.phase
+    , viewWalls model.walls
+    , viewHero model.heroX model.heroY
+    ]
+
+
+viewSticks sticks =
+    sticks
         |> List.map viewStick
         |> group []
-    , model.phase
+
+
+viewStickFromPhase phase =
+    phase
         |> stickFromPhase
         |> maybeView viewStick
-    , model.walls
+
+
+viewWalls walls =
+    walls
         |> wallsToList
         |> List.map viewWall
         |> group []
-    , viewHero model.heroX model.heroY
-    ]
 
 
 viewHero : Float -> Float -> Svg msg
