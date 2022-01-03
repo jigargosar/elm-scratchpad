@@ -553,14 +553,17 @@ wallsCurrent (Walls _ c _) =
 randomWalls : Generator Walls
 randomWalls =
     let
+        n =
+            1
+
         a () =
-            randomWallSequenceAfter 100 initialWall
+            randomWallSequenceAfter n initialWall
                 |> Random.map (Walls [] initialWall)
 
         b () =
             Walls [] initialWall []
                 |> Random.constant
-                |> applyN 100 addRandomWall
+                |> applyN n addRandomWall
 
         _ =
             \_ -> a
