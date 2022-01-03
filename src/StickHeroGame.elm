@@ -65,6 +65,10 @@ wallWidthRange =
     ( heroWidth * 1.5, heroWidth * 4 )
 
 
+wallGapRange =
+    ( heroWidth * 1.5, heroWidth * 8 )
+
+
 initialWallWidth =
     lerpRange wallWidthRange 0.5
 
@@ -361,10 +365,6 @@ viewStick stick =
         , stroke wWhite
         , xf [ mv2 stick.x 0, rotateDeg stick.angleDeg ]
         ]
-
-
-wallGapRange =
-    ( 20, 70 )
 
 
 type alias Stick =
