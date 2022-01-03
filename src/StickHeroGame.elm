@@ -50,7 +50,7 @@ transitionSpeed =
 
 
 heroWidth =
-    15
+    10
 
 
 addDelta : Float -> Model -> Model
@@ -360,7 +360,7 @@ initialWallWidth =
 
 
 wallGapRange =
-    ( 40, 70 )
+    ( 20, 70 )
 
 
 type alias Stick =
