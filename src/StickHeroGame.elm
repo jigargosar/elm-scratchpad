@@ -17,16 +17,8 @@ main =
         }
 
 
-type alias Model =
-    { clock : Float
-    , phase : Phase
-    , walls : Walls
-    , heroX : Float
-    , heroY : Float
-    , sticks : List Stick
-    , xOffset : Float
-    , seed : Seed
-    }
+
+-- CONSTANTS
 
 
 walkingSpeed =
@@ -71,6 +63,22 @@ wallGapRange =
 
 initialWallWidth =
     lerpRange wallWidthRange 0.5
+
+
+
+-- MODEL
+
+
+type alias Model =
+    { clock : Float
+    , phase : Phase
+    , walls : Walls
+    , heroX : Float
+    , heroY : Float
+    , sticks : List Stick
+    , xOffset : Float
+    , seed : Seed
+    }
 
 
 addDelta : Float -> Model -> Model
