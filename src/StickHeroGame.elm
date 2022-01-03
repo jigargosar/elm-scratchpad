@@ -100,7 +100,27 @@ step dt model =
             in
             case maybeNextWalls of
                 Nothing ->
-                    model
+                    case uncons model.sticks of
+                        Nothing ->
+                            Debug.todo "Invalid State: stretching stick not found"
+
+                        Just ( stick, _ ) ->
+                            let
+                                maxHeroX =
+                                    stickX2 stick
+
+                                heroX =
+                                    model.heroX + dt * walkingSpeed |> atMost maxHeroX
+                            in
+                            { model
+                                | heroX = heroX
+                                , phase =
+                                    if heroX == model.heroX then
+                                        Transitioning
+
+                                    else
+                                        Walking
+                            }
 
                 Just nextWalls ->
                     let
