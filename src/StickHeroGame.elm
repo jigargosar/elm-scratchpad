@@ -433,9 +433,9 @@ initialWall =
     Wall 0 initialWallWidth
 
 
-wallIsXInRange : Float -> Wall -> Bool
-wallIsXInRange n wall =
-    n >= wallX1 wall && n <= wallX2 wall
+wallContainsX : Float -> Wall -> Bool
+wallContainsX x wall =
+    x >= wallX1 wall && x <= wallX2 wall
 
 
 wallX1 : Wall -> Float
@@ -484,7 +484,7 @@ wallsTouchingEndOfStick stick (Walls before c after) =
     uncons after
         |> Maybe.andThen
             (\( wall, newAfter ) ->
-                if wallIsXInRange (stickX2 stick) wall then
+                if wallContainsX (stickX2 stick) wall then
                     Just (Walls (before ++ [ c ]) wall newAfter)
 
                 else
