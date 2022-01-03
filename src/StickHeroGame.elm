@@ -32,7 +32,7 @@ walkingSpeed =
     0.1
 
 
-fallingSpeed =
+heroFallingSpeed =
     0.1
 
 
@@ -133,11 +133,15 @@ step dt model =
                 { model | xOffset = xOffset }
 
         Falling stick ->
+            let
+                maxHeroY =
+                    1
+            in
             { model
                 | phase = Falling (fallStick dt stick)
                 , heroY =
                     model.heroY
-                        |> add (dt * fallingSpeed)
+                        |> add (dt * heroFallingSpeed)
                         |> atMost 100
             }
 
@@ -333,7 +337,7 @@ fallStick dt stick =
         | angleDeg =
             stick.angleDeg
                 + dt
-                * fallingSpeed
+                * turnSpeed
                 |> clamp 0 90
     }
 
