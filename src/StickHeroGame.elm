@@ -202,13 +202,10 @@ step dt model =
         Transitioning ->
             let
                 xOffset =
-                    model.xOffset + transitionSpeed * dt
-
-                maxXOffset =
-                    model.heroX
+                    model.xOffset + transitionSpeed * dt |> atMost model.heroX
             in
-            if xOffset >= maxXOffset then
-                { model | xOffset = maxXOffset, phase = Waiting }
+            if xOffset == model.xOffset then
+                { model | phase = Waiting }
 
             else
                 { model | xOffset = xOffset }
