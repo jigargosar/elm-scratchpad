@@ -139,6 +139,15 @@ stickFromPhase phase =
             Nothing
 
 
+ensureSufficientWalls : Model -> Model -> Model
+ensureSufficientWalls prevModel model =
+    if model.phase == Waiting && prevModel.phase /= Waiting then
+        model
+
+    else
+        model
+
+
 addDelta : Float -> Model -> Model
 addDelta delta model =
     { model | clock = model.clock + delta }
@@ -264,6 +273,7 @@ update msg model =
         OnClampedDelta delta ->
             ( model
                 |> step delta
+                |> ensureSufficientWalls model
                 |> addDelta delta
             , Cmd.none
             )
