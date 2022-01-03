@@ -497,8 +497,8 @@ newWallAfter prevWall attr =
     }
 
 
-randomWallSequenceAfter : Int -> Wall -> Generator (List Wall)
-randomWallSequenceAfter n firstWall =
+wallSequenceFromGapWidths : Wall -> List GapWidth -> List Wall
+wallSequenceFromGapWidths firstWall =
     let
         reducer : GapWidth -> ( Wall, List Wall ) -> ( Wall, List Wall )
         reducer gw ( prevWall, acc ) =
@@ -507,17 +507,16 @@ randomWallSequenceAfter n firstWall =
                     newWallAfter prevWall gw
             in
             ( wall, wall :: acc )
-
-        accToReturn : ( Wall, List Wall ) -> List Wall
-        accToReturn =
-            second >> List.reverse
-
-        fromGapWidthList : List GapWidth -> List Wall
-        fromGapWidthList =
-            List.foldl reducer ( firstWall, [] ) >> accToReturn
     in
+    List.foldl reducer ( firstWall, [] )
+        >> second
+        >> List.reverse
+
+
+randomWallSequenceAfter : Int -> Wall -> Generator (List Wall)
+randomWallSequenceAfter n firstWall =
     Random.list n randomGapWidth
-        |> Random.map fromGapWidthList
+        |> Random.map (wallSequenceFromGapWidths firstWall)
 
 
 viewWall : Wall -> Svg msg
