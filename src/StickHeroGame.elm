@@ -482,8 +482,7 @@ type Walls
 wallsTouchingEndOfStick : Stick -> Walls -> Maybe Walls
 wallsTouchingEndOfStick stick =
     wallsSelectNext
-        >> maybeFilter
-            (wallsCurrent >> wallContainsX (stickX2 stick))
+        >> maybeFilter (wallsCurrent >> wallContainsX (stickX2 stick))
 
 
 wallsSelectNext : Walls -> Maybe Walls
