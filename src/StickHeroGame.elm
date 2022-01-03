@@ -111,7 +111,7 @@ step dt model =
         Walking stick ->
             let
                 ( maxHeroX, mbNextWalls ) =
-                    case wallsTouchingEndOfStick stick model.walls of
+                    case wallsSelectNextTouchingEndOfStick stick model.walls of
                         Nothing ->
                             ( stickX2 stick
                             , Nothing
@@ -479,8 +479,8 @@ type Walls
     = Walls (List Wall) Wall (List Wall)
 
 
-wallsTouchingEndOfStick : Stick -> Walls -> Maybe Walls
-wallsTouchingEndOfStick stick =
+wallsSelectNextTouchingEndOfStick : Stick -> Walls -> Maybe Walls
+wallsSelectNextTouchingEndOfStick stick =
     wallsSelectNextContainingX (stickX2 stick)
 
 
