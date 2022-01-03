@@ -299,7 +299,7 @@ viewSvg model =
         , sMaxHeight "100vh"
         ]
         [ group
-            [ xf [ mv2 (viewportWidth / -3) 0, mvLeft model.xOffset ] ]
+            [ xf [ mvLeft (viewportWidth / 3), mvLeft model.xOffset ] ]
             [ model.walls
                 |> wallsToList
                 |> List.map viewWall
