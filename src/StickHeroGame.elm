@@ -380,7 +380,7 @@ viewSvg model =
 viewSticks : List Stick -> Svg msg
 viewSticks sticks =
     sticks
-        |> List.map viewStick
+        |> List.map (Svg.Lazy.lazy viewStick)
         |> group []
 
 
@@ -388,7 +388,7 @@ viewStickFromPhase : Phase -> Svg msg
 viewStickFromPhase phase =
     phase
         |> stickFromPhase
-        |> maybeView viewStick
+        |> maybeView (Svg.Lazy.lazy viewStick)
 
 
 viewWalls : Walls -> Svg msg
