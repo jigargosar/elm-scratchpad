@@ -251,7 +251,16 @@ view model =
     Document "Stick Hero"
         [ basicStylesNode
         , viewSvg model
-        , text <| Debug.toString model.phase
+        , div
+            [ positionFixed
+            , bgc wBlack
+            , fg wBlue
+            , pa "1ch"
+            , fontSize "12px"
+
+            --, borderRadius "10%"
+            ]
+            [ text <| Debug.toString model.phase ]
         ]
 
 
