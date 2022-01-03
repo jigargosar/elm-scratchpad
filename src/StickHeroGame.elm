@@ -4,6 +4,7 @@ import Browser.Events
 import Json.Decode as JD
 import Random exposing (Seed)
 import Svg
+import Svg.Lazy
 import Utils exposing (..)
 
 
@@ -389,7 +390,7 @@ viewStickFromPhase phase =
 viewWalls walls =
     walls
         |> wallsToList
-        |> List.map viewWall
+        |> List.map (Svg.Lazy.lazy viewWall)
         |> group []
 
 
