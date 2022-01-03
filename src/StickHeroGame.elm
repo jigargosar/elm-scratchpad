@@ -353,11 +353,6 @@ viewSvg model =
 
             _ ->
                 noView
-        , group [ opacity 0.01 ]
-            [ circle 100 [ fill wBlue ]
-            , circle 1 [ fill wPink ]
-            ]
-            |> always noView
         ]
 
 
