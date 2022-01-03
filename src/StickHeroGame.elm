@@ -353,7 +353,11 @@ viewSvg model =
                 , mvLeft model.xOffset
                 ]
             ]
-            (viewGameEntities model)
+            [ Svg.Lazy.lazy viewSticks model.sticks
+            , Svg.Lazy.lazy viewStickFromPhase model.phase
+            , Svg.Lazy.lazy viewWalls model.walls
+            , Svg.Lazy.lazy2 viewHero model.heroX model.heroY
+            ]
         , case model.phase of
             Over ->
                 group [ xf [ mvUp (viewportHeight / 4) ] ]
@@ -367,15 +371,6 @@ viewSvg model =
             _ ->
                 noView
         ]
-
-
-viewGameEntities : Model -> List (Svg msg)
-viewGameEntities model =
-    [ Svg.Lazy.lazy viewSticks model.sticks
-    , Svg.Lazy.lazy viewStickFromPhase model.phase
-    , Svg.Lazy.lazy viewWalls model.walls
-    , Svg.Lazy.lazy2 viewHero model.heroX model.heroY
-    ]
 
 
 viewSticks sticks =
