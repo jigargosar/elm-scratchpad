@@ -492,6 +492,12 @@ wallsTouchingEndOfStick stick (Walls before c after) =
             )
 
 
+wallsSelectNext : Walls -> Maybe Walls
+wallsSelectNext (Walls b c a) =
+    uncons a
+        |> Maybe.map (\( nc, na ) -> Walls (b ++ [ c ]) nc na)
+
+
 wallsCurrentX2 : Walls -> Float
 wallsCurrentX2 =
     wallsCurrent >> wallX2
