@@ -317,12 +317,15 @@ view model =
     Document "Stick Hero"
         [ basicStylesNode
         , viewSvg model
-        , viewDebugInfo model.phase |> always noView
+        , (\_ ->
+            viewDebugInfo model
+          )
+            |> always noView
         ]
 
 
-viewDebugInfo : Phase -> Html msg
-viewDebugInfo phase =
+viewDebugInfo : Model -> Html msg
+viewDebugInfo model =
     div
         [ positionFixed
         , bgc wBlack
@@ -330,7 +333,7 @@ viewDebugInfo phase =
         , pa "1ch"
         , fontSize "14px"
         ]
-        [ text <| Debug.toString phase ]
+        [ text <| Debug.toString model.phase ]
 
 
 viewSvg : Model -> Html msg
