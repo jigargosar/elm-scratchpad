@@ -290,16 +290,16 @@ view model =
 viewSvg : Model -> Html msg
 viewSvg model =
     let
-        ( width, height ) =
+        ( viewportWidth, viewportHeight ) =
             ( 200, 200 )
     in
     basicSvg
-        [ viewBoxC width height
+        [ viewBoxC viewportWidth viewportHeight
         , sMaxWidth "100vw"
         , sMaxHeight "100vh"
         ]
         [ group
-            [ xf [ mv2 (width / -3) 0, mvLeft model.xOffset ] ]
+            [ xf [ mv2 (viewportWidth / -3) 0, mvLeft model.xOffset ] ]
             [ model.walls
                 |> wallsToList
                 |> List.map viewWall
@@ -332,8 +332,8 @@ viewSvg model =
             ]
         , case model.phase of
             Over ->
-                group [ xf [ mvUp (height / 4) ] ]
-                    [ rect width (height / 4) [ fill black, opacity 0.9 ]
+                group [ xf [ mvUp (viewportHeight / 4) ] ]
+                    [ rect viewportWidth (viewportHeight / 4) [ fill black, opacity 0.9 ]
                     , words "RESTART"
                         [ fill wWhite
                         , fontSize "30px"
