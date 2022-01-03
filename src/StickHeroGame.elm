@@ -92,7 +92,33 @@ step dt model =
                     }
 
         Walking ->
-            model
+            let
+                maybeNextWalls =
+                    model.sticks
+                        |> List.head
+                        |> Maybe.andThen (\s -> wallsTouchingEndOfStick s model.walls)
+            in
+            case maybeNextWalls of
+                Nothing ->
+                    model
+
+                Just nextWalls ->
+                    let
+                        maxHeroX =
+                            wallsCurrentCX nextWalls
+
+                        heroX =
+                            model.heroX + dt * walkingSpeed |> atMost maxHeroX
+                    in
+                    { model
+                        | heroX = heroX
+                        , phase =
+                            if heroX == model.heroX then
+                                Transitioning
+
+                            else
+                                Walking
+                    }
 
         --let
         --    angleDeg =
