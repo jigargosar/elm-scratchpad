@@ -125,24 +125,20 @@ step dt model =
                 heroX =
                     model.heroX + dt * walkingSpeed |> atMost maxHeroX
             in
-            case mbNextWalls of
-                Nothing ->
-                    if heroX == model.heroX then
+            if heroX == model.heroX then
+                case mbNextWalls of
+                    Nothing ->
                         { model | phase = Falling stick }
 
-                    else
-                        { model | heroX = heroX }
-
-                Just nextWalls ->
-                    if heroX == model.heroX then
+                    Just nextWalls ->
                         { model
                             | walls = nextWalls
                             , sticks = stick :: model.sticks
                             , phase = Transitioning
                         }
 
-                    else
-                        { model | heroX = heroX }
+            else
+                { model | heroX = heroX }
 
         Transitioning ->
             let
