@@ -63,7 +63,7 @@ step dt model =
         Waiting ->
             model
 
-        Stretching ->
+        StickPhase_ Stretching ->
             case uncons model.sticks of
                 Nothing ->
                     Debug.todo "Invalid State: stretching stick not found"
@@ -71,7 +71,7 @@ step dt model =
                 Just ( stick, prevSticks ) ->
                     { model | sticks = stretchStick dt stick :: prevSticks }
 
-        Turning ->
+        StickPhase_ Turning ->
             case uncons model.sticks of
                 Nothing ->
                     Debug.todo "Invalid State: stretching stick not found"
@@ -85,13 +85,13 @@ step dt model =
                         | sticks = turnedStick :: prevSticks
                         , phase =
                             if stick == turnedStick then
-                                Walking
+                                StickPhase_ Walking
 
                             else
-                                Turning
+                                StickPhase_ Turning
                     }
 
-        Walking ->
+        StickPhase_ Walking ->
             let
                 maybeNextWalls =
                     model.sticks
@@ -116,10 +116,10 @@ step dt model =
                                 | heroX = heroX
                                 , phase =
                                     if heroX == model.heroX then
-                                        Falling
+                                        StickPhase_ Falling
 
                                     else
-                                        Walking
+                                        StickPhase_ Walking
                             }
 
                 Just nextWalls ->
@@ -131,12 +131,12 @@ step dt model =
                             model.heroX + dt * walkingSpeed |> atMost maxHeroX
                     in
                     if heroX == model.heroX then
-                        { model | walls = nextWalls, phase = Transitioning }
+                        { model | walls = nextWalls, phase = StickPhase_ Transitioning }
 
                     else
                         { model | heroX = heroX }
 
-        Transitioning ->
+        StickPhase_ Transitioning ->
             let
                 xOffset =
                     model.xOffset + transitionSpeed * dt
@@ -150,7 +150,7 @@ step dt model =
             else
                 { model | xOffset = xOffset }
 
-        Falling ->
+        StickPhase_ Falling ->
             case uncons model.sticks of
                 Nothing ->
                     Debug.todo "Invalid State: stretching stick not found"
@@ -168,7 +168,15 @@ step dt model =
 
 type Phase
     = Waiting
-    | Stretching
+    | StickPhase_ StickPhase
+
+
+type alias PhaseWithStick =
+    { stick : Stick, phase : Phase }
+
+
+type StickPhase
+    = Stretching
     | Turning
     | Walking
     | Transitioning
@@ -232,7 +240,7 @@ update msg model =
             ( case ( model.phase, e.key, e.repeat ) of
                 ( Waiting, " ", False ) ->
                     { model
-                        | phase = Stretching
+                        | phase = StickPhase_ Stretching
                         , sticks =
                             initStretchingStick (wallsCurrentX2 model.walls)
                                 :: model.sticks
@@ -245,8 +253,8 @@ update msg model =
 
         OnKeyUp key ->
             ( case ( model.phase, key ) of
-                ( Stretching, " " ) ->
-                    { model | phase = Turning }
+                ( StickPhase_ Stretching, " " ) ->
+                    { model | phase = StickPhase_ Turning }
 
                 _ ->
                     model
