@@ -53,6 +53,10 @@ heroWidth =
     10
 
 
+heroHeight =
+    heroWidth * 2
+
+
 addDelta : Float -> Model -> Model
 addDelta delta model =
     { model | clock = model.clock + delta }
@@ -519,20 +523,11 @@ viewWall { x, w } =
 
 
 viewHero xOffset yOffset =
-    let
-        w =
-            heroWidth
-
-        h =
-            w
-    in
     group [ xf [ mv2 xOffset yOffset ] ]
-        [ Svg.rect
-            [ attrXF (w / -2)
-            , aWidthF w
-            , attrYF -h
-            , aHeightF h
-            , fill wBlue
+        [ rect
+            heroWidth
+            heroHeight
+            [ fill wBlue
+            , xf [ mvUp (heroHeight / 2) ]
             ]
-            []
         ]
