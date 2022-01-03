@@ -389,6 +389,7 @@ viewStickFromPhase phase =
         |> maybeView viewStick
 
 
+viewWalls : Walls -> Svg msg
 viewWalls walls =
     walls
         |> wallsToList

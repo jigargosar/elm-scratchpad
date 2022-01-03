@@ -597,6 +597,7 @@ basicSvgAttrs aa =
         :: aa
 
 
+group : List (Attribute msg) -> List (Svg msg) -> Svg msg
 group =
     Svg.g
 
