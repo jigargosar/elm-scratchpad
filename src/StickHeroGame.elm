@@ -350,6 +350,7 @@ viewSvg model =
         ]
 
 
+viewHero : Float -> Float -> Svg msg
 viewHero xOffset yOffset =
     group [ xf [ mv2 xOffset yOffset ] ]
         [ rect
