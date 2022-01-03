@@ -455,7 +455,7 @@ newWallAfter prevWall attr =
     }
 
 
-randomWallSequenceAfter : Wall -> Generator (List Walls)
+randomWallSequenceAfter : Wall -> Generator (List Wall)
 randomWallSequenceAfter wall =
     Debug.todo "todo"
 
@@ -522,6 +522,12 @@ wallsCurrent (Walls _ c _) =
 
 randomWalls : Generator Walls
 randomWalls =
+    let
+        _ =
+            \_ ->
+                randomWallSequenceAfter initialWall
+                    |> Random.map (Walls [] initialWall)
+    in
     Walls [] initialWall []
         |> Random.constant
         |> applyN 100 addRandomWall
