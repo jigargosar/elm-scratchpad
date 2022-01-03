@@ -211,7 +211,12 @@ update msg model =
         OnKeyDown key ->
             ( case ( model.phase, key ) of
                 ( Waiting, " " ) ->
-                    { model | phase = Stretching model.clock }
+                    { model
+                        | phase = Stretching model.clock
+                        , sticks =
+                            initStretchingStick (wallsCurrentX2 model.walls)
+                                :: model.sticks
+                    }
 
                 _ ->
                     model
@@ -334,6 +339,15 @@ wallGapRange =
 
 type alias Stick =
     { x : Float, len : Float, angleDeg : Float }
+
+
+initStretchingStick : Float -> Stick
+initStretchingStick x =
+    let
+        dt =
+            0
+    in
+    { x = x, len = dt * stretchSpeed, angleDeg = -90 }
 
 
 stickX2 : Stick -> Float
