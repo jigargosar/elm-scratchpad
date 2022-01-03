@@ -350,6 +350,17 @@ viewSvg model =
         ]
 
 
+viewHero xOffset yOffset =
+    group [ xf [ mv2 xOffset yOffset ] ]
+        [ rect
+            heroWidth
+            heroHeight
+            [ fill wBlue
+            , xf [ mvUp (heroHeight / 2) ]
+            ]
+        ]
+
+
 viewStick : Stick -> Svg msg
 viewStick stick =
     polyline
@@ -532,14 +543,3 @@ addRandomWall =
 wallsToList : Walls -> List Wall
 wallsToList (Walls before c after) =
     before ++ [ c ] ++ after
-
-
-viewHero xOffset yOffset =
-    group [ xf [ mv2 xOffset yOffset ] ]
-        [ rect
-            heroWidth
-            heroHeight
-            [ fill wBlue
-            , xf [ mvUp (heroHeight / 2) ]
-            ]
-        ]
