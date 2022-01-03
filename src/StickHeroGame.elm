@@ -250,6 +250,7 @@ view model =
     Document "Stick Hero"
         [ basicStylesNode
         , viewSvg model
+        , text <| Debug.toString model.phase
         ]
 
 
@@ -296,6 +297,12 @@ viewSvg model =
                 Over ->
                     noView
             ]
+        , case model.phase of
+            Over ->
+                words "Game Over" [ fill black ]
+
+            _ ->
+                noView
         , group [ opacity 0.01 ]
             [ circle 100 [ fill wBlue ]
             , circle 1 [ fill wPink ]
