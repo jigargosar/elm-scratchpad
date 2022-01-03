@@ -455,14 +455,22 @@ newWallAfter prevWall attr =
     }
 
 
+type alias GapWidth =
+    { gap : Float, width : Float }
+
+
+randomGapWidth : Generator GapWidth
+randomGapWidth =
+    Random.map2
+        GapWidth
+        (randomFloatT wallGapRange)
+        (randomFloatT wallWidthRange)
+
+
 randomWallSequenceAfter : Wall -> Generator (List Wall)
 randomWallSequenceAfter firstWall =
     let
-        gen : Generator { gap : Float, width : Float }
-        gen =
-            Debug.todo "todo"
-
-        reducer : { gap : Float, width : Float } -> ( Wall, List Wall ) -> ( Wall, List Wall )
+        reducer : GapWidth -> ( Wall, List Wall ) -> ( Wall, List Wall )
         reducer gw ( prevWall, acc ) =
             let
                 wall =
@@ -474,11 +482,11 @@ randomWallSequenceAfter firstWall =
         accToReturn =
             second >> List.reverse
 
-        fromGapWidthList : List { gap : Float, width : Float } -> List Wall
+        fromGapWidthList : List GapWidth -> List Wall
         fromGapWidthList =
             List.foldl reducer ( firstWall, [] ) >> accToReturn
     in
-    Random.list 100 gen
+    Random.list 100 randomGapWidth
         |> Random.map fromGapWidthList
 
 
@@ -546,9 +554,8 @@ randomWalls : Generator Walls
 randomWalls =
     let
         _ =
-            \_ ->
-                randomWallSequenceAfter initialWall
-                    |> Random.map (Walls [] initialWall)
+            randomWallSequenceAfter initialWall
+                |> Random.map (Walls [] initialWall)
     in
     Walls [] initialWall []
         |> Random.constant
