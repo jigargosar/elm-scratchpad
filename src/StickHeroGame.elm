@@ -274,13 +274,14 @@ view model =
                     , translateF2 ( -model.xOffset, 0 )
                     ]
                 ]
-                [ viewWalls model.walls
+                [ model.walls
+                    |> wallsToList
+                    |> List.map viewWall
+                    |> group []
                 , model.sticks
                     |> List.map viewStick
                     |> group []
                 , viewHero model.heroX model.heroY
-
-                --, viewStretchingStick model
                 ]
             , group [ opacity 0.01 ]
                 [ circle 100 [ fill wBlue ]
@@ -288,35 +289,6 @@ view model =
                 ]
             ]
         ]
-
-
-
---viewStretchingStick model =
---    case model.phase of
---        Waiting ->
---            noView
---
---        WalkingToCenterOfWall _ _ ->
---            noView
---
---        Transitioning ->
---            noView
---
---        Stretching start ->
---            let
---                stick =
---                    initStretchingStickWithStartTime start model
---            in
---            viewStick stick
---
---        Turning stick ->
---            viewStick stick
---
---        Falling stick ->
---            viewStick stick
---
---        WalkingToEndOfStick _ stick ->
---            viewStick stick
 
 
 viewStick : Stick -> Svg msg
@@ -485,14 +457,6 @@ randomWallAfter prevWall =
 wallsToList : Walls -> List Wall
 wallsToList (Walls before c after) =
     Array.toList before ++ [ c ] ++ Array.toList after
-
-
-viewWalls : Walls -> Svg msg
-viewWalls walls =
-    walls
-        |> wallsToList
-        |> List.map viewWall
-        |> group []
 
 
 viewWall : Wall -> Svg msg
