@@ -416,14 +416,14 @@ type alias Wall =
     { x : Float, w : Float }
 
 
-wallIsXInRange : Float -> Wall -> Bool
-wallIsXInRange n { x, w } =
-    n >= x - w / 2 && n <= x + w / 2
-
-
 initialWall : Wall
 initialWall =
     Wall 0 initialWallWidth
+
+
+wallIsXInRange : Float -> Wall -> Bool
+wallIsXInRange n { x, w } =
+    n >= x - w / 2 && n <= x + w / 2
 
 
 wallX2 : Wall -> Float
