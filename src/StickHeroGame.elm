@@ -3,7 +3,7 @@ module StickHeroGame exposing (main)
 import Array exposing (Array)
 import Browser.Events
 import Json.Decode as JD
-import Random
+import Random exposing (Seed)
 import Svg
 import Utils exposing (..)
 
@@ -25,6 +25,7 @@ type alias Model =
     , heroY : Float
     , sticks : List Stick
     , xOffset : Float
+    , seed : Seed
     }
 
 
@@ -173,27 +174,31 @@ type Phase
 
 init : () -> ( Model, Cmd Msg )
 init () =
+    ( initModelWithSeed <| Random.initialSeed 0
+    , Cmd.none
+    )
+
+
+initModelWithSeed : Seed -> Model
+initModelWithSeed initialSeed =
     let
-        initWalls : Walls
-        initWalls =
+        gen =
             Walls Array.empty initialWall Array.empty
                 |> Random.constant
                 |> applyN 100 addRandomWall
-                |> stepWithInitialSeed 0
+
+        ( walls, seed ) =
+            Random.step gen initialSeed
     in
-    ( { clock = 0
-      , phase =
-            --Turning { x = wallX2 initialWall, len = 50, angleDeg = -90 }
-            --Waiting
-            Over
-      , walls = initWalls
-      , heroX = 0
-      , heroY = 0
-      , sticks = []
-      , xOffset = 0
-      }
-    , Cmd.none
-    )
+    { clock = 0
+    , phase = Waiting
+    , walls = walls
+    , heroX = 0
+    , heroY = 0
+    , sticks = []
+    , xOffset = 0
+    , seed = seed
+    }
 
 
 type Msg
