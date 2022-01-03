@@ -446,13 +446,6 @@ type Walls
     = Walls (List Wall) Wall (List Wall)
 
 
-randomWalls : Generator Walls
-randomWalls =
-    Walls [] initialWall []
-        |> Random.constant
-        |> applyN 100 addRandomWall
-
-
 wallsTouchingEndOfStick : Stick -> Walls -> Maybe Walls
 wallsTouchingEndOfStick stick (Walls before c after) =
     uncons after
@@ -492,6 +485,13 @@ wallsLast (Walls _ c after) =
 wallsAppendIn : Walls -> Wall -> Walls
 wallsAppendIn (Walls before c after) last =
     Walls before c (after ++ [ last ])
+
+
+randomWalls : Generator Walls
+randomWalls =
+    Walls [] initialWall []
+        |> Random.constant
+        |> applyN 100 addRandomWall
 
 
 addRandomWall : Generator Walls -> Generator Walls
