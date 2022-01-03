@@ -491,27 +491,26 @@ randomWalls =
 
 addRandomWall : Generator Walls -> Generator Walls
 addRandomWall =
+    let
+        wallsAppendIn : Walls -> Wall -> Walls
+        wallsAppendIn (Walls before c after) last =
+            Walls before c (after ++ [ last ])
+
+        randomWallAfter : Wall -> Generator Wall
+        randomWallAfter prevWall =
+            Random.map2
+                (\wallGap wallWidth ->
+                    newWallAfter prevWall { gap = wallGap, width = wallWidth }
+                )
+                (randomFloatT wallGapRange)
+                (randomFloatT wallWidthRange)
+    in
     Random.andThen
         (\walls ->
             wallsLast walls
                 |> randomWallAfter
                 |> Random.map (wallsAppendIn walls)
         )
-
-
-wallsAppendIn : Walls -> Wall -> Walls
-wallsAppendIn (Walls before c after) last =
-    Walls before c (after ++ [ last ])
-
-
-randomWallAfter : Wall -> Generator Wall
-randomWallAfter prevWall =
-    Random.map2
-        (\wallGap wallWidth ->
-            newWallAfter prevWall { gap = wallGap, width = wallWidth }
-        )
-        (randomFloatT wallGapRange)
-        (randomFloatT wallWidthRange)
 
 
 wallsToList : Walls -> List Wall
