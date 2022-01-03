@@ -433,7 +433,7 @@ wallX2 { x, w } =
 
 newWallAfter : Wall -> { gap : Float, width : Float } -> Wall
 newWallAfter prevWall attr =
-    { x = prevWall.x + prevWall.w / 2 + attr.gap + attr.width / 2
+    { x = wallX2 prevWall + attr.gap + attr.width / 2
     , w = attr.width
     }
 
