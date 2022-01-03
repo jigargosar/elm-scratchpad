@@ -480,16 +480,10 @@ type Walls
 
 
 wallsTouchingEndOfStick : Stick -> Walls -> Maybe Walls
-wallsTouchingEndOfStick stick (Walls before c after) =
-    uncons after
-        |> Maybe.andThen
-            (\( wall, newAfter ) ->
-                if wallContainsX (stickX2 stick) wall then
-                    Just (Walls (before ++ [ c ]) wall newAfter)
-
-                else
-                    Nothing
-            )
+wallsTouchingEndOfStick stick =
+    wallsSelectNext
+        >> maybeFilter
+            (wallsCurrent >> wallContainsX (stickX2 stick))
 
 
 wallsSelectNext : Walls -> Maybe Walls
