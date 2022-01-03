@@ -623,6 +623,10 @@ mvRight x =
     mv2 x 0
 
 
+mvLeft x =
+    mvRight -x
+
+
 scale s =
     TT.Scale s s
 
