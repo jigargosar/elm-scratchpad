@@ -268,13 +268,7 @@ view model =
             , sMaxHeight "100vh"
             ]
             [ group
-                [ xf
-                    [ mv2 (width / -3) 0
-                    , mvLeft model.xOffset
-                    ]
-
-                --, transforms [ "translate(-33.33%,0)" , translateF2 ( -model.xOffset, 0 ) ]
-                ]
+                [ xf [ mv2 (width / -3) 0, mvLeft model.xOffset ] ]
                 [ model.walls
                     |> wallsToList
                     |> List.map viewWall
