@@ -383,6 +383,7 @@ viewSticks sticks =
         |> group []
 
 
+viewStickFromPhase : Phase -> Svg msg
 viewStickFromPhase phase =
     phase
         |> stickFromPhase
