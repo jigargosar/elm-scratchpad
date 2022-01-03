@@ -336,19 +336,22 @@ viewDebugInfo model =
         [ text <| Debug.toString model.phase ]
 
 
+viewportWidth =
+    200
+
+
+viewportHeight =
+    200
+
+
 viewSvg : Model -> Html msg
 viewSvg model =
-    let
-        ( viewportWidth, viewportHeight ) =
-            ( 200, 200 )
-    in
     basicSvg
         [ viewBoxC viewportWidth viewportHeight
         , sMaxWidth "100vw"
         , sMaxHeight "100vh"
         ]
-        [ Svg.Lazy.lazy7 viewGameEntities
-            viewportWidth
+        [ Svg.Lazy.lazy6 viewGameEntities
             model.xOffset
             model.sticks
             model.phase
@@ -370,7 +373,7 @@ viewSvg model =
         ]
 
 
-viewGameEntities viewportWidth xOffset sticks phase walls heroX heroY =
+viewGameEntities xOffset sticks phase walls heroX heroY =
     group
         [ xf
             [ mvLeft (viewportWidth / 3)
