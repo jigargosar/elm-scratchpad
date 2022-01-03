@@ -135,14 +135,16 @@ step dt model =
         Falling stick ->
             let
                 maxHeroY =
-                    1
+                    100
+
+                heroY =
+                    model.heroY
+                        |> add (dt * heroFallingSpeed)
+                        |> atMost maxHeroY
             in
             { model
                 | phase = Falling (fallStick dt stick)
-                , heroY =
-                    model.heroY
-                        |> add (dt * heroFallingSpeed)
-                        |> atMost 100
+                , heroY = heroY
             }
 
 
