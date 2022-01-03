@@ -423,10 +423,6 @@ type Walls
     = Walls (Array Wall) Wall (Array Wall)
 
 
-
---noinspection ElmUnusedSymbol
-
-
 wallsTouchingEndOfStick : Stick -> Walls -> Maybe Walls
 wallsTouchingEndOfStick stick (Walls before c after) =
     Array.get 0 after
@@ -443,10 +439,6 @@ wallsTouchingEndOfStick stick (Walls before c after) =
 wallsCurrentX2 : Walls -> Float
 wallsCurrentX2 =
     wallsCurrent >> wallX2
-
-
-
---noinspection ElmUnusedSymbol
 
 
 wallsCurrentCX : Walls -> Float
