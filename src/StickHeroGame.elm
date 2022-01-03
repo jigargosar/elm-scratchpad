@@ -184,7 +184,8 @@ init () =
     ( { clock = 0
       , phase =
             --Turning { x = wallX2 initialWall, len = 50, angleDeg = -90 }
-            Waiting
+            --Waiting
+            Over
       , walls = initWalls
       , heroX = 0
       , heroY = 0
@@ -299,7 +300,10 @@ viewSvg model =
             ]
         , case model.phase of
             Over ->
-                words "Game Over" [ fill black ]
+                group []
+                    [ rect width height [ fill wLightGray, opacity 0.5 ]
+                    , words "Game Over" [ fill wOrange, style "text-shadow" "1px 1px 2px #000" ]
+                    ]
 
             _ ->
                 noView
