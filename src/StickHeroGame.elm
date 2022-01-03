@@ -50,11 +50,23 @@ transitionSpeed =
 
 
 heroWidth =
-    5
+    10
 
 
 heroHeight =
     heroWidth * 2
+
+
+doubleScoreSquareWidth =
+    heroWidth / 2
+
+
+wallWidthRange =
+    ( heroWidth * 1.5, heroWidth * 4 )
+
+
+initialWallWidth =
+    lerpRange wallWidthRange 0.5
 
 
 addDelta : Float -> Model -> Model
@@ -349,18 +361,6 @@ viewStick stick =
         , stroke wWhite
         , xf [ mv2 stick.x 0, rotateDeg stick.angleDeg ]
         ]
-
-
-wallWidthRange =
-    ( 15, 25 )
-
-
-doubleScoreSquareWidth =
-    first wallWidthRange / 2
-
-
-initialWallWidth =
-    lerpRange wallWidthRange 1
 
 
 wallGapRange =
