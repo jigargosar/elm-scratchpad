@@ -377,6 +377,7 @@ viewSvg model =
         ]
 
 
+viewSticks : List Stick -> Svg msg
 viewSticks sticks =
     sticks
         |> List.map viewStick
