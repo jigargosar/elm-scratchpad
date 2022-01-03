@@ -142,12 +142,7 @@ stickFromPhase phase =
 ensureSufficientWalls : Model -> Model -> Model
 ensureSufficientWalls prevModel model =
     if model.phase == Waiting && prevModel.phase /= Waiting then
-        let
-            maybeGen : Walls -> Maybe (Generator Walls)
-            maybeGen =
-                Debug.todo "todo"
-        in
-        case maybeGen model.walls of
+        case wallsEnsureSufficient model.walls of
             Nothing ->
                 model
 
@@ -546,7 +541,7 @@ type Walls
 
 
 initialWallCount =
-    2
+    1
 
 
 wallsRandom : Generator Walls
