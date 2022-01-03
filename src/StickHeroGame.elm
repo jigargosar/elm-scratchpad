@@ -368,10 +368,10 @@ viewSvg model =
 
 viewGameEntities : Model -> List (Svg msg)
 viewGameEntities model =
-    [ viewSticks model.sticks
-    , viewStickFromPhase model.phase
-    , viewWalls model.walls
-    , viewHero model.heroX model.heroY
+    [ Svg.Lazy.lazy viewSticks model.sticks
+    , Svg.Lazy.lazy viewStickFromPhase model.phase
+    , Svg.Lazy.lazy viewWalls model.walls
+    , Svg.Lazy.lazy2 viewHero model.heroX model.heroY
     ]
 
 
