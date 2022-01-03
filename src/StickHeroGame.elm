@@ -434,8 +434,13 @@ initialWall =
 
 
 wallIsXInRange : Float -> Wall -> Bool
-wallIsXInRange n { x, w } =
-    n >= x - w / 2 && n <= x + w / 2
+wallIsXInRange n wall =
+    n >= wallX1 wall && n <= wallX2 wall
+
+
+wallX1 : Wall -> Float
+wallX1 { x, w } =
+    x - (w / 2)
 
 
 wallX2 : Wall -> Float
