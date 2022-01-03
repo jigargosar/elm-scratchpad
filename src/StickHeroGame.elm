@@ -259,6 +259,7 @@ view model =
             , fontSize "14px"
             ]
             [ text <| Debug.toString model.phase ]
+            |> always noView
         ]
 
 
