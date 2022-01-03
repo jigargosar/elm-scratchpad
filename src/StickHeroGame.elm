@@ -63,64 +63,42 @@ step dt model =
         Waiting ->
             model
 
-        StickPhase_ Stretching ->
-            case uncons model.sticks of
+        Stretching stick ->
+            { model | phase = Stretching <| stretchStick dt stick }
+
+        Turning stick ->
+            let
+                turnedStick =
+                    turnStick dt stick
+            in
+            { model
+                | phase =
+                    if stick == turnedStick then
+                        Walking turnedStick
+
+                    else
+                        Turning turnedStick
+            }
+
+        Walking stick ->
+            case wallsTouchingEndOfStick stick model.walls of
                 Nothing ->
-                    Debug.todo "Invalid State: stretching stick not found"
-
-                Just ( stick, prevSticks ) ->
-                    { model | sticks = stretchStick dt stick :: prevSticks }
-
-        StickPhase_ Turning ->
-            case uncons model.sticks of
-                Nothing ->
-                    Debug.todo "Invalid State: stretching stick not found"
-
-                Just ( stick, prevSticks ) ->
                     let
-                        turnedStick =
-                            turnStick dt stick
+                        maxHeroX =
+                            stickX2 stick
+
+                        heroX =
+                            model.heroX + dt * walkingSpeed |> atMost maxHeroX
                     in
                     { model
-                        | sticks = turnedStick :: prevSticks
+                        | heroX = heroX
                         , phase =
-                            if stick == turnedStick then
-                                StickPhase_ Walking
+                            if heroX == model.heroX then
+                                Falling stick
 
                             else
-                                StickPhase_ Turning
+                                Walking stick
                     }
-
-        StickPhase_ Walking ->
-            let
-                maybeNextWalls =
-                    model.sticks
-                        |> List.head
-                        |> Maybe.andThen (\s -> wallsTouchingEndOfStick s model.walls)
-            in
-            case maybeNextWalls of
-                Nothing ->
-                    case uncons model.sticks of
-                        Nothing ->
-                            Debug.todo "Invalid State: stretching stick not found"
-
-                        Just ( stick, _ ) ->
-                            let
-                                maxHeroX =
-                                    stickX2 stick
-
-                                heroX =
-                                    model.heroX + dt * walkingSpeed |> atMost maxHeroX
-                            in
-                            { model
-                                | heroX = heroX
-                                , phase =
-                                    if heroX == model.heroX then
-                                        StickPhase_ Falling
-
-                                    else
-                                        StickPhase_ Walking
-                            }
 
                 Just nextWalls ->
                     let
@@ -131,12 +109,16 @@ step dt model =
                             model.heroX + dt * walkingSpeed |> atMost maxHeroX
                     in
                     if heroX == model.heroX then
-                        { model | walls = nextWalls, phase = StickPhase_ Transitioning }
+                        { model
+                            | walls = nextWalls
+                            , sticks = stick :: model.sticks
+                            , phase = Transitioning
+                        }
 
                     else
                         { model | heroX = heroX }
 
-        StickPhase_ Transitioning ->
+        Transitioning ->
             let
                 xOffset =
                     model.xOffset + transitionSpeed * dt
@@ -150,37 +132,23 @@ step dt model =
             else
                 { model | xOffset = xOffset }
 
-        StickPhase_ Falling ->
-            case uncons model.sticks of
-                Nothing ->
-                    Debug.todo "Invalid State: stretching stick not found"
-
-                Just ( stick, prevSticks ) ->
-                    { model
-                        | sticks = fallStick dt stick :: prevSticks
-                        , heroY =
-                            model.heroY
-                                + dt
-                                * fallingSpeed
-                                |> atMost 100
-                    }
+        Falling stick ->
+            { model
+                | phase = Falling (fallStick dt stick)
+                , heroY =
+                    model.heroY
+                        |> add (dt * fallingSpeed)
+                        |> atMost 100
+            }
 
 
 type Phase
     = Waiting
-    | StickPhase_ StickPhase
-
-
-type alias PhaseWithStick =
-    { stick : Stick, phase : Phase }
-
-
-type StickPhase
-    = Stretching
-    | Turning
-    | Walking
+    | Stretching Stick
+    | Turning Stick
+    | Walking Stick
+    | Falling Stick
     | Transitioning
-    | Falling
 
 
 init : () -> ( Model, Cmd Msg )
@@ -239,12 +207,7 @@ update msg model =
         OnKeyDown e ->
             ( case ( model.phase, e.key, e.repeat ) of
                 ( Waiting, " ", False ) ->
-                    { model
-                        | phase = StickPhase_ Stretching
-                        , sticks =
-                            initStretchingStick (wallsCurrentX2 model.walls)
-                                :: model.sticks
-                    }
+                    { model | phase = Stretching (initStretchingStick (wallsCurrentX2 model.walls)) }
 
                 _ ->
                     model
@@ -253,8 +216,8 @@ update msg model =
 
         OnKeyUp key ->
             ( case ( model.phase, key ) of
-                ( StickPhase_ Stretching, " " ) ->
-                    { model | phase = StickPhase_ Turning }
+                ( Stretching stick, " " ) ->
+                    { model | phase = Turning stick }
 
                 _ ->
                     model
