@@ -548,7 +548,7 @@ initialWallCount =
     10
 
 
-minimumWallCount =
+minimumAfterWallCount =
     initialWallCount // 2
 
 
@@ -560,7 +560,7 @@ wallsRandom =
 
 wallsEnsureSufficient : Walls -> Maybe (Generator Walls)
 wallsEnsureSufficient (Walls before c after) =
-    if List.length after <= minimumWallCount then
+    if List.length after <= minimumAfterWallCount then
         let
             lastWall =
                 after
