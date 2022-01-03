@@ -301,13 +301,17 @@ viewSvg model =
         , case model.phase of
             Over ->
                 group []
-                    [ rect width height [ fill wLightGray, opacity 0.5 ]
-                    , words "Game Over" [ fill wOrange, style "text-shadow" "1px 1px 2px #000" ]
+                    [ rect width height [ fill wBlack, opacity 0.8 ]
+                    , words "GAME OVER"
+                        [ fill wPink
+                        , style "text-shadow" "1px 1px 2px #000"
+                        , fontSize "30px"
+                        ]
                     ]
 
             _ ->
                 noView
-        , group [ opacity 0.01 ]
+        , group [ opacity 0 ]
             [ circle 100 [ fill wBlue ]
             , circle 1 [ fill wPink ]
             ]
