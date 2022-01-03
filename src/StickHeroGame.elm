@@ -273,6 +273,7 @@ viewSvg model =
             , model.sticks
                 |> List.map viewStick
                 |> group []
+            , viewHero model.heroX model.heroY
             , case model.phase of
                 Waiting ->
                     noView
@@ -294,7 +295,6 @@ viewSvg model =
 
                 Over ->
                     noView
-            , viewHero model.heroX model.heroY
             ]
         , group [ opacity 0.01 ]
             [ circle 100 [ fill wBlue ]
