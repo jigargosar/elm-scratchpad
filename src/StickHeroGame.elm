@@ -388,7 +388,7 @@ viewStickFromPhase : Phase -> Svg msg
 viewStickFromPhase phase =
     phase
         |> stickFromPhase
-        |> maybeView (Svg.Lazy.lazy viewStick)
+        |> maybeView viewStick
 
 
 viewWalls : Walls -> Svg msg
