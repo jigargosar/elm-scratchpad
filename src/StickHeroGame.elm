@@ -467,8 +467,8 @@ randomGapWidth =
         (randomFloatT wallWidthRange)
 
 
-randomWallSequenceAfter : Wall -> Generator (List Wall)
-randomWallSequenceAfter firstWall =
+randomWallSequenceAfter : Int -> Wall -> Generator (List Wall)
+randomWallSequenceAfter n firstWall =
     let
         reducer : GapWidth -> ( Wall, List Wall ) -> ( Wall, List Wall )
         reducer gw ( prevWall, acc ) =
@@ -486,7 +486,7 @@ randomWallSequenceAfter firstWall =
         fromGapWidthList =
             List.foldl reducer ( firstWall, [] ) >> accToReturn
     in
-    Random.list 100 randomGapWidth
+    Random.list n randomGapWidth
         |> Random.map fromGapWidthList
 
 
@@ -554,7 +554,7 @@ randomWalls : Generator Walls
 randomWalls =
     let
         _ =
-            randomWallSequenceAfter initialWall
+            randomWallSequenceAfter 100 initialWall
                 |> Random.map (Walls [] initialWall)
     in
     Walls [] initialWall []
