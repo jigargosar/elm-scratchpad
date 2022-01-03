@@ -253,6 +253,24 @@ viewSvg model =
             , model.sticks
                 |> List.map viewStick
                 |> group []
+            , case model.phase of
+                Waiting ->
+                    noView
+
+                Stretching stick ->
+                    viewStick stick
+
+                Turning stick ->
+                    viewStick stick
+
+                Walking stick ->
+                    viewStick stick
+
+                Falling stick ->
+                    viewStick stick
+
+                Transitioning ->
+                    noView
             , viewHero model.heroX model.heroY
             ]
         , group [ opacity 0.01 ]
