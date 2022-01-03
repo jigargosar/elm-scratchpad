@@ -336,10 +336,10 @@ viewSvg model =
             , model.sticks
                 |> List.map viewStick
                 |> group []
-            , viewHero model.heroX model.heroY
             , model.phase
                 |> stickFromPhase
                 |> maybeView viewStick
+            , viewHero model.heroX model.heroY
             ]
         , case model.phase of
             Over ->
