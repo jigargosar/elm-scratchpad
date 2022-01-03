@@ -456,19 +456,23 @@ newWallAfter prevWall attr =
 
 
 randomWallSequenceAfter : Wall -> Generator (List Wall)
-randomWallSequenceAfter wall =
+randomWallSequenceAfter firstWall =
     let
         gen : Generator { gap : Float, width : Float }
         gen =
             Debug.todo "todo"
 
-        reduce : { gap : Float, width : Float } -> List Wall -> List Wall
+        reduce : { gap : Float, width : Float } -> ( Wall, List Wall ) -> ( Wall, List Wall )
         reduce =
+            Debug.todo "todo"
+
+        accToReturn : ( Wall, List Wall ) -> List Wall
+        accToReturn _ =
             Debug.todo "todo"
 
         foo : List { gap : Float, width : Float } -> List Wall
         foo =
-            List.foldl reduce [] >> List.reverse
+            List.foldl reduce ( firstWall, [] ) >> accToReturn
     in
     Random.list 100 gen
         |> Random.map foo
