@@ -455,6 +455,11 @@ newWallAfter prevWall attr =
     }
 
 
+randomWallSequenceAfter : Wall -> Generator (List Walls)
+randomWallSequenceAfter wall =
+    Debug.todo "todo"
+
+
 viewWall : Wall -> Svg msg
 viewWall { x, w } =
     --rect w wallHeight [ fill white, xf [ mv2 x (wallHeight / 2) ] ]
