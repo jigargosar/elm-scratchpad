@@ -63,7 +63,7 @@ step dt model =
         Waiting ->
             model
 
-        Stretching _ ->
+        Stretching ->
             case uncons model.sticks of
                 Nothing ->
                     Debug.todo "Invalid State: stretching stick not found"
@@ -71,30 +71,51 @@ step dt model =
                 Just ( stick, prevSticks ) ->
                     { model | sticks = stretchStick dt stick :: prevSticks }
 
-        Turning stick_ ->
-            let
-                angleDeg =
-                    stick_.angleDeg + dt * turnSpeed |> atMost 0
+        Turning ->
+            case uncons model.sticks of
+                Nothing ->
+                    Debug.todo "Invalid State: stretching stick not found"
 
-                stick =
-                    { stick_ | angleDeg = angleDeg }
-            in
-            if angleDeg < 0 then
-                { model | phase = Turning { stick | angleDeg = angleDeg } }
+                Just ( stick, prevSticks ) ->
+                    let
+                        turnedStick =
+                            turnStick dt stick
+                    in
+                    { model
+                        | sticks = turnedStick :: prevSticks
+                        , phase =
+                            if stick == turnedStick then
+                                Walking
 
-            else
-                case wallsTouchingEndOfStick stick model.walls of
-                    Just walls ->
-                        { model
-                            | phase = WalkingToCenterOfWall (wallsCurrentCX walls) walls
-                            , sticks = stick :: model.sticks
-                        }
+                            else
+                                Turning
+                    }
 
-                    Nothing ->
-                        { model
-                            | phase = WalkingToEndOfStick (stickX2 stick + heroWidth / 2) stick
-                        }
+        Walking ->
+            model
 
+        --let
+        --    angleDeg =
+        --        stick_.angleDeg + dt * turnSpeed |> atMost 0
+        --
+        --    stick =
+        --        { stick_ | angleDeg = angleDeg }
+        --in
+        --if angleDeg < 0 then
+        --    { model | phase = Turning { stick | angleDeg = angleDeg } }
+        --
+        --else
+        --    case wallsTouchingEndOfStick stick model.walls of
+        --        Just walls ->
+        --            { model
+        --                | phase = WalkingToCenterOfWall (wallsCurrentCX walls) walls
+        --                , sticks = stick :: model.sticks
+        --            }
+        --
+        --        Nothing ->
+        --            { model
+        --                | phase = WalkingToEndOfStick (stickX2 stick + heroWidth / 2) stick
+        --            }
         WalkingToCenterOfWall maxHeroX walls ->
             let
                 heroX =
@@ -154,8 +175,9 @@ step dt model =
 
 type Phase
     = Waiting
-    | Stretching Float
-    | Turning Stick
+    | Stretching
+    | Turning
+    | Walking
     | WalkingToCenterOfWall Float Walls
     | WalkingToEndOfStick Float Stick
     | Transitioning
@@ -219,7 +241,7 @@ update msg model =
             ( case ( model.phase, key ) of
                 ( Waiting, " " ) ->
                     { model
-                        | phase = Stretching model.clock
+                        | phase = Stretching
                         , sticks =
                             initStretchingStick (wallsCurrentX2 model.walls)
                                 :: model.sticks
@@ -232,8 +254,8 @@ update msg model =
 
         OnKeyUp key ->
             ( case ( model.phase, key ) of
-                ( Stretching start, " " ) ->
-                    { model | phase = Turning (initStretchingStickWithStartTime start model) }
+                ( Stretching, " " ) ->
+                    { model | phase = Turning }
 
                 _ ->
                     model
@@ -266,8 +288,8 @@ view model =
                     |> List.map viewStick
                     |> group []
                 , viewHero model.heroX model.heroY
-                , viewStretchingStick model
-                    |> always noView
+
+                --, viewStretchingStick model
                 ]
             , group [ opacity 0.01 ]
                 [ circle 100 [ fill wBlue ]
@@ -277,47 +299,33 @@ view model =
         ]
 
 
-viewStretchingStick model =
-    case model.phase of
-        Waiting ->
-            noView
 
-        WalkingToCenterOfWall _ _ ->
-            noView
-
-        Transitioning ->
-            noView
-
-        Stretching start ->
-            let
-                stick =
-                    initStretchingStickWithStartTime start model
-            in
-            viewStick stick
-
-        Turning stick ->
-            viewStick stick
-
-        Falling stick ->
-            viewStick stick
-
-        WalkingToEndOfStick _ stick ->
-            viewStick stick
-
-
-initStretchingStickWithStartTime : Float -> Model -> Stick
-initStretchingStickWithStartTime start model =
-    let
-        elapsed =
-            model.clock - start
-
-        stickLength =
-            elapsed * stretchSpeed
-
-        xOffset =
-            wallsCurrentX2 model.walls
-    in
-    { x = xOffset, len = stickLength, angleDeg = -90 }
+--viewStretchingStick model =
+--    case model.phase of
+--        Waiting ->
+--            noView
+--
+--        WalkingToCenterOfWall _ _ ->
+--            noView
+--
+--        Transitioning ->
+--            noView
+--
+--        Stretching start ->
+--            let
+--                stick =
+--                    initStretchingStickWithStartTime start model
+--            in
+--            viewStick stick
+--
+--        Turning stick ->
+--            viewStick stick
+--
+--        Falling stick ->
+--            viewStick stick
+--
+--        WalkingToEndOfStick _ stick ->
+--            viewStick stick
 
 
 viewStick : Stick -> Svg msg
@@ -367,6 +375,17 @@ stretchStick dt stick =
     { stick | len = stick.len + dt * stretchSpeed }
 
 
+turnStick : Float -> Stick -> Stick
+turnStick dt stick =
+    { stick
+        | angleDeg =
+            stick.angleDeg
+                + dt
+                * turnSpeed
+                |> clamp -90 0
+    }
+
+
 stickX2 : Stick -> Float
 stickX2 { x, len } =
     x + len
@@ -402,6 +421,10 @@ type Walls
     = Walls (Array Wall) Wall (Array Wall)
 
 
+
+--noinspection ElmUnusedSymbol
+
+
 wallsTouchingEndOfStick : Stick -> Walls -> Maybe Walls
 wallsTouchingEndOfStick stick (Walls before c after) =
     Array.get 0 after
@@ -418,6 +441,10 @@ wallsTouchingEndOfStick stick (Walls before c after) =
 wallsCurrentX2 : Walls -> Float
 wallsCurrentX2 =
     wallsCurrent >> wallX2
+
+
+
+--noinspection ElmUnusedSymbol
 
 
 wallsCurrentCX : Walls -> Float
