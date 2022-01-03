@@ -141,11 +141,21 @@ step dt model =
                     model.heroY
                         |> add (dt * heroFallingSpeed)
                         |> atMost maxHeroY
+
+                updatedStick =
+                    fallStick dt stick
             in
-            { model
-                | phase = Falling (fallStick dt stick)
-                , heroY = heroY
-            }
+            if heroY == model.heroY && updatedStick == stick then
+                { model
+                    | phase = Over
+                    , sticks = updatedStick :: model.sticks
+                }
+
+            else
+                { model
+                    | phase = Falling updatedStick
+                    , heroY = heroY
+                }
 
 
 type Phase
@@ -155,6 +165,7 @@ type Phase
     | Walking Stick
     | Falling Stick
     | Transitioning
+    | Over
 
 
 init : () -> ( Model, Cmd Msg )
@@ -276,6 +287,9 @@ viewSvg model =
                     viewStick stick
 
                 Transitioning ->
+                    noView
+
+                Over ->
                     noView
             , viewHero model.heroX model.heroY
             ]
