@@ -266,31 +266,8 @@ view model =
                     |> List.map viewStick
                     |> group []
                 , viewHero model.heroX model.heroY
-                , case model.phase of
-                    Waiting ->
-                        noView
-
-                    WalkingToCenterOfWall _ _ ->
-                        noView
-
-                    Transitioning ->
-                        noView
-
-                    Stretching start ->
-                        let
-                            stick =
-                                initStretchingStickWithStartTime start model
-                        in
-                        viewStick stick
-
-                    Turning stick ->
-                        viewStick stick
-
-                    Falling stick ->
-                        viewStick stick
-
-                    WalkingToEndOfStick _ stick ->
-                        viewStick stick
+                , viewStretchingStick model
+                    |> always noView
                 ]
             , group [ opacity 0.01 ]
                 [ circle 100 [ fill wBlue ]
@@ -298,6 +275,34 @@ view model =
                 ]
             ]
         ]
+
+
+viewStretchingStick model =
+    case model.phase of
+        Waiting ->
+            noView
+
+        WalkingToCenterOfWall _ _ ->
+            noView
+
+        Transitioning ->
+            noView
+
+        Stretching start ->
+            let
+                stick =
+                    initStretchingStickWithStartTime start model
+            in
+            viewStick stick
+
+        Turning stick ->
+            viewStick stick
+
+        Falling stick ->
+            viewStick stick
+
+        WalkingToEndOfStick _ stick ->
+            viewStick stick
 
 
 initStretchingStickWithStartTime : Float -> Model -> Stick
