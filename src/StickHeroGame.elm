@@ -545,6 +545,16 @@ type Walls
     = Walls (List Wall) Wall (List Wall)
 
 
+randomWalls : Generator Walls
+randomWalls =
+    let
+        n =
+            10
+    in
+    randomWallSequenceAfter n initialWall
+        |> Random.map (Walls [] initialWall)
+
+
 wallsSelectNextTouchingEndOfStick : Stick -> Walls -> Maybe Walls
 wallsSelectNextTouchingEndOfStick stick =
     wallsSelectNextContainingX (stickX2 stick)
@@ -579,16 +589,6 @@ wallsCurrentContainsX x =
 wallsCurrent : Walls -> Wall
 wallsCurrent (Walls _ c _) =
     c
-
-
-randomWalls : Generator Walls
-randomWalls =
-    let
-        n =
-            10
-    in
-    randomWallSequenceAfter n initialWall
-        |> Random.map (Walls [] initialWall)
 
 
 wallsToList : Walls -> List Wall
