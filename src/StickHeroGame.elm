@@ -230,6 +230,9 @@ update msg model =
                 ( Waiting, " ", False ) ->
                     { model | phase = Stretching (initStretchingStick (wallsCurrentX2 model.walls)) }
 
+                ( Over, " ", False ) ->
+                    { model | phase = Waiting }
+
                 _ ->
                     model
             , Cmd.none
