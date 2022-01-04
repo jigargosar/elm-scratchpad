@@ -134,14 +134,17 @@ type Phase
     | Over
 
 
-startStretching : Model -> Model
-startStretching model =
-    let
-        initStretchingPhase : Walls -> Phase
-        initStretchingPhase walls =
-            Stretching (initStretchingStick (wallsCurrentX2 walls))
-    in
-    { model | phase = initStretchingPhase model.walls }
+startStretchingOnUserInput : Model -> Model
+startStretchingOnUserInput model =
+    case model.phase of
+        Waiting ->
+            { model
+                | phase =
+                    Stretching (initStretchingStick (wallsCurrentX2 model.walls))
+            }
+
+        _ ->
+            model
 
 
 isWaitingForFirstTime : Model -> Bool
@@ -342,7 +345,7 @@ update msg model =
         OnKeyDown e ->
             ( case ( model.phase, e.key, e.repeat ) of
                 ( Waiting, " ", False ) ->
-                    startStretching model
+                    startStretchingOnUserInput model
 
                 ( Over, " ", False ) ->
                     initModelWithSeed model.seed
@@ -365,7 +368,7 @@ update msg model =
         OnMouseDown ->
             ( case model.phase of
                 Waiting ->
-                    startStretching model
+                    startStretchingOnUserInput model
 
                 _ ->
                     model
