@@ -373,6 +373,9 @@ update msg model =
                     ( Waiting, " " ) ->
                         startStretchingOnUserInput model
 
+                    ( Over, " " ) ->
+                        initModelWithSeed model.seed
+
                     _ ->
                         if List.member e.key [ "r", "Enter" ] then
                             initModelWithSeed model.seed
