@@ -421,6 +421,12 @@ viewSvg model =
             , viewWalls model.walls
             , viewHero model.heroX model.heroY
             ]
+        , words "00"
+            [ fill wWhite
+            , wordsAlignYTop
+            , wordsAlignXRight
+            , transforms [ "translate(50%,-50%)" ]
+            ]
         , case model.phase of
             Over ->
                 group [ xf [ mvUp (viewportHeight / 4) ] ]
