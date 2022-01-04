@@ -406,6 +406,7 @@ viewSvg model =
         ]
 
 
+viewDoubleScoreIndicator : Phase -> Svg msg
 viewDoubleScoreIndicator phase =
     let
         opacityValue =
