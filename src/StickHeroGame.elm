@@ -23,6 +23,7 @@ import Utils exposing (..)
    [x] click input
    [x] make game more difficult by reducing max/average wall width.
    * Clone Visuals
+   * clone responsiveness
 -}
 
 
