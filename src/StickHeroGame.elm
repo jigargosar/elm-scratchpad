@@ -529,33 +529,33 @@ randomGapWidth =
         (randomFloatT wallWidthRange)
 
 
-newWallAfter : Wall -> GapWidth -> Wall
-newWallAfter prevWall attr =
-    { x = wallX2 prevWall + attr.gap + attr.width / 2
+newWallAfter : Float -> GapWidth -> Wall
+newWallAfter prevWallX2 attr =
+    { x = prevWallX2 + attr.gap + attr.width / 2
     , w = attr.width
     }
 
 
-wallSequenceFromGapWidths : Wall -> List GapWidth -> List Wall
-wallSequenceFromGapWidths firstWall =
+wallSequenceFromGapWidths : Float -> List GapWidth -> List Wall
+wallSequenceFromGapWidths firstWallX2 =
     let
-        reducer : GapWidth -> ( Wall, List Wall ) -> ( Wall, List Wall )
-        reducer gw ( prevWall, acc ) =
+        reducer : GapWidth -> ( Float, List Wall ) -> ( Float, List Wall )
+        reducer gw ( prevWallX2, acc ) =
             let
                 wall =
-                    newWallAfter prevWall gw
+                    newWallAfter prevWallX2 gw
             in
-            ( wall, wall :: acc )
+            ( wallX2 wall, wall :: acc )
     in
-    List.foldl reducer ( firstWall, [] )
+    List.foldl reducer ( firstWallX2, [] )
         >> second
         >> List.reverse
 
 
-randomWallSequenceAfter : Int -> Wall -> Generator (List Wall)
-randomWallSequenceAfter n firstWall =
+randomWallSequenceAfter : Int -> Float -> Generator (List Wall)
+randomWallSequenceAfter n firstWallX2 =
     Random.list n randomGapWidth
-        |> Random.map (wallSequenceFromGapWidths firstWall)
+        |> Random.map (wallSequenceFromGapWidths firstWallX2)
 
 
 viewWall : Wall -> Svg msg
@@ -588,7 +588,7 @@ minimumAfterWallCount =
 
 wallsRandom : Generator Walls
 wallsRandom =
-    randomWallSequenceAfter (minimumAfterWallCount * 2) initialWall
+    randomWallSequenceAfter (minimumAfterWallCount * 2) (wallX2 initialWall)
         |> Random.map (Walls [] initialWall)
 
 
@@ -596,12 +596,13 @@ wallsEnsureSufficient : Walls -> Maybe (Generator Walls)
 wallsEnsureSufficient (Walls before c after) =
     if List.length after <= minimumAfterWallCount then
         let
-            lastWall =
+            lastWallX2 =
                 after
                     |> listLast
                     |> Maybe.withDefault c
+                    |> wallX2
         in
-        randomWallSequenceAfter (minimumAfterWallCount * 2) lastWall
+        randomWallSequenceAfter (minimumAfterWallCount * 2) lastWallX2
             |> Random.map
                 (\afterLast ->
                     Walls before c (after ++ afterLast)
