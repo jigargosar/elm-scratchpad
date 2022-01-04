@@ -381,7 +381,14 @@ update msg model =
             )
 
         OnMouseDown ->
-            ( startStretchingOnUserInput model, Cmd.none )
+            ( case model.phase of
+                Over ->
+                    initModelWithSeed model.seed
+
+                _ ->
+                    startStretchingOnUserInput model
+            , Cmd.none
+            )
 
         OnMouseUp ->
             ( stopStretchingOnUserInput model, Cmd.none )
