@@ -326,6 +326,7 @@ type Msg
     | OnKeyUp String
     | OnMouseDown
     | OnMouseUp
+    | RestartClicked
 
 
 subscriptions : Model -> Sub Msg
@@ -393,6 +394,9 @@ update msg model =
         OnMouseUp ->
             ( stopStretchingOnUserInput model, Cmd.none )
 
+        RestartClicked ->
+            ( initModelWithSeed model.seed, Cmd.none )
+
 
 view : Model -> Document Msg
 view model =
@@ -426,7 +430,7 @@ viewportHeight =
     200
 
 
-viewSvg : Model -> Html msg
+viewSvg : Model -> Html Msg
 viewSvg model =
     basicSvg
         [ viewBoxC viewportWidth viewportHeight
@@ -505,7 +509,7 @@ viewScore score =
         ]
 
 
-viewRestartGameOverlay : Phase -> Svg msg
+viewRestartGameOverlay : Phase -> Svg Msg
 viewRestartGameOverlay phase =
     let
         opacityValue =
@@ -520,6 +524,7 @@ viewRestartGameOverlay phase =
         [ opacity opacityValue
         , transitionOpacity
         , xf [ mvUp (viewportHeight / 4) ]
+        , notifyClick RestartClicked
         ]
     <|
         [ rect viewportWidth (viewportHeight / 4) [ fill black, opacity 0.9 ]
