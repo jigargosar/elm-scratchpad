@@ -187,10 +187,13 @@ step dt model =
                 --{ model | phase = Walking turnedStick }
                 case wallsSelectNextTouchingEndOfStick stick model.walls of
                     Nothing ->
-                        { model | phase = Walking turnedStick }
+                        { model | phase = WalkingToEndOfStick turnedStick }
 
                     Just walls ->
-                        { model | phase = Walking turnedStick }
+                        { model
+                            | phase = WalkingToCenterOfWall walls
+                            , sticks = stick :: model.sticks
+                        }
 
             else
                 { model | phase = Turning turnedStick }
