@@ -183,14 +183,11 @@ step dt model =
                 turnedStick =
                     turnStick dt stick
             in
-            { model
-                | phase =
-                    if stick == turnedStick then
-                        Walking turnedStick
+            if stick == turnedStick then
+                { model | phase = Walking turnedStick }
 
-                    else
-                        Turning turnedStick
-            }
+            else
+                { model | phase = Turning turnedStick }
 
         WalkingToEndOfStick stick ->
             let
