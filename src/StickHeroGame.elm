@@ -87,6 +87,7 @@ initialWallWidth =
 
 type alias Model =
     { clock : Float
+    , score : Int
     , phase : Phase
     , walls : Walls
     , heroX : Float
@@ -111,6 +112,7 @@ initModelWithSeed initialSeed =
             Random.step wallsRandom initialSeed
     in
     { clock = 0
+    , score = 0
     , phase = Waiting
     , walls = walls
     , heroX = 0
