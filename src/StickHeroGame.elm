@@ -16,7 +16,8 @@ import Utils exposing (..)
 
    Pending:
    * Starting Instructions: "Hold down then mouse to stretch the stick"
-   * Score
+   * Score on top right
+   * DOUBLE SCORE indicator.
    * click input
 -}
 
