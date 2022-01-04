@@ -28,6 +28,7 @@ import Utils exposing (..)
    * play it on your mobile.
    * send it to Ojas.
    * export repo to git hub.
+   * check notes.md
 -}
 
 
