@@ -401,6 +401,7 @@ viewSvg model =
         ]
 
 
+viewStartingInstructions : Bool -> Svg msg
 viewStartingInstructions show =
     let
         opacityValue =
