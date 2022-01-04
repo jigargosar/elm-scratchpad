@@ -593,16 +593,9 @@ wallsRandom =
 
 
 wallsEnsureSufficient : Walls -> Maybe (Generator Walls)
-wallsEnsureSufficient (Walls before c after) =
+wallsEnsureSufficient ((Walls before c after) as walls) =
     if List.length after <= minimumAfterWallCount then
-        let
-            lastWallX2 =
-                after
-                    |> listLast
-                    |> Maybe.withDefault c
-                    |> wallX2
-        in
-        randomWallSequenceAfter (minimumAfterWallCount * 2) lastWallX2
+        randomWallSequenceAfter (minimumAfterWallCount * 2) (wallsLastX2 walls)
             |> Random.map
                 (\afterLast ->
                     Walls before c (after ++ afterLast)
@@ -611,6 +604,18 @@ wallsEnsureSufficient (Walls before c after) =
 
     else
         Nothing
+
+
+wallsLastX2 : Walls -> Float
+wallsLastX2 =
+    wallsLast >> wallX2
+
+
+wallsLast : Walls -> Wall
+wallsLast (Walls _ c after) =
+    after
+        |> listLast
+        |> Maybe.withDefault c
 
 
 wallsSelectNextTouchingEndOfStick : Stick -> Walls -> Maybe Walls
