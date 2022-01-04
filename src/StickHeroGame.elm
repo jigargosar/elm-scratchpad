@@ -15,9 +15,9 @@ import Utils exposing (..)
            * youtube: https://www.youtube.com/watch?v=eue3UdFvwPo
 
    Pending:
-   * Starting Instructions: "Hold down then mouse to stretch the stick"
    * Score on top right
    * DOUBLE SCORE indicator.
+   * Starting Instructions: "Hold down then mouse to stretch the stick"
    * click input
 -}
 
