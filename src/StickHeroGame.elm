@@ -187,11 +187,19 @@ step dt model =
                     Nothing ->
                         { model | phase = WalkingToEndOfStick turnedStick }
 
-                    Just walls ->
+                    Just ( wallTouch, walls ) ->
                         { model
                             | phase = WalkingToCenterOfWall walls
                             , sticks = stick :: model.sticks
-                            , score = model.score + 1
+                            , score =
+                                model.score
+                                    + (case wallTouch of
+                                        TouchingCenterRegion ->
+                                            2
+
+                                        TouchingNonCentralRegion ->
+                                            1
+                                      )
                         }
 
             else
@@ -517,15 +525,18 @@ initialWall =
     Wall 0 initialWallWidth
 
 
-wallClassifyX : Float -> Wall -> WallTouch
-wallClassifyX x wall =
-    Debug.todo "todo"
+wallTouchAtX : Float -> Wall -> Maybe WallTouch
+wallTouchAtX x wall =
+    if wallContainsX x wall then
+        Just TouchingNonCentralRegion
+
+    else
+        Nothing
 
 
 type WallTouch
-    = NotTouching
-    | TouchingCenterRegion
-    | Touching
+    = TouchingCenterRegion
+    | TouchingNonCentralRegion
 
 
 wallContainsX : Float -> Wall -> Bool
@@ -651,14 +662,20 @@ wallsLast (Walls _ c after) =
         |> Maybe.withDefault c
 
 
-wallsSelectNextTouchingEndOfStick : Stick -> Walls -> Maybe Walls
+wallsSelectNextTouchingEndOfStick : Stick -> Walls -> Maybe ( WallTouch, Walls )
 wallsSelectNextTouchingEndOfStick stick =
     wallsSelectNextContainingX (stickX2 stick)
 
 
-wallsSelectNextContainingX : Float -> Walls -> Maybe Walls
+wallsSelectNextContainingX : Float -> Walls -> Maybe ( WallTouch, Walls )
 wallsSelectNextContainingX x =
-    wallsSelectNext >> maybeFilter (wallsCurrentContainsX x)
+    wallsSelectNext
+        >> Maybe.andThen
+            (\walls ->
+                wallsCurrent walls
+                    |> wallTouchAtX x
+                    |> Maybe.map (pairTo walls)
+            )
 
 
 wallsSelectNext : Walls -> Maybe Walls
@@ -675,11 +692,6 @@ wallsCurrentX2 =
 wallsCurrentCX : Walls -> Float
 wallsCurrentCX =
     wallsCurrent >> .x
-
-
-wallsCurrentContainsX : Float -> Walls -> Bool
-wallsCurrentContainsX x =
-    wallsCurrent >> wallContainsX x
 
 
 wallsCurrent : Walls -> Wall
