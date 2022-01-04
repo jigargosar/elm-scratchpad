@@ -15,6 +15,7 @@ import Utils exposing (..)
            * youtube: https://www.youtube.com/watch?v=eue3UdFvwPo
 
    Pending:
+   * simplify ensureSufficientWalls
    * Score on top right
    * DOUBLE SCORE indicator.
    * Starting Instructions: "Hold down then mouse to stretch the stick"
