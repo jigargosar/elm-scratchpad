@@ -507,16 +507,26 @@ viewScore score =
 viewRestartGameOverlay : Phase -> Svg Msg
 viewRestartGameOverlay phase =
     let
-        opacityValue =
-            case phase of
-                Over ->
-                    1
+        active =
+            phase == Over
 
-                _ ->
-                    0
+        opacityValue =
+            if active then
+                1
+
+            else
+                0
+
+        pointerEventsValue =
+            if active then
+                "auto"
+
+            else
+                "none"
     in
     group
         [ opacity opacityValue
+        , style "pointer-events" pointerEventsValue
         , transitionOpacity
         , xf [ mvUp (viewportHeight / 4) ]
         , notifyClick RestartClicked
