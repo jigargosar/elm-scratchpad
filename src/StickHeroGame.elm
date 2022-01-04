@@ -195,6 +195,7 @@ step dt model =
                         { model
                             | phase = WalkingToCenterOfWall walls
                             , sticks = stick :: model.sticks
+                            , score = model.score + 1
                         }
 
             else
