@@ -22,6 +22,7 @@ import Utils exposing (..)
    [x] Starting Instructions: "Hold down the mouse to stretch the stick"
    [x] click input
    [x] make game more difficult by reducing max/average wall width.
+   * Clone Visuals
 -}
 
 
