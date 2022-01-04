@@ -7,6 +7,16 @@ import Svg
 import Utils exposing (..)
 
 
+
+{-
+   Specs:
+   * clone Stick Hero
+        * codepen: https://codepen.io/HunorMarton/pen/xxOMQKg
+        * youtube: https://www.youtube.com/watch?v=eue3UdFvwPo
+
+-}
+
+
 main =
     bDocument
         { init = init
