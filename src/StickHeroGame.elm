@@ -596,10 +596,7 @@ wallsEnsureSufficient : Walls -> Maybe (Generator Walls)
 wallsEnsureSufficient ((Walls before c after) as walls) =
     if List.length after <= minimumAfterWallCount then
         randomWallSequenceAfter (minimumAfterWallCount * 2) (wallsLastX2 walls)
-            |> Random.map
-                (\afterLast ->
-                    Walls before c (after ++ afterLast)
-                )
+            |> Random.map wallsAppendIn
             |> Just
 
     else
@@ -609,6 +606,11 @@ wallsEnsureSufficient ((Walls before c after) as walls) =
 wallsLastX2 : Walls -> Float
 wallsLastX2 =
     wallsLast >> wallX2
+
+
+wallsAppendIn : Walls -> List Wall -> Walls
+wallsAppendIn (Walls b c a) aa =
+    Walls b c (a ++ aa)
 
 
 wallsLast : Walls -> Wall
