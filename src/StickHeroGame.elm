@@ -26,6 +26,7 @@ import Utils exposing (..)
    * make svg expand to full screen, preserve aspect ratio to clone responsiveness.
    * use pointer-event pointer-down/up to make it work in mobile mode.
    * play it on your mobile.
+   * send it to Ojas.
 -}
 
 
