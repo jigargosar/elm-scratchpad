@@ -517,6 +517,17 @@ initialWall =
     Wall 0 initialWallWidth
 
 
+wallClassifyX : Float -> Wall -> WallTouch
+wallClassifyX x wall =
+    Debug.todo "todo"
+
+
+type WallTouch
+    = NotTouching
+    | TouchingCenterRegion
+    | Touching
+
+
 wallContainsX : Float -> Wall -> Bool
 wallContainsX x wall =
     x >= wallX1 wall && x <= wallX2 wall
