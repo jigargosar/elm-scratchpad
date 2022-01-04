@@ -353,16 +353,20 @@ update msg model =
             )
 
         OnKeyDown e ->
-            ( case ( model.phase, e.key, e.repeat ) of
-                ( Waiting, " ", False ) ->
-                    startStretchingOnUserInput model
+            ( if e.repeat then
+                model
 
-                _ ->
-                    if not e.repeat && List.member e.key [ "r", "Enter" ] then
-                        initModelWithSeed model.seed
+              else
+                case ( model.phase, e.key ) of
+                    ( Waiting, " " ) ->
+                        startStretchingOnUserInput model
 
-                    else
-                        model
+                    _ ->
+                        if List.member e.key [ "r", "Enter" ] then
+                            initModelWithSeed model.seed
+
+                        else
+                            model
             , Cmd.none
             )
 
