@@ -418,7 +418,7 @@ viewStartingInstructions show =
     in
     words "Hold down the mouse to stretch the stick"
         [ opacity opacityValue
-        , transitionOpacity
+        , style "transition" "opacity 500ms"
         , fill white
         , transforms [ "translateY(-30%)" ]
         , fontSize "10px"
@@ -438,7 +438,7 @@ viewDoubleScoreIndicator phase =
     in
     words "DOUBLE SCORE"
         [ opacity opacityValue
-        , transitionOpacity
+        , style "transition" "opacity 500ms"
         , fill white
         , transforms [ "translateY(-30%)" ]
         , fontSize "10px"
