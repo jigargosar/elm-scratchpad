@@ -535,11 +535,7 @@ type alias Stick =
 
 initStretchingStick : Float -> Stick
 initStretchingStick x =
-    let
-        dt =
-            0
-    in
-    { x = x, len = dt * stretchSpeed, angleDeg = -90 }
+    { x = x, len = 0, angleDeg = -90 }
 
 
 stretchStick : Float -> Stick -> Stick
