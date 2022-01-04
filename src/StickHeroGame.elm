@@ -381,7 +381,7 @@ update msg model =
             )
 
         OnMouseUp ->
-            ( model, Cmd.none )
+            ( stopStretchingOnUserInput model, Cmd.none )
 
 
 view : Model -> Document Msg
