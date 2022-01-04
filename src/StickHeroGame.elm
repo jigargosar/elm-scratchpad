@@ -394,15 +394,20 @@ viewSvg model =
             , viewWalls model.walls
             , viewHero model.heroX model.heroY
             ]
-        , words (fromInt model.score)
-            [ fill wWhite
-            , wordsAlignYTop
-            , wordsAlignXRight
-            , transforms [ "translate(calc(50% - 1ch),-50%)" ]
-            , fontSize "20px"
-            ]
+        , viewScore model.score
         , viewDoubleScoreIndicator model.phase
         , viewRestartGameOverlay model.phase
+        ]
+
+
+viewScore : Int -> Svg msg
+viewScore score =
+    words (fromInt score)
+        [ fill wWhite
+        , wordsAlignYTop
+        , wordsAlignXRight
+        , transforms [ "translate(calc(50% - 1ch),-50%)" ]
+        , fontSize "20px"
         ]
 
 
