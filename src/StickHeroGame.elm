@@ -183,7 +183,7 @@ step dt model =
             in
             if stick == turnedStick then
                 --{ model | phase = Walking turnedStick }
-                case wallsSelectNextTouchingEndOfStick stick model.walls of
+                case wallsSelectNextTouchingX (stickX2 stick) model.walls of
                     Nothing ->
                         { model | phase = WalkingToEndOfStick turnedStick }
 
@@ -675,11 +675,6 @@ wallsLast (Walls _ c after) =
     after
         |> listLast
         |> Maybe.withDefault c
-
-
-wallsSelectNextTouchingEndOfStick : Stick -> Walls -> Maybe ( WallTouch, Walls )
-wallsSelectNextTouchingEndOfStick stick =
-    wallsSelectNextTouchingX (stickX2 stick)
 
 
 wallsSelectNextTouchingX : Float -> Walls -> Maybe ( WallTouch, Walls )
