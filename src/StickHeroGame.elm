@@ -366,12 +366,7 @@ update msg model =
             )
 
         OnMouseDown ->
-            ( case model.phase of
-                Waiting ->
-                    startStretchingOnUserInput model
-
-                _ ->
-                    model
+            ( startStretchingOnUserInput model
             , Cmd.none
             )
 
