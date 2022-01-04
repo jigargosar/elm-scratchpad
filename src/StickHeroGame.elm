@@ -425,7 +425,7 @@ viewSvg model =
             [ fill wWhite
             , wordsAlignYTop
             , wordsAlignXRight
-            , transforms [ "translate(50%,-50%)" ]
+            , transforms [ "translate(calc(50% - 1ch),-50%)" ]
             ]
         , case model.phase of
             Over ->
