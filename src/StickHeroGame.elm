@@ -419,17 +419,6 @@ viewStartingInstructions show =
         ]
 
 
-viewScore : Int -> Svg msg
-viewScore score =
-    words (fromInt score)
-        [ fill wWhite
-        , wordsAlignYTop
-        , wordsAlignXRight
-        , transforms [ "translate(calc(50% - 1ch),-50%)" ]
-        , fontSize "20px"
-        ]
-
-
 viewDoubleScoreIndicator : Phase -> Svg msg
 viewDoubleScoreIndicator phase =
     let
@@ -447,6 +436,17 @@ viewDoubleScoreIndicator phase =
         , fill white
         , transforms [ "translateY(-20%)" ]
         , fontSize "10px"
+        ]
+
+
+viewScore : Int -> Svg msg
+viewScore score =
+    words (fromInt score)
+        [ fill wWhite
+        , wordsAlignYTop
+        , wordsAlignXRight
+        , transforms [ "translate(calc(50% - 1ch),-50%)" ]
+        , fontSize "20px"
         ]
 
 
