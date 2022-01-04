@@ -456,7 +456,7 @@ viewSvg model =
         , viewScore model.score
         , viewStartingInstructions (isWaitingForFirstTime model)
         , viewDoubleScoreIndicator (shouldShowDoubleScoreIndicator model)
-        , viewRestartGameOverlay model.phase
+        , viewRestartGameOverlay (model.phase == Over)
         ]
 
 
@@ -497,12 +497,8 @@ viewScore score =
         ]
 
 
-viewRestartGameOverlay : Phase -> Svg Msg
-viewRestartGameOverlay phase =
-    let
-        active =
-            phase == Over
-    in
+viewRestartGameOverlay : Bool -> Svg Msg
+viewRestartGameOverlay active =
     group
         [ opacityFromBool active
         , pointerEventsFromBool active
