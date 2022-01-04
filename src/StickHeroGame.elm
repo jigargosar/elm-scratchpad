@@ -75,7 +75,7 @@ wallWidthRange =
 
 
 wallGapRange =
-    ( heroWidth * 2.5, heroWidth * 9.5 )
+    ( heroWidth * 2.5, heroWidth * 10 )
 
 
 initialWallWidth =
@@ -433,7 +433,7 @@ viewportWidth =
 
 
 viewportHeight =
-    200
+    300
 
 
 viewSvg : Model -> Html Msg
