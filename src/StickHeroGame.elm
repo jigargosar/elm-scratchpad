@@ -401,19 +401,23 @@ viewSvg model =
             , transforms [ "translate(calc(50% - 1ch),-50%)" ]
             , fontSize "20px"
             ]
-        , case model.phase of
-            Over ->
-                group [ xf [ mvUp (viewportHeight / 4) ] ]
-                    [ rect viewportWidth (viewportHeight / 4) [ fill black, opacity 0.9 ]
-                    , words "RESTART"
-                        [ fill wWhite
-                        , fontSize "30px"
-                        ]
-                    ]
-
-            _ ->
-                noView
+        , viewRestartGameOverlay model.phase
         ]
+
+
+viewRestartGameOverlay phase =
+    case phase of
+        Over ->
+            group [ xf [ mvUp (viewportHeight / 4) ] ]
+                [ rect viewportWidth (viewportHeight / 4) [ fill black, opacity 0.9 ]
+                , words "RESTART"
+                    [ fill wWhite
+                    , fontSize "30px"
+                    ]
+                ]
+
+        _ ->
+            noView
 
 
 viewSticks : List Stick -> Svg msg
