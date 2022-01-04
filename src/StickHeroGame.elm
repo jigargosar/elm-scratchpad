@@ -401,10 +401,28 @@ viewSvg model =
             , transforms [ "translate(calc(50% - 1ch),-50%)" ]
             , fontSize "20px"
             ]
+        , viewDoubleScoreIndicator model.phase
         , viewRestartGameOverlay model.phase
         ]
 
 
+viewDoubleScoreIndicator phase =
+    let
+        opacityValue =
+            case phase of
+                WalkingToCenterOfWall TouchingCenteralRegion _ ->
+                    1
+
+                _ ->
+                    0
+    in
+    words "DOUBLE SCORE"
+        [ fill white
+        , transforms [ "translateY (-20%)" ]
+        ]
+
+
+viewRestartGameOverlay : Phase -> Svg msg
 viewRestartGameOverlay phase =
     case phase of
         Over ->
