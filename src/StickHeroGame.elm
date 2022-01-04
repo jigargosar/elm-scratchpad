@@ -420,7 +420,7 @@ viewStartingInstructions show =
         [ opacity opacityValue
         , transitionOpacity
         , fill white
-        , transforms [ "translateY(-20%)" ]
+        , transforms [ "translateY(-30%)" ]
         , fontSize "10px"
         ]
 
@@ -440,7 +440,7 @@ viewDoubleScoreIndicator phase =
         [ opacity opacityValue
         , transitionOpacity
         , fill white
-        , transforms [ "translateY(-20%)" ]
+        , transforms [ "translateY(-30%)" ]
         , fontSize "10px"
         ]
 
