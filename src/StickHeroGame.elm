@@ -406,6 +406,10 @@ viewSvg model =
         ]
 
 
+transitionOpacity =
+    style "transition" "opacity 500ms ease-in-out"
+
+
 viewStartingInstructions : Bool -> Svg msg
 viewStartingInstructions show =
     let
@@ -423,10 +427,6 @@ viewStartingInstructions show =
         , transforms [ "translateY(-30%)" ]
         , fontSize "10px"
         ]
-
-
-transitionOpacity =
-    style "transition" "opacity 500ms ease-in-out"
 
 
 viewDoubleScoreIndicator : Phase -> Svg msg
