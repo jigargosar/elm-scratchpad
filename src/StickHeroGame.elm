@@ -38,24 +38,24 @@ main =
 -- CONSTANTS
 
 
-walkingSpeed =
-    0.1
-
-
-heroFallingSpeed =
-    0.1
-
-
-turnSpeed =
-    0.4
-
-
 stretchSpeed =
     0.1
 
 
+walkingSpeed =
+    0.2
+
+
+heroFallingSpeed =
+    0.2
+
+
 transitionSpeed =
-    0.1
+    0.2
+
+
+turnSpeed =
+    0.4
 
 
 heroWidth =
