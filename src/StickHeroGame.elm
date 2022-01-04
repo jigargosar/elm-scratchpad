@@ -21,7 +21,7 @@ import Utils exposing (..)
    [x] DOUBLE SCORE indicator.
    [x] Starting Instructions: "Hold down the mouse to stretch the stick"
    [x] click input
-   * make game more difficult by reducing max/average wall width.
+   [x] make game more difficult by reducing max/average wall width.
 -}
 
 
