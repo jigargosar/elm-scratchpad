@@ -156,24 +156,6 @@ stickFromPhase phase =
             Nothing
 
 
-ensureSufficientWalls : Phase -> Model -> Model
-ensureSufficientWalls prevPhase model =
-    if model.phase == Waiting && prevPhase /= Waiting then
-        case wallsEnsureSufficient model.walls of
-            Nothing ->
-                model
-
-            Just gen ->
-                let
-                    ( walls, seed ) =
-                        Random.step gen model.seed
-                in
-                { model | walls = walls, seed = seed }
-
-    else
-        model
-
-
 addDelta : Float -> Model -> Model
 addDelta delta model =
     { model | clock = model.clock + delta }
@@ -241,6 +223,7 @@ step dt model =
             in
             if xOffset == model.xOffset then
                 { model | phase = Waiting }
+                    |> ensureSufficientWalls
 
             else
                 { model | xOffset = xOffset }
@@ -274,6 +257,20 @@ step dt model =
             model
 
 
+ensureSufficientWalls : Model -> Model
+ensureSufficientWalls model =
+    case wallsEnsureSufficient model.walls of
+        Nothing ->
+            model
+
+        Just gen ->
+            let
+                ( walls, seed ) =
+                    Random.step gen model.seed
+            in
+            { model | walls = walls, seed = seed }
+
+
 type Msg
     = NOP
     | OnClampedDelta Float
@@ -299,7 +296,6 @@ update msg model =
         OnClampedDelta delta ->
             ( model
                 |> step delta
-                |> ensureSufficientWalls model.phase
                 |> addDelta delta
             , Cmd.none
             )
