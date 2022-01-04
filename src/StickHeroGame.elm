@@ -128,7 +128,7 @@ type Phase
     | Stretching Stick
     | Turning Stick
     | WalkingToEndOfStick Stick
-    | WalkingToCenterOfWall Walls
+    | WalkingToCenterOfWall WallTouch Walls
     | Falling Stick
     | Transitioning
     | Over
@@ -149,7 +149,7 @@ stickFromPhase phase =
         WalkingToEndOfStick stick ->
             Just stick
 
-        WalkingToCenterOfWall _ ->
+        WalkingToCenterOfWall _ _ ->
             Nothing
 
         Falling stick ->
@@ -189,7 +189,7 @@ step dt model =
 
                     Just ( wallTouch, walls ) ->
                         { model
-                            | phase = WalkingToCenterOfWall walls
+                            | phase = WalkingToCenterOfWall wallTouch walls
                             , sticks = stick :: model.sticks
                             , score =
                                 model.score
