@@ -219,7 +219,7 @@ step dt model =
             else
                 { model | heroX = heroX }
 
-        WalkingToCenterOfWall walls ->
+        WalkingToCenterOfWall _ walls ->
             let
                 maxHeroX =
                     wallsCurrentCX walls
