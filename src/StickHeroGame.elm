@@ -472,7 +472,7 @@ transitionOpacity =
 
 viewStartingInstructions : Bool -> Svg msg
 viewStartingInstructions show =
-    words "Hold down the mouse to stretch the stick"
+    words "Hold down the mouse to stretch out the stick"
         [ opacityFromBool show
         , transitionOpacity
         , fill white
