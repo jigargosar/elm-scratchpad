@@ -456,16 +456,8 @@ transitionOpacity =
 
 viewStartingInstructions : Bool -> Svg msg
 viewStartingInstructions show =
-    let
-        opacityValue =
-            if show then
-                1
-
-            else
-                0
-    in
     words "Hold down the mouse to stretch the stick"
-        [ opacity opacityValue
+        [ opacityFromBool show
         , transitionOpacity
         , fill white
         , transforms [ "translateY(-30%)" ]
