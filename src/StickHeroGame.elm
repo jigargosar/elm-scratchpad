@@ -301,6 +301,8 @@ type Msg
     | OnClampedDelta Float
     | OnKeyDown KeyEvent
     | OnKeyUp String
+    | OnMouseDown
+    | OnMouseUp
 
 
 subscriptions : Model -> Sub Msg
@@ -308,6 +310,8 @@ subscriptions _ =
     [ Browser.Events.onAnimationFrameDelta (clamp 0 100 >> OnClampedDelta)
     , Browser.Events.onKeyDown (JD.map OnKeyDown keyEventDecoder)
     , Browser.Events.onKeyUp (JD.map OnKeyUp keyDecoder)
+    , Browser.Events.onMouseDown (JD.succeed OnMouseDown)
+    , Browser.Events.onMouseUp (JD.succeed OnMouseUp)
     ]
         |> Sub.batch
 
@@ -347,6 +351,12 @@ update msg model =
                     model
             , Cmd.none
             )
+
+        OnMouseDown ->
+            ( model, Cmd.none )
+
+        OnMouseUp ->
+            ( model, Cmd.none )
 
 
 view : Model -> Document Msg
