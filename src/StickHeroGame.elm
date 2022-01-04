@@ -417,7 +417,8 @@ viewDoubleScoreIndicator phase =
                     0
     in
     words "DOUBLE SCORE"
-        [ fill white
+        [ opacity opacityValue
+        , fill white
         , transforms [ "translateY(-20%)" ]
         , fontSize "10px"
         ]
