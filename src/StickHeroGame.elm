@@ -134,6 +134,11 @@ type Phase
     | Over
 
 
+isWaitingForFirstTime : Model -> Bool
+isWaitingForFirstTime model =
+    model.phase == Waiting && List.isEmpty model.sticks
+
+
 stickFromPhase : Phase -> Maybe Stick
 stickFromPhase phase =
     case phase of
@@ -395,7 +400,7 @@ viewSvg model =
             , viewHero model.heroX model.heroY
             ]
         , viewScore model.score
-        , viewStartingInstructions (model.phase == Waiting && List.isEmpty model.sticks)
+        , viewStartingInstructions (isWaitingForFirstTime model)
         , viewDoubleScoreIndicator model.phase
         , viewRestartGameOverlay model.phase
         ]
