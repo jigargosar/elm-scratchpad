@@ -15,7 +15,7 @@ import Utils exposing (..)
            * youtube: https://www.youtube.com/watch?v=eue3UdFvwPo
 
    Pending:
-   * simplify ensureSufficientWalls
+   [x] simplify ensureSufficientWalls
    * split walking phase?
    * Score on top right
    * DOUBLE SCORE indicator.
