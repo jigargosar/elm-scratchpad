@@ -127,7 +127,6 @@ type Phase
     = Waiting
     | Stretching Stick
     | Turning Stick
-    | Walking Stick
     | WalkingToEndOfStick Stick
     | WalkingToCenterOfWall Walls
     | Falling Stick
@@ -145,9 +144,6 @@ stickFromPhase phase =
             Just stick
 
         Turning stick ->
-            Just stick
-
-        Walking stick ->
             Just stick
 
         WalkingToEndOfStick stick ->
@@ -228,38 +224,6 @@ step dt model =
                     | walls = walls
                     , phase = Transitioning
                 }
-
-            else
-                { model | heroX = heroX }
-
-        Walking stick ->
-            let
-                ( maxHeroX, mbNextWalls ) =
-                    case wallsSelectNextTouchingEndOfStick stick model.walls of
-                        Nothing ->
-                            ( stickX2 stick
-                            , Nothing
-                            )
-
-                        Just nextWalls ->
-                            ( wallsCurrentCX nextWalls
-                            , Just nextWalls
-                            )
-
-                heroX =
-                    model.heroX + dt * walkingSpeed |> atMost maxHeroX
-            in
-            if heroX == model.heroX then
-                case mbNextWalls of
-                    Nothing ->
-                        { model | phase = Falling stick }
-
-                    Just nextWalls ->
-                        { model
-                            | walls = nextWalls
-                            , sticks = stick :: model.sticks
-                            , phase = Transitioning
-                        }
 
             else
                 { model | heroX = heroX }
