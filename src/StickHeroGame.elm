@@ -395,8 +395,27 @@ viewSvg model =
             , viewHero model.heroX model.heroY
             ]
         , viewScore model.score
+        , viewStartingInstructions (model.phase == Waiting && List.isEmpty model.sticks)
         , viewDoubleScoreIndicator model.phase
         , viewRestartGameOverlay model.phase
+        ]
+
+
+viewStartingInstructions show =
+    let
+        opacityValue =
+            if show then
+                1
+
+            else
+                0
+    in
+    words "Hold down the mouse to stretch the stick"
+        [ opacity opacityValue
+        , transitionOpacity
+        , fill white
+        , transforms [ "translateY(-20%)" ]
+        , fontSize "10px"
         ]
 
 
