@@ -360,8 +360,15 @@ update msg model =
                 ( Over, " ", False ) ->
                     initModelWithSeed model.seed
 
+                ( _, "r", False ) ->
+                    initModelWithSeed model.seed
+
                 _ ->
-                    model
+                    if not e.repeat && List.member e.key [ "r", "Enter" ] then
+                        initModelWithSeed model.seed
+
+                    else
+                        model
             , Cmd.none
             )
 
