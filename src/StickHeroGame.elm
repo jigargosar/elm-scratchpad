@@ -679,11 +679,11 @@ wallsLast (Walls _ c after) =
 
 wallsSelectNextTouchingEndOfStick : Stick -> Walls -> Maybe ( WallTouch, Walls )
 wallsSelectNextTouchingEndOfStick stick =
-    wallsSelectNextContainingX (stickX2 stick)
+    wallsSelectNextTouchingX (stickX2 stick)
 
 
-wallsSelectNextContainingX : Float -> Walls -> Maybe ( WallTouch, Walls )
-wallsSelectNextContainingX x =
+wallsSelectNextTouchingX : Float -> Walls -> Maybe ( WallTouch, Walls )
+wallsSelectNextTouchingX x =
     wallsSelectNext
         >> Maybe.andThen
             (\walls ->
