@@ -71,7 +71,7 @@ doubleScoreSquareWidth =
 
 
 wallWidthRange =
-    ( heroWidth * 1.5, heroWidth * 4 )
+    ( heroWidth * 1.5, heroWidth * 2.5 )
 
 
 wallGapRange =
