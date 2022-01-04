@@ -16,6 +16,7 @@ import Utils exposing (..)
 
    Pending:
    * simplify ensureSufficientWalls
+   * split walking phase?
    * Score on top right
    * DOUBLE SCORE indicator.
    * Starting Instructions: "Hold down then mouse to stretch the stick"
