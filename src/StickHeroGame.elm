@@ -278,7 +278,7 @@ step dt model =
         Falling stick ->
             let
                 maxHeroY =
-                    100
+                    viewportHeight / 2
 
                 heroY =
                     model.heroY
