@@ -43,15 +43,15 @@ stretchSpeed =
 
 
 walkingSpeed =
-    0.2
+    0.15
 
 
 heroFallingSpeed =
-    0.2
+    0.3
 
 
 transitionSpeed =
-    0.2
+    0.15
 
 
 turnSpeed =
