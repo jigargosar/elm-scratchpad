@@ -9,11 +9,15 @@ import Utils exposing (..)
 
 
 {-
-   Specs:
-   * clone Stick Hero
-        * codepen: https://codepen.io/HunorMarton/pen/xxOMQKg
-        * youtube: https://www.youtube.com/watch?v=eue3UdFvwPo
+      Specs:
+      * clone Stick Hero
+           * codepen: https://codepen.io/HunorMarton/pen/xxOMQKg
+           * youtube: https://www.youtube.com/watch?v=eue3UdFvwPo
 
+   Pending:
+   * Starting Instructions: "Hold down then mouse to stretch the stick"
+   * Score
+   * click input
 -}
 
 
