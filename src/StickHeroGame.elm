@@ -194,7 +194,7 @@ step dt model =
                             , score =
                                 model.score
                                     + (case wallTouch of
-                                        TouchingCenterRegion ->
+                                        TouchingCenteralRegion ->
                                             2
 
                                         TouchingNonCentralRegion ->
@@ -528,20 +528,35 @@ initialWall =
 wallTouchAtX : Float -> Wall -> Maybe WallTouch
 wallTouchAtX x wall =
     if wallContainsX x wall then
-        Just TouchingNonCentralRegion
+        Just
+            (if wallCentralRegionContainsX x wall then
+                TouchingCenteralRegion
+
+             else
+                TouchingNonCentralRegion
+            )
 
     else
         Nothing
 
 
 type WallTouch
-    = TouchingCenterRegion
+    = TouchingCenteralRegion
     | TouchingNonCentralRegion
 
 
 wallContainsX : Float -> Wall -> Bool
 wallContainsX x wall =
     x >= wallX1 wall && x <= wallX2 wall
+
+
+wallCentralRegionContainsX : Float -> Wall -> Bool
+wallCentralRegionContainsX x wall =
+    let
+        hw =
+            doubleScoreSquareWidth / 2
+    in
+    x >= wall.x - hw && x <= wall.x + hw
 
 
 wallX1 : Wall -> Float
