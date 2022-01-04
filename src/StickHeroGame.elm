@@ -509,24 +509,10 @@ viewRestartGameOverlay phase =
     let
         active =
             phase == Over
-
-        opacityValue =
-            if active then
-                1
-
-            else
-                0
-
-        pointerEventsValue =
-            if active then
-                "auto"
-
-            else
-                "none"
     in
     group
-        [ opacity opacityValue
-        , style "pointer-events" pointerEventsValue
+        [ opacityFromBool active
+        , pointerEventsFromBool active
         , transitionOpacity
         , xf [ mvUp (viewportHeight / 4) ]
         , notifyClick RestartClicked

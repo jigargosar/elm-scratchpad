@@ -977,6 +977,14 @@ noPointerEvents =
     style "pointer-events" "none"
 
 
+pointerEventsFromBool bool =
+    if bool then
+        style "pointer-events" "auto"
+
+    else
+        style "pointer-events" "none"
+
+
 tac =
     style "text-align" "center"
 
@@ -2014,6 +2022,14 @@ right0 =
 
 opacity =
     fromFloat >> style "opacity"
+
+
+opacityFromBool bool =
+    if bool then
+        opacity 1
+
+    else
+        opacity 0
 
 
 
