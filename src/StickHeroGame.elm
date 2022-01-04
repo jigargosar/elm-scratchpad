@@ -184,7 +184,12 @@ step dt model =
                     turnStick dt stick
             in
             if stick == turnedStick then
-                { model | phase = Walking turnedStick }
+                case wallsSelectNextTouchingEndOfStick stick model.walls of
+                    Nothing ->
+                        { model | phase = Walking turnedStick }
+
+                    Just walls ->
+                        { model | phase = Walking turnedStick }
 
             else
                 { model | phase = Turning turnedStick }
