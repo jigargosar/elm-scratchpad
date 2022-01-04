@@ -147,6 +147,16 @@ startStretchingOnUserInput model =
             model
 
 
+stopStretchingOnUserInput : Model -> Model
+stopStretchingOnUserInput model =
+    case model.phase of
+        Stretching stick ->
+            { model | phase = Turning stick }
+
+        _ ->
+            model
+
+
 isWaitingForFirstTime : Model -> Bool
 isWaitingForFirstTime model =
     model.phase == Waiting && List.isEmpty model.sticks
@@ -356,9 +366,9 @@ update msg model =
             )
 
         OnKeyUp key ->
-            ( case ( model.phase, key ) of
-                ( Stretching stick, " " ) ->
-                    { model | phase = Turning stick }
+            ( case key of
+                " " ->
+                    stopStretchingOnUserInput model
 
                 _ ->
                     model
