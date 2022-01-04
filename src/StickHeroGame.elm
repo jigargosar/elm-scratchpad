@@ -75,7 +75,7 @@ wallWidthRange =
 
 
 wallGapRange =
-    ( heroWidth * 2.5, heroWidth * 10 )
+    ( heroWidth * 2.5, heroWidth * 9.5 )
 
 
 initialWallWidth =
