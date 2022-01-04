@@ -19,7 +19,7 @@ import Utils exposing (..)
    [x] Score on top right
    [x] split walking phase
    [x] DOUBLE SCORE indicator.
-   * Starting Instructions: "Hold down then mouse to stretch the stick"
+   * Starting Instructions: "Hold down the mouse to stretch the stick"
    * click input
 -}
 
