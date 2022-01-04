@@ -376,9 +376,7 @@ update msg model =
             )
 
         OnMouseDown ->
-            ( startStretchingOnUserInput model
-            , Cmd.none
-            )
+            ( startStretchingOnUserInput model, Cmd.none )
 
         OnMouseUp ->
             ( stopStretchingOnUserInput model, Cmd.none )
