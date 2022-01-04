@@ -582,17 +582,13 @@ type Walls
     = Walls (List Wall) Wall (List Wall)
 
 
-sufficientAfterWallCount =
-    20
-
-
 minimumAfterWallCount =
-    sufficientAfterWallCount // 2
+    10
 
 
 wallsRandom : Generator Walls
 wallsRandom =
-    randomWallSequenceAfter sufficientAfterWallCount initialWall
+    randomWallSequenceAfter (minimumAfterWallCount * 2) initialWall
         |> Random.map (Walls [] initialWall)
 
 
@@ -605,7 +601,7 @@ wallsEnsureSufficient (Walls before c after) =
                     |> listLast
                     |> Maybe.withDefault c
         in
-        randomWallSequenceAfter sufficientAfterWallCount lastWall
+        randomWallSequenceAfter (minimumAfterWallCount * 2) lastWall
             |> Random.map
                 (\afterLast ->
                     Walls before c (after ++ afterLast)
