@@ -199,7 +199,7 @@ step dt model =
                             , score =
                                 model.score
                                     + (case wallTouch of
-                                        TouchingCenteralRegion ->
+                                        TouchingCentralRegion ->
                                             2
 
                                         TouchingNonCentralRegion ->
@@ -418,11 +418,15 @@ viewStartingInstructions show =
     in
     words "Hold down the mouse to stretch the stick"
         [ opacity opacityValue
-        , style "transition" "opacity 500ms"
+        , transitionOpacity
         , fill white
         , transforms [ "translateY(-30%)" ]
         , fontSize "10px"
         ]
+
+
+transitionOpacity =
+    style "transition" "opacity 500ms ease-in-out"
 
 
 viewDoubleScoreIndicator : Phase -> Svg msg
@@ -430,7 +434,7 @@ viewDoubleScoreIndicator phase =
     let
         opacityValue =
             case phase of
-                WalkingToCenterOfWall TouchingCenteralRegion _ ->
+                WalkingToCenterOfWall TouchingCentralRegion _ ->
                     1
 
                 _ ->
@@ -438,7 +442,7 @@ viewDoubleScoreIndicator phase =
     in
     words "DOUBLE SCORE"
         [ opacity opacityValue
-        , style "transition" "opacity 500ms"
+        , transitionOpacity
         , fill white
         , transforms [ "translateY(-30%)" ]
         , fontSize "10px"
@@ -586,7 +590,7 @@ wallTouchAtX x wall =
     if wallContainsX x wall then
         Just
             (if wallCentralRegionContainsX x wall then
-                TouchingCenteralRegion
+                TouchingCentralRegion
 
              else
                 TouchingNonCentralRegion
@@ -597,7 +601,7 @@ wallTouchAtX x wall =
 
 
 type WallTouch
-    = TouchingCenteralRegion
+    = TouchingCentralRegion
     | TouchingNonCentralRegion
 
 
