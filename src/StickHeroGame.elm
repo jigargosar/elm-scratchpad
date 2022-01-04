@@ -363,7 +363,14 @@ update msg model =
             )
 
         OnMouseDown ->
-            ( model, Cmd.none )
+            ( case model.phase of
+                Waiting ->
+                    startStretching model
+
+                _ ->
+                    model
+            , Cmd.none
+            )
 
         OnMouseUp ->
             ( model, Cmd.none )
