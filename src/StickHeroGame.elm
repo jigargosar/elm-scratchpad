@@ -162,6 +162,16 @@ isWaitingForFirstTime model =
     model.phase == Waiting && List.isEmpty model.sticks
 
 
+shouldShowDoubleScoreIndicator : Model -> Bool
+shouldShowDoubleScoreIndicator model =
+    case model.phase of
+        WalkingToCenterOfWall TouchingCentralRegion _ ->
+            True
+
+        _ ->
+            False
+
+
 stickFromPhase : Phase -> Maybe Stick
 stickFromPhase phase =
     case phase of
@@ -445,7 +455,7 @@ viewSvg model =
             ]
         , viewScore model.score
         , viewStartingInstructions (isWaitingForFirstTime model)
-        , viewDoubleScoreIndicator model.phase
+        , viewDoubleScoreIndicator (shouldShowDoubleScoreIndicator model)
         , viewRestartGameOverlay model.phase
         ]
 
@@ -465,19 +475,10 @@ viewStartingInstructions show =
         ]
 
 
-viewDoubleScoreIndicator : Phase -> Svg msg
-viewDoubleScoreIndicator phase =
-    let
-        opacityValue =
-            case phase of
-                WalkingToCenterOfWall TouchingCentralRegion _ ->
-                    1
-
-                _ ->
-                    0
-    in
+viewDoubleScoreIndicator : Bool -> Svg msg
+viewDoubleScoreIndicator active =
     words "DOUBLE SCORE"
-        [ opacity opacityValue
+        [ opacityFromBool active
         , transitionOpacity
         , fill white
         , transforms [ "translateY(-30%)" ]
