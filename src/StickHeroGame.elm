@@ -458,9 +458,9 @@ viewScore score =
 
 viewRestartGameOverlay : Phase -> Svg msg
 viewRestartGameOverlay phase =
-    case phase of
-        Over ->
-            group [ xf [ mvUp (viewportHeight / 4) ] ]
+    group [ xf [ mvUp (viewportHeight / 4) ] ] <|
+        case phase of
+            Over ->
                 [ rect viewportWidth (viewportHeight / 4) [ fill black, opacity 0.9 ]
                 , words "RESTART"
                     [ fill wWhite
@@ -468,8 +468,8 @@ viewRestartGameOverlay phase =
                     ]
                 ]
 
-        _ ->
-            noView
+            _ ->
+                []
 
 
 viewSticks : List Stick -> Svg msg
