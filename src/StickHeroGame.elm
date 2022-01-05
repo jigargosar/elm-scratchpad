@@ -425,8 +425,6 @@ view model =
             , sWidth "100vw"
             , sHeight "100vh"
             , bgc wPink
-
-            --, Html.Events.on "pointerdown" (JD.succeed OnMouseDown)
             , disableContextMenu NOP
             , notifyPointerDown OnMouseDown
             , notifyPointerUp OnMouseUp
