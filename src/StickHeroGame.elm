@@ -110,6 +110,11 @@ init () =
     )
 
 
+forceRestart : Model -> Model
+forceRestart { seed } =
+    initModelWithSeed seed
+
+
 initModelWithSeed : Seed -> Model
 initModelWithSeed initialSeed =
     let
@@ -366,11 +371,11 @@ update msg model =
                         startStretchingOnUserInput model
 
                     ( Over, " " ) ->
-                        initModelWithSeed model.seed
+                        forceRestart model
 
                     _ ->
                         if List.member e.key [ "r", "Enter" ] then
-                            initModelWithSeed model.seed
+                            forceRestart model
 
                         else
                             model
@@ -396,7 +401,7 @@ update msg model =
             ( stopStretchingOnUserInput model, Cmd.none )
 
         RestartClicked ->
-            ( initModelWithSeed model.seed, Cmd.none )
+            ( forceRestart model, Cmd.none )
 
 
 view : Model -> Document Msg
