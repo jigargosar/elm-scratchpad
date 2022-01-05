@@ -424,7 +424,6 @@ view model =
             [ viewBoxC viewportWidth viewportHeight
             , sWidth "100vw"
             , sHeight "100vh"
-            , bgc wPink
             , disableContextMenu NOP
             , notifyPointerDown OnMouseDown
             , notifyPointerUp OnMouseUp
