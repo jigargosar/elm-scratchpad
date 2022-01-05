@@ -140,6 +140,7 @@ initModelWithSeed initialSeed =
 
 type Phase
     = Waiting
+    | StartedStretching Float
     | Stretching Stick
     | Turning Stick
     | WalkingToEndOfStick Stick
@@ -193,6 +194,9 @@ stickFromPhase phase =
         Waiting ->
             Nothing
 
+        StartedStretching _ ->
+            Nothing
+
         Stretching stick ->
             Just stick
 
@@ -220,6 +224,9 @@ step dt model =
     case model.phase of
         Waiting ->
             model
+
+        StartedStretching elapsed ->
+            { model | phase = StartedStretching <| elapsed + dt }
 
         Stretching stick ->
             { model | phase = Stretching <| stretchStick dt stick }
