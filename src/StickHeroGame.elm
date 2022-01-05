@@ -417,6 +417,7 @@ view model =
             , sWidth "100vw"
             , sHeight "100vh"
             , disableContextMenu NOP
+            , style "touch-action" "none"
             , notifyPointerDown OnPointerDown
             , notifyPointerUp OnPointerUp
             ]
