@@ -122,6 +122,14 @@ onEnter tag =
         )
 
 
+onBrowserKeyDown msg =
+    Browser.Events.onKeyDown (JD.map msg keyEventDecoder)
+
+
+onBrowserKeyUp msg =
+    Browser.Events.onKeyUp (JD.map msg keyDecoder)
+
+
 keyEventDecoder : Decoder KeyEvent
 keyEventDecoder =
     JD.succeed KeyEvent

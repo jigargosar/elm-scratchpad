@@ -350,8 +350,8 @@ type Msg
 subscriptions : Model -> Sub Msg
 subscriptions _ =
     [ Browser.Events.onAnimationFrameDelta (clamp 0 100 >> OnClampedDelta)
-    , Browser.Events.onKeyDown (JD.map OnKeyDown keyEventDecoder)
-    , Browser.Events.onKeyUp (JD.map OnKeyUp keyDecoder)
+    , onBrowserKeyDown OnKeyDown
+    , onBrowserKeyUp OnKeyUp
 
     --, Browser.Events.onMouseDown (JD.succeed OnMouseDown)
     --, Browser.Events.onMouseUp (JD.succeed OnMouseUp)
