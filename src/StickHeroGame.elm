@@ -718,9 +718,12 @@ viewWall wall =
     let
         wallHeight =
             viewportHeight / 2
+
+        wallWidth =
+            wall.w - 2
     in
     group [ xf [ mvRight wall.x ] ]
-        [ rectT (wall.w - 2) wallHeight [ fill white ]
+        [ rectT wallWidth wallHeight [ fill white ]
         , squareT doubleScoreSquareWidth [ fill wPurple ]
         ]
 
