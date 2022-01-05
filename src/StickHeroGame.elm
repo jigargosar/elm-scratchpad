@@ -427,13 +427,7 @@ view model =
             , bgc wPink
 
             --, Html.Events.on "pointerdown" (JD.succeed OnMouseDown)
-            , Html.Events.custom "contextmenu"
-                (JD.succeed
-                    { message = NOP
-                    , stopPropagation = True
-                    , preventDefault = True
-                    }
-                )
+            , disableContextMenu NOP
             , Html.Events.on "pointerdown" (JD.succeed OnMouseDown)
             , Html.Events.on "pointerup" (JD.succeed OnMouseUp)
             ]

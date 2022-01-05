@@ -1933,6 +1933,16 @@ notifyClick =
     Html.Events.onClick
 
 
+disableContextMenu msg =
+    Html.Events.custom "contextmenu"
+        (JD.succeed
+            { message = msg
+            , stopPropagation = True
+            , preventDefault = True
+            }
+        )
+
+
 onInput =
     Html.Events.onInput
 
