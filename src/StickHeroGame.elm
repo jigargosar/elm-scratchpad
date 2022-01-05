@@ -333,8 +333,8 @@ type Msg
     | OnClampedDelta Float
     | OnKeyDown KeyEvent
     | OnKeyUp String
-    | OnMouseDown
-    | OnMouseUp
+    | OnPointerDown
+    | OnPointerUp
     | RestartClicked
 
 
@@ -387,12 +387,12 @@ update msg model =
             , Cmd.none
             )
 
-        OnMouseDown ->
+        OnPointerDown ->
             ( startStretchingOnUserInput model
             , Cmd.none
             )
 
-        OnMouseUp ->
+        OnPointerUp ->
             ( stopStretchingOnUserInput model, Cmd.none )
 
         RestartClicked ->
@@ -408,8 +408,8 @@ view model =
             , sWidth "100vw"
             , sHeight "100vh"
             , disableContextMenu NOP
-            , notifyPointerDown OnMouseDown
-            , notifyPointerUp OnMouseUp
+            , notifyPointerDown OnPointerDown
+            , notifyPointerUp OnPointerUp
             ]
             [ group
                 [ xf
