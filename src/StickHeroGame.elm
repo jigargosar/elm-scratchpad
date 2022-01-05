@@ -420,15 +420,17 @@ view model =
         [ basicStylesNode
         , basicSvg
             [ viewBoxC viewportWidth viewportHeight
-            , sMaxWidth "100vw"
-            , sMaxHeight "100vh"
-            , sWidth "100vw"
-            , sHeight "100vh"
-            , ma "auto"
 
             --, aWidth "100vw"
             --, aHeight "100vh"
+            , sWidth "100vw"
+            , sHeight "100vh"
+
+            --, sMaxWidth "100vw"
+            --, sMaxHeight "100vh"
+            , ma "auto"
             , overflowHidden
+            , bgc wPink
             ]
             [ group
                 [ xf
