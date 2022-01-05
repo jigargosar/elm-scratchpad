@@ -419,19 +419,7 @@ view model =
     Document "Stick Hero"
         [ basicStylesNode
         , basicSvg
-            [ viewBoxC viewportWidth viewportHeight
-
-            --, aWidth "100vw"
-            --, aHeight "100vh"
-            , sWidth "100vw"
-            , sHeight "100vh"
-
-            --, sMaxWidth "100vw"
-            --, sMaxHeight "100vh"
-            , ma "auto"
-            , overflowHidden
-            , bgc wPink
-            ]
+            svgAttrs
             [ group
                 [ xf
                     [ mvLeft (viewportWidth / 3)
@@ -449,6 +437,16 @@ view model =
             , viewRestartGameOverlay (model.phase == Over)
             ]
         ]
+
+
+svgAttrs =
+    [ viewBoxC viewportWidth viewportHeight
+    , sWidth "100vw"
+    , sHeight "100vh"
+    , ma "auto"
+    , overflowHidden
+    , bgc wPink
+    ]
 
 
 viewportWidth =
