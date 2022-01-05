@@ -518,7 +518,7 @@ viewRestartGameOverlay active =
         , transitionOpacity
         , notifyClick RestartClicked
         ]
-        [ rect viewportWidth viewportHeight [ fill transparent ]
+        [ square (max viewportWidth viewportHeight |> mul 3) [ fill transparent ]
         , group
             [ xf [ mvUp (viewportHeight / 4) ]
             ]
