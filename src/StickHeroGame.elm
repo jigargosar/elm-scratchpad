@@ -128,7 +128,7 @@ initModelWithSeed initialSeed =
             Random.step wallsRandom initialSeed
     in
     { score = 0
-    , phase = Waiting
+    , phase = Over
     , walls = walls
     , heroX = 0
     , heroY = 0
@@ -516,15 +516,17 @@ viewRestartGameOverlay active =
         [ opacityFromBool active
         , pointerEventsFromBool active
         , transitionOpacity
-        , xf [ mvUp (viewportHeight / 4) ]
         , notifyClick RestartClicked
         ]
-    <|
         [ rect viewportWidth viewportHeight [ fill transparent ]
-        , rect viewportWidth (viewportHeight / 4) [ fill black, opacity 0.9 ]
-        , words "RESTART"
-            [ fill wWhite
-            , fontSize "30px"
+        , group
+            [ xf [ mvUp (viewportHeight / 4) ]
+            ]
+            [ rect viewportWidth (viewportHeight / 4) [ fill black, opacity 0.9 ]
+            , words "RESTART"
+                [ fill wWhite
+                , fontSize "30px"
+                ]
             ]
         ]
 
