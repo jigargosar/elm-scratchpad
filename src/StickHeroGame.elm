@@ -18,7 +18,7 @@ import Utils exposing (..)
     [x] fix pointer up not being detected.
     [x] prevent screen scrolling on phone.
     * list visuals to clone
-    * send it to Ojas.
+    * list steps to take before you can send it to Ojas.
     * export repo to git hub.
     * check notes.md
 
