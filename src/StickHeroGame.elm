@@ -17,7 +17,11 @@ import Utils exposing (..)
     [x] play it on your mobile.
     [x] fix pointer up not being detected.
     [x] prevent screen scrolling on phone.
-    [x] make walls appear thinner than actual ,so on fail there is visible gap.
+    * on fail there should be visible gap.
+        * perhaps make walls appear thinner than actual,
+            * doesn't work, there will be a gap at stick start.
+        * can't play with stick length, will cause overflow or underflow.
+        * ideally on fail, we want to show smaller stick, that's all.
     * list visuals to clone
     * send it to Ojas.
     * export repo to git hub.
@@ -607,7 +611,7 @@ viewStick stick =
     in
     polyline
         [ ( 0, 0 )
-        , ( stick.len, 0 )
+        , ( stick.len - 2, 0 )
         ]
         [ strokeW sw
         , stroke wGreen_lime
@@ -721,9 +725,7 @@ viewWall wall =
             viewportHeight / 2
 
         wallWidth =
-            -- make walls appear thinner than actual
-            -- so on fail there is visible gap.
-            wall.w - 2
+            wall.w
     in
     group [ xf [ mvRight wall.x ] ]
         [ rectT wallWidth wallHeight [ fill white ]
