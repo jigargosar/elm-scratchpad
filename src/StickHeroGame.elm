@@ -352,9 +352,6 @@ subscriptions _ =
     [ Browser.Events.onAnimationFrameDelta (clamp 0 100 >> OnClampedDelta)
     , onBrowserKeyDown OnKeyDown
     , onBrowserKeyUp OnKeyUp
-
-    --, Browser.Events.onMouseDown (JD.succeed OnMouseDown)
-    --, Browser.Events.onMouseUp (JD.succeed OnMouseUp)
     ]
         |> Sub.batch
 
