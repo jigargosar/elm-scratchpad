@@ -17,7 +17,7 @@ import Utils exposing (..)
     [x] play it on your mobile.
     [x] fix pointer up not being detected.
     [x] prevent screen scrolling on phone.
-    * make walls appear thinner than actual to disallow minor gaps from failing.
+    [x] make walls appear thinner than actual ,so on fail there is visible gap.
     * list visuals to clone
     * send it to Ojas.
     * export repo to git hub.
@@ -720,6 +720,8 @@ viewWall wall =
             viewportHeight / 2
 
         wallWidth =
+            -- make walls appear thinner than actual
+            -- so on fail there is visible gap.
             wall.w - 2
     in
     group [ xf [ mvRight wall.x ] ]
