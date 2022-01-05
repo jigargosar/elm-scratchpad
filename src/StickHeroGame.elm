@@ -140,7 +140,6 @@ initModelWithSeed initialSeed =
 
 type Phase
     = Waiting
-    | StartedStretching Float
     | Stretching Stick
     | Turning Stick
     | WalkingToEndOfStick Stick
@@ -156,8 +155,7 @@ startStretchingOnUserInput model =
         Waiting ->
             { model
                 | phase =
-                    --Stretching (initStretchingStick (wallsCurrentX2 model.walls))
-                    StartedStretching 0
+                    Stretching (initStretchingStick (wallsCurrentX2 model.walls))
             }
 
         _ ->
@@ -195,9 +193,6 @@ stickFromPhase phase =
         Waiting ->
             Nothing
 
-        StartedStretching _ ->
-            Nothing
-
         Stretching stick ->
             Just stick
 
@@ -225,9 +220,6 @@ step dt model =
     case model.phase of
         Waiting ->
             model
-
-        StartedStretching elapsed ->
-            { model | phase = StartedStretching <| elapsed + dt }
 
         Stretching stick ->
             { model | phase = Stretching <| stretchStick dt stick }
