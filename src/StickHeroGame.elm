@@ -156,7 +156,8 @@ startStretchingOnUserInput model =
         Waiting ->
             { model
                 | phase =
-                    Stretching (initStretchingStick (wallsCurrentX2 model.walls))
+                    --Stretching (initStretchingStick (wallsCurrentX2 model.walls))
+                    StartedStretching 0
             }
 
         _ ->
