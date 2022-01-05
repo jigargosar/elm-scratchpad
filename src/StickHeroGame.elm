@@ -422,21 +422,15 @@ view model =
             [ viewBoxC viewportWidth viewportHeight
             , sMaxWidth "100vw"
             , sMaxHeight "100vh"
+            , sWidth "100vw"
+            , sHeight "100vh"
+            , ma "auto"
 
             --, aWidth "100vw"
             --, aHeight "100vh"
-            , ma "auto"
+            , overflowHidden
             ]
-            [ Svg.rect
-                [ aWidth "100vw"
-                , aHeight "100vh"
-                , fill wPink
-                , transforms
-                    [ "translate(-50vw,-50vh)"
-                    ]
-                ]
-                []
-            , group
+            [ group
                 [ xf
                     [ mvLeft (viewportWidth / 3)
                     , mvLeft model.xOffset
