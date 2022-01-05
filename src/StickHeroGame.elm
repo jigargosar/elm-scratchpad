@@ -22,10 +22,10 @@ import Utils exposing (..)
    [x] Starting Instructions: "Hold down the mouse to stretch the stick"
    [x] click input
    [x] make game more difficult by reducing max/average wall width.
-   * list visuals to clone
    * make svg expand to full screen, preserve aspect ratio to clone responsiveness.
    * use pointer-event pointer-down/up to make it work in mobile mode.
    * play it on your mobile.
+   * list visuals to clone
    * send it to Ojas.
    * export repo to git hub.
    * check notes.md
