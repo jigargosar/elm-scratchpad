@@ -16,6 +16,8 @@ import Utils exposing (..)
     Pending:
     [x] use pointer-event pointer-down/up to make it work in mobile mode.
     * play it on your mobile.
+    * prevent screen scrolling on phone.
+    * prevent pointer up not being detected.
     * list visuals to clone
     * send it to Ojas.
     * export repo to git hub.
