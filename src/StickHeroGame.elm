@@ -17,15 +17,17 @@ import Utils exposing (..)
     [x] play it on your mobile.
     [x] fix pointer up not being detected.
     [x] prevent screen scrolling on phone.
+    * list visuals to clone
+    * send it to Ojas.
+    * export repo to git hub.
+    * check notes.md
+
+    LATER:
     * on fail there should be visible gap.
         * perhaps make walls appear thinner than actual,
             * doesn't work, there will be a gap at stick start.
         * can't play with stick length, will cause overflow or underflow.
         * ideally on fail, we want to show smaller stick, that's all.
-    * list visuals to clone
-    * send it to Ojas.
-    * export repo to git hub.
-    * check notes.md
 
 
     DONE:
