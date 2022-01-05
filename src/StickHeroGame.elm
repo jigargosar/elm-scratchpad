@@ -520,7 +520,8 @@ viewRestartGameOverlay active =
         , notifyClick RestartClicked
         ]
     <|
-        [ rect viewportWidth (viewportHeight / 4) [ fill black, opacity 0.9 ]
+        [ rect viewportWidth viewportHeight []
+        , rect viewportWidth (viewportHeight / 4) [ fill black, opacity 0.9 ]
         , words "RESTART"
             [ fill wWhite
             , fontSize "30px"
