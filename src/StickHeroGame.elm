@@ -726,7 +726,7 @@ viewWall { x, w } =
             viewportHeight / 2
     in
     group [ xf [ mv2 x 0 ] ]
-        [ rect w wallHeight [ fill white, xf [ mv2 0 (wallHeight / 2) ] ]
+        [ rectT w wallHeight [ fill white ]
         , square doubleScoreSquareWidth [ fill wPurple, xf [ mv2 0 (doubleScoreSquareWidth / 2) ] ]
         ]
 
