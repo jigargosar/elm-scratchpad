@@ -1,7 +1,6 @@
 module StickHeroGame exposing (main)
 
 import Browser.Events
-import Html.Events
 import Json.Decode as JD
 import Random exposing (Seed)
 import Svg
