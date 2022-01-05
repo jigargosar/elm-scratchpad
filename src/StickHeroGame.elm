@@ -418,7 +418,27 @@ view : Model -> Document Msg
 view model =
     Document "Stick Hero"
         [ basicStylesNode
-        , viewSvg model
+        , basicSvg
+            [ viewBoxC viewportWidth viewportHeight
+            , sMaxWidth "100vw"
+            , sMaxHeight "100vh"
+            ]
+            [ group
+                [ xf
+                    [ mvLeft (viewportWidth / 3)
+                    , mvLeft model.xOffset
+                    ]
+                ]
+                [ viewSticks model.sticks
+                , viewStickFromPhase model.phase
+                , viewWalls model.walls
+                , viewHero model.heroX model.heroY
+                ]
+            , viewScore model.score
+            , viewStartingInstructions (isWaitingForFirstTime model)
+            , viewDoubleScoreIndicator (shouldShowDoubleScoreIndicator model)
+            , viewRestartGameOverlay (model.phase == Over)
+            ]
         ]
 
 
@@ -428,31 +448,6 @@ viewportWidth =
 
 viewportHeight =
     300
-
-
-viewSvg : Model -> Html Msg
-viewSvg model =
-    basicSvg
-        [ viewBoxC viewportWidth viewportHeight
-        , sMaxWidth "100vw"
-        , sMaxHeight "100vh"
-        ]
-        [ group
-            [ xf
-                [ mvLeft (viewportWidth / 3)
-                , mvLeft model.xOffset
-                ]
-            ]
-            [ viewSticks model.sticks
-            , viewStickFromPhase model.phase
-            , viewWalls model.walls
-            , viewHero model.heroX model.heroY
-            ]
-        , viewScore model.score
-        , viewStartingInstructions (isWaitingForFirstTime model)
-        , viewDoubleScoreIndicator (shouldShowDoubleScoreIndicator model)
-        , viewRestartGameOverlay (model.phase == Over)
-        ]
 
 
 transitionOpacity =
