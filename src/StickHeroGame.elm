@@ -419,23 +419,7 @@ view model =
     Document "Stick Hero"
         [ basicStylesNode
         , viewSvg model
-        , (\_ ->
-            viewDebugInfo model
-          )
-            |> always noView
         ]
-
-
-viewDebugInfo : Model -> Html msg
-viewDebugInfo model =
-    div
-        [ positionFixed
-        , bgc wBlack
-        , fg wBlue
-        , pa "1ch"
-        , fontSize "14px"
-        ]
-        [ text <| Debug.toString model.phase ]
 
 
 viewportWidth =
