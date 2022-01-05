@@ -615,7 +615,7 @@ viewStick stick =
     in
     polyline
         [ ( 0, 0 )
-        , ( stick.len - 2, 0 )
+        , ( stick.len, 0 )
         ]
         [ strokeW sw
         , stroke wGreen_lime
