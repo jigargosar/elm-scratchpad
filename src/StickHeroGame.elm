@@ -345,6 +345,7 @@ type Msg
     | OnKeyDown KeyEvent
     | OnKeyUp String
     | OnPointerDown
+    | OnPointerCancel
     | OnPointerUp
     | RestartClicked
 
@@ -401,6 +402,16 @@ update msg model =
         OnPointerDown ->
             ( startStretchingOnUserInput model, Cmd.none )
 
+        OnPointerCancel ->
+            ( case model.phase of
+                Stretching _ ->
+                    { model | phase = Waiting }
+
+                _ ->
+                    model
+            , Cmd.none
+            )
+
         OnPointerUp ->
             ( stopStretchingOnUserInput model, Cmd.none )
 
@@ -422,9 +433,11 @@ view model =
             , sMaxWidth "100vw"
             , sMaxHeight "100vh"
             , disableContextMenu NOP
-            , style "touch-action" "none"
+
+            --, style "touch-action" "none"
             , notifyPointerDown OnPointerDown
             , notifyPointerUp OnPointerUp
+            , notifyPointerCancel OnPointerCancel
             ]
             [ group
                 [ xf

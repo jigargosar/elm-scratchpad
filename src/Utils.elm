@@ -1963,6 +1963,11 @@ notifyPointerUp msg =
     Html.Events.on "pointerup" (JD.succeed msg)
 
 
+notifyPointerCancel : msg -> Attribute msg
+notifyPointerCancel msg =
+    Html.Events.on "pointercancel" (JD.succeed msg)
+
+
 disableContextMenu msg =
     Html.Events.custom "contextmenu"
         (JD.succeed
