@@ -1234,6 +1234,20 @@ rectLT w h aa =
         []
 
 
+square : Float -> List (Attribute msg) -> Svg msg
+square sz =
+    rect sz sz
+
+
+squareT s =
+    rectT s s
+
+
+squareLT : Float -> List (Attribute msg) -> Svg msg
+squareLT sz =
+    rectLT sz sz
+
+
 vPolyline : List Vec -> List (Attribute msg) -> Svg msg
 vPolyline vs =
     polyline (List.map vToTuple vs)
@@ -1262,16 +1276,6 @@ wordsAlignXRight =
 
 wordsAlignYTop =
     TA.dominantBaseline TT.DominantBaselineHanging
-
-
-square : Float -> List (Attribute msg) -> Svg msg
-square sz =
-    rect sz sz
-
-
-squareLT : Float -> List (Attribute msg) -> Svg msg
-squareLT sz =
-    rectLT sz sz
 
 
 words : String -> List (Svg.Attribute msg) -> Svg msg

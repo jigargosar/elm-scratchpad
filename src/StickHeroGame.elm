@@ -727,7 +727,7 @@ viewWall { x, w } =
     in
     group [ xf [ mv2 x 0 ] ]
         [ rectT w wallHeight [ fill white ]
-        , square doubleScoreSquareWidth [ fill wPurple, xf [ mv2 0 (doubleScoreSquareWidth / 2) ] ]
+        , squareT doubleScoreSquareWidth [ fill wPurple ]
         ]
 
 
