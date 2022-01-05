@@ -14,7 +14,7 @@ import Utils exposing (..)
     * youtube: https://www.youtube.com/watch?v=eue3UdFvwPo
 
     Pending:
-    * use pointer-event pointer-down/up to make it work in mobile mode.
+    [x] use pointer-event pointer-down/up to make it work in mobile mode.
     * play it on your mobile.
     * list visuals to clone
     * send it to Ojas.
