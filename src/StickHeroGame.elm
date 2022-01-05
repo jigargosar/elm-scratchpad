@@ -1,7 +1,5 @@
 module StickHeroGame exposing (main)
 
-import Browser.Events
-import Json.Decode as JD
 import Random exposing (Seed)
 import Svg
 import Utils exposing (..)
@@ -94,8 +92,7 @@ initialWallWidth =
 
 
 type alias Model =
-    { clock : Float
-    , score : Int
+    { score : Int
     , phase : Phase
     , walls : Walls
     , heroX : Float
@@ -119,8 +116,7 @@ initModelWithSeed initialSeed =
         ( walls, seed ) =
             Random.step wallsRandom initialSeed
     in
-    { clock = 0
-    , score = 0
+    { score = 0
     , phase = Waiting
     , walls = walls
     , heroX = 0
@@ -206,11 +202,6 @@ stickFromPhase phase =
 
         Over ->
             Nothing
-
-
-addDelta : Float -> Model -> Model
-addDelta delta model =
-    { model | clock = model.clock + delta }
 
 
 step : Float -> Model -> Model
@@ -363,11 +354,7 @@ update msg model =
             ( model, Cmd.none )
 
         OnClampedDelta delta ->
-            ( model
-                |> step delta
-                |> addDelta delta
-            , Cmd.none
-            )
+            ( step delta model, Cmd.none )
 
         OnKeyDown e ->
             ( if e.repeat then
