@@ -434,20 +434,8 @@ view model =
                     , preventDefault = True
                     }
                 )
-            , Html.Events.custom "pointerdown"
-                (JD.succeed
-                    { message = OnMouseDown
-                    , stopPropagation = True
-                    , preventDefault = True
-                    }
-                )
-            , Html.Events.custom "pointerup"
-                (JD.succeed
-                    { message = OnMouseUp
-                    , stopPropagation = True
-                    , preventDefault = True
-                    }
-                )
+            , Html.Events.on "pointerdown" (JD.succeed OnMouseDown)
+            , Html.Events.on "pointerup" (JD.succeed OnMouseUp)
             ]
             [ group
                 [ xf
