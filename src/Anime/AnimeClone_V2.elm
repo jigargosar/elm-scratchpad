@@ -123,7 +123,7 @@ viewExample isSelected animClock eg =
 viewExampleBackground : Bool -> Html msg
 viewExampleBackground isSelected =
     div
-        [ absolute
+        [ positionAbsolute
         , w100
         , h100
         , bgCurrentColor
@@ -358,7 +358,7 @@ viewStaggeringEasingExample _ ac =
 
 
 shadowElStyles =
-    [ absolute, left0, opacity 0.2 ]
+    [ positionAbsolute, left0, opacity 0.2 ]
 
 
 smallSizeStyles =
@@ -372,7 +372,7 @@ viewSquare attrs =
 viewLabel : Bool -> String -> Html msg
 viewLabel isSelected t =
     div
-        ([ absolute
+        ([ positionAbsolute
          , opacity
             (if isSelected then
                 0.3

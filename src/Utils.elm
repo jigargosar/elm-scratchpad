@@ -849,8 +849,16 @@ fontSize =
     style "font-size"
 
 
-absolute =
+positionAbsolute =
     style "position" "absolute"
+
+
+absoluteFill =
+    inset0
+
+
+inset0 =
+    style "inset" "0"
 
 
 positionFixed =

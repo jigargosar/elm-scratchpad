@@ -414,7 +414,7 @@ viewTaskItem mbDragging b t =
                                 in
                                 placeOverContent
                                     [ div
-                                        [ absolute
+                                        [ positionAbsolute
                                         , if nearTop then
                                             bottom100
 
