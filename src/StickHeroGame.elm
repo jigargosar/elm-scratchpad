@@ -1,7 +1,6 @@
 module StickHeroGame exposing (main)
 
 import Random exposing (Seed)
-import Svg
 import Utils exposing (..)
 
 
