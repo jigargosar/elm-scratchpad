@@ -353,8 +353,9 @@ subscriptions _ =
     [ Browser.Events.onAnimationFrameDelta (clamp 0 100 >> OnClampedDelta)
     , Browser.Events.onKeyDown (JD.map OnKeyDown keyEventDecoder)
     , Browser.Events.onKeyUp (JD.map OnKeyUp keyDecoder)
-    , Browser.Events.onMouseDown (JD.succeed OnMouseDown)
-    , Browser.Events.onMouseUp (JD.succeed OnMouseUp)
+
+    --, Browser.Events.onMouseDown (JD.succeed OnMouseDown)
+    --, Browser.Events.onMouseUp (JD.succeed OnMouseUp)
     ]
         |> Sub.batch
 
@@ -424,8 +425,14 @@ view model =
             , sWidth "100vw"
             , sHeight "100vh"
             , bgc wPink
-            , Html.Events.on "pointer-down" (JD.succeed OnMouseDown)
-            , Html.Events.on "pointer-up" (JD.succeed OnMouseUp)
+            , Html.Events.on "pointerdown" (JD.succeed OnMouseDown)
+            , Html.Events.custom "pointerup"
+                (JD.succeed
+                    { message = OnMouseUp
+                    , stopPropagation = True
+                    , preventDefault = True
+                    }
+                )
             ]
             [ group
                 [ xf
