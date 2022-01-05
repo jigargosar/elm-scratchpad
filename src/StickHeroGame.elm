@@ -345,7 +345,6 @@ type Msg
     | OnKeyDown KeyEvent
     | OnKeyUp String
     | OnPointerDown
-    | OnPointerCancel
     | OnPointerUp
     | RestartClicked
 
@@ -401,16 +400,6 @@ update msg model =
 
         OnPointerDown ->
             ( startStretchingOnUserInput model, Cmd.none )
-
-        OnPointerCancel ->
-            ( case model.phase of
-                Stretching _ ->
-                    { model | phase = Waiting }
-
-                _ ->
-                    model
-            , Cmd.none
-            )
 
         OnPointerUp ->
             ( stopStretchingOnUserInput model, Cmd.none )
