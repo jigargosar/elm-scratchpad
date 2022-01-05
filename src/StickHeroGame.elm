@@ -19,6 +19,8 @@ import Utils exposing (..)
     [x] prevent screen scrolling on phone.
     * list visuals to clone
     * list steps to take before you can send it to Ojas.
+        * deploy
+        * polish?
     * export repo to git hub.
     * check notes.md
 
