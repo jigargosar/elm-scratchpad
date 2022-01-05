@@ -17,6 +17,7 @@ import Utils exposing (..)
     [x] play it on your mobile.
     [x] fix pointer up not being detected.
     [x] prevent screen scrolling on phone.
+    * make walls appear thinner than actual to disallow minor gaps from failing.
     * list visuals to clone
     * send it to Ojas.
     * export repo to git hub.
