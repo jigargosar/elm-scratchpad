@@ -1,6 +1,7 @@
 module StickHeroGame exposing (main)
 
 import Browser.Events
+import Html.Events
 import Json.Decode as JD
 import Random exposing (Seed)
 import Svg
@@ -423,6 +424,8 @@ view model =
             , sWidth "100vw"
             , sHeight "100vh"
             , bgc wPink
+            , Html.Events.on "pointer-down" (JD.succeed OnMouseDown)
+            , Html.Events.on "pointer-up" (JD.succeed OnMouseUp)
             ]
             [ group
                 [ xf
