@@ -128,7 +128,7 @@ initModelWithSeed initialSeed =
             Random.step wallsRandom initialSeed
     in
     { score = 0
-    , phase = Over
+    , phase = Waiting
     , walls = walls
     , heroX = 0
     , heroY = 0
