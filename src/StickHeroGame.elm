@@ -428,8 +428,8 @@ view model =
 
             --, Html.Events.on "pointerdown" (JD.succeed OnMouseDown)
             , disableContextMenu NOP
-            , Html.Events.on "pointerdown" (JD.succeed OnMouseDown)
-            , Html.Events.on "pointerup" (JD.succeed OnMouseUp)
+            , notifyPointerDown OnMouseDown
+            , notifyPointerUp OnMouseUp
             ]
             [ group
                 [ xf

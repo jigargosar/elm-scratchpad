@@ -1933,6 +1933,16 @@ notifyClick =
     Html.Events.onClick
 
 
+notifyPointerDown : msg -> Attribute msg
+notifyPointerDown msg =
+    Html.Events.on "pointerdown" (JD.succeed msg)
+
+
+notifyPointerUp : msg -> Attribute msg
+notifyPointerUp msg =
+    Html.Events.on "pointerup" (JD.succeed msg)
+
+
 disableContextMenu msg =
     Html.Events.custom "contextmenu"
         (JD.succeed
