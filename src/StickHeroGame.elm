@@ -714,13 +714,13 @@ randomWallSequenceAfter n firstWallX2 =
 
 
 viewWall : Wall -> Svg msg
-viewWall { x, w } =
+viewWall wall =
     let
         wallHeight =
             viewportHeight / 2
     in
-    group [ xf [ mv2 x 0 ] ]
-        [ rectT w wallHeight [ fill white ]
+    group [ xf [ mvRight wall.x ] ]
+        [ rectT (wall.w - 2) wallHeight [ fill white ]
         , squareT doubleScoreSquareWidth [ fill wPurple ]
         ]
 
