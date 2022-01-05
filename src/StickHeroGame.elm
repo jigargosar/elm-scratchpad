@@ -443,8 +443,6 @@ svgAttrs =
     [ viewBoxC viewportWidth viewportHeight
     , sWidth "100vw"
     , sHeight "100vh"
-    , ma "auto"
-    , overflowHidden
     , bgc wPink
     ]
 
