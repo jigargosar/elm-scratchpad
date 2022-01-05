@@ -393,9 +393,7 @@ update msg model =
             )
 
         OnPointerDown ->
-            ( startStretchingOnUserInput model
-            , Cmd.none
-            )
+            ( startStretchingOnUserInput model, Cmd.none )
 
         OnPointerUp ->
             ( stopStretchingOnUserInput model, Cmd.none )
