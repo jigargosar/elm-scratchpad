@@ -1224,6 +1224,10 @@ rectT w h aa =
     rectLT w h (Px.x (w / -2) :: aa)
 
 
+rectB w h aa =
+    rectLT w h (Px.x (w / -2) :: Px.y -h :: aa)
+
+
 rectLT : Float -> Float -> List (Attribute msg) -> Svg msg
 rectLT w h aa =
     Svg.rect

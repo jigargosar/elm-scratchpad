@@ -553,13 +553,7 @@ viewWalls walls =
 viewHero : Float -> Float -> Svg msg
 viewHero xOffset yOffset =
     group [ xf [ mv2 xOffset yOffset ] ]
-        [ rect
-            heroWidth
-            heroHeight
-            [ fill wBlue
-            , xf [ mvUp (heroHeight / 2) ]
-            ]
-        ]
+        [ rectB heroWidth heroHeight [ fill wBlue ] ]
 
 
 type alias Stick =
