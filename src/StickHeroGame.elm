@@ -437,7 +437,7 @@ view model =
             --, style "touch-action" "none"
             , notifyPointerDown OnPointerDown
             , notifyPointerUp OnPointerUp
-            , notifyPointerCancel OnPointerCancel
+            , notifyPointerCancel OnPointerUp
             ]
             [ group
                 [ xf
