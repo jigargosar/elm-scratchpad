@@ -518,7 +518,9 @@ viewRestartGameOverlay active =
         , transitionOpacity
         , notifyClick RestartClicked
         ]
-        [ square (max viewportWidth viewportHeight |> mul 3) [ fill transparent ]
+        [ -- hack: using large area for capturing restart clicks
+          -- since svg element can be larger than vp
+          square (max viewportWidth viewportHeight |> mul 3) [ fill transparent ]
         , group
             [ xf [ mvUp (viewportHeight / 4) ]
             ]
