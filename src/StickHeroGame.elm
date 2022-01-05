@@ -422,6 +422,8 @@ view model =
             [ viewBoxC viewportWidth viewportHeight
             , sMaxWidth "100vw"
             , sMaxHeight "100vh"
+            , aWidth "100vw"
+            , aHeight "100vh"
             ]
             [ group
                 [ xf
