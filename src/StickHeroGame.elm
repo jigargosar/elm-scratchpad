@@ -7,7 +7,7 @@ import Utils exposing (..)
 
 
 {-
-   FIX FOR FORMAT
+   INDENTATION FIX FOR ELM-FORMAT
     Specs:
     * clone Stick Hero
     * codepen: https://codepen.io/HunorMarton/pen/xxOMQKg
