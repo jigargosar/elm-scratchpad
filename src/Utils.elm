@@ -122,6 +122,10 @@ onEnter tag =
         )
 
 
+onAnimationFrameClampedDelta msg =
+    Browser.Events.onAnimationFrameDelta (clamp 0 100 >> msg)
+
+
 onBrowserKeyDown msg =
     Browser.Events.onKeyDown (JD.map msg keyEventDecoder)
 

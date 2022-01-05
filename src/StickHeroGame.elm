@@ -349,7 +349,7 @@ type Msg
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    [ Browser.Events.onAnimationFrameDelta (clamp 0 100 >> OnClampedDelta)
+    [ onAnimationFrameClampedDelta OnClampedDelta
     , onBrowserKeyDown OnKeyDown
     , onBrowserKeyUp OnKeyUp
     ]
