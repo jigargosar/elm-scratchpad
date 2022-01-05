@@ -21,6 +21,7 @@ import Utils exposing (..)
     * export repo to git hub.
     * check notes.md
 
+
     DONE:
     [x] simplify ensureSufficientWalls
     [x] Score on top right
@@ -30,8 +31,6 @@ import Utils exposing (..)
     [x] click input
     [x] make game more difficult by reducing max/average wall width.
     [x] make svg expand to full screen, preserve aspect ratio to clone responsiveness.
-
-
 -}
 
 
