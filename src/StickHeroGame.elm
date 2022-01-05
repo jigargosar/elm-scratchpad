@@ -456,7 +456,7 @@ viewportWidth =
 
 
 viewportHeight =
-    300
+    viewportWidth * 2
 
 
 transitionOpacity =
