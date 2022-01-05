@@ -166,11 +166,7 @@ stopStretchingOnUserInput : Model -> Model
 stopStretchingOnUserInput model =
     case model.phase of
         Stretching stick ->
-            if stick.len < 30 then
-                { model | phase = Waiting }
-
-            else
-                { model | phase = Turning stick }
+            { model | phase = Turning stick }
 
         _ ->
             model
