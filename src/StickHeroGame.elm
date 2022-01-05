@@ -7,26 +7,31 @@ import Utils exposing (..)
 
 
 {-
-      Specs:
-      * clone Stick Hero
-           * codepen: https://codepen.io/HunorMarton/pen/xxOMQKg
-           * youtube: https://www.youtube.com/watch?v=eue3UdFvwPo
+   FIX FOR FORMAT
+    Specs:
+    * clone Stick Hero
+    * codepen: https://codepen.io/HunorMarton/pen/xxOMQKg
+    * youtube: https://www.youtube.com/watch?v=eue3UdFvwPo
 
-   Pending:
-   [x] simplify ensureSufficientWalls
-   [x] Score on top right
-   [x] split walking phase
-   [x] DOUBLE SCORE indicator.
-   [x] Starting Instructions: "Hold down the mouse to stretch the stick"
-   [x] click input
-   [x] make game more difficult by reducing max/average wall width.
-   [x] make svg expand to full screen, preserve aspect ratio to clone responsiveness.
-   * use pointer-event pointer-down/up to make it work in mobile mode.
-   * play it on your mobile.
-   * list visuals to clone
-   * send it to Ojas.
-   * export repo to git hub.
-   * check notes.md
+    Pending:
+    * use pointer-event pointer-down/up to make it work in mobile mode.
+    * play it on your mobile.
+    * list visuals to clone
+    * send it to Ojas.
+    * export repo to git hub.
+    * check notes.md
+
+    DONE:
+    [x] simplify ensureSufficientWalls
+    [x] Score on top right
+    [x] split walking phase
+    [x] DOUBLE SCORE indicator.
+    [x] Starting Instructions: "Hold down the mouse to stretch the stick"
+    [x] click input
+    [x] make game more difficult by reducing max/average wall width.
+    [x] make svg expand to full screen, preserve aspect ratio to clone responsiveness.
+
+
 -}
 
 
