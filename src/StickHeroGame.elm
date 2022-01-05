@@ -22,7 +22,7 @@ import Utils exposing (..)
     * export repo to git hub.
     * check notes.md
 
-    LATER:
+    LATER/NEVER:
     * on fail there should be visible gap.
         * perhaps make walls appear thinner than actual,
             * doesn't work, there will be a gap at stick start.
