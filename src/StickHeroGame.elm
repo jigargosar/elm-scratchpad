@@ -359,6 +359,7 @@ type Msg
     | OnKeyDown KeyEvent
     | OnKeyUp String
     | OnPointerDown
+    | OnPointerCancel
     | OnPointerUp
     | RestartClicked
 
@@ -415,6 +416,9 @@ update msg model =
         OnPointerDown ->
             ( startStretchingOnUserInput model, Cmd.none )
 
+        OnPointerCancel ->
+            ( cancelOrStopStretchingOnUserInput model, Cmd.none )
+
         OnPointerUp ->
             ( stopStretchingOnUserInput model, Cmd.none )
 
@@ -440,7 +444,7 @@ view model =
             --, style "touch-action" "none"
             , notifyPointerDown OnPointerDown
             , notifyPointerUp OnPointerUp
-            , notifyPointerCancel OnPointerUp
+            , notifyPointerCancel OnPointerCancel
             ]
             [ group
                 [ xf
