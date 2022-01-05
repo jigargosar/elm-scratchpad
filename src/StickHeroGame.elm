@@ -429,7 +429,7 @@ view model =
             --, Html.Events.on "pointerdown" (JD.succeed OnMouseDown)
             , Html.Events.custom "contextmenu"
                 (JD.succeed
-                    { message = OnMouseDown
+                    { message = NOP
                     , stopPropagation = True
                     , preventDefault = True
                     }
