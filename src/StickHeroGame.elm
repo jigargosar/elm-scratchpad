@@ -502,6 +502,17 @@ type alias Hill =
     }
 
 
+yFromXOfHill : Hill -> Float -> Float
+yFromXOfHill { amplitude, stretch, height } x =
+    sin
+        (rangeMap ( 0, stretch )
+            ( degrees 0, degrees 360 )
+            x
+        )
+        * amplitude
+        |> add -height
+
+
 hill1 : Hill
 hill1 =
     { amplitude = 16, stretch = 220, height = 90 }
@@ -513,7 +524,7 @@ hill2 =
 
 
 hillPoints : Hill -> Float -> List Float2
-hillPoints { amplitude, stretch, height } xOffset =
+hillPoints hill xOffset =
     let
         xMin =
             -viewportWidth * 10
@@ -527,19 +538,10 @@ hillPoints { amplitude, stretch, height } xOffset =
         last =
             ( xMax, 0 )
 
-        hillYAt x =
-            sin
-                (rangeMap ( 0, stretch )
-                    ( degrees 0, degrees 360 )
-                    x
-                )
-                * amplitude
-                |> add -height
-
         inBetween =
             List.range xMin xMax
                 |> List.map (toFloat >> add xOffset)
-                |> List.map (\x -> ( x, hillYAt x ))
+                |> List.map (\x -> ( x, yFromXOfHill hill x ))
     in
     first :: inBetween ++ [ last ]
 
