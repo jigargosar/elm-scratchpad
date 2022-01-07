@@ -1,6 +1,8 @@
 module StickHeroGame exposing (main)
 
 import Random exposing (Seed)
+import TypedSvg
+import TypedSvg.Attributes
 import Utils exposing (..)
 
 
@@ -465,11 +467,41 @@ view model =
                 , viewWalls model.walls
                 , viewHero model.heroX model.heroY
                 ]
+            , viewBackground
             , viewScore model.score
             , viewStartingInstructions (isWaitingForFirstTime model)
             , viewDoubleScoreIndicator (shouldShowDoubleScoreIndicator model)
             , viewRestartGameOverlay (model.phase == Over)
             ]
+        ]
+
+
+viewBackground =
+    group []
+        [ TypedSvg.polygon
+            [ TypedSvg.Attributes.points
+                (( -viewportWidth, 0 )
+                    :: (List.range -viewportWidth viewportWidth
+                            |> List.map
+                                (\i ->
+                                    ( toFloat i
+                                    , sin
+                                        (rangeMap ( 0, 150 )
+                                            ( degrees 0, degrees 360 )
+                                            (toFloat i)
+                                        )
+                                        * 10
+                                        |> add -60
+                                    )
+                                )
+                       )
+                    ++ [ ( viewportWidth, 0 ) ]
+                )
+            , fill wGreen_lime
+            , stroke wBlue
+            , transforms []
+            ]
+            []
         ]
 
 
