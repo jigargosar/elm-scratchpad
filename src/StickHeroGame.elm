@@ -456,7 +456,8 @@ view model =
             , notifyPointerUp OnPointerUp
             , notifyPointerCancel OnPointerCancel
             ]
-            [ group
+            [ viewBackground -model.xOffset
+            , group
                 [ xf
                     [ mvLeft (viewportWidth / 3)
                     , mvLeft model.xOffset
@@ -467,7 +468,6 @@ view model =
                 , viewWalls model.walls
                 , viewHero model.heroX model.heroY
                 ]
-            , viewBackground model.xOffset
             , viewScore model.score
             , viewStartingInstructions (isWaitingForFirstTime model)
             , viewDoubleScoreIndicator (shouldShowDoubleScoreIndicator model)
