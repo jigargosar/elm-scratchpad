@@ -479,30 +479,32 @@ view model =
 viewBackground =
     group []
         [ TypedSvg.polygon
-            [ TypedSvg.Attributes.points
-                (( -viewportWidth, 0 )
-                    :: (List.range -viewportWidth viewportWidth
-                            |> List.map
-                                (\i ->
-                                    ( toFloat i
-                                    , sin
-                                        (rangeMap ( 0, 150 )
-                                            ( degrees 0, degrees 360 )
-                                            (toFloat i)
-                                        )
-                                        * 10
-                                        |> add -60
-                                    )
-                                )
-                       )
-                    ++ [ ( viewportWidth, 0 ) ]
-                )
+            [ TypedSvg.Attributes.points hillPoints
             , fill wGreen_lime
             , stroke wBlue
             , transforms []
             ]
             []
         ]
+
+
+hillPoints =
+    ( -viewportWidth, 0 )
+        :: (List.range -viewportWidth viewportWidth
+                |> List.map
+                    (\i ->
+                        ( toFloat i
+                        , sin
+                            (rangeMap ( 0, 150 )
+                                ( degrees 0, degrees 360 )
+                                (toFloat i)
+                            )
+                            * 10
+                            |> add -60
+                        )
+                    )
+           )
+        ++ [ ( viewportWidth, 0 ) ]
 
 
 viewportWidth =
