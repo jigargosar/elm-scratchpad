@@ -479,14 +479,14 @@ view model =
 viewBackground xOffset =
     group []
         [ TypedSvg.polygon
-            [ TypedSvg.Attributes.points (hillPoints 16 220 90 xOffset)
+            [ TypedSvg.Attributes.points (hillPoints hill1 xOffset)
             , fill wGreen_lime
             , stroke wBlue
             , transforms [ translateF2 ( 0, viewportHeight / 2 ) ]
             ]
             []
         , TypedSvg.polygon
-            [ TypedSvg.Attributes.points (hillPoints 8 250 60 (xOffset + 150))
+            [ TypedSvg.Attributes.points (hillPoints hill2 (xOffset + 150))
             , fill wGreen2_sea
             , stroke wBlue
             , transforms [ translateF2 ( 0, viewportHeight / 2 ) ]
@@ -502,7 +502,18 @@ type alias Hill =
     }
 
 
-hillPoints amplitude stretch height xOffset =
+hill1 : Hill
+hill1 =
+    { amplitude = 16, stretch = 220, height = 90 }
+
+
+hill2 : Hill
+hill2 =
+    { amplitude = 8, stretch = 250, height = 60 }
+
+
+hillPoints : Hill -> Float -> List Float2
+hillPoints { amplitude, stretch, height } xOffset =
     let
         xMin =
             -viewportWidth * 10
