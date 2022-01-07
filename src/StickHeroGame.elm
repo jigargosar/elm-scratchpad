@@ -521,7 +521,7 @@ hillPoints amplitude stretch height xOffset =
                         )
                     )
            )
-        ++ [ ( viewportWidth * 10, 0 ) ]
+        ++ [ ( xMax, 0 ) ]
 
 
 viewportWidth =
