@@ -512,18 +512,21 @@ hillPoints amplitude stretch height xOffset =
         last =
             ( xMax, 0 )
 
+        hillYAt x =
+            sin
+                (rangeMap ( xOffset, xOffset + stretch )
+                    ( degrees 0, degrees 360 )
+                    (toFloat x)
+                )
+                * amplitude
+                |> add -height
+
         inBetween =
             xs
                 |> List.map
                     (\i ->
                         ( toFloat i
-                        , sin
-                            (rangeMap ( xOffset, xOffset + stretch )
-                                ( degrees 0, degrees 360 )
-                                (toFloat i)
-                            )
-                            * amplitude
-                            |> add -height
+                        , hillYAt i
                         )
                     )
     in
