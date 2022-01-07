@@ -467,7 +467,7 @@ view model =
                 , viewWalls model.walls
                 , viewHero model.heroX model.heroY
                 ]
-            , viewBackground
+            , viewBackground model.xOffset
             , viewScore model.score
             , viewStartingInstructions (isWaitingForFirstTime model)
             , viewDoubleScoreIndicator (shouldShowDoubleScoreIndicator model)
@@ -476,31 +476,38 @@ view model =
         ]
 
 
-viewBackground =
+viewBackground xOffset =
     group []
         [ TypedSvg.polygon
-            [ TypedSvg.Attributes.points hillPoints
+            [ TypedSvg.Attributes.points (hillPoints 16 220 90 xOffset)
             , fill wGreen_lime
             , stroke wBlue
-            , transforms []
+            , transforms [ translateF2 ( 0, viewportHeight / 2 ) ]
+            ]
+            []
+        , TypedSvg.polygon
+            [ TypedSvg.Attributes.points (hillPoints 8 250 60 (xOffset + 150))
+            , fill wGreen2_sea
+            , stroke wBlue
+            , transforms [ translateF2 ( 0, viewportHeight / 2 ) ]
             ]
             []
         ]
 
 
-hillPoints =
+hillPoints amplitude stretch height xOffset =
     ( -viewportWidth, 0 )
         :: (List.range -viewportWidth viewportWidth
                 |> List.map
                     (\i ->
                         ( toFloat i
                         , sin
-                            (rangeMap ( 0, 150 )
+                            (rangeMap ( xOffset, xOffset + stretch )
                                 ( degrees 0, degrees 360 )
                                 (toFloat i)
                             )
-                            * 10
-                            |> add -60
+                            * amplitude
+                            |> add -height
                         )
                     )
            )
