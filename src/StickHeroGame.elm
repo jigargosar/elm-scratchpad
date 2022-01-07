@@ -527,18 +527,12 @@ hillPoints hill xOffset =
         xMax =
             viewportWidth * 10
 
-        first =
-            ( xMin, 0 )
-
-        last =
-            ( xMax, 0 )
-
         inBetween =
             List.range xMin xMax
                 |> List.map (toFloat >> add xOffset)
                 |> List.map (\x -> ( x, yFromXOfHill hill x ))
     in
-    first :: inBetween ++ [ last ]
+    ( xMin, 0 ) :: inBetween ++ [ ( xMax, 0 ) ]
 
 
 viewportWidth =
