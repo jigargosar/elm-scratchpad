@@ -510,9 +510,6 @@ hillPoints amplitude stretch height xOffset =
         xMax =
             viewportWidth * 10
 
-        xs =
-            List.range xMin xMax
-
         first =
             ( xMin, 0 )
 
@@ -529,12 +526,9 @@ hillPoints amplitude stretch height xOffset =
                 |> add -height
 
         inBetween =
-            xs
-                |> List.map
-                    (toFloat
-                        >> add xOffset
-                        >> (\x -> ( x, hillYAt x ))
-                    )
+            List.range xMin xMax
+                |> List.map (toFloat >> add xOffset)
+                |> List.map (\x -> ( x, hillYAt x ))
     in
     first :: inBetween ++ [ last ]
 
