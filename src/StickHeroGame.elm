@@ -495,6 +495,13 @@ viewBackground xOffset =
         ]
 
 
+type alias Hill =
+    { amplitude : Float
+    , stretch : Float
+    , height : Float
+    }
+
+
 hillPoints amplitude stretch height xOffset =
     let
         xMin =
