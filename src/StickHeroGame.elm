@@ -505,9 +505,15 @@ hillPoints amplitude stretch height xOffset =
 
         xs =
             List.range xMin xMax
-    in
-    ( xMin, 0 )
-        :: (xs
+
+        first =
+            ( xMin, 0 )
+
+        last =
+            ( xMax, 0 )
+
+        inBetween =
+            xs
                 |> List.map
                     (\i ->
                         ( toFloat i
@@ -520,8 +526,8 @@ hillPoints amplitude stretch height xOffset =
                             |> add -height
                         )
                     )
-           )
-        ++ [ ( xMax, 0 ) ]
+    in
+    first :: inBetween ++ [ last ]
 
 
 viewportWidth =
