@@ -522,15 +522,17 @@ hillPoints : Hill -> Float -> List Float2
 hillPoints hill xOffset =
     let
         xMin =
-            -viewportWidth * 10
+            ---viewportWidth * 10
+            0
 
         xMax =
-            viewportWidth * 10
+            --viewportWidth * 10
+            viewportWidth
 
         inBetween =
             List.range xMin xMax
-                |> List.map (toFloat >> add xOffset)
-                |> List.map (\x -> ( x, yFromXOfHill hill x ))
+                |> List.map toFloat
+                |> List.map (\x -> ( x, yFromXOfHill hill (x + xOffset) ))
     in
     ( xMin, 0 ) :: inBetween ++ [ ( xMax, 0 ) ]
 
