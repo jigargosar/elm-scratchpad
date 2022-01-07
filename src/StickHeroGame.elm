@@ -504,11 +504,7 @@ type alias Hill =
 
 yFromXOfHill : Hill -> Float -> Float
 yFromXOfHill { amplitude, stretch, height } x =
-    sin
-        (rangeMap ( 0, stretch )
-            ( degrees 0, degrees 360 )
-            x
-        )
+    sin (x * (2 * pi / stretch))
         * amplitude
         |> add -height
 
