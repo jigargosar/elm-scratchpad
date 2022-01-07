@@ -496,8 +496,18 @@ viewBackground xOffset =
 
 
 hillPoints amplitude stretch height xOffset =
-    ( -viewportWidth * 10, 0 )
-        :: (List.range (-viewportWidth * 10) (viewportWidth * 10)
+    let
+        xMin =
+            -viewportWidth * 10
+
+        xMax =
+            viewportWidth * 10
+
+        xs =
+            List.range xMin xMax
+    in
+    ( xMin, 0 )
+        :: (xs
                 |> List.map
                     (\i ->
                         ( toFloat i
