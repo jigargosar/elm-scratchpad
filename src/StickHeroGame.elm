@@ -497,26 +497,26 @@ viewBackground xOffset =
 
 type alias Hill =
     { amplitude : Float
-    , stretch : Float
-    , height : Float
+    , frequency : Float
+    , baseHeight : Float
     }
 
 
 yFromXOfHill : Hill -> Float -> Float
-yFromXOfHill { amplitude, stretch, height } x =
-    sin (x * (turns 1 / stretch))
+yFromXOfHill { amplitude, frequency, baseHeight } x =
+    sin (x * (turns 1 / frequency))
         * amplitude
-        |> add -height
+        |> add -baseHeight
 
 
 hill1 : Hill
 hill1 =
-    { amplitude = 16, stretch = 220, height = 90 }
+    { amplitude = 16, frequency = 220, baseHeight = 90 }
 
 
 hill2 : Hill
 hill2 =
-    { amplitude = 8, stretch = 250, height = 60 }
+    { amplitude = 8, frequency = 250, baseHeight = 60 }
 
 
 hillPoints : Hill -> Float -> List Float2
