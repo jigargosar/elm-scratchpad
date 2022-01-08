@@ -474,7 +474,8 @@ view model =
         [ basicStylesNode
         , basicSvg
             [ viewBoxFromScreen screen
-            , viewBoxC viewportWidth screen.height
+
+            --, viewBoxC viewportWidth screen.height
             , positionAbsolute
             , absoluteFill
 
@@ -489,10 +490,10 @@ view model =
             , notifyPointerUp OnPointerUp
             , notifyPointerCancel OnPointerCancel
             ]
-            [ viewBackground screen -model.xOffset
+            [ viewBackground screen model.xOffset
             , group
                 [ xf
-                    [ mvLeft (viewportWidth / 3)
+                    [ mvLeft (screen.width / 3)
                     , mvLeft model.xOffset
                     ]
                 ]
@@ -513,14 +514,14 @@ viewBackground : Screen -> Float -> Svg msg
 viewBackground screen xOffset =
     group []
         [ TypedSvg.polygon
-            [ TypedSvg.Attributes.points (hillPoints hill1 xOffset)
+            [ TypedSvg.Attributes.points (hillPoints screen hill1 xOffset)
             , fill wGreen_lime
             , stroke wBlue
             , transforms [ translateF2 ( screen.left, screen.bottom ) ]
             ]
             []
         , TypedSvg.polygon
-            [ TypedSvg.Attributes.points (hillPoints hill2 (xOffset + 150))
+            [ TypedSvg.Attributes.points (hillPoints screen hill2 (xOffset + 150))
             , fill wGreen2_sea
             , stroke wBlue
             , transforms [ translateF2 ( screen.left, screen.bottom ) ]
@@ -552,8 +553,8 @@ hill2 =
     { amplitude = 8, frequency = 250, baseHeight = 60 }
 
 
-hillPoints : Hill -> Float -> List Float2
-hillPoints hill xOffset =
+hillPoints : Screen -> Hill -> Float -> List Float2
+hillPoints screen hill xOffset =
     let
         xMin =
             ---viewportWidth * 10
@@ -561,21 +562,19 @@ hillPoints hill xOffset =
 
         xMax =
             --viewportWidth * 10
-            viewportWidth
+            round screen.width
 
         inBetween =
             List.range xMin xMax
                 |> List.map toFloat
                 |> List.map (\x -> ( x, yFromXOfHill hill (x + xOffset) ))
     in
-    ( xMin, 0 ) :: inBetween ++ [ ( xMax, 0 ) ]
-
-
-viewportWidth =
-    200
+    ( xMin, 0 ) :: inBetween ++ [ ( toFloat xMax, 0 ) ]
 
 
 
+--viewportWidth =
+--    200
 --viewportHeight =
 --    viewportWidth * 2
 
@@ -629,7 +628,7 @@ viewRestartGameOverlay screen active =
         , group
             [ xf [ mvUp (screen.height / 4) ]
             ]
-            [ rect viewportWidth (screen.height / 4) [ fill black, opacity 0.9 ]
+            [ rect screen.width (screen.height / 4) [ fill black, opacity 0.9 ]
             , words "RESTART" [ fill wWhite, fontSize "30px" ]
             ]
         ]
