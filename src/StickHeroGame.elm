@@ -26,7 +26,7 @@ import Utils exposing (..)
         * bg: hills
         * bg: trees
         * hero shape
-        * full screen viewport calculations,
+        [ ] full screen viewport calculations,
     * list steps to take before you can send it to Ojas.
         * deploy
         * list polish if any.
