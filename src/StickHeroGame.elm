@@ -541,7 +541,8 @@ type alias Hill =
 
 yFromXOfHill : Hill -> Float -> Float
 yFromXOfHill { amplitude, frequency, baseHeight } x =
-    (sin (x * (turns 1 / frequency)) * amplitude)
+    sin (x * turns 1 / frequency)
+        * amplitude
         |> add -baseHeight
 
 
