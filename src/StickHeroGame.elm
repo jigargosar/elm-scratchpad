@@ -81,19 +81,19 @@ main =
 
 
 stretchSpeed =
-    0.1
+    0.1 * 3
 
 
 walkingSpeed =
-    0.15
+    0.15 * 3
 
 
 heroFallingSpeed =
-    0.3
+    0.3 * 3
 
 
 transitionSpeed =
-    0.15
+    0.15 * 3
 
 
 turnSpeed =
@@ -101,7 +101,7 @@ turnSpeed =
 
 
 heroWidth =
-    10
+    10 * 3
 
 
 heroHeight =
@@ -122,6 +122,10 @@ wallGapRange =
 
 initialWallWidth =
     lerpRange wallWidthRange 0.5
+
+
+stickThickness =
+    heroWidth / 5
 
 
 
@@ -590,7 +594,7 @@ viewStartingInstructions show =
         , transitionOpacity
         , fill white
         , transforms [ "translateY(-30%)" ]
-        , fontSize "10px"
+        , fontSize "30px"
         ]
 
 
@@ -601,7 +605,7 @@ viewDoubleScoreIndicator active =
         , transitionOpacity
         , fill white
         , transforms [ "translateY(-30%)" ]
-        , fontSize "10px"
+        , fontSize "30px"
         ]
 
 
@@ -612,7 +616,7 @@ viewScore score =
         , wordsAlignYTop
         , wordsAlignXRight
         , transforms [ "translate(calc(50% - 1ch),-50%)" ]
-        , fontSize "20px"
+        , fontSize "60px"
         ]
 
 
@@ -629,7 +633,7 @@ viewRestartGameOverlay screen active =
             [ xf [ mvUp (screen.height / 4) ]
             ]
             [ rect screen.width (screen.height / 4) [ fill black, opacity 0.9 ]
-            , words "RESTART" [ fill wWhite, fontSize "30px" ]
+            , words "RESTART" [ fill wWhite, fontSize "90px" ]
             ]
         ]
 
@@ -705,18 +709,14 @@ stickX2 { x, len } =
 
 viewStick : Stick -> Svg msg
 viewStick stick =
-    let
-        sw =
-            2
-    in
     polyline
         [ ( 0, 0 )
         , ( stick.len, 0 )
         ]
-        [ strokeW sw
+        [ strokeW stickThickness
         , stroke wGreen_lime
         , stroke wWhite
-        , xf [ mv2 stick.x (sw / 2), rotateDeg stick.angleDeg ]
+        , xf [ mv2 stick.x (stickThickness / 2), rotateDeg stick.angleDeg ]
         ]
 
 
