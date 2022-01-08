@@ -20,6 +20,7 @@ import Utils exposing (..)
     [x] fix pointer up not being detected.
     [x] prevent screen scrolling on phone.
     [x] list visuals to clone
+    * record deadline for completion.
     * visuals:
         * bg: hills
         * bg: trees
