@@ -23,13 +23,14 @@ import Utils exposing (..)
     [*] record deadline for completion.
     * END PROJECT BEFORE 15th JAN 2022
     * visuals:
-        * bg: hills
+        [x] full screen viewport calculations,
+        [ ] bg: hills
         * bg: trees
         * hero shape
-        [ ] full screen viewport calculations,
     * list steps to take before you can send it to Ojas.
         * deploy
         * list polish if any.
+            * starting instruction: Long press to stretch out the stick.
     * export repo to git hub.
     * try using gh pages to deploy examples. one for now.
     * check notes.md for new projects.
