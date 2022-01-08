@@ -560,11 +560,9 @@ hillPoints : Screen -> Hill -> Float -> List Float2
 hillPoints screen hill xOffset =
     let
         xMin =
-            ---viewportWidth * 10
             0
 
         xMax =
-            --viewportWidth * 10
             round screen.width
 
         inBetween =
