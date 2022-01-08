@@ -8,7 +8,7 @@ import Utils exposing (..)
 
 
 {-
-   INDENTATION FIX FOR ELM-FORMAT
+   THIS LINE IS FOR FIXING INDENTATION ISSUE WITH ELM-FORMAT. DETAILS?
     Specs:
     * clone Stick Hero
     * codepen: https://codepen.io/HunorMarton/pen/xxOMQKg
