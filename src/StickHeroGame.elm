@@ -1,6 +1,5 @@
 module StickHeroGame exposing (main)
 
-import Playground exposing (Screen)
 import Random exposing (Seed)
 import TypedSvg
 import TypedSvg.Attributes
@@ -29,7 +28,7 @@ import Utils exposing (..)
         * hero shape
         * full screen viewport calculations,
             * so that we can position hills easily.
-            * can we simplfy calculations by nesting svg's
+            * can we simplify calculations by nesting svg
             * or by using svg as background image for full screen?
             * what about hill height?
             * the most deterministic solution will be calculate
@@ -142,41 +141,20 @@ type alias Model =
     }
 
 
-type alias Screen =
-    { width : Float
-    , height : Float
-    , top : Float
-    , left : Float
-    , right : Float
-    , bottom : Float
-    }
-
-
-toScreen : Float -> Float -> Screen
-toScreen width height =
-    { width = width
-    , height = height
-    , top = height / 2
-    , left = -width / 2
-    , right = width / 2
-    , bottom = -height / 2
-    }
-
-
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( initModelWithSeed <| Random.initialSeed 0
-    , Cmd.none
+    ( initModelWithSeedAndScreen (Random.initialSeed 0) initialScreen
+    , getScreenCmd GotScreen
     )
 
 
 forceRestart : Model -> Model
-forceRestart { seed } =
-    initModelWithSeed seed
+forceRestart { seed, screen } =
+    initModelWithSeedAndScreen seed screen
 
 
-initModelWithSeed : Seed -> Model
-initModelWithSeed initialSeed =
+initModelWithSeedAndScreen : Seed -> Screen -> Model
+initModelWithSeedAndScreen initialSeed screen =
     let
         ( walls, seed ) =
             Random.step wallsRandom initialSeed
@@ -188,6 +166,7 @@ initModelWithSeed initialSeed =
     , heroY = 0
     , sticks = []
     , xOffset = 0
+    , screen = screen
     , seed = seed
     }
 
@@ -409,6 +388,7 @@ ensureSufficientWalls model =
 
 type Msg
     = NOP
+    | GotScreen Screen
     | OnClampedDelta Float
     | OnKeyDown KeyEvent
     | OnKeyUp String
@@ -435,6 +415,9 @@ update msg model =
 
         OnClampedDelta delta ->
             ( step delta model, Cmd.none )
+
+        GotScreen screen ->
+            ( { model | screen = screen }, Cmd.none )
 
         OnKeyDown e ->
             ( if e.repeat then

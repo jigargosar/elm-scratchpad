@@ -1,6 +1,7 @@
 module Utils exposing (..)
 
 import Browser
+import Browser.Dom
 import Browser.Events
 import Color
 import Dict exposing (Dict)
@@ -16,6 +17,7 @@ import Random.Extra
 import Svg
 import Svg.Attributes as SA
 import Svg.Keyed
+import Task
 import TypedSvg.Attributes as TA
 import TypedSvg.Attributes.InPx as Px
 import TypedSvg.Types as TT
@@ -2210,3 +2212,44 @@ randomHue__ =
         |> List.drop 1
         |> List.take (sampleCount - 1)
         |> Random.uniform 0
+
+
+
+-- SCREEN HELPERS
+
+
+type alias Screen =
+    { width : Float
+    , height : Float
+    , top : Float
+    , left : Float
+    , right : Float
+    , bottom : Float
+    }
+
+
+initialScreen : Screen
+initialScreen =
+    toScreen 600 600
+
+
+toScreen : Float -> Float -> Screen
+toScreen width height =
+    { width = width
+    , height = height
+    , top = height / 2
+    , left = -width / 2
+    , right = width / 2
+    , bottom = -height / 2
+    }
+
+
+getScreenTask : Task.Task x Screen
+getScreenTask =
+    Browser.Dom.getViewport
+        |> Task.map (.viewport >> (\{ width, height } -> toScreen width height))
+
+
+getScreenCmd : (Screen -> msg) -> Cmd msg
+getScreenCmd msg =
+    Task.perform msg getScreenTask
