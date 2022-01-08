@@ -574,13 +574,6 @@ hillPoints screen hill xOffset =
     ( xMin, 0 ) :: inBetween ++ [ ( toFloat xMax, 0 ) ]
 
 
-
---viewportWidth =
---    200
---viewportHeight =
---    viewportWidth * 2
-
-
 transitionOpacity =
     style "transition" "opacity 500ms ease-in-out"
 
