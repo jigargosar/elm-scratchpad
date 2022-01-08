@@ -1,5 +1,6 @@
 module StickHeroGame exposing (main)
 
+import Playground exposing (Screen)
 import Random exposing (Seed)
 import TypedSvg
 import TypedSvg.Attributes
@@ -136,7 +137,19 @@ type alias Model =
     , heroY : Float
     , sticks : List Stick
     , xOffset : Float
+    , screen : Screen
     , seed : Seed
+    }
+
+
+toScreen : Float -> Float -> Screen
+toScreen width height =
+    { width = width
+    , height = height
+    , top = height / 2
+    , left = -width / 2
+    , right = width / 2
+    , bottom = -height / 2
     }
 
 
