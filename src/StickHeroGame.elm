@@ -514,18 +514,16 @@ view model =
 
 viewBackground : Screen -> Float -> Svg msg
 viewBackground screen xOffset =
-    group []
+    group [ stroke wBlue ]
         [ TypedSvg.polygon
             [ TypedSvg.Attributes.points (hillPoints screen hill1 xOffset)
             , fill wGreen_lime
-            , stroke wBlue
             , transforms [ translateF2 ( screen.left, screen.bottom ) ]
             ]
             []
         , TypedSvg.polygon
             [ TypedSvg.Attributes.points (hillPoints screen hill2 (xOffset + 150))
             , fill wGreen2_sea
-            , stroke wBlue
             , transforms [ translateF2 ( screen.left, screen.bottom ) ]
             ]
             []
