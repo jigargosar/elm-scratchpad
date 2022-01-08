@@ -20,6 +20,11 @@ import Utils exposing (..)
     [x] fix pointer up not being detected.
     [x] prevent screen scrolling on phone.
     * list visuals to clone
+        * bg: hills
+        * bg: trees
+        * hero shape
+        * full screen viewport calculations
+
     * list steps to take before you can send it to Ojas.
         * deploy
         * polish?
