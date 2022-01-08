@@ -37,6 +37,10 @@ import Utils exposing (..)
     LATER/NEVER:
     * resize issues
         * heroY appears stuck when screen is resized on Over state.
+        * at small width or height, many things get weird
+            * resize button background rect gets smaller
+            * starting instructions get out of bounds
+            * ...
     * on fail there should be visible gap.
         * perhaps make walls appear thinner than actual,
             * doesn't work, there will be a gap at stick start.
