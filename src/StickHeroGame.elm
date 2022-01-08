@@ -30,7 +30,8 @@ import Utils exposing (..)
         * deploy
         * list polish if any.
     * export repo to git hub.
-    * check notes.md
+    * try using gh pages to deploy examples. one for now.
+    * check notes.md for new projects.
 
     LATER/NEVER:
     * on fail there should be visible gap.
