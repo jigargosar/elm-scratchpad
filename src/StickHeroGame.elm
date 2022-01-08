@@ -482,18 +482,11 @@ view model =
         [ basicStylesNode
         , basicSvg
             [ viewBoxFromScreen screen
-
-            --, viewBoxC viewportWidth screen.height
-            , positionAbsolute
+            , positionFixed
             , absoluteFill
-
-            --, sWidth "100vw"
-            --, sHeight "100vh"
-            , sMaxWidth "100vw"
-            , sMaxHeight "100vh"
+            , aHeight "100%"
+            , aWidth "100%"
             , disableContextMenu NOP
-
-            --, style "touch-action" "none"
             , notifyPointerDown OnPointerDown
             , notifyPointerUp OnPointerUp
             , notifyPointerCancel OnPointerCancel
