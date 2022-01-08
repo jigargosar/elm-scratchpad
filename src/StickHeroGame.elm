@@ -20,7 +20,8 @@ import Utils exposing (..)
     [x] fix pointer up not being detected.
     [x] prevent screen scrolling on phone.
     [x] list visuals to clone
-    * record deadline for completion.
+    [*] record deadline for completion.
+    * END PROJECT BEFORE 15th JAN 2022
     * visuals:
         * bg: hills
         * bg: trees
