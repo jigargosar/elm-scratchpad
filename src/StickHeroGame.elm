@@ -27,7 +27,6 @@ import Utils exposing (..)
         * bg: trees
         * hero shape
         * full screen viewport calculations,
-
     * list steps to take before you can send it to Ojas.
         * deploy
         * list polish if any.
@@ -36,6 +35,8 @@ import Utils exposing (..)
     * check notes.md for new projects.
 
     LATER/NEVER:
+    * resize issues
+        * heroY appears stuck when screen is resized on Over state.
     * on fail there should be visible gap.
         * perhaps make walls appear thinner than actual,
             * doesn't work, there will be a gap at stick start.
