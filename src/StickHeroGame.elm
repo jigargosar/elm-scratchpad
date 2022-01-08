@@ -483,7 +483,8 @@ view model =
         , basicSvg
             [ viewBoxFromScreen screen
             , positionFixed
-            , absoluteFill
+            , top0
+            , left0
             , aHeight "100%"
             , aWidth "100%"
             , disableContextMenu NOP
