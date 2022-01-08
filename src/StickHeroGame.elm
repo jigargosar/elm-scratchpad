@@ -403,6 +403,7 @@ subscriptions _ =
     [ onAnimationFrameClampedDelta OnClampedDelta
     , onBrowserKeyDown OnKeyDown
     , onBrowserKeyUp OnKeyUp
+    , onScreenResized GotScreen
     ]
         |> Sub.batch
 

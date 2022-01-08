@@ -2253,3 +2253,9 @@ getScreenTask =
 getScreenCmd : (Screen -> msg) -> Cmd msg
 getScreenCmd msg =
     Task.perform msg getScreenTask
+
+
+onScreenResized : (Screen -> msg) -> Sub msg
+onScreenResized msg =
+    Browser.Events.onResize (\w h -> toScreen (toFloat w) (toFloat h))
+        |> Sub.map msg
