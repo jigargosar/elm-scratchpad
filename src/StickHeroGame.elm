@@ -346,7 +346,7 @@ step dt model =
         Falling stick ->
             let
                 maxHeroY =
-                    viewportHeight / 2
+                    model.screen.bottom
 
                 heroY =
                     model.heroY
@@ -466,10 +466,15 @@ update msg model =
 
 view : Model -> Document Msg
 view model =
+    let
+        screen =
+            model.screen
+    in
     Document "Stick Hero"
         [ basicStylesNode
         , basicSvg
-            [ viewBoxC viewportWidth viewportHeight
+            [ viewBoxFromScreen screen
+            , viewBoxC viewportWidth screen.height
             , positionAbsolute
             , absoluteFill
 
@@ -484,7 +489,7 @@ view model =
             , notifyPointerUp OnPointerUp
             , notifyPointerCancel OnPointerCancel
             ]
-            [ viewBackground -model.xOffset
+            [ viewBackground screen -model.xOffset
             , group
                 [ xf
                     [ mvLeft (viewportWidth / 3)
@@ -493,31 +498,32 @@ view model =
                 ]
                 [ viewSticks model.sticks
                 , viewStickFromPhase model.phase
-                , viewWalls model.walls
+                , viewWalls screen model.walls
                 , viewHero model.heroX model.heroY
                 ]
             , viewScore model.score
             , viewStartingInstructions (isWaitingForFirstTime model)
             , viewDoubleScoreIndicator (shouldShowDoubleScoreIndicator model)
-            , viewRestartGameOverlay (model.phase == Over)
+            , viewRestartGameOverlay screen (model.phase == Over)
             ]
         ]
 
 
-viewBackground xOffset =
+viewBackground : Screen -> Float -> Svg msg
+viewBackground screen xOffset =
     group []
         [ TypedSvg.polygon
             [ TypedSvg.Attributes.points (hillPoints hill1 xOffset)
             , fill wGreen_lime
             , stroke wBlue
-            , transforms [ translateF2 ( 0, viewportHeight / 2 ) ]
+            , transforms [ translateF2 ( 0, screen.bottom ) ]
             ]
             []
         , TypedSvg.polygon
             [ TypedSvg.Attributes.points (hillPoints hill2 (xOffset + 150))
             , fill wGreen2_sea
             , stroke wBlue
-            , transforms [ translateF2 ( 0, viewportHeight / 2 ) ]
+            , transforms [ translateF2 ( 0, screen.bottom ) ]
             ]
             []
         ]
@@ -569,8 +575,9 @@ viewportWidth =
     200
 
 
-viewportHeight =
-    viewportWidth * 2
+
+--viewportHeight =
+--    viewportWidth * 2
 
 
 transitionOpacity =
@@ -610,21 +617,19 @@ viewScore score =
         ]
 
 
-viewRestartGameOverlay : Bool -> Svg Msg
-viewRestartGameOverlay active =
+viewRestartGameOverlay : Screen -> Bool -> Svg Msg
+viewRestartGameOverlay screen active =
     group
         [ opacityFromBool active
         , pointerEventsFromBool active
         , transitionOpacity
         , notifyClick RestartClicked
         ]
-        [ -- hack: using large area for capturing restart clicks
-          -- since svg element can be larger than vp
-          square (max viewportWidth viewportHeight |> mul 3) [ fill transparent ]
+        [ rect screen.width screen.height [ fill transparent ]
         , group
-            [ xf [ mvUp (viewportHeight / 4) ]
+            [ xf [ mvUp (screen.height / 4) ]
             ]
-            [ rect viewportWidth (viewportHeight / 4) [ fill black, opacity 0.9 ]
+            [ rect viewportWidth (screen.height / 4) [ fill black, opacity 0.9 ]
             , words "RESTART" [ fill wWhite, fontSize "30px" ]
             ]
         ]
@@ -644,11 +649,11 @@ viewStickFromPhase phase =
         |> maybeView viewStick
 
 
-viewWalls : Walls -> Svg msg
-viewWalls walls =
+viewWalls : Screen -> Walls -> Svg msg
+viewWalls screen walls =
     walls
         |> wallsToList
-        |> List.map viewWall
+        |> List.map (viewWall screen)
         |> group []
 
 
@@ -814,11 +819,11 @@ randomWallSequenceAfter n firstWallX2 =
         |> Random.map (wallSequenceFromGapWidths firstWallX2)
 
 
-viewWall : Wall -> Svg msg
-viewWall wall =
+viewWall : Screen -> Wall -> Svg msg
+viewWall screen wall =
     let
         wallHeight =
-            viewportHeight / 2
+            screen.height / 2
 
         wallWidth =
             wall.w
