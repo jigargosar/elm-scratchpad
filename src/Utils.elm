@@ -1344,6 +1344,10 @@ sub =
     (-)
 
 
+roundFloat =
+    round >> toFloat
+
+
 maxInt =
     Random.maxInt
 
