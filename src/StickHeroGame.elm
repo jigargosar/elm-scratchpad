@@ -27,18 +27,6 @@ import Utils exposing (..)
         * bg: trees
         * hero shape
         * full screen viewport calculations,
-            * so that we can position hills easily.
-            * can we simplify calculations by nesting svg
-            * or by using svg as background image for full screen?
-            * what about hill height?
-            * the most deterministic solution will be calculate
-              everything ourself, others might be hacks
-              whose edge cases we might not be able to
-              predict.
-              If we do find some elegant solution,
-              we can always note it for next project.
-
-
 
     * list steps to take before you can send it to Ojas.
         * deploy
@@ -54,7 +42,18 @@ import Utils exposing (..)
         * can't play with stick length, will cause overflow or underflow.
         * ideally on fail, we want to show smaller stick, that's all.
 
-
+    NOTES:
+    * full screen viewport calculations,
+        * so that we can position hills easily.
+        * can we simplify calculations by nesting svg
+        * or by using svg as background image for full screen?
+        * what about hill height?
+        * the most deterministic solution will be calculate
+          everything ourself, others might be hacks
+          whose edge cases we might not be able to
+          predict.
+          If we do find some elegant solution,
+          we can always note it for next project.
     DONE:
     [x] simplify ensureSufficientWalls
     [x] Score on top right
