@@ -516,14 +516,14 @@ viewBackground screen xOffset =
             [ TypedSvg.Attributes.points (hillPoints hill1 xOffset)
             , fill wGreen_lime
             , stroke wBlue
-            , transforms [ translateF2 ( 0, screen.bottom ) ]
+            , transforms [ translateF2 ( screen.left, screen.bottom ) ]
             ]
             []
         , TypedSvg.polygon
             [ TypedSvg.Attributes.points (hillPoints hill2 (xOffset + 150))
             , fill wGreen2_sea
             , stroke wBlue
-            , transforms [ translateF2 ( 0, screen.bottom ) ]
+            , transforms [ translateF2 ( screen.left, screen.bottom ) ]
             ]
             []
         ]
