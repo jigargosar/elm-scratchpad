@@ -547,12 +547,12 @@ yFromXOfHill { amplitude, frequency, baseHeight } x =
 
 hill1 : Hill
 hill1 =
-    { amplitude = 16, frequency = 220, baseHeight = 90 }
+    { amplitude = 10, frequency = 500, baseHeight = 100 }
 
 
 hill2 : Hill
 hill2 =
-    { amplitude = 8, frequency = 250, baseHeight = 60 }
+    { amplitude = 20, frequency = 1000, baseHeight = 70 }
 
 
 hillPoints : Screen -> Hill -> Float -> List Float2
