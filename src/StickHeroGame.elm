@@ -142,6 +142,16 @@ type alias Model =
     }
 
 
+type alias Screen =
+    { width : Float
+    , height : Float
+    , top : Float
+    , left : Float
+    , right : Float
+    , bottom : Float
+    }
+
+
 toScreen : Float -> Float -> Screen
 toScreen width height =
     { width = width
