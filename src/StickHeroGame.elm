@@ -16,7 +16,7 @@ import Utils exposing (..)
 
     # END PROJECT BEFORE 15th JAN 2022
     ## Pending
-    * update starting instruction: Long press to stretch out the stick.
+    [x] update starting instruction: Long press to stretch out the stick.
     * publish repo to gh.
     * deploy, gh-pages or surge?
     * paste link here:
