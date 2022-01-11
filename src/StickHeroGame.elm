@@ -18,11 +18,9 @@ import Utils exposing (..)
     ## Pending
     [x] update starting instruction: Long press to stretch out the stick.
     [x] publish repo to gh.
-    * deploy, gh-pages or surge?
-    * paste link here:
+    [x] deploy to surge
+    [x] paste link here: https://elm-stick-hero.surge.sh/
     * send link to ojas
-    * try using gh pages to deploy examples. one for now.
-    * check notes.md for new projects.
 
     ## LATER/NEVER:
     * bg: trees
