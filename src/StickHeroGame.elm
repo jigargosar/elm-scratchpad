@@ -226,7 +226,7 @@ cancelOrStopStretchingOnUserInput : Model -> Model
 cancelOrStopStretchingOnUserInput model =
     case model.phase of
         Stretching stick ->
-            if stick.len < 10 then
+            if stick.len / stretchSpeed < 200 then
                 { model | phase = Waiting }
 
             else
