@@ -21,7 +21,8 @@ import Utils exposing (..)
     [x] deploy to surge
     [x] paste link here: https://elm-stick-hero.surge.sh/
     [x] fix dpr issue on mobile
-    * fix long instruction line issue on mobile.
+    [x] fix long instruction line issue on mobile.
+    [x] fix touch cancel timeout.
     * send link to ojas
 
     ## LATER/NEVER:
