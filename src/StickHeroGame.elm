@@ -89,20 +89,24 @@ main =
 -- CONSTANTS
 
 
+fooFactor =
+    2.5
+
+
 stretchSpeed =
-    0.1 * 3
+    0.1 * fooFactor
 
 
 walkingSpeed =
-    0.15 * 3
+    0.15 * fooFactor
 
 
 heroFallingSpeed =
-    0.3 * 3
+    0.3 * fooFactor
 
 
 transitionSpeed =
-    0.15 * 3
+    0.15 * fooFactor
 
 
 turnSpeed =
@@ -110,7 +114,7 @@ turnSpeed =
 
 
 heroWidth =
-    10 * 3
+    10 * fooFactor
 
 
 heroHeight =
