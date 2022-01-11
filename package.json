@@ -1,7 +1,7 @@
 {
   "scripts": {
     "start": "cross-env PARCEL_ELM_NO_DEBUG=1 parcel src/TCBON/MandelbrotSet.html --no-hmr",
-    "build-deploy-stick-hero-game": "elm make src/StickHeroGame.elm --optimize --output surge/stick-hero/index.html && surge surge/stick-hero elm-stick-hero.surge.sh"
+    "build-deploy-stick-hero-game": "parcel build --no-source-maps src/StickHeroGame.html --dir surge/stick-hero && surge surge/stick-hero elm-stick-hero.surge.sh"
   },
   "devDependencies": {
     "@parcel/transformer-elm": "^2.0.1",
