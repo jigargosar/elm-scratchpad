@@ -652,13 +652,23 @@ viewWalls screen walls =
 viewHero : Float -> Float -> Svg msg
 viewHero xOffset yOffset =
     group [ xf [ mv2 xOffset yOffset ] ]
-        [ rectB heroWidth heroHeight [ fill wWhite ]
+        [ rectB heroWidth (heroHeight * 0.75) [ fill wWhite, xf [ mvUp (heroHeight * 0.25) ] ]
         , rect
             (heroWidth * 1.2)
             (heroHeight * 0.1)
             [ fill wPurple
             , xf [ mvUp (heroHeight * 0.1 * 8) ]
             ]
+        , viewHeroLeg 1
+        , viewHeroLeg -1
+        ]
+
+
+viewHeroLeg xOffset =
+    rectB (heroWidth * 0.2)
+        (heroHeight * 0.3)
+        [ fill wWhite
+        , xf [ mvLeft (heroWidth * 0.25 * xOffset) ]
         ]
 
 
