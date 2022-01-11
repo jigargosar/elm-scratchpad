@@ -24,9 +24,9 @@ import Utils exposing (..)
     * END PROJECT BEFORE 15th JAN 2022
     * visuals:
         [x] full screen viewport calculations,
-        [ ] bg: hills
+        [x] bg: hills
+        [ ] hero shape
         * bg: trees
-        * hero shape
     * list steps to take before you can send it to Ojas.
         * deploy
         * list polish if any.
@@ -515,16 +515,16 @@ view model =
 
 viewBackground : Screen -> Float -> Svg msg
 viewBackground screen xOffset =
-    group [ stroke wBlue ]
+    group []
         [ TypedSvg.polygon
             [ TypedSvg.Attributes.points (hillPoints screen hill1 xOffset)
-            , fill wGreen_lime
+            , fill "hsl(79, 66%, 47%)"
             , transforms [ translateF2 ( screen.left, screen.bottom ) ]
             ]
             []
         , TypedSvg.polygon
             [ TypedSvg.Attributes.points (hillPoints screen hill2 (xOffset + 150))
-            , fill wGreen2_sea
+            , fill "hsl(87, 70%, 37%)"
             , transforms [ translateF2 ( screen.left, screen.bottom ) ]
             ]
             []
@@ -652,7 +652,14 @@ viewWalls screen walls =
 viewHero : Float -> Float -> Svg msg
 viewHero xOffset yOffset =
     group [ xf [ mv2 xOffset yOffset ] ]
-        [ rectB heroWidth heroHeight [ fill wBlue ] ]
+        [ rectB heroWidth heroHeight [ fill wWhite ]
+        , rect
+            (heroWidth * 1.2)
+            (heroHeight * 0.1)
+            [ fill wPurple
+            , xf [ mvUp (heroHeight * 0.1 * 8) ]
+            ]
+        ]
 
 
 type alias Stick =
