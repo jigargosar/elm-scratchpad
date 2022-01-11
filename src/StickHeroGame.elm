@@ -20,6 +20,7 @@ import Utils exposing (..)
     [x] publish repo to gh.
     [x] deploy to surge
     [x] paste link here: https://elm-stick-hero.surge.sh/
+    * fix dpr issue on mobile
     * send link to ojas
 
     ## LATER/NEVER:
