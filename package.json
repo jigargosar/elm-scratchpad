@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "start": "cross-env PARCEL_ELM_NO_DEBUG=1 parcel src/TCBON/MandelbrotSet.html --no-hmr"
+    "start": "cross-env PARCEL_ELM_NO_DEBUG=1 parcel src/TCBON/MandelbrotSet.html --no-hmr",
+    "build-deploy-stick-hero-game": ""
   },
   "devDependencies": {
     "@parcel/transformer-elm": "^2.0.1",
