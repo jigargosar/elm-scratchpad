@@ -653,6 +653,13 @@ viewHero : Float -> Float -> Svg msg
 viewHero xOffset yOffset =
     group [ xf [ mv2 xOffset yOffset ] ]
         [ rectB heroWidth (heroHeight * 0.75) [ fill wWhite, xf [ mvUp (heroHeight * 0.25) ] ]
+        , circle (heroWidth * 0.2)
+            [ fill wGray
+            , xf
+                [ mvUp (heroHeight * 0.1 * 7)
+                , mvRight (heroWidth * 0.3)
+                ]
+            ]
         , rect
             (heroWidth * 1.2)
             (heroHeight * 0.1)
