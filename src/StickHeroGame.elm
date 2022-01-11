@@ -29,8 +29,8 @@ import Utils exposing (..)
 
     [x] list steps to take before you can send it to Ojas.
     [x] list polish if any.
-    * deploy, gh-pages or surge?
     * starting instruction: Long press to stretch out the stick.
+    * deploy, gh-pages or surge?
     * paste link here:
     * send link to ojas
     * export repo to git hub.
