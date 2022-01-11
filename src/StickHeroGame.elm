@@ -586,12 +586,12 @@ transitionOpacity =
 
 viewStartingInstructions : Bool -> Svg msg
 viewStartingInstructions show =
-    words "Long press to stretch out the stick."
+    words "Long press to stretch out the stick"
         [ opacityFromBool show
         , transitionOpacity
         , fill white
         , transforms [ "translateY(-30%)" ]
-        , fontSize "30px"
+        , fontSize "25px"
         ]
 
 
