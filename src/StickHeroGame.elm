@@ -9,27 +9,14 @@ import Utils exposing (..)
 
 {-
    THIS LINE IS FOR FIXING INDENTATION ISSUE WITH ELM-FORMAT. DETAILS?
-    Specs:
+    # Specs:
     * clone Stick Hero
     * codepen: https://codepen.io/HunorMarton/pen/xxOMQKg
     * youtube: https://www.youtube.com/watch?v=eue3UdFvwPo
 
-    Pending:
-    [x] use pointer-event pointer-down/up to make it work in mobile mode.
-    [x] play it on your mobile.
-    [x] fix pointer up not being detected.
-    [x] prevent screen scrolling on phone.
-    [x] list visuals to clone
-    [*] record deadline for completion.
-    * END PROJECT BEFORE 15th JAN 2022
-    * visuals:
-        [x] full screen viewport calculations,
-        [x] bg: hills
-        [x] hero shape
-
-    [x] list steps to take before you can send it to Ojas.
-    [x] list polish if any.
-    * starting instruction: Long press to stretch out the stick.
+    # END PROJECT BEFORE 15th JAN 2022
+    ## Pending
+    * update starting instruction: Long press to stretch out the stick.
     * publish repo to gh.
     * deploy, gh-pages or surge?
     * paste link here:
@@ -38,7 +25,7 @@ import Utils exposing (..)
     * try using gh pages to deploy examples. one for now.
     * check notes.md for new projects.
 
-    LATER/NEVER:
+    ## LATER/NEVER:
     * bg: trees
     * resize issues
         * heroY appears stuck when screen is resized on Over state.
@@ -73,6 +60,20 @@ import Utils exposing (..)
     [x] click input
     [x] make game more difficult by reducing max/average wall width.
     [x] make svg expand to full screen, preserve aspect ratio to clone responsiveness.
+    [x] use pointer-event pointer-down/up to make it work in mobile mode.
+    [x] play it on your mobile.
+    [x] fix pointer up not being detected.
+    [x] prevent screen scrolling on phone.
+    [x] list visuals to clone
+    [x] record deadline for completion.
+    [x] visuals:
+        [x] full screen viewport calculations,
+        [x] bg: hills
+        [x] hero shape
+
+    [x] list steps to take before you can send it to Ojas.
+    [x] list polish if any.
+
 -}
 
 
