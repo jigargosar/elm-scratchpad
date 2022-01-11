@@ -25,17 +25,20 @@ import Utils exposing (..)
     * visuals:
         [x] full screen viewport calculations,
         [x] bg: hills
-        [ ] hero shape
-        * bg: trees
-    * list steps to take before you can send it to Ojas.
-        * deploy
-        * list polish if any.
-            * starting instruction: Long press to stretch out the stick.
+        [x] hero shape
+
+    [x] list steps to take before you can send it to Ojas.
+    [x] list polish if any.
+    * deploy, gh-pages or surge?
+    * starting instruction: Long press to stretch out the stick.
+    * paste link here:
+    * send link to ojas
     * export repo to git hub.
     * try using gh pages to deploy examples. one for now.
     * check notes.md for new projects.
 
     LATER/NEVER:
+    * bg: trees
     * resize issues
         * heroY appears stuck when screen is resized on Over state.
         * at small width or height, many things get weird
