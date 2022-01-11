@@ -21,7 +21,6 @@ import Utils exposing (..)
     * deploy, gh-pages or surge?
     * paste link here:
     * send link to ojas
-    * export repo to git hub.
     * try using gh pages to deploy examples. one for now.
     * check notes.md for new projects.
 
