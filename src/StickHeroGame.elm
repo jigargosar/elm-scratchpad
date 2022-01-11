@@ -591,7 +591,7 @@ viewStartingInstructions show =
         , transitionOpacity
         , fill white
         , transforms [ "translateY(-30%)" ]
-        , fontSize "25px"
+        , fontSize "24px"
         ]
 
 
@@ -602,7 +602,7 @@ viewDoubleScoreIndicator active =
         , transitionOpacity
         , fill white
         , transforms [ "translateY(-30%)" ]
-        , fontSize "30px"
+        , fontSize "24px"
         ]
 
 
@@ -630,7 +630,7 @@ viewRestartGameOverlay screen active =
             [ xf [ mvUp (screen.height / 4) ]
             ]
             [ rect screen.width (screen.height / 4) [ fill black, opacity 0.9 ]
-            , words "RESTART" [ fill wWhite, fontSize "90px" ]
+            , words "RESTART" [ fill wWhite, fontSize "60px" ]
             ]
         ]
 
