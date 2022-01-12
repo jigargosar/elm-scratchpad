@@ -92,7 +92,7 @@ main =
 
 
 fooFactor =
-    2.5
+    2
 
 
 stretchSpeed =
