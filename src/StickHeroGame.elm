@@ -121,7 +121,7 @@ turnSpeed =
 
 
 heroHeight =
-    heroWidth * 2
+    heroWidth * 2.5
 
 
 doubleScoreSquareWidth =
