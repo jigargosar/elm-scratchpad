@@ -610,7 +610,7 @@ viewScore score =
         [ fill wWhite
         , wordsAlignYTop
         , wordsAlignXRight
-        , transforms [ "translate(calc(50% - 1ch),-50%)" ]
+        , transforms [ "translate(calc(50% - 1ch),calc(-50% + 1ch))" ]
         , fontSize "30px"
         ]
 
