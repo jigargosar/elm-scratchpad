@@ -91,10 +91,6 @@ main =
 -- CONSTANTS
 
 
-fooFactor =
-    1.5
-
-
 heroWidth =
     15
 
