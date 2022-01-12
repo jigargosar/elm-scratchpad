@@ -97,7 +97,7 @@ heroWidth =
 
 
 stretchSpeed =
-    0.2
+    0.175
 
 
 walkingSpeed =
@@ -362,7 +362,7 @@ step dt model =
         Falling stick ->
             let
                 maxHeroY =
-                    model.screen.bottom
+                    model.screen.bottom + heroHeight + 1
 
                 heroY =
                     model.heroY
