@@ -125,15 +125,15 @@ heroHeight =
 
 
 doubleScoreSquareWidth =
-    heroWidth / 2
+    10
 
 
 wallWidthRange =
-    ( heroWidth * 1.2, heroWidth * 2.5 )
+    ( 20, 50 )
 
 
 wallGapRange =
-    ( heroWidth * 2.5, heroWidth * 10 )
+    ( 50, 200 )
 
 
 initialWallWidth =
@@ -141,7 +141,7 @@ initialWallWidth =
 
 
 stickThickness =
-    heroWidth / 5
+    2
 
 
 
