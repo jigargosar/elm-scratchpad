@@ -15,13 +15,11 @@ import Utils exposing (..)
     * youtube: https://www.youtube.com/watch?v=eue3UdFvwPo
 
     # END PROJECT BEFORE 15th JAN 2022
-    ## Pending
-    [x] make hero fall off the screen.
-    [x] send link to ojas
-    * link to source code.
-    * post it on elm discourse.
+    # PROJECT ENDED ON 12th JAN 2022
 
     ## LATER/NEVER:
+    * link to source code.
+    * post it on elm discourse.
     * double score indicator, at times, is visible for too short a duration.
         * ideally: it should be visible for fixed duration, before fading-out.
     * bg: trees
@@ -79,6 +77,9 @@ import Utils exposing (..)
     [x] fix long instruction line issue on mobile.
     [x] fix touch cancel timeout.
     [x] fix font and min size issues on mobile
+    [x] make hero fall off the screen.
+    [x] send link to ojas
+    [x] add to /README.md
 
 -}
 
