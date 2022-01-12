@@ -95,6 +95,11 @@ fooFactor =
     1.5
 
 
+heroWidth =
+    -- 15
+    10 * fooFactor
+
+
 stretchSpeed =
     0.1 * fooFactor
 
@@ -113,11 +118,6 @@ transitionSpeed =
 
 turnSpeed =
     0.4
-
-
-heroWidth =
-    -- 15
-    10 * fooFactor
 
 
 heroHeight =
