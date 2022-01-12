@@ -23,7 +23,8 @@ import Utils exposing (..)
     [x] fix dpr issue on mobile
     [x] fix long instruction line issue on mobile.
     [x] fix touch cancel timeout.
-    [ ] fix font and min size issues on mobile
+    [x] fix font and min size issues on mobile
+    [ ] make hero fall off the screen.
     * send link to ojas
 
     ## LATER/NEVER:
