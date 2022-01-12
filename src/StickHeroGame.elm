@@ -16,7 +16,7 @@ import Utils exposing (..)
 
     # END PROJECT BEFORE 15th JAN 2022
     ## Pending
-    [ ] make hero fall off the screen.
+    [x] make hero fall off the screen.
     * send link to ojas
 
     ## LATER/NEVER:
