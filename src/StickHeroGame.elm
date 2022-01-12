@@ -92,7 +92,7 @@ main =
 
 
 fooFactor =
-    2
+    1.5
 
 
 stretchSpeed =
@@ -116,6 +116,7 @@ turnSpeed =
 
 
 heroWidth =
+    -- 15
     10 * fooFactor
 
 
