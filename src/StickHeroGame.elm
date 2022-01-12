@@ -100,19 +100,19 @@ heroWidth =
 
 
 stretchSpeed =
-    0.1 * fooFactor
+    0.2
 
 
 walkingSpeed =
-    0.3
+    0.4
 
 
 heroFallingSpeed =
-    0.3
+    0.4
 
 
 transitionSpeed =
-    0.3
+    0.4
 
 
 turnSpeed =
