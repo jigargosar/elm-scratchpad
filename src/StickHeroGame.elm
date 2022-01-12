@@ -16,14 +16,6 @@ import Utils exposing (..)
 
     # END PROJECT BEFORE 15th JAN 2022
     ## Pending
-    [x] update starting instruction: Long press to stretch out the stick.
-    [x] publish repo to gh.
-    [x] deploy to surge
-    [x] paste link here: https://elm-stick-hero.surge.sh/
-    [x] fix dpr issue on mobile
-    [x] fix long instruction line issue on mobile.
-    [x] fix touch cancel timeout.
-    [x] fix font and min size issues on mobile
     [ ] make hero fall off the screen.
     * send link to ojas
 
@@ -75,6 +67,14 @@ import Utils exposing (..)
 
     [x] list steps to take before you can send it to Ojas.
     [x] list polish if any.
+    [x] update starting instruction: Long press to stretch out the stick.
+    [x] publish repo to gh.
+    [x] deploy to surge
+    [x] paste link here: https://elm-stick-hero.surge.sh/
+    [x] fix dpr issue on mobile
+    [x] fix long instruction line issue on mobile.
+    [x] fix touch cancel timeout.
+    [x] fix font and min size issues on mobile
 
 -}
 
