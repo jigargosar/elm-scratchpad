@@ -20,6 +20,8 @@ import Utils exposing (..)
     * send link to ojas
 
     ## LATER/NEVER:
+    * double score indicator, at times, is visible for too short a duration.
+        * ideally: it should be visible for fixed duration, before fading-out.
     * bg: trees
     * resize issues
         * heroY appears stuck when screen is resized on Over state.
