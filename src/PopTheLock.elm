@@ -161,11 +161,6 @@ step dt model =
 
         Rotating rec ->
             let
-                --va =
-                --    angularVelocity pinAngularSpeed rec.pinAngularDirection
-                --
-                --pinAngle =
-                --    rec.pinStartingAngle + (va * dt)
                 elapsed =
                     rec.elapsed + dt
             in
