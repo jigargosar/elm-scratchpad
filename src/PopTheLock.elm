@@ -110,8 +110,25 @@ init () =
       , phase = phase
       , seed = seed
       }
+        |> updateOnUserInput
     , Cmd.none
     )
+
+
+updateOnUserInput : Model -> Model
+updateOnUserInput model =
+    case model.phase of
+        WaitingForUserInput _ ->
+            model
+
+        Rotating _ ->
+            model
+
+        LevelFailed _ ->
+            model
+
+        LevelComplete _ ->
+            model
 
 
 type Msg
