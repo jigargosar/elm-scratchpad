@@ -34,7 +34,8 @@ type Phase
         , pinAngularDirection : AngularDirection
         , locksPopped : Int
         }
-    | Fail { pinAngle : Float, dotAngle : Float, locksPopped : Int }
+    | LevelFailed { pinAngle : Float, dotAngle : Float, locksPopped : Int }
+    | LevelComplete { pinAngle : Float }
 
 
 type AngularDirection
