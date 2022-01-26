@@ -31,6 +31,10 @@ minDotAngleOffset =
     degrees 20
 
 
+errorMarginAngle =
+    degrees 8
+
+
 initialPinAngle =
     degrees -90
 
@@ -143,8 +147,35 @@ updateOnUserInput model =
                         }
             }
 
-        Rotating _ ->
-            model
+        Rotating rec ->
+            let
+                failed =
+                    abs (pinAngularSpeed * rec.elapsed - rec.dotAngleOffset) > errorMarginAngle
+            in
+            if failed then
+                let
+                    pinAngle =
+                        rec.pinStartingAngle
+                            + angleInDirection rec.pinAngularDirection (pinAngularSpeed * rec.elapsed)
+
+                    dotAngle =
+                        rec.pinStartingAngle
+                            + angleInDirection rec.pinAngularDirection rec.dotAngleOffset
+
+                    pendingLocks =
+                        rec.pendingLocks
+                in
+                { model
+                    | phase =
+                        LevelFailed
+                            { pinAngle = pinAngle
+                            , dotAngle = dotAngle
+                            , pendingLocks = pendingLocks
+                            }
+                }
+
+            else
+                model
 
         LevelFailed _ ->
             model
@@ -165,13 +196,13 @@ step dt model =
                     rec.elapsed + dt
 
                 failed =
-                    pinAngularSpeed * elapsed > rec.dotAngleOffset + degrees 10
+                    pinAngularSpeed * elapsed > rec.dotAngleOffset + errorMarginAngle
             in
             if failed then
                 let
                     pinAngle =
                         rec.pinStartingAngle
-                            + angleInDirection rec.pinAngularDirection (pinAngularSpeed * rec.elapsed)
+                            + angleInDirection rec.pinAngularDirection (pinAngularSpeed * elapsed)
 
                     dotAngle =
                         rec.pinStartingAngle
