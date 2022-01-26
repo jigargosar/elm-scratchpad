@@ -274,8 +274,23 @@ view model =
                     , viewPendingLocks pendingLocks
                     ]
 
-            LevelFailed _ ->
-                noView
+            LevelFailed rec ->
+                let
+                    pinAngle =
+                        rec.pinAngle
+
+                    dotAngle =
+                        rec.dotAngle
+
+                    pendingLocks =
+                        rec.pendingLocks
+                in
+                group []
+                    [ viewLock
+                    , viewDot dotAngle
+                    , viewPin pinAngle
+                    , viewPendingLocks pendingLocks
+                    ]
 
             LevelComplete _ ->
                 noView
