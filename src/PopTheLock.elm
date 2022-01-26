@@ -43,6 +43,10 @@ type AngularDirection
     | CounterClockWise
 
 
+initialPinAngle =
+    degrees -90
+
+
 init : () -> ( Model, Cmd Msg )
 init () =
     ( { level = 1
@@ -107,8 +111,12 @@ lockThickness =
     30
 
 
-dotRadius =
+pinRadius =
     (lockThickness / 2) * 0.9
+
+
+dotRadius =
+    (lockThickness / 2) * 0.8
 
 
 viewLock : Svg Msg
@@ -129,6 +137,15 @@ viewDot angle =
             fromPolar ( r, theta )
     in
     circle dotRadius [ fill wYellow, transforms [ translateF2 dotCenterF2 ] ]
+
+
+viewPin : Float -> Svg Msg
+viewPin angle =
+    polyline [ ( -pinRadius, 0 ), ( pinRadius, 0 ) ]
+        [ stroke wPink
+        , strokeW 10
+        , transforms [ translateF2 ( lockRadius, 0 ), rotateF angle ]
+        ]
 
 
 viewLevelNum : Int -> Svg Msg
