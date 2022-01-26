@@ -63,7 +63,7 @@ type Phase
         , pinAngularDirection : AngularDirection
         , pendingLocks : Int
         }
-    | LevelFailed { pinAngle : Float, dotAngle : Float, pendingLocks : Int }
+    | LevelFailed { elapsed : Float, pinAngle : Float, dotAngle : Float, pendingLocks : Int }
     | LevelComplete { pinAngle : Float }
 
 
@@ -177,7 +177,8 @@ updateOnUserInput model =
                 { model
                     | phase =
                         LevelFailed
-                            { pinAngle = pinAngle
+                            { elapsed = 0
+                            , pinAngle = pinAngle
                             , dotAngle = dotAngle
                             , pendingLocks = pendingLocks
                             }
@@ -240,7 +241,8 @@ step dt model =
                 { model
                     | phase =
                         LevelFailed
-                            { pinAngle = pinAngle
+                            { elapsed = 0
+                            , pinAngle = pinAngle
                             , dotAngle = dotAngle
                             , pendingLocks = pendingLocks
                             }
