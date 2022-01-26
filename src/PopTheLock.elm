@@ -174,8 +174,16 @@ updateOnUserInput model =
                             }
                 }
 
+            else if rec.pendingLocks <= 1 then
+                let
+                    pinAngle =
+                        rec.pinStartingAngle
+                            + angleInDirection rec.pinAngularDirection (pinAngularSpeed * rec.elapsed)
+                in
+                { model | phase = LevelComplete { pinAngle = pinAngle } }
+
             else
-                model
+                { model | phase = Rotating { rec | pendingLocks = rec.pendingLocks - 1 } }
 
         LevelFailed _ ->
             model
