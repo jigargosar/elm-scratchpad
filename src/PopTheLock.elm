@@ -28,6 +28,13 @@ type alias Model =
 
 type Phase
     = WaitingForUserInput { dotAngle : Float, pinAngularDirection : AngularDirection }
+    | Rotating
+        { pinAngle : Float
+        , dotAngle : Float
+        , pinAngularDirection : AngularDirection
+        , locksPopped : Int
+        }
+    | Fail { pinAngle : Float, dotAngle : Float, locksPopped : Int }
 
 
 type AngularDirection
