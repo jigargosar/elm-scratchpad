@@ -53,7 +53,8 @@ type alias Model =
 type Phase
     = WaitingForUserInput { dotAngleOffset : Float, pinAngularDirection : AngularDirection }
     | Rotating
-        { pinAngleStart : Float
+        { pinStartingAngle : Float
+        , elapsed : Float
         , dotAngleOffset : Float
         , pinAngularDirection : AngularDirection
         , pendingLocks : Int
@@ -134,7 +135,8 @@ updateOnUserInput model =
             { model
                 | phase =
                     Rotating
-                        { pinAngleStart = initialPinAngle
+                        { pinStartingAngle = initialPinAngle
+                        , elapsed = 0
                         , dotAngleOffset = dotAngleOffset
                         , pinAngularDirection = pinAngularDirection
                         , pendingLocks = model.level
@@ -159,13 +161,15 @@ step dt model =
 
         Rotating rec ->
             let
-                va =
-                    angularVelocity pinAngularSpeed rec.pinAngularDirection
-
-                pinAngle =
-                    rec.pinAngleStart + (va * dt)
+                --va =
+                --    angularVelocity pinAngularSpeed rec.pinAngularDirection
+                --
+                --pinAngle =
+                --    rec.pinStartingAngle + (va * dt)
+                elapsed =
+                    rec.elapsed + dt
             in
-            { model | phase = Rotating { rec | pinAngleStart = pinAngle } }
+            { model | phase = Rotating { rec | elapsed = elapsed } }
 
         LevelFailed _ ->
             model
@@ -226,11 +230,11 @@ view model =
                     , viewPendingLocks model.level
                     ]
 
-            Rotating { pinAngleStart, dotAngleOffset, pendingLocks } ->
+            Rotating { pinStartingAngle, dotAngleOffset, pendingLocks } ->
                 group []
                     [ viewLock
                     , viewDot dotAngleOffset
-                    , viewPin pinAngleStart
+                    , viewPin pinStartingAngle
                     , viewPendingLocks pendingLocks
                     ]
 
