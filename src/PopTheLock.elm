@@ -16,7 +16,7 @@ main =
         { init = init
         , subscriptions = subscriptions
         , update = update
-        , view = view
+        , view = viewDoc
         }
 
 
@@ -68,8 +68,14 @@ update msg model =
             ( model, Cmd.none )
 
 
-view : Model -> Document Msg
-view _ =
+viewDoc : Model -> Document Msg
+viewDoc model =
     Document "App Title"
         [ basicStylesNode
+        , view model
         ]
+
+
+view : Model -> Html Msg
+view _ =
+    basicSvg [] []

@@ -587,17 +587,6 @@ svg =
     Svg.svg
 
 
-svgBlock aa =
-    svg
-        (dBlock
-            :: noFill
-            :: noStroke
-            :: noUserSelect
-            :: bgc gray
-            :: aa
-        )
-
-
 basicSvg aa =
     basicSvgAttrs aa |> svg
 

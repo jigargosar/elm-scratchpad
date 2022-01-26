@@ -20,6 +20,17 @@ main =
         ]
 
 
+svgBlock aa =
+    svg
+        (dBlock
+            :: noFill
+            :: noStroke
+            :: noUserSelect
+            :: bgc gray
+            :: aa
+        )
+
+
 type alias Particle =
     { to : Float2
     , h : Float
