@@ -96,6 +96,7 @@ view model =
                     [ viewLock
                     , viewDot dotAngle
                     , viewPin initialPinAngle
+                    , viewPendingLocks model.level
                     ]
 
             Rotating _ ->
@@ -110,7 +111,7 @@ view model =
 
 
 lockRadius =
-    75
+    90
 
 
 lockThickness =
@@ -152,6 +153,19 @@ viewPin angle =
         , strokeW 8
         , TA.strokeLinecap TT.StrokeLinecapRound
         , transforms [ rotateF angle, translateF2 ( lockRadius, 0 ) ]
+        ]
+
+
+viewPendingLocks : Int -> Svg Msg
+viewPendingLocks num =
+    let
+        numStr =
+            fromInt num
+    in
+    words numStr
+        [ fontSize "80px"
+        , ffMonospace
+        , fill <| whiteA 0.8
         ]
 
 
