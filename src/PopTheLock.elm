@@ -47,6 +47,10 @@ degreesPerSecond d =
     degrees d / 1000
 
 
+maxLevelFailedTransitionDuration =
+    3000
+
+
 type alias Model =
     { level : Int
     , phase : Phase
@@ -124,20 +128,26 @@ init () =
     let
         initialSeed =
             Random.initialSeed 2
-
-        ( phase, seed ) =
-            Random.step randomInitialPhase initialSeed
     in
-    ( { level = 12
-      , phase = phase
-      , seed = seed
-      }
+    ( initLevelWithSeed 12 initialSeed
         |> updateOnUserInput
         |> step (4500 + 0)
         |> updateOnUserInput
         |> Debug.log "Debug: "
     , Cmd.none
     )
+
+
+initLevelWithSeed : Int -> Seed -> Model
+initLevelWithSeed level initialSeed =
+    let
+        ( phase, seed ) =
+            Random.step randomInitialPhase initialSeed
+    in
+    { level = level
+    , phase = phase
+    , seed = seed
+    }
 
 
 updateOnUserInput : Model -> Model
@@ -251,8 +261,16 @@ step dt model =
             else
                 { model | phase = Rotating { rec | elapsed = elapsed } }
 
-        LevelFailed _ ->
-            model
+        LevelFailed rec ->
+            let
+                elapsed =
+                    rec.elapsed + dt |> atMost maxLevelFailedTransitionDuration
+            in
+            if rec.elapsed == elapsed then
+                initLevelWithSeed model.level model.seed
+
+            else
+                { model | phase = LevelFailed { rec | elapsed = elapsed } }
 
         LevelComplete _ ->
             model
