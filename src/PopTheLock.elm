@@ -99,9 +99,36 @@ view model =
         ]
 
 
+lockRadius =
+    75
+
+
+lockThickness =
+    30
+
+
+dotRadius =
+    (lockThickness / 2) * 0.9
+
+
 viewLock : Svg Msg
 viewLock =
-    circle 75 [ strokeW 30, stroke <| blackA 0.8 ]
+    circle lockRadius [ strokeW lockThickness, stroke <| blackA 0.8 ]
+
+
+viewDot : Float -> Svg Msg
+viewDot angle =
+    let
+        r =
+            lockRadius
+
+        theta =
+            angle
+
+        dotCenterF2 =
+            fromPolar ( r, theta )
+    in
+    circle dotRadius [ fill wYellow, transforms [ translateF2 dotCenterF2 ] ]
 
 
 viewLevelNum : Int -> Svg Msg
