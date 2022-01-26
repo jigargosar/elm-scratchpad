@@ -75,34 +75,6 @@ randomInitialPhase =
         randomDotAngleOffset
 
 
-
---randomAngularDirection
---    |> Random.andThen
---        (\angularDirection ->
---            randomDotAngle initialPinAngle angularDirection
---                |> Random.map
---                    (\dotAngle ->
---                        WaitingForUserInput
---                            { dotAngleOffset = dotAngle
---                            , pinAngularDirection = angularDirection
---                            }
---                    )
---        )
-
-
-randomDotAngle : Float -> AngularDirection -> Generator Float
-randomDotAngle pinAngle angularDirection =
-    randomDotAngleOffset
-        |> (case angularDirection of
-                ClockWise ->
-                    identity
-
-                CounterClockWise ->
-                    Random.map negate
-           )
-        |> Random.map (add pinAngle)
-
-
 randomDotAngleOffset =
     Random.float minDotAngleOffset maxDotAngleOffset
 
