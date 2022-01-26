@@ -23,6 +23,26 @@ main =
         }
 
 
+maxDotAngleOffset =
+    degrees (90 + 45)
+
+
+minDotAngleOffset =
+    degrees 20
+
+
+initialPinAngle =
+    degrees -90
+
+
+pinAngularSpeed =
+    degreesPerSecond 30
+
+
+degreesPerSecond d =
+    degrees d / 1000
+
+
 type alias Model =
     { level : Int
     , phase : Phase
@@ -75,14 +95,6 @@ randomDotAngleOffset =
     Random.float minDotAngleOffset maxDotAngleOffset
 
 
-maxDotAngleOffset =
-    degrees (90 + 45)
-
-
-minDotAngleOffset =
-    degrees 20
-
-
 randomAngularDirection : Generator AngularDirection
 randomAngularDirection =
     Random.uniform ClockWise [ CounterClockWise ]
@@ -93,8 +105,19 @@ type AngularDirection
     | CounterClockWise
 
 
-initialPinAngle =
-    degrees -90
+angularDirectionToSign : AngularDirection -> Float
+angularDirectionToSign angularDirection =
+    case angularDirection of
+        ClockWise ->
+            1
+
+        CounterClockWise ->
+            -1
+
+
+angularVelocity : Float -> AngularDirection -> Float
+angularVelocity angularSpeed angularDirection =
+    angularSpeed * angularDirectionToSign angularDirection
 
 
 init : () -> ( Model, Cmd Msg )
@@ -131,6 +154,29 @@ updateOnUserInput model =
 
         Rotating _ ->
             model
+
+        LevelFailed _ ->
+            model
+
+        LevelComplete _ ->
+            model
+
+
+step : Float -> Model -> Model
+step dt model =
+    case model.phase of
+        WaitingForUserInput _ ->
+            model
+
+        Rotating rec ->
+            let
+                va =
+                    angularVelocity pinAngularSpeed rec.pinAngularDirection
+
+                pinAngle =
+                    rec.pinAngle + (va * dt)
+            in
+            { model | phase = Rotating { rec | pinAngle = pinAngle } }
 
         LevelFailed _ ->
             model
