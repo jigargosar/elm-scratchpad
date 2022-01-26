@@ -123,7 +123,7 @@ init () =
         ( phase, seed ) =
             Random.step randomInitialPhase initialSeed
     in
-    ( { level = 1
+    ( { level = 12
       , phase = phase
       , seed = seed
       }
