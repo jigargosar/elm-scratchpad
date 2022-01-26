@@ -118,8 +118,16 @@ init () =
 updateOnUserInput : Model -> Model
 updateOnUserInput model =
     case model.phase of
-        WaitingForUserInput _ ->
-            model
+        WaitingForUserInput { dotAngle, pinAngularDirection } ->
+            { model
+                | phase =
+                    Rotating
+                        { pinAngle = initialPinAngle
+                        , dotAngle = dotAngle
+                        , pinAngularDirection = pinAngularDirection
+                        , locksPopped = 0
+                        }
+            }
 
         Rotating _ ->
             model
