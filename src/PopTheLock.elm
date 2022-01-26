@@ -77,5 +77,25 @@ viewDoc model =
 
 
 view : Model -> Html Msg
-view _ =
-    basicSvg [] []
+view model =
+    basicSvg [ viewBoxC 300 600 ]
+        [ viewLevelNum model.level
+        ]
+
+
+viewLevelNum : Int -> Svg Msg
+viewLevelNum level =
+    let
+        levelStr =
+            fromInt level
+
+        txt =
+            "LEVEL:" ++ levelStr
+    in
+    words txt
+        [ wordsAlignYTop
+        , wordsAlignXLeft
+        , fontSize "30px"
+        , fill <| whiteA 0.8
+        , transforms [ translateF2 ( 20, 20 ) ]
+        ]
