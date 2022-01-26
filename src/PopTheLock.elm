@@ -51,7 +51,7 @@ type alias Model =
 
 
 type Phase
-    = WaitingForUserInput { dotAngle : Float, pinAngularDirection : AngularDirection }
+    = WaitingForUserInput { dotAngleOffset : Float, pinAngularDirection : AngularDirection }
     | Rotating
         { pinAngle : Float
         , dotAngle : Float
@@ -64,18 +64,30 @@ type Phase
 
 randomInitialPhase : Generator Phase
 randomInitialPhase =
-    randomAngularDirection
-        |> Random.andThen
-            (\angularDirection ->
-                randomDotAngle initialPinAngle angularDirection
-                    |> Random.map
-                        (\dotAngle ->
-                            WaitingForUserInput
-                                { dotAngle = dotAngle
-                                , pinAngularDirection = angularDirection
-                                }
-                        )
-            )
+    Random.map2
+        (\angularDirection dotAngleOffset ->
+            WaitingForUserInput
+                { dotAngleOffset = dotAngleOffset
+                , pinAngularDirection = angularDirection
+                }
+        )
+        randomAngularDirection
+        randomDotAngleOffset
+
+
+
+--randomAngularDirection
+--    |> Random.andThen
+--        (\angularDirection ->
+--            randomDotAngle initialPinAngle angularDirection
+--                |> Random.map
+--                    (\dotAngle ->
+--                        WaitingForUserInput
+--                            { dotAngleOffset = dotAngle
+--                            , pinAngularDirection = angularDirection
+--                            }
+--                    )
+--        )
 
 
 randomDotAngle : Float -> AngularDirection -> Generator Float
@@ -141,12 +153,12 @@ init () =
 updateOnUserInput : Model -> Model
 updateOnUserInput model =
     case model.phase of
-        WaitingForUserInput { dotAngle, pinAngularDirection } ->
+        WaitingForUserInput { dotAngleOffset, pinAngularDirection } ->
             { model
                 | phase =
                     Rotating
                         { pinAngle = initialPinAngle
-                        , dotAngle = dotAngle
+                        , dotAngle = dotAngleOffset
                         , pinAngularDirection = pinAngularDirection
                         , pendingLocks = model.level
                         }
@@ -222,10 +234,10 @@ view model =
         ]
         [ viewLevelNum model.level
         , case model.phase of
-            WaitingForUserInput { dotAngle } ->
+            WaitingForUserInput { dotAngleOffset } ->
                 group []
                     [ viewLock
-                    , viewDot dotAngle
+                    , viewDot dotAngleOffset
                     , viewPin initialPinAngle
                     , viewPendingLocks model.level
                     ]
