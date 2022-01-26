@@ -1078,7 +1078,7 @@ translateT ( a, b ) =
 
 
 rotateF f =
-    "rotate(" ++ fromFloat f ++ ")"
+    "rotate(" ++ fromFloat f ++ "rad)"
 
 
 scaleF f =

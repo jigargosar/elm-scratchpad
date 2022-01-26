@@ -1,5 +1,7 @@
 module PopTheLock exposing (main)
 
+import TypedSvg.Attributes as TA
+import TypedSvg.Types as TT
 import Utils exposing (..)
 
 
@@ -85,7 +87,7 @@ view model =
     basicSvg
         [ viewBoxC 300 (300 * 1.5)
         , sMaxHeight "100vh"
-        , bgc wPurple
+        , bgc wBlue
         ]
         [ viewLevelNum model.level
         , case model.phase of
@@ -116,11 +118,11 @@ lockThickness =
 
 
 pinRadius =
-    (lockThickness / 2) * 0.9
+    (lockThickness / 2) * 0.7
 
 
 dotRadius =
-    (lockThickness / 2) * 0.8
+    (lockThickness / 2) * 0.6
 
 
 viewLock : Svg Msg
@@ -147,8 +149,9 @@ viewPin : Float -> Svg Msg
 viewPin angle =
     polyline [ ( -pinRadius, 0 ), ( pinRadius, 0 ) ]
         [ stroke wPink
-        , strokeW 10
-        , transforms [ translateF2 ( lockRadius, 0 ), rotateF angle ]
+        , strokeW 8
+        , TA.strokeLinecap TT.StrokeLinecapRound
+        , transforms [ rotateF angle, translateF2 ( lockRadius, 0 ) ]
         ]
 
 
