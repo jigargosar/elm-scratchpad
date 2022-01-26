@@ -83,10 +83,10 @@ randomDotAngle pinAngle angularDirection =
     randomDotAngleOffset
         |> (case angularDirection of
                 ClockWise ->
-                    Random.map negate
+                    identity
 
                 CounterClockWise ->
-                    identity
+                    Random.map negate
            )
         |> Random.map (add pinAngle)
 
@@ -172,6 +172,7 @@ step dt model =
             let
                 va =
                     angularVelocity pinAngularSpeed rec.pinAngularDirection
+                        |> Debug.log "Debug: "
 
                 pinAngle =
                     rec.pinAngle + (va * dt)
@@ -187,11 +188,12 @@ step dt model =
 
 type Msg
     = NOP
+    | OnClampedDelta Float
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Sub.none
+    onAnimationFrameClampedDelta OnClampedDelta
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -199,6 +201,9 @@ update msg model =
     case msg of
         NOP ->
             ( model, Cmd.none )
+
+        OnClampedDelta dt ->
+            ( step dt model, Cmd.none )
 
 
 viewDoc : Model -> Document Msg
