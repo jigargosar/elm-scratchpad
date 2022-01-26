@@ -237,7 +237,7 @@ view model =
                 let
                     pinAngle =
                         rec.pinStartingAngle
-                            + (angularVelocity pinAngularSpeed rec.pinAngularDirection * rec.elapsed)
+                            + angleInDirection rec.pinAngularDirection (pinAngularSpeed * rec.elapsed)
 
                     dotAngle =
                         rec.pinStartingAngle
