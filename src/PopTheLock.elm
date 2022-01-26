@@ -78,9 +78,30 @@ viewDoc model =
 
 view : Model -> Html Msg
 view model =
-    basicSvg [ viewBoxC 300 600 ]
+    basicSvg [ viewBoxC 300 600, bgc wPurple ]
         [ viewLevelNum model.level
+        , case model.phase of
+            WaitingForUserInput { dotAngle } ->
+                group []
+                    [ viewLock
+                    , viewDot dotAngle
+                    , viewPin initialPinAngle
+                    ]
+
+            Rotating _ ->
+                noView
+
+            LevelFailed _ ->
+                noView
+
+            LevelComplete _ ->
+                noView
         ]
+
+
+viewLock : Svg Msg
+viewLock =
+    circle 75 [ strokeW 30, stroke <| blackA 0.8 ]
 
 
 viewLevelNum : Int -> Svg Msg

@@ -665,6 +665,11 @@ whiteA =
     hsla 1 1 1
 
 
+blackA : Float -> String
+blackA =
+    hsla 0 0 0
+
+
 black =
     grayN 0.1
 
