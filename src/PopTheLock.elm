@@ -46,7 +46,7 @@ randomInitialPhase =
     randomAngularDirection
         |> Random.andThen
             (\angularDirection ->
-                randomDotAngleOffsetFromAngularDirection angularDirection
+                randomDotAngle initialPinAngle angularDirection
                     |> Random.map
                         (\dotAngle ->
                             WaitingForUserInput
@@ -57,8 +57,8 @@ randomInitialPhase =
             )
 
 
-randomDotAngleOffsetFromAngularDirection : AngularDirection -> Generator Float
-randomDotAngleOffsetFromAngularDirection angularDirection =
+randomDotAngle : Float -> AngularDirection -> Generator Float
+randomDotAngle pinAngle angularDirection =
     randomDotAngleOffset
         |> (case angularDirection of
                 ClockWise ->
@@ -67,19 +67,24 @@ randomDotAngleOffsetFromAngularDirection angularDirection =
                 CounterClockWise ->
                     identity
            )
+        |> Random.map (add pinAngle)
 
 
 randomDotAngleOffset =
-    Random.float 0 maxDotAngleOffset
+    Random.float minDotAngleOffset maxDotAngleOffset
+
+
+maxDotAngleOffset =
+    degrees (90 + 45)
+
+
+minDotAngleOffset =
+    degrees 20
 
 
 randomAngularDirection : Generator AngularDirection
 randomAngularDirection =
     Random.uniform ClockWise [ CounterClockWise ]
-
-
-maxDotAngleOffset =
-    degrees (90 + 45)
 
 
 type AngularDirection
@@ -93,8 +98,18 @@ initialPinAngle =
 
 init : () -> ( Model, Cmd Msg )
 init () =
+    let
+        initialSeed =
+            Random.initialSeed 0
+
+        ( phase, seed ) =
+            Random.step randomInitialPhase initialSeed
+    in
     ( { level = 1
-      , phase = WaitingForUserInput { dotAngle = 0, pinAngularDirection = CounterClockWise }
+      , phase =
+            WaitingForUserInput { dotAngle = 0, pinAngularDirection = CounterClockWise }
+                |> always phase
+                |> Debug.log "Debug: "
       }
     , Cmd.none
     )
