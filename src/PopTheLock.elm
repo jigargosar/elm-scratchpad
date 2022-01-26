@@ -60,7 +60,6 @@ randomInitialPhase =
 randomDotAngle : Float -> AngularDirection -> Generator Float
 randomDotAngle pinAngle angularDirection =
     randomDotAngleOffset
-        |> Random.map (Debug.log "Debug: ")
         |> (case angularDirection of
                 ClockWise ->
                     Random.map negate
@@ -68,7 +67,6 @@ randomDotAngle pinAngle angularDirection =
                 CounterClockWise ->
                     identity
            )
-        |> Random.map (Debug.log "Debug: ")
         |> Random.map (add pinAngle)
 
 
@@ -111,7 +109,6 @@ init () =
       , phase =
             WaitingForUserInput { dotAngle = 0, pinAngularDirection = CounterClockWise }
                 |> always phase
-                |> Debug.log "Debug: "
       }
     , Cmd.none
     )
