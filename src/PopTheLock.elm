@@ -281,6 +281,8 @@ viewDoc model =
     Document "App Title"
         [ basicStylesNode
         , view model
+
+        --, div [ positionFixed, bgc <| blackA 0.3 ] [ text <| Debug.toString model.phase ]
         ]
 
 
