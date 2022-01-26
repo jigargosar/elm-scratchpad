@@ -217,24 +217,39 @@ view model =
         , case model.phase of
             WaitingForUserInput { dotAngleOffset, pinAngularDirection } ->
                 let
+                    pinAngle =
+                        initialPinAngle
+
                     dotAngle =
                         pinAngle + angleInDirection pinAngularDirection dotAngleOffset
 
-                    pinAngle =
-                        initialPinAngle
+                    pendingLocks =
+                        model.level
                 in
                 group []
                     [ viewLock
                     , viewDot dotAngle
                     , viewPin pinAngle
-                    , viewPendingLocks model.level
+                    , viewPendingLocks pendingLocks
                     ]
 
-            Rotating { pinStartingAngle, dotAngleOffset, pendingLocks } ->
+            Rotating rec ->
+                let
+                    pinAngle =
+                        rec.pinStartingAngle
+                            + (angularVelocity pinAngularSpeed rec.pinAngularDirection * rec.elapsed)
+
+                    dotAngle =
+                        rec.pinStartingAngle
+                            + angleInDirection rec.pinAngularDirection rec.dotAngleOffset
+
+                    pendingLocks =
+                        model.level
+                in
                 group []
                     [ viewLock
-                    , viewDot dotAngleOffset
-                    , viewPin pinStartingAngle
+                    , viewDot dotAngle
+                    , viewPin pinAngle
                     , viewPendingLocks pendingLocks
                     ]
 
