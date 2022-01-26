@@ -364,7 +364,7 @@ view model =
                     pendingLocks =
                         rec.pendingLocks
                 in
-                group []
+                group [ transforms [ rotateF (rec.elapsed * 0.001) ] ]
                     [ viewLock
                     , viewDot dotAngle
                     , viewPin pinAngle
