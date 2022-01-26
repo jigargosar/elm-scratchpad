@@ -26,6 +26,7 @@ main =
 type alias Model =
     { level : Int
     , phase : Phase
+    , seed : Seed
     }
 
 
@@ -107,6 +108,7 @@ init () =
     in
     ( { level = 1
       , phase = phase
+      , seed = seed
       }
     , Cmd.none
     )

@@ -2016,6 +2016,10 @@ type alias Generator a =
     Random.Generator a
 
 
+type alias Seed =
+    Random.Seed
+
+
 rAndMap =
     Random.Extra.andMap
 
