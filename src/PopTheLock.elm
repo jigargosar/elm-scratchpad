@@ -27,13 +27,18 @@ type alias Model =
 
 
 type Phase
-    = WaitingForUserInput
+    = WaitingForUserInput { dotAngle : Float, pinAngularDirection : AngularDirection }
+
+
+type AngularDirection
+    = ClockWise
+    | CounterClockWise
 
 
 init : () -> ( Model, Cmd Msg )
 init () =
     ( { level = 1
-      , phase = WaitingForUserInput
+      , phase = WaitingForUserInput { dotAngle = 0, pinAngularDirection = CounterClockWise }
       }
     , Cmd.none
     )
