@@ -166,14 +166,25 @@ step dt model =
 
                 failed =
                     pinAngularSpeed * elapsed > rec.dotAngleOffset + degrees 10
+
+                pinAngle =
+                    rec.pinStartingAngle
+                        + angleInDirection rec.pinAngularDirection (pinAngularSpeed * rec.elapsed)
+
+                dotAngle =
+                    rec.pinStartingAngle
+                        + angleInDirection rec.pinAngularDirection rec.dotAngleOffset
+
+                pendingLocks =
+                    rec.pendingLocks
             in
             if failed then
                 { model
                     | phase =
                         LevelFailed
-                            { pinAngle = rec.pinStartingAngle
-                            , dotAngle = rec.dotAngleOffset
-                            , pendingLocks = rec.pendingLocks
+                            { pinAngle = pinAngle
+                            , dotAngle = dotAngle
+                            , pendingLocks = pendingLocks
                             }
                 }
 
@@ -253,7 +264,7 @@ view model =
                             + angleInDirection rec.pinAngularDirection rec.dotAngleOffset
 
                     pendingLocks =
-                        model.level
+                        rec.pendingLocks
                 in
                 group []
                     [ viewLock
