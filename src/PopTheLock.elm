@@ -106,9 +106,7 @@ init () =
             Random.step randomInitialPhase initialSeed
     in
     ( { level = 1
-      , phase =
-            WaitingForUserInput { dotAngle = 0, pinAngularDirection = CounterClockWise }
-                |> always phase
+      , phase = phase
       }
     , Cmd.none
     )
