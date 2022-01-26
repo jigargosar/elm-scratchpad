@@ -1,5 +1,6 @@
 module PopTheLock exposing (main)
 
+import Random
 import TypedSvg.Attributes as TA
 import TypedSvg.Types as TT
 import Utils exposing (..)
@@ -38,6 +39,47 @@ type Phase
         }
     | LevelFailed { pinAngle : Float, dotAngle : Float, locksPopped : Int }
     | LevelComplete { pinAngle : Float }
+
+
+randomInitialPhase : Generator Phase
+randomInitialPhase =
+    randomAngularDirection
+        |> Random.andThen
+            (\angularDirection ->
+                randomDotAngleOffsetFromAngularDirection angularDirection
+                    |> Random.map
+                        (\dotAngle ->
+                            WaitingForUserInput
+                                { dotAngle = dotAngle
+                                , pinAngularDirection = angularDirection
+                                }
+                        )
+            )
+
+
+randomDotAngleOffsetFromAngularDirection : AngularDirection -> Generator Float
+randomDotAngleOffsetFromAngularDirection angularDirection =
+    randomDotAngleOffset
+        |> (case angularDirection of
+                ClockWise ->
+                    Random.map negate
+
+                CounterClockWise ->
+                    identity
+           )
+
+
+randomDotAngleOffset =
+    Random.float 0 maxDotAngleOffset
+
+
+randomAngularDirection : Generator AngularDirection
+randomAngularDirection =
+    Random.uniform ClockWise [ CounterClockWise ]
+
+
+maxDotAngleOffset =
+    degrees (90 + 45)
 
 
 type AngularDirection
