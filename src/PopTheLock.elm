@@ -128,7 +128,7 @@ init () =
       , seed = seed
       }
         |> updateOnUserInput
-        |> step (4500 + 10000)
+        |> step (4500 + 0)
         |> updateOnUserInput
     , Cmd.none
     )
