@@ -94,6 +94,16 @@ type AngularDirection
     | CounterClockWise
 
 
+oppositeAngularDirection : AngularDirection -> AngularDirection
+oppositeAngularDirection angularDirection =
+    case angularDirection of
+        ClockWise ->
+            CounterClockWise
+
+        CounterClockWise ->
+            ClockWise
+
+
 angleInDirection : AngularDirection -> Float -> Float
 angleInDirection angularDirection angle =
     angularDirectionToSign angularDirection * angle
@@ -107,11 +117,6 @@ angularDirectionToSign angularDirection =
 
         CounterClockWise ->
             -1
-
-
-angularVelocity : Float -> AngularDirection -> Float
-angularVelocity angularSpeed angularDirection =
-    angularSpeed * angularDirectionToSign angularDirection
 
 
 init : () -> ( Model, Cmd Msg )
@@ -155,12 +160,13 @@ updateOnUserInput model =
                 failed =
                     abs (pinAngularSpeed * rec.elapsed - rec.dotAngleOffset) > errorMarginAngle
             in
+            let
+                pinAngle =
+                    rec.pinStartingAngle
+                        + angleInDirection rec.pinAngularDirection (pinAngularSpeed * rec.elapsed)
+            in
             if failed then
                 let
-                    pinAngle =
-                        rec.pinStartingAngle
-                            + angleInDirection rec.pinAngularDirection (pinAngularSpeed * rec.elapsed)
-
                     dotAngle =
                         rec.pinStartingAngle
                             + angleInDirection rec.pinAngularDirection rec.dotAngleOffset
@@ -178,15 +184,24 @@ updateOnUserInput model =
                 }
 
             else if rec.pendingLocks <= 1 then
-                let
-                    pinAngle =
-                        rec.pinStartingAngle
-                            + angleInDirection rec.pinAngularDirection (pinAngularSpeed * rec.elapsed)
-                in
                 { model | phase = LevelComplete { pinAngle = pinAngle } }
 
             else
-                { model | phase = Rotating { rec | pendingLocks = rec.pendingLocks - 1 } }
+                let
+                    ( dotAngleOffset, seed ) =
+                        Random.step randomDotAngleOffset model.seed
+                in
+                { model
+                    | seed = seed
+                    , phase =
+                        Rotating
+                            { pinStartingAngle = pinAngle
+                            , elapsed = 0
+                            , dotAngleOffset = dotAngleOffset
+                            , pinAngularDirection = oppositeAngularDirection rec.pinAngularDirection
+                            , pendingLocks = rec.pendingLocks - 1
+                            }
+                }
 
         LevelFailed _ ->
             model
