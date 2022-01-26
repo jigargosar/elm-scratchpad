@@ -21,12 +21,22 @@ main =
 
 
 type alias Model =
-    {}
+    { level : Int
+    , phase : Phase
+    }
+
+
+type Phase
+    = WaitingForUserInput
 
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( {}, Cmd.none )
+    ( { level = 1
+      , phase = WaitingForUserInput
+      }
+    , Cmd.none
+    )
 
 
 type Msg
