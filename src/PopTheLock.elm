@@ -159,12 +159,13 @@ viewLevelNum level =
             fromInt level
 
         txt =
-            "LEVEL:" ++ levelStr
+            "LEVEL: " ++ levelStr
     in
     words txt
         [ wordsAlignYTop
         , wordsAlignXLeft
         , fontSize "30px"
+        , ffMonospace
         , fill <| whiteA 0.8
-        , transforms [ translateF2 ( 20, 20 ) ]
+        , transforms [ translateT ( "-50%", "-50%" ), translateF2 ( 10, 10 ) ]
         ]

@@ -1073,6 +1073,10 @@ translateF2 ( x, y ) =
     "translate(" ++ fpx x ++ "," ++ fpx y ++ ")"
 
 
+translateT ( a, b ) =
+    "translate(" ++ a ++ "," ++ b ++ ")"
+
+
 rotateF f =
     "rotate(" ++ fromFloat f ++ ")"
 
