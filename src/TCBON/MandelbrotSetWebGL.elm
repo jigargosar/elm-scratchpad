@@ -281,7 +281,7 @@ update msg model =
                         |> rangeMapCRI model.canvas model.mandel
 
                 scale_ =
-                    1 + sign e.deltaY * 0.1
+                    1 + signum e.deltaY * 0.1
             in
             ( { model | mandel = zoomAroundBy fixedPt scale_ model.mandel }, Cmd.none )
 

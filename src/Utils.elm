@@ -1368,8 +1368,8 @@ isOdd =
     isEven >> not
 
 
-sign : number -> number
-sign x =
+signum : number -> number
+signum x =
     case compare x 0 of
         LT ->
             -1
