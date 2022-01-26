@@ -36,9 +36,9 @@ type Phase
         { pinAngle : Float
         , dotAngle : Float
         , pinAngularDirection : AngularDirection
-        , locksPopped : Int
+        , pendingLocks : Int
         }
-    | LevelFailed { pinAngle : Float, dotAngle : Float, locksPopped : Int }
+    | LevelFailed { pinAngle : Float, dotAngle : Float, pendingLocks : Int }
     | LevelComplete { pinAngle : Float }
 
 
@@ -125,7 +125,7 @@ updateOnUserInput model =
                         { pinAngle = initialPinAngle
                         , dotAngle = dotAngle
                         , pinAngularDirection = pinAngularDirection
-                        , locksPopped = 0
+                        , pendingLocks = model.level
                         }
             }
 
@@ -180,8 +180,13 @@ view model =
                     , viewPendingLocks model.level
                     ]
 
-            Rotating _ ->
-                noView
+            Rotating { pinAngle, dotAngle, pendingLocks } ->
+                group []
+                    [ viewLock
+                    , viewDot dotAngle
+                    , viewPin pinAngle
+                    , viewPendingLocks pendingLocks
+                    ]
 
             LevelFailed _ ->
                 noView
