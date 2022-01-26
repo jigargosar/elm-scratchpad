@@ -117,7 +117,7 @@ init () =
       , phase = phase
       , seed = seed
       }
-        |> updateOnUserInput
+      --|> updateOnUserInput
     , Cmd.none
     )
 
@@ -207,10 +207,17 @@ view model =
         [ viewLevelNum model.level
         , case model.phase of
             WaitingForUserInput { dotAngleOffset } ->
+                let
+                    dotAngle =
+                        dotAngleOffset
+
+                    pinAngle =
+                        initialPinAngle
+                in
                 group []
                     [ viewLock
-                    , viewDot dotAngleOffset
-                    , viewPin initialPinAngle
+                    , viewDot dotAngle
+                    , viewPin pinAngle
                     , viewPendingLocks model.level
                     ]
 
