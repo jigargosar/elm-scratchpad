@@ -53,8 +53,8 @@ type alias Model =
 type Phase
     = WaitingForUserInput { dotAngleOffset : Float, pinAngularDirection : AngularDirection }
     | Rotating
-        { pinAngle : Float
-        , dotAngle : Float
+        { pinAngleStart : Float
+        , dotAngleOffset : Float
         , pinAngularDirection : AngularDirection
         , pendingLocks : Int
         }
@@ -122,7 +122,7 @@ init () =
       , phase = phase
       , seed = seed
       }
-      --|> updateOnUserInput
+        |> updateOnUserInput
     , Cmd.none
     )
 
@@ -134,8 +134,8 @@ updateOnUserInput model =
             { model
                 | phase =
                     Rotating
-                        { pinAngle = initialPinAngle
-                        , dotAngle = dotAngleOffset
+                        { pinAngleStart = initialPinAngle
+                        , dotAngleOffset = dotAngleOffset
                         , pinAngularDirection = pinAngularDirection
                         , pendingLocks = model.level
                         }
@@ -163,9 +163,9 @@ step dt model =
                     angularVelocity pinAngularSpeed rec.pinAngularDirection
 
                 pinAngle =
-                    rec.pinAngle + (va * dt)
+                    rec.pinAngleStart + (va * dt)
             in
-            { model | phase = Rotating { rec | pinAngle = pinAngle } }
+            { model | phase = Rotating { rec | pinAngleStart = pinAngle } }
 
         LevelFailed _ ->
             model
@@ -226,11 +226,11 @@ view model =
                     , viewPendingLocks model.level
                     ]
 
-            Rotating { pinAngle, dotAngle, pendingLocks } ->
+            Rotating { pinAngleStart, dotAngleOffset, pendingLocks } ->
                 group []
                     [ viewLock
-                    , viewDot dotAngle
-                    , viewPin pinAngle
+                    , viewDot dotAngleOffset
+                    , viewPin pinAngleStart
                     , viewPendingLocks pendingLocks
                     ]
 
