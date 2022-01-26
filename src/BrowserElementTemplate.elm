@@ -3,6 +3,15 @@ module BrowserElementTemplate exposing (main)
 import Utils exposing (..)
 
 
+
+{-
+   THIS LINE IS FOR FIXING INDENTATION ISSUE WITH ELM-FORMAT. DETAILS?
+    # Specs:
+
+
+-}
+
+
 main =
     bDocument
         { init = init
