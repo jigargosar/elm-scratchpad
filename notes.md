@@ -3,6 +3,7 @@
 # Next
 * StickHero with elm-animation toolkit.
 * ableton tone.js sequencer
+  * chrome lab song maker.
 
 
 # ARCHIVE

@@ -943,4 +943,4 @@ wallsCurrent (Walls _ c _) =
 
 wallsToList : Walls -> List Wall
 wallsToList (Walls before c after) =
-    before ++ [ c ] ++ after
+    before ++ c :: after
