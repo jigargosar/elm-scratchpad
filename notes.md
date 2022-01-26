@@ -1,11 +1,11 @@
 # Current project
+* pop the lock. https://www.youtube.com/watch?v=eZAJTXmRtDc
 
 # Next
 * StickHero with elm-animation toolkit.
 * ableton tone.js sequencer
   * chrome lab song maker.
 * snake game smooth movement.
-* pop the lock. https://www.youtube.com/watch?v=eZAJTXmRtDc
 
 
 # ARCHIVE
