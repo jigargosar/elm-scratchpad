@@ -163,8 +163,22 @@ step dt model =
             let
                 elapsed =
                     rec.elapsed + dt
+
+                failed =
+                    pinAngularSpeed * elapsed > rec.dotAngleOffset + degrees 5
             in
-            { model | phase = Rotating { rec | elapsed = elapsed } }
+            if failed then
+                { model
+                    | phase =
+                        LevelFailed
+                            { pinAngle = rec.pinStartingAngle
+                            , dotAngle = rec.dotAngleOffset
+                            , pendingLocks = rec.pendingLocks
+                            }
+                }
+
+            else
+                { model | phase = Rotating { rec | elapsed = elapsed } }
 
         LevelFailed _ ->
             model
