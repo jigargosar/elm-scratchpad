@@ -359,15 +359,14 @@ view model =
                     pinAngle =
                         rec.pinAngle
 
-                    dotAngle =
-                        rec.dotAngle
-
+                    --dotAngle = rec.dotAngle
                     pendingLocks =
                         rec.pendingLocks
                 in
-                group [ transforms [ rotateF (rec.elapsed * 0.001) ] ]
+                group [ transforms [ rotateF (rec.elapsed * 0.01) ] ]
                     [ viewLock
-                    , viewDot dotAngle
+
+                    --, viewDot dotAngle
                     , viewPin pinAngle
                     , viewPendingLocks pendingLocks
                     ]
