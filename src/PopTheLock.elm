@@ -3,6 +3,14 @@ module PopTheLock exposing (main)
 import Utils exposing (..)
 
 
+
+{-
+   THIS LINE IS FOR FIXING INDENTATION ISSUE WITH ELM-FORMAT. DETAILS?
+    # Specs:
+    Clone: https://www.youtube.com/watch?v=eZAJTXmRtDc
+-}
+
+
 main =
     bDocument
         { init = init
