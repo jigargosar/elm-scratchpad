@@ -89,6 +89,11 @@ type AngularDirection
     | CounterClockWise
 
 
+angleInDirection : AngularDirection -> Float -> Float
+angleInDirection angularDirection angle =
+    angularDirectionToSign angularDirection * angle
+
+
 angularDirectionToSign : AngularDirection -> Float
 angularDirectionToSign angularDirection =
     case angularDirection of
@@ -206,10 +211,10 @@ view model =
         ]
         [ viewLevelNum model.level
         , case model.phase of
-            WaitingForUserInput { dotAngleOffset } ->
+            WaitingForUserInput { dotAngleOffset, pinAngularDirection } ->
                 let
                     dotAngle =
-                        dotAngleOffset
+                        pinAngle + angleInDirection pinAngularDirection dotAngleOffset
 
                     pinAngle =
                         initialPinAngle
