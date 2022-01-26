@@ -172,7 +172,6 @@ step dt model =
             let
                 va =
                     angularVelocity pinAngularSpeed rec.pinAngularDirection
-                        |> Debug.log "Debug: "
 
                 pinAngle =
                     rec.pinAngle + (va * dt)
