@@ -82,7 +82,11 @@ viewDoc model =
 
 view : Model -> Html Msg
 view model =
-    basicSvg [ viewBoxC 300 600, bgc wPurple ]
+    basicSvg
+        [ viewBoxC 300 (300 * 1.5)
+        , sMaxHeight "100vh"
+        , bgc wPurple
+        ]
         [ viewLevelNum model.level
         , case model.phase of
             WaitingForUserInput { dotAngle } ->
