@@ -60,6 +60,7 @@ randomInitialPhase =
 randomDotAngle : Float -> AngularDirection -> Generator Float
 randomDotAngle pinAngle angularDirection =
     randomDotAngleOffset
+        |> Random.map (Debug.log "Debug: ")
         |> (case angularDirection of
                 ClockWise ->
                     Random.map negate
@@ -67,6 +68,7 @@ randomDotAngle pinAngle angularDirection =
                 CounterClockWise ->
                     identity
            )
+        |> Random.map (Debug.log "Debug: ")
         |> Random.map (add pinAngle)
 
 
@@ -100,7 +102,7 @@ init : () -> ( Model, Cmd Msg )
 init () =
     let
         initialSeed =
-            Random.initialSeed 0
+            Random.initialSeed 2
 
         ( phase, seed ) =
             Random.step randomInitialPhase initialSeed
