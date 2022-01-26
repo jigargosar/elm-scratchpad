@@ -165,7 +165,7 @@ step dt model =
                     rec.elapsed + dt
 
                 failed =
-                    pinAngularSpeed * elapsed > rec.dotAngleOffset + degrees 5
+                    pinAngularSpeed * elapsed > rec.dotAngleOffset + degrees 10
             in
             if failed then
                 { model
