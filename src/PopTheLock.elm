@@ -130,6 +130,7 @@ init () =
         |> updateOnUserInput
         |> step (4500 + 0)
         |> updateOnUserInput
+        |> Debug.log "Debug: "
     , Cmd.none
     )
 
