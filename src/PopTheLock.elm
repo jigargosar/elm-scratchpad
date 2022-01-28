@@ -473,6 +473,8 @@ viewLock =
     [ polyline
         [ ( -lockRadius / 2, 0 )
         , ( -lockRadius / 2, -lockRadius )
+        , ( lockRadius / 2, -lockRadius )
+        , ( lockRadius / 2, 0 )
         ]
         [ transforms [ translateF2 ( 0, -lockRadius * 0.9 ) ]
         , strokeW lockThickness
