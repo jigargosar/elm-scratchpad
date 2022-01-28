@@ -52,6 +52,11 @@ maxLevelFailedTransitionDuration =
     1000
 
 
+maxLevelCompleteTransitionDuration =
+    --3000
+    1000
+
+
 type alias Model =
     { level : Int
     , phase : Phase
@@ -273,8 +278,16 @@ step dt model =
             else
                 { model | phase = LevelFailed { rec | elapsed = elapsed } }
 
-        LevelComplete _ ->
-            model
+        LevelComplete rec ->
+            let
+                elapsed =
+                    rec.elapsed + dt |> atMost maxLevelCompleteTransitionDuration
+            in
+            if elapsed == maxLevelFailedTransitionDuration then
+                initLevelWithSeed model.level model.seed
+
+            else
+                { model | phase = LevelComplete { rec | elapsed = elapsed } }
 
 
 type Msg
