@@ -314,8 +314,7 @@ view model =
     basicSvg
         [ viewBoxC 300 (300 * 1.5)
         , sMaxHeight "100vh"
-        , bgc
-            (getBGColor model.phase)
+        , bgc (getBGColor model.phase)
         ]
         [ viewLevelNum model.level
         , case model.phase of
