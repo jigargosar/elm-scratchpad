@@ -349,7 +349,7 @@ view model =
                 group
                     [ classNames
                         (if model.level /= 1 then
-                            [ cnAnimated, cnSlideInRight ]
+                            [ cnAnimated, cnSlideInRight, cnFaster ]
 
                          else
                             []
@@ -410,7 +410,7 @@ view model =
                         0
                 in
                 group
-                    [ classNames [ cnAnimated, cnSlideOutLeft ]
+                    [ classNames [ cnAnimated, cnSlideOutLeft, cnFaster ]
                     ]
                     [ viewLock
 

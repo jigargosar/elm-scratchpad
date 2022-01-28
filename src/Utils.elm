@@ -830,6 +830,10 @@ cnSlideInRight =
     "animate__slideInRight"
 
 
+cnFaster =
+    "animate__faster"
+
+
 basicStylesNode : Html msg
 basicStylesNode =
     stylesNode """
