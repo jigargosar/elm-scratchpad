@@ -314,7 +314,8 @@ view model =
     basicSvg
         [ viewBoxC 300 (300 * 1.5)
         , sMaxHeight "100vh"
-        , bgc wBlue
+        , bgc
+            (getBGColor model.phase)
         ]
         [ viewLevelNum model.level
         , case model.phase of
@@ -394,6 +395,24 @@ pinRadius =
 
 dotRadius =
     (lockThickness / 2) * 0.6
+
+
+getBGColor : Phase -> String
+getBGColor phase =
+    let
+        isFail =
+            case phase of
+                LevelFailed _ ->
+                    True
+
+                _ ->
+                    False
+    in
+    if isFail then
+        "tomato"
+
+    else
+        wBlue
 
 
 viewLock : Svg Msg
