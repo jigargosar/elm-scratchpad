@@ -354,90 +354,92 @@ view model =
         , bgc bgColor
         ]
         [ viewLevelNum model.level
-        , case model.phase of
-            WaitingForUserInput { dotAngleOffset, pinAngularDirection } ->
-                let
-                    pinAngle =
-                        initialPinAngle
+        , group [ transforms [ translateF2 ( 0, 50 ) ] ]
+            [ case model.phase of
+                WaitingForUserInput { dotAngleOffset, pinAngularDirection } ->
+                    let
+                        pinAngle =
+                            initialPinAngle
 
-                    dotAngle =
-                        pinAngle + angleInDirection pinAngularDirection dotAngleOffset
+                        dotAngle =
+                            pinAngle + angleInDirection pinAngularDirection dotAngleOffset
 
-                    pendingLocks =
-                        model.level
-                in
-                group
-                    [ classNames
-                        (if model.level /= 1 then
-                            [ cnAnimated, cnSlideInRight, cnFaster ]
+                        pendingLocks =
+                            model.level
+                    in
+                    group
+                        [ classNames
+                            (if model.level /= 1 then
+                                [ cnAnimated, cnSlideInRight, cnFaster ]
 
-                         else
-                            []
-                        )
-                    ]
-                    [ viewLock bgColor
-                    , viewDot dotAngle
-                    , viewPin pinAngle
-                    , viewPendingLocks pendingLocks
-                    ]
+                             else
+                                []
+                            )
+                        ]
+                        [ viewLock bgColor
+                        , viewDot dotAngle
+                        , viewPin pinAngle
+                        , viewPendingLocks pendingLocks
+                        ]
 
-            Rotating rec ->
-                let
-                    pinAngle =
-                        rec.pinStartingAngle
-                            + angleInDirection rec.pinAngularDirection (pinAngularSpeed * rec.elapsed)
+                Rotating rec ->
+                    let
+                        pinAngle =
+                            rec.pinStartingAngle
+                                + angleInDirection rec.pinAngularDirection (pinAngularSpeed * rec.elapsed)
 
-                    dotAngle =
-                        rec.pinStartingAngle
-                            + angleInDirection rec.pinAngularDirection rec.dotAngleOffset
+                        dotAngle =
+                            rec.pinStartingAngle
+                                + angleInDirection rec.pinAngularDirection rec.dotAngleOffset
 
-                    pendingLocks =
-                        rec.pendingLocks
-                in
-                group []
-                    [ viewLock bgColor
-                    , viewDot dotAngle
-                    , viewPin pinAngle
-                    , viewPendingLocks pendingLocks
-                    ]
+                        pendingLocks =
+                            rec.pendingLocks
+                    in
+                    group []
+                        [ viewLock bgColor
+                        , viewDot dotAngle
+                        , viewPin pinAngle
+                        , viewPendingLocks pendingLocks
+                        ]
 
-            LevelFailed rec ->
-                let
-                    pinAngle =
-                        rec.pinAngle
+                LevelFailed rec ->
+                    let
+                        pinAngle =
+                            rec.pinAngle
 
-                    --dotAngle = rec.dotAngle
-                    pendingLocks =
-                        rec.pendingLocks
-                in
-                group
-                    [ classNames [ cnAnimated, cnHeadShake ]
-                    ]
-                    [ viewLock bgColor
+                        --dotAngle = rec.dotAngle
+                        pendingLocks =
+                            rec.pendingLocks
+                    in
+                    group
+                        [ classNames [ cnAnimated, cnHeadShake ]
+                        ]
+                        [ viewLock bgColor
 
-                    --, viewDot dotAngle
-                    , viewPin pinAngle
-                    , viewPendingLocks pendingLocks
-                    ]
+                        --, viewDot dotAngle
+                        , viewPin pinAngle
+                        , viewPendingLocks pendingLocks
+                        ]
 
-            LevelComplete rec ->
-                let
-                    pinAngle =
-                        rec.pinAngle
+                LevelComplete rec ->
+                    let
+                        pinAngle =
+                            rec.pinAngle
 
-                    --dotAngle = rec.dotAngle
-                    pendingLocks =
-                        0
-                in
-                group
-                    [ classNames [ cnAnimated, cnSlideOutLeft, cnFaster, "animate__delay-1s" ]
-                    ]
-                    [ viewLockAnimated (norm 0 500 rec.elapsed |> clamp 0 1) bgColor
+                        --dotAngle = rec.dotAngle
+                        pendingLocks =
+                            0
+                    in
+                    group
+                        [ classNames [ cnAnimated, cnSlideOutLeft, cnFaster, "animate__delay-1s" ]
+                        ]
+                        [ viewLockAnimated (norm 0 500 rec.elapsed |> clamp 0 1) bgColor
 
-                    --, viewDot dotAngle
-                    , viewPin pinAngle
-                    , viewPendingLocks pendingLocks
-                    ]
+                        --, viewDot dotAngle
+                        , viewPin pinAngle
+                        , viewPendingLocks pendingLocks
+                        ]
+            ]
         ]
 
 
@@ -491,7 +493,7 @@ viewLockAnimated n bg =
             ]
         )
         [ transforms
-            [ translateF2 ( 0, -lockRadius + (n |> Ease.inBack |> mul -lockRadius) )
+            [ translateF2 ( 0, -lockRadius + (n |> Ease.inBack |> mul -50) )
             , scaleY 1.2
             ]
         , stroke <| blackA 0.6
