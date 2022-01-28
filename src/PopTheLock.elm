@@ -1,8 +1,6 @@
 module PopTheLock exposing (main)
 
-import Html.Attributes as HA
 import Random
-import Svg.Attributes
 import TypedSvg.Attributes as TA
 import TypedSvg.Types as TT
 import Utils exposing (..)
@@ -71,7 +69,7 @@ type Phase
         , pendingLocks : Int
         }
     | LevelFailed { elapsed : Float, pinAngle : Float, dotAngle : Float, pendingLocks : Int }
-    | LevelComplete { pinAngle : Float }
+    | LevelComplete { elapsed : Float, pinAngle : Float }
 
 
 randomInitialPhase : Generator Phase
@@ -198,7 +196,7 @@ updateOnUserInput model =
                 }
 
             else if rec.pendingLocks <= 1 then
-                { model | phase = LevelComplete { pinAngle = pinAngle } }
+                { model | phase = LevelComplete { elapsed = 0, pinAngle = pinAngle } }
 
             else
                 let
