@@ -470,12 +470,17 @@ getBGColor phase =
 
 viewLock : Svg Msg
 viewLock =
-    viewLockBody
-
-
-viewLockBody : Svg Msg
-viewLockBody =
-    circle lockRadius [ strokeW lockThickness, stroke <| blackA 0.8 ]
+    [ polyline
+        [ ( -lockRadius / 2, 0 )
+        , ( -lockRadius / 2, -lockRadius )
+        ]
+        [ transforms [ translateF2 ( 0, -lockRadius * 0.9 ) ]
+        , strokeW lockThickness
+        , stroke <| blackA 0.8
+        ]
+    , circle lockRadius [ strokeW lockThickness, stroke <| blackA 0.95 ]
+    ]
+        |> group []
 
 
 viewDot : Float -> Svg Msg
