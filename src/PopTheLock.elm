@@ -368,7 +368,7 @@ view model =
                             []
                         )
                     ]
-                    [ viewLockBody
+                    [ viewLock
                     , viewDot dotAngle
                     , viewPin pinAngle
                     , viewPendingLocks pendingLocks
@@ -388,7 +388,7 @@ view model =
                         rec.pendingLocks
                 in
                 group []
-                    [ viewLockBody
+                    [ viewLock
                     , viewDot dotAngle
                     , viewPin pinAngle
                     , viewPendingLocks pendingLocks
@@ -406,7 +406,7 @@ view model =
                 group
                     [ classNames [ cnAnimated, cnHeadShake ]
                     ]
-                    [ viewLockBody
+                    [ viewLock
 
                     --, viewDot dotAngle
                     , viewPin pinAngle
@@ -425,7 +425,7 @@ view model =
                 group
                     [ classNames [ cnAnimated, cnSlideOutLeft, cnFaster, "animate__delay-1s" ]
                     ]
-                    [ viewLockBody
+                    [ viewLock
 
                     --, viewDot dotAngle
                     , viewPin pinAngle
@@ -466,6 +466,11 @@ getBGColor phase =
 
     else
         wBlue
+
+
+viewLock : Svg Msg
+viewLock =
+    viewLockBody
 
 
 viewLockBody : Svg Msg
