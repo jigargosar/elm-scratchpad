@@ -476,20 +476,17 @@ getBGColor phase =
 
 viewLock : String -> Svg Msg
 viewLock bg =
-    [ --polyline
-      group [ transforms [ translateF2 ( 0, -40 + 40 ) ] ]
-        [ SubPath.element
-            (Curve.basis
-                [ ( -lockRadius / 2, 0 )
-                , ( -lockRadius / 2, -lockRadius )
-                , ( lockRadius / 2, -lockRadius )
-                , ( lockRadius / 2, 0 )
-                ]
-            )
-            [ transforms [ translateF2 ( 0, -lockRadius ), scaleY 1.2 ]
-            , stroke <| blackA 0.6
-            , strokeCapRound
+    [ SubPath.element
+        (Curve.basis
+            [ ( -lockRadius / 2, 0 )
+            , ( -lockRadius / 2, -lockRadius )
+            , ( lockRadius / 2, -lockRadius )
+            , ( lockRadius / 2, 0 )
             ]
+        )
+        [ transforms [ translateF2 ( 0, -lockRadius + 40 + -40 ), scaleY 1.2 ]
+        , stroke <| blackA 0.6
+        , strokeCapRound
         ]
     , circle lockRadius [ stroke bg ]
     , circle lockRadius [ stroke (blackA 0.9) ]
