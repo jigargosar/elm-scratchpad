@@ -487,16 +487,15 @@ viewLock bg =
                 ]
             )
             [ transforms [ translateF2 ( 0, -lockRadius ), scaleY 1.2 ]
-            , strokeW lockThickness
             , stroke <| blackA 0.6
             , TA.strokeLinecap TT.StrokeLinecapRound
             , TA.strokeLinejoin TT.StrokeLinejoinBevel
             ]
         ]
-    , circle lockRadius [ strokeW lockThickness, stroke bg ]
-    , circle lockRadius [ strokeW lockThickness, stroke black, opacity 0.9 ]
+    , circle lockRadius [ stroke bg ]
+    , circle lockRadius [ stroke (blackA 0.9) ]
     ]
-        |> group []
+        |> group [ strokeW lockThickness ]
 
 
 viewDot : Float -> Svg Msg
