@@ -132,10 +132,11 @@ init () =
         initialSeed =
             Random.initialSeed 2
     in
-    ( initLevelWithSeed 12 initialSeed
+    ( initLevelWithSeed 1 initialSeed
         |> updateOnUserInput
-        --|> step (4500 + 0)
+        |> step (4500 + 0)
         |> updateOnUserInput
+        |> Debug.log "Debug: "
     , Cmd.none
     )
 
