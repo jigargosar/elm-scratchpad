@@ -1,6 +1,8 @@
 module PopTheLock exposing (main)
 
+import Html.Attributes as HA
 import Random
+import Svg.Attributes
 import TypedSvg.Attributes as TA
 import TypedSvg.Types as TT
 import Utils exposing (..)
@@ -364,7 +366,10 @@ view model =
                     pendingLocks =
                         rec.pendingLocks
                 in
-                group [ transforms [ rotateF (rec.elapsed * 0.01) ] ]
+                group
+                    [ Svg.Attributes.class "a"
+                    , transforms [ rotateF (rec.elapsed * 0.01) ]
+                    ]
                     [ viewLock
 
                     --, viewDot dotAngle
