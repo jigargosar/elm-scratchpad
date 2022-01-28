@@ -366,8 +366,7 @@ view model =
                         rec.pendingLocks
                 in
                 group
-                    [ Svg.Attributes.class "animate__animated"
-                    , Svg.Attributes.class "animate__headShake"
+                    [ classNames [ "animate__animated", "animate__headShake" ]
                     ]
                     [ viewLock
 

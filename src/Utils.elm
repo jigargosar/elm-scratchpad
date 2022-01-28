@@ -8,7 +8,7 @@ import Dict exposing (Dict)
 import Ease
 import Float.Extra
 import Html exposing (Html)
-import Html.Attributes exposing (style)
+import Html.Attributes as HA
 import Html.Events
 import Json.Decode as JD exposing (Decoder)
 import Random exposing (Generator)
@@ -974,25 +974,25 @@ ffMonospace =
 
 style : String -> String -> Attribute msg
 style =
-    Html.Attributes.style
+    HA.style
 
 
 attrHeightI =
-    Html.Attributes.height
+    HA.height
 
 
 attrWidthI =
-    Html.Attributes.width
+    HA.width
 
 
 tabindex : Int -> Attribute msg
 tabindex =
-    Html.Attributes.tabindex
+    HA.tabindex
 
 
 autofocus : Bool -> Attribute msg
 autofocus =
-    Html.Attributes.autofocus
+    HA.autofocus
 
 
 noPointerEvents =
@@ -2067,6 +2067,10 @@ randomFloatT ( a, b ) =
 
 
 -- STYLE HELPERS
+
+
+classNames names =
+    HA.attribute "class" (String.join " " names)
 
 
 bottom100 =
