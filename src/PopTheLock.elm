@@ -431,7 +431,7 @@ view model =
                 group
                     [ classNames [ cnAnimated, cnSlideOutLeft, cnFaster, "animate__delay-1s" ]
                     ]
-                    [ viewLockAnimated 0.5 bgColor
+                    [ viewLockAnimated (norm 0 500 rec.elapsed |> clamp 0 1) bgColor
 
                     --, viewDot dotAngle
                     , viewPin pinAngle
