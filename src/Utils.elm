@@ -125,7 +125,7 @@ onEnter tag =
 
 
 onAnimationFrameClampedDelta msg =
-    Browser.Events.onAnimationFrameDelta (clamp 0 100 >> msg)
+    Browser.Events.onAnimationFrameDelta (clamp 1 100 >> msg)
 
 
 onBrowserKeyDown msg =

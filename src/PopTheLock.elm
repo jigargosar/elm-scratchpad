@@ -136,7 +136,6 @@ init () =
         |> updateOnUserInput
         --|> step (4500 + 0)
         |> updateOnUserInput
-        |> Debug.log "Debug: "
     , Cmd.none
     )
 
@@ -367,8 +366,8 @@ view model =
                         rec.pendingLocks
                 in
                 group
-                    [ Svg.Attributes.class "a"
-                    , transforms [ rotateF (rec.elapsed * 0.01) ]
+                    [ transforms [ rotateF (rec.elapsed * 0.01) ]
+                    , Svg.Attributes.class "a"
                     ]
                     [ viewLock
 
