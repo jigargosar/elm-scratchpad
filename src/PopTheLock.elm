@@ -132,7 +132,7 @@ init () =
     in
     ( initLevelWithSeed 12 initialSeed
         |> updateOnUserInput
-        |> step (4500 + 0)
+        --|> step (4500 + 0)
         |> updateOnUserInput
         |> Debug.log "Debug: "
     , Cmd.none
@@ -301,6 +301,7 @@ viewDoc : Model -> Document Msg
 viewDoc model =
     Document "App Title"
         [ basicStylesNode
+        , animateCssNode
         , view model
 
         --, div [ positionFixed, bgc <| blackA 0.3 ] [ text <| Debug.toString model.phase ]
