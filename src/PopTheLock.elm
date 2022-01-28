@@ -423,7 +423,7 @@ view model =
                         0
                 in
                 group
-                    [ classNames [ cnAnimated, cnSlideOutLeft, cnFaster ]
+                    [ classNames [ cnAnimated, cnSlideOutLeft, cnFaster, "animate__delay-1s" ]
                     ]
                     [ viewLock
 
