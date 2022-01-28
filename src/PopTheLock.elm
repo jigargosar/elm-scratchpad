@@ -475,7 +475,12 @@ getBGColor phase =
 
 
 viewLock : String -> Svg Msg
-viewLock bg =
+viewLock =
+    viewLockAnimated 0
+
+
+viewLockAnimated : Float -> String -> Svg Msg
+viewLockAnimated n bg =
     [ SubPath.element
         (Curve.basis
             [ ( -lockRadius / 2, 0 )
