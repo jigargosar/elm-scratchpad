@@ -491,7 +491,7 @@ viewLockAnimated n bg =
             ]
         )
         [ transforms
-            [ translateF2 ( 0, -lockRadius + lerp 0 -lockRadius (Ease.inBack n) )
+            [ translateF2 ( 0, -lockRadius + (n |> Ease.inBack |> mul -lockRadius) )
             , scaleY 1.2
             ]
         , stroke <| blackA 0.6
