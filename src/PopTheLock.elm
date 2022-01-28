@@ -40,7 +40,7 @@ initialPinAngle =
 
 
 pinAngularSpeed =
-    degreesPerSecond 30
+    degreesPerSecond 60
 
 
 degreesPerSecond d =
