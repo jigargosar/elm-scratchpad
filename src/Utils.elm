@@ -775,6 +775,10 @@ strokeW =
     SA.strokeWidth << String.fromFloat
 
 
+strokeCapRound =
+    TA.strokeLinecap TT.StrokeLinecapRound
+
+
 fill =
     SA.fill
 

@@ -488,8 +488,7 @@ viewLock bg =
             )
             [ transforms [ translateF2 ( 0, -lockRadius ), scaleY 1.2 ]
             , stroke <| blackA 0.6
-            , TA.strokeLinecap TT.StrokeLinecapRound
-            , TA.strokeLinejoin TT.StrokeLinejoinBevel
+            , strokeCapRound
             ]
         ]
     , circle lockRadius [ stroke bg ]
@@ -518,7 +517,7 @@ viewPin angle =
     polyline [ ( -pinRadius, 0 ), ( pinRadius, 0 ) ]
         [ stroke wPink
         , strokeW 8
-        , TA.strokeLinecap TT.StrokeLinecapRound
+        , strokeCapRound
         , transforms [ rotateF angle, translateF2 ( lockRadius, 0 ) ]
         ]
 
