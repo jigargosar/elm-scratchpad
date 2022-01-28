@@ -1112,6 +1112,10 @@ scaleF f =
     "scale(" ++ fromFloat f ++ ")"
 
 
+scaleY f =
+    "scaleY(" ++ fromFloat f ++ ")"
+
+
 paf =
     fpx >> pa
 

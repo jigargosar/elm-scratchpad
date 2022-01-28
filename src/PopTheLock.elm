@@ -1,6 +1,8 @@
 module PopTheLock exposing (main)
 
+import Curve
 import Random
+import SubPath
 import TypedSvg.Attributes as TA
 import TypedSvg.Types as TT
 import Utils exposing (..)
@@ -341,10 +343,14 @@ viewDoc model =
 
 view : Model -> Html Msg
 view model =
+    let
+        bgColor =
+            getBGColor model.phase
+    in
     basicSvg
         [ viewBoxC 300 (300 * 1.5)
         , sMaxHeight "100vh"
-        , bgc (getBGColor model.phase)
+        , bgc bgColor
         ]
         [ viewLevelNum model.level
         , case model.phase of
@@ -368,7 +374,7 @@ view model =
                             []
                         )
                     ]
-                    [ viewLock
+                    [ viewLock bgColor
                     , viewDot dotAngle
                     , viewPin pinAngle
                     , viewPendingLocks pendingLocks
@@ -388,7 +394,7 @@ view model =
                         rec.pendingLocks
                 in
                 group []
-                    [ viewLock
+                    [ viewLock bgColor
                     , viewDot dotAngle
                     , viewPin pinAngle
                     , viewPendingLocks pendingLocks
@@ -406,7 +412,7 @@ view model =
                 group
                     [ classNames [ cnAnimated, cnHeadShake ]
                     ]
-                    [ viewLock
+                    [ viewLock bgColor
 
                     --, viewDot dotAngle
                     , viewPin pinAngle
@@ -425,7 +431,7 @@ view model =
                 group
                     [ classNames [ cnAnimated, cnSlideOutLeft, cnFaster, "animate__delay-1s" ]
                     ]
-                    [ viewLock
+                    [ viewLock bgColor
 
                     --, viewDot dotAngle
                     , viewPin pinAngle
@@ -468,21 +474,27 @@ getBGColor phase =
         wBlue
 
 
-viewLock : Svg Msg
-viewLock =
-    [ polyline
-        [ ( -lockRadius / 2, 0 )
-        , ( -lockRadius / 2, -lockRadius )
-        , ( lockRadius / 2, -lockRadius )
-        , ( lockRadius / 2, 0 )
+viewLock : String -> Svg Msg
+viewLock bg =
+    [ --polyline
+      group [ transforms [ translateF2 ( 0, -40 + 40 ) ] ]
+        [ SubPath.element
+            (Curve.basis
+                [ ( -lockRadius / 2, 0 )
+                , ( -lockRadius / 2, -lockRadius )
+                , ( lockRadius / 2, -lockRadius )
+                , ( lockRadius / 2, 0 )
+                ]
+            )
+            [ transforms [ translateF2 ( 0, -lockRadius ), scaleY 1.2 ]
+            , strokeW lockThickness
+            , stroke <| blackA 0.6
+            , TA.strokeLinecap TT.StrokeLinecapRound
+            , TA.strokeLinejoin TT.StrokeLinejoinBevel
+            ]
         ]
-        [ transforms [ translateF2 ( 0, -lockRadius ) ]
-        , strokeW lockThickness
-        , stroke <| blackA 0.8
-        , TA.strokeLinecap TT.StrokeLinecapSquare
-        , TA.strokeLinejoin TT.StrokeLinejoinBevel
-        ]
-    , circle lockRadius [ strokeW lockThickness, stroke <| blackA 0.95 ]
+    , circle lockRadius [ strokeW lockThickness, stroke bg ]
+    , circle lockRadius [ strokeW lockThickness, stroke black, opacity 0.9 ]
     ]
         |> group []
 
