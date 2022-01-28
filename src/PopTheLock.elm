@@ -489,7 +489,7 @@ viewLockAnimated n bg =
             , ( lockRadius / 2, 0 )
             ]
         )
-        [ transforms [ translateF2 ( 0, -lockRadius + 40 + -40 ), scaleY 1.2 ]
+        [ transforms [ translateF2 ( 0, -lockRadius + lerp 0 -lockRadius n ), scaleY 1.2 ]
         , stroke <| blackA 0.6
         , strokeCapRound
         ]
