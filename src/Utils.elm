@@ -826,6 +826,10 @@ cnSlideOutLeft =
     "animate__slideOutLeft"
 
 
+cnSlideInRight =
+    "animate__slideInRight"
+
+
 basicStylesNode : Html msg
 basicStylesNode =
     stylesNode """

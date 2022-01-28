@@ -52,9 +52,8 @@ maxLevelFailedTransitionDuration =
     1000
 
 
-maxLevelCompleteTransitionDuration =
-    --3000
-    1000
+maxLevelCompleteTransitionOutDuration =
+    1000 / 2
 
 
 type alias Model =
@@ -269,10 +268,13 @@ step dt model =
 
         LevelFailed rec ->
             let
+                maxValue =
+                    maxLevelFailedTransitionDuration
+
                 elapsed =
-                    rec.elapsed + dt |> atMost maxLevelFailedTransitionDuration
+                    rec.elapsed + dt |> atMost maxValue
             in
-            if elapsed == maxLevelFailedTransitionDuration then
+            if elapsed == maxValue then
                 initLevelWithSeed model.level model.seed
 
             else
@@ -280,10 +282,13 @@ step dt model =
 
         LevelComplete rec ->
             let
+                maxValue =
+                    maxLevelCompleteTransitionOutDuration
+
                 elapsed =
-                    rec.elapsed + dt |> atMost maxLevelCompleteTransitionDuration
+                    rec.elapsed + dt |> atMost maxValue
             in
-            if elapsed == maxLevelFailedTransitionDuration then
+            if elapsed == maxValue then
                 initLevelWithSeed (model.level + 1) model.seed
 
             else
@@ -341,7 +346,15 @@ view model =
                     pendingLocks =
                         model.level
                 in
-                group []
+                group
+                    [ classNames
+                        (if model.level /= 1 then
+                            [ cnAnimated, cnSlideInRight ]
+
+                         else
+                            []
+                        )
+                    ]
                     [ viewLock
                     , viewDot dotAngle
                     , viewPin pinAngle
