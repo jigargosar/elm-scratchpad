@@ -387,8 +387,24 @@ view model =
                     , viewPendingLocks pendingLocks
                     ]
 
-            LevelComplete _ ->
-                noView
+            LevelComplete rec ->
+                let
+                    pinAngle =
+                        rec.pinAngle
+
+                    --dotAngle = rec.dotAngle
+                    pendingLocks =
+                        0
+                in
+                group
+                    [ classNames [ cnAnimated, cnHeadShake ]
+                    ]
+                    [ viewLock
+
+                    --, viewDot dotAngle
+                    , viewPin pinAngle
+                    , viewPendingLocks pendingLocks
+                    ]
         ]
 
 
