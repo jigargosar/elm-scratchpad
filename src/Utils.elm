@@ -128,6 +128,7 @@ onAnimationFrameClampedDelta msg =
     Browser.Events.onAnimationFrameDelta (clamp 1 100 >> msg)
 
 
+onBrowserKeyDown : (KeyEvent -> msg) -> Sub msg
 onBrowserKeyDown msg =
     Browser.Events.onKeyDown (JD.map msg keyEventDecoder)
 

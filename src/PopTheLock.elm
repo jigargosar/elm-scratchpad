@@ -298,11 +298,15 @@ step dt model =
 type Msg
     = NOP
     | OnClampedDelta Float
+    | OnKeyDown KeyEvent
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    onAnimationFrameClampedDelta OnClampedDelta
+    [ onAnimationFrameClampedDelta OnClampedDelta
+    , onBrowserKeyDown OnKeyDown
+    ]
+        |> Sub.batch
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -313,6 +317,15 @@ update msg model =
 
         OnClampedDelta dt ->
             ( step dt model, Cmd.none )
+
+        OnKeyDown keyEvent ->
+            ( if keyEvent.key == " " && not keyEvent.repeat then
+                updateOnUserInput model
+
+              else
+                model
+            , Cmd.none
+            )
 
 
 viewDoc : Model -> Document Msg
