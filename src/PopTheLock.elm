@@ -397,7 +397,7 @@ view model =
                         0
                 in
                 group
-                    [ classNames [ cnAnimated, cnHeadShake ]
+                    [ classNames [ cnAnimated, cnSlideOutLeft ]
                     ]
                     [ viewLock
 

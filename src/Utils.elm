@@ -822,6 +822,10 @@ cnHeadShake =
     "animate__headShake"
 
 
+cnSlideOutLeft =
+    "animate__slideOutLeft"
+
+
 basicStylesNode : Html msg
 basicStylesNode =
     stylesNode """
