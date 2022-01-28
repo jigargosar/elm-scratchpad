@@ -476,9 +476,11 @@ viewLock =
         , ( lockRadius / 2, -lockRadius )
         , ( lockRadius / 2, 0 )
         ]
-        [ transforms [ translateF2 ( 0, -lockRadius * 0.9 ) ]
+        [ transforms [ translateF2 ( 0, -lockRadius ) ]
         , strokeW lockThickness
         , stroke <| blackA 0.8
+        , TA.strokeLinecap TT.StrokeLinecapSquare
+        , TA.strokeLinejoin TT.StrokeLinejoinBevel
         ]
     , circle lockRadius [ strokeW lockThickness, stroke <| blackA 0.95 ]
     ]
