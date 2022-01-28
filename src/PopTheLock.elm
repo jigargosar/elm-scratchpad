@@ -366,8 +366,8 @@ view model =
                         rec.pendingLocks
                 in
                 group
-                    [ transforms [ rotateF (rec.elapsed * 0.01) ]
-                    , Svg.Attributes.class "a"
+                    [ Svg.Attributes.class "animate__animated"
+                    , Svg.Attributes.class "animate__headShake"
                     ]
                     [ viewLock
 
