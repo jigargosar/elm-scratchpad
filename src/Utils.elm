@@ -814,6 +814,14 @@ animateCssNode =
 """
 
 
+cnAnimated =
+    "animate__animated"
+
+
+cnHeadShake =
+    "animate__headShake"
+
+
 basicStylesNode : Html msg
 basicStylesNode =
     stylesNode """

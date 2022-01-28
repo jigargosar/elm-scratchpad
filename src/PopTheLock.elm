@@ -366,7 +366,7 @@ view model =
                         rec.pendingLocks
                 in
                 group
-                    [ classNames [ "animate__animated", "animate__headShake" ]
+                    [ classNames [ cnAnimated, cnHeadShake ]
                     ]
                     [ viewLock
 
