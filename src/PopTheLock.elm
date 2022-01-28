@@ -268,7 +268,7 @@ step dt model =
                 elapsed =
                     rec.elapsed + dt |> atMost maxLevelFailedTransitionDuration
             in
-            if rec.elapsed == elapsed then
+            if elapsed == maxLevelFailedTransitionDuration then
                 initLevelWithSeed model.level model.seed
 
             else
