@@ -284,7 +284,7 @@ step dt model =
                     rec.elapsed + dt |> atMost maxLevelCompleteTransitionDuration
             in
             if elapsed == maxLevelFailedTransitionDuration then
-                initLevelWithSeed model.level model.seed
+                initLevelWithSeed (model.level + 1) model.seed
 
             else
                 { model | phase = LevelComplete { rec | elapsed = elapsed } }
