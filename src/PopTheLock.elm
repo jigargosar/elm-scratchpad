@@ -53,7 +53,7 @@ maxLevelFailedTransitionDuration =
 
 
 maxLevelCompleteTransitionOutDuration =
-    1000 * 1.5
+    1500
 
 
 type alias Model =
