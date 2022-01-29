@@ -3,7 +3,7 @@ module PopTheLock exposing (main)
 import Curve
 import Ease
 import Random
-import SubPath
+import SubPath exposing (SubPath)
 import TypedSvg.Attributes as TA
 import TypedSvg.Types as TT
 import Utils exposing (..)
@@ -485,13 +485,7 @@ viewLock =
 viewLockAnimated : Float -> String -> Svg Msg
 viewLockAnimated n bg =
     [ SubPath.element
-        (Curve.basis
-            [ ( -lockRadius / 2, 0 )
-            , ( -lockRadius / 2, -lockRadius )
-            , ( lockRadius / 2, -lockRadius )
-            , ( lockRadius / 2, 0 )
-            ]
-        )
+        (lockHandleSubPath lockRadius)
         [ transforms
             [ translateF2 ( 0, -lockRadius + (n |> Ease.inBack |> mul -50) )
             , scaleY 1.2
@@ -503,6 +497,16 @@ viewLockAnimated n bg =
     , circle lockRadius [ stroke (blackA 0.9) ]
     ]
         |> group [ strokeW lockThickness ]
+
+
+lockHandleSubPath : Float -> SubPath
+lockHandleSubPath r =
+    Curve.basis
+        [ ( -r / 2, 0 )
+        , ( -r / 2, -r )
+        , ( r / 2, -r )
+        , ( r / 2, 0 )
+        ]
 
 
 viewDot : Float -> Svg Msg
