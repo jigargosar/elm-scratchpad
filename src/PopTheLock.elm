@@ -426,7 +426,6 @@ view model =
                         pinAngle =
                             rec.pinAngle
 
-                        --dotAngle = rec.dotAngle
                         pendingLocks =
                             0
                     in
@@ -435,7 +434,7 @@ view model =
                             [ translateF2
                                 ( norm 1000 1500 rec.elapsed
                                     |> clamp 0 1
-                                    --|> Ease.inBack
+                                    |> Ease.inBack
                                     |> mul -300
                                 , 0
                                 )
