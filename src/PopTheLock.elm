@@ -243,12 +243,17 @@ restartCurrentLevel model =
 initNextLevel : Model -> Model
 initNextLevel model =
     let
-        ( phase, seed ) =
-            Random.step randomInitialPhase model.seed
+        ( rec, seed ) =
+            Random.step randomLevel model.seed
     in
     { model
         | level = model.level + 1
-        , phase = phase
+        , phase =
+            NextLevel
+                { animation = startAnimation ( 500, [] ) model.clock
+                , dotAngleOffset = rec.dotAngleOffset
+                , pinAngularDirection = rec.pinAngularDirection
+                }
         , seed = seed
     }
 
@@ -381,8 +386,18 @@ step dt model =
             else
                 model
 
-        NextLevel record ->
-            model
+        NextLevel rec ->
+            if animationIsDone rec.animation model.clock then
+                { model
+                    | phase =
+                        WaitingForUserInput
+                            { dotAngleOffset = rec.dotAngleOffset
+                            , pinAngularDirection = rec.pinAngularDirection
+                            }
+                }
+
+            else
+                model
 
 
 type Msg
