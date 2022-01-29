@@ -75,11 +75,16 @@ type Phase
         , pendingLocks : Int
         }
     | LevelFailed { elapsed : Float, pinAngle : Float, dotAngle : Float, pendingLocks : Int }
-    | LevelComplete { elapsed : Float, pinAngle : Float }
+    | LevelComplete { animation : Animation, elapsed : Float, pinAngle : Float }
 
 
-levelCompleteAnimationDurations =
-    ( 500, [ 500, 500 ] )
+initLevelComplete : { pinAngle : Float, clock : Clock } -> Phase
+initLevelComplete { pinAngle, clock } =
+    LevelComplete
+        { animation = startAnimation ( 500, [ 500, 500 ] ) clock
+        , elapsed = 0
+        , pinAngle = 0
+        }
 
 
 type alias Clock =
@@ -260,7 +265,7 @@ updateOnUserInput model =
                 }
 
             else if rec.pendingLocks <= 1 then
-                { model | phase = LevelComplete { elapsed = 0, pinAngle = pinAngle } }
+                { model | phase = initLevelComplete { pinAngle = pinAngle, clock = model.clock } }
 
             else
                 let
@@ -341,18 +346,11 @@ step dt model =
                 { model | phase = LevelFailed { rec | elapsed = elapsed } }
 
         LevelComplete rec ->
-            let
-                maxValue =
-                    maxLevelCompleteTransitionOutDuration
-
-                elapsed =
-                    rec.elapsed + dt |> atMost maxValue
-            in
-            if elapsed == maxValue then
+            if animationIsDone rec.animation model.clock then
                 initLevelWithSeed (model.level + 1) model.seed
 
             else
-                { model | phase = LevelComplete { rec | elapsed = elapsed } }
+                model
 
 
 type Msg
