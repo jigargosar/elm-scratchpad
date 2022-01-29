@@ -437,9 +437,7 @@ view model =
                         lockHandleDY =
                             normClamped 0 500 rec.elapsed |> Ease.inBack |> mul -50
                     in
-                    group
-                        [ transforms [ translateF2 ( dx, 0 ) ]
-                        ]
+                    group [ transforms [ translateF2 ( dx, 0 ) ] ]
                         [ viewLockAnimated { lockHandleDY = lockHandleDY } bgColor
                         , viewPin pinAngle
                         , viewPendingLocks pendingLocks
