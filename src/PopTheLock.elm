@@ -48,11 +48,6 @@ degreesPerSecond d =
     degrees d / 1000
 
 
-maxLevelFailedTransitionDuration =
-    --3000
-    1000
-
-
 type alias Model =
     { level : Int
     , phase : Phase
@@ -91,7 +86,7 @@ initLevelFailed :
     -> Phase
 initLevelFailed { clock, pinAngle, dotAngle, pendingLocks } =
     LevelFailed
-        { animation = startAnimation ( 500, [] ) clock
+        { animation = startAnimation ( 1000, [] ) clock
         , pinAngle = pinAngle
         , dotAngle = dotAngle
         , pendingLocks = pendingLocks
