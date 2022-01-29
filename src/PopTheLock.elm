@@ -79,6 +79,28 @@ type Phase
     | LevelComplete { elapsed : Float, pinAngle : Float }
 
 
+levelCompleteAnimationDurations =
+    List.repeat 3 500
+
+
+type alias Clock =
+    Float
+
+
+type alias Animation =
+    { durations : List Float, startClock : Clock }
+
+
+startAnimation : List Float -> Clock -> Animation
+startAnimation durations clock =
+    { durations = durations, startClock = clock }
+
+
+animationCompleted : Animation -> Clock -> Bool
+animationCompleted { startClock } nowClock =
+    nowClock - startClock >= 0
+
+
 randomInitialPhase : Generator Phase
 randomInitialPhase =
     Random.map2
