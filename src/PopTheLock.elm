@@ -444,8 +444,6 @@ view model =
                                 normClamped 0 500 rec.elapsed |> Ease.inBack |> mul -50
                             }
                             bgColor
-
-                        --, viewDot dotAngle
                         , viewPin pinAngle
                         , viewPendingLocks pendingLocks
                         ]
