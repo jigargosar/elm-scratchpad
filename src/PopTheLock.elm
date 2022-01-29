@@ -96,8 +96,8 @@ startAnimation durations clock =
     { durations = durations, startClock = clock }
 
 
-animationCompleted : Animation -> Clock -> Bool
-animationCompleted { startClock } nowClock =
+animationIsDone : Animation -> Clock -> Bool
+animationIsDone { startClock } nowClock =
     nowClock - startClock >= 0
 
 
