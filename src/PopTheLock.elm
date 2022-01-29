@@ -105,8 +105,8 @@ startAnimation durations clock =
 
 
 animationIsDone : Animation -> Clock -> Bool
-animationIsDone { startClock } nowClock =
-    nowClock - startClock >= 0
+animationIsDone { startClock, durations } nowClock =
+    nowClock - startClock >= first durations + List.sum (second durations)
 
 
 animationValue : Animation -> Clock -> ( Int, Float )
@@ -200,7 +200,8 @@ init () =
     in
     ( initLevelWithSeed 1 initialSeed
         |> updateOnUserInput
-        |> step (2200 + 0)
+        |> update (OnClampedDelta (2200 + 0))
+        |> first
         |> updateOnUserInput
         |> Debug.log "Debug: "
     , Cmd.none
