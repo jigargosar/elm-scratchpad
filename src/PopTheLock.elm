@@ -223,6 +223,31 @@ initLevelWithSeed level initialSeed =
     }
 
 
+restartCurrentLevel : Model -> Model
+restartCurrentLevel model =
+    let
+        ( phase, seed ) =
+            Random.step randomInitialPhase model.seed
+    in
+    { model
+        | phase = phase
+        , seed = seed
+    }
+
+
+initNextLevel : Model -> Model
+initNextLevel model =
+    let
+        ( phase, seed ) =
+            Random.step randomInitialPhase model.seed
+    in
+    { model
+        | level = model.level + 1
+        , phase = phase
+        , seed = seed
+    }
+
+
 updateOnUserInput : Model -> Model
 updateOnUserInput model =
     case model.phase of
@@ -336,14 +361,14 @@ step dt model =
 
         LevelFailed rec ->
             if animationIsDone rec.animation model.clock then
-                initLevelWithSeed model.level model.seed
+                restartCurrentLevel model
 
             else
                 model
 
         LevelComplete rec ->
             if animationIsDone rec.animation model.clock then
-                initLevelWithSeed (model.level + 1) model.seed
+                initNextLevel model
 
             else
                 model
