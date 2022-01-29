@@ -145,12 +145,16 @@ animationValueHelp elapsed i start ( dur, ds ) =
 
 randomInitialPhase : Generator Phase
 randomInitialPhase =
+    randomLevel |> Random.map WaitingForUserInput
+
+
+randomLevel : Generator { dotAngleOffset : Float, pinAngularDirection : AngularDirection }
+randomLevel =
     Random.map2
         (\angularDirection dotAngleOffset ->
-            WaitingForUserInput
-                { dotAngleOffset = dotAngleOffset
-                , pinAngularDirection = angularDirection
-                }
+            { dotAngleOffset = dotAngleOffset
+            , pinAngularDirection = angularDirection
+            }
         )
         randomAngularDirection
         randomDotAngleOffset
