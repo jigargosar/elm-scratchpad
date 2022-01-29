@@ -86,7 +86,7 @@ initLevelFailed :
     -> Phase
 initLevelFailed { clock, pinAngle, dotAngle, pendingLocks } =
     LevelFailed
-        { animation = startAnimation ( 1000, [] ) clock
+        { animation = startAnimation ( 500, [ 500 ] ) clock
         , pinAngle = pinAngle
         , dotAngle = dotAngle
         , pendingLocks = pendingLocks
