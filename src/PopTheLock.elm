@@ -490,18 +490,14 @@ view model =
 
                         dx =
                             if partIdx == 2 then
-                                n
-                                    |> Ease.inBack
-                                    |> mul -300
+                                n |> Ease.inBack |> mul -300
 
                             else
                                 0
 
                         lockHandleDY =
                             if partIdx == 0 then
-                                n
-                                    |> Ease.inBack
-                                    |> mul -50
+                                n |> Ease.inBack |> mul -50
 
                             else
                                 0
