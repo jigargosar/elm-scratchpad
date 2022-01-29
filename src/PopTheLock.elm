@@ -108,12 +108,6 @@ animationIsDone { startClock } nowClock =
 animationValue : Animation -> Clock -> ( Int, Float )
 animationValue { durations, startClock } nowClock =
     let
-        firstDuration =
-            first durations
-
-        restDurations =
-            second durations
-
         elapsed =
             nowClock - startClock
     in
@@ -121,24 +115,24 @@ animationValue { durations, startClock } nowClock =
         ( 0, 0 )
 
     else
-        let
-            foo i dur start ds =
-                let
-                    end =
-                        start + dur
-                in
-                if elapsed < end then
-                    ( i, norm start end elapsed )
+        animationValueHelp elapsed 0 0 durations
 
-                else
-                    case ds of
-                        [] ->
-                            ( i, 1 )
 
-                        nDur :: nDS ->
-                            foo (i + 1) nDur end nDS
-        in
-        foo 0 firstDuration startClock restDurations
+animationValueHelp elapsed i start ( dur, ds ) =
+    let
+        end =
+            start + dur
+    in
+    if elapsed < end then
+        ( i, norm start end elapsed )
+
+    else
+        case uncons ds of
+            Nothing ->
+                ( i, 1 )
+
+            Just nDurations ->
+                animationValueHelp elapsed (i + 1) end nDurations
 
 
 randomInitialPhase : Generator Phase
