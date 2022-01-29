@@ -67,6 +67,7 @@ type Phase
         }
     | LevelFailed { animation : Animation, pinAngle : Float, dotAngle : Float, pendingLocks : Int }
     | LevelComplete { animation : Animation, pinAngle : Float }
+    | NextLevel { animation : Animation, dotAngleOffset : Float, pinAngularDirection : AngularDirection }
 
 
 initLevelComplete : { pinAngle : Float, clock : Clock } -> Phase
@@ -318,6 +319,9 @@ updateOnUserInput model =
         LevelComplete _ ->
             model
 
+        NextLevel _ ->
+            model
+
 
 step : Float -> Model -> Model
 step dt model =
@@ -372,6 +376,9 @@ step dt model =
 
             else
                 model
+
+        NextLevel record ->
+            model
 
 
 type Msg
@@ -443,15 +450,7 @@ view model =
                         pendingLocks =
                             model.level
                     in
-                    group
-                        [ classNames
-                            (if model.level /= 1 then
-                                [ cnAnimated, cnSlideInRight, cnFaster ]
-
-                             else
-                                []
-                            )
-                        ]
+                    group []
                         [ viewLock bgColor
                         , viewDot dotAngle
                         , viewPin pinAngle
@@ -527,6 +526,26 @@ view model =
                     in
                     group [ transforms [ translateF2 ( dx, 0 ) ] ]
                         [ viewLockAnimated { lockHandleDY = lockHandleDY } bgColor
+                        , viewPin pinAngle
+                        , viewPendingLocks pendingLocks
+                        ]
+
+                NextLevel rec ->
+                    let
+                        pinAngle =
+                            initialPinAngle
+
+                        dotAngle =
+                            pinAngle + angleInDirection rec.pinAngularDirection rec.dotAngleOffset
+
+                        pendingLocks =
+                            model.level
+                    in
+                    group
+                        [ classNames [ cnAnimated, cnSlideInRight, cnFaster ]
+                        ]
+                        [ viewLock bgColor
+                        , viewDot dotAngle
                         , viewPin pinAngle
                         , viewPendingLocks pendingLocks
                         ]
