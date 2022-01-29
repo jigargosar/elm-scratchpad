@@ -60,6 +60,7 @@ maxLevelCompleteTransitionOutDuration =
 type alias Model =
     { level : Int
     , phase : Phase
+    , clock : Clock
     , seed : Seed
     }
 
@@ -78,7 +79,7 @@ type Phase
 
 
 levelCompleteAnimationDurations =
-    List.repeat 3 500
+    ( 500, [ 500, 500 ] )
 
 
 type alias Clock =
@@ -209,6 +210,7 @@ initLevelWithSeed level initialSeed =
     in
     { level = level
     , phase = phase
+    , clock = 0
     , seed = seed
     }
 
@@ -374,7 +376,7 @@ update msg model =
             ( model, Cmd.none )
 
         OnClampedDelta dt ->
-            ( step dt model, Cmd.none )
+            ( step dt { model | clock = model.clock + dt }, Cmd.none )
 
         OnKeyDown keyEvent ->
             ( if keyEvent.key == " " && not keyEvent.repeat then
