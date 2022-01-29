@@ -200,7 +200,7 @@ init () =
         initialSeed =
             Random.initialSeed 2
     in
-    ( initLevelWithSeed 1 initialSeed
+    ( initWithSeed initialSeed
         |> updateOnUserInput
         |> update (OnClampedDelta (2200 + 0))
         |> first
@@ -210,13 +210,13 @@ init () =
     )
 
 
-initLevelWithSeed : Int -> Seed -> Model
-initLevelWithSeed level initialSeed =
+initWithSeed : Seed -> Model
+initWithSeed initialSeed =
     let
         ( phase, seed ) =
             Random.step randomInitialPhase initialSeed
     in
-    { level = level
+    { level = 1
     , phase = phase
     , clock = 0
     , seed = seed
