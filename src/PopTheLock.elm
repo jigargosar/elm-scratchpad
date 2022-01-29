@@ -431,8 +431,7 @@ view model =
                             0
                     in
                     group
-                        [ --classNames [ cnAnimated, cnSlideOutLeft, cnFaster, "animate__delay-1s" ]
-                          transforms
+                        [ transforms
                             [ translateF2
                                 ( norm 1000 1500 rec.elapsed
                                     |> clamp 0 1
