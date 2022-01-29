@@ -431,7 +431,16 @@ view model =
                             0
                     in
                     group
-                        [ classNames [ cnAnimated, cnSlideOutLeft, cnFaster, "animate__delay-1s" ]
+                        [ --classNames [ cnAnimated, cnSlideOutLeft, cnFaster, "animate__delay-1s" ]
+                          transforms
+                            [ translateF2
+                                ( norm 1000 1500 rec.elapsed
+                                    |> clamp 0 1
+                                    --|> Ease.inBack
+                                    |> mul -300
+                                , 0
+                                )
+                            ]
                         ]
                         [ viewLockAnimated
                             { lockHandleDY =
