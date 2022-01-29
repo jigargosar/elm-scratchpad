@@ -74,7 +74,7 @@ initLevelComplete : { pinAngle : Float, clock : Clock } -> Phase
 initLevelComplete { pinAngle, clock } =
     LevelComplete
         { animation = startAnimation ( 500, [ 500, 500 ] ) clock
-        , pinAngle = 0
+        , pinAngle = pinAngle
         }
 
 
@@ -494,7 +494,7 @@ view model =
                                 1
 
                             else
-                                normClamped 0 500 rec.elapsed
+                                normClamped 0 300 rec.elapsed
                     in
                     group []
                         [ viewLock bgColor
@@ -647,17 +647,7 @@ lockHandleSubPath r =
 
 viewDot : Float -> Svg Msg
 viewDot angle =
-    let
-        r =
-            lockRadius
-
-        theta =
-            angle
-
-        dotCenterF2 =
-            fromPolar ( r, theta )
-    in
-    circle dotRadius [ fill wYellow, transforms [ translateF2 dotCenterF2 ] ]
+    viewDotAnimated { angle = angle, scale = 1 }
 
 
 viewDotAnimated : { scale : Float, angle : Float } -> Svg Msg
