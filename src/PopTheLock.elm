@@ -4,8 +4,6 @@ import Curve
 import Ease
 import Random
 import SubPath exposing (SubPath)
-import TypedSvg.Attributes as TA
-import TypedSvg.Types as TT
 import Utils exposing (..)
 
 
