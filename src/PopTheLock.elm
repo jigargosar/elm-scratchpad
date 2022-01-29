@@ -433,7 +433,11 @@ view model =
                     group
                         [ classNames [ cnAnimated, cnSlideOutLeft, cnFaster, "animate__delay-1s" ]
                         ]
-                        [ viewLockAnimated (norm 0 500 rec.elapsed |> clamp 0 1) bgColor
+                        [ viewLockAnimated (norm 0 500 rec.elapsed |> clamp 0 1)
+                            { lockHandleDY =
+                                norm 0 500 rec.elapsed |> clamp 0 1 |> Ease.inBack |> mul -50
+                            }
+                            bgColor
 
                         --, viewDot dotAngle
                         , viewPin pinAngle
@@ -479,11 +483,11 @@ getBGColor phase =
 
 viewLock : String -> Svg Msg
 viewLock =
-    viewLockAnimated 0
+    viewLockAnimated 0 { lockHandleDY = 0 }
 
 
-viewLockAnimated : Float -> String -> Svg Msg
-viewLockAnimated n bg =
+viewLockAnimated : Float -> { lockHandleDY : Float } -> String -> Svg Msg
+viewLockAnimated n _ bg =
     let
         lockHandleDY =
             n |> Ease.inBack |> mul -50
