@@ -432,8 +432,7 @@ view model =
                     group
                         [ transforms
                             [ translateF2
-                                ( norm 1000 1500 rec.elapsed
-                                    |> clamp 0 1
+                                ( normClamped 1000 1500 rec.elapsed
                                     |> Ease.inBack
                                     |> mul -300
                                 , 0
@@ -442,7 +441,7 @@ view model =
                         ]
                         [ viewLockAnimated
                             { lockHandleDY =
-                                norm 0 500 rec.elapsed |> clamp 0 1 |> Ease.inBack |> mul -50
+                                normClamped 0 500 rec.elapsed |> Ease.inBack |> mul -50
                             }
                             bgColor
 

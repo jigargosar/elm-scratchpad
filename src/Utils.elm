@@ -43,6 +43,10 @@ norm a b x =
     (x - a) / (b - a)
 
 
+normClamped a b x =
+    norm a b x |> clamp 0 1
+
+
 type Dir4
     = Up
     | Down
