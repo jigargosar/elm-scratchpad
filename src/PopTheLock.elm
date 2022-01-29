@@ -70,7 +70,7 @@ type Phase
         , pinAngularDirection : AngularDirection
         , pendingLocks : Int
         }
-    | LevelFailed { elapsed : Float, pinAngle : Float, dotAngle : Float, pendingLocks : Int }
+    | LevelFailed { animation : Animation, pinAngle : Float, dotAngle : Float, pendingLocks : Int }
     | LevelComplete { animation : Animation, pinAngle : Float }
 
 
@@ -79,6 +79,22 @@ initLevelComplete { pinAngle, clock } =
     LevelComplete
         { animation = startAnimation ( 500, [ 500, 500 ] ) clock
         , pinAngle = 0
+        }
+
+
+initLevelFailed :
+    { clock : Clock
+    , pinAngle : Float
+    , dotAngle : Float
+    , pendingLocks : Int
+    }
+    -> Phase
+initLevelFailed { clock, pinAngle, dotAngle, pendingLocks } =
+    LevelFailed
+        { animation = startAnimation ( 500, [] ) clock
+        , pinAngle = pinAngle
+        , dotAngle = dotAngle
+        , pendingLocks = pendingLocks
         }
 
 
@@ -248,8 +264,8 @@ updateOnUserInput model =
                 in
                 { model
                     | phase =
-                        LevelFailed
-                            { elapsed = 0
+                        initLevelFailed
+                            { clock = model.clock
                             , pinAngle = pinAngle
                             , dotAngle = dotAngle
                             , pendingLocks = pendingLocks
@@ -312,8 +328,8 @@ step dt model =
                 in
                 { model
                     | phase =
-                        LevelFailed
-                            { elapsed = 0
+                        initLevelFailed
+                            { clock = model.clock
                             , pinAngle = pinAngle
                             , dotAngle = dotAngle
                             , pendingLocks = pendingLocks
@@ -324,18 +340,11 @@ step dt model =
                 { model | phase = Rotating { rec | elapsed = elapsed } }
 
         LevelFailed rec ->
-            let
-                maxValue =
-                    maxLevelFailedTransitionDuration
-
-                elapsed =
-                    rec.elapsed + dt |> atMost maxValue
-            in
-            if elapsed == maxValue then
+            if animationIsDone rec.animation model.clock then
                 initLevelWithSeed model.level model.seed
 
             else
-                { model | phase = LevelFailed { rec | elapsed = elapsed } }
+                model
 
         LevelComplete rec ->
             if animationIsDone rec.animation model.clock then
@@ -487,11 +496,14 @@ view model =
                                 0
 
                         lockHandleDY =
-                            if partIdx == 0 then
-                                n |> Ease.inBack |> mul -50
+                            (if partIdx == 0 then
+                                n
 
-                            else
-                                0
+                             else
+                                1
+                            )
+                                |> Ease.inBack
+                                |> mul -50
                     in
                     group [ transforms [ translateF2 ( dx, 0 ) ] ]
                         [ viewLockAnimated { lockHandleDY = lockHandleDY } bgColor
