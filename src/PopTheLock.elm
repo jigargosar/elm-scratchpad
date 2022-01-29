@@ -118,7 +118,7 @@ animationValue { durations, startClock } nowClock =
         animationValueHelp elapsed 0 0 durations
 
 
-animationValueHelp : Float -> Int -> Float -> ( Float, List a ) -> ( Int, Float )
+animationValueHelp : Float -> Int -> Float -> NEL Float -> ( Int, Float )
 animationValueHelp elapsed i start ( dur, ds ) =
     let
         end =
