@@ -484,10 +484,14 @@ viewLock =
 
 viewLockAnimated : Float -> String -> Svg Msg
 viewLockAnimated n bg =
+    let
+        lockHandleDY =
+            n |> Ease.inBack |> mul -50
+    in
     [ SubPath.element
         (lockHandleSubPath lockRadius)
         [ transforms
-            [ translateF2 ( 0, -lockRadius + (n |> Ease.inBack |> mul -50) )
+            [ translateF2 ( 0, -lockRadius + lockHandleDY )
             , scaleY 1.2
             ]
         , stroke <| blackA 0.6
