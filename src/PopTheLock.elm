@@ -88,10 +88,14 @@ type alias Clock =
 
 
 type alias Animation =
-    { durations : List Float, startClock : Clock }
+    { durations : NEL Float, startClock : Clock }
 
 
-startAnimation : List Float -> Clock -> Animation
+type alias NEL a =
+    ( a, List a )
+
+
+startAnimation : NEL Float -> Clock -> Animation
 startAnimation durations clock =
     { durations = durations, startClock = clock }
 
@@ -99,6 +103,42 @@ startAnimation durations clock =
 animationIsDone : Animation -> Clock -> Bool
 animationIsDone { startClock } nowClock =
     nowClock - startClock >= 0
+
+
+animationValue : Animation -> Clock -> ( Int, Float )
+animationValue { durations, startClock } nowClock =
+    let
+        firstDuration =
+            first durations
+
+        restDurations =
+            second durations
+
+        elapsed =
+            nowClock - startClock
+    in
+    if elapsed <= 0 then
+        ( 0, 0 )
+
+    else
+        let
+            foo i dur start ds =
+                let
+                    end =
+                        start + dur
+                in
+                if elapsed < end then
+                    ( i, norm start end elapsed )
+
+                else
+                    case ds of
+                        [] ->
+                            ( i, 1 )
+
+                        nDur :: nDS ->
+                            foo (i + 1) nDur end nDS
+        in
+        foo 0 firstDuration startClock restDurations
 
 
 randomInitialPhase : Generator Phase
