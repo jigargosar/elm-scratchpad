@@ -53,10 +53,6 @@ maxLevelFailedTransitionDuration =
     1000
 
 
-maxLevelCompleteTransitionOutDuration =
-    1500
-
-
 type alias Model =
     { level : Int
     , phase : Phase
@@ -75,14 +71,13 @@ type Phase
         , pendingLocks : Int
         }
     | LevelFailed { elapsed : Float, pinAngle : Float, dotAngle : Float, pendingLocks : Int }
-    | LevelComplete { animation : Animation, elapsed : Float, pinAngle : Float }
+    | LevelComplete { animation : Animation, pinAngle : Float }
 
 
 initLevelComplete : { pinAngle : Float, clock : Clock } -> Phase
 initLevelComplete { pinAngle, clock } =
     LevelComplete
         { animation = startAnimation ( 500, [ 500, 500 ] ) clock
-        , elapsed = 0
         , pinAngle = 0
         }
 
