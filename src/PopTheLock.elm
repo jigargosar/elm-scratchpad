@@ -90,10 +90,6 @@ type alias Animation =
     { durations : NEL Float, startClock : Clock }
 
 
-type alias NEL a =
-    ( a, List a )
-
-
 startAnimation : NEL Float -> Clock -> Animation
 startAnimation durations clock =
     { durations = durations, startClock = clock }

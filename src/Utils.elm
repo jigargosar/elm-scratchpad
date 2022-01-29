@@ -2318,3 +2318,11 @@ onScreenResized : (Screen -> msg) -> Sub msg
 onScreenResized msg =
     Browser.Events.onResize (\w h -> toScreen (toFloat w) (toFloat h))
         |> Sub.map msg
+
+
+
+-- NEL NON EMPTY LIST
+
+
+type alias NEL a =
+    ( a, List a )
