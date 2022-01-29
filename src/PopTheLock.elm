@@ -488,10 +488,13 @@ view model =
 
                         pendingLocks =
                             rec.pendingLocks
+
+                        dotScale =
+                            normClamped 0 500 rec.elapsed
                     in
                     group []
                         [ viewLock bgColor
-                        , viewDot dotAngle
+                        , viewDotAnimated { scale = dotScale, angle = dotAngle }
                         , viewPin pinAngle
                         , viewPendingLocks pendingLocks
                         ]
@@ -651,6 +654,11 @@ viewDot angle =
             fromPolar ( r, theta )
     in
     circle dotRadius [ fill wYellow, transforms [ translateF2 dotCenterF2 ] ]
+
+
+viewDotAnimated : { scale : Float, angle : Float } -> Svg Msg
+viewDotAnimated { scale, angle } =
+    group [ transforms [ scaleF scale ] ] [ viewDot angle ]
 
 
 viewPin : Float -> Svg Msg
