@@ -485,22 +485,26 @@ view model =
                         pendingLocks =
                             0
 
-                        animPart =
-                            maxLevelCompleteTransitionOutDuration / 3
-
-                        animPart1 =
-                            normClamped (animPart * 0) (animPart * 1) rec.elapsed
-
-                        animPart3 =
-                            normClamped (animPart * 2) (animPart * 3) rec.elapsed
+                        ( partIdx, n ) =
+                            animationValue rec.animation model.clock
 
                         dx =
-                            animPart3
-                                |> Ease.inBack
-                                |> mul -300
+                            if partIdx == 2 then
+                                n
+                                    |> Ease.inBack
+                                    |> mul -300
+
+                            else
+                                0
 
                         lockHandleDY =
-                            animPart1 |> Ease.inBack |> mul -50
+                            if partIdx == 0 then
+                                n
+                                    |> Ease.inBack
+                                    |> mul -50
+
+                            else
+                                0
                     in
                     group [ transforms [ translateF2 ( dx, 0 ) ] ]
                         [ viewLockAnimated { lockHandleDY = lockHandleDY } bgColor
