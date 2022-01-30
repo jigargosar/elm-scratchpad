@@ -383,14 +383,18 @@ step dt model =
 
         Rotating rec ->
             let
-                elapsed =
-                    rec.elapsed + dt
-
                 ( success, pd ) =
                     pdRotate dt rec.pd
             in
             if success then
-                { model | phase = Rotating { rec | elapsed = elapsed } }
+                { model
+                    | phase =
+                        Rotating
+                            { rec
+                                | elapsed = rec.elapsed + dt
+                                , pd = pd
+                            }
+                }
 
             else
                 { model | phase = initLevelFailed model.clock pd rec.pendingLocks }
@@ -478,7 +482,7 @@ view model =
                 WaitingForUserInput pd ->
                     let
                         pda =
-                            pdAngles 0 pd
+                            pdAngles pd
 
                         pinAngle =
                             pda.pinAngle
@@ -499,7 +503,7 @@ view model =
                 Rotating rec ->
                     let
                         pda =
-                            pdAngles rec.elapsed rec.pd
+                            pdAngles rec.pd
 
                         pinAngle =
                             pda.pinAngle
@@ -528,9 +532,8 @@ view model =
                 LevelFailed rec ->
                     let
                         pinAngle =
-                            rec.pda.pinAngle
+                            pdAngles rec.pd |> .pinAngle
 
-                        --dotAngle = rec.dotAngle
                         pendingLocks =
                             rec.pendingLocks
                     in
@@ -538,8 +541,6 @@ view model =
                         [ classNames [ cnAnimated, cnHeadShake ]
                         ]
                         [ viewLock bgColor
-
-                        --, viewDot dotAngle
                         , viewPin pinAngle
                         , viewPendingLocks pendingLocks
                         ]
@@ -547,7 +548,7 @@ view model =
                 LevelComplete rec ->
                     let
                         pinAngle =
-                            rec.pd
+                            pdAngles rec.pd |> .pinAngle
 
                         pendingLocks =
                             0
@@ -581,7 +582,7 @@ view model =
                 NextLevel rec ->
                     let
                         pda =
-                            pdAngles 0 rec.pd
+                            pdAngles rec.pd
 
                         pinAngle =
                             pda.pinAngle
