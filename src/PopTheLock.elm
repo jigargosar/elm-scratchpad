@@ -56,6 +56,15 @@ type alias Model =
     }
 
 
+type alias Pin =
+    { startAngle : Float, dir : AngularDirection, dotAngleOffset : Float }
+
+
+pinToAngles : Pin -> { pin : Float, dot : Float }
+pinToAngles pin =
+    Debug.todo "todo"
+
+
 type Phase
     = WaitingForUserInput { dotAngleOffset : Float, pinAngularDirection : AngularDirection }
     | Rotating
