@@ -164,7 +164,7 @@ pdHasFailed (PD rec) =
 
 type Phase
     = WaitingForUserInput
-    | Rotating { elapsed : Float }
+    | Rotating
     | LevelFailed { animation : Animation }
     | LevelComplete { animation : Animation }
     | NextLevel { animation : Animation }
@@ -323,9 +323,9 @@ updateOnUserInput : Model -> Model
 updateOnUserInput model =
     case model.phase of
         WaitingForUserInput ->
-            { model | phase = Rotating { elapsed = 0 } }
+            { model | phase = Rotating }
 
-        Rotating _ ->
+        Rotating ->
             case pdUpdateOnClick model.pd of
                 Just pd ->
                     if pdPendingLocks pd == 0 then
@@ -345,7 +345,7 @@ updateOnUserInput model =
                         { model
                             | seed = seed
                             , pd = npd
-                            , phase = Rotating { elapsed = 0 }
+                            , phase = Rotating
                         }
 
                 Nothing ->
@@ -367,7 +367,7 @@ step dt model =
         WaitingForUserInput ->
             model
 
-        Rotating rec ->
+        Rotating ->
             let
                 ( success, pd ) =
                     pdRotate dt model.pd
@@ -375,7 +375,7 @@ step dt model =
                 phase =
                     case success of
                         True ->
-                            Rotating { rec | elapsed = rec.elapsed + dt }
+                            Rotating
 
                         False ->
                             initLevelFailed model.clock
@@ -483,7 +483,7 @@ view model =
                         , viewPendingLocks pendingLocks
                         ]
 
-                Rotating rec ->
+                Rotating ->
                     let
                         pda =
                             pdAngles model.pd
@@ -494,17 +494,9 @@ view model =
                         dotAngle =
                             pda.dotAngle
                     in
-                    let
-                        dotScale =
-                            if model.level == pendingLocks then
-                                1
-
-                            else
-                                normClamped 0 300 rec.elapsed
-                    in
                     group []
                         [ viewLock bgColor
-                        , viewDotAnimated { scale = dotScale, angle = dotAngle }
+                        , viewDot dotAngle
                         , viewPin pinAngle
                         , viewPendingLocks pendingLocks
                         ]
@@ -644,11 +636,11 @@ lockHandleSubPath r =
 
 viewDot : Float -> Svg Msg
 viewDot angle =
-    viewDotAnimated { angle = angle, scale = 1 }
+    viewDotAnimated__ { angle = angle, scale = 1 }
 
 
-viewDotAnimated : { scale : Float, angle : Float } -> Svg Msg
-viewDotAnimated { scale, angle } =
+viewDotAnimated__ : { scale : Float, angle : Float } -> Svg Msg
+viewDotAnimated__ { scale, angle } =
     let
         r =
             lockRadius
