@@ -62,7 +62,7 @@ type alias PDAngles =
 
 type PD
     = PD
-        { elapsed : Float
+        { pinRotatedFor : Float
         , pinStartingAngle : Float
         , pinAngularDirection : AngularDirection
         , dotAngleOffset : Float
@@ -74,7 +74,7 @@ initPD =
     Random.map2
         (\angularDirection dotAngleOffset ->
             PD
-                { elapsed = 0
+                { pinRotatedFor = 0
                 , pinStartingAngle = initialPinAngle
                 , pinAngularDirection = angularDirection
                 , dotAngleOffset = dotAngleOffset
@@ -89,7 +89,7 @@ nextPD ((PD rec) as pd) =
     Random.map
         (\dotAngleOffset ->
             PD
-                { elapsed = 0
+                { pinRotatedFor = 0
                 , pinStartingAngle = pdAngles pd |> .pinAngle
                 , pinAngularDirection = oppositeAngularDirection rec.pinAngularDirection
                 , dotAngleOffset = dotAngleOffset
@@ -102,7 +102,7 @@ pdAngles : PD -> PDAngles
 pdAngles (PD rec) =
     let
         elapsed =
-            rec.elapsed
+            rec.pinRotatedFor
 
         pinAngle =
             rec.pinStartingAngle
@@ -119,7 +119,7 @@ pdIsPinOverDot : PD -> Bool
 pdIsPinOverDot (PD rec) =
     let
         elapsed =
-            rec.elapsed
+            rec.pinRotatedFor
 
         failed =
             abs (pinAngularSpeed * elapsed - rec.dotAngleOffset) > errorMarginAngle
@@ -131,17 +131,17 @@ pdRotate : Float -> PD -> ( Bool, PD )
 pdRotate dt (PD rec) =
     let
         elapsed =
-            rec.elapsed + dt
+            rec.pinRotatedFor + dt
 
         npd =
-            PD { rec | elapsed = elapsed }
+            PD { rec | pinRotatedFor = elapsed }
     in
     ( not <| pdHasFailed npd, npd )
 
 
 pdHasFailed : PD -> Bool
 pdHasFailed (PD rec) =
-    pinAngularSpeed * rec.elapsed > rec.dotAngleOffset + errorMarginAngle
+    pinAngularSpeed * rec.pinRotatedFor > rec.dotAngleOffset + errorMarginAngle
 
 
 type Phase
