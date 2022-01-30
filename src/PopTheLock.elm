@@ -50,6 +50,7 @@ degreesPerSecond d =
 
 type alias Model =
     { level : Int
+    , pd : PD
     , phase : Phase
     , clock : Clock
     , seed : Seed
@@ -145,25 +146,17 @@ pdHasFailed (PD rec) =
 
 
 type Phase
-    = WaitingForUserInput PD
-    | Rotating
-        { elapsed : Float
-        , pd : PD
-        , pendingLocks : Int
-        }
-    | LevelFailed { animation : Animation, pd : PD, pendingLocks : Int }
-    | LevelComplete { animation : Animation, pd : PD }
-    | NextLevel
-        { animation : Animation
-        , pd : PD
-        }
+    = WaitingForUserInput
+    | Rotating { elapsed : Float, pendingLocks : Int }
+    | LevelFailed { animation : Animation, pendingLocks : Int }
+    | LevelComplete { animation : Animation }
+    | NextLevel { animation : Animation }
 
 
-initLevelFailed : Clock -> PD -> Int -> Phase
-initLevelFailed clock pd pendingLocks =
+initLevelFailed : Clock -> Int -> Phase
+initLevelFailed clock pendingLocks =
     LevelFailed
         { animation = startAnimation ( 500, [ 500 ] ) clock
-        , pd = pd
         , pendingLocks = pendingLocks
         }
 
@@ -215,11 +208,6 @@ animationValueHelp elapsed i start ( dur, ds ) =
 
             Just nDurations ->
                 animationValueHelp elapsed (i + 1) end nDurations
-
-
-randomInitialPhase : Generator Phase
-randomInitialPhase =
-    initPD |> Random.map WaitingForUserInput
 
 
 randomDotAngleOffset =
@@ -280,11 +268,12 @@ init () =
 initWithSeed : Seed -> Model
 initWithSeed initialSeed =
     let
-        ( phase, seed ) =
-            Random.step randomInitialPhase initialSeed
+        ( pd, seed ) =
+            Random.step initPD initialSeed
     in
     { level = 1
-    , phase = phase
+    , pd = pd
+    , phase = WaitingForUserInput
     , clock = 0
     , seed = seed
     }
@@ -293,13 +282,10 @@ initWithSeed initialSeed =
 restartCurrentLevel : Model -> Model
 restartCurrentLevel model =
     let
-        ( phase, seed ) =
-            Random.step randomInitialPhase model.seed
+        ( pd, seed ) =
+            Random.step initPD model.seed
     in
-    { model
-        | phase = phase
-        , seed = seed
-    }
+    { model | phase = WaitingForUserInput, pd = pd, seed = seed }
 
 
 initNextLevel : Model -> Model
@@ -310,11 +296,8 @@ initNextLevel model =
     in
     { model
         | level = model.level + 1
-        , phase =
-            NextLevel
-                { animation = startAnimation ( 500, [] ) model.clock
-                , pd = pd
-                }
+        , pd = pd
+        , phase = NextLevel { animation = startAnimation ( 500, [] ) model.clock }
         , seed = seed
     }
 
@@ -322,44 +305,43 @@ initNextLevel model =
 updateOnUserInput : Model -> Model
 updateOnUserInput model =
     case model.phase of
-        WaitingForUserInput pd ->
-            { model
-                | phase =
-                    Rotating { elapsed = 0, pd = pd, pendingLocks = model.level }
-            }
+        WaitingForUserInput ->
+            { model | phase = Rotating { elapsed = 0, pendingLocks = model.level } }
 
         Rotating rec ->
             let
+                pd =
+                    model.pd
+
                 isLastLock =
                     rec.pendingLocks <= 1
             in
-            if pdIsPinOverDot rec.pd then
+            if pdIsPinOverDot pd then
                 if isLastLock then
                     { model
                         | phase =
                             LevelComplete
                                 { animation = startAnimation ( 500, [ 500, 500 ] ) model.clock
-                                , pd = rec.pd
                                 }
                     }
 
                 else
                     let
-                        ( pd, seed ) =
-                            Random.step (nextPD rec.pd) model.seed
+                        ( npd, seed ) =
+                            Random.step (nextPD pd) model.seed
                     in
                     { model
                         | seed = seed
+                        , pd = npd
                         , phase =
                             Rotating
                                 { elapsed = 0
-                                , pd = pd
                                 , pendingLocks = rec.pendingLocks - 1
                                 }
                     }
 
             else
-                { model | phase = initLevelFailed model.clock rec.pd rec.pendingLocks }
+                { model | phase = initLevelFailed model.clock rec.pendingLocks }
 
         LevelFailed _ ->
             model
@@ -374,20 +356,23 @@ updateOnUserInput model =
 step : Float -> Model -> Model
 step dt model =
     case model.phase of
-        WaitingForUserInput _ ->
+        WaitingForUserInput ->
             model
 
         Rotating rec ->
             let
-                phase =
-                    case pdRotate dt rec.pd of
-                        ( True, pd ) ->
-                            Rotating { rec | elapsed = rec.elapsed + dt, pd = pd }
+                ( success, pd ) =
+                    pdRotate dt model.pd
 
-                        ( False, pd ) ->
-                            initLevelFailed model.clock pd rec.pendingLocks
+                phase =
+                    case success of
+                        True ->
+                            Rotating { rec | elapsed = rec.elapsed + dt }
+
+                        False ->
+                            initLevelFailed model.clock rec.pendingLocks
             in
-            { model | phase = phase }
+            { model | phase = phase, pd = pd }
 
         LevelFailed rec ->
             if animationIsDone rec.animation model.clock then
@@ -405,7 +390,7 @@ step dt model =
 
         NextLevel rec ->
             if animationIsDone rec.animation model.clock then
-                { model | phase = WaitingForUserInput rec.pd }
+                { model | phase = WaitingForUserInput }
 
             else
                 model
@@ -469,10 +454,10 @@ view model =
         [ viewLevelNum model.level
         , group [ transforms [ translateF2 ( 0, 50 ) ] ]
             [ case model.phase of
-                WaitingForUserInput pd ->
+                WaitingForUserInput ->
                     let
                         pda =
-                            pdAngles pd
+                            pdAngles model.pd
 
                         pinAngle =
                             pda.pinAngle
@@ -493,7 +478,7 @@ view model =
                 Rotating rec ->
                     let
                         pda =
-                            pdAngles rec.pd
+                            pdAngles model.pd
 
                         pinAngle =
                             pda.pinAngle
@@ -522,7 +507,7 @@ view model =
                 LevelFailed rec ->
                     let
                         pinAngle =
-                            pdAngles rec.pd |> .pinAngle
+                            pdAngles model.pd |> .pinAngle
 
                         pendingLocks =
                             rec.pendingLocks
@@ -538,7 +523,7 @@ view model =
                 LevelComplete rec ->
                     let
                         pinAngle =
-                            pdAngles rec.pd |> .pinAngle
+                            pdAngles model.pd |> .pinAngle
 
                         pendingLocks =
                             0
@@ -569,10 +554,10 @@ view model =
                         , viewPendingLocks pendingLocks
                         ]
 
-                NextLevel rec ->
+                NextLevel _ ->
                     let
                         pda =
-                            pdAngles rec.pd
+                            pdAngles model.pd
 
                         pinAngle =
                             pda.pinAngle
