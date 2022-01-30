@@ -67,11 +67,12 @@ type PD
         , pinStartingAngle : Float
         , pinAngularDirection : AngularDirection
         , dotAngleOffset : Float
+        , pendingLocks : Int
         }
 
 
-initPD : Generator PD
-initPD =
+initPD : Int -> Generator PD
+initPD pendingLocks =
     Random.map2
         (\angularDirection dotAngleOffset ->
             PD
@@ -79,6 +80,7 @@ initPD =
                 , pinStartingAngle = initialPinAngle
                 , pinAngularDirection = angularDirection
                 , dotAngleOffset = dotAngleOffset
+                , pendingLocks = pendingLocks
                 }
         )
         randomAngularDirection
@@ -94,6 +96,7 @@ nextPD ((PD rec) as pd) =
                 , pinStartingAngle = pdAngles pd |> .pinAngle
                 , pinAngularDirection = oppositeAngularDirection rec.pinAngularDirection
                 , dotAngleOffset = dotAngleOffset
+                , pendingLocks = rec.pendingLocks - 1
                 }
         )
         randomDotAngleOffset
@@ -114,6 +117,20 @@ pdAngles (PD rec) =
                 + angleInDirection rec.pinAngularDirection rec.dotAngleOffset
     in
     { pinAngle = pinAngle, dotAngle = dotAngle }
+
+
+pdPendingLocks : PD -> Int
+pdPendingLocks (PD rec) =
+    rec.pendingLocks
+
+
+pdUpdateOnClick : PD -> Maybe PD
+pdUpdateOnClick ((PD rec) as pd) =
+    if pdIsPinOverDot pd then
+        Just (PD { rec | pendingLocks = rec.pendingLocks - 1 })
+
+    else
+        Nothing
 
 
 pdIsPinOverDot : PD -> Bool
@@ -147,18 +164,15 @@ pdHasFailed (PD rec) =
 
 type Phase
     = WaitingForUserInput
-    | Rotating { elapsed : Float, pendingLocks : Int }
-    | LevelFailed { animation : Animation, pendingLocks : Int }
+    | Rotating { elapsed : Float }
+    | LevelFailed { animation : Animation }
     | LevelComplete { animation : Animation }
     | NextLevel { animation : Animation }
 
 
-initLevelFailed : Clock -> Int -> Phase
-initLevelFailed clock pendingLocks =
-    LevelFailed
-        { animation = startAnimation ( 500, [ 500 ] ) clock
-        , pendingLocks = pendingLocks
-        }
+initLevelFailed : Clock -> Phase
+initLevelFailed clock =
+    LevelFailed { animation = startAnimation ( 500, [ 500 ] ) clock }
 
 
 type alias Clock =
@@ -269,7 +283,7 @@ initWithSeed : Seed -> Model
 initWithSeed initialSeed =
     let
         ( pd, seed ) =
-            Random.step initPD initialSeed
+            Random.step (initPD 1) initialSeed
     in
     { level = 1
     , pd = pd
@@ -283,7 +297,7 @@ restartCurrentLevel : Model -> Model
 restartCurrentLevel model =
     let
         ( pd, seed ) =
-            Random.step initPD model.seed
+            Random.step (initPD model.level) model.seed
     in
     { model | phase = WaitingForUserInput, pd = pd, seed = seed }
 
@@ -291,11 +305,14 @@ restartCurrentLevel model =
 initNextLevel : Model -> Model
 initNextLevel model =
     let
+        nextLevelNum =
+            model.level + 1
+
         ( pd, seed ) =
-            Random.step initPD model.seed
+            Random.step (initPD nextLevelNum) model.seed
     in
     { model
-        | level = model.level + 1
+        | level = nextLevelNum
         , pd = pd
         , phase = NextLevel { animation = startAnimation ( 500, [] ) model.clock }
         , seed = seed
@@ -306,42 +323,33 @@ updateOnUserInput : Model -> Model
 updateOnUserInput model =
     case model.phase of
         WaitingForUserInput ->
-            { model | phase = Rotating { elapsed = 0, pendingLocks = model.level } }
+            { model | phase = Rotating { elapsed = 0 } }
 
-        Rotating rec ->
-            let
-                pd =
-                    model.pd
+        Rotating _ ->
+            case pdUpdateOnClick model.pd of
+                Just pd ->
+                    if pdPendingLocks pd == 0 then
+                        { model
+                            | pd = pd
+                            , phase =
+                                LevelComplete
+                                    { animation = startAnimation ( 500, [ 500, 500 ] ) model.clock
+                                    }
+                        }
 
-                isLastLock =
-                    rec.pendingLocks <= 1
-            in
-            if pdIsPinOverDot pd then
-                if isLastLock then
-                    { model
-                        | phase =
-                            LevelComplete
-                                { animation = startAnimation ( 500, [ 500, 500 ] ) model.clock
-                                }
-                    }
+                    else
+                        let
+                            ( npd, seed ) =
+                                Random.step (nextPD model.pd) model.seed
+                        in
+                        { model
+                            | seed = seed
+                            , pd = npd
+                            , phase = Rotating { elapsed = 0 }
+                        }
 
-                else
-                    let
-                        ( npd, seed ) =
-                            Random.step (nextPD pd) model.seed
-                    in
-                    { model
-                        | seed = seed
-                        , pd = npd
-                        , phase =
-                            Rotating
-                                { elapsed = 0
-                                , pendingLocks = rec.pendingLocks - 1
-                                }
-                    }
-
-            else
-                { model | phase = initLevelFailed model.clock rec.pendingLocks }
+                Nothing ->
+                    { model | phase = initLevelFailed model.clock }
 
         LevelFailed _ ->
             model
