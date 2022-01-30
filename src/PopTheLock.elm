@@ -69,8 +69,8 @@ initPD =
     Debug.todo "todo"
 
 
-pdAt : Float -> PD -> Maybe { pa : Float, da : Float }
-pdAt =
+pdAnglesAt : Float -> PD -> PDAngles
+pdAnglesAt =
     Debug.todo "todo"
 
 
