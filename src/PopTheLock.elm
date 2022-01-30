@@ -128,19 +128,15 @@ pdIsPinOverDot (PD rec) =
 
 
 pdRotate : Float -> PD -> ( Bool, PD )
-pdRotate dt ((PD rec) as pd) =
-    if pdHasFailed pd then
-        ( False, pd )
+pdRotate dt (PD rec) =
+    let
+        elapsed =
+            rec.elapsed + dt
 
-    else
-        let
-            elapsed =
-                rec.elapsed + dt
-
-            npd =
-                PD { rec | elapsed = elapsed }
-        in
-        ( not <| pdHasFailed npd, npd )
+        npd =
+            PD { rec | elapsed = elapsed }
+    in
+    ( not <| pdHasFailed npd, npd )
 
 
 pdHasFailed : PD -> Bool
