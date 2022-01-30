@@ -62,7 +62,8 @@ type alias PDAngles =
 
 type PD
     = PD
-        { pinStartingAngle : Float
+        { elapsed : Float
+        , pinStartingAngle : Float
         , pinAngularDirection : AngularDirection
         , dotAngleOffset : Float
         }
@@ -73,7 +74,8 @@ initPD =
     Random.map2
         (\angularDirection dotAngleOffset ->
             PD
-                { pinStartingAngle = initialPinAngle
+                { elapsed = 0
+                , pinStartingAngle = initialPinAngle
                 , pinAngularDirection = angularDirection
                 , dotAngleOffset = dotAngleOffset
                 }
@@ -82,12 +84,13 @@ initPD =
         randomDotAngleOffset
 
 
-nextPD : Float -> PD -> Generator PD
-nextPD pinAngle (PD rec) =
+nextPD : PD -> Generator PD
+nextPD ((PD rec) as pd) =
     Random.map
         (\dotAngleOffset ->
             PD
-                { pinStartingAngle = pinAngle
+                { elapsed = 0
+                , pinStartingAngle = pdAngles pd |> .pinAngle
                 , pinAngularDirection = oppositeAngularDirection rec.pinAngularDirection
                 , dotAngleOffset = dotAngleOffset
                 }
@@ -95,9 +98,12 @@ nextPD pinAngle (PD rec) =
         randomDotAngleOffset
 
 
-pdAnglesAt : Float -> PD -> PDAngles
-pdAnglesAt elapsed (PD rec) =
+pdAngles : PD -> PDAngles
+pdAngles (PD rec) =
     let
+        elapsed =
+            rec.elapsed
+
         pinAngle =
             rec.pinStartingAngle
                 + angleInDirection rec.pinAngularDirection (pinAngularSpeed * elapsed)
@@ -109,26 +115,37 @@ pdAnglesAt elapsed (PD rec) =
     { pinAngle = pinAngle, dotAngle = dotAngle }
 
 
-pdClickedAt : Float -> PD -> ( Bool, PDAngles )
-pdClickedAt elapsed ((PD rec) as pd) =
+pdIsPinOverDot : PD -> Bool
+pdIsPinOverDot (PD rec) =
     let
+        elapsed =
+            rec.elapsed
+
         failed =
             abs (pinAngularSpeed * elapsed - rec.dotAngleOffset) > errorMarginAngle
     in
-    ( not failed, pdAnglesAt elapsed pd )
+    not failed
 
 
-pdFailedAt : Float -> PD -> Maybe PDAngles
-pdFailedAt elapsed ((PD rec) as pd) =
-    let
-        failed =
-            pinAngularSpeed * elapsed > rec.dotAngleOffset + errorMarginAngle
-    in
-    if failed then
-        Just (pdAnglesAt elapsed pd)
+pdRotate : Float -> PD -> ( Bool, PD )
+pdRotate dt ((PD rec) as pd) =
+    if pdHasFailed pd then
+        ( False, pd )
 
     else
-        Nothing
+        let
+            elapsed =
+                rec.elapsed + dt
+
+            npd =
+                PD { rec | elapsed = elapsed }
+        in
+        ( not <| pdHasFailed npd, npd )
+
+
+pdHasFailed : PD -> Bool
+pdHasFailed (PD rec) =
+    pinAngularSpeed * rec.elapsed > rec.dotAngleOffset + errorMarginAngle
 
 
 type Phase
@@ -138,27 +155,19 @@ type Phase
         , pd : PD
         , pendingLocks : Int
         }
-    | LevelFailed { animation : Animation, pda : PDAngles, pendingLocks : Int }
-    | LevelComplete { animation : Animation, pinAngle : Float }
+    | LevelFailed { animation : Animation, pd : PD, pendingLocks : Int }
+    | LevelComplete { animation : Animation, pd : PD }
     | NextLevel
         { animation : Animation
         , pd : PD
         }
 
 
-initLevelComplete : { pinAngle : Float, clock : Clock } -> Phase
-initLevelComplete { pinAngle, clock } =
-    LevelComplete
-        { animation = startAnimation ( 500, [ 500, 500 ] ) clock
-        , pinAngle = pinAngle
-        }
-
-
-initLevelFailed : Clock -> PDAngles -> Int -> Phase
-initLevelFailed clock pda pendingLocks =
+initLevelFailed : Clock -> PD -> Int -> Phase
+initLevelFailed clock pd pendingLocks =
     LevelFailed
         { animation = startAnimation ( 500, [ 500 ] ) clock
-        , pda = pda
+        , pd = pd
         , pendingLocks = pendingLocks
         }
 
@@ -325,26 +334,23 @@ updateOnUserInput model =
 
         Rotating rec ->
             let
-                ( success, pda ) =
-                    pdClickedAt rec.elapsed rec.pd
-
                 isLastLock =
                     rec.pendingLocks <= 1
             in
-            if success then
+            if pdIsPinOverDot rec.pd then
                 if isLastLock then
                     { model
                         | phase =
-                            initLevelComplete
-                                { clock = model.clock
-                                , pinAngle = pda.pinAngle
+                            LevelComplete
+                                { animation = startAnimation ( 500, [ 500, 500 ] ) model.clock
+                                , pd = rec.pd
                                 }
                     }
 
                 else
                     let
                         ( pd, seed ) =
-                            Random.step (nextPD pda.pinAngle rec.pd) model.seed
+                            Random.step (nextPD rec.pd) model.seed
                     in
                     { model
                         | seed = seed
@@ -357,7 +363,7 @@ updateOnUserInput model =
                     }
 
             else
-                { model | phase = initLevelFailed model.clock pda rec.pendingLocks }
+                { model | phase = initLevelFailed model.clock rec.pd rec.pendingLocks }
 
         LevelFailed _ ->
             model
@@ -379,13 +385,15 @@ step dt model =
             let
                 elapsed =
                     rec.elapsed + dt
-            in
-            case pdFailedAt elapsed rec.pd of
-                Just pda ->
-                    { model | phase = initLevelFailed model.clock pda rec.pendingLocks }
 
-                Nothing ->
-                    { model | phase = Rotating { rec | elapsed = elapsed } }
+                ( success, pd ) =
+                    pdRotate dt rec.pd
+            in
+            if success then
+                { model | phase = Rotating { rec | elapsed = elapsed } }
+
+            else
+                { model | phase = initLevelFailed model.clock pd rec.pendingLocks }
 
         LevelFailed rec ->
             if animationIsDone rec.animation model.clock then
@@ -470,7 +478,7 @@ view model =
                 WaitingForUserInput pd ->
                     let
                         pda =
-                            pdAnglesAt 0 pd
+                            pdAngles 0 pd
 
                         pinAngle =
                             pda.pinAngle
@@ -491,7 +499,7 @@ view model =
                 Rotating rec ->
                     let
                         pda =
-                            pdAnglesAt rec.elapsed rec.pd
+                            pdAngles rec.elapsed rec.pd
 
                         pinAngle =
                             pda.pinAngle
@@ -539,7 +547,7 @@ view model =
                 LevelComplete rec ->
                     let
                         pinAngle =
-                            rec.pinAngle
+                            rec.pd
 
                         pendingLocks =
                             0
@@ -573,7 +581,7 @@ view model =
                 NextLevel rec ->
                     let
                         pda =
-                            pdAnglesAt 0 rec.pd
+                            pdAngles 0 rec.pd
 
                         pinAngle =
                             pda.pinAngle
