@@ -97,7 +97,11 @@ type Phase
         }
     | LevelFailed { animation : Animation, pinAngle : Float, dotAngle : Float, pendingLocks : Int }
     | LevelComplete { animation : Animation, pinAngle : Float }
-    | NextLevel { animation : Animation, dotAngleOffset : Float, pinAngularDirection : AngularDirection }
+    | NextLevel
+        { animation : Animation
+        , dotAngleOffset : Float
+        , pinAngularDirection : AngularDirection
+        }
 
 
 initLevelComplete : { pinAngle : Float, clock : Clock } -> Phase
