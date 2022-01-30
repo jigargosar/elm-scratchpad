@@ -379,21 +379,15 @@ step dt model =
 
         Rotating rec ->
             let
-                ( success, pd ) =
-                    pdRotate dt rec.pd
-            in
-            if success then
-                { model
-                    | phase =
-                        Rotating
-                            { rec
-                                | elapsed = rec.elapsed + dt
-                                , pd = pd
-                            }
-                }
+                phase =
+                    case pdRotate dt rec.pd of
+                        ( True, pd ) ->
+                            Rotating { rec | elapsed = rec.elapsed + dt, pd = pd }
 
-            else
-                { model | phase = initLevelFailed model.clock pd rec.pendingLocks }
+                        ( False, pd ) ->
+                            initLevelFailed model.clock pd rec.pendingLocks
+            in
+            { model | phase = phase }
 
         LevelFailed rec ->
             if animationIsDone rec.animation model.clock then
