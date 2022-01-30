@@ -378,7 +378,7 @@ step dt model =
                             Rotating { rec | elapsed = rec.elapsed + dt }
 
                         False ->
-                            initLevelFailed model.clock rec.pendingLocks
+                            initLevelFailed model.clock
             in
             { model | phase = phase, pd = pd }
 
@@ -453,6 +453,9 @@ view model =
     let
         bgColor =
             getBGColor model.phase
+
+        pendingLocks =
+            pdPendingLocks model.pd
     in
     basicSvg
         [ viewBoxC 300 (300 * 1.5)
@@ -472,9 +475,6 @@ view model =
 
                         dotAngle =
                             pda.dotAngle
-
-                        pendingLocks =
-                            model.level
                     in
                     group []
                         [ viewLock bgColor
@@ -495,9 +495,6 @@ view model =
                             pda.dotAngle
                     in
                     let
-                        pendingLocks =
-                            rec.pendingLocks
-
                         dotScale =
                             if model.level == pendingLocks then
                                 1
@@ -512,13 +509,10 @@ view model =
                         , viewPendingLocks pendingLocks
                         ]
 
-                LevelFailed rec ->
+                LevelFailed _ ->
                     let
                         pinAngle =
                             pdAngles model.pd |> .pinAngle
-
-                        pendingLocks =
-                            rec.pendingLocks
                     in
                     group
                         [ classNames [ cnAnimated, cnHeadShake ]
@@ -532,9 +526,6 @@ view model =
                     let
                         pinAngle =
                             pdAngles model.pd |> .pinAngle
-
-                        pendingLocks =
-                            0
 
                         ( partIdx, n ) =
                             animationValue rec.animation model.clock
@@ -572,9 +563,6 @@ view model =
 
                         dotAngle =
                             pda.dotAngle
-
-                        pendingLocks =
-                            model.level
                     in
                     group
                         [ classNames [ cnAnimated, cnSlideInRight, cnFaster ]
