@@ -327,26 +327,26 @@ updateOnUserInput model =
             let
                 ( success, pda ) =
                     pdClickedAt rec.elapsed rec.pd
-            in
-            let
-                failed =
-                    not success
-            in
-            if failed then
-                { model | phase = initLevelFailed model.clock pda rec.pendingLocks }
 
-            else if rec.pendingLocks <= 1 then
-                { model | phase = initLevelComplete { pinAngle = pda.pinAngle, clock = model.clock } }
+                isLastLock =
+                    rec.pendingLocks <= 1
+            in
+            if success then
+                if isLastLock then
+                    { model | phase = initLevelComplete { pinAngle = pda.pinAngle, clock = model.clock } }
+
+                else
+                    let
+                        ( pd, seed ) =
+                            Random.step (nextPD pda.pinAngle rec.pd) model.seed
+                    in
+                    { model
+                        | seed = seed
+                        , phase = Rotating { elapsed = 0, pd = pd, pendingLocks = rec.pendingLocks - 1 }
+                    }
 
             else
-                let
-                    ( pd, seed ) =
-                        Random.step (nextPD pda.pinAngle rec.pd) model.seed
-                in
-                { model
-                    | seed = seed
-                    , phase = Rotating { elapsed = 0, pd = pd, pendingLocks = rec.pendingLocks - 1 }
-                }
+                { model | phase = initLevelFailed model.clock pda rec.pendingLocks }
 
         LevelFailed _ ->
             model
