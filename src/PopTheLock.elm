@@ -336,8 +336,8 @@ updateOnUserInput model =
                     { model
                         | phase =
                             initLevelComplete
-                                { pinAngle = pda.pinAngle
-                                , clock = model.clock
+                                { clock = model.clock
+                                , pinAngle = pda.pinAngle
                                 }
                     }
 
