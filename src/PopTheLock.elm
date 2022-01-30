@@ -56,6 +56,20 @@ type alias Model =
     }
 
 
+type PD
+    = PD
+
+
+pdPinAngle : PD -> Float
+pdPinAngle =
+    Debug.todo "todo"
+
+
+pdDotAngle : PD -> Float
+pdDotAngle =
+    Debug.todo "todo"
+
+
 type alias Pin =
     { startAngle : Float, dir : AngularDirection, dotAngleOffset : Float }
 
