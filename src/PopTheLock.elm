@@ -342,7 +342,12 @@ updateOnUserInput model =
                     in
                     { model
                         | seed = seed
-                        , phase = Rotating { elapsed = 0, pd = pd, pendingLocks = rec.pendingLocks - 1 }
+                        , phase =
+                            Rotating
+                                { elapsed = 0
+                                , pd = pd
+                                , pendingLocks = rec.pendingLocks - 1
+                                }
                     }
 
             else
