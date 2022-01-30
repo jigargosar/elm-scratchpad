@@ -56,19 +56,30 @@ type alias Model =
     }
 
 
+type alias PDAngles =
+    { p : Float, d : Float }
 
---type PD
---    = PD
---
---initPD: Generator PD
---initPD =
---    Debug.todo "todo"
---
---pdAt : Float -> PD -> Maybe {pa:Float, da:Float}
---pdAt   =
---    Debug.todo "todo"
---
---pdClickedAt: Float -> PD ->
+
+type PD
+    = PD
+
+
+initPD : Generator PD
+initPD =
+    Debug.todo "todo"
+
+
+pdAt : Float -> PD -> Maybe { pa : Float, da : Float }
+pdAt =
+    Debug.todo "todo"
+
+
+pdClickedAt : Float -> PD -> ( Bool, PDAngles )
+pdClickedAt =
+    Debug.todo "todo"
+
+
+
 --pdPinAngle : PD -> Float
 --pdPinAngle =
 --    Debug.todo "todo"
