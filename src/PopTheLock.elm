@@ -333,7 +333,13 @@ updateOnUserInput model =
             in
             if success then
                 if isLastLock then
-                    { model | phase = initLevelComplete { pinAngle = pda.pinAngle, clock = model.clock } }
+                    { model
+                        | phase =
+                            initLevelComplete
+                                { pinAngle = pda.pinAngle
+                                , clock = model.clock
+                                }
+                    }
 
                 else
                     let
