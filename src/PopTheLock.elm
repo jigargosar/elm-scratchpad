@@ -115,7 +115,7 @@ pdClickedAt elapsed ((PD rec) as pd) =
         failed =
             abs (pinAngularSpeed * elapsed - rec.dotAngleOffset) > errorMarginAngle
     in
-    ( failed, pdAnglesAt elapsed pd )
+    ( not failed, pdAnglesAt elapsed pd )
 
 
 pdFailedAt : Float -> PD -> Maybe PDAngles
