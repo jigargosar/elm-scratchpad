@@ -56,27 +56,34 @@ type alias Model =
     }
 
 
-type PD
-    = PD
 
-
-pdPinAngle : PD -> Float
-pdPinAngle =
-    Debug.todo "todo"
-
-
-pdDotAngle : PD -> Float
-pdDotAngle =
-    Debug.todo "todo"
-
-
-type alias Pin =
-    { startAngle : Float, dir : AngularDirection, dotAngleOffset : Float }
-
-
-pinToAngles : Pin -> { pin : Float, dot : Float }
-pinToAngles pin =
-    Debug.todo "todo"
+--type PD
+--    = PD
+--
+--initPD: Generator PD
+--initPD =
+--    Debug.todo "todo"
+--
+--pdAt : Float -> PD -> Maybe {pa:Float, da:Float}
+--pdAt   =
+--    Debug.todo "todo"
+--
+--pdClickedAt: Float -> PD ->
+--pdPinAngle : PD -> Float
+--pdPinAngle =
+--    Debug.todo "todo"
+--
+--
+--pdDotAngle : PD -> Float
+--pdDotAngle =
+--    Debug.todo "todo"
+--type alias Pin =
+--    { startAngle : Float, dir : AngularDirection, dotAngleOffset : Float }
+--
+--
+--pinToAngles : Pin -> { pin : Float, dot : Float }
+--pinToAngles pin =
+--    Debug.todo "todo"
 
 
 type Phase
