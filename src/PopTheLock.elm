@@ -399,7 +399,21 @@ viewDoc model =
     Document "App Title"
         [ basicStylesNode
         , animateCssNode
-        , styleNode ""
+        , styleNode """
+            @keyframes popLockHandle {
+                0% {
+                    transform: translate(0,0);
+                }
+
+                25%, 75% {
+                    transform: translate(0, 2%);
+                }
+
+                100% {
+                    transform: translate(0, -15%);
+                }
+            }
+        """
         , toViewModel model |> view
 
         --, div [ positionFixed, bgc <| blackA 0.3 ] [ text <| Debug.toString model.phase ]
@@ -472,11 +486,11 @@ toViewModel model =
                     { vm
                         | lockHandleClasses =
                             ( []
-                            , "animation:slideOutUp ; animation-duration: 500ms"
+                            , "animation: popLockHandle; animation-fill-mode: both; animation-duration: 500ms"
                             )
                         , dotAngle = Nothing
                         , classes = [ cnAnimated, cnSlideOutLeft ]
-                        , style = "animation-delay: 300ms; animation-duration: 500ms"
+                        , style = "animation-delay: 500ms; animation-duration: 500ms"
                     }
 
                 LevelFail ->
