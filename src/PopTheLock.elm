@@ -1,7 +1,6 @@
 module PopTheLock exposing (main)
 
 import Curve
-import Ease
 import Random
 import SubPath exposing (SubPath)
 import Utils exposing (..)
@@ -456,6 +455,7 @@ type alias ViewModel =
     , pinAngle : Float
     , dotAngle : Maybe Float
     , classes : List String
+    , styles : List (Attribute Msg)
     , lockHandleClasses : List String
     }
 
@@ -508,6 +508,7 @@ toViewModel model =
             , pinAngle = pinAngle
             , dotAngle = Just dotAngle
             , classes = []
+            , styles = []
             , lockHandleClasses = []
             }
     in
@@ -564,23 +565,6 @@ getBGColor phase =
 
     else
         wBlue
-
-
-viewLockAnimated : { lockHandleDY : Float } -> String -> Svg Msg
-viewLockAnimated { lockHandleDY } bg =
-    [ SubPath.element
-        (lockHandleSubPath lockRadius)
-        [ transforms
-            [ translateF2 ( 0, -lockRadius + lockHandleDY )
-            , scaleY 1.2
-            ]
-        , stroke <| blackA 0.6
-        , strokeCapRound
-        ]
-    , circle lockRadius [ stroke bg ]
-    , circle lockRadius [ stroke (blackA 0.9) ]
-    ]
-        |> group [ strokeW lockThickness ]
 
 
 viewLockAnimated2 : List String -> String -> Svg Msg
