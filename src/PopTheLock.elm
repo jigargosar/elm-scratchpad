@@ -454,7 +454,7 @@ type alias ViewModel =
     , level : Int
     , pendingLocks : Int
     , pinAngle : Float
-    , dotAngle : Float
+    , dotAngle : Maybe Float
     , classes : List String
     , dx : Float
     , lockHandleDY : Float
@@ -469,10 +469,13 @@ view vm =
         , bgc vm.bgColor
         ]
         [ viewLevelNum vm.level
-        , group [ transforms [ translateF2 ( vm.dx, 0 ) ] ]
-            [ viewLockAnimated { lockHandleDY = vm.lockHandleDY } vm.bgColor
-            , viewPin vm.pinAngle
-            , viewPendingLocks vm.pendingLocks
+        , group [ transforms [ translateF2 ( 0, 50 ) ] ]
+            [ group [ classNames vm.classes, transforms [ translateF2 ( vm.dx, 0 ) ] ]
+                [ viewLockAnimated { lockHandleDY = vm.lockHandleDY } vm.bgColor
+                , viewPin vm.pinAngle
+                , maybeView viewDot vm.dotAngle
+                , viewPendingLocks vm.pendingLocks
+                ]
             ]
         ]
 
@@ -503,7 +506,7 @@ toViewModel model =
             , level = model.level
             , pendingLocks = pendingLocks
             , pinAngle = pinAngle
-            , dotAngle = dotAngle
+            , dotAngle = Just dotAngle
             , classes = []
             , dx = 0
             , lockHandleDY = 0
@@ -541,7 +544,7 @@ toViewModel model =
                         |> Ease.inBack
                         |> mul -50
             in
-            { vm | dx = dx, lockHandleDY = lockHandleDY }
+            { vm | dx = dx, lockHandleDY = lockHandleDY, dotAngle = Nothing }
 
         NextLevel _ ->
             { vm | classes = [ cnAnimated, cnSlideInRight, cnFaster ] }
@@ -579,11 +582,6 @@ getBGColor phase =
 
     else
         wBlue
-
-
-viewLock : String -> Svg Msg
-viewLock =
-    viewLockAnimated { lockHandleDY = 0 }
 
 
 viewLockAnimated : { lockHandleDY : Float } -> String -> Svg Msg
