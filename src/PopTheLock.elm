@@ -3,6 +3,7 @@ module PopTheLock exposing (main)
 import Curve
 import Random
 import SubPath exposing (SubPath)
+import Svg.Attributes as SA
 import Utils exposing (..)
 
 
@@ -333,7 +334,7 @@ updateOnUserInput model =
                             | pd = pd
                             , phase =
                                 LevelComplete
-                                    { animation = startAnimation ( 500, [ 500, 500 ] ) model.clock
+                                    { animation = startAnimation ( levelCompleteAnimationDuration, [] ) model.clock
                                     }
                         }
 
@@ -455,7 +456,7 @@ type alias ViewModel =
     , pinAngle : Float
     , dotAngle : Maybe Float
     , classes : List String
-    , styles : List (Attribute Msg)
+    , style : String
     , lockHandleClasses : List String
     }
 
@@ -470,8 +471,8 @@ view vm =
         [ viewLevelNum vm.level
         , group [ transforms [ translateF2 ( 0, 50 ) ] ]
             [ group
-                [ classNames vm.classes ]
-                [ viewLockAnimated2 vm.lockHandleClasses vm.bgColor
+                [ classNames vm.classes, SA.style vm.style ]
+                [ viewLock vm.lockHandleClasses vm.bgColor
                 , viewPin vm.pinAngle
                 , maybeView viewDot vm.dotAngle
                 , viewPendingLocks vm.pendingLocks
@@ -508,7 +509,7 @@ toViewModel model =
             , pinAngle = pinAngle
             , dotAngle = Just dotAngle
             , classes = []
-            , styles = []
+            , style = ""
             , lockHandleClasses = []
             }
     in
@@ -524,13 +525,18 @@ toViewModel model =
 
         LevelComplete _ ->
             { vm
-                | lockHandleClasses = [ cnAnimated, cnSlideOutUp, cnSlower, cnFaster ]
+                | lockHandleClasses = [ cnAnimated, cnSlideOutUp, cnFaster ]
                 , dotAngle = Nothing
                 , classes = [ cnAnimated, cnSlideOutLeft, cnFaster, cnDelay1s ]
+                , style = "--animate-delay: 0.5s;"
             }
 
         NextLevel _ ->
             { vm | classes = [ cnAnimated, cnSlideInRight, cnFaster ] }
+
+
+levelCompleteAnimationDuration =
+    500 + 500
 
 
 lockRadius =
@@ -567,8 +573,8 @@ getBGColor phase =
         wBlue
 
 
-viewLockAnimated2 : List String -> String -> Svg Msg
-viewLockAnimated2 lockHandleClasses bg =
+viewLock : List String -> String -> Svg Msg
+viewLock lockHandleClasses bg =
     [ group [ classNames lockHandleClasses ]
         [ SubPath.element
             (lockHandleSubPath lockRadius)
