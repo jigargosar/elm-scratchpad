@@ -166,9 +166,16 @@ pdHasFailed (PD rec) =
 type Phase
     = WaitingForUserInput
     | Rotating
+    | Animating Clock AnimationName
     | LevelFailed { animation : Animation }
     | LevelComplete { animation : Animation }
     | NextLevel { animation : Animation }
+
+
+type AnimationName
+    = LevelComplete_Out
+    | LevelFail
+    | NextLevel_In
 
 
 initLevelFailed : Clock -> Phase
@@ -192,19 +199,6 @@ startAnimation durations clock =
 animationIsDone : Animation -> Clock -> Bool
 animationIsDone { startClock, durations } nowClock =
     nowClock - startClock >= first durations + List.sum (second durations)
-
-
-animationValue : Animation -> Clock -> ( Int, Float )
-animationValue { durations, startClock } nowClock =
-    let
-        elapsed =
-            nowClock - startClock
-    in
-    if elapsed <= 0 then
-        ( 0, 0 )
-
-    else
-        animationValueHelp elapsed 0 0 durations
 
 
 animationValueHelp : Float -> Int -> Float -> NEL Float -> ( Int, Float )
@@ -355,6 +349,9 @@ updateOnUserInput model =
                 Nothing ->
                     { model | phase = initLevelFailed model.clock }
 
+        Animating _ _ ->
+            model
+
         LevelFailed _ ->
             model
 
@@ -385,6 +382,36 @@ step dt model =
                             initLevelFailed model.clock
             in
             { model | phase = phase, pd = pd }
+
+        Animating start an ->
+            let
+                duration =
+                    case an of
+                        LevelComplete_Out ->
+                            levelCompleteAnimationDuration
+
+                        LevelFail ->
+                            500
+
+                        NextLevel_In ->
+                            nextLevelAnimationDuration
+
+                elapsed =
+                    model.clock - start
+            in
+            if elapsed >= duration then
+                case an of
+                    LevelComplete_Out ->
+                        initNextLevel model
+
+                    LevelFail ->
+                        restartCurrentLevel model
+
+                    NextLevel_In ->
+                        { model | phase = WaitingForUserInput }
+
+            else
+                model
 
         LevelFailed rec ->
             if animationIsDone rec.animation model.clock then
@@ -522,6 +549,25 @@ toViewModel model =
 
         Rotating ->
             vm
+
+        Animating _ an ->
+            case an of
+                LevelComplete_Out ->
+                    { vm
+                        | lockHandleClasses = [ cnAnimated, cnSlideOutUp, cnFaster ]
+                        , dotAngle = Nothing
+                        , classes = [ cnAnimated, cnSlideOutLeft ]
+                        , style = "animation-delay: 300ms; animation-duration: 500ms"
+                    }
+
+                LevelFail ->
+                    { vm | classes = [ cnAnimated, cnHeadShake ] }
+
+                NextLevel_In ->
+                    { vm
+                        | classes = [ cnAnimated, cnSlideInRight ]
+                        , style = "animation-duration: 200ms"
+                    }
 
         LevelFailed _ ->
             { vm | classes = [ cnAnimated, cnHeadShake ] }
