@@ -175,6 +175,19 @@ type AnimationName
     | NextLevelEnter
 
 
+animationDuration : AnimationName -> number
+animationDuration an =
+    case an of
+        LevelCompleteLeave ->
+            levelCompleteDuration
+
+        LevelFail ->
+            levelFailDuration
+
+        NextLevelEnter ->
+            nextLevelDuration
+
+
 initLevelFailed : Clock -> Phase
 initLevelFailed clock =
     Animating clock LevelFail
@@ -335,21 +348,10 @@ step dt model =
 
         Animating start an ->
             let
-                duration =
-                    case an of
-                        LevelCompleteLeave ->
-                            levelCompleteAnimationDuration
-
-                        LevelFail ->
-                            500 + 500
-
-                        NextLevelEnter ->
-                            nextLevelAnimationDuration
-
                 elapsed =
                     model.clock - start
             in
-            if elapsed >= duration then
+            if elapsed >= animationDuration an then
                 case an of
                     LevelCompleteLeave ->
                         initNextLevel model
@@ -499,11 +501,15 @@ toViewModel model =
                     }
 
 
-levelCompleteAnimationDuration =
+levelCompleteDuration =
     300 + 500
 
 
-nextLevelAnimationDuration =
+levelFailDuration =
+    500 + 500
+
+
+nextLevelDuration =
     200
 
 
