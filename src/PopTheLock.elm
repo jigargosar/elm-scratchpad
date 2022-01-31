@@ -315,7 +315,10 @@ initNextLevel model =
     { model
         | level = nextLevelNum
         , pd = pd
-        , phase = NextLevel { animation = startAnimation ( nextLevelAnimationDuration, [] ) model.clock }
+        , phase =
+            NextLevel
+                { animation = startAnimation ( nextLevelAnimationDuration, [] ) model.clock
+                }
         , seed = seed
     }
 
