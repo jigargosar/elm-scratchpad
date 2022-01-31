@@ -443,107 +443,15 @@ viewDoc model =
     Document "App Title"
         [ basicStylesNode
         , animateCssNode
-        , view model
+        , toViewModel model |> view
 
         --, div [ positionFixed, bgc <| blackA 0.3 ] [ text <| Debug.toString model.phase ]
         ]
 
 
-view : Model -> Html Msg
-view model =
-    let
-        bgColor =
-            getBGColor model.phase
-
-        pendingLocks =
-            pdPendingLocks model.pd
-    in
-    let
-        pda =
-            pdAngles model.pd
-
-        pinAngle =
-            pda.pinAngle
-
-        dotAngle =
-            pda.dotAngle
-    in
-    basicSvg
-        [ viewBoxC 300 (300 * 1.5)
-        , sMaxHeight "100vh"
-        , bgc bgColor
-        ]
-        [ viewLevelNum model.level
-        , group [ transforms [ translateF2 ( 0, 50 ) ] ]
-            [ case model.phase of
-                WaitingForUserInput ->
-                    group []
-                        [ viewLock bgColor
-                        , viewDot dotAngle
-                        , viewPin pinAngle
-                        , viewPendingLocks pendingLocks
-                        ]
-
-                Rotating ->
-                    group []
-                        [ viewLock bgColor
-                        , viewDot dotAngle
-                        , viewPin pinAngle
-                        , viewPendingLocks pendingLocks
-                        ]
-
-                LevelFailed _ ->
-                    group
-                        [ classNames [ cnAnimated, cnHeadShake ]
-                        ]
-                        [ viewLock bgColor
-                        , viewPin pinAngle
-                        , viewPendingLocks pendingLocks
-                        ]
-
-                LevelComplete rec ->
-                    let
-                        ( partIdx, n ) =
-                            animationValue rec.animation model.clock
-
-                        dx =
-                            if partIdx == 2 then
-                                n |> Ease.inBack |> mul -300
-
-                            else
-                                0
-
-                        lockHandleDY =
-                            (if partIdx == 0 then
-                                n
-
-                             else
-                                1
-                            )
-                                |> Ease.inBack
-                                |> mul -50
-                    in
-                    group [ transforms [ translateF2 ( dx, 0 ) ] ]
-                        [ viewLockAnimated { lockHandleDY = lockHandleDY } bgColor
-                        , viewPin pinAngle
-                        , viewPendingLocks pendingLocks
-                        ]
-
-                NextLevel _ ->
-                    group
-                        [ classNames [ cnAnimated, cnSlideInRight, cnFaster ]
-                        ]
-                        [ viewLock bgColor
-                        , viewDot dotAngle
-                        , viewPin pinAngle
-                        , viewPendingLocks pendingLocks
-                        ]
-            ]
-        ]
-
-
 type alias ViewModel =
     { bgColor : String
+    , level : Int
     , pendingLocks : Int
     , pinAngle : Float
     , dotAngle : Float
@@ -551,6 +459,22 @@ type alias ViewModel =
     , dx : Float
     , lockHandleDY : Float
     }
+
+
+view : ViewModel -> Svg Msg
+view vm =
+    basicSvg
+        [ viewBoxC 300 (300 * 1.5)
+        , sMaxHeight "100vh"
+        , bgc vm.bgColor
+        ]
+        [ viewLevelNum vm.level
+        , group [ transforms [ translateF2 ( vm.dx, 0 ) ] ]
+            [ viewLockAnimated { lockHandleDY = vm.lockHandleDY } vm.bgColor
+            , viewPin vm.pinAngle
+            , viewPendingLocks vm.pendingLocks
+            ]
+        ]
 
 
 toViewModel : Model -> ViewModel
@@ -576,6 +500,7 @@ toViewModel model =
         vm : ViewModel
         vm =
             { bgColor = bgColor
+            , level = model.level
             , pendingLocks = pendingLocks
             , pinAngle = pinAngle
             , dotAngle = dotAngle
