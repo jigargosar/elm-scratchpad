@@ -390,10 +390,6 @@ update msg model =
             ( model, Cmd.none )
 
         AnimationEnded name ->
-            let
-                _ =
-                    Debug.log "Debug: " name
-            in
             case model.phase of
                 Animating _ an ->
                     ( case ( an, name ) of
