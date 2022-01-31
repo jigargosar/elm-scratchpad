@@ -170,9 +170,9 @@ type Phase
 
 
 type AnimationName
-    = LevelComplete_Out
+    = LevelCompleteLeave
     | LevelFail
-    | NextLevel_In
+    | NextLevelEnter
 
 
 initLevelFailed : Clock -> Phase
@@ -274,7 +274,7 @@ initNextLevel model =
     { model
         | level = nextLevelNum
         , pd = pd
-        , phase = Animating model.clock NextLevel_In
+        , phase = Animating model.clock NextLevelEnter
         , seed = seed
     }
 
@@ -291,7 +291,7 @@ updateOnUserInput model =
                     if pdPendingLocks pd == 0 then
                         { model
                             | pd = pd
-                            , phase = Animating model.clock LevelComplete_Out
+                            , phase = Animating model.clock LevelCompleteLeave
                         }
 
                     else
@@ -337,13 +337,13 @@ step dt model =
             let
                 duration =
                     case an of
-                        LevelComplete_Out ->
+                        LevelCompleteLeave ->
                             levelCompleteAnimationDuration
 
                         LevelFail ->
                             500 + 500
 
-                        NextLevel_In ->
+                        NextLevelEnter ->
                             nextLevelAnimationDuration
 
                 elapsed =
@@ -351,13 +351,13 @@ step dt model =
             in
             if elapsed >= duration then
                 case an of
-                    LevelComplete_Out ->
+                    LevelCompleteLeave ->
                         initNextLevel model
 
                     LevelFail ->
                         restartCurrentLevel model
 
-                    NextLevel_In ->
+                    NextLevelEnter ->
                         { model | phase = WaitingForUserInput }
 
             else
@@ -481,7 +481,7 @@ toViewModel model =
 
         Animating _ an ->
             case an of
-                LevelComplete_Out ->
+                LevelCompleteLeave ->
                     { vm
                         | lockHandleClasses = [ cnAnimated, cnSlideOutUp, cnFaster ]
                         , dotAngle = Nothing
@@ -492,7 +492,7 @@ toViewModel model =
                 LevelFail ->
                     { vm | classes = [ cnAnimated, cnHeadShake ] }
 
-                NextLevel_In ->
+                NextLevelEnter ->
                     { vm
                         | classes = [ cnAnimated, cnSlideInRight ]
                         , style = "animation-duration: 200ms"
