@@ -523,9 +523,9 @@ toViewModel model =
 
         LevelComplete _ ->
             { vm
-                | lockHandleClasses = [ cnAnimated, cnSlideOutUp, cnSlower ]
+                | lockHandleClasses = [ cnAnimated, cnSlideOutUp, cnSlower, cnFaster ]
                 , dotAngle = Nothing
-                , classes = [ cnAnimated, cnSlideOutLeft, cnDelay1s ]
+                , classes = [ cnAnimated, cnSlideOutLeft, cnFaster, cnDelay1s ]
             }
 
         NextLevel _ ->
