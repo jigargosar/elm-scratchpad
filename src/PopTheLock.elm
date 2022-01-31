@@ -167,9 +167,6 @@ type Phase
     = WaitingForUserInput
     | Rotating
     | Animating Clock AnimationName
-    | LevelFailed { animation : Animation }
-    | LevelComplete { animation : Animation }
-    | NextLevel { animation : Animation }
 
 
 type AnimationName
@@ -180,43 +177,11 @@ type AnimationName
 
 initLevelFailed : Clock -> Phase
 initLevelFailed clock =
-    LevelFailed { animation = startAnimation ( 500, [ 500 ] ) clock }
+    Animating clock LevelFail
 
 
 type alias Clock =
     Float
-
-
-type alias Animation =
-    { durations : NEL Float, startClock : Clock }
-
-
-startAnimation : NEL Float -> Clock -> Animation
-startAnimation durations clock =
-    { durations = durations, startClock = clock }
-
-
-animationIsDone : Animation -> Clock -> Bool
-animationIsDone { startClock, durations } nowClock =
-    nowClock - startClock >= first durations + List.sum (second durations)
-
-
-animationValueHelp : Float -> Int -> Float -> NEL Float -> ( Int, Float )
-animationValueHelp elapsed i start ( dur, ds ) =
-    let
-        end =
-            start + dur
-    in
-    if elapsed < end then
-        ( i, norm start end elapsed )
-
-    else
-        case uncons ds of
-            Nothing ->
-                ( i, 1 )
-
-            Just nDurations ->
-                animationValueHelp elapsed (i + 1) end nDurations
 
 
 randomDotAngleOffset =
@@ -309,10 +274,7 @@ initNextLevel model =
     { model
         | level = nextLevelNum
         , pd = pd
-        , phase =
-            NextLevel
-                { animation = startAnimation ( nextLevelAnimationDuration, [] ) model.clock
-                }
+        , phase = Animating model.clock NextLevel_In
         , seed = seed
     }
 
@@ -329,10 +291,7 @@ updateOnUserInput model =
                     if pdPendingLocks pd == 0 then
                         { model
                             | pd = pd
-                            , phase =
-                                LevelComplete
-                                    { animation = startAnimation ( levelCompleteAnimationDuration, [] ) model.clock
-                                    }
+                            , phase = Animating model.clock LevelComplete_Out
                         }
 
                     else
@@ -350,15 +309,6 @@ updateOnUserInput model =
                     { model | phase = initLevelFailed model.clock }
 
         Animating _ _ ->
-            model
-
-        LevelFailed _ ->
-            model
-
-        LevelComplete _ ->
-            model
-
-        NextLevel _ ->
             model
 
 
@@ -391,7 +341,7 @@ step dt model =
                             levelCompleteAnimationDuration
 
                         LevelFail ->
-                            500
+                            500 + 500
 
                         NextLevel_In ->
                             nextLevelAnimationDuration
@@ -409,27 +359,6 @@ step dt model =
 
                     NextLevel_In ->
                         { model | phase = WaitingForUserInput }
-
-            else
-                model
-
-        LevelFailed rec ->
-            if animationIsDone rec.animation model.clock then
-                restartCurrentLevel model
-
-            else
-                model
-
-        LevelComplete rec ->
-            if animationIsDone rec.animation model.clock then
-                initNextLevel model
-
-            else
-                model
-
-        NextLevel rec ->
-            if animationIsDone rec.animation model.clock then
-                { model | phase = WaitingForUserInput }
 
             else
                 model
@@ -569,23 +498,6 @@ toViewModel model =
                         , style = "animation-duration: 200ms"
                     }
 
-        LevelFailed _ ->
-            { vm | classes = [ cnAnimated, cnHeadShake ] }
-
-        LevelComplete _ ->
-            { vm
-                | lockHandleClasses = [ cnAnimated, cnSlideOutUp, cnFaster ]
-                , dotAngle = Nothing
-                , classes = [ cnAnimated, cnSlideOutLeft ]
-                , style = "animation-delay: 300ms; animation-duration: 500ms"
-            }
-
-        NextLevel _ ->
-            { vm
-                | classes = [ cnAnimated, cnSlideInRight ]
-                , style = "animation-duration: 200ms"
-            }
-
 
 levelCompleteAnimationDuration =
     300 + 500
@@ -616,7 +528,7 @@ getBGColor phase =
     let
         isFail =
             case phase of
-                LevelFailed _ ->
+                Animating _ LevelFail ->
                     True
 
                 _ ->
