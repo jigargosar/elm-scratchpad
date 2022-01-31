@@ -839,12 +839,24 @@ cnSlideOutLeft =
     "animate__slideOutLeft"
 
 
+cnSlideOutUp =
+    "animate__slideOutUp"
+
+
 cnSlideInRight =
     "animate__slideInRight"
 
 
 cnFaster =
     "animate__faster"
+
+
+cnSlow =
+    "animate__slow"
+
+
+cnSlower =
+    "animate__slower"
 
 
 basicStylesNode : Html msg

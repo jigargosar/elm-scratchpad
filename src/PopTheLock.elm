@@ -456,7 +456,7 @@ type alias ViewModel =
     , pinAngle : Float
     , dotAngle : Maybe Float
     , classes : List String
-    , lockHandleDY : Float
+    , lockHandleClasses : List String
     }
 
 
@@ -471,7 +471,7 @@ view vm =
         , group [ transforms [ translateF2 ( 0, 50 ) ] ]
             [ group
                 [ classNames vm.classes ]
-                [ viewLockAnimated { lockHandleDY = vm.lockHandleDY } vm.bgColor
+                [ viewLockAnimated2 vm.lockHandleClasses vm.bgColor
                 , viewPin vm.pinAngle
                 , maybeView viewDot vm.dotAngle
                 , viewPendingLocks vm.pendingLocks
@@ -508,7 +508,7 @@ toViewModel model =
             , pinAngle = pinAngle
             , dotAngle = Just dotAngle
             , classes = []
-            , lockHandleDY = 0
+            , lockHandleClasses = []
             }
     in
     case model.phase of
@@ -521,23 +521,9 @@ toViewModel model =
         LevelFailed _ ->
             { vm | classes = [ cnAnimated, cnHeadShake ] }
 
-        LevelComplete rec ->
-            let
-                ( partIdx, n ) =
-                    animationValue rec.animation model.clock
-
-                lockHandleDY =
-                    (if partIdx == 0 then
-                        n
-
-                     else
-                        1
-                    )
-                        |> Ease.inBack
-                        |> mul -50
-            in
+        LevelComplete _ ->
             { vm
-                | lockHandleDY = lockHandleDY
+                | lockHandleClasses = [ cnAnimated, cnSlideOutUp, cnSlower ]
                 , dotAngle = Nothing
                 , classes = [ cnAnimated, cnSlideOutLeft, cnDelay1s ]
             }
@@ -590,6 +576,25 @@ viewLockAnimated { lockHandleDY } bg =
             ]
         , stroke <| blackA 0.6
         , strokeCapRound
+        ]
+    , circle lockRadius [ stroke bg ]
+    , circle lockRadius [ stroke (blackA 0.9) ]
+    ]
+        |> group [ strokeW lockThickness ]
+
+
+viewLockAnimated2 : List String -> String -> Svg Msg
+viewLockAnimated2 lockHandleClasses bg =
+    [ group [ classNames lockHandleClasses ]
+        [ SubPath.element
+            (lockHandleSubPath lockRadius)
+            [ transforms
+                [ translateF2 ( 0, -lockRadius )
+                , scaleY 1.2
+                ]
+            , stroke <| blackA 0.6
+            , strokeCapRound
+            ]
         ]
     , circle lockRadius [ stroke bg ]
     , circle lockRadius [ stroke (blackA 0.9) ]
