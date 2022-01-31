@@ -445,30 +445,16 @@ view vm =
 toViewModel : Model -> ViewModel
 toViewModel model =
     let
-        bgColor =
-            getBGColor model.phase
-
-        pendingLocks =
-            pdPendingLocks model.pd
-    in
-    let
         pda =
             pdAngles model.pd
 
-        pinAngle =
-            pda.pinAngle
-
-        dotAngle =
-            pda.dotAngle
-    in
-    let
         vm : ViewModel
         vm =
-            { bgColor = bgColor
+            { bgColor = getBGColor model.phase
             , level = model.level
-            , pendingLocks = pendingLocks
-            , pinAngle = pinAngle
-            , dotAngle = Just dotAngle
+            , pendingLocks = pdPendingLocks model.pd
+            , pinAngle = pda.pinAngle
+            , dotAngle = Just pda.dotAngle
             , classes = []
             , style = ""
             , lockHandleClasses = []
