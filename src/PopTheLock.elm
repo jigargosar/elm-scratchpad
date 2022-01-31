@@ -456,7 +456,6 @@ type alias ViewModel =
     , pinAngle : Float
     , dotAngle : Maybe Float
     , classes : List String
-    , dx : Float
     , lockHandleDY : Float
     }
 
@@ -471,9 +470,7 @@ view vm =
         [ viewLevelNum vm.level
         , group [ transforms [ translateF2 ( 0, 50 ) ] ]
             [ group
-                [ classNames vm.classes
-                , transforms [ translateF2 ( vm.dx, 0 ) ]
-                ]
+                [ classNames vm.classes ]
                 [ viewLockAnimated { lockHandleDY = vm.lockHandleDY } vm.bgColor
                 , viewPin vm.pinAngle
                 , maybeView viewDot vm.dotAngle
@@ -511,7 +508,6 @@ toViewModel model =
             , pinAngle = pinAngle
             , dotAngle = Just dotAngle
             , classes = []
-            , dx = 0
             , lockHandleDY = 0
             }
     in
@@ -530,13 +526,6 @@ toViewModel model =
                 ( partIdx, n ) =
                     animationValue rec.animation model.clock
 
-                dx =
-                    if partIdx == 2 then
-                        n |> Ease.inBack |> mul -300
-
-                    else
-                        0
-
                 lockHandleDY =
                     (if partIdx == 0 then
                         n
@@ -547,7 +536,11 @@ toViewModel model =
                         |> Ease.inBack
                         |> mul -50
             in
-            { vm | dx = dx, lockHandleDY = lockHandleDY, dotAngle = Nothing }
+            { vm
+                | lockHandleDY = lockHandleDY
+                , dotAngle = Nothing
+                , classes = [ cnAnimated, cnSlideOutLeft, cnDelay1s ]
+            }
 
         NextLevel _ ->
             { vm | classes = [ cnAnimated, cnSlideInRight, cnFaster ] }

@@ -831,6 +831,10 @@ cnHeadShake =
     "animate__headShake"
 
 
+cnDelay1s =
+    "animate__delay-1s"
+
+
 cnSlideOutLeft =
     "animate__slideOutLeft"
 
