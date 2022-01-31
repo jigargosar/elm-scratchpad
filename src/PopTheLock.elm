@@ -458,6 +458,16 @@ view model =
         pendingLocks =
             pdPendingLocks model.pd
     in
+    let
+        pda =
+            pdAngles model.pd
+
+        pinAngle =
+            pda.pinAngle
+
+        dotAngle =
+            pda.dotAngle
+    in
     basicSvg
         [ viewBoxC 300 (300 * 1.5)
         , sMaxHeight "100vh"
@@ -467,16 +477,6 @@ view model =
         , group [ transforms [ translateF2 ( 0, 50 ) ] ]
             [ case model.phase of
                 WaitingForUserInput ->
-                    let
-                        pda =
-                            pdAngles model.pd
-
-                        pinAngle =
-                            pda.pinAngle
-
-                        dotAngle =
-                            pda.dotAngle
-                    in
                     group []
                         [ viewLock bgColor
                         , viewDot dotAngle
@@ -485,16 +485,6 @@ view model =
                         ]
 
                 Rotating ->
-                    let
-                        pda =
-                            pdAngles model.pd
-
-                        pinAngle =
-                            pda.pinAngle
-
-                        dotAngle =
-                            pda.dotAngle
-                    in
                     group []
                         [ viewLock bgColor
                         , viewDot dotAngle
@@ -503,10 +493,6 @@ view model =
                         ]
 
                 LevelFailed _ ->
-                    let
-                        pinAngle =
-                            pdAngles model.pd |> .pinAngle
-                    in
                     group
                         [ classNames [ cnAnimated, cnHeadShake ]
                         ]
@@ -517,9 +503,6 @@ view model =
 
                 LevelComplete rec ->
                     let
-                        pinAngle =
-                            pdAngles model.pd |> .pinAngle
-
                         ( partIdx, n ) =
                             animationValue rec.animation model.clock
 
@@ -547,16 +530,6 @@ view model =
                         ]
 
                 NextLevel _ ->
-                    let
-                        pda =
-                            pdAngles model.pd
-
-                        pinAngle =
-                            pda.pinAngle
-
-                        dotAngle =
-                            pda.dotAngle
-                    in
                     group
                         [ classNames [ cnAnimated, cnSlideInRight, cnFaster ]
                         ]
