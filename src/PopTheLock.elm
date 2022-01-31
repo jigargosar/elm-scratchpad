@@ -1,9 +1,11 @@
 module PopTheLock exposing (main)
 
 import Curve
+import Json.Decode as JD
 import Random
 import SubPath exposing (SubPath)
 import Svg.Attributes as SA
+import Svg.Events as SE
 import Utils exposing (..)
 
 
@@ -368,6 +370,7 @@ step dt model =
 
 type Msg
     = NOP
+    | AnimationEnded String
     | OnClampedDelta Float
     | OnKeyDown KeyEvent
 
@@ -385,6 +388,31 @@ update msg model =
     case msg of
         NOP ->
             ( model, Cmd.none )
+
+        AnimationEnded name ->
+            let
+                _ =
+                    Debug.log "Debug: " name
+            in
+            case model.phase of
+                Animating _ an ->
+                    ( case ( an, name ) of
+                        ( LevelCompleteLeave, "slideOutLeft" ) ->
+                            initNextLevel model
+
+                        ( LevelFail, "headShake" ) ->
+                            restartCurrentLevel model
+
+                        ( NextLevelEnter, "slideInRight" ) ->
+                            { model | phase = WaitingForUserInput }
+
+                        _ ->
+                            model
+                    , Cmd.none
+                    )
+
+                _ ->
+                    ( model, Cmd.none )
 
         OnClampedDelta dt ->
             ( step dt { model | clock = model.clock + dt }, Cmd.none )
@@ -432,7 +460,10 @@ view vm =
         [ viewLevelNum vm.level
         , group [ transforms [ translateF2 ( 0, 50 ) ] ]
             [ group
-                [ classNames vm.classes, SA.style vm.style ]
+                [ classNames vm.classes
+                , SA.style vm.style
+                , SE.on "animationend" (JD.map AnimationEnded (JD.field "animationName" JD.string))
+                ]
                 [ viewLock vm.lockHandleClasses vm.bgColor
                 , viewPin vm.pinAngle
                 , maybeView viewDot vm.dotAngle
