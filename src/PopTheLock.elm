@@ -177,19 +177,6 @@ type AnimationName
     | NextLevelEnter
 
 
-animationDuration : AnimationName -> number
-animationDuration an =
-    case an of
-        LevelCompleteLeave ->
-            levelCompleteDuration
-
-        LevelFail ->
-            levelFailDuration
-
-        NextLevelEnter ->
-            nextLevelDuration
-
-
 initLevelFailed : Clock -> Phase
 initLevelFailed clock =
     Animating clock LevelFail
@@ -348,24 +335,8 @@ step dt model =
             in
             { model | phase = phase, pd = pd }
 
-        Animating start an ->
-            let
-                elapsed =
-                    model.clock - start
-            in
-            if elapsed >= animationDuration an then
-                case an of
-                    LevelCompleteLeave ->
-                        initNextLevel model
-
-                    LevelFail ->
-                        restartCurrentLevel model
-
-                    NextLevelEnter ->
-                        { model | phase = WaitingForUserInput }
-
-            else
-                model
+        Animating _ _ ->
+            model
 
 
 type Msg
@@ -461,8 +432,8 @@ view vm =
                 , SE.on "animationend" (JD.map AnimationEnded (JD.field "animationName" JD.string))
                 ]
                 [ viewLock vm.lockHandleClasses vm.bgColor
-                , viewPin vm.pinAngle
                 , maybeView viewDot vm.dotAngle
+                , viewPin vm.pinAngle
                 , viewPendingLocks vm.pendingLocks
                 ]
             ]
@@ -515,18 +486,6 @@ toViewModel model =
                         | classes = [ cnAnimated, cnSlideInRight ]
                         , style = "animation-duration: 200ms"
                     }
-
-
-levelCompleteDuration =
-    300 + 500
-
-
-levelFailDuration =
-    500 + 500
-
-
-nextLevelDuration =
-    200
 
 
 lockRadius =
