@@ -315,7 +315,7 @@ initNextLevel model =
     { model
         | level = nextLevelNum
         , pd = pd
-        , phase = NextLevel { animation = startAnimation ( 500, [] ) model.clock }
+        , phase = NextLevel { animation = startAnimation ( nextLevelAnimationDuration, [] ) model.clock }
         , seed = seed
     }
 
@@ -528,15 +528,22 @@ toViewModel model =
                 | lockHandleClasses = [ cnAnimated, cnSlideOutUp, cnFaster ]
                 , dotAngle = Nothing
                 , classes = [ cnAnimated, cnSlideOutLeft ]
-                , style = "animation-delay: 500ms; animation-duration: 500ms"
+                , style = "animation-delay: 300ms; animation-duration: 500ms"
             }
 
         NextLevel _ ->
-            { vm | classes = [ cnAnimated, cnSlideInRight, cnFaster ] }
+            { vm
+                | classes = [ cnAnimated, cnSlideInRight ]
+                , style = "animation-duration: 200ms"
+            }
 
 
 levelCompleteAnimationDuration =
-    500 + 500
+    300 + 500
+
+
+nextLevelAnimationDuration =
+    200
 
 
 lockRadius =
