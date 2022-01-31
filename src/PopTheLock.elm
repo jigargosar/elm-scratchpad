@@ -418,7 +418,7 @@ type alias ViewModel =
     , dotAngle : Maybe Float
     , classes : List String
     , style : String
-    , lockHandleClasses : List String
+    , lockHandleClasses : ( List String, String )
     }
 
 
@@ -457,7 +457,7 @@ toViewModel model =
             , dotAngle = Just pda.dotAngle
             , classes = []
             , style = ""
-            , lockHandleClasses = []
+            , lockHandleClasses = ( [], "" )
             }
     in
     case model.phase of
@@ -471,7 +471,10 @@ toViewModel model =
             case an of
                 LevelCompleteLeave ->
                     { vm
-                        | lockHandleClasses = [ cnAnimated, cnSlideOutUp, cnFaster ]
+                        | lockHandleClasses =
+                            ( []
+                            , "animation:slideOutUp ; animation-duration: 500ms"
+                            )
                         , dotAngle = Nothing
                         , classes = [ cnAnimated, cnSlideOutLeft ]
                         , style = "animation-delay: 300ms; animation-duration: 500ms"
@@ -533,9 +536,9 @@ getBGColor phase =
         wBlue
 
 
-viewLock : List String -> String -> Svg Msg
-viewLock lockHandleClasses bg =
-    [ group [ classNames lockHandleClasses ]
+viewLock : ( List String, String ) -> String -> Svg Msg
+viewLock ( lockHandleClasses, lockHandleStyle ) bg =
+    [ group [ classNames lockHandleClasses, SA.style lockHandleStyle ]
         [ SubPath.element
             (lockHandleSubPath lockRadius)
             [ transforms
