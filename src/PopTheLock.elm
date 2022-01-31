@@ -405,13 +405,15 @@ viewDoc model =
                     transform: translate(0,0);
                 }
 
-                25%, 75% {
+                25% {
                     transform: translate(0, 2%);
                 }
 
-                100% {
-                    transform: translate(0, -15%);
+                50%, 100% {
+                    transform: translate(0, -10%);
                 }
+
+
             }
         """
         , toViewModel model |> view
@@ -486,11 +488,11 @@ toViewModel model =
                     { vm
                         | lockHandleClasses =
                             ( []
-                            , "animation: popLockHandle; animation-fill-mode: both; animation-duration: 500ms"
+                            , "animation: popLockHandle; animation-fill-mode: both; animation-duration: 1000ms"
                             )
                         , dotAngle = Nothing
                         , classes = [ cnAnimated, cnSlideOutLeft ]
-                        , style = "animation-delay: 500ms; animation-duration: 500ms"
+                        , style = "animation-delay: 1000ms; animation-duration: 500ms"
                     }
 
                 LevelFail ->
