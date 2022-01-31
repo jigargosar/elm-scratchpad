@@ -470,7 +470,10 @@ view vm =
         ]
         [ viewLevelNum vm.level
         , group [ transforms [ translateF2 ( 0, 50 ) ] ]
-            [ group [ classNames vm.classes, transforms [ translateF2 ( vm.dx, 0 ) ] ]
+            [ group
+                [ classNames vm.classes
+                , transforms [ translateF2 ( vm.dx, 0 ) ]
+                ]
                 [ viewLockAnimated { lockHandleDY = vm.lockHandleDY } vm.bgColor
                 , viewPin vm.pinAngle
                 , maybeView viewDot vm.dotAngle
