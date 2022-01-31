@@ -542,6 +542,86 @@ view model =
         ]
 
 
+type alias ViewModel =
+    { bgColor : String
+    , pendingLocks : Int
+    , pinAngle : Float
+    , dotAngle : Float
+    , classes : List String
+    , dx : Float
+    , lockHandleDY : Float
+    }
+
+
+toViewModel : Model -> ViewModel
+toViewModel model =
+    let
+        bgColor =
+            getBGColor model.phase
+
+        pendingLocks =
+            pdPendingLocks model.pd
+    in
+    let
+        pda =
+            pdAngles model.pd
+
+        pinAngle =
+            pda.pinAngle
+
+        dotAngle =
+            pda.dotAngle
+    in
+    let
+        vm : ViewModel
+        vm =
+            { bgColor = bgColor
+            , pendingLocks = pendingLocks
+            , pinAngle = pinAngle
+            , dotAngle = dotAngle
+            , classes = []
+            , dx = 0
+            , lockHandleDY = 0
+            }
+    in
+    case model.phase of
+        WaitingForUserInput ->
+            vm
+
+        Rotating ->
+            vm
+
+        LevelFailed _ ->
+            { vm | classes = [ cnAnimated, cnHeadShake ] }
+
+        LevelComplete rec ->
+            let
+                ( partIdx, n ) =
+                    animationValue rec.animation model.clock
+
+                dx =
+                    if partIdx == 2 then
+                        n |> Ease.inBack |> mul -300
+
+                    else
+                        0
+
+                lockHandleDY =
+                    (if partIdx == 0 then
+                        n
+
+                     else
+                        1
+                    )
+                        |> Ease.inBack
+                        |> mul -50
+            in
+            { vm | dx = dx, lockHandleDY = lockHandleDY }
+
+        NextLevel _ ->
+            { vm | classes = [ cnAnimated, cnSlideInRight, cnFaster ] }
+
+
 lockRadius =
     90
 
