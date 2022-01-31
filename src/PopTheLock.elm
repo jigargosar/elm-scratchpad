@@ -527,8 +527,10 @@ toViewModel model =
             { vm
                 | lockHandleClasses = [ cnAnimated, cnSlideOutUp, cnFaster ]
                 , dotAngle = Nothing
-                , classes = [ cnAnimated, cnSlideOutLeft, cnFaster, cnDelay1s ]
-                , style = "--animate-delay: 0.5s;"
+                , classes = [ cnAnimated, cnSlideOutLeft, cnFaster ]
+
+                --, style = "--animate-delay: 0.5s;"
+                , style = "animation-delay: 500ms"
             }
 
         NextLevel _ ->
