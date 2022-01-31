@@ -399,6 +399,7 @@ viewDoc model =
     Document "App Title"
         [ basicStylesNode
         , animateCssNode
+        , styleNode ""
         , toViewModel model |> view
 
         --, div [ positionFixed, bgc <| blackA 0.3 ] [ text <| Debug.toString model.phase ]

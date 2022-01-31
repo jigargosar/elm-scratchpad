@@ -209,7 +209,7 @@ view : Model -> Document Msg
 view model =
     Document "Kanban"
         [ basicStylesNode
-        , stylesNode """
+        , styleNode """
             input{
                 font-size: inherit;
                 padding: 0.5rem;
@@ -249,7 +249,7 @@ view model =
                     noView
 
                 Just _ ->
-                    stylesNode """
+                    styleNode """
                     * {
                       cursor: grabbing!important;
                       user-select:none!important;

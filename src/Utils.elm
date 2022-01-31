@@ -796,8 +796,8 @@ withTitle title body =
     Document title body
 
 
-stylesNode : String -> Html msg
-stylesNode string =
+styleNode : String -> Html msg
+styleNode string =
     Html.node "style" [] [ Html.text string ]
 
 
@@ -818,7 +818,7 @@ bgCurrentColor =
 
 
 animateCssNode =
-    stylesNode """
+    styleNode """
 @import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css');
 """
 
@@ -861,7 +861,7 @@ cnSlower =
 
 basicStylesNode : Html msg
 basicStylesNode =
-    stylesNode """
+    styleNode """
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 *, *::before, *::after {

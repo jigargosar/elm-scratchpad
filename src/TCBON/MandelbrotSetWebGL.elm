@@ -432,7 +432,7 @@ viewEl model =
                     mandel_
     in
     div [ fontSize "30px" ]
-        [ stylesNode "html,body{height:100%; background-color:#444; overflow:hidden;}"
+        [ styleNode "html,body{height:100%; background-color:#444; overflow:hidden;}"
         , Html.Lazy.lazy4 viewMandelGL model.canvas mandel model.maxT model.colorPow
         , div
             [ positionAbsolute

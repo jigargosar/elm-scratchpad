@@ -142,7 +142,7 @@ updateTiles input model =
 view : Model -> Html Msg
 view { tiles, forceOverlay } =
     div [ bgcTransparent, bgc gray ]
-        [ stylesNode """
+        [ styleNode """
                 * {box-sizing:border-box;}
                 html,body{display:grid;min-height:100%;background-color:#ddd;}
             """
