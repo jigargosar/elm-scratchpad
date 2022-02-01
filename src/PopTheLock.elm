@@ -80,15 +80,12 @@ pdAngles pd =
         elapsed =
             pd.pinRotatedFor
 
-        pinStartingAngle =
-            pd.pinStartingAngle
-
         pinAngle =
-            pinStartingAngle
+            pd.pinStartingAngle
                 + angleInDirection pd.pinAngularDirection (pinAngularSpeed * elapsed)
 
         dotAngle =
-            pinStartingAngle
+            pd.pinStartingAngle
                 + angleInDirection pd.pinAngularDirection pd.dotAngleOffset
     in
     { pinAngle = pinAngle, dotAngle = dotAngle }
@@ -118,19 +115,9 @@ pdRotate dt pd =
     ( not <| pdHasFailed npd, npd )
 
 
-pdHasFailed1 : PD a -> Bool
-pdHasFailed1 pd =
-    pinAngularSpeed * pd.pinRotatedFor > pd.dotAngleOffset + errorMarginAngle
-
-
 pdHasFailed : PD a -> Bool
-pdHasFailed =
-    pdAngles >> pdaHasFailed
-
-
-pdaHasFailed : PDAngles -> Bool
-pdaHasFailed { pinAngle, dotAngle } =
-    (abs pinAngle - abs dotAngle) > errorMarginAngle
+pdHasFailed pd =
+    pinAngularSpeed * pd.pinRotatedFor > pd.dotAngleOffset + errorMarginAngle
 
 
 type Phase
