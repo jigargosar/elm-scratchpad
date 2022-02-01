@@ -118,14 +118,14 @@ pdRotate dt pd =
     ( not <| pdHasFailed npd, npd )
 
 
-pdHasFailed : PD a -> Bool
-pdHasFailed pd =
+pdHasFailed1 : PD a -> Bool
+pdHasFailed1 pd =
     pinAngularSpeed * pd.pinRotatedFor > pd.dotAngleOffset + errorMarginAngle
 
 
-pdHasFailed2 : PD a -> Bool
-pdHasFailed2 =
-    pdAngles >> Debug.log "Debug: " >> pdaHasFailed
+pdHasFailed : PD a -> Bool
+pdHasFailed =
+    pdAngles >> pdaHasFailed
 
 
 pdaHasFailed : PDAngles -> Bool
