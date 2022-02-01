@@ -60,6 +60,14 @@ type alias Model =
         }
 
 
+type Phase
+    = WaitingForUserInput
+    | Rotating
+    | LevelCompleted
+    | LevelFailed
+    | NextLevelEntered
+
+
 type alias PD a =
     { a
         | pinRotatedFor : Float
@@ -91,14 +99,7 @@ hasPinGoneBeyondDot pd =
     pinAngularSpeed * pd.pinRotatedFor > pd.dotAngleOffset + errorMarginAngle
 
 
-type Phase
-    = WaitingForUserInput
-    | Rotating
-    | LevelCompleted
-    | LevelFailed
-    | NextLevelEntered
-
-
+randomDotAngleOffset : Generator Float
 randomDotAngleOffset =
     Random.float minDotAngleOffset maxDotAngleOffset
 
