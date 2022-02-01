@@ -464,7 +464,7 @@ toBGColor level phase =
     else
         --wBlue
         --FlatColors.TurkishPalette.lightPurpleHex
-        listGetAt (modBy (List.length bgs) (level // 1)) bgs
+        listGetAt (modBy (List.length bgs) (level // 10)) bgs
             |> Maybe.withDefault FlatColors.TurkishPalette.lightPurpleHex
 
 
