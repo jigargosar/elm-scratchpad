@@ -54,6 +54,7 @@ degreesPerSecond d =
 type alias Model =
     PD
         { level : Int
+        , pendingLocks : Int
         , phase : Phase
         , clock : Clock
         , seed : Seed
@@ -70,7 +71,6 @@ type alias PD a =
         , pinStartingAngle : Float
         , pinAngularDirection : AngularDirection
         , dotAngleOffset : Float
-        , pendingLocks : Int
     }
 
 
