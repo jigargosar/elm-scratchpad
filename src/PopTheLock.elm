@@ -177,7 +177,12 @@ init () =
         initialSeed =
             Random.initialSeed 1
     in
-    ( initWithSeed initialSeed
+    ( initHelp
+        { level = 1
+        , clock = 0
+        , initialSeed = initialSeed
+        , phase = WaitingForUserInput
+        }
         |> updateOnUserInput
         |> update (OnClampedDelta (600 + 0))
         |> first
@@ -208,11 +213,6 @@ initHelp { level, clock, initialSeed, phase } =
     , clock = clock
     , seed = seed
     }
-
-
-initWithSeed : Seed -> Model
-initWithSeed initialSeed =
-    initHelp { level = 1, clock = 0, initialSeed = initialSeed, phase = WaitingForUserInput }
 
 
 restartCurrentLevel : Model -> Model
