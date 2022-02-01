@@ -1,6 +1,7 @@
 module PopTheLock exposing (main)
 
 import Curve
+import FlatColors.TurkishPalette
 import Json.Decode as JD
 import Random
 import SubPath exposing (SubPath)
@@ -446,10 +447,12 @@ toBGColor phase =
                     False
     in
     if isFail then
-        "tomato"
+        --"tomato"
+        FlatColors.TurkishPalette.lightRedHex
 
     else
-        wBlue
+        --wBlue
+        FlatColors.TurkishPalette.lightPurpleHex
 
 
 viewLock : ( List String, String ) -> String -> Svg Msg
