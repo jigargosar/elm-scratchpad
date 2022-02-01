@@ -52,57 +52,29 @@ degreesPerSecond d =
 
 
 type alias Model =
-    { level : Int
-    , pd : PD
-    , phase : Phase
-    , clock : Clock
-    , seed : Seed
-    }
+    PD
+        { level : Int
+        , phase : Phase
+        , clock : Clock
+        , seed : Seed
+        }
 
 
 type alias PDAngles =
     { pinAngle : Float, dotAngle : Float }
 
 
-type alias PD =
-    { pinRotatedFor : Float
-    , pinStartingAngle : Float
-    , pinAngularDirection : AngularDirection
-    , dotAngleOffset : Float
-    , pendingLocks : Int
+type alias PD a =
+    { a
+        | pinRotatedFor : Float
+        , pinStartingAngle : Float
+        , pinAngularDirection : AngularDirection
+        , dotAngleOffset : Float
+        , pendingLocks : Int
     }
 
 
-initPD : Int -> Generator PD
-initPD pendingLocks =
-    Random.map2
-        (\angularDirection dotAngleOffset ->
-            { pinRotatedFor = 0
-            , pinStartingAngle = initialPinAngle
-            , pinAngularDirection = angularDirection
-            , dotAngleOffset = dotAngleOffset
-            , pendingLocks = pendingLocks
-            }
-        )
-        randomAngularDirection
-        randomDotAngleOffset
-
-
-nextPD : PD -> Generator PD
-nextPD pd =
-    Random.map
-        (\dotAngleOffset ->
-            { pinRotatedFor = 0
-            , pinStartingAngle = pdAngles pd |> .pinAngle
-            , pinAngularDirection = oppositeAngularDirection pd.pinAngularDirection
-            , dotAngleOffset = dotAngleOffset
-            , pendingLocks = pd.pendingLocks - 1
-            }
-        )
-        randomDotAngleOffset
-
-
-pdAngles : PD -> PDAngles
+pdAngles : PD a -> PDAngles
 pdAngles pd =
     let
         elapsed =
@@ -119,12 +91,12 @@ pdAngles pd =
     { pinAngle = pinAngle, dotAngle = dotAngle }
 
 
-pdPendingLocks : PD -> Int
+pdPendingLocks : PD a -> Int
 pdPendingLocks pd =
     pd.pendingLocks
 
 
-pdUpdateOnClick : PD -> Maybe PD
+pdUpdateOnClick : PD a -> Maybe (PD a)
 pdUpdateOnClick pd =
     if pdIsPinOverDot pd then
         Just { pd | pendingLocks = pd.pendingLocks - 1 }
@@ -133,7 +105,7 @@ pdUpdateOnClick pd =
         Nothing
 
 
-pdIsPinOverDot : PD -> Bool
+pdIsPinOverDot : PD a -> Bool
 pdIsPinOverDot pd =
     let
         elapsed =
@@ -145,7 +117,7 @@ pdIsPinOverDot pd =
     not failed
 
 
-pdRotate : Float -> PD -> ( Bool, PD )
+pdRotate : Float -> PD a -> ( Bool, PD a )
 pdRotate dt pd =
     let
         elapsed =
@@ -157,7 +129,7 @@ pdRotate dt pd =
     ( not <| pdHasFailed npd, npd )
 
 
-pdHasFailed : PD -> Bool
+pdHasFailed : PD a -> Bool
 pdHasFailed pd =
     pinAngularSpeed * pd.pinRotatedFor > pd.dotAngleOffset + errorMarginAngle
 
@@ -217,11 +189,11 @@ init : () -> ( Model, Cmd Msg )
 init () =
     let
         initialSeed =
-            Random.initialSeed 2
+            Random.initialSeed 0
     in
     ( initWithSeed initialSeed
         |> updateOnUserInput
-        |> update (OnClampedDelta (2200 + 0))
+        |> update (OnClampedDelta (600 + 0))
         |> first
         |> updateOnUserInput
         |> Debug.log "Debug: "
@@ -229,44 +201,47 @@ init () =
     )
 
 
-initWithSeed : Seed -> Model
-initWithSeed initialSeed =
+initHelp : { level : Int, clock : Clock, initialSeed : Seed, phase : Phase } -> Model
+initHelp { level, clock, initialSeed, phase } =
     let
-        ( pd, seed ) =
-            Random.step (initPD 1) initialSeed
+        ( ( angularDirection, dotAngleOffset ), seed ) =
+            Random.step
+                (Random.pair
+                    randomAngularDirection
+                    randomDotAngleOffset
+                )
+                initialSeed
     in
-    { level = 1
-    , pd = pd
-    , phase = WaitingForUserInput
-    , clock = 0
+    { level = level
+    , pinRotatedFor = 0
+    , pinStartingAngle = initialPinAngle
+    , pinAngularDirection = angularDirection
+    , dotAngleOffset = dotAngleOffset
+    , pendingLocks = level
+    , phase = phase
+    , clock = clock
     , seed = seed
     }
 
 
+initWithSeed : Seed -> Model
+initWithSeed initialSeed =
+    initHelp { level = 1, clock = 0, initialSeed = initialSeed, phase = WaitingForUserInput }
+
+
 restartCurrentLevel : Model -> Model
 restartCurrentLevel model =
-    let
-        ( pd, seed ) =
-            Random.step (initPD model.level) model.seed
-    in
-    { model | phase = WaitingForUserInput, pd = pd, seed = seed }
+    initHelp { level = model.level, clock = model.clock, initialSeed = model.seed, phase = WaitingForUserInput }
 
 
 initNextLevel : Model -> Model
 initNextLevel model =
-    let
-        nextLevelNum =
-            model.level + 1
+    initHelp { level = model.level + 1, clock = model.clock, initialSeed = model.seed, phase = NextLevelEntered }
 
-        ( pd, seed ) =
-            Random.step (initPD nextLevelNum) model.seed
-    in
-    { model
-        | level = nextLevelNum
-        , pd = pd
-        , phase = NextLevelEntered
-        , seed = seed
-    }
+
+updateRotatingSuccess : Model -> Model
+updateRotatingSuccess model =
+    Debug.todo "todo"
 
 
 updateOnUserInput : Model -> Model
@@ -276,27 +251,28 @@ updateOnUserInput model =
             { model | phase = Rotating }
 
         Rotating ->
-            case pdUpdateOnClick model.pd of
-                Just pd ->
-                    if pdPendingLocks pd == 0 then
-                        { model
-                            | pd = pd
-                            , phase = LevelCompleted
-                        }
+            if pdIsPinOverDot model then
+                if model.pendingLocks == 1 then
+                    { model | pendingLocks = 0, phase = LevelCompleted }
 
-                    else
-                        let
-                            ( npd, seed ) =
-                                Random.step (nextPD model.pd) model.seed
-                        in
-                        { model
-                            | seed = seed
-                            , pd = npd
-                            , phase = Rotating
-                        }
+                else
+                    let
+                        ( dotAngleOffset, seed ) =
+                            Random.step randomDotAngleOffset model.seed
+                    in
+                    { level = model.level
+                    , phase = Rotating
+                    , clock = model.clock
+                    , seed = seed
+                    , pinRotatedFor = 0
+                    , pinStartingAngle = pdAngles model |> .pinAngle
+                    , pinAngularDirection = oppositeAngularDirection model.pinAngularDirection
+                    , dotAngleOffset = dotAngleOffset
+                    , pendingLocks = model.pendingLocks - 1
+                    }
 
-                Nothing ->
-                    { model | phase = LevelFailed }
+            else
+                { model | phase = LevelFailed }
 
         LevelCompleted ->
             model
@@ -317,7 +293,7 @@ step dt model =
         Rotating ->
             let
                 ( success, pd ) =
-                    pdRotate dt model.pd
+                    pdRotate dt model
 
                 phase =
                     case success of
@@ -327,7 +303,7 @@ step dt model =
                         False ->
                             LevelFailed
             in
-            { model | phase = phase, pd = pd }
+            { pd | phase = phase }
 
         LevelCompleted ->
             model
@@ -456,13 +432,13 @@ toViewModel : Model -> ViewModel
 toViewModel model =
     let
         pda =
-            pdAngles model.pd
+            pdAngles model
 
         vm : ViewModel
         vm =
             { bgColor = getBGColor model.phase
             , level = model.level
-            , pendingLocks = pdPendingLocks model.pd
+            , pendingLocks = pdPendingLocks model
             , pinAngle = pda.pinAngle
             , dotAngle = Just pda.dotAngle
             , classes = []
