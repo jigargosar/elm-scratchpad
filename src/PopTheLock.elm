@@ -323,20 +323,20 @@ viewDoc model =
 customStylesNode : Html msg
 customStylesNode =
     styleNode """
-            @keyframes popLockHandle {
-                0% {
-                    transform: translate(0,0);
-                }
+    @keyframes popLockHandle {
+        0% {
+            transform: translate(0,0);
+        }
 
-                25% {
-                    transform: translate(0, 2%);
-                }
+        25% {
+            transform: translate(0, 2%);
+        }
 
-                50%, 100% {
-                    transform: translate(0, -10%);
-                }
-            }
-        """
+        50%, 100% {
+            transform: translate(0, -10%);
+        }
+    }
+"""
 
 
 type alias ViewModel =
