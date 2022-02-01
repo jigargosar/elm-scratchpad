@@ -95,8 +95,8 @@ pdIsPinOverDot pd =
     abs (pinAngularSpeed * pd.pinRotatedFor - pd.dotAngleOffset) <= errorMarginAngle
 
 
-pdHasFailed : PD a -> Bool
-pdHasFailed pd =
+hasPinGoneBeyondDot : PD a -> Bool
+hasPinGoneBeyondDot pd =
     pinAngularSpeed * pd.pinRotatedFor > pd.dotAngleOffset + errorMarginAngle
 
 
@@ -255,7 +255,7 @@ step dt model =
         Rotating ->
             { model | pinRotatedFor = model.pinRotatedFor + dt }
                 |> (\m ->
-                        if pdHasFailed m then
+                        if hasPinGoneBeyondDot m then
                             { m | phase = LevelFailed }
 
                         else
