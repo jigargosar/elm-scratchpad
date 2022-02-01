@@ -92,14 +92,7 @@ pdAngles pd =
 
 pdIsPinOverDot : PD a -> Bool
 pdIsPinOverDot pd =
-    let
-        elapsed =
-            pd.pinRotatedFor
-
-        failed =
-            abs (pinAngularSpeed * elapsed - pd.dotAngleOffset) > errorMarginAngle
-    in
-    not failed
+    abs (pinAngularSpeed * pd.pinRotatedFor - pd.dotAngleOffset) <= errorMarginAngle
 
 
 pdRotate : Float -> PD a -> ( Bool, PD a )
