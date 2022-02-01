@@ -60,10 +60,6 @@ type alias Model =
         }
 
 
-type alias PDAngles =
-    { pinAngle : Float, dotAngle : Float }
-
-
 type alias PD a =
     { a
         | pinRotatedFor : Float
