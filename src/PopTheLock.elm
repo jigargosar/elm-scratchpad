@@ -56,7 +56,6 @@ type alias Model =
         { level : Int
         , pendingLocks : Int
         , phase : Phase
-        , clock : Clock
         , seed : Seed
         }
 
@@ -128,10 +127,6 @@ type Phase
     | NextLevelEntered
 
 
-type alias Clock =
-    Float
-
-
 randomDotAngleOffset =
     Random.float minDotAngleOffset maxDotAngleOffset
 
@@ -179,7 +174,6 @@ init () =
     in
     ( initHelp
         { level = 1
-        , clock = 0
         , initialSeed = initialSeed
         , phase = WaitingForUserInput
         }
@@ -192,8 +186,8 @@ init () =
     )
 
 
-initHelp : { level : Int, clock : Clock, initialSeed : Seed, phase : Phase } -> Model
-initHelp { level, clock, initialSeed, phase } =
+initHelp : { level : Int, initialSeed : Seed, phase : Phase } -> Model
+initHelp { level, initialSeed, phase } =
     let
         ( ( angularDirection, dotAngleOffset ), seed ) =
             Random.step
@@ -210,7 +204,6 @@ initHelp { level, clock, initialSeed, phase } =
     , dotAngleOffset = dotAngleOffset
     , pendingLocks = level
     , phase = phase
-    , clock = clock
     , seed = seed
     }
 
@@ -219,7 +212,6 @@ restartCurrentLevel : Model -> Model
 restartCurrentLevel model =
     initHelp
         { level = model.level
-        , clock = model.clock
         , initialSeed = model.seed
         , phase = WaitingForUserInput
         }
@@ -229,7 +221,6 @@ initNextLevel : Model -> Model
 initNextLevel model =
     initHelp
         { level = model.level + 1
-        , clock = model.clock
         , initialSeed = model.seed
         , phase = NextLevelEntered
         }
@@ -253,7 +244,6 @@ updateOnUserInput model =
                     in
                     { level = model.level
                     , phase = Rotating
-                    , clock = model.clock
                     , seed = seed
                     , pinRotatedFor = 0
                     , pinStartingAngle = pdAngles model |> .pinAngle
@@ -344,7 +334,7 @@ update msg model =
             )
 
         OnClampedDelta dt ->
-            ( step dt { model | clock = model.clock + dt }, Cmd.none )
+            ( step dt model, Cmd.none )
 
         OnKeyDown keyEvent ->
             ( if keyEvent.key == " " && not keyEvent.repeat then
