@@ -831,10 +831,6 @@ cnHeadShake =
     "animate__headShake"
 
 
-cnDelay1s =
-    "animate__delay-1s"
-
-
 cnSlideOutLeft =
     "animate__slideOutLeft"
 
@@ -857,6 +853,10 @@ cnSlow =
 
 cnSlower =
     "animate__slower"
+
+
+cnDelay1s =
+    "animate__delay-1s"
 
 
 basicStylesNode : Html msg
