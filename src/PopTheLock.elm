@@ -168,7 +168,7 @@ pdHasFailed (PD rec) =
 type Phase
     = WaitingForUserInput
     | Rotating
-    | Animating Clock AnimationName
+    | Animating AnimationName
 
 
 type AnimationName
@@ -177,9 +177,9 @@ type AnimationName
     | NextLevelEnter
 
 
-initLevelFailed : Clock -> Phase
-initLevelFailed clock =
-    Animating clock LevelFail
+initLevelFailed : Phase
+initLevelFailed =
+    Animating LevelFail
 
 
 type alias Clock =
@@ -276,7 +276,7 @@ initNextLevel model =
     { model
         | level = nextLevelNum
         , pd = pd
-        , phase = Animating model.clock NextLevelEnter
+        , phase = Animating NextLevelEnter
         , seed = seed
     }
 
@@ -293,7 +293,7 @@ updateOnUserInput model =
                     if pdPendingLocks pd == 0 then
                         { model
                             | pd = pd
-                            , phase = Animating model.clock LevelCompleteLeave
+                            , phase = Animating LevelCompleteLeave
                         }
 
                     else
@@ -308,9 +308,9 @@ updateOnUserInput model =
                         }
 
                 Nothing ->
-                    { model | phase = initLevelFailed model.clock }
+                    { model | phase = initLevelFailed }
 
-        Animating _ _ ->
+        Animating _ ->
             model
 
 
@@ -331,11 +331,11 @@ step dt model =
                             Rotating
 
                         False ->
-                            initLevelFailed model.clock
+                            initLevelFailed
             in
             { model | phase = phase, pd = pd }
 
-        Animating _ _ ->
+        Animating _ ->
             model
 
 
@@ -362,7 +362,7 @@ update msg model =
 
         AnimationEnded name ->
             case model.phase of
-                Animating _ an ->
+                Animating an ->
                     ( case ( an, name ) of
                         ( LevelCompleteLeave, "slideOutLeft" ) ->
                             initNextLevel model
@@ -482,7 +482,7 @@ toViewModel model =
         Rotating ->
             vm
 
-        Animating _ an ->
+        Animating an ->
             case an of
                 LevelCompleteLeave ->
                     { vm
@@ -526,7 +526,7 @@ getBGColor phase =
     let
         isFail =
             case phase of
-                Animating _ LevelFail ->
+                Animating LevelFail ->
                     True
 
                 _ ->
