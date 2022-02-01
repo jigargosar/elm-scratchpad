@@ -85,11 +85,6 @@ dotAngle pd =
         + angleInDirection pd.pinAngularDirection pd.dotAngleOffset
 
 
-pdAngles : PD a -> PDAngles
-pdAngles pd =
-    { pinAngle = pinAngle pd, dotAngle = dotAngle pd }
-
-
 isPinOverDot : PD a -> Bool
 isPinOverDot pd =
     abs (pinAngularSpeed * pd.pinRotatedFor - pd.dotAngleOffset) <= errorMarginAngle
@@ -227,7 +222,7 @@ updateOnUserInput model =
                     , phase = Rotating
                     , seed = seed
                     , pinRotatedFor = 0
-                    , pinStartingAngle = pdAngles model |> .pinAngle
+                    , pinStartingAngle = pinAngle model
                     , pinAngularDirection = oppositeAngularDirection model.pinAngularDirection
                     , dotAngleOffset = dotAngleOffset
                     , pendingLocks = model.pendingLocks - 1
@@ -388,16 +383,13 @@ view vm =
 toViewModel : Model -> ViewModel
 toViewModel model =
     let
-        pda =
-            pdAngles model
-
         vm : ViewModel
         vm =
             { bgColor = getBGColor model.phase
             , level = model.level
             , pendingLocks = model.pendingLocks
-            , pinAngle = pda.pinAngle
-            , dotAngle = Just pda.dotAngle
+            , pinAngle = pinAngle model
+            , dotAngle = Just (dotAngle model)
             , classes = []
             , style = ""
             , lockHandleClasses = ( [], "" )
