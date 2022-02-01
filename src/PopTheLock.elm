@@ -168,18 +168,14 @@ pdHasFailed (PD rec) =
 type Phase
     = WaitingForUserInput
     | Rotating
-    | Animating AnimationName
-
-
-type AnimationName
-    = LevelCompleteLeave
+    | LevelCompleteLeave
     | LevelFail
     | NextLevelEnter
 
 
 initLevelFailed : Phase
 initLevelFailed =
-    Animating LevelFail
+    LevelFail
 
 
 type alias Clock =
@@ -276,7 +272,7 @@ initNextLevel model =
     { model
         | level = nextLevelNum
         , pd = pd
-        , phase = Animating NextLevelEnter
+        , phase = NextLevelEnter
         , seed = seed
     }
 
@@ -293,7 +289,7 @@ updateOnUserInput model =
                     if pdPendingLocks pd == 0 then
                         { model
                             | pd = pd
-                            , phase = Animating LevelCompleteLeave
+                            , phase = LevelCompleteLeave
                         }
 
                     else
@@ -310,7 +306,13 @@ updateOnUserInput model =
                 Nothing ->
                     { model | phase = initLevelFailed }
 
-        Animating _ ->
+        LevelCompleteLeave ->
+            model
+
+        LevelFail ->
+            model
+
+        NextLevelEnter ->
             model
 
 
@@ -335,7 +337,13 @@ step dt model =
             in
             { model | phase = phase, pd = pd }
 
-        Animating _ ->
+        LevelCompleteLeave ->
+            model
+
+        LevelFail ->
+            model
+
+        NextLevelEnter ->
             model
 
 
@@ -361,25 +369,20 @@ update msg model =
             ( model, Cmd.none )
 
         AnimationEnded name ->
-            case model.phase of
-                Animating an ->
-                    ( case ( an, name ) of
-                        ( LevelCompleteLeave, "slideOutLeft" ) ->
-                            initNextLevel model
+            ( case ( model.phase, name ) of
+                ( LevelCompleteLeave, "slideOutLeft" ) ->
+                    initNextLevel model
 
-                        ( LevelFail, "headShake" ) ->
-                            restartCurrentLevel model
+                ( LevelFail, "headShake" ) ->
+                    restartCurrentLevel model
 
-                        ( NextLevelEnter, "slideInRight" ) ->
-                            { model | phase = WaitingForUserInput }
-
-                        _ ->
-                            model
-                    , Cmd.none
-                    )
+                ( NextLevelEnter, "slideInRight" ) ->
+                    { model | phase = WaitingForUserInput }
 
                 _ ->
-                    ( model, Cmd.none )
+                    model
+            , Cmd.none
+            )
 
         OnClampedDelta dt ->
             ( step dt { model | clock = model.clock + dt }, Cmd.none )
@@ -482,27 +485,25 @@ toViewModel model =
         Rotating ->
             vm
 
-        Animating an ->
-            case an of
-                LevelCompleteLeave ->
-                    { vm
-                        | lockHandleClasses =
-                            ( []
-                            , "animation: popLockHandle; animation-fill-mode: both; animation-duration: 1000ms"
-                            )
-                        , dotAngle = Nothing
-                        , classes = [ cnAnimated, cnSlideOutLeft ]
-                        , style = "animation-delay: 1000ms; animation-duration: 500ms"
-                    }
+        LevelCompleteLeave ->
+            { vm
+                | lockHandleClasses =
+                    ( []
+                    , "animation: popLockHandle; animation-fill-mode: both; animation-duration: 1000ms"
+                    )
+                , dotAngle = Nothing
+                , classes = [ cnAnimated, cnSlideOutLeft ]
+                , style = "animation-delay: 1000ms; animation-duration: 500ms"
+            }
 
-                LevelFail ->
-                    { vm | classes = [ cnAnimated, cnHeadShake ] }
+        LevelFail ->
+            { vm | classes = [ cnAnimated, cnHeadShake ] }
 
-                NextLevelEnter ->
-                    { vm
-                        | classes = [ cnAnimated, cnSlideInRight ]
-                        , style = "animation-duration: 200ms"
-                    }
+        NextLevelEnter ->
+            { vm
+                | classes = [ cnAnimated, cnSlideInRight ]
+                , style = "animation-duration: 200ms"
+            }
 
 
 lockRadius =
@@ -526,7 +527,7 @@ getBGColor phase =
     let
         isFail =
             case phase of
-                Animating LevelFail ->
+                LevelFail ->
                     True
 
                 _ ->
