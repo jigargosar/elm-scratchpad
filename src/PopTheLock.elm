@@ -23,7 +23,7 @@ main =
         { init = init
         , subscriptions = subscriptions
         , update = update
-        , view = viewDoc
+        , view = viewDocument
         }
 
 
@@ -308,8 +308,8 @@ update msg model =
             )
 
 
-viewDoc : Model -> Document Msg
-viewDoc model =
+viewDocument : Model -> Document Msg
+viewDocument model =
     Document "App Title"
         [ basicStylesNode
         , animateCssNode
