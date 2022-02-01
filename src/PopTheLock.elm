@@ -151,7 +151,7 @@ init () =
         , phase = WaitingForUserInput
         }
         |> updateOnUserInput
-        |> update (OnClampedDelta (600 + 0))
+        |> update (Tick (600 + 0))
         |> first
         |> updateOnUserInput
         |> Debug.log "Debug: "
@@ -265,16 +265,15 @@ step dt model =
 
 
 type Msg
-    = NOP
-    | AnimationEnded String
-    | OnClampedDelta Float
-    | OnKeyDown KeyEvent
+    = AnimationEnded String
+    | Tick Float
+    | KeyDown KeyEvent
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    [ onAnimationFrameClampedDelta OnClampedDelta
-    , onBrowserKeyDown OnKeyDown
+    [ onAnimationFrameClampedDelta Tick
+    , onBrowserKeyDown KeyDown
     ]
         |> Sub.batch
 
@@ -282,9 +281,6 @@ subscriptions _ =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        NOP ->
-            ( model, Cmd.none )
-
         AnimationEnded name ->
             case ( model.phase, name ) of
                 ( LevelCompleted, "slideOutLeft" ) ->
@@ -299,10 +295,10 @@ update msg model =
                 _ ->
                     ( model, Cmd.none )
 
-        OnClampedDelta dt ->
+        Tick dt ->
             ( step dt model, Cmd.none )
 
-        OnKeyDown keyEvent ->
+        KeyDown keyEvent ->
             ( if keyEvent.key == " " && not keyEvent.repeat then
                 updateOnUserInput model
 
