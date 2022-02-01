@@ -286,20 +286,18 @@ update msg model =
             ( model, Cmd.none )
 
         AnimationEnded name ->
-            ( case ( model.phase, name ) of
+            case ( model.phase, name ) of
                 ( LevelCompleted, "slideOutLeft" ) ->
-                    initNextLevel model
+                    ( initNextLevel model, Cmd.none )
 
                 ( LevelFailed, "headShake" ) ->
-                    restartCurrentLevel model
+                    ( restartCurrentLevel model, Cmd.none )
 
                 ( NextLevelEntered, "slideInRight" ) ->
-                    { model | phase = WaitingForUserInput }
+                    ( { model | phase = WaitingForUserInput }, Cmd.none )
 
                 _ ->
-                    model
-            , Cmd.none
-            )
+                    ( model, Cmd.none )
 
         OnClampedDelta dt ->
             ( step dt model, Cmd.none )
