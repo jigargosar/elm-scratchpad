@@ -91,11 +91,6 @@ pdAngles pd =
     { pinAngle = pinAngle, dotAngle = dotAngle }
 
 
-pdPendingLocks : PD a -> Int
-pdPendingLocks pd =
-    pd.pendingLocks
-
-
 pdIsPinOverDot : PD a -> Bool
 pdIsPinOverDot pd =
     let
@@ -424,7 +419,7 @@ toViewModel model =
         vm =
             { bgColor = getBGColor model.phase
             , level = model.level
-            , pendingLocks = pdPendingLocks model
+            , pendingLocks = model.pendingLocks
             , pinAngle = pda.pinAngle
             , dotAngle = Just pda.dotAngle
             , classes = []
