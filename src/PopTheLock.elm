@@ -168,14 +168,9 @@ pdHasFailed (PD rec) =
 type Phase
     = WaitingForUserInput
     | Rotating
-    | LevelCompleteLeave
-    | LevelFail
-    | NextLevelEnter
-
-
-initLevelFailed : Phase
-initLevelFailed =
-    LevelFail
+    | LevelCompleted
+    | LevelFailed
+    | NextLevelEntered
 
 
 type alias Clock =
@@ -272,7 +267,7 @@ initNextLevel model =
     { model
         | level = nextLevelNum
         , pd = pd
-        , phase = NextLevelEnter
+        , phase = NextLevelEntered
         , seed = seed
     }
 
@@ -289,7 +284,7 @@ updateOnUserInput model =
                     if pdPendingLocks pd == 0 then
                         { model
                             | pd = pd
-                            , phase = LevelCompleteLeave
+                            , phase = LevelCompleted
                         }
 
                     else
@@ -304,15 +299,15 @@ updateOnUserInput model =
                         }
 
                 Nothing ->
-                    { model | phase = initLevelFailed }
+                    { model | phase = LevelFailed }
 
-        LevelCompleteLeave ->
+        LevelCompleted ->
             model
 
-        LevelFail ->
+        LevelFailed ->
             model
 
-        NextLevelEnter ->
+        NextLevelEntered ->
             model
 
 
@@ -333,17 +328,17 @@ step dt model =
                             Rotating
 
                         False ->
-                            initLevelFailed
+                            LevelFailed
             in
             { model | phase = phase, pd = pd }
 
-        LevelCompleteLeave ->
+        LevelCompleted ->
             model
 
-        LevelFail ->
+        LevelFailed ->
             model
 
-        NextLevelEnter ->
+        NextLevelEntered ->
             model
 
 
@@ -370,13 +365,13 @@ update msg model =
 
         AnimationEnded name ->
             ( case ( model.phase, name ) of
-                ( LevelCompleteLeave, "slideOutLeft" ) ->
+                ( LevelCompleted, "slideOutLeft" ) ->
                     initNextLevel model
 
-                ( LevelFail, "headShake" ) ->
+                ( LevelFailed, "headShake" ) ->
                     restartCurrentLevel model
 
-                ( NextLevelEnter, "slideInRight" ) ->
+                ( NextLevelEntered, "slideInRight" ) ->
                     { model | phase = WaitingForUserInput }
 
                 _ ->
@@ -485,7 +480,7 @@ toViewModel model =
         Rotating ->
             vm
 
-        LevelCompleteLeave ->
+        LevelCompleted ->
             { vm
                 | lockHandleClasses =
                     ( []
@@ -496,10 +491,10 @@ toViewModel model =
                 , style = "animation-delay: 1000ms; animation-duration: 500ms"
             }
 
-        LevelFail ->
+        LevelFailed ->
             { vm | classes = [ cnAnimated, cnHeadShake ] }
 
-        NextLevelEnter ->
+        NextLevelEntered ->
             { vm
                 | classes = [ cnAnimated, cnSlideInRight ]
                 , style = "animation-duration: 200ms"
@@ -527,7 +522,7 @@ getBGColor phase =
     let
         isFail =
             case phase of
-                LevelFail ->
+                LevelFailed ->
                     True
 
                 _ ->
