@@ -313,7 +313,16 @@ viewDoc model =
     Document "App Title"
         [ basicStylesNode
         , animateCssNode
-        , styleNode """
+        , customStylesNode
+        , toViewModel model |> view
+
+        --, div [ positionFixed, bgc <| blackA 0.3 ] [ text <| Debug.toString model.phase ]
+        ]
+
+
+customStylesNode : Html msg
+customStylesNode =
+    styleNode """
             @keyframes popLockHandle {
                 0% {
                     transform: translate(0,0);
@@ -330,10 +339,6 @@ viewDoc model =
 
             }
         """
-        , toViewModel model |> view
-
-        --, div [ positionFixed, bgc <| blackA 0.3 ] [ text <| Debug.toString model.phase ]
-        ]
 
 
 type alias ViewModel =
