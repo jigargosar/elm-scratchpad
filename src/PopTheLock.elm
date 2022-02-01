@@ -117,8 +117,8 @@ pdHasFailed elapsed pd =
 type Phase
     = WaitingForUserInput
     | Rotating { pinRotatedFor : Float }
-    | LevelCompleted
-    | LevelFailed
+    | LevelCompleted PDAngles
+    | LevelFailed PDAngles
     | NextLevelEntered
 
 
@@ -230,9 +230,13 @@ updateOnUserInput model =
             { model | phase = Rotating { pinRotatedFor = 0 } }
 
         Rotating { pinRotatedFor } ->
+            let
+                pda =
+                    pdAngles pinRotatedFor model
+            in
             if pdIsPinOverDot pinRotatedFor model then
                 if model.pendingLocks == 1 then
-                    { model | pendingLocks = 0, phase = LevelCompleted }
+                    { model | pendingLocks = 0, phase = LevelCompleted pda }
 
                 else
                     let
@@ -243,19 +247,19 @@ updateOnUserInput model =
                     , phase = Rotating { pinRotatedFor = 0 }
                     , clock = model.clock
                     , seed = seed
-                    , pinStartingAngle = pdAngles pinRotatedFor model |> .pinAngle
+                    , pinStartingAngle = pda.pinAngle
                     , pinAngularDirection = oppositeAngularDirection model.pinAngularDirection
                     , dotAngleOffset = dotAngleOffset
                     , pendingLocks = model.pendingLocks - 1
                     }
 
             else
-                { model | phase = LevelFailed }
+                { model | phase = LevelFailed pda }
 
-        LevelCompleted ->
+        LevelCompleted _ ->
             model
 
-        LevelFailed ->
+        LevelFailed _ ->
             model
 
         NextLevelEntered ->
@@ -279,14 +283,14 @@ step dt model =
                             Rotating { pinRotatedFor = elapsed }
 
                         True ->
-                            LevelFailed
+                            LevelFailed (pdAngles elapsed model)
             in
             { model | phase = phase }
 
-        LevelCompleted ->
+        LevelCompleted _ ->
             model
 
-        LevelFailed ->
+        LevelFailed _ ->
             model
 
         NextLevelEntered ->
@@ -316,10 +320,10 @@ update msg model =
 
         AnimationEnded name ->
             ( case ( model.phase, name ) of
-                ( LevelCompleted, "slideOutLeft" ) ->
+                ( LevelCompleted _, "slideOutLeft" ) ->
                     initNextLevel model
 
-                ( LevelFailed, "headShake" ) ->
+                ( LevelFailed _, "headShake" ) ->
                     restartCurrentLevel model
 
                 ( NextLevelEntered, "slideInRight" ) ->
@@ -417,11 +421,11 @@ toViewModel model =
                 Rotating { pinRotatedFor } ->
                     pdAngles pinRotatedFor model
 
-                LevelCompleted ->
-                    pdAngles 0 model
+                LevelCompleted pda_ ->
+                    pda_
 
-                LevelFailed ->
-                    pdAngles 0 model
+                LevelFailed pda_ ->
+                    pda_
 
                 NextLevelEntered ->
                     pdAngles 0 model
@@ -445,7 +449,7 @@ toViewModel model =
         Rotating _ ->
             vm
 
-        LevelCompleted ->
+        LevelCompleted _ ->
             { vm
                 | lockHandleClasses =
                     ( []
@@ -456,7 +460,7 @@ toViewModel model =
                 , style = "animation-delay: 1000ms; animation-duration: 500ms"
             }
 
-        LevelFailed ->
+        LevelFailed _ ->
             { vm | classes = [ cnAnimated, cnHeadShake ] }
 
         NextLevelEntered ->
@@ -487,7 +491,7 @@ getBGColor phase =
     let
         isFail =
             case phase of
-                LevelFailed ->
+                LevelFailed _ ->
                     True
 
                 _ ->
