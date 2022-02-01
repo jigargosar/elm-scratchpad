@@ -449,7 +449,8 @@ toBGColor level phase =
 
         bgs =
             [ FlatColors.TurkishPalette.lightPurpleHex
-            , FlatColors.TurkishPalette.radiantYellowHex
+
+            --, FlatColors.TurkishPalette.radiantYellowHex
             , FlatColors.IndianPalette.richGardeniaHex
             , FlatColors.TurkishPalette.spiroDiscoBallHex
             , FlatColors.TurkishPalette.weirdGreenHex
@@ -463,7 +464,7 @@ toBGColor level phase =
     else
         --wBlue
         --FlatColors.TurkishPalette.lightPurpleHex
-        listGetAt (modBy (List.length bgs) (level // 10)) bgs
+        listGetAt (modBy (List.length bgs) (level // 1)) bgs
             |> Maybe.withDefault FlatColors.TurkishPalette.lightPurpleHex
 
 
