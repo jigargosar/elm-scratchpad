@@ -489,7 +489,7 @@ viewDot angle =
     in
     keyedGroup
         [ transforms [ translateF2 dotCenterF2 ] ]
-        [ ( Debug.toString angle
+        [ ( fromFloat angle
           , circle dotRadius
                 [ fill wYellow
                 , classNames [ cnAnimated, "animate__zoomIn" ]
