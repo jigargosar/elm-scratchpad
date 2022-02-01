@@ -452,8 +452,6 @@ toBGColor level phase =
             , FlatColors.TurkishPalette.lightPurpleHex
             , FlatColors.IndianPalette.richGardeniaHex
             , FlatColors.TurkishPalette.weirdGreenHex
-
-            --, FlatColors.TurkishPalette.radiantYellowHex
             , FlatColors.TurkishPalette.spiroDiscoBallHex
             ]
     in
@@ -465,7 +463,7 @@ toBGColor level phase =
         --wBlue
         --FlatColors.TurkishPalette.lightPurpleHex
         listGetAt (modBy (List.length bgs) (level // 10)) bgs
-            |> Maybe.withDefault FlatColors.TurkishPalette.lightPurpleHex
+            |> Maybe.withDefault FlatColors.TurkishPalette.radiantYellowHex
 
 
 viewLock : ( List String, String ) -> String -> Svg Msg
