@@ -96,15 +96,6 @@ pdPendingLocks pd =
     pd.pendingLocks
 
 
-pdUpdateOnClick : PD a -> Maybe (PD a)
-pdUpdateOnClick pd =
-    if pdIsPinOverDot pd then
-        Just { pd | pendingLocks = pd.pendingLocks - 1 }
-
-    else
-        Nothing
-
-
 pdIsPinOverDot : PD a -> Bool
 pdIsPinOverDot pd =
     let
@@ -237,11 +228,6 @@ restartCurrentLevel model =
 initNextLevel : Model -> Model
 initNextLevel model =
     initHelp { level = model.level + 1, clock = model.clock, initialSeed = model.seed, phase = NextLevelEntered }
-
-
-updateRotatingSuccess : Model -> Model
-updateRotatingSuccess model =
-    Debug.todo "todo"
 
 
 updateOnUserInput : Model -> Model
