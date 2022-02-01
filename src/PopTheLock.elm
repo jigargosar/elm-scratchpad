@@ -1,6 +1,7 @@
 module PopTheLock exposing (main)
 
 import Curve
+import FlatColors.IndianPalette
 import FlatColors.TurkishPalette
 import Json.Decode as JD
 import Random
@@ -447,11 +448,12 @@ toBGColor level phase =
                     False
 
         bgs =
-            [ FlatColors.TurkishPalette.spiroDiscoBallHex
+            [ FlatColors.TurkishPalette.lightPurpleHex
+            , FlatColors.TurkishPalette.radiantYellowHex
+            , FlatColors.IndianPalette.richGardeniaHex
+            , FlatColors.TurkishPalette.spiroDiscoBallHex
             , FlatColors.TurkishPalette.weirdGreenHex
             , FlatColors.TurkishPalette.lightIndigoHex
-            , FlatColors.TurkishPalette.lightPurpleHex
-            , FlatColors.TurkishPalette.radiantYellowHex
             ]
     in
     if isFail then
@@ -517,6 +519,7 @@ viewPin angle =
     polyline [ ( -pinRadius, 0 ), ( pinRadius, 0 ) ]
         [ stroke wPink
         , stroke FlatColors.TurkishPalette.redOrangeHex
+        , stroke FlatColors.IndianPalette.sasquatchSocksHex
         , strokeW 8
         , strokeCapRound
         , transforms [ rotateF angle, translateF2 ( lockRadius, 0 ) ]
