@@ -80,12 +80,15 @@ pdAngles pd =
         elapsed =
             pd.pinRotatedFor
 
-        pinAngle =
+        pinStartingAngle =
             pd.pinStartingAngle
+
+        pinAngle =
+            pinStartingAngle
                 + angleInDirection pd.pinAngularDirection (pinAngularSpeed * elapsed)
 
         dotAngle =
-            pd.pinStartingAngle
+            pinStartingAngle
                 + angleInDirection pd.pinAngularDirection pd.dotAngleOffset
     in
     { pinAngle = pinAngle, dotAngle = dotAngle }
@@ -118,6 +121,16 @@ pdRotate dt pd =
 pdHasFailed : PD a -> Bool
 pdHasFailed pd =
     pinAngularSpeed * pd.pinRotatedFor > pd.dotAngleOffset + errorMarginAngle
+
+
+pdHasFailed2 : PD a -> Bool
+pdHasFailed2 =
+    pdAngles >> Debug.log "Debug: " >> pdaHasFailed
+
+
+pdaHasFailed : PDAngles -> Bool
+pdaHasFailed { pinAngle, dotAngle } =
+    (abs pinAngle - abs dotAngle) > errorMarginAngle
 
 
 type Phase
