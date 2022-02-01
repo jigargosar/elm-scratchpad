@@ -504,7 +504,8 @@ viewDotAnimated__ { scale, angle } =
           , circle dotRadius
                 [ fill wYellow
                 , transforms [ scaleF scale ]
-                , classNames [ cnAnimated, cnSlideInRight ]
+                , classNames [ cnAnimated, "animate__zoomIn" ]
+                , SA.style "animation-duration: 200ms"
                 ]
           )
         ]
