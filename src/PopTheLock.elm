@@ -381,7 +381,7 @@ toViewModel model =
     let
         vm : ViewModel
         vm =
-            { bgColor = toBGColor model.phase
+            { bgColor = toBGColor model.level model.phase
             , level = model.level
             , pendingLocks = model.pendingLocks
             , pinAngle = pinAngle model
@@ -435,8 +435,8 @@ dotRadius =
     (lockThickness / 2) * 0.6
 
 
-toBGColor : Phase -> String
-toBGColor phase =
+toBGColor : Int -> Phase -> String
+toBGColor level phase =
     let
         isFail =
             case phase of
@@ -445,6 +445,9 @@ toBGColor phase =
 
                 _ ->
                     False
+
+        bgs =
+            [ FlatColors.TurkishPalette.lightPurpleHex ]
     in
     if isFail then
         --"tomato"
@@ -452,7 +455,9 @@ toBGColor phase =
 
     else
         --wBlue
-        FlatColors.TurkishPalette.lightPurpleHex
+        --FlatColors.TurkishPalette.lightPurpleHex
+        listGetAt (modBy (List.length bgs) level) bgs
+            |> Maybe.withDefault FlatColors.TurkishPalette.lightPurpleHex
 
 
 viewLock : ( List String, String ) -> String -> Svg Msg
