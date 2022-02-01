@@ -67,15 +67,19 @@ type alias PDAngles =
 
 type alias PD a =
     { a
-        | pinStartingAngle : Float
+        | pinRotatedFor : Float
+        , pinStartingAngle : Float
         , pinAngularDirection : AngularDirection
         , dotAngleOffset : Float
     }
 
 
-pdAngles : Float -> PD a -> PDAngles
-pdAngles elapsed pd =
+pdAngles : PD a -> PDAngles
+pdAngles pd =
     let
+        elapsed =
+            pd.pinRotatedFor
+
         pinAngle =
             pd.pinStartingAngle
                 + angleInDirection pd.pinAngularDirection (pinAngularSpeed * elapsed)
@@ -87,38 +91,40 @@ pdAngles elapsed pd =
     { pinAngle = pinAngle, dotAngle = dotAngle }
 
 
-pdIsPinOverDot : Float -> PD a -> Bool
-pdIsPinOverDot elapsed pd =
+pdIsPinOverDot : PD a -> Bool
+pdIsPinOverDot pd =
     let
+        elapsed =
+            pd.pinRotatedFor
+
         failed =
             abs (pinAngularSpeed * elapsed - pd.dotAngleOffset) > errorMarginAngle
     in
     not failed
 
 
+pdRotate : Float -> PD a -> ( Bool, PD a )
+pdRotate dt pd =
+    let
+        elapsed =
+            pd.pinRotatedFor + dt
 
---pdRotate : Float -> PD a -> ( Bool, PD a )
---pdRotate dt pd =
---    let
---        elapsed =
---            pd.pinRotatedFor + dt
---
---        npd =
---            { pd | pinRotatedFor = elapsed }
---    in
---    ( not <| pdHasFailed npd, npd )
+        npd =
+            { pd | pinRotatedFor = elapsed }
+    in
+    ( not <| pdHasFailed npd, npd )
 
 
-pdHasFailed : Float -> PD a -> Bool
-pdHasFailed elapsed pd =
-    pinAngularSpeed * elapsed > pd.dotAngleOffset + errorMarginAngle
+pdHasFailed : PD a -> Bool
+pdHasFailed pd =
+    pinAngularSpeed * pd.pinRotatedFor > pd.dotAngleOffset + errorMarginAngle
 
 
 type Phase
     = WaitingForUserInput
-    | Rotating { pinRotatedFor : Float }
-    | LevelCompleted PDAngles
-    | LevelFailed PDAngles
+    | Rotating
+    | LevelCompleted
+    | LevelFailed
     | NextLevelEntered
 
 
@@ -193,6 +199,7 @@ initHelp { level, clock, initialSeed, phase } =
                 initialSeed
     in
     { level = level
+    , pinRotatedFor = 0
     , pinStartingAngle = initialPinAngle
     , pinAngularDirection = angularDirection
     , dotAngleOffset = dotAngleOffset
@@ -227,16 +234,12 @@ updateOnUserInput : Model -> Model
 updateOnUserInput model =
     case model.phase of
         WaitingForUserInput ->
-            { model | phase = Rotating { pinRotatedFor = 0 } }
+            { model | phase = Rotating }
 
-        Rotating { pinRotatedFor } ->
-            let
-                pda =
-                    pdAngles pinRotatedFor model
-            in
-            if pdIsPinOverDot pinRotatedFor model then
+        Rotating ->
+            if pdIsPinOverDot model then
                 if model.pendingLocks == 1 then
-                    { model | pendingLocks = 0, phase = LevelCompleted pda }
+                    { model | pendingLocks = 0, phase = LevelCompleted }
 
                 else
                     let
@@ -244,22 +247,23 @@ updateOnUserInput model =
                             Random.step randomDotAngleOffset model.seed
                     in
                     { level = model.level
-                    , phase = Rotating { pinRotatedFor = 0 }
+                    , phase = Rotating
                     , clock = model.clock
                     , seed = seed
-                    , pinStartingAngle = pda.pinAngle
+                    , pinRotatedFor = 0
+                    , pinStartingAngle = pdAngles model |> .pinAngle
                     , pinAngularDirection = oppositeAngularDirection model.pinAngularDirection
                     , dotAngleOffset = dotAngleOffset
                     , pendingLocks = model.pendingLocks - 1
                     }
 
             else
-                { model | phase = LevelFailed pda }
+                { model | phase = LevelFailed }
 
-        LevelCompleted _ ->
+        LevelCompleted ->
             model
 
-        LevelFailed _ ->
+        LevelFailed ->
             model
 
         NextLevelEntered ->
@@ -272,25 +276,25 @@ step dt model =
         WaitingForUserInput ->
             model
 
-        Rotating { pinRotatedFor } ->
+        Rotating ->
             let
-                elapsed =
-                    pinRotatedFor + dt
+                ( success, pd ) =
+                    pdRotate dt model
 
                 phase =
-                    case pdHasFailed elapsed model of
-                        False ->
-                            Rotating { pinRotatedFor = elapsed }
-
+                    case success of
                         True ->
-                            LevelFailed (pdAngles elapsed model)
-            in
-            { model | phase = phase }
+                            Rotating
 
-        LevelCompleted _ ->
+                        False ->
+                            LevelFailed
+            in
+            { pd | phase = phase }
+
+        LevelCompleted ->
             model
 
-        LevelFailed _ ->
+        LevelFailed ->
             model
 
         NextLevelEntered ->
@@ -320,10 +324,10 @@ update msg model =
 
         AnimationEnded name ->
             ( case ( model.phase, name ) of
-                ( LevelCompleted _, "slideOutLeft" ) ->
+                ( LevelCompleted, "slideOutLeft" ) ->
                     initNextLevel model
 
-                ( LevelFailed _, "headShake" ) ->
+                ( LevelFailed, "headShake" ) ->
                     restartCurrentLevel model
 
                 ( NextLevelEntered, "slideInRight" ) ->
@@ -414,21 +418,7 @@ toViewModel : Model -> ViewModel
 toViewModel model =
     let
         pda =
-            case model.phase of
-                WaitingForUserInput ->
-                    pdAngles 0 model
-
-                Rotating { pinRotatedFor } ->
-                    pdAngles pinRotatedFor model
-
-                LevelCompleted pda_ ->
-                    pda_
-
-                LevelFailed pda_ ->
-                    pda_
-
-                NextLevelEntered ->
-                    pdAngles 0 model
+            pdAngles model
 
         vm : ViewModel
         vm =
@@ -446,10 +436,10 @@ toViewModel model =
         WaitingForUserInput ->
             vm
 
-        Rotating _ ->
+        Rotating ->
             vm
 
-        LevelCompleted _ ->
+        LevelCompleted ->
             { vm
                 | lockHandleClasses =
                     ( []
@@ -460,7 +450,7 @@ toViewModel model =
                 , style = "animation-delay: 1000ms; animation-duration: 500ms"
             }
 
-        LevelFailed _ ->
+        LevelFailed ->
             { vm | classes = [ cnAnimated, cnHeadShake ] }
 
         NextLevelEntered ->
@@ -491,7 +481,7 @@ getBGColor phase =
     let
         isFail =
             case phase of
-                LevelFailed _ ->
+                LevelFailed ->
                     True
 
                 _ ->
