@@ -831,6 +831,10 @@ cnHeadShake =
     "animate__headShake"
 
 
+cnZoomIn =
+    "animate__zoomIn"
+
+
 cnSlideOutLeft =
     "animate__slideOutLeft"
 

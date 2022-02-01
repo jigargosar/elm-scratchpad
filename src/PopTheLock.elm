@@ -492,7 +492,7 @@ viewDot angle =
         [ ( fromFloat angle
           , circle dotRadius
                 [ fill wYellow
-                , classNames [ cnAnimated, "animate__zoomIn" ]
+                , classNames [ cnAnimated, cnZoomIn ]
                 , SA.style "animation-duration: 200ms"
                 ]
           )
