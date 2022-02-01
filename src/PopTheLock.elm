@@ -73,25 +73,25 @@ type alias PD a =
     }
 
 
+pinAngle : PD a -> Float
+pinAngle pd =
+    pd.pinStartingAngle
+        + angleInDirection pd.pinAngularDirection (pinAngularSpeed * pd.pinRotatedFor)
+
+
+dotAngle : PD a -> Float
+dotAngle pd =
+    pd.pinStartingAngle
+        + angleInDirection pd.pinAngularDirection pd.dotAngleOffset
+
+
 pdAngles : PD a -> PDAngles
 pdAngles pd =
-    let
-        elapsed =
-            pd.pinRotatedFor
-
-        pinAngle =
-            pd.pinStartingAngle
-                + angleInDirection pd.pinAngularDirection (pinAngularSpeed * elapsed)
-
-        dotAngle =
-            pd.pinStartingAngle
-                + angleInDirection pd.pinAngularDirection pd.dotAngleOffset
-    in
-    { pinAngle = pinAngle, dotAngle = dotAngle }
+    { pinAngle = pinAngle pd, dotAngle = dotAngle pd }
 
 
-pdIsPinOverDot : PD a -> Bool
-pdIsPinOverDot pd =
+isPinOverDot : PD a -> Bool
+isPinOverDot pd =
     abs (pinAngularSpeed * pd.pinRotatedFor - pd.dotAngleOffset) <= errorMarginAngle
 
 
@@ -214,7 +214,7 @@ updateOnUserInput model =
             { model | phase = Rotating }
 
         Rotating ->
-            if pdIsPinOverDot model then
+            if isPinOverDot model then
                 if model.pendingLocks == 1 then
                     { model | pendingLocks = 0, phase = LevelCompleted }
 
