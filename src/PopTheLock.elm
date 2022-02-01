@@ -497,11 +497,10 @@ viewDotAnimated__ { scale, angle } =
         dotCenterF2 =
             fromPolar ( r, theta )
     in
-    circle dotRadius
-        [ fill wYellow
-        , transforms
-            [ translateF2 dotCenterF2
-            , scaleF scale
+    group [ transforms [ translateF2 dotCenterF2 ] ]
+        [ circle dotRadius
+            [ fill wYellow
+            , transforms [ scaleF scale ]
             ]
         ]
 
