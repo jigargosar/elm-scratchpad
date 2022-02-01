@@ -6,6 +6,7 @@ import Random
 import SubPath exposing (SubPath)
 import Svg.Attributes as SA
 import Svg.Events as SE
+import Svg.Lazy as SL
 import Utils exposing (..)
 
 
@@ -497,12 +498,15 @@ viewDotAnimated__ { scale, angle } =
         dotCenterF2 =
             fromPolar ( r, theta )
     in
-    group [ transforms [ translateF2 dotCenterF2 ] ]
-        [ circle dotRadius
-            [ fill wYellow
-            , transforms [ scaleF scale ]
-            , classNames [ cnAnimated, cnSlideInRight ]
-            ]
+    keyedGroup
+        [ transforms [ translateF2 dotCenterF2 ] ]
+        [ ( Debug.toString angle
+          , circle dotRadius
+                [ fill wYellow
+                , transforms [ scaleF scale ]
+                , classNames [ cnAnimated, cnSlideInRight ]
+                ]
+          )
         ]
 
 
