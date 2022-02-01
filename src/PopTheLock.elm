@@ -189,7 +189,7 @@ init : () -> ( Model, Cmd Msg )
 init () =
     let
         initialSeed =
-            Random.initialSeed 0
+            Random.initialSeed 1
     in
     ( initWithSeed initialSeed
         |> updateOnUserInput
