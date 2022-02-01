@@ -483,11 +483,6 @@ lockHandleSubPath r =
 
 viewDot : Float -> Svg Msg
 viewDot angle =
-    viewDotAnimated__ { angle = angle, scale = 1 }
-
-
-viewDotAnimated__ : { scale : Float, angle : Float } -> Svg Msg
-viewDotAnimated__ { scale, angle } =
     let
         r =
             lockRadius
@@ -503,7 +498,6 @@ viewDotAnimated__ { scale, angle } =
         [ ( Debug.toString angle
           , circle dotRadius
                 [ fill wYellow
-                , transforms [ scaleF scale ]
                 , classNames [ cnAnimated, "animate__zoomIn" ]
                 , SA.style "animation-duration: 200ms"
                 ]
