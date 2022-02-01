@@ -494,7 +494,7 @@ viewDot angle =
         [ transforms [ translateF2 dotCenterF2 ] ]
         [ ( fromFloat angle
           , circle dotRadius
-                [ fill wYellow
+                [ fill FlatColors.TurkishPalette.dornYellowHex
                 , classNames [ cnAnimated, cnZoomIn ]
                 , SA.style "animation-duration: 200ms"
                 ]
@@ -506,6 +506,7 @@ viewPin : Float -> Svg Msg
 viewPin angle =
     polyline [ ( -pinRadius, 0 ), ( pinRadius, 0 ) ]
         [ stroke wPink
+        , stroke FlatColors.TurkishPalette.redOrangeHex
         , strokeW 8
         , strokeCapRound
         , transforms [ rotateF angle, translateF2 ( lockRadius, 0 ) ]
