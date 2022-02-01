@@ -447,7 +447,12 @@ toBGColor level phase =
                     False
 
         bgs =
-            [ FlatColors.TurkishPalette.lightPurpleHex ]
+            [ FlatColors.TurkishPalette.spiroDiscoBallHex
+            , FlatColors.TurkishPalette.weirdGreenHex
+            , FlatColors.TurkishPalette.lightIndigoHex
+            , FlatColors.TurkishPalette.lightPurpleHex
+            , FlatColors.TurkishPalette.radiantYellowHex
+            ]
     in
     if isFail then
         --"tomato"
@@ -456,7 +461,7 @@ toBGColor level phase =
     else
         --wBlue
         --FlatColors.TurkishPalette.lightPurpleHex
-        listGetAt (modBy (List.length bgs) level) bgs
+        listGetAt (modBy (List.length bgs) (level // 10)) bgs
             |> Maybe.withDefault FlatColors.TurkishPalette.lightPurpleHex
 
 
