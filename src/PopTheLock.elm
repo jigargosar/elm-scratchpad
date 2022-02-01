@@ -67,19 +67,15 @@ type alias PDAngles =
 
 type alias PD a =
     { a
-        | pinRotatedFor : Float
-        , pinStartingAngle : Float
+        | pinStartingAngle : Float
         , pinAngularDirection : AngularDirection
         , dotAngleOffset : Float
     }
 
 
-pdAngles : PD a -> PDAngles
-pdAngles pd =
+pdAngles : Float -> PD a -> PDAngles
+pdAngles elapsed pd =
     let
-        elapsed =
-            pd.pinRotatedFor
-
         pinAngle =
             pd.pinStartingAngle
                 + angleInDirection pd.pinAngularDirection (pinAngularSpeed * elapsed)
@@ -91,38 +87,36 @@ pdAngles pd =
     { pinAngle = pinAngle, dotAngle = dotAngle }
 
 
-pdIsPinOverDot : PD a -> Bool
-pdIsPinOverDot pd =
+pdIsPinOverDot : Float -> PD a -> Bool
+pdIsPinOverDot elapsed pd =
     let
-        elapsed =
-            pd.pinRotatedFor
-
         failed =
             abs (pinAngularSpeed * elapsed - pd.dotAngleOffset) > errorMarginAngle
     in
     not failed
 
 
-pdRotate : Float -> PD a -> ( Bool, PD a )
-pdRotate dt pd =
-    let
-        elapsed =
-            pd.pinRotatedFor + dt
 
-        npd =
-            { pd | pinRotatedFor = elapsed }
-    in
-    ( not <| pdHasFailed npd, npd )
+--pdRotate : Float -> PD a -> ( Bool, PD a )
+--pdRotate dt pd =
+--    let
+--        elapsed =
+--            pd.pinRotatedFor + dt
+--
+--        npd =
+--            { pd | pinRotatedFor = elapsed }
+--    in
+--    ( not <| pdHasFailed npd, npd )
 
 
-pdHasFailed : PD a -> Bool
-pdHasFailed pd =
-    pinAngularSpeed * pd.pinRotatedFor > pd.dotAngleOffset + errorMarginAngle
+pdHasFailed : Float -> PD a -> Bool
+pdHasFailed elapsed pd =
+    pinAngularSpeed * elapsed > pd.dotAngleOffset + errorMarginAngle
 
 
 type Phase
     = WaitingForUserInput
-    | Rotating
+    | Rotating { pinRotatedFor : Float }
     | LevelCompleted
     | LevelFailed
     | NextLevelEntered
@@ -199,7 +193,6 @@ initHelp { level, clock, initialSeed, phase } =
                 initialSeed
     in
     { level = level
-    , pinRotatedFor = 0
     , pinStartingAngle = initialPinAngle
     , pinAngularDirection = angularDirection
     , dotAngleOffset = dotAngleOffset
@@ -234,10 +227,10 @@ updateOnUserInput : Model -> Model
 updateOnUserInput model =
     case model.phase of
         WaitingForUserInput ->
-            { model | phase = Rotating }
+            { model | phase = Rotating { pinRotatedFor = 0 } }
 
-        Rotating ->
-            if pdIsPinOverDot model then
+        Rotating { pinRotatedFor } ->
+            if pdIsPinOverDot pinRotatedFor model then
                 if model.pendingLocks == 1 then
                     { model | pendingLocks = 0, phase = LevelCompleted }
 
@@ -247,11 +240,10 @@ updateOnUserInput model =
                             Random.step randomDotAngleOffset model.seed
                     in
                     { level = model.level
-                    , phase = Rotating
+                    , phase = Rotating { pinRotatedFor = 0 }
                     , clock = model.clock
                     , seed = seed
-                    , pinRotatedFor = 0
-                    , pinStartingAngle = pdAngles model |> .pinAngle
+                    , pinStartingAngle = pdAngles pinRotatedFor model |> .pinAngle
                     , pinAngularDirection = oppositeAngularDirection model.pinAngularDirection
                     , dotAngleOffset = dotAngleOffset
                     , pendingLocks = model.pendingLocks - 1
@@ -276,20 +268,20 @@ step dt model =
         WaitingForUserInput ->
             model
 
-        Rotating ->
+        Rotating { pinRotatedFor } ->
             let
-                ( success, pd ) =
-                    pdRotate dt model
+                elapsed =
+                    pinRotatedFor + dt
 
                 phase =
-                    case success of
-                        True ->
-                            Rotating
-
+                    case pdHasFailed elapsed model of
                         False ->
+                            Rotating { pinRotatedFor = elapsed }
+
+                        True ->
                             LevelFailed
             in
-            { pd | phase = phase }
+            { model | phase = phase }
 
         LevelCompleted ->
             model
@@ -418,7 +410,21 @@ toViewModel : Model -> ViewModel
 toViewModel model =
     let
         pda =
-            pdAngles model
+            case model.phase of
+                WaitingForUserInput ->
+                    pdAngles 0 model
+
+                Rotating { pinRotatedFor } ->
+                    pdAngles pinRotatedFor model
+
+                LevelCompleted ->
+                    pdAngles 0 model
+
+                LevelFailed ->
+                    pdAngles 0 model
+
+                NextLevelEntered ->
+                    pdAngles 0 model
 
         vm : ViewModel
         vm =
@@ -436,7 +442,7 @@ toViewModel model =
         WaitingForUserInput ->
             vm
 
-        Rotating ->
+        Rotating _ ->
             vm
 
         LevelCompleted ->
