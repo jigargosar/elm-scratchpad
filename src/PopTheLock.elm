@@ -484,14 +484,8 @@ lockHandleSubPath r =
 viewDot : Float -> Svg Msg
 viewDot angle =
     let
-        r =
-            lockRadius
-
-        theta =
-            angle
-
         dotCenterF2 =
-            fromPolar ( r, theta )
+            fromPolar ( lockRadius, angle )
     in
     keyedGroup
         [ transforms [ translateF2 dotCenterF2 ] ]
