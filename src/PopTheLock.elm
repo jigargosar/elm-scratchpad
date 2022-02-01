@@ -501,7 +501,7 @@ viewDotAnimated__ { scale, angle } =
         [ circle dotRadius
             [ fill wYellow
             , transforms [ scaleF scale ]
-            , classNames [ cnAnimated, cnSlideOutLeft ]
+            , classNames [ cnAnimated, cnSlideInRight ]
             ]
         ]
 
