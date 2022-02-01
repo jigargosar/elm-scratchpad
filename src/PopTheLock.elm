@@ -335,8 +335,6 @@ customStylesNode =
                 50%, 100% {
                     transform: translate(0, -10%);
                 }
-
-
             }
         """
 
