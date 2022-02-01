@@ -98,11 +98,8 @@ pdIsPinOverDot pd =
 pdRotate : Float -> PD a -> ( Bool, PD a )
 pdRotate dt pd =
     let
-        elapsed =
-            pd.pinRotatedFor + dt
-
         npd =
-            { pd | pinRotatedFor = elapsed }
+            { pd | pinRotatedFor = pd.pinRotatedFor + dt }
     in
     ( not <| pdHasFailed npd, npd )
 
