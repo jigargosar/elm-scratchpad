@@ -380,7 +380,7 @@ toViewModel model =
     let
         vm : ViewModel
         vm =
-            { bgColor = getBGColor model.phase
+            { bgColor = toBGColor model.phase
             , level = model.level
             , pendingLocks = model.pendingLocks
             , pinAngle = pinAngle model
@@ -434,8 +434,8 @@ dotRadius =
     (lockThickness / 2) * 0.6
 
 
-getBGColor : Phase -> String
-getBGColor phase =
+toBGColor : Phase -> String
+toBGColor phase =
     let
         isFail =
             case phase of
