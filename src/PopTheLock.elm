@@ -449,11 +449,11 @@ toBGColor level phase =
 
         bgs =
             [ FlatColors.TurkishPalette.lightIndigoHex
-            , FlatColors.TurkishPalette.weirdGreenHex
             , FlatColors.TurkishPalette.lightPurpleHex
+            , FlatColors.IndianPalette.richGardeniaHex
+            , FlatColors.TurkishPalette.weirdGreenHex
 
             --, FlatColors.TurkishPalette.radiantYellowHex
-            , FlatColors.IndianPalette.richGardeniaHex
             , FlatColors.TurkishPalette.spiroDiscoBallHex
             ]
     in
