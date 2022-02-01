@@ -217,7 +217,12 @@ initHelp { level, clock, initialSeed, phase } =
 
 restartCurrentLevel : Model -> Model
 restartCurrentLevel model =
-    initHelp { level = model.level, clock = model.clock, initialSeed = model.seed, phase = WaitingForUserInput }
+    initHelp
+        { level = model.level
+        , clock = model.clock
+        , initialSeed = model.seed
+        , phase = WaitingForUserInput
+        }
 
 
 initNextLevel : Model -> Model
