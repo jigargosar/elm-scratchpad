@@ -448,13 +448,13 @@ toBGColor level phase =
                     False
 
         bgs =
-            [ FlatColors.TurkishPalette.lightPurpleHex
+            [ FlatColors.TurkishPalette.lightIndigoHex
+            , FlatColors.TurkishPalette.weirdGreenHex
+            , FlatColors.TurkishPalette.lightPurpleHex
 
             --, FlatColors.TurkishPalette.radiantYellowHex
             , FlatColors.IndianPalette.richGardeniaHex
             , FlatColors.TurkishPalette.spiroDiscoBallHex
-            , FlatColors.TurkishPalette.weirdGreenHex
-            , FlatColors.TurkishPalette.lightIndigoHex
             ]
     in
     if isFail then
