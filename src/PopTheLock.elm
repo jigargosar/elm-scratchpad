@@ -222,7 +222,12 @@ restartCurrentLevel model =
 
 initNextLevel : Model -> Model
 initNextLevel model =
-    initHelp { level = model.level + 1, clock = model.clock, initialSeed = model.seed, phase = NextLevelEntered }
+    initHelp
+        { level = model.level + 1
+        , clock = model.clock
+        , initialSeed = model.seed
+        , phase = NextLevelEntered
+        }
 
 
 updateOnUserInput : Model -> Model
