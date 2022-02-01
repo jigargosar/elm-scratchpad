@@ -64,105 +64,102 @@ type alias PDAngles =
     { pinAngle : Float, dotAngle : Float }
 
 
-type PD
-    = PD
-        { pinRotatedFor : Float
-        , pinStartingAngle : Float
-        , pinAngularDirection : AngularDirection
-        , dotAngleOffset : Float
-        , pendingLocks : Int
-        }
+type alias PD =
+    { pinRotatedFor : Float
+    , pinStartingAngle : Float
+    , pinAngularDirection : AngularDirection
+    , dotAngleOffset : Float
+    , pendingLocks : Int
+    }
 
 
 initPD : Int -> Generator PD
 initPD pendingLocks =
     Random.map2
         (\angularDirection dotAngleOffset ->
-            PD
-                { pinRotatedFor = 0
-                , pinStartingAngle = initialPinAngle
-                , pinAngularDirection = angularDirection
-                , dotAngleOffset = dotAngleOffset
-                , pendingLocks = pendingLocks
-                }
+            { pinRotatedFor = 0
+            , pinStartingAngle = initialPinAngle
+            , pinAngularDirection = angularDirection
+            , dotAngleOffset = dotAngleOffset
+            , pendingLocks = pendingLocks
+            }
         )
         randomAngularDirection
         randomDotAngleOffset
 
 
 nextPD : PD -> Generator PD
-nextPD ((PD rec) as pd) =
+nextPD pd =
     Random.map
         (\dotAngleOffset ->
-            PD
-                { pinRotatedFor = 0
-                , pinStartingAngle = pdAngles pd |> .pinAngle
-                , pinAngularDirection = oppositeAngularDirection rec.pinAngularDirection
-                , dotAngleOffset = dotAngleOffset
-                , pendingLocks = rec.pendingLocks - 1
-                }
+            { pinRotatedFor = 0
+            , pinStartingAngle = pdAngles pd |> .pinAngle
+            , pinAngularDirection = oppositeAngularDirection pd.pinAngularDirection
+            , dotAngleOffset = dotAngleOffset
+            , pendingLocks = pd.pendingLocks - 1
+            }
         )
         randomDotAngleOffset
 
 
 pdAngles : PD -> PDAngles
-pdAngles (PD rec) =
+pdAngles pd =
     let
         elapsed =
-            rec.pinRotatedFor
+            pd.pinRotatedFor
 
         pinAngle =
-            rec.pinStartingAngle
-                + angleInDirection rec.pinAngularDirection (pinAngularSpeed * elapsed)
+            pd.pinStartingAngle
+                + angleInDirection pd.pinAngularDirection (pinAngularSpeed * elapsed)
 
         dotAngle =
-            rec.pinStartingAngle
-                + angleInDirection rec.pinAngularDirection rec.dotAngleOffset
+            pd.pinStartingAngle
+                + angleInDirection pd.pinAngularDirection pd.dotAngleOffset
     in
     { pinAngle = pinAngle, dotAngle = dotAngle }
 
 
 pdPendingLocks : PD -> Int
-pdPendingLocks (PD rec) =
-    rec.pendingLocks
+pdPendingLocks pd =
+    pd.pendingLocks
 
 
 pdUpdateOnClick : PD -> Maybe PD
-pdUpdateOnClick ((PD rec) as pd) =
+pdUpdateOnClick pd =
     if pdIsPinOverDot pd then
-        Just (PD { rec | pendingLocks = rec.pendingLocks - 1 })
+        Just { pd | pendingLocks = pd.pendingLocks - 1 }
 
     else
         Nothing
 
 
 pdIsPinOverDot : PD -> Bool
-pdIsPinOverDot (PD rec) =
+pdIsPinOverDot pd =
     let
         elapsed =
-            rec.pinRotatedFor
+            pd.pinRotatedFor
 
         failed =
-            abs (pinAngularSpeed * elapsed - rec.dotAngleOffset) > errorMarginAngle
+            abs (pinAngularSpeed * elapsed - pd.dotAngleOffset) > errorMarginAngle
     in
     not failed
 
 
 pdRotate : Float -> PD -> ( Bool, PD )
-pdRotate dt (PD rec) =
+pdRotate dt pd =
     let
         elapsed =
-            rec.pinRotatedFor + dt
+            pd.pinRotatedFor + dt
 
         npd =
-            PD { rec | pinRotatedFor = elapsed }
+            { pd | pinRotatedFor = elapsed }
     in
     ( not <| pdHasFailed npd, npd )
 
 
 pdHasFailed : PD -> Bool
-pdHasFailed (PD rec) =
-    pinAngularSpeed * rec.pinRotatedFor > rec.dotAngleOffset + errorMarginAngle
+pdHasFailed pd =
+    pinAngularSpeed * pd.pinRotatedFor > pd.dotAngleOffset + errorMarginAngle
 
 
 type Phase
