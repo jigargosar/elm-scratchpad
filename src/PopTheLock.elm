@@ -325,6 +325,7 @@ viewDocument model =
 customStyleNode : Html msg
 customStyleNode =
     styleNode """
+    @import url('https://fonts.googleapis.com/css2?family=Autour+One&display=swap');
     @keyframes popLockHandle {
         0% {
             transform: translate(0,0);
@@ -359,6 +360,7 @@ view vm =
         [ viewBoxC 300 (300 * 1.5)
         , sMaxHeight "100vh"
         , bgc vm.bgColor
+        , fontFamily "'Autour One', cursive"
         ]
         [ viewLevelNum vm.level
         , group [ transforms [ translateF2 ( 0, 50 ) ] ]
@@ -532,7 +534,8 @@ viewPendingLocks num =
     in
     words numStr
         [ fontSize "80px"
-        , ffMonospace
+
+        --, ffMonospace
         , fill <| whiteA 0.8
         ]
 
@@ -550,7 +553,8 @@ viewLevelNum level =
         [ wordsAlignYTop
         , wordsAlignXLeft
         , fontSize "30px"
-        , ffMonospace
+
+        --, ffMonospace
         , fill <| whiteA 0.8
         , transforms [ translateT ( "-50%", "-50%" ), translateF2 ( 10, 10 ) ]
         ]

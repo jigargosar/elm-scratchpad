@@ -1018,7 +1018,11 @@ transitionFill =
 
 
 ffMonospace =
-    style "font-family" "monospace"
+    fontFamily "monospace"
+
+
+fontFamily =
+    style "font-family"
 
 
 style : String -> String -> Attribute msg
