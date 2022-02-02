@@ -8,7 +8,6 @@ import Random
 import SubPath exposing (SubPath)
 import Svg.Attributes as SA
 import Svg.Events as SE
-import Svg.Lazy as SL
 import Utils exposing (..)
 
 
