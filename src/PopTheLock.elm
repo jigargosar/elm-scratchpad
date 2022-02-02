@@ -360,7 +360,7 @@ view vm =
         [ viewBoxC 300 (300 * 1.5)
         , sMaxHeight "100vh"
         , bgc vm.bgColor
-        , fontFamily "'Autour One', cursive"
+        , fontFamily "Autour One, cursive"
         ]
         [ viewLevelNum vm.level
         , group [ transforms [ translateF2 ( 0, 50 ) ] ]
