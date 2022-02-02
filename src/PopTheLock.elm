@@ -17,6 +17,10 @@ import Utils exposing (..)
     # Specs:
     Clone: https://www.youtube.com/watch?v=eZAJTXmRtDc
     # STARTED ON: 26-01-22 10:10 AM
+
+    # Ref
+    * https://www.youtube.com/watch?v=YirMzw7vb8I
+    * https://www.youtube.com/channel/UCzUg10YwM6tqXTFUJpRq-HA
 -}
 
 
