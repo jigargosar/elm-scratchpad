@@ -313,7 +313,7 @@ update msg model =
 
               else
                 model
-            , Cmd.none
+            , playSound ()
             )
 
 
