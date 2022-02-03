@@ -21,6 +21,9 @@
       });
       app.ports.playLevelCompleteSound.subscribe(function () {
         popSound.play();
+        setTimeout(() => popSound.play(), 500 + 100);
+        setTimeout(() => popSound.play(), 500 + 200);
+        setTimeout(() => popSound.play(), 500 + 300);
       });
     </script>
   </body>
