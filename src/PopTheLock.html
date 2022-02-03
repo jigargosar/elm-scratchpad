@@ -1,15 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pop The Lock - Elm Game</title>
-</head>
-<body>
-<script type="module">
-  import {Elm} from "./PopTheLock.elm"
+  </head>
+  <body>
+    <script type="module">
+      import { Elm } from "./PopTheLock.elm";
+      import { Howl, Howler } from "howler";
 
-  Elm.PopTheLock.init()
-</script>
-</body>
+      const popSound = new Howl({
+        src: [new URL("sounds/pop-sound.mp3", import.meta.url).toString()],
+      });
+
+      const app = Elm.PopTheLock.init();
+
+      app.ports.playSound.subscribe(function () {
+        console.log("playing");
+        popSound.play();
+      });
+    </script>
+  </body>
 </html>
