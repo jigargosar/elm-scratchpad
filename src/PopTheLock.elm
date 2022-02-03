@@ -160,9 +160,11 @@ init () =
         , phase = WaitingForUserInput
         }
         |> updateOnUserInput
+        |> first
         |> update (Tick (600 + 0))
         |> first
         |> updateOnUserInput
+        |> first
         |> Debug.log "Debug: "
     , Cmd.none
     )
@@ -208,16 +210,16 @@ initNextLevel model =
         }
 
 
-updateOnUserInput : Model -> Model
+updateOnUserInput : Model -> ( Model, Cmd msg )
 updateOnUserInput model =
     case model.phase of
         WaitingForUserInput ->
-            { model | phase = Rotating }
+            { model | phase = Rotating } |> withNoCmd
 
         Rotating ->
             if isPinOverDot model then
                 if model.pendingLocks == 1 then
-                    { model | pendingLocks = 0, phase = LevelCompleted }
+                    { model | pendingLocks = 0, phase = LevelCompleted } |> withNoCmd
 
                 else
                     let
@@ -233,18 +235,19 @@ updateOnUserInput model =
                     , dotAngleOffset = dotAngleOffset
                     , pendingLocks = model.pendingLocks - 1
                     }
+                        |> withCmd (playSound ())
 
             else
-                { model | phase = LevelFailed }
+                { model | phase = LevelFailed } |> withNoCmd
 
         LevelCompleted ->
-            model
+            model |> withNoCmd
 
         LevelFailed ->
-            model
+            model |> withNoCmd
 
         NextLevelEntered ->
-            model
+            model |> withNoCmd
 
 
 step : Float -> Model -> Model
@@ -308,13 +311,11 @@ update msg model =
             ( step dt model, Cmd.none )
 
         KeyDown keyEvent ->
-            ( if keyEvent.key == " " && not keyEvent.repeat then
+            if keyEvent.key == " " && not keyEvent.repeat then
                 updateOnUserInput model
 
-              else
-                model
-            , playSound ()
-            )
+            else
+                model |> withNoCmd
 
 
 viewDocument : Model -> Document Msg
