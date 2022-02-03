@@ -14,16 +14,23 @@
         src: [new URL("sounds/pop-sound.mp3", import.meta.url).toString()],
       });
 
+      const levelCompleteSound = new Howl({
+        src: [new URL("sounds/zapThreeToneUp.mp3", import.meta.url).toString()],
+        rate: 0.8,
+        volume: 1.2
+      });
+
       const app = Elm.PopTheLock.init();
 
       app.ports.playPopSound.subscribe(function () {
         popSound.play();
       });
       app.ports.playLevelCompleteSound.subscribe(function () {
-        popSound.play();
-        setTimeout(() => popSound.play(), 500 + 100);
-        setTimeout(() => popSound.play(), 500 + 200);
-        setTimeout(() => popSound.play(), 500 + 300);
+        levelCompleteSound.play();
+        // popSound.play();
+        // setTimeout(() => popSound.play(), 200 + 100);
+        // setTimeout(() => popSound.play(), 200 + 200);
+        // setTimeout(() => popSound.play(), 200 + 300);
       });
     </script>
   </body>
