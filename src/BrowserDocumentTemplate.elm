@@ -1,4 +1,4 @@
-module BrowserElementTemplate exposing (main)
+module BrowserDocumentTemplate exposing (main)
 
 import Utils exposing (..)
 
