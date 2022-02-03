@@ -14,6 +14,9 @@ import Utils exposing (..)
 port playPopSound : () -> Cmd msg
 
 
+port playLevelCompleteSound : () -> Cmd msg
+
+
 
 {-
    THIS LINE IS FOR FIXING INDENTATION ISSUE WITH ELM-FORMAT. DETAILS?
@@ -219,7 +222,8 @@ updateOnUserInput model =
         Rotating ->
             if isPinOverDot model then
                 if model.pendingLocks == 1 then
-                    { model | pendingLocks = 0, phase = LevelCompleted } |> withNoCmd
+                    { model | pendingLocks = 0, phase = LevelCompleted }
+                        |> withCmd (playLevelCompleteSound ())
 
                 else
                     let
