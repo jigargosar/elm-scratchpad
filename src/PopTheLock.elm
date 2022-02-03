@@ -1,4 +1,4 @@
-module PopTheLock exposing (main)
+port module PopTheLock exposing (main)
 
 import Curve
 import FlatColors.IndianPalette
@@ -9,6 +9,9 @@ import SubPath exposing (SubPath)
 import Svg.Attributes as SA
 import Svg.Events as SE
 import Utils exposing (..)
+
+
+port playSound : () -> Cmd msg
 
 
 
