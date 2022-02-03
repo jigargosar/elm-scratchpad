@@ -16,7 +16,7 @@
 
       const app = Elm.PopTheLock.init();
 
-      app.ports.playSound.subscribe(function () {
+      app.ports.playPopSound.subscribe(function () {
         console.log("playing");
         popSound.play();
       });

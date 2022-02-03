@@ -11,7 +11,7 @@ import Svg.Events as SE
 import Utils exposing (..)
 
 
-port playSound : () -> Cmd msg
+port playPopSound : () -> Cmd msg
 
 
 
@@ -235,7 +235,7 @@ updateOnUserInput model =
                     , dotAngleOffset = dotAngleOffset
                     , pendingLocks = model.pendingLocks - 1
                     }
-                        |> withCmd (playSound ())
+                        |> withCmd (playPopSound ())
 
             else
                 { model | phase = LevelFailed } |> withNoCmd
