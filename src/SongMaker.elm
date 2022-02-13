@@ -16,7 +16,7 @@ import Utils exposing (..)
 -}
 
 
-port play : () -> Cmd msg
+port play : List (List String) -> Cmd msg
 
 
 port stop : () -> Cmd msg
@@ -90,10 +90,16 @@ update msg model =
         PlayClicked ->
             let
                 toNotesColumns : Set Int2 -> List (List String)
-                toNotesColumns pp =
-                    Debug.todo "todo"
+                toNotesColumns _ =
+                    [ [ "C4" ]
+                    , [ "E4", "D4", "E4" ]
+                    , [ "G4" ]
+                    , [ "A4", "G4" ]
+                    ]
+                        |> List.concat
+                        |> List.map List.singleton
             in
-            ( model, play () )
+            ( model, play (toNotesColumns model.pp) )
 
         StopClicked ->
             ( model, stop () )
