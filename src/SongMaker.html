@@ -17,7 +17,7 @@
         "G4",
         ["A4", "G4"],
       ];
-      const notes = notesSubdivisionArray.flat();
+      const flattenedNotes = notesSubdivisionArray.flat();
       const seq = new Tone.Sequence(
         (time, note) => {
           Tone.Draw.schedule(function () {}, time);
