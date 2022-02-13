@@ -1,5 +1,6 @@
 module SongMaker exposing (main)
 
+import Html exposing (button)
 import Random
 import Random.List
 import Set exposing (Set)
@@ -90,7 +91,10 @@ colors =
 
 view : Model -> Html Msg
 view ({ w, h, pp } as model) =
-    viewGrid model
+    fCol []
+        [ viewGrid model
+        , fRow [ pa "20px" ] [ button [ fontSize "20px", pa "0.25em 1em" ] [ text "Play" ] ]
+        ]
 
 
 viewGrid : Model -> Html Msg
@@ -118,7 +122,7 @@ viewGrid { w, h, pp } =
     in
     rangeN w
         |> List.map viewColumnAtX
-        |> gRow [ noUserSelect ]
+        |> gRow [ style "flex-grow" "1", noUserSelect ]
 
 
 viewTile c gp =
