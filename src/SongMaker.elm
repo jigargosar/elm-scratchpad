@@ -19,6 +19,9 @@ import Utils exposing (..)
 port play : () -> Cmd msg
 
 
+port stop : () -> Cmd msg
+
+
 main =
     bDocument
         { init = init
@@ -57,6 +60,7 @@ type Msg
     = NOP
     | OnPointerDown Int2
     | PlayClicked
+    | StopClicked
 
 
 subscriptions : Model -> Sub Msg
@@ -74,6 +78,9 @@ update msg model =
             ( { model | pp = setToggleMember gp model.pp }, Cmd.none )
 
         PlayClicked ->
+            ( model, play () )
+
+        StopClicked ->
             ( model, play () )
 
 
