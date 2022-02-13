@@ -2,7 +2,7 @@ module SongMaker exposing (main)
 
 import Random
 import Random.List
-import Set
+import Set exposing (Set)
 import Utils exposing (..)
 
 
@@ -25,12 +25,28 @@ main =
 
 
 type alias Model =
-    {}
+    { w : Int, h : Int, pp : Set Int2 }
 
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( {}, Cmd.none )
+    let
+        w =
+            16
+
+        h =
+            14
+    in
+    let
+        paintedPositions =
+            rangeWH w h
+                |> Random.List.shuffle
+                |> Random.andThen Random.List.shuffle
+                |> stepWithInitialSeed 0
+                |> List.take 40
+                |> Set.fromList
+    in
+    ( { w = w, h = h, pp = paintedPositions }, Cmd.none )
 
 
 type Msg
