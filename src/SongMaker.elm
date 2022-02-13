@@ -1,4 +1,4 @@
-module SongMaker exposing (main)
+port module SongMaker exposing (main)
 
 import Html exposing (button)
 import Random
@@ -14,6 +14,9 @@ import Utils exposing (..)
 
 
 -}
+
+
+port play : () -> Cmd msg
 
 
 main =

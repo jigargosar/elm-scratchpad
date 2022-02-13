@@ -16,11 +16,12 @@
           synth.triggerAttackRelease(note, 0.1, time);
         },
         ["C4", ["E4", "D4", "E4"], "G4", ["A4", "G4"]]
-      )
-      .start(0);
-      // Tone.Transport.start();
+      ).start(0);
 
-      Elm.SongMaker.init();
+      const app = Elm.SongMaker.init();
+      app.ports?.play.subscribe(function () {
+        Tone.Transport.start();
+      });
     </script>
   </body>
 </html>
