@@ -100,7 +100,7 @@ view =
     in
     rangeN w
         |> List.map viewColumnAtX
-        |> gRow []
+        |> gRow [ noUserSelect ]
 
 
 viewTile c =
