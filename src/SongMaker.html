@@ -17,10 +17,12 @@
         },
         ["C4", ["E4", "D4", "E4"], "G4", ["A4", "G4"]]
       ).start(0);
-
       const app = Elm.SongMaker.init();
-      app.ports?.play.subscribe(function () {
-        Tone.Transport.start();
+
+      app.ports.play.subscribe(async function () {
+        await Tone.start();
+        await Tone.Transport.stop();
+        await Tone.Transport.start();
       });
     </script>
   </body>

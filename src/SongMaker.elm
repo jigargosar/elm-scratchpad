@@ -56,6 +56,7 @@ init () =
 type Msg
     = NOP
     | OnPointerDown Int2
+    | PlayClicked
 
 
 subscriptions : Model -> Sub Msg
@@ -71,6 +72,9 @@ update msg model =
 
         OnPointerDown gp ->
             ( { model | pp = setToggleMember gp model.pp }, Cmd.none )
+
+        PlayClicked ->
+            ( model, play () )
 
 
 viewDocument : Model -> Document Msg
@@ -96,7 +100,14 @@ view : Model -> Html Msg
 view ({ w, h, pp } as model) =
     fCol []
         [ viewGrid model
-        , fRow [ pa "20px" ] [ button [ fontSize "20px", pa "0.3em 1em" ] [ text "Play" ] ]
+        , fRow [ pa "20px" ]
+            [ button
+                [ fontSize "20px"
+                , pa "0.3em 1em"
+                , notifyClick PlayClicked
+                ]
+                [ text "Play" ]
+            ]
         ]
 
 
