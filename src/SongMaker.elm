@@ -70,18 +70,24 @@ colors =
 
 view =
     let
-        _ =
+        grid =
             rangeWH w h
-                |> removeRandomItems
+                |> Random.List.shuffle
+                |> Random.andThen Random.List.shuffle
+                |> stepWithInitialSeed 0
+                |> List.take 40
                 |> Set.fromList
 
-        removeRandomItems : List a -> List a
-        removeRandomItems =
-            Random.List.shuffle >> Random.map (List.drop 20)
-
-        colorAt : ( a, Int ) -> String
-        colorAt ( _, y ) =
+        colorAtY y =
             listGetAtWithDefault "" (modBy 7 y) colors
+
+        colorAt : Int2 -> String
+        colorAt (( _, y ) as gp) =
+            if Set.member gp grid then
+                colorAtY y
+
+            else
+                "white"
 
         w =
             16
