@@ -100,7 +100,7 @@ view { w, h, pp } =
                 listGetAtWithDefault "" (modBy 7 y) colors
 
             else
-                "white"
+                wWhite
 
         viewColumnAtX x =
             rangeN h
