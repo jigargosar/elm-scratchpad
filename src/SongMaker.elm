@@ -96,12 +96,14 @@ view =
             14
     in
     rangeN w
-        |> List.map (\x -> rangeN h |> List.map (\y -> colorAt ( x, y )) |> viewColumn)
+        |> List.map
+            (\x ->
+                rangeN h
+                    |> List.map (\y -> colorAt ( x, y ))
+                    |> List.map viewTile
+                    |> gCol []
+            )
         |> gRow []
-
-
-viewColumn =
-    List.map viewTile >> gCol []
 
 
 viewTile c =
