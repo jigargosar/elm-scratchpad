@@ -24,7 +24,7 @@
         Tone.Transport.stop();
         Tone.Transport.start();
       });
-      app.ports.stop().subscribe(async function () {
+      app.ports.stop.subscribe(async function () {
         await Tone.start();
         Tone.Transport.stop();
       });
