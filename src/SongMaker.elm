@@ -96,8 +96,9 @@ update msg model =
                     , [ "G4" ]
                     , [ "A4", "G4" ]
                     ]
-                        |> List.concat
-                        |> List.map List.singleton
+
+                --|> List.concat
+                --|> List.map List.singleton
             in
             ( model, play (toNotesColumns model.pp) )
 
