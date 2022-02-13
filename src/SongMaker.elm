@@ -55,13 +55,13 @@ viewDocument _ =
 
 
 colors =
-    [ wPurple
-    , wGreen_lime
-    , wYellow
-    , wOrange
-    , wPink
+    [ wPink
+    , wPurple
     , wBlue
     , wGreen2_sea
+    , wOrange
+    , wYellow
+    , wGreen_lime
     ]
 
 
