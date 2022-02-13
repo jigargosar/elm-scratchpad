@@ -88,6 +88,11 @@ update msg model =
             ( { model | pp = setToggleMember gp model.pp }, Cmd.none )
 
         PlayClicked ->
+            let
+                toNotesColumns : Set Int2 -> List (List String)
+                toNotesColumns pp =
+                    Debug.todo "todo"
+            in
             ( model, play () )
 
         StopClicked ->
