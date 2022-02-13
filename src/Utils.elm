@@ -1172,6 +1172,14 @@ dGrid =
     style "display" "grid"
 
 
+displayGrid =
+    dGrid
+
+
+gridAutoFlowColumn =
+    style "grid-auto-flow" "column"
+
+
 fDCol =
     style "flex-direction" "column"
 
