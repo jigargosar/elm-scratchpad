@@ -41,7 +41,7 @@
         const seq = new Tone.Sequence(
                 (time, i) => {
                   Tone.Draw.schedule(function () {app.ports.selectColumn.send(i)}, time);
-                  synth.triggerAttackRelease(steps[i], "64n", time);
+                  synth.triggerAttackRelease(steps[i], 0.1, time);
                   // synth.triggerAttackRelease(steps[i], "8n", time);
                   // synth.triggerAttackRelease(notes[i], 0.1, time+0.05);
                 },
