@@ -95,8 +95,7 @@ view =
 
         viewColumnAtX x =
             rangeN h
-                |> List.map (\y -> colorAt ( x, y ))
-                |> List.map viewTile
+                |> List.map (\y -> colorAt ( x, y ) |> viewTile)
                 |> gCol []
     in
     rangeN w
