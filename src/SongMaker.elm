@@ -71,4 +71,8 @@ view =
 
 
 viewTile c =
-    div [ bgc c, sMinHeight "20px" ] []
+    div [ bgc c, sOutline "1px solid black", sMinHeight "20px" ] []
+
+
+sOutline =
+    style "outline"
