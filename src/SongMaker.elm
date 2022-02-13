@@ -1,5 +1,8 @@
 module SongMaker exposing (main)
 
+import Random
+import Random.List
+import Set
 import Utils exposing (..)
 
 
@@ -67,6 +70,15 @@ colors =
 
 view =
     let
+        _ =
+            rangeWH w h
+                |> removeRandomItems
+                |> Set.fromList
+
+        removeRandomItems : List a -> List a
+        removeRandomItems =
+            Random.List.shuffle >> Random.map (List.drop 20)
+
         colorAt : ( a, Int ) -> String
         colorAt ( _, y ) =
             listGetAtWithDefault "" (modBy 7 y) colors
