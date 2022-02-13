@@ -14,6 +14,7 @@ import Json.Decode as JD exposing (Decoder)
 import Random exposing (Generator)
 import Random.Char
 import Random.Extra
+import Set
 import Svg
 import Svg.Attributes as SA
 import Svg.Keyed
@@ -2386,3 +2387,15 @@ onScreenResized msg =
 
 type alias NEL a =
     ( a, List a )
+
+
+
+-- SET
+
+
+setToggleMember e s =
+    if Set.member e s then
+        Set.remove e s
+
+    else
+        Set.insert e s

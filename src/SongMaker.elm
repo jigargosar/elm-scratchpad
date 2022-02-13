@@ -67,7 +67,7 @@ update msg model =
             ( model, Cmd.none )
 
         OnPointerDown gp ->
-            ( model, Cmd.none )
+            ( { model | pp = setToggleMember gp model.pp }, Cmd.none )
 
 
 viewDocument : Model -> Document Msg
