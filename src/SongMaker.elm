@@ -70,10 +70,12 @@ view =
         columnList =
             List.repeat 16 (List.repeat 2 colors |> List.concat)
     in
-    gRow []
-        (columnList |> viewColumn)
+    columnList
+        |> viewColumn
+        |> gRow []
 
 
+viewColumn : List (List String) -> List (Html msg)
 viewColumn =
     List.map
         (\cs ->
