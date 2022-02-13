@@ -22,6 +22,9 @@ port play : () -> Cmd msg
 port stop : () -> Cmd msg
 
 
+port selectColumn : (Int -> msg) -> Sub msg
+
+
 main =
     bDocument
         { init = init
@@ -32,7 +35,7 @@ main =
 
 
 type alias Model =
-    { w : Int, h : Int, pp : Set Int2 }
+    { w : Int, h : Int, pp : Set Int2, cIdx : Int }
 
 
 init : () -> ( Model, Cmd Msg )
@@ -53,7 +56,13 @@ init () =
                 |> List.take 40
                 |> Set.fromList
     in
-    ( { w = w, h = h, pp = paintedPositions }, Cmd.none )
+    ( { w = w
+      , h = h
+      , pp = paintedPositions
+      , cIdx = 0
+      }
+    , Cmd.none
+    )
 
 
 type Msg
@@ -61,11 +70,12 @@ type Msg
     | OnPointerDown Int2
     | PlayClicked
     | StopClicked
+    | SelectColumn Int
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Sub.none
+    selectColumn SelectColumn
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -82,6 +92,9 @@ update msg model =
 
         StopClicked ->
             ( model, stop () )
+
+        SelectColumn cIdx ->
+            ( model, Cmd.none )
 
 
 viewDocument : Model -> Document Msg
