@@ -1180,6 +1180,10 @@ gridAutoFlowColumn =
     style "grid-auto-flow" "column"
 
 
+gridAutoFlowRow =
+    style "grid-auto-flow" "row"
+
+
 fDCol =
     style "flex-direction" "column"
 
