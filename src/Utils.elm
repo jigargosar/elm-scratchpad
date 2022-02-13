@@ -1168,12 +1168,12 @@ dBlock =
     style "display" "block"
 
 
-dGrid =
-    style "display" "grid"
-
-
 displayGrid =
     dGrid
+
+
+dGrid =
+    style "display" "grid"
 
 
 gridAutoFlowColumn =
