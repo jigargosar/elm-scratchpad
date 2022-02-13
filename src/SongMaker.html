@@ -36,17 +36,17 @@
         await Tone.start();
         Tone.Transport.stop();
         Tone.Transport.cancel();
-        Tone.Transport.bpm.value = 120
+        Tone.Transport.bpm.value = 120;
 
         const seq = new Tone.Sequence(
-                (time, i) => {
-                  Tone.Draw.schedule(function () {app.ports.selectColumn.send(i)}, time);
-                  synth.triggerAttackRelease(steps[i], 0.1, time);
-                  // synth.triggerAttackRelease(steps[i], "8n", time);
-                  // synth.triggerAttackRelease(notes[i], 0.1, time+0.05);
-                },
-                steps.map((_,i)=>i),
-                "4n"
+          (time, i) => {
+            Tone.Draw.schedule(function () {
+              app.ports.selectColumn.send(i);
+            }, time);
+            synth.triggerAttackRelease(steps[i], 0.1, time);
+          },
+          steps.map((_, i) => i),
+          "4n"
         );
         seq.start(0);
         Tone.Transport.start();
