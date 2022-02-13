@@ -1,4 +1,4 @@
-module BrowserDocumentTemplate exposing (main)
+module SongMaker exposing (main)
 
 import Utils exposing (..)
 
