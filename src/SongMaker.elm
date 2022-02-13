@@ -93,7 +93,7 @@ view : Model -> Html Msg
 view ({ w, h, pp } as model) =
     fCol []
         [ viewGrid model
-        , fRow [ pa "20px" ] [ button [ fontSize "20px", pa "0.25em 1em" ] [ text "Play" ] ]
+        , fRow [ pa "20px" ] [ button [ fontSize "20px", pa "0.3em 1em" ] [ text "Play" ] ]
         ]
 
 
