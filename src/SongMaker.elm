@@ -70,9 +70,15 @@ view =
         colorAt : ( a, Int ) -> String
         colorAt ( _, y ) =
             listGetAtWithDefault "" (modBy 7 y) colors
+
+        w =
+            16
+
+        h =
+            14
     in
-    rangeN 16
-        |> List.map (\x -> rangeN 14 |> List.map (\y -> colorAt ( x, y )) |> viewColumn)
+    rangeN w
+        |> List.map (\x -> rangeN h |> List.map (\y -> colorAt ( x, y )) |> viewColumn)
         |> gRow []
 
 
