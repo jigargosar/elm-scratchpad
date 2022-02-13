@@ -102,8 +102,7 @@ view =
             14
     in
     rangeN w
-        |> List.map
-            viewColumnAtX
+        |> List.map viewColumnAtX
         |> gRow []
 
 
