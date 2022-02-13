@@ -3,7 +3,8 @@
     "start": "cross-env PARCEL_ELM_NO_DEBUG=1 parcel src/TCBON/MandelbrotSet.html --no-hmr",
     "shg:bnd": "shx rm -fr surge/stick-hero && parcel build --no-source-maps src/StickHeroGame.html --dist-dir surge/stick-hero && shx mv surge/stick-hero/StickHeroGame.html surge/stick-hero/index.html && surge surge/stick-hero elm-stick-hero.surge.sh",
     "shg:dev": "cross-env PARCEL_ELM_NO_DEBUG=1 parcel --no-hmr src/StickHeroGame.html --open",
-    "ptl:dev": "cross-env PARCEL_ELM_NO_DEBUG=1 parcel --no-hmr src/PopTheLock.html --open"
+    "ptl:dev": "cross-env PARCEL_ELM_NO_DEBUG=1 parcel --no-hmr src/PopTheLock.html --open",
+    "sm:dev": "cross-env PARCEL_ELM_NO_DEBUG=1 parcel --no-hmr src/SongMaker.html --open"
   },
   "devDependencies": {
     "@parcel/transformer-elm": "^2.1.1",
