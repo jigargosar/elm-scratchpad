@@ -89,6 +89,12 @@ view =
             else
                 "white"
 
+        viewColumnAtX x =
+            rangeN h
+                |> List.map (\y -> colorAt ( x, y ))
+                |> List.map viewTile
+                |> gCol []
+
         w =
             16
 
@@ -97,12 +103,7 @@ view =
     in
     rangeN w
         |> List.map
-            (\x ->
-                rangeN h
-                    |> List.map (\y -> colorAt ( x, y ))
-                    |> List.map viewTile
-                    |> gCol []
-            )
+            viewColumnAtX
         |> gRow []
 
 
