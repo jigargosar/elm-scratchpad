@@ -68,7 +68,7 @@ colors =
 view =
     let
         lss =
-            List.repeat 5 colors
+            List.repeat 16 (List.repeat 2 colors |> List.concat)
     in
     div [ displayGrid, gridAutoFlowColumn ]
         (lss
