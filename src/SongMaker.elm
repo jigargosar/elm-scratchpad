@@ -67,25 +67,17 @@ colors =
 
 view =
     let
-        columnTiles =
-            List.repeat 2 colors |> List.concat
-
-        columnList =
-            List.repeat 16 columnTiles
+        colorAt : ( a, Int ) -> String
+        colorAt ( _, y ) =
+            listGetAtWithDefault "" (modBy 7 y) colors
     in
-    columnList
-        |> viewColumn
+    rangeN 16
+        |> List.map (\x -> rangeN 14 |> List.map (\y -> colorAt ( x, y )) |> viewColumn)
         |> gRow []
 
 
-viewColumn : List (List String) -> List (Html msg)
 viewColumn =
-    List.map
-        (\cs ->
-            cs
-                |> List.map viewTile
-                |> gCol []
-        )
+    List.map viewTile >> gCol []
 
 
 viewTile c =

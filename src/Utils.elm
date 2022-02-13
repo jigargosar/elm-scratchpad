@@ -1681,6 +1681,10 @@ listGetAt idx =
     List.drop idx >> List.head
 
 
+listGetAtWithDefault default idx =
+    listGetAt idx >> Maybe.withDefault default
+
+
 minBy : (a -> comparable) -> a -> a -> a
 minBy fn a b =
     if fn a < fn b then
