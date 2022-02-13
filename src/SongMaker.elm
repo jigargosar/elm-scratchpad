@@ -70,15 +70,16 @@ view =
         columnList =
             List.repeat 16 (List.repeat 2 colors |> List.concat)
     in
-    div [ displayGrid, gridAutoFlowColumn ]
+    gRow []
         (columnList |> viewColumn)
 
 
 viewColumn =
     List.map
         (\cs ->
-            div [ displayGrid, gridAutoFlowRow ]
-                (cs |> List.map viewTile)
+            cs
+                |> List.map viewTile
+                |> gCol []
         )
 
 

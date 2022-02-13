@@ -1262,6 +1262,14 @@ fCol aa =
     div (dFlex :: fDCol :: aa)
 
 
+gRow aa =
+    div (dGrid :: gridAutoFlowColumn :: aa)
+
+
+gCol aa =
+    div (dGrid :: gridAutoFlowRow :: aa)
+
+
 circle : Float -> List (Attribute msg) -> Svg msg
 circle r xs =
     Svg.circle (Px.r r :: xs) []
