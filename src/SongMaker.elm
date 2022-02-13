@@ -70,7 +70,7 @@ colors =
 
 view =
     let
-        grid =
+        paintedPositions =
             rangeWH w h
                 |> Random.List.shuffle
                 |> Random.andThen Random.List.shuffle
@@ -83,7 +83,7 @@ view =
 
         colorAt : Int2 -> String
         colorAt (( _, y ) as gp) =
-            if Set.member gp grid then
+            if Set.member gp paintedPositions then
                 colorAtY y
 
             else
