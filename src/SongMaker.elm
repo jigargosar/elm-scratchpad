@@ -66,8 +66,18 @@ colors =
 
 
 view =
+    let
+        lss =
+            List.repeat 5 colors
+    in
     div [ displayGrid, gridAutoFlowColumn ]
-        (colors |> List.map viewTile)
+        (lss
+            |> List.map
+                (\cs ->
+                    div [ displayGrid, gridAutoFlowRow ]
+                        (cs |> List.map viewTile)
+                )
+        )
 
 
 viewTile c =
