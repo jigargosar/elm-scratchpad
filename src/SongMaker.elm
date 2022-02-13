@@ -66,7 +66,7 @@ colors =
 
 
 view =
-    div [ displayGrid, gridAutoFlowRow ]
+    div [ displayGrid, gridAutoFlowColumn ]
         (colors |> List.map viewTile)
 
 
