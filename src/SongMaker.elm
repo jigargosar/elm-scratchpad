@@ -70,6 +70,13 @@ colors =
 
 view =
     let
+        w =
+            16
+
+        h =
+            14
+    in
+    let
         paintedPositions =
             rangeWH w h
                 |> Random.List.shuffle
@@ -94,12 +101,6 @@ view =
                 |> List.map (\y -> colorAt ( x, y ))
                 |> List.map viewTile
                 |> gCol []
-
-        w =
-            16
-
-        h =
-            14
     in
     rangeN w
         |> List.map viewColumnAtX
