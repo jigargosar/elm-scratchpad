@@ -50,4 +50,11 @@ viewDocument : Model -> Document Msg
 viewDocument _ =
     Document "Song Maker"
         [ basicStylesNode
+        , view
+        ]
+
+
+view =
+    div [ dGrid, w100 ]
+        [ div [ bgc wPink, sHeight "20px" ] []
         ]
