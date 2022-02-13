@@ -85,13 +85,10 @@ view =
                 |> List.take 40
                 |> Set.fromList
 
-        colorAtY y =
-            listGetAtWithDefault "" (modBy 7 y) colors
-
         colorAt : Int2 -> String
         colorAt (( _, y ) as gp) =
             if Set.member gp paintedPositions then
-                colorAtY y
+                listGetAtWithDefault "" (modBy 7 y) colors
 
             else
                 "white"
