@@ -11,12 +11,19 @@
       import * as Tone from "tone";
 
       const synth = new Tone.Synth({}).toDestination();
+      const notesSubdivisionArray = [
+        "C4",
+        ["E4", "D4", "E4"],
+        "G4",
+        ["A4", "G4"],
+      ];
+      const notes = notesSubdivisionArray.flat();
       const seq = new Tone.Sequence(
         (time, note) => {
           Tone.Draw.schedule(function () {}, time);
           synth.triggerAttackRelease(note, 0.1, time);
         },
-        ["C4", ["E4", "D4", "E4"], "G4", ["A4", "G4"]],
+        notesSubdivisionArray,
         "4n"
       );
       seq.start(0);
