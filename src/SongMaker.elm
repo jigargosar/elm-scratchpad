@@ -67,8 +67,11 @@ colors =
 
 view =
     let
+        columnTiles =
+            List.repeat 2 colors |> List.concat
+
         columnList =
-            List.repeat 16 (List.repeat 2 colors |> List.concat)
+            List.repeat 16 columnTiles
     in
     columnList
         |> viewColumn
