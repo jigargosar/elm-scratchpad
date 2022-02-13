@@ -17,7 +17,8 @@
         },
         ["C4", ["E4", "D4", "E4"], "G4", ["A4", "G4"]],
         "4n"
-      ).start(0);
+      );
+      seq.start(0);
       const app = Elm.SongMaker.init();
 
       app.ports.play.subscribe(async function () {
