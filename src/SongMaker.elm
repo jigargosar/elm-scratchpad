@@ -35,6 +35,7 @@ init () =
 
 type Msg
     = NOP
+    | OnPointerDown Int2
 
 
 subscriptions : Model -> Sub Msg
@@ -46,6 +47,9 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         NOP ->
+            ( model, Cmd.none )
+
+        OnPointerDown gp ->
             ( model, Cmd.none )
 
 
@@ -95,7 +99,14 @@ view =
 
         viewColumnAtX x =
             rangeN h
-                |> List.map (\y -> colorAt ( x, y ) |> viewTile)
+                |> List.map
+                    (\y ->
+                        let
+                            gp =
+                                ( x, y )
+                        in
+                        viewTile (colorAt gp) gp
+                    )
                 |> gCol []
     in
     rangeN w
@@ -103,8 +114,14 @@ view =
         |> gRow [ noUserSelect ]
 
 
-viewTile c =
-    div [ bgc c, sOutline "1px solid black", sMinHeight "20px" ] []
+viewTile c gp =
+    div
+        [ bgc c
+        , sOutline "1px solid black"
+        , sMinHeight "20px"
+        , notifyPointerDown (OnPointerDown gp)
+        ]
+        []
 
 
 sOutline =
