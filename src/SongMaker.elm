@@ -70,10 +70,10 @@ update msg model =
 
 
 viewDocument : Model -> Document Msg
-viewDocument _ =
+viewDocument model =
     Document "Song Maker"
         [ basicStylesNode
-        , view
+        , view model
         ]
 
 
@@ -88,22 +88,11 @@ colors =
     ]
 
 
-view =
-    let
-        w =
-            16
-
-        h =
-            14
-    in
+view : Model -> Html Msg
+view { w, h, pp } =
     let
         paintedPositions =
-            rangeWH w h
-                |> Random.List.shuffle
-                |> Random.andThen Random.List.shuffle
-                |> stepWithInitialSeed 0
-                |> List.take 40
-                |> Set.fromList
+            pp
 
         colorAt : Int2 -> String
         colorAt (( _, y ) as gp) =
