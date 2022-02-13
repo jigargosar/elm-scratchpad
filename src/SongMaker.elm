@@ -91,12 +91,9 @@ colors =
 view : Model -> Html Msg
 view { w, h, pp } =
     let
-        paintedPositions =
-            pp
-
         colorAt : Int2 -> String
         colorAt (( _, y ) as gp) =
-            if Set.member gp paintedPositions then
+            if Set.member gp pp then
                 listGetAtWithDefault "" (modBy 7 y) colors
 
             else
