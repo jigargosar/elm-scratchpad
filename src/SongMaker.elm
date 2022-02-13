@@ -106,7 +106,7 @@ viewGrid { w, h, pp } =
                 listGetAtWithDefault "" (modBy 7 y) colors
 
             else
-                wWhite
+                "transparent"
 
         viewColumnAtX x =
             rangeN h
@@ -133,7 +133,3 @@ viewTile c gp =
         , notifyPointerDown (OnPointerDown gp)
         ]
         []
-
-
-sOutline =
-    style "outline"

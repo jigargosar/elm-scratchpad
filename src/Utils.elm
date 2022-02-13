@@ -711,6 +711,10 @@ borderRadius =
     style "border-radius"
 
 
+sOutline =
+    style "outline"
+
+
 bgc =
     style "background-color"
 
