@@ -94,7 +94,7 @@ update msg model =
             ( model, stop () )
 
         SelectColumn cIdx ->
-            ( model, Cmd.none )
+            ( { model | cIdx = cIdx }, Cmd.none )
 
 
 viewDocument : Model -> Document Msg
