@@ -89,7 +89,12 @@ colors =
 
 
 view : Model -> Html Msg
-view { w, h, pp } =
+view ({ w, h, pp } as model) =
+    viewGrid model
+
+
+viewGrid : Model -> Html Msg
+viewGrid { w, h, pp } =
     let
         colorAt : Int2 -> String
         colorAt (( _, y ) as gp) =
