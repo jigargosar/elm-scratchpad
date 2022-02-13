@@ -11,7 +11,7 @@
       import * as Tone from "tone";
 
       const synth = new Tone.PolySynth().toDestination();
-      synth.debug = true;
+      synth.debug = false;
       const notesSubdivisionArray = [
         "C4",
         ["E4", "D4", "E4"],
@@ -22,7 +22,7 @@
       const noteIndices = notes.map((_, i) => i);
       const seq = new Tone.Sequence(
         (time, i) => {
-          Tone.Draw.schedule(function () {app.ports.selectColumn(i)}, time);
+          Tone.Draw.schedule(function () {app.ports.selectColumn.send(i)}, time);
           synth.triggerAttackRelease(notes[i], "8n", time);
           // synth.triggerAttackRelease(notes[i], 0.1, time+0.05);
         },

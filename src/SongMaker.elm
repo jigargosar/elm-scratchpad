@@ -138,7 +138,7 @@ view ({ w, h, pp } as model) =
 
 
 viewGrid : Model -> Html Msg
-viewGrid { w, h, pp } =
+viewGrid { w, h, pp, cIdx } =
     let
         colorAt : Int2 -> String
         colorAt (( _, y ) as gp) =
@@ -158,7 +158,15 @@ viewGrid { w, h, pp } =
                         in
                         viewTile (colorAt gp) gp
                     )
-                |> gCol []
+                |> gCol
+                    [ opacity
+                        (if x == cIdx then
+                            0.5
+
+                         else
+                            1
+                        )
+                    ]
     in
     rangeN w
         |> List.map viewColumnAtX
