@@ -54,7 +54,21 @@ viewDocument _ =
         ]
 
 
+colors =
+    [ wPurple
+    , wGreen_lime
+    , wYellow
+    , wOrange
+    , wPink
+    , wBlue
+    , wGreen2_sea
+    ]
+
+
 view =
     div [ dGrid ]
-        [ div [ bgc wPink, sMinHeight "20px" ] []
-        ]
+        (colors |> List.map viewTile)
+
+
+viewTile c =
+    div [ bgc c, sMinHeight "20px" ] []
