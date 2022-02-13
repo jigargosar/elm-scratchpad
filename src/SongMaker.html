@@ -21,8 +21,8 @@
 
       app.ports.play.subscribe(async function () {
         await Tone.start();
-        await Tone.Transport.stop();
-        await Tone.Transport.start();
+        Tone.Transport.stop();
+        Tone.Transport.start();
       });
     </script>
   </body>
