@@ -10,7 +10,7 @@
       import { Elm } from "./SongMaker.elm";
       import * as Tone from "tone";
 
-      const synth = new Tone.Synth().toDestination();
+      const synth = new Tone.Synth({}).toDestination();
       const seq = new Tone.Sequence(
         (time, note) => {
           synth.triggerAttackRelease(note, 0.1, time);
