@@ -128,7 +128,7 @@ viewGrid { w, h, pp } =
 viewTile c gp =
     div
         [ bgc c
-        , sOutline "0.25px solid black"
+        , sOutline "1px solid black"
         , sMinHeight "20px"
         , notifyPointerDown (OnPointerDown gp)
         ]
