@@ -81,7 +81,7 @@ update msg model =
             ( model, play () )
 
         StopClicked ->
-            ( model, play () )
+            ( model, stop () )
 
 
 viewDocument : Model -> Document Msg
@@ -107,13 +107,19 @@ view : Model -> Html Msg
 view ({ w, h, pp } as model) =
     fCol []
         [ viewGrid model
-        , fRow [ pa "20px" ]
+        , fRow [ pa "20px", gap "20px" ]
             [ button
                 [ fontSize "20px"
                 , pa "0.3em 1em"
                 , notifyClick PlayClicked
                 ]
                 [ text "Play" ]
+            , button
+                [ fontSize "20px"
+                , pa "0.3em 1em"
+                , notifyClick StopClicked
+                ]
+                [ text "Stop" ]
             ]
         ]
 
