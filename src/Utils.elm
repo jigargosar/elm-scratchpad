@@ -1096,6 +1096,14 @@ sMaxWidth =
     style "max-width"
 
 
+sMinHeight =
+    style "min-height"
+
+
+sMinWidth =
+    style "min-width"
+
+
 placeContentCenter =
     style "place-content" "center"
 

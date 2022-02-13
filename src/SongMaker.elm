@@ -55,6 +55,6 @@ viewDocument _ =
 
 
 view =
-    div [ dGrid, w100 ]
-        [ div [ bgc wPink, sHeight "20px" ] []
+    div [ dGrid ]
+        [ div [ bgc wPink, sMinHeight "20px" ] []
         ]
