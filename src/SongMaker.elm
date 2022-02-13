@@ -67,16 +67,18 @@ colors =
 
 view =
     let
-        lss =
+        columnList =
             List.repeat 16 (List.repeat 2 colors |> List.concat)
     in
     div [ displayGrid, gridAutoFlowColumn ]
-        (lss
-            |> List.map
-                (\cs ->
-                    div [ displayGrid, gridAutoFlowRow ]
-                        (cs |> List.map viewTile)
-                )
+        (columnList |> viewColumn)
+
+
+viewColumn =
+    List.map
+        (\cs ->
+            div [ displayGrid, gridAutoFlowRow ]
+                (cs |> List.map viewTile)
         )
 
 
