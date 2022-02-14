@@ -30,11 +30,12 @@ const Player = (function () {
   let steps = null;
 
   Tone.Transport.bpm.value = 120;
+
   function updateStepsAndInitSeqIfRequired(steps_) {
     steps = steps_;
     if (!seq) {
       seq = new Tone.Sequence(
-      (time, i) => {
+        (time, i) => {
           Tone.Draw.schedule(function () {
             app.ports.selectColumn.send(i);
           }, time);
@@ -49,7 +50,6 @@ const Player = (function () {
   }
 
   return {
-
     async play(steps_) {
       await Tone.start();
       updateStepsAndInitSeqIfRequired(steps_);
@@ -61,9 +61,9 @@ const Player = (function () {
       await Tone.start();
       synth.triggerAttackRelease(note, noteDuration);
     },
-    stop(){
-      Tone.Transport.stop()
-    }
+    stop() {
+      Tone.Transport.stop();
+    },
   };
 })();
 
