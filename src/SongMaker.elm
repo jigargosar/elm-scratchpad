@@ -1,5 +1,6 @@
 port module SongMaker exposing (main)
 
+import Dict exposing (Dict)
 import Html exposing (button)
 import Random
 import Random.List
@@ -65,8 +66,8 @@ init () =
     )
 
 
-toNotesColumns : Set Int2 -> List (List String)
-toNotesColumns pp =
+toNotesColumns : Int -> Set Int2 -> List (List String)
+toNotesColumns w pp =
     let
         _ =
             [ [ "C4" ]
@@ -80,9 +81,15 @@ toNotesColumns pp =
         noteFromGP : Int2 -> String
         noteFromGP ( _, y ) =
             listGetAtWithDefault "" (modBy 7 y) [ "C4", "D4", "E4", "F4", "G4", "A4", "B4" ]
+
+        columnToNotesDict : Dict Int (List String)
+        columnToNotesDict =
+            groupEqBy first (Set.toList pp)
+                |> List.map (\( gp, gps ) -> ( first gp, List.map noteFromGP (gp :: gps) ))
+                |> Dict.fromList
     in
-    groupEqBy first (Set.toList pp)
-        |> List.map (\( gp, gps ) -> List.map noteFromGP (gp :: gps))
+    rangeN w
+        |> List.map (\x -> Dict.get x columnToNotesDict |> Maybe.withDefault [])
 
 
 type Msg
@@ -105,10 +112,10 @@ update msg model =
             ( model, Cmd.none )
 
         OnPointerDown gp ->
-            ( { model | pp = setToggleMember gp model.pp }, play (toNotesColumns model.pp) )
+            ( { model | pp = setToggleMember gp model.pp }, play (toNotesColumns model.w model.pp) )
 
         PlayClicked ->
-            ( model, play (toNotesColumns model.pp) )
+            ( model, play (toNotesColumns model.w model.pp) )
 
         StopClicked ->
             ( model, stop () )
