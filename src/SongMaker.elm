@@ -59,7 +59,7 @@ init () =
     in
     ( { w = w
       , h = h
-      , pp = paintedPositions
+      , pp = paintedPositions |> always Set.empty
       , cIdx = 0
       }
     , Cmd.none
