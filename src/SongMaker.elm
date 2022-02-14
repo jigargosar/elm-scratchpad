@@ -66,7 +66,7 @@ init () =
 
 
 toNotesColumns : Set Int2 -> List (List String)
-toNotesColumns _ =
+toNotesColumns pp =
     let
         _ =
             [ [ "C4" ]
@@ -77,16 +77,12 @@ toNotesColumns _ =
                 |> List.concat
                 |> List.map List.singleton
 
-        _ =
-            groupEqBy
+        noteFromGP : Int2 -> String
+        noteFromGP gp =
+            Debug.todo "todo"
     in
-    [ [ "C4" ]
-    , [ "E4", "D4", "E4" ]
-    , [ "G4" ]
-    , [ "A4", "G4" ]
-    ]
-        |> List.concat
-        |> List.map List.singleton
+    groupEqBy first (Set.toList pp)
+        |> List.map (\( gp, gps ) -> List.map noteFromGP (gp :: gps))
 
 
 type Msg
