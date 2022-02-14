@@ -81,27 +81,6 @@ toNotesColumns w pp =
                 |> List.concat
                 |> List.map List.singleton
 
-        noteFromGP : Int2 -> String
-        noteFromGP ( _, y ) =
-            listGetAtWithDefault
-                ""
-                y
-                [ "C4"
-                , "D4"
-                , "E4"
-                , "F4"
-                , "G4"
-                , "A4"
-                , "B4"
-                , "C5"
-                , "D5"
-                , "E5"
-                , "F5"
-                , "G5"
-                , "A5"
-                , "B5"
-                ]
-
         columnToNotesDict : Dict Int (List String)
         columnToNotesDict =
             groupEqBy first (Set.toList pp)
@@ -110,6 +89,28 @@ toNotesColumns w pp =
     in
     rangeN w
         |> List.map (\x -> Dict.get x columnToNotesDict |> Maybe.withDefault [])
+
+
+noteFromGP : Int2 -> String
+noteFromGP ( _, y ) =
+    listGetAtWithDefault
+        ""
+        y
+        [ "C4"
+        , "D4"
+        , "E4"
+        , "F4"
+        , "G4"
+        , "A4"
+        , "B4"
+        , "C5"
+        , "D5"
+        , "E5"
+        , "F5"
+        , "G5"
+        , "A5"
+        , "B5"
+        ]
 
 
 type Msg
@@ -137,8 +138,18 @@ update msg model =
             ( model, Cmd.none )
 
         OnPointerDown gp ->
-            { model | pp = setToggleMember gp model.pp }
+            let
+                _ =
+                    1
+            in
+            (if Set.member gp model.pp then
+                { model | pp = Set.remove gp model.pp }
+
+             else
+                { model | pp = Set.insert gp model.pp }
+            )
                 |> withEffect playEffect
+                |> addCmd (playSingleNote (noteFromGP gp))
 
         PlayClicked ->
             model |> withEffect playEffect
