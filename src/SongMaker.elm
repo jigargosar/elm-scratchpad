@@ -105,7 +105,7 @@ update msg model =
             ( model, Cmd.none )
 
         OnPointerDown gp ->
-            ( { model | pp = setToggleMember gp model.pp }, Cmd.none )
+            ( { model | pp = setToggleMember gp model.pp }, play (toNotesColumns model.pp) )
 
         PlayClicked ->
             ( model, play (toNotesColumns model.pp) )

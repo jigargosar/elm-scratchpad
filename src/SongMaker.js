@@ -26,7 +26,7 @@ const app = Elm.SongMaker.init();
 app.ports.play.subscribe(async function (steps) {
   await Tone.start();
   Tone.Transport.stop();
-  Tone.Transport.cancel();
+  Tone.Transport.cancel(0);
   Tone.Transport.bpm.value = 120;
 
   const seq = new Tone.Sequence(
@@ -34,6 +34,7 @@ app.ports.play.subscribe(async function (steps) {
       Tone.Draw.schedule(function () {
         app.ports.selectColumn.send(i);
       }, time);
+      console.log(steps[i])
       synth.triggerAttackRelease(steps[i], 0.1, time);
     },
     steps.map((_, i) => i),
