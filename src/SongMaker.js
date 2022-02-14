@@ -24,21 +24,22 @@ const synth = new Tone.PolySynth().toDestination();
 const app = Elm.SongMaker.init();
 
 const Player = (function () {
+  const noteDuration = 0.1;
+
   let seq = null;
   let steps = null;
 
   Tone.Transport.bpm.value = 120;
-
   function updateStepsAndInitSeqIfRequired(steps_) {
     steps = steps_;
     if (!seq) {
       seq = new Tone.Sequence(
-        (time, i) => {
+      (time, i) => {
           Tone.Draw.schedule(function () {
             app.ports.selectColumn.send(i);
           }, time);
           console.log(steps[i]);
-          synth.triggerAttackRelease(steps[i], 0.1, time);
+          synth.triggerAttackRelease(steps[i], noteDuration, time);
         },
         steps.map((_, i) => i),
         "4n"
@@ -48,12 +49,17 @@ const Player = (function () {
   }
 
   return {
+
     async play(steps_) {
       await Tone.start();
       updateStepsAndInitSeqIfRequired(steps_);
       // Tone.Transport.cancel(0);
       // Tone.Transport.stop();
       Tone.Transport.start();
+    },
+    async playSingleNote(note) {
+      await Tone.start();
+      synth.triggerAttackRelease(note, noteDuration);
     },
     stop(){
       Tone.Transport.stop()
@@ -62,4 +68,5 @@ const Player = (function () {
 })();
 
 app.ports.play.subscribe(Player.play);
+app.ports.playSingleNote.subscribe(Player.playSingleNote);
 app.ports.stop.subscribe(Player.stop);

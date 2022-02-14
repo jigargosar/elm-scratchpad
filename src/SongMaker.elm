@@ -20,6 +20,9 @@ import Utils exposing (..)
 port play : List (List String) -> Cmd msg
 
 
+port playSingleNote : String -> Cmd msg
+
+
 port stop : () -> Cmd msg
 
 
