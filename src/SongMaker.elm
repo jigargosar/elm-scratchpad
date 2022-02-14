@@ -122,6 +122,11 @@ subscriptions _ =
     selectColumn SelectColumn
 
 
+playEffect : Model -> Cmd msg
+playEffect model =
+    play (toNotesColumns model.w model.pp)
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -129,10 +134,11 @@ update msg model =
             ( model, Cmd.none )
 
         OnPointerDown gp ->
-            ( { model | pp = setToggleMember gp model.pp }, play (toNotesColumns model.w model.pp) )
+            { model | pp = setToggleMember gp model.pp }
+                |> withEffect playEffect
 
         PlayClicked ->
-            ( model, play (toNotesColumns model.w model.pp) )
+            model |> withEffect playEffect
 
         StopClicked ->
             ( model, stop () )

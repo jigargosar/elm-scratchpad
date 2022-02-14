@@ -25,8 +25,8 @@ const app = Elm.SongMaker.init();
 
 app.ports.play.subscribe(async function (steps) {
   await Tone.start();
-  Tone.Transport.stop();
   Tone.Transport.cancel(0);
+  Tone.Transport.stop();
   Tone.Transport.bpm.value = 120;
 
   const seq = new Tone.Sequence(
