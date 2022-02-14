@@ -65,6 +65,17 @@ init () =
     )
 
 
+toNotesColumns : Set Int2 -> List (List String)
+toNotesColumns _ =
+    [ [ "C4" ]
+    , [ "E4", "D4", "E4" ]
+    , [ "G4" ]
+    , [ "A4", "G4" ]
+    ]
+        |> List.concat
+        |> List.map List.singleton
+
+
 type Msg
     = NOP
     | OnPointerDown Int2
@@ -88,17 +99,6 @@ update msg model =
             ( { model | pp = setToggleMember gp model.pp }, Cmd.none )
 
         PlayClicked ->
-            let
-                toNotesColumns : Set Int2 -> List (List String)
-                toNotesColumns _ =
-                    [ [ "C4" ]
-                    , [ "E4", "D4", "E4" ]
-                    , [ "G4" ]
-                    , [ "A4", "G4" ]
-                    ]
-                        |> List.concat
-                        |> List.map List.singleton
-            in
             ( model, play (toNotesColumns model.pp) )
 
         StopClicked ->
