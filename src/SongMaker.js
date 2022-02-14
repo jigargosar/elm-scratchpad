@@ -1,5 +1,5 @@
 import { Elm } from "./SongMaker.elm";
-import * as Tone from "tone";
+import * as Tone from "tone/build/Tone.js";
 
 const synth = new Tone.PolySynth().toDestination();
 // synth.debug = true;
