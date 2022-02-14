@@ -50,7 +50,7 @@ const Player = (function () {
   return {
     async play(steps_) {
       await Tone.start();
-      updateStepsAndInitSeqIfRequired(steps_)
+      updateStepsAndInitSeqIfRequired(steps_);
       // Tone.Transport.cancel(0);
       // Tone.Transport.stop();
       Tone.Transport.start();
@@ -58,26 +58,7 @@ const Player = (function () {
   };
 })();
 
-app.ports.play.subscribe(async function (steps) {
-  await Tone.start();
-  Tone.Transport.cancel(0);
-  Tone.Transport.stop();
-  Tone.Transport.bpm.value = 120;
-
-  const seq = new Tone.Sequence(
-    (time, i) => {
-      Tone.Draw.schedule(function () {
-        app.ports.selectColumn.send(i);
-      }, time);
-      console.log(steps[i]);
-      synth.triggerAttackRelease(steps[i], 0.1, time);
-    },
-    steps.map((_, i) => i),
-    "4n"
-  );
-  seq.start(0);
-  Tone.Transport.start();
-});
+app.ports.play.subscribe(Player.play);
 app.ports.stop.subscribe(async function () {
   await Tone.start();
   Tone.Transport.stop();
