@@ -49,7 +49,7 @@ init : () -> ( Model, Cmd Msg )
 init () =
     let
         w =
-            16
+            32
 
         h =
             14
