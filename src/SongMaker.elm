@@ -78,8 +78,8 @@ toNotesColumns pp =
                 |> List.map List.singleton
 
         noteFromGP : Int2 -> String
-        noteFromGP gp =
-            Debug.todo "todo"
+        noteFromGP ( _, y ) =
+            listGetAtWithDefault "" (modBy 7 y) [ "C4", "D4", "E4", "F4", "G4", "A4", "B4" ]
     in
     groupEqBy first (Set.toList pp)
         |> List.map (\( gp, gps ) -> List.map noteFromGP (gp :: gps))
