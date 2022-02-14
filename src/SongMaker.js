@@ -55,11 +55,11 @@ const Player = (function () {
       // Tone.Transport.stop();
       Tone.Transport.start();
     },
+    stop(){
+      Tone.Transport.stop()
+    }
   };
 })();
 
 app.ports.play.subscribe(Player.play);
-app.ports.stop.subscribe(async function () {
-  await Tone.start();
-  Tone.Transport.stop();
-});
+app.ports.stop.subscribe(Player.stop);
