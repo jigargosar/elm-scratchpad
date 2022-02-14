@@ -138,18 +138,15 @@ update msg model =
             ( model, Cmd.none )
 
         OnPointerDown gp ->
-            let
-                _ =
-                    1
-            in
             (if Set.member gp model.pp then
                 { model | pp = Set.remove gp model.pp }
+                    |> withNoCmd
 
              else
                 { model | pp = Set.insert gp model.pp }
+                    |> withCmd (playSingleNote (noteFromGP gp))
             )
-                |> withEffect playEffect
-                |> addCmd (playSingleNote (noteFromGP gp))
+                |> addEffect playEffect
 
         PlayClicked ->
             model |> withEffect playEffect
