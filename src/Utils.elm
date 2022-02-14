@@ -1942,8 +1942,8 @@ allEq v ls =
     List.all (eq v) ls
 
 
-groupBy : (a -> b) -> List a -> List ( a, List a )
-groupBy extract =
+groupEqBy : (a -> b) -> List a -> List ( a, List a )
+groupEqBy extract =
     groupWith (eqBy extract)
 
 

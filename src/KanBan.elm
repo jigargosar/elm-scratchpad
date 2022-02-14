@@ -186,7 +186,7 @@ normalizeTaskSortOrder : TaskDict -> TaskDict
 normalizeTaskSortOrder taskDict =
     taskDict
         |> Dict.values
-        |> groupBy .bucketId
+        |> groupEqBy .bucketId
         |> List.concatMap
             (\( h, t ) ->
                 (h :: t)
