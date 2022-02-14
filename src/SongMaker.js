@@ -51,8 +51,8 @@ const Player = (function () {
     async play(steps_) {
       await Tone.start();
       updateStepsAndInitSeqIfRequired(steps_)
-      Tone.Transport.cancel(0);
-      Tone.Transport.stop();
+      // Tone.Transport.cancel(0);
+      // Tone.Transport.stop();
       Tone.Transport.start();
     },
   };
