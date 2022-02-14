@@ -23,6 +23,9 @@ port play : List (List String) -> Cmd msg
 port playSingleNote : String -> Cmd msg
 
 
+port updateSteps : List (List String) -> Cmd msg
+
+
 port stop : () -> Cmd msg
 
 
@@ -131,6 +134,11 @@ playEffect model =
     play (toNotesColumns model.w model.pp)
 
 
+updateStepsEffect : Model -> Cmd msg
+updateStepsEffect model =
+    updateSteps (toNotesColumns model.w model.pp)
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -146,7 +154,7 @@ update msg model =
                 { model | pp = Set.insert gp model.pp }
                     |> withCmd (playSingleNote (noteFromGP gp))
             )
-                |> addEffect playEffect
+                |> addEffect updateStepsEffect
 
         PlayClicked ->
             model |> withEffect playEffect

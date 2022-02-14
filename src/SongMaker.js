@@ -50,6 +50,9 @@ const Player = (function () {
   }
 
   return {
+    updateSteps(steps_) {
+      steps = steps_;
+    },
     async play(steps_) {
       await Tone.start();
       updateStepsAndInitSeqIfRequired(steps_);
@@ -68,5 +71,6 @@ const Player = (function () {
 })();
 
 app.ports.play.subscribe(Player.play);
+app.ports.updateSteps.subscribe(Player.updateSteps);
 app.ports.playSingleNote.subscribe(Player.playSingleNote);
 app.ports.stop.subscribe(Player.stop);
