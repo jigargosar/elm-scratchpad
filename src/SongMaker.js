@@ -30,16 +30,18 @@ const Player = (function () {
   let steps = null;
   let state = "unknown";
 
-  function updateAndReportStateChange() {
+  function pollAndReportStateChange() {
     if (state !== Tone.Transport.state) {
       state = Tone.Transport.state;
       app.ports.stateChanged.send(state);
     }
   }
 
-  Tone.Transport.on("start", updateAndReportStateChange);
-  Tone.Transport.on("stop", updateAndReportStateChange);
-  Tone.Transport.on("pause", updateAndReportStateChange);
+  pollAndReportStateChange();
+
+  Tone.Transport.on("start", pollAndReportStateChange);
+  Tone.Transport.on("stop", pollAndReportStateChange);
+  Tone.Transport.on("pause", pollAndReportStateChange);
 
   Tone.Transport.bpm.value = 120;
 
