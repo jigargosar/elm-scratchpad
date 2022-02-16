@@ -157,7 +157,7 @@ playEffect model =
 
 togglePlayEffect : Model -> Cmd msg
 togglePlayEffect model =
-    play (toNotesColumns model.w model.pp)
+    togglePlay (toNotesColumns model.w model.pp)
 
 
 updateStepsEffect : Model -> Cmd msg
