@@ -39,7 +39,7 @@ const Player = (function () {
           Tone.Draw.schedule(function () {
             app.ports.selectColumn.send(i);
           }, time);
-          console.log(steps[i]);
+          // console.log(steps[i]);
           synth.triggerAttackRelease(steps[i], noteDuration, time);
         },
         steps.map((_, i) => i),
