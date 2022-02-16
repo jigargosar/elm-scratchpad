@@ -143,6 +143,7 @@ noteFromGP ( _, y ) =
 type Msg
     = NOP
     | PointerDownOnGP Int2
+    | PointerEnteredGP Int2
     | OnPointerUp
     | PlayClicked
     | StopClicked
@@ -191,6 +192,21 @@ update msg model =
                     |> withCmd (playSingleNote (noteFromGP gp))
             )
                 |> addEffect updateStepsEffect
+
+        PointerEnteredGP gp ->
+            case model.drawState of
+                Nothing ->
+                    ( model, Cmd.none )
+
+                Just Drawing ->
+                    { model | pp = Set.insert gp model.pp }
+                        |> withCmd (playSingleNote (noteFromGP gp))
+                        |> addEffect updateStepsEffect
+
+                Just Erasing ->
+                    { model | pp = Set.remove gp model.pp }
+                        |> withNoCmd
+                        |> addEffect updateStepsEffect
 
         OnPointerUp ->
             ( { model | drawState = Nothing }, Cmd.none )
