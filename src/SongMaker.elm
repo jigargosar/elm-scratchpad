@@ -325,7 +325,7 @@ viewGrid { w, h, pp, cIdx, playerState } =
                     )
                 |> gCol
                     [ opacity
-                        (if playerState == "playing" && x == cIdx then
+                        (if playerState == "started" && x == cIdx then
                             0.5
 
                          else
