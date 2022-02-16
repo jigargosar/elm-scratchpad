@@ -238,8 +238,8 @@ viewBottomRow model =
             ]
             [ text "Stop" ]
         , fCol []
-            [ fRow [ itemsCenter ] [ text ("Step: " ++ fromInt (model.cIdx + 1)) ]
-            , fRow [ itemsCenter ] [ text ("Player: " ++ model.playerState) ]
+            [ fRow [ itemsCenter ] [ text ("Current Step: " ++ fromInt (model.cIdx + 1)) ]
+            , fRow [ itemsCenter ] [ text ("Player State: " ++ model.playerState) ]
             ]
         ]
 
