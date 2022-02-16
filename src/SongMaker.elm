@@ -55,7 +55,7 @@ type alias Model =
     , h : Int
     , pp : Set Int2
     , cIdx : Int
-    , playerState : PlayerState
+    , playState : PlayerState
     , drawState : Maybe DrawState
     }
 
@@ -94,7 +94,7 @@ init () =
       , h = h
       , pp = paintedPositions
       , cIdx = 0
-      , playerState = NotPlaying
+      , playState = NotPlaying
       , drawState = Nothing
       }
     , Cmd.none
@@ -242,7 +242,7 @@ update msg model =
 
         PlayerStateChanged playerStateString ->
             ( { model
-                | playerState =
+                | playState =
                     case playerStateString of
                         "started" ->
                             Playing
@@ -298,7 +298,7 @@ viewBottomRow model =
             ]
             [ span [ style "display" "inline-block", sMinWidth "4ch" ]
                 [ text
-                    (case model.playerState of
+                    (case model.playState of
                         Playing ->
                             "Stop"
 
@@ -309,13 +309,13 @@ viewBottomRow model =
             ]
         , fCol []
             [ fRow [ itemsCenter ] [ text ("Current Step: " ++ fromInt (model.cIdx + 1)) ]
-            , fRow [ itemsCenter ] [ text ("Player State: " ++ Debug.toString model.playerState) ]
+            , fRow [ itemsCenter ] [ text ("Player State: " ++ Debug.toString model.playState) ]
             ]
         ]
 
 
 viewGrid : Model -> Html Msg
-viewGrid { w, h, pp, cIdx, playerState } =
+viewGrid { w, h, pp, cIdx, playState } =
     let
         colorAt : Int2 -> String
         colorAt (( _, y ) as gp) =
@@ -337,7 +337,7 @@ viewGrid { w, h, pp, cIdx, playerState } =
                     )
                 |> gCol
                     [ opacity
-                        (if playerState == Playing && x == cIdx then
+                        (if playState == Playing && x == cIdx then
                             0.5
 
                          else
