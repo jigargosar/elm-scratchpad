@@ -293,7 +293,10 @@ viewGrid { w, h, pp, cIdx } =
     in
     rangeN w
         |> List.map viewColumnAtX
-        |> gRow [ style "flex-grow" "1", noUserSelect ]
+        |> gRow
+            [ style "flex-grow" "1"
+            , noUserSelect
+            ]
 
 
 viewTile c gp =
