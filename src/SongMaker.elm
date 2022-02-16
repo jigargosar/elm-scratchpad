@@ -212,11 +212,12 @@ view : Model -> Html Msg
 view ({ w, h, pp } as model) =
     fCol []
         [ viewGrid model
-        , viewBottomRow
+        , viewBottomRow model
         ]
 
 
-viewBottomRow =
+viewBottomRow : Model -> Html Msg
+viewBottomRow model =
     fRow [ pa "20px", gap "20px" ]
         [ button
             [ fontSize "20px"
@@ -236,6 +237,7 @@ viewBottomRow =
             , notifyClick StopClicked
             ]
             [ text "Stop" ]
+        , div [] [ text ("Current Step: " ++ fromInt model.cIdx) ]
         ]
 
 
