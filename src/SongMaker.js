@@ -67,6 +67,9 @@ const Player = (function () {
     stop() {
       Tone.Transport.stop();
     },
+    pause() {
+      Tone.Transport.pause();
+    },
   };
 })();
 
@@ -74,3 +77,4 @@ app.ports.play.subscribe(Player.play);
 app.ports.updateSteps.subscribe(Player.updateSteps);
 app.ports.playSingleNote.subscribe(Player.playSingleNote);
 app.ports.stop.subscribe(Player.stop);
+app.ports.pause.subscribe(Player.pause);
