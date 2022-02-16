@@ -1,7 +1,6 @@
 port module SongMaker exposing (main)
 
 import Dict exposing (Dict)
-import Html exposing (button, span)
 import Random
 import Random.List
 import Set exposing (Set)

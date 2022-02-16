@@ -1262,6 +1262,16 @@ div =
     Html.div
 
 
+span : List (Attribute msg) -> List (Html msg) -> Html msg
+span =
+    Html.span
+
+
+button : List (Attribute msg) -> List (Html msg) -> Html msg
+button =
+    Html.button
+
+
 fRow : List (Attribute msg) -> List (Html msg) -> Html msg
 fRow aa =
     div (dFlex :: aa)
