@@ -2084,6 +2084,11 @@ notifyPointerDown msg =
     Html.Events.on "pointerdown" (JD.succeed msg)
 
 
+notifyPointerEnter : msg -> Attribute msg
+notifyPointerEnter msg =
+    Html.Events.on "pointerenter" (JD.succeed msg)
+
+
 notifyPointerUp : msg -> Attribute msg
 notifyPointerUp msg =
     Html.Events.on "pointerup" (JD.succeed msg)
