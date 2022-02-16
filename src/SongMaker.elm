@@ -288,7 +288,7 @@ viewBottomRow model =
         , itemsCenter
         ]
         [ viewPlayButton model.playState
-        , fRow [ gap "20px" ]
+        , fRow [ gap "4ch" ]
             [ fRow [ itemsCenter ] [ text ("Current Step: " ++ fromInt (model.cIdx + 1)) ]
             , fRow [ itemsCenter ] [ text ("Player State: " ++ Debug.toString model.playState) ]
             ]
