@@ -55,9 +55,14 @@ type alias Model =
     , h : Int
     , pp : Set Int2
     , cIdx : Int
-    , playerState : String
+    , playerState : PlayerState
     , drawState : Maybe DrawState
     }
+
+
+type PlayerState
+    = Playing
+    | NotPlaying
 
 
 type DrawState
@@ -89,7 +94,7 @@ init () =
       , h = h
       , pp = paintedPositions
       , cIdx = 0
-      , playerState = "unknown"
+      , playerState = NotPlaying
       , drawState = Nothing
       }
     , Cmd.none
@@ -235,8 +240,18 @@ update msg model =
         SelectColumn cIdx ->
             ( { model | cIdx = cIdx }, Cmd.none )
 
-        PlayerStateChanged playerState ->
-            ( { model | playerState = playerState }, Cmd.none )
+        PlayerStateChanged playerStateString ->
+            ( { model
+                | playerState =
+                    case playerStateString of
+                        "started" ->
+                            Playing
+
+                        _ ->
+                            NotPlaying
+              }
+            , Cmd.none
+            )
 
 
 viewDocument : Model -> Document Msg
@@ -284,20 +299,17 @@ viewBottomRow model =
             [ span [ style "display" "inline-block", sMinWidth "4ch" ]
                 [ text
                     (case model.playerState of
-                        "stopped" ->
-                            "Play"
-
-                        "paused" ->
-                            "Play"
-
-                        _ ->
+                        Playing ->
                             "Stop"
+
+                        NotPlaying ->
+                            "Play"
                     )
                 ]
             ]
         , fCol []
             [ fRow [ itemsCenter ] [ text ("Current Step: " ++ fromInt (model.cIdx + 1)) ]
-            , fRow [ itemsCenter ] [ text ("Player State: " ++ model.playerState) ]
+            , fRow [ itemsCenter ] [ text ("Player State: " ++ Debug.toString model.playerState) ]
             ]
         ]
 
@@ -325,7 +337,7 @@ viewGrid { w, h, pp, cIdx, playerState } =
                     )
                 |> gCol
                     [ opacity
-                        (if playerState == "started" && x == cIdx then
+                        (if playerState == Playing && x == cIdx then
                             0.5
 
                          else
