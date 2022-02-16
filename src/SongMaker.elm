@@ -332,6 +332,7 @@ viewTile c gp =
         , sOutline ("0.5px solid " ++ wLightGray)
         , sMinHeight "20px"
         , notifyPointerDown (PointerDownOnGP gp)
+        , notifyPointerUp OnPointerUp
         , notifyPointerEnter (PointerEnteredGP gp)
         ]
         []
