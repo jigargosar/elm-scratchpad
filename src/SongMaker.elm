@@ -151,12 +151,14 @@ type Msg
     | ToggleClicked
     | SelectColumn Int
     | PlayerStateChanged String
+    | OnKeyDown KeyEvent
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
     [ selectColumn SelectColumn
     , stateChanged PlayerStateChanged
+    , onBrowserKeyDown OnKeyDown
     ]
         |> Sub.batch
 
@@ -216,6 +218,13 @@ update msg model =
 
         ToggleClicked ->
             model |> withEffect togglePlayEffect
+
+        OnKeyDown e ->
+            if not e.repeat && e.key == " " then
+                model |> withEffect togglePlayEffect
+
+            else
+                ( model, Cmd.none )
 
         StopClicked ->
             ( model, stop () )
