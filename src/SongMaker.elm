@@ -288,7 +288,7 @@ viewBottomRow model =
 
 
 viewGrid : Model -> Html Msg
-viewGrid { w, h, pp, cIdx } =
+viewGrid { w, h, pp, cIdx, playerState } =
     let
         colorAt : Int2 -> String
         colorAt (( _, y ) as gp) =
@@ -310,7 +310,7 @@ viewGrid { w, h, pp, cIdx } =
                     )
                 |> gCol
                     [ opacity
-                        (if x == cIdx then
+                        (if playerState == "playing" && x == cIdx then
                             0.5
 
                          else
