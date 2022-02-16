@@ -74,9 +74,10 @@ init () =
                 |> Random.List.shuffle
                 |> Random.andThen Random.List.shuffle
                 |> stepWithInitialSeed 0
-                |> List.take 40
+                |> List.take 50
                 |> Set.fromList
-                |> always Set.empty
+
+        --|> always Set.empty
     in
     ( { w = w
       , h = h
