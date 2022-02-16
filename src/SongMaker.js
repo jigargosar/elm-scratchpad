@@ -70,8 +70,14 @@ const Player = (function () {
     pause() {
       Tone.Transport.pause();
     },
+    get seq() {
+      return seq;
+    },
   };
 })();
+
+window.__Player = Player;
+window.__Tone = Tone;
 
 app.ports.play.subscribe(Player.play);
 app.ports.updateSteps.subscribe(Player.updateSteps);
