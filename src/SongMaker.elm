@@ -56,7 +56,13 @@ type alias Model =
     , pp : Set Int2
     , cIdx : Int
     , playerState : String
+    , drawState : Maybe DrawState
     }
+
+
+type DrawState
+    = Drawing
+    | Erasing
 
 
 init : () -> ( Model, Cmd Msg )
@@ -84,6 +90,7 @@ init () =
       , pp = paintedPositions
       , cIdx = 0
       , playerState = "unknown"
+      , drawState = Nothing
       }
     , Cmd.none
     )
@@ -175,11 +182,11 @@ update msg model =
 
         OnPointerDown gp ->
             (if Set.member gp model.pp then
-                { model | pp = Set.remove gp model.pp }
+                { model | pp = Set.remove gp model.pp, drawState = Just Erasing }
                     |> withNoCmd
 
              else
-                { model | pp = Set.insert gp model.pp }
+                { model | pp = Set.insert gp model.pp, drawState = Just Drawing }
                     |> withCmd (playSingleNote (noteFromGP gp))
             )
                 |> addEffect updateStepsEffect
