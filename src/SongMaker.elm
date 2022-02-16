@@ -206,6 +206,12 @@ view ({ w, h, pp } as model) =
             , button
                 [ fontSize "20px"
                 , pa "0.3em 1em"
+                , notifyClick PauseClicked
+                ]
+                [ text "Pause" ]
+            , button
+                [ fontSize "20px"
+                , pa "0.3em 1em"
                 , notifyClick StopClicked
                 ]
                 [ text "Stop" ]
