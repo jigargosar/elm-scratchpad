@@ -224,24 +224,10 @@ viewBottomRow model =
         , itemsCenter
         , fontSize "16px"
         ]
-        [ button
-            [ fontSize "20px"
-            , pa "0.3em 1em"
-            , notifyClick PlayClicked
-            ]
-            [ text "Play" ]
-        , button
-            [ fontSize "20px"
-            , pa "0.3em 1em"
-            , notifyClick PauseClicked
-            ]
-            [ text "Pause" ]
-        , button
-            [ fontSize "20px"
-            , pa "0.3em 1em"
-            , notifyClick StopClicked
-            ]
-            [ text "Stop" ]
+        [ button [ fontSize "20px", pa "0.3em 1em", notifyClick PlayClicked ] [ text "Play" ]
+        , button [ fontSize "20px", pa "0.3em 1em", notifyClick PauseClicked ] [ text "Pause" ]
+            |> always noView
+        , button [ fontSize "20px", pa "0.3em 1em", notifyClick StopClicked ] [ text "Stop" ]
         , fCol []
             [ fRow [ itemsCenter ] [ text ("Current Step: " ++ fromInt (model.cIdx + 1)) ]
             , fRow [ itemsCenter ] [ text ("Player State: " ++ model.playerState) ]
