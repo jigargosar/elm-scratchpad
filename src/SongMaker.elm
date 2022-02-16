@@ -29,6 +29,9 @@ port updateSteps : List (List String) -> Cmd msg
 port stop : () -> Cmd msg
 
 
+port pause : () -> Cmd msg
+
+
 port selectColumn : (Int -> msg) -> Sub msg
 
 
@@ -121,6 +124,7 @@ type Msg
     | OnPointerDown Int2
     | PlayClicked
     | StopClicked
+    | PauseClicked
     | SelectColumn Int
 
 
@@ -161,6 +165,9 @@ update msg model =
 
         StopClicked ->
             ( model, stop () )
+
+        PauseClicked ->
+            ( model, pause () )
 
         SelectColumn cIdx ->
             ( { model | cIdx = cIdx }, Cmd.none )
