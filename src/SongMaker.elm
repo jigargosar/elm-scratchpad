@@ -273,7 +273,7 @@ colors =
 
 
 view : Model -> Html Msg
-view ({ w, h, pp } as model) =
+view model =
     fCol []
         [ viewGrid model
         , viewBottomRow model
