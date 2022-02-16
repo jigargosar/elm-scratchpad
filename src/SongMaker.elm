@@ -218,7 +218,7 @@ view ({ w, h, pp } as model) =
 
 viewBottomRow : Model -> Html Msg
 viewBottomRow model =
-    fRow [ pa "20px", gap "20px" ]
+    fRow [ pa "20px", gap "20px", itemsCenter ]
         [ button
             [ fontSize "20px"
             , pa "0.3em 1em"
@@ -237,7 +237,10 @@ viewBottomRow model =
             , notifyClick StopClicked
             ]
             [ text "Stop" ]
-        , div [] [ text ("Current Step: " ++ fromInt model.cIdx) ]
+        , fCol []
+            [ fRow [ itemsCenter ] [ text ("Step: " ++ fromInt (model.cIdx + 1)) ]
+            , fRow [ itemsCenter ] [ text ("Player: " ++ model.playerState) ]
+            ]
         ]
 
 
