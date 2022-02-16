@@ -63,7 +63,7 @@ init : () -> ( Model, Cmd Msg )
 init () =
     let
         w =
-            32
+            16
 
         h =
             14
@@ -73,8 +73,8 @@ init () =
             rangeWH w h
                 |> Random.List.shuffle
                 |> Random.andThen Random.List.shuffle
-                |> stepWithInitialSeed 0
-                |> List.take 50
+                |> stepWithInitialSeed 2
+                |> List.take 30
                 |> Set.fromList
 
         --|> always Set.empty
@@ -238,8 +238,8 @@ viewBottomRow model =
         , itemsCenter
         , fontSize "16px"
         ]
-        [ button [ fontSize "20px", pa "0.5ch 1ch", notifyClick ToggleClicked ]
-            [ div [ style "display" "inline-block", sMinWidth "4ch" ]
+        [ button [ autofocus True, fontSize "20px", pa "0.5ch 1ch", notifyClick ToggleClicked ]
+            [ span [ style "display" "inline-block", sMinWidth "4ch" ]
                 [ text
                     (case model.playerState of
                         "stopped" ->
