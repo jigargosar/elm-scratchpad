@@ -129,6 +129,11 @@ onEnter tag =
         )
 
 
+alwaysPreventDefaultOnKeyDown tag =
+    Html.Events.preventDefaultOn "keydown"
+        (JD.succeed ( tag, True ))
+
+
 onAnimationFrameClampedDelta msg =
     Browser.Events.onAnimationFrameDelta (clamp 1 100 >> msg)
 

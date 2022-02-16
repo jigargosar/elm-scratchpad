@@ -274,7 +274,13 @@ viewBottomRow model =
         , itemsCenter
         , fontSize "16px"
         ]
-        [ button [ autofocus True, fontSize "20px", pa "0.5ch 1ch", notifyClick ToggleClicked ]
+        [ button
+            [ autofocus True
+            , fontSize "20px"
+            , pa "0.5ch 1ch"
+            , notifyClick ToggleClicked
+            , alwaysPreventDefaultOnKeyDown NOP
+            ]
             [ span [ style "display" "inline-block", sMinWidth "4ch" ]
                 [ text
                     (case model.playerState of
