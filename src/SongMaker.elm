@@ -236,7 +236,7 @@ viewBottomRow model =
         , itemsCenter
         , fontSize "16px"
         ]
-        [ button [ fontSize "20px", pa "0.3em 1em", notifyClick ToggleClicked ]
+        [ button [ fontSize "20px", pa "0.5ch 1ch", notifyClick ToggleClicked ]
             [ div [ style "display" "inline-block", sMinWidth "4ch" ]
                 [ text
                     (case model.playerState of
