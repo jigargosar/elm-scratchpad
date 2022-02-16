@@ -70,9 +70,12 @@ const Player = (function () {
     async play(steps_) {
       await Tone.start();
       updateStepsAndInitSeqIfRequired(steps_);
-      // Tone.Transport.cancel(0);
-      // Tone.Transport.stop();
       Tone.Transport.start();
+    },
+    async toggle(steps_) {
+      await Tone.start();
+      updateStepsAndInitSeqIfRequired(steps_);
+      Tone.Transport.toggle();
     },
     async playSingleNote(note) {
       await Tone.start();
@@ -94,6 +97,7 @@ window.__Player = Player;
 window.__Tone = Tone;
 
 app.ports.play.subscribe(Player.play);
+app.ports.togglePlay.subscribe(Player.toggle);
 app.ports.updateSteps.subscribe(Player.updateSteps);
 app.ports.playSingleNote.subscribe(Player.playSingleNote);
 app.ports.stop.subscribe(Player.stop);
