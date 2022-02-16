@@ -76,10 +76,11 @@ init () =
                 |> stepWithInitialSeed 0
                 |> List.take 40
                 |> Set.fromList
+                |> always Set.empty
     in
     ( { w = w
       , h = h
-      , pp = paintedPositions |> always Set.empty
+      , pp = paintedPositions
       , cIdx = 0
       , playerState = "unknown"
       }
