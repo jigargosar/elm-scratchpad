@@ -297,6 +297,7 @@ viewBottomRow model =
         ]
 
 
+viewPlayButton : PlayerState -> Html Msg
 viewPlayButton playState =
     button
         [ autofocus True
