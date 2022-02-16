@@ -289,27 +289,31 @@ viewBottomRow model =
         , itemsCenter
         , fontSize "16px"
         ]
-        [ button
-            [ autofocus True
-            , fontSize "20px"
-            , pa "0.5ch 1ch"
-            , notifyClick ToggleClicked
-            , alwaysPreventDefaultOnKeyDown NOP
-            ]
-            [ span [ style "display" "inline-block", sMinWidth "4ch" ]
-                [ text
-                    (case model.playState of
-                        Playing ->
-                            "Stop"
-
-                        NotPlaying ->
-                            "Play"
-                    )
-                ]
-            ]
+        [ viewPlayButton model.playState
         , fCol []
             [ fRow [ itemsCenter ] [ text ("Current Step: " ++ fromInt (model.cIdx + 1)) ]
             , fRow [ itemsCenter ] [ text ("Player State: " ++ Debug.toString model.playState) ]
+            ]
+        ]
+
+
+viewPlayButton playState =
+    button
+        [ autofocus True
+        , fontSize "20px"
+        , pa "0.5ch 1ch"
+        , notifyClick ToggleClicked
+        , alwaysPreventDefaultOnKeyDown NOP
+        ]
+        [ span [ style "display" "inline-block", sMinWidth "4ch" ]
+            [ text
+                (case playState of
+                    Playing ->
+                        "Stop"
+
+                    NotPlaying ->
+                        "Play"
+                )
             ]
         ]
 
