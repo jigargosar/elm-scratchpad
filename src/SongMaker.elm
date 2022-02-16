@@ -20,6 +20,9 @@ import Utils exposing (..)
 port play : List (List String) -> Cmd msg
 
 
+port togglePlay : List (List String) -> Cmd msg
+
+
 port playSingleNote : String -> Cmd msg
 
 
@@ -134,6 +137,7 @@ type Msg
     | PlayClicked
     | StopClicked
     | PauseClicked
+    | ToggleClicked
     | SelectColumn Int
     | PlayerStateChanged String
 
@@ -148,6 +152,11 @@ subscriptions _ =
 
 playEffect : Model -> Cmd msg
 playEffect model =
+    play (toNotesColumns model.w model.pp)
+
+
+togglePlayEffect : Model -> Cmd msg
+togglePlayEffect model =
     play (toNotesColumns model.w model.pp)
 
 
@@ -175,6 +184,9 @@ update msg model =
 
         PlayClicked ->
             model |> withEffect playEffect
+
+        ToggleClicked ->
+            model |> withEffect togglePlayEffect
 
         StopClicked ->
             ( model, stop () )
@@ -224,10 +236,19 @@ viewBottomRow model =
         , itemsCenter
         , fontSize "16px"
         ]
-        [ button [ fontSize "20px", pa "0.3em 1em", notifyClick PlayClicked ] [ text "Play" ]
-        , button [ fontSize "20px", pa "0.3em 1em", notifyClick PauseClicked ] [ text "Pause" ]
-            |> always noView
-        , button [ fontSize "20px", pa "0.3em 1em", notifyClick StopClicked ] [ text "Stop" ]
+        [ button [ fontSize "20px", pa "0.3em 1em", notifyClick ToggleClicked ]
+            [ text
+                (case model.playerState of
+                    "stopped" ->
+                        "Play"
+
+                    "paused" ->
+                        "Play"
+
+                    _ ->
+                        "Stop"
+                )
+            ]
         , fCol []
             [ fRow [ itemsCenter ] [ text ("Current Step: " ++ fromInt (model.cIdx + 1)) ]
             , fRow [ itemsCenter ] [ text ("Player State: " ++ model.playerState) ]
