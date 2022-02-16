@@ -1,7 +1,7 @@
 port module SongMaker exposing (main)
 
 import Dict exposing (Dict)
-import Html exposing (button)
+import Html exposing (button, span)
 import Random
 import Random.List
 import Set exposing (Set)
@@ -237,17 +237,19 @@ viewBottomRow model =
         , fontSize "16px"
         ]
         [ button [ fontSize "20px", pa "0.3em 1em", notifyClick ToggleClicked ]
-            [ text
-                (case model.playerState of
-                    "stopped" ->
-                        "Play"
+            [ div [ style "display" "inline-block", sMinWidth "4ch" ]
+                [ text
+                    (case model.playerState of
+                        "stopped" ->
+                            "Play"
 
-                    "paused" ->
-                        "Play"
+                        "paused" ->
+                            "Play"
 
-                    _ ->
-                        "Stop"
-                )
+                        _ ->
+                            "Stop"
+                    )
+                ]
             ]
         , fCol []
             [ fRow [ itemsCenter ] [ text ("Current Step: " ++ fromInt (model.cIdx + 1)) ]
