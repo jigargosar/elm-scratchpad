@@ -35,6 +35,9 @@ port pause : () -> Cmd msg
 port selectColumn : (Int -> msg) -> Sub msg
 
 
+port stateChanged : (String -> msg) -> Sub msg
+
+
 main =
     bDocument
         { init = init
@@ -45,7 +48,12 @@ main =
 
 
 type alias Model =
-    { w : Int, h : Int, pp : Set Int2, cIdx : Int }
+    { w : Int
+    , h : Int
+    , pp : Set Int2
+    , cIdx : Int
+    , playerState : String
+    }
 
 
 init : () -> ( Model, Cmd Msg )
@@ -70,6 +78,7 @@ init () =
       , h = h
       , pp = paintedPositions |> always Set.empty
       , cIdx = 0
+      , playerState = "unknown"
       }
     , Cmd.none
     )
@@ -126,11 +135,15 @@ type Msg
     | StopClicked
     | PauseClicked
     | SelectColumn Int
+    | PlayerStateChanged String
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    selectColumn SelectColumn
+    [ selectColumn SelectColumn
+    , stateChanged PlayerStateChanged
+    ]
+        |> Sub.batch
 
 
 playEffect : Model -> Cmd msg
@@ -171,6 +184,9 @@ update msg model =
 
         SelectColumn cIdx ->
             ( { model | cIdx = cIdx }, Cmd.none )
+
+        PlayerStateChanged playerState ->
+            ( { model | playerState = playerState }, Cmd.none )
 
 
 viewDocument : Model -> Document Msg
