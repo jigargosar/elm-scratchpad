@@ -218,7 +218,12 @@ view ({ w, h, pp } as model) =
 
 viewBottomRow : Model -> Html Msg
 viewBottomRow model =
-    fRow [ pa "20px", gap "20px", itemsCenter ]
+    fRow
+        [ pa "20px"
+        , gap "20px"
+        , itemsCenter
+        , fontSize "16px"
+        ]
         [ button
             [ fontSize "20px"
             , pa "0.3em 1em"
