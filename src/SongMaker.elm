@@ -363,17 +363,16 @@ viewGrid { w, h, pp, cIdx, playState } =
             else
                 "transparent"
 
-        viewColumnAtX x =
-            rangeN h
-                |> List.map
-                    (\y ->
-                        let
-                            gp =
-                                ( x, y )
-                        in
-                        viewTile (colorAt gp) gp
-                    )
-
+        --viewColumnAtX x =
+        --    rangeN h
+        --        |> List.map
+        --            (\y ->
+        --                let
+        --                    gp =
+        --                        ( x, y )
+        --                in
+        --                viewTile (colorAt gp) gp
+        --            )
         --|> gCol
         --    [ opacity
         --        (if playState == Playing && x == cIdx then
@@ -383,9 +382,9 @@ viewGrid { w, h, pp, cIdx, playState } =
         --            1
         --        )
         --    ]
-        tiles =
-            rangeN w
-                |> List.concatMap viewColumnAtX
+        --tiles =
+        --    rangeN w
+        --        |> List.concatMap viewColumnAtX
     in
     pp
         |> Set.toList
