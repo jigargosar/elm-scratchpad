@@ -114,6 +114,7 @@ type alias KeyEvent =
     { modifiers : Modifiers
     , key : String
     , repeat : Bool
+    , targetTagName : String
     }
 
 
@@ -158,6 +159,13 @@ keyEventDecoder =
         |> jdAndMap modifiersDecoder
         |> jdAndMap keyDecoder
         |> jdAndMap repeatDecoder
+        |> jdAndMap targetTagNameDecoder
+
+
+targetTagNameDecoder : Decoder String
+targetTagNameDecoder =
+    JD.at [ "target", "tagName" ] JD.string
+        |> JD.map (Debug.log "Debug: ")
 
 
 keyDecoder : Decoder String
