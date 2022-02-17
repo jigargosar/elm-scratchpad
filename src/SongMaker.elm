@@ -423,15 +423,12 @@ viewGrid { w, h, pp, cIdx, playState } =
                             , noPointerEvents
                             ]
                             [ div
-                                [ bgc
-                                    (if modBy 4 x == 0 then
-                                        wLightGray
+                                (if modBy 4 x == 0 then
+                                    [ bgc wLightGray, sWidth "2px" ]
 
-                                     else
-                                        wGray
-                                    )
-                                , sWidth "2px"
-                                ]
+                                 else
+                                    [ bgc wGray, sWidth "1px" ]
+                                )
                                 []
                             ]
                     )
