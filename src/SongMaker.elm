@@ -341,7 +341,6 @@ viewPlayButton playState =
         , fontSize "20px"
         , pa "0.5ch 1ch"
         , notifyClick ToggleClicked
-        , alwaysPreventDefaultOnKeyDown NOP
         , preventDefaultOnKeyDown
             (keyEventDecoder
                 |> JD.andThen
