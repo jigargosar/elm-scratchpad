@@ -165,6 +165,12 @@ keyEventDecoder =
 targetTagNameDecoder : Decoder String
 targetTagNameDecoder =
     JD.at [ "target", "tagName" ] JD.string
+        |> JD.andThen
+            (\x ->
+                JD.at [ "target", "tagName" ] JD.string
+                    |> JD.map (Debug.log "Debug: ")
+                    |> JD.andThen (always (JD.succeed x))
+            )
         |> JD.map (Debug.log "Debug: ")
 
 
