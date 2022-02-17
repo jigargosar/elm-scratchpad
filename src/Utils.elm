@@ -115,6 +115,7 @@ type alias KeyEvent =
     , key : String
     , repeat : Bool
     , targetTagName : String
+    , isTargetBodyElement : Bool
     }
 
 
@@ -160,6 +161,7 @@ keyEventDecoder =
         |> jdAndMap keyDecoder
         |> jdAndMap repeatDecoder
         |> jdAndMap targetTagNameOrBodyDecoder
+        |> jdAndMap (targetTagNameOrBodyDecoder |> JD.map (String.toUpper >> eq "BODY"))
 
 
 targetTagNameDecoder : Decoder String
