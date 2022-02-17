@@ -3,6 +3,7 @@ module Utils exposing (..)
 import Browser
 import Browser.Dom
 import Browser.Events
+import Browser.Navigation exposing (Key)
 import Color
 import Dict exposing (Dict)
 import Ease
@@ -22,6 +23,7 @@ import Task
 import TypedSvg.Attributes as TA
 import TypedSvg.Attributes.InPx as Px
 import TypedSvg.Types as TT
+import Url exposing (Url)
 
 
 rangeMap ( a, b ) ( c, d ) x =
@@ -2077,6 +2079,20 @@ bDocument :
     -> Program flags model msg
 bDocument =
     Browser.document
+
+
+browserApplication :
+    { init : flags -> Url -> Key -> ( model, Cmd msg )
+    , view : model -> Browser.Document msg
+    , update : msg -> model -> ( model, Cmd msg )
+    , subscriptions : model -> Sub msg
+    , onUrlRequest :
+        Browser.UrlRequest -> msg
+    , onUrlChange : Url -> msg
+    }
+    -> Program flags model msg
+browserApplication =
+    Browser.application
 
 
 animationApp : (Float -> Html Float) -> Program () Float Float
