@@ -2,6 +2,8 @@ port module SongMaker exposing (main)
 
 import Browser.Navigation exposing (Key)
 import Dict exposing (Dict)
+import Json.Decode as JD exposing (Decoder)
+import Json.Encode as JE exposing (Value)
 import Random
 import Random.List
 import Set exposing (Set)
@@ -111,6 +113,26 @@ init () url key =
       }
     , Cmd.none
     )
+
+
+paintedPositionsDecoder : Decoder (Set GPos)
+paintedPositionsDecoder =
+    JD.list int2Decoder |> JD.map Set.fromList
+
+
+paintedPositionsEncoder : Set GPos -> Value
+paintedPositionsEncoder =
+    JE.set int2Encoder
+
+
+int2Encoder : Int2 -> Value
+int2Encoder ( a, b ) =
+    JE.list identity [ JE.int a, JE.int b ]
+
+
+int2Decoder : Decoder Int2
+int2Decoder =
+    JD.map2 Tuple.pair (JD.index 0 JD.int) (JD.index 1 JD.int)
 
 
 toNotesColumns : Int -> Set Int2 -> List (List String)
