@@ -393,7 +393,7 @@ viewGrid { w, h, pp, cIdx, playState } =
         lines =
             [ div
                 [ bgc wWhite
-                , style "grid-row" (fromInt 7 ++ "/" ++ fromInt 8)
+                , style "grid-row" (fromInt 7 ++ "/" ++ fromInt 9)
                 , style "grid-column" "1/-1"
                 ]
                 []
