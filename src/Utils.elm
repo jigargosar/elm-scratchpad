@@ -161,7 +161,13 @@ keyEventDecoder =
         |> jdAndMap keyDecoder
         |> jdAndMap repeatDecoder
         |> jdAndMap targetTagNameOrBodyDecoder
-        |> jdAndMap (targetTagNameOrBodyDecoder |> JD.map (String.toUpper >> eq "BODY"))
+        |> jdAndMap isTargetBodyDecoder
+
+
+isTargetBodyDecoder : Decoder Bool
+isTargetBodyDecoder =
+    targetTagNameOrBodyDecoder
+        |> JD.map (String.toUpper >> eq "BODY")
 
 
 targetTagNameDecoder : Decoder String
