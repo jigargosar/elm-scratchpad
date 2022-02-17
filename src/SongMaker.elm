@@ -2,11 +2,15 @@ port module SongMaker exposing (main)
 
 import Browser.Navigation exposing (Key)
 import Dict exposing (Dict)
+import Html
+import Html.Attributes exposing (classList)
 import Json.Decode as JD exposing (Decoder)
 import Json.Encode as JE exposing (Value)
 import Random
 import Random.List
 import Set exposing (Set)
+import Svg
+import Svg.Attributes exposing (class)
 import Url exposing (Url)
 import Utils exposing (..)
 
@@ -294,6 +298,36 @@ viewDocument model =
     Document "Song Maker"
         [ basicStylesNode
         , view model
+        , Svg.svg
+            [ Svg.Attributes.viewBox "0 0 100 100", Html.Attributes.class "a" ]
+            [ Svg.rect
+                [ Svg.Attributes.class "sa"
+                , Html.Attributes.class "a"
+                , Svg.Attributes.width "100"
+                , Svg.Attributes.height "100"
+                , Svg.Attributes.fill "green"
+                ]
+                []
+            , Svg.g
+                [ Html.Attributes.class "a"
+                ]
+                []
+            ]
+        , Svg.svg
+            [ Html.Attributes.class "bi"
+            , Html.Attributes.width 32
+            , Html.Attributes.height 32
+            ]
+            [ Svg.use [ Svg.Attributes.xlinkHref "bootstrap-icons.svg#heart-fill" ] []
+            ]
+        , Svg.svg
+            [ -- Remove this line and it won't throw exception
+              Html.Attributes.class "bi"
+            , Html.Attributes.width 32
+            , Html.Attributes.height 32
+            ]
+            [ Svg.use [ Svg.Attributes.xlinkHref "bootstrap-icons.svg#heart-fill" ] []
+            ]
         ]
 
 
@@ -407,9 +441,18 @@ viewGrid { w, h, pp, cIdx, playState } =
 viewTile c gp =
     div
         [ bgc c
+        , if True then
+            noAttr
+
+          else
+            noAttr
         , sOutline ("0.5px solid " ++ wLightGray)
         , sMinHeight "20px"
         , notifyPointerDown (PointerDownOnGP gp)
         , notifyPointerEnter (PointerEnteredGP gp)
         ]
         []
+
+
+noAttr =
+    style "" ""
