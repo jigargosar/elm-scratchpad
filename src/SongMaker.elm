@@ -121,8 +121,8 @@ paintedPositionsDecoder =
 
 
 paintedPositionsEncoder : Set GPos -> Value
-paintedPositionsEncoder set =
-    JE.set (\( a, b ) -> JE.list identity [ JE.int a, JE.int b ]) set
+paintedPositionsEncoder =
+    JE.set (\( a, b ) -> JE.list identity [ JE.int a, JE.int b ])
 
 
 toNotesColumns : Int -> Set Int2 -> List (List String)
