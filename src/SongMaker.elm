@@ -86,8 +86,8 @@ init () url key =
             14
     in
     let
-        paintedPositions : Set GPos
-        paintedPositions =
+        initialPP : Set GPos
+        initialPP =
             rangeWH w h
                 |> Random.List.shuffle
                 |> Random.andThen Random.List.shuffle
@@ -96,6 +96,14 @@ init () url key =
                 |> Set.fromList
 
         --|> always Set.empty
+        pp =
+            url.path
+                |> String.dropLeft 1
+                |> Url.percentDecode
+                |> Maybe.withDefault ""
+                |> JD.decodeString paintedPositionsDecoder
+                |> Result.withDefault initialPP
+
         _ =
             Debug.log "Debug: " url
 
@@ -105,7 +113,7 @@ init () url key =
     in
     ( { w = w
       , h = h
-      , pp = paintedPositions
+      , pp = initialPP
       , cIdx = 0
       , playState = NotPlaying
       , drawState = Nothing
