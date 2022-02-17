@@ -169,8 +169,8 @@ noteFromGP ( _, y ) =
         ]
 
 
-colorFromGP : Int2 -> String
-colorFromGP ( _, y ) =
+noteColorFromGP : Int2 -> String
+noteColorFromGP ( _, y ) =
     listGetAtWithDefault "" (modBy 7 y) colors
 
 
@@ -370,7 +370,7 @@ viewGrid { w, h, pp, cIdx, playState } =
         colorAt : Int2 -> String
         colorAt gp =
             if Set.member gp pp then
-                colorFromGP gp
+                noteColorFromGP gp
 
             else
                 "transparent"
