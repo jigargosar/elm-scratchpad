@@ -60,6 +60,7 @@ type alias Model =
     , cIdx : Int
     , playState : PlayerState
     , drawState : Maybe DrawState
+    , key : Key
     }
 
 
@@ -74,7 +75,7 @@ type DrawState
 
 
 init : () -> Url -> Key -> ( Model, Cmd Msg )
-init () _ _ =
+init () _ key =
     let
         w =
             16
@@ -99,6 +100,7 @@ init () _ _ =
       , cIdx = 0
       , playState = NotPlaying
       , drawState = Nothing
+      , key = key
       }
     , Cmd.none
     )
