@@ -95,7 +95,6 @@ init () url key =
                 |> List.take 30
                 |> Set.fromList
 
-        --|> always Set.empty
         pp =
             url.path
                 |> String.dropLeft 1
@@ -103,13 +102,6 @@ init () url key =
                 |> Maybe.withDefault ""
                 |> JD.decodeString paintedPositionsDecoder
                 |> Result.withDefault initialPP
-
-        _ =
-            Debug.log "Debug: " url
-
-        _ =
-            Maybe.andThen Url.percentDecode url.query
-                |> Debug.log "Debug: "
     in
     ( { w = w
       , h = h
