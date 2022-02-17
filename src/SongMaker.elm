@@ -113,7 +113,7 @@ init () url key =
     in
     ( { w = w
       , h = h
-      , pp = initialPP
+      , pp = pp
       , cIdx = 0
       , playState = NotPlaying
       , drawState = Nothing
