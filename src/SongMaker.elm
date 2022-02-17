@@ -386,8 +386,9 @@ viewGrid { w, h, pp, cIdx, playState } =
     in
     rangeN w
         |> List.concatMap viewColumnAtX
-        |> gridColumns
+        |> div
             [ style "flex-grow" "1"
+            , dGrid
             , style "grid-template"
                 (("repeat(" ++ fromInt h ++ ",1fr)")
                     ++ "/"
