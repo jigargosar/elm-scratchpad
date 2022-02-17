@@ -298,36 +298,6 @@ viewDocument model =
     Document "Song Maker"
         [ basicStylesNode
         , view model
-        , Svg.svg
-            [ Svg.Attributes.viewBox "0 0 100 100", Html.Attributes.class "a" ]
-            [ Svg.rect
-                [ Svg.Attributes.class "sa"
-                , Html.Attributes.class "a"
-                , Svg.Attributes.width "100"
-                , Svg.Attributes.height "100"
-                , Svg.Attributes.fill "green"
-                ]
-                []
-            , Svg.g
-                [ Html.Attributes.class "a"
-                ]
-                []
-            ]
-        , Svg.svg
-            [ Html.Attributes.class "bi"
-            , Html.Attributes.width 32
-            , Html.Attributes.height 32
-            ]
-            [ Svg.use [ Svg.Attributes.xlinkHref "bootstrap-icons.svg#heart-fill" ] []
-            ]
-        , Svg.svg
-            [ -- Remove this line and it won't throw exception
-              Html.Attributes.class "bi"
-            , Html.Attributes.width 32
-            , Html.Attributes.height 32
-            ]
-            [ Svg.use [ Svg.Attributes.xlinkHref "bootstrap-icons.svg#heart-fill" ] []
-            ]
         ]
 
 
