@@ -389,8 +389,11 @@ viewGrid { w, h, pp, cIdx, playState } =
             pp
                 |> Set.toList
                 |> List.map (\gp -> viewTile (colorAt gp) gp)
+
+        lines =
+            []
     in
-    tiles
+    (tiles ++ lines)
         |> div
             [ style "flex-grow" "1"
             , dGrid
