@@ -1,9 +1,11 @@
 port module SongMaker exposing (main)
 
+import Browser.Navigation exposing (Key)
 import Dict exposing (Dict)
 import Random
 import Random.List
 import Set exposing (Set)
+import Url exposing (Url)
 import Utils exposing (..)
 
 
@@ -41,8 +43,10 @@ port stateChanged : (String -> msg) -> Sub msg
 
 
 main =
-    bDocument
+    browserApplication
         { init = init
+        , onUrlRequest = always NOP
+        , onUrlChange = always NOP
         , subscriptions = subscriptions
         , update = update
         , view = viewDocument
@@ -69,8 +73,8 @@ type DrawState
     | Erasing
 
 
-init : () -> ( Model, Cmd Msg )
-init () =
+init : () -> Url -> Key -> ( Model, Cmd Msg )
+init () _ _ =
     let
         w =
             16
