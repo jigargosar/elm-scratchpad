@@ -395,11 +395,6 @@ viewGrid { w, h, pp, cIdx, playState } =
 viewTile c gp =
     div
         [ bgc c
-        , if True then
-            noAttr
-
-          else
-            noAttr
         , sOutline ("0.5px solid " ++ wLightGray)
         , sMinHeight "20px"
         , notifyPointerDown (PointerDownOnGP gp)
