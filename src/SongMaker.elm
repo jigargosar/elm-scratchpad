@@ -373,21 +373,26 @@ viewGrid { w, h, pp, cIdx, playState } =
                         in
                         viewTile (colorAt gp) gp
                     )
-                |> gCol
-                    [ opacity
-                        (if playState == Playing && x == cIdx then
-                            0.5
 
-                         else
-                            1
-                        )
-                    ]
+        --|> gCol
+        --    [ opacity
+        --        (if playState == Playing && x == cIdx then
+        --            0.5
+        --
+        --         else
+        --            1
+        --        )
+        --    ]
     in
     rangeN w
-        |> List.map viewColumnAtX
+        |> List.concatMap viewColumnAtX
         |> gridColumns
             [ style "flex-grow" "1"
-            , style "grid-template-columns" ("repeat(" ++ fromInt w ++ ",1fr)")
+            , style "grid-template"
+                (("repeat(" ++ fromInt h ++ ",1fr)")
+                    ++ "/"
+                    ++ ("repeat(" ++ fromInt w ++ ",1fr)")
+                )
 
             --, style "grid-auto-columns" "1fr"
             , noUserSelect

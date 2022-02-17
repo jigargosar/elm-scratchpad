@@ -1307,15 +1307,11 @@ fCol aa =
     div (dFlex :: fDCol :: aa)
 
 
-gRow aa =
+gridColumns aa =
     div (dGrid :: gridAutoFlowColumn :: aa)
 
 
-gridColumns =
-    gRow
-
-
-gCol aa =
+gridRows aa =
     div (dGrid :: gridAutoFlowRow :: aa)
 
 
