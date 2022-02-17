@@ -80,7 +80,7 @@ init : () -> Url -> Key -> ( Model, Cmd Msg )
 init () url key =
     let
         w =
-            16
+            32
 
         h =
             14
