@@ -387,6 +387,9 @@ viewGrid { w, h, pp, cIdx, playState } =
         |> List.map viewColumnAtX
         |> gridColumns
             [ style "flex-grow" "1"
+            , style "grid-template-columns" ("repeat(" ++ fromInt w ++ ",1fr)")
+
+            --, style "grid-auto-columns" "1fr"
             , noUserSelect
             , notifyPointerUp OnPointerUp
             ]
