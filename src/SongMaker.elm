@@ -169,6 +169,11 @@ noteFromGP ( _, y ) =
         ]
 
 
+colorFromGP : Int2 -> String
+colorFromGP ( _, y ) =
+    listGetAtWithDefault "" (modBy 7 y) colors
+
+
 type Msg
     = NOP
     | PointerDownOnGP Int2
@@ -363,9 +368,9 @@ viewGrid : Model -> Html Msg
 viewGrid { w, h, pp, cIdx, playState } =
     let
         colorAt : Int2 -> String
-        colorAt (( _, y ) as gp) =
+        colorAt gp =
             if Set.member gp pp then
-                listGetAtWithDefault "" (modBy 7 y) colors
+                colorFromGP gp
 
             else
                 "transparent"
