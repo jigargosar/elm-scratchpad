@@ -390,7 +390,7 @@ viewGrid { w, h, pp, cIdx, playState } =
                 |> Set.toList
                 |> List.map (\gp -> viewTile (colorAt gp) gp)
 
-        lines =
+        hLines =
             [ fCol
                 [ style "grid-row" "7/9"
                 , style "grid-column" "1/-1"
@@ -399,8 +399,21 @@ viewGrid { w, h, pp, cIdx, playState } =
                 [ div [ bgc wWhite, sHeight "1px" ] []
                 ]
             ]
+
+        vLines =
+            List.range 1 (w - 1)
+                |> List.map
+                    (\x ->
+                        fRow
+                            [ style "grid-column" (fromInt x ++ "/" ++ fromInt (x + 2))
+                            , style "grid-row" "1/-1"
+                            , contentCenter
+                            ]
+                            [ div [ bgc wWhite, sWidth "1px" ] []
+                            ]
+                    )
     in
-    (tiles ++ lines)
+    (tiles ++ hLines ++ vLines)
         |> div
             [ style "flex-grow" "1"
             , dGrid
