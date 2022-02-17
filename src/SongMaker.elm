@@ -385,10 +385,12 @@ viewGrid { w, h, pp, cIdx, playState } =
         --tiles =
         --    rangeN w
         --        |> List.concatMap viewColumnAtX
+        tiles =
+            pp
+                |> Set.toList
+                |> List.map (\gp -> viewTile (colorAt gp) gp)
     in
-    pp
-        |> Set.toList
-        |> List.map (\gp -> viewTile (colorAt gp) gp)
+    tiles
         |> div
             [ style "flex-grow" "1"
             , dGrid
