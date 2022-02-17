@@ -391,12 +391,13 @@ viewGrid { w, h, pp, cIdx, playState } =
                 |> List.map (\gp -> viewTile (colorAt gp) gp)
 
         lines =
-            [ div
-                [ bgc wWhite
-                , style "grid-row" (fromInt 7 ++ "/" ++ fromInt 9)
+            [ fCol
+                [ style "grid-row" "7/9"
                 , style "grid-column" "1/-1"
+                , contentCenter
                 ]
-                []
+                [ div [ bgc wWhite, sHeight "1px" ] []
+                ]
             ]
     in
     (tiles ++ lines)
