@@ -260,6 +260,12 @@ update msg model =
             if not e.repeat && e.key == " " then
                 model |> withEffect togglePlayEffect
 
+            else if e.key == "s" then
+                ( model
+                , Browser.Navigation.replaceUrl model.key
+                    (paintedPositionsEncoder model.pp |> JE.encode 0)
+                )
+
             else
                 ( model, Cmd.none )
 
