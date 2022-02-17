@@ -159,12 +159,17 @@ keyEventDecoder =
         |> jdAndMap modifiersDecoder
         |> jdAndMap keyDecoder
         |> jdAndMap repeatDecoder
-        |> jdAndMap targetTagNameDecoder
+        |> jdAndMap targetTagNameOrBodyDecoder
 
 
 targetTagNameDecoder : Decoder String
 targetTagNameDecoder =
     JD.at [ "target", "tagName" ] JD.string
+
+
+targetTagNameOrBodyDecoder : Decoder String
+targetTagNameOrBodyDecoder =
+    JD.oneOf [ targetTagNameDecoder, JD.succeed "BODY" ]
 
 
 keyDecoder : Decoder String
