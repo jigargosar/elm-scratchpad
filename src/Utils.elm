@@ -2221,6 +2221,10 @@ randomFloatT ( a, b ) =
 -- STYLE HELPERS
 
 
+noAttr =
+    style "" ""
+
+
 classNames names =
     HA.attribute "class" (String.join " " names)
 

@@ -418,7 +418,3 @@ viewTile c gp =
         , notifyPointerEnter (PointerEnteredGP gp)
         ]
         []
-
-
-noAttr =
-    style "" ""
