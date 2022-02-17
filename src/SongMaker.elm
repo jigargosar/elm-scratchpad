@@ -2,15 +2,11 @@ port module SongMaker exposing (main)
 
 import Browser.Navigation exposing (Key)
 import Dict exposing (Dict)
-import Html
-import Html.Attributes exposing (classList)
 import Json.Decode as JD exposing (Decoder)
 import Json.Encode as JE exposing (Value)
 import Random
 import Random.List
 import Set exposing (Set)
-import Svg
-import Svg.Attributes exposing (class)
 import Url exposing (Url)
 import Utils exposing (..)
 
