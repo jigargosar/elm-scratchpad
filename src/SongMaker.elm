@@ -396,7 +396,7 @@ viewGrid { w, h, pp, cIdx, playState } =
                 , style "grid-column" "1/-1"
                 , contentCenter
                 ]
-                [ div [ bgc wWhite, sHeight "1px" ] []
+                [ div [ bgc wLightGray, sHeight "1px" ] []
                 ]
             ]
 
@@ -409,7 +409,17 @@ viewGrid { w, h, pp, cIdx, playState } =
                             , style "grid-row" "1/-1"
                             , contentCenter
                             ]
-                            [ div [ bgc wWhite, sWidth "1px" ] []
+                            [ div
+                                [ bgc
+                                    (if modBy 4 x == 0 then
+                                        wLightGray
+
+                                     else
+                                        wGray
+                                    )
+                                , sWidth "1px"
+                                ]
+                                []
                             ]
                     )
     in
