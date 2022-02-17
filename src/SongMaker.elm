@@ -75,7 +75,7 @@ type DrawState
 
 
 init : () -> Url -> Key -> ( Model, Cmd Msg )
-init () _ key =
+init () url key =
     let
         w =
             16
@@ -84,6 +84,7 @@ init () _ key =
             14
     in
     let
+        paintedPositions : Set GPos
         paintedPositions =
             rangeWH w h
                 |> Random.List.shuffle
@@ -93,6 +94,12 @@ init () _ key =
                 |> Set.fromList
 
         --|> always Set.empty
+        _ =
+            Debug.log "Debug: " url
+
+        _ =
+            Maybe.andThen Url.percentDecode url.query
+                |> Debug.log "Debug: "
     in
     ( { w = w
       , h = h
