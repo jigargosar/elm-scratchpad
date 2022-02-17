@@ -257,7 +257,7 @@ update msg model =
             model |> withEffect togglePlayEffect
 
         OnKeyDown e ->
-            if not e.repeat && e.key == " " then
+            if e.isTargetBodyElement && not e.repeat && e.key == " " then
                 model |> withEffect togglePlayEffect
 
             else if e.key == "s" then
@@ -341,17 +341,18 @@ viewPlayButton playState =
         , fontSize "20px"
         , pa "0.5ch 1ch"
         , notifyClick ToggleClicked
-        , preventDefaultOnKeyDown
-            (keyEventDecoder
-                |> JD.andThen
-                    (\e ->
-                        if not e.repeat && List.member e.key [ " ", "Enter" ] then
-                            JD.succeed ( NOP, True )
 
-                        else
-                            JD.fail "not needed"
-                    )
-            )
+        --, preventDefaultOnKeyDown
+        --    (keyEventDecoder
+        --        |> JD.andThen
+        --            (\e ->
+        --                if not e.repeat && List.member e.key [ " ", "Enter" ] then
+        --                    JD.succeed ( NOP, True )
+        --
+        --                else
+        --                    JD.fail "not needed"
+        --            )
+        --    )
         ]
         [ span [ style "display" "inline-block", sMinWidth "4ch" ]
             [ text
