@@ -402,9 +402,13 @@ viewGrid { w, h, pp, cIdx, playState } =
 
 
 viewTile c (( x, y ) as gp) =
+    let
+        ( row, col ) =
+            ( y + 1, x + 1 )
+    in
     div
         [ bgc c
-        , style "grid-area" (fromInt (y + 1) ++ "/" ++ fromInt (x + 1))
+        , style "grid-area" (fromInt row ++ "/" ++ fromInt col)
         , sOutline ("0.5px solid " ++ wLightGray)
         , sMinHeight "20px"
         , notifyPointerDown (PointerDownOnGP gp)
