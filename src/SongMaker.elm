@@ -363,16 +363,17 @@ viewGrid { w, h, pp, cIdx, playState } =
             else
                 "transparent"
 
-        --viewColumnAtX x =
-        --    rangeN h
-        --        |> List.map
-        --            (\y ->
-        --                let
-        --                    gp =
-        --                        ( x, y )
-        --                in
-        --                viewTile (colorAt gp) gp
-        --            )
+        viewColumnAtX x =
+            rangeN h
+                |> List.map
+                    (\y ->
+                        let
+                            gp =
+                                ( x, y )
+                        in
+                        viewTile (colorAt gp) gp
+                    )
+
         --|> gCol
         --    [ opacity
         --        (if playState == Playing && x == cIdx then
@@ -382,23 +383,37 @@ viewGrid { w, h, pp, cIdx, playState } =
         --            1
         --        )
         --    ]
-        --tiles =
-        --    rangeN w
-        --        |> List.concatMap viewColumnAtX
         tiles =
-            pp
-                |> Set.toList
-                |> List.map (\gp -> viewTile (colorAt gp) gp)
+            rangeN w
+                |> List.concatMap viewColumnAtX
 
+        --tiles =
+        --    pp
+        --        |> Set.toList
+        --        |> List.map (\gp -> viewTile (colorAt gp) gp)
         hLines =
-            [ fCol
-                [ style "grid-row" "7/9"
-                , style "grid-column" "1/-1"
-                , contentCenter
-                ]
-                [ div [ bgc wLightGray, sHeight "1px" ] []
-                ]
-            ]
+            List.range 1 (h - 1)
+                |> List.map
+                    (\y ->
+                        fCol
+                            [ style "grid-row" (fromInt y ++ "/" ++ fromInt (y + 2))
+                            , style "grid-column" "1/-1"
+                            , contentCenter
+                            , noPointerEvents
+                            ]
+                            [ div
+                                [ bgc
+                                    (if modBy 7 y == 0 then
+                                        wLightGray
+
+                                     else
+                                        wGray
+                                    )
+                                , sHeight "2px"
+                                ]
+                                []
+                            ]
+                    )
 
         vLines =
             List.range 1 (w - 1)
@@ -408,6 +423,7 @@ viewGrid { w, h, pp, cIdx, playState } =
                             [ style "grid-column" (fromInt x ++ "/" ++ fromInt (x + 2))
                             , style "grid-row" "1/-1"
                             , contentCenter
+                            , noPointerEvents
                             ]
                             [ div
                                 [ bgc
@@ -417,7 +433,7 @@ viewGrid { w, h, pp, cIdx, playState } =
                                      else
                                         wGray
                                     )
-                                , sWidth "1px"
+                                , sWidth "2px"
                                 ]
                                 []
                             ]
@@ -447,7 +463,8 @@ viewTile c (( x, y ) as gp) =
     div
         [ bgc c
         , style "grid-area" (fromInt row ++ "/" ++ fromInt col)
-        , sOutline ("0.5px solid " ++ wLightGray)
+
+        --, sOutline ("0.5px solid " ++ wLightGray)
         , sMinHeight "20px"
         , notifyPointerDown (PointerDownOnGP gp)
         , notifyPointerEnter (PointerEnteredGP gp)
