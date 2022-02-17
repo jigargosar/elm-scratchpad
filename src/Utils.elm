@@ -1311,6 +1311,10 @@ gRow aa =
     div (dGrid :: gridAutoFlowColumn :: aa)
 
 
+gridColumns =
+    gRow
+
+
 gCol aa =
     div (dGrid :: gridAutoFlowRow :: aa)
 

@@ -385,7 +385,7 @@ viewGrid { w, h, pp, cIdx, playState } =
     in
     rangeN w
         |> List.map viewColumnAtX
-        |> gRow
+        |> gridColumns
             [ style "flex-grow" "1"
             , noUserSelect
             , notifyPointerUp OnPointerUp
