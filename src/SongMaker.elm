@@ -365,7 +365,7 @@ computeTileColorAtGP { pp, cIdx } gp =
 
 
 viewGrid : Model -> Html Msg
-viewGrid { w, h, pp, cIdx, playState } =
+viewGrid ({ w, h, pp, cIdx, playState } as model) =
     let
         colorAt : Int2 -> String
         colorAt gp =
@@ -386,7 +386,7 @@ viewGrid { w, h, pp, cIdx, playState } =
                             gp =
                                 ( x, y )
                         in
-                        viewTile (colorAt gp) gp
+                        viewTile (computeTileColorAtGP model gp) gp
                     )
 
         tiles =
