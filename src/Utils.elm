@@ -975,7 +975,7 @@ userSelectText =
     style "user-select" "text"
 
 
-relative =
+positionRelative =
     style "position" "relative"
 
 

@@ -231,7 +231,7 @@ view model =
                 , gap "20px"
                 , dGrid
                 , style "grid-auto-flow" "column"
-                , relative
+                , positionRelative
                 ]
                 (initialBuckets
                     |> List.map
@@ -434,4 +434,4 @@ viewTaskItem mbDragging b t =
 
 
 placeOverContent rest base =
-    div [ relative ] (base :: rest)
+    div [ positionRelative ] (base :: rest)

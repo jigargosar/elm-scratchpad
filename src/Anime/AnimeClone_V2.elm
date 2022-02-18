@@ -106,7 +106,7 @@ viewExample isSelected animClock eg =
         [ style "border-bottom" "1px solid rgba(0,0,0,0.65)"
         , pb "20px"
         , sMaxWidth "600px"
-        , relative
+        , positionRelative
         , notifyClick (ExampleClicked eg)
         , cursorPointer
         ]
@@ -196,7 +196,7 @@ viewStaggeringBasicsExample isSelected ac =
                 |> String.join ""
 
         viewWithDX dx index =
-            div [ relative ]
+            div [ positionRelative ]
                 [ viewSquare [ smallSizeStyles, shadowElStyles ]
                 , viewLabel isSelected (labelText index)
                 , viewSquare [ smallSizeStyles, [ transforms [ translateX dx ] ] ]
@@ -223,7 +223,7 @@ viewStaggeringStartValueExample isSelected ac =
                 |> String.join ""
 
         viewWithDX dx index =
-            div [ relative ]
+            div [ positionRelative ]
                 [ viewSquare [ smallSizeStyles, shadowElStyles ]
                 , viewLabel isSelected (labelText index)
                 , viewSquare [ smallSizeStyles, [ transforms [ translateX dx ] ] ]
@@ -246,7 +246,7 @@ viewStaggerFromCenterExample : Bool -> A.Clock -> Html msg
 viewStaggerFromCenterExample _ ac =
     let
         viewWithDX dx _ =
-            div [ relative ]
+            div [ positionRelative ]
                 [ viewSquare [ smallSizeStyles, shadowElStyles ]
                 , viewSquare [ smallSizeStyles, [ transforms [ translateX dx ] ] ]
                 ]
@@ -279,7 +279,7 @@ viewStaggerRangeValueExample isSelected clock =
                 |> String.join ""
 
         viewWithDXAndDA dx da index =
-            div [ relative ]
+            div [ positionRelative ]
                 [ viewSquare [ smallSizeStyles, shadowElStyles ]
                 , viewLabel isSelected (labelText index)
                 , viewSquare
@@ -313,7 +313,7 @@ viewStaggeringReverseDirectionExample isSelected ac =
                 |> String.join ""
 
         viewWithDX dx index =
-            div [ relative ]
+            div [ positionRelative ]
                 [ viewSquare [ smallSizeStyles, shadowElStyles ]
                 , viewLabel isSelected (labelText index)
                 , viewSquare [ smallSizeStyles, [ transforms [ translateX dx ] ] ]
@@ -339,7 +339,7 @@ viewStaggeringEasingExample _ ac =
             6
 
         viewWithDX dx _ =
-            div [ relative ]
+            div [ positionRelative ]
                 [ viewSquare [ smallSizeStyles, shadowElStyles ]
                 , viewSquare [ smallSizeStyles, [ transforms [ translateX dx ] ] ]
                 ]

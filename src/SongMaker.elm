@@ -371,10 +371,9 @@ viewGrid ({ w, h, pp, cIdx, playState } as model) =
             rangeWH w h
                 |> List.map (\gp -> viewTile (computeTileColorAtGP model gp) gp)
     in
-    (tiles ++ viewGridLines w h)
-        |> div
-            [ style "flex-grow" "1"
-            , dGrid
+    div [ dGrid, positionRelative, style "flex-grow" "1" ]
+        [ div
+            [ dGrid
             , style "grid-template"
                 (("repeat(" ++ fromInt h ++ ",1fr)")
                     ++ "/"
@@ -383,6 +382,9 @@ viewGrid ({ w, h, pp, cIdx, playState } as model) =
             , noUserSelect
             , notifyPointerUp OnPointerUp
             ]
+            (tiles ++ viewGridLines w h)
+        , div [ w100, h100, positionAbsolute ] [ text "HH" ]
+        ]
 
 
 viewGridLines w h =
