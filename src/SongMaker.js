@@ -6,6 +6,7 @@ const app = Elm.SongMaker.init();
 
 const Player = (function () {
   const noteDuration = 0.1;
+  const noteGap = "8n"
 
   let seq = null;
   let steps = null;
@@ -38,7 +39,7 @@ const Player = (function () {
           synth.triggerAttackRelease(steps[i], noteDuration, time);
         },
         steps.map((_, i) => i),
-        "8n"
+        noteGap
       );
       seq.start(0);
     }
