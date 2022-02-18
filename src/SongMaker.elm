@@ -368,7 +368,7 @@ computeTileColorAtGP { pp, cIdx } (( x, _ ) as gp) =
 
 
 viewGrid : Model -> Html Msg
-viewGrid ({ w, h, pp, cIdx, playState } as model) =
+viewGrid ({ w, h } as model) =
     div [ dGrid, positionRelative, style "flex-grow" "1" ]
         [ viewGridTiles model
         , viewMinorGridLines w h
