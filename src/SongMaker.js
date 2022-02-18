@@ -2,25 +2,6 @@ import { Elm } from "./SongMaker.elm";
 import * as Tone from "tone/build/Tone.js";
 
 const synth = new Tone.PolySynth().toDestination();
-// synth.debug = true;
-// const notesSubdivisionArray = [
-//   "C4",
-//   ["E4", "D4", "E4"],
-//   "G4",
-//   ["A4", "G4"],
-// ];
-// const notes = notesSubdivisionArray.flat();
-// const noteIndices = notes.map((_, i) => i);
-// const seq = new Tone.Sequence(
-//   (time, i) => {
-//     Tone.Draw.schedule(function () {app.ports.selectColumn.send(i)}, time);
-//     synth.triggerAttackRelease(notes[i], "8n", time);
-//     // synth.triggerAttackRelease(notes[i], 0.1, time+0.05);
-//   },
-//   noteIndices,
-//   "4n"
-// );
-// seq.start(0);
 const app = Elm.SongMaker.init();
 
 const Player = (function () {
@@ -57,7 +38,7 @@ const Player = (function () {
           synth.triggerAttackRelease(steps[i], noteDuration, time);
         },
         steps.map((_, i) => i),
-        "4n"
+        "8n"
       );
       seq.start(0);
     }
