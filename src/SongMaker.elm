@@ -375,20 +375,30 @@ viewGrid ({ w, h, pp, cIdx, playState } as model) =
                 |> List.map (\gp -> viewTile (computeTileColorAtGP model gp) gp)
     in
     div [ dGrid, positionRelative, style "flex-grow" "1" ]
-        [ div
-            [ dGrid
-            , style "grid-template"
-                (("repeat(" ++ fromInt h ++ ",1fr)")
-                    ++ "/"
-                    ++ ("repeat(" ++ fromInt w ++ ",1fr)")
-                )
-            , noUserSelect
-            , notifyPointerUp OnPointerUp
-            ]
-            tiles
+        [ viewGridTiles model
         , viewMinorGridLines w h
         , viewMajorGridLines w h
         ]
+
+
+viewGridTiles : Model -> Html Msg
+viewGridTiles ({ w, h } as model) =
+    let
+        tiles =
+            rangeWH w h
+                |> List.map (\gp -> viewTile (computeTileColorAtGP model gp) gp)
+    in
+    div
+        [ dGrid
+        , style "grid-template"
+            (("repeat(" ++ fromInt h ++ ",1fr)")
+                ++ "/"
+                ++ ("repeat(" ++ fromInt w ++ ",1fr)")
+            )
+        , noUserSelect
+        , notifyPointerUp OnPointerUp
+        ]
+        tiles
 
 
 viewMinorGridLines w h =
