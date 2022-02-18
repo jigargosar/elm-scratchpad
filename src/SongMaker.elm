@@ -400,7 +400,6 @@ viewGrid ({ w, h, pp, cIdx, playState } as model) =
             , h100
             , positionAbsolute
             , noPointerEvents
-            , backgroundImageGridLines (hsl 0 0 0.4) "1px"
             , backgroundImages
                 [ "linear-gradient(to right, " ++ hsl 0 0 0.3 ++ " " ++ "1px" ++ ", transparent 0)"
                 , "linear-gradient(to bottom, " ++ hsl 0 0 0.3 ++ " " ++ "3px" ++ ", transparent 0)"
