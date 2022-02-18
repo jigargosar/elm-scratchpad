@@ -387,20 +387,22 @@ viewGrid ({ w, h, pp, cIdx, playState } as model) =
                 |> List.map
                     (\y ->
                         fCol
-                            [ style "grid-row" (fromInt y ++ "/" ++ fromInt (y + 2))
-                            , style "grid-column" "1/-1"
-                            , contentCenter
-                            , noPointerEvents
-                            ]
-                            [ div
-                                (if modBy 7 y == 0 then
-                                    [ bgc wLightGray, sHeight "2px" ]
+                            ([ style "grid-row" (fromInt y ++ "/" ++ fromInt (y + 2))
+                             , style "grid-column" "1/-1"
+                             , contentCenter
+                             , noPointerEvents
+                             , style "place-self" "center"
+                             , sHeight "2px"
+                             , sWidth "100%"
+                             ]
+                                ++ (if modBy 7 y == 0 then
+                                        [ bgc wLightGray, sHeight "2px" ]
 
-                                 else
-                                    [ bgc wGray, sHeight "1px" ]
-                                )
-                                []
-                            ]
+                                    else
+                                        [ bgc wGray, sHeight "1px" ]
+                                   )
+                            )
+                            []
                     )
 
         vLines =
