@@ -171,6 +171,17 @@ noteFromGP ( _, y ) =
 
 noteColorFromGP : Int2 -> String
 noteColorFromGP ( _, y ) =
+    let
+        colors =
+            [ wPink
+            , wPurple
+            , wBlue
+            , wGreen2_sea
+            , wOrange
+            , wYellow
+            , wGreen_lime
+            ]
+    in
     listGetAtWithDefault "" (modBy 7 y) colors
 
 
@@ -295,17 +306,6 @@ viewDocument model =
         [ basicStylesNode
         , view model
         ]
-
-
-colors =
-    [ wPink
-    , wPurple
-    , wBlue
-    , wGreen2_sea
-    , wOrange
-    , wYellow
-    , wGreen_lime
-    ]
 
 
 view : Model -> Html Msg
