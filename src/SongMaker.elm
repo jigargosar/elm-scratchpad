@@ -439,6 +439,23 @@ viewGrid ({ w, h, pp, cIdx, playState } as model) =
             ]
 
 
+viewHLine y =
+    div
+        ([ style "grid-row" (fromInt y ++ "/" ++ fromInt (y + 2))
+         , style "grid-column" "1/-1"
+         , noPointerEvents
+         , style "align-self" "center"
+         ]
+            ++ (if modBy 7 y == 0 then
+                    [ bgc wLightGray, sHeight "2px" ]
+
+                else
+                    [ bgc wGray, sHeight "1px" ]
+               )
+        )
+        []
+
+
 viewTile c (( x, y ) as gp) =
     let
         ( row, col ) =
