@@ -386,14 +386,11 @@ viewGrid ({ w, h, pp, cIdx, playState } as model) =
             List.range 1 (h - 1)
                 |> List.map
                     (\y ->
-                        fCol
+                        div
                             ([ style "grid-row" (fromInt y ++ "/" ++ fromInt (y + 2))
                              , style "grid-column" "1/-1"
-                             , contentCenter
                              , noPointerEvents
-                             , style "place-self" "center"
-                             , sHeight "2px"
-                             , sWidth "100%"
+                             , style "align-self" "center"
                              ]
                                 ++ (if modBy 7 y == 0 then
                                         [ bgc wLightGray, sHeight "2px" ]
