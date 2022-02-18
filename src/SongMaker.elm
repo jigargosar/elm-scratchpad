@@ -411,14 +411,6 @@ viewGrid ({ w, h, pp, cIdx, playState } as model) =
         ]
 
 
-columnGridLineGradiant c t =
-    "linear-gradient(to right, " ++ c ++ " " ++ t ++ ", transparent 0)"
-
-
-rowGridLineGradiant c t =
-    "linear-gradient(to bottom, " ++ c ++ " " ++ t ++ ", transparent 0)"
-
-
 backgroundSizeForGridLinesWH w h =
     style "background-size"
         (fromFloat (100 / toFloat w) ++ "% " ++ (fromFloat (100 / toFloat h) ++ "%"))
@@ -431,8 +423,12 @@ backgroundImageForGridLines c t =
         ]
 
 
-backgroundImages ls =
-    style "background-image" (ls |> String.join ",")
+columnGridLineGradiant c t =
+    "linear-gradient(to right, " ++ c ++ " " ++ t ++ ", transparent 0)"
+
+
+rowGridLineGradiant c t =
+    "linear-gradient(to bottom, " ++ c ++ " " ++ t ++ ", transparent 0)"
 
 
 viewTile c (( x, y ) as gp) =

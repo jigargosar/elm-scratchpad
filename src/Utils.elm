@@ -979,6 +979,10 @@ positionRelative =
     style "position" "relative"
 
 
+backgroundImages ls =
+    style "background-image" (ls |> String.join ",")
+
+
 styleWidth =
     style "width"
 
