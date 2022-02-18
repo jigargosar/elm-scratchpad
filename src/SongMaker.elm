@@ -388,15 +388,18 @@ viewGrid ({ w, h, pp, cIdx, playState } as model) =
             , h100
             , positionAbsolute
             , noPointerEvents
-            , backgroundImages
-                [ "linear-gradient(to right, grey 1px, transparent 0)"
-                , "linear-gradient(to bottom, grey 1px, transparent 0)"
-                ]
+            , backgroundImageGridLines minorGridLineColor "1px"
             , style "background-size"
                 (fromFloat (100 / toFloat w) ++ "% " ++ (fromFloat (100 / toFloat h) ++ "%"))
-            , style "background-position" "-0.5px -0.5px"
             ]
-            [ text "HH" ]
+            []
+        ]
+
+
+backgroundImageGridLines c t =
+    backgroundImages
+        [ "linear-gradient(to right, " ++ c ++ " " ++ t ++ ", transparent 0)"
+        , "linear-gradient(to bottom, " ++ c ++ " " ++ t ++ ", transparent 0)"
         ]
 
 
