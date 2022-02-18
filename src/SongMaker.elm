@@ -378,20 +378,9 @@ viewGrid ({ w, h, pp, cIdx, playState } as model) =
             else
                 "transparent"
 
-        viewColumnAtX x =
-            rangeN h
-                |> List.map
-                    (\y ->
-                        let
-                            gp =
-                                ( x, y )
-                        in
-                        viewTile (computeTileColorAtGP model gp) gp
-                    )
-
         tiles =
-            rangeN w
-                |> List.concatMap viewColumnAtX
+            rangeWH w h
+                |> List.map (\gp -> viewTile (computeTileColorAtGP model gp) gp)
 
         hLines =
             List.range 1 (h - 1)
