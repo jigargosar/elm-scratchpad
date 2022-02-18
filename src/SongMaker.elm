@@ -414,7 +414,7 @@ majorGridLineThickness =
 
 viewRowLineAfter row =
     div
-        ([ style "grid-row" (fromInt row ++ "/" ++ fromInt (row + 2))
+        ([ style "grid-row" (fromInt row ++ "/ span 2") -- "/" ++ fromInt (row + 2))
          , style "grid-column" "1/-1"
          , noPointerEvents
          , style "align-self" "center"
@@ -431,7 +431,7 @@ viewRowLineAfter row =
 
 viewVLine x =
     div
-        ([ style "grid-column" (fromInt x ++ "/" ++ fromInt (x + 2))
+        ([ style "grid-column" (fromInt x ++ "/ span 2") -- "/" ++ fromInt (x + 2))
          , style "grid-row" "1/-1"
          , noPointerEvents
          , style "justify-self" "center"
