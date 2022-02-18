@@ -397,8 +397,6 @@ viewGrid ({ w, h, pp, cIdx, playState } as model) =
                     ++ "/"
                     ++ ("repeat(" ++ fromInt w ++ ",1fr)")
                 )
-
-            --, style "grid-auto-columns" "1fr"
             , noUserSelect
             , notifyPointerUp OnPointerUp
             ]
