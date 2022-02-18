@@ -352,6 +352,18 @@ viewPlayButton playState =
         ]
 
 
+computeTileColorAtGP : Model -> Int2 -> String
+computeTileColorAtGP { pp, cIdx } gp =
+    if Set.member gp pp then
+        noteColorFromGP gp
+
+    else if first gp == cIdx then
+        hsl 0.6 0.2 0.4
+
+    else
+        "transparent"
+
+
 viewGrid : Model -> Html Msg
 viewGrid { w, h, pp, cIdx, playState } =
     let
