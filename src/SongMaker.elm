@@ -453,6 +453,7 @@ viewTile c (( x, y ) as gp) =
         [ bgc c
         , style "grid-area" (fromInt row ++ "/" ++ fromInt col)
         , sMinHeight "20px"
+        , sMinWidth "30px"
         , notifyPointerDown (PointerDownOnGP gp)
         , notifyPointerEnter (PointerEnteredGP gp)
         ]
