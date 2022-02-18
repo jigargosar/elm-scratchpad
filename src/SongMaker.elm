@@ -360,6 +360,9 @@ viewGrid { w, h, pp, cIdx, playState } =
             if Set.member gp pp then
                 noteColorFromGP gp
 
+            else if first gp == cIdx then
+                hsla 0.6 0.2 0.4 1
+
             else
                 "transparent"
 
