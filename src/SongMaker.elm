@@ -391,6 +391,22 @@ viewGrid ({ w, h, pp, cIdx, playState } as model) =
             ]
 
 
+minorGridLineColor =
+    wGray
+
+
+minorGridLineThickness =
+    "1px"
+
+
+majorGridLineColor =
+    wLightGray
+
+
+majorGridLineThickness =
+    "2px"
+
+
 viewHLine y =
     div
         ([ style "grid-row" (fromInt y ++ "/" ++ fromInt (y + 2))
@@ -406,22 +422,6 @@ viewHLine y =
                )
         )
         []
-
-
-minorGridLineColor =
-    wGray
-
-
-minorGridLineThickness =
-    "1px"
-
-
-majorGridLineColor =
-    wLightGray
-
-
-majorGridLineThickness =
-    "2px"
 
 
 viewVLine x =
