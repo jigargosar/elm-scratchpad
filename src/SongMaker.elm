@@ -408,6 +408,22 @@ viewHLine y =
         []
 
 
+minorGridLineColor =
+    wGray
+
+
+minorGridLineThickness =
+    "1px"
+
+
+majorGridLineColor =
+    wLightGray
+
+
+majorGridLineThickness =
+    "2px"
+
+
 viewVLine x =
     div
         ([ style "grid-column" (fromInt x ++ "/" ++ fromInt (x + 2))
