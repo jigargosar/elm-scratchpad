@@ -374,23 +374,10 @@ viewGrid { w, h, pp, cIdx, playState } =
                         viewTile (colorAt gp) gp
                     )
 
-        --|> gCol
-        --    [ opacity
-        --        (if playState == Playing && x == cIdx then
-        --            0.5
-        --
-        --         else
-        --            1
-        --        )
-        --    ]
         tiles =
             rangeN w
                 |> List.concatMap viewColumnAtX
 
-        --tiles =
-        --    pp
-        --        |> Set.toList
-        --        |> List.map (\gp -> viewTile (colorAt gp) gp)
         hLines =
             List.range 1 (h - 1)
                 |> List.map
