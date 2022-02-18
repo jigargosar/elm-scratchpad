@@ -383,24 +383,7 @@ viewGrid ({ w, h, pp, cIdx, playState } as model) =
                 |> List.map (\gp -> viewTile (computeTileColorAtGP model gp) gp)
 
         hLines =
-            List.range 1 (h - 1)
-                |> List.map
-                    (\y ->
-                        div
-                            ([ style "grid-row" (fromInt y ++ "/" ++ fromInt (y + 2))
-                             , style "grid-column" "1/-1"
-                             , noPointerEvents
-                             , style "align-self" "center"
-                             ]
-                                ++ (if modBy 7 y == 0 then
-                                        [ bgc wLightGray, sHeight "2px" ]
-
-                                    else
-                                        [ bgc wGray, sHeight "1px" ]
-                                   )
-                            )
-                            []
-                    )
+            List.range 1 (h - 1) |> List.map viewHLine
 
         vLines =
             List.range 1 (w - 1)
