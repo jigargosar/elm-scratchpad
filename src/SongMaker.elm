@@ -388,12 +388,25 @@ viewGrid ({ w, h, pp, cIdx, playState } as model) =
             , h100
             , positionAbsolute
             , noPointerEvents
-            , backgroundImageGridLines minorGridLineColor "1px"
-            , style "background-size"
-                (fromFloat (100 / toFloat w) ++ "% " ++ (fromFloat (100 / toFloat h) ++ "%"))
+            , backgroundImageGridLines wGray "1px"
+            , backgroundSizeForGridWH w h
+            ]
+            []
+        , div
+            [ w100
+            , h100
+            , positionAbsolute
+            , noPointerEvents
+            , backgroundImageGridLines wLightGray "2px"
+            , backgroundSizeForGridWH (w // 4) (h // 7)
             ]
             []
         ]
+
+
+backgroundSizeForGridWH w h =
+    style "background-size"
+        (fromFloat (100 / toFloat w) ++ "% " ++ (fromFloat (100 / toFloat h) ++ "%"))
 
 
 backgroundImageGridLines c t =
