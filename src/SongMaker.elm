@@ -431,11 +431,11 @@ viewVLine x =
          , noPointerEvents
          , style "justify-self" "center"
          ]
-            ++ (if modBy 7 x == 0 then
-                    [ bgc wLightGray, sWidth "2px" ]
+            ++ (if modBy 4 x == 0 then
+                    [ bgc majorGridLineColor, sWidth majorGridLineThickness ]
 
                 else
-                    [ bgc wGray, sWidth "1px" ]
+                    [ bgc minorGridLineColor, sWidth minorGridLineThickness ]
                )
         )
         []
