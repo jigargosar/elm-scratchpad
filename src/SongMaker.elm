@@ -399,10 +399,10 @@ viewHLine y =
          , style "align-self" "center"
          ]
             ++ (if modBy 7 y == 0 then
-                    [ bgc wLightGray, sHeight "2px" ]
+                    [ bgc majorGridLineColor, sHeight majorGridLineThickness ]
 
                 else
-                    [ bgc wGray, sHeight "1px" ]
+                    [ bgc minorGridLineColor, sHeight minorGridLineThickness ]
                )
         )
         []
