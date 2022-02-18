@@ -389,9 +389,11 @@ viewGrid ({ w, h, pp, cIdx, playState } as model) =
             , positionAbsolute
             , noPointerEvents
             , style "background-image" "url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoBAMAAAB+0KVeAAAAHlBMVEUAAABkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGRkZGSH0mEbAAAACnRSTlMAzDPDPPPYnGMw2CgMzQAAAChJREFUKM9jgAPOAgZMwGIwKkhXQSUY0BCCMxkEYUAsEM4cjI4fwYIAf2QMNbUsZjcAAAAASUVORK5CYII=')"
+            , style "background-image" "linear-gradient(to right, grey 1px, transparent 1px), linear-gradient(to bottom, grey 1px, transparent 1px)"
             , style "background-size"
                 (fromFloat (100 / toFloat w) ++ "% " ++ (fromFloat (100 / toFloat h) ++ "%"))
-            , style "background-position" "left top"
+            , style "background-position" "50% 50%"
+            , style "background-position" "0 0"
             ]
             [ text "HH" ]
         ]
