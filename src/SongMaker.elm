@@ -388,7 +388,7 @@ viewGrid ({ w, h, pp, cIdx, playState } as model) =
 viewGridLines w h =
     let
         hLines =
-            List.range 1 (h - 1) |> List.map viewHLine
+            List.range 1 (h - 1) |> List.map viewRowLineAfter
 
         vLines =
             List.range 1 (w - 1) |> List.map viewVLine
@@ -412,14 +412,14 @@ majorGridLineThickness =
     "2px"
 
 
-viewHLine y =
+viewRowLineAfter row =
     div
-        ([ style "grid-row" (fromInt y ++ "/" ++ fromInt (y + 2))
+        ([ style "grid-row" (fromInt row ++ "/" ++ fromInt (row + 2))
          , style "grid-column" "1/-1"
          , noPointerEvents
          , style "align-self" "center"
          ]
-            ++ (if modBy 7 y == 0 then
+            ++ (if modBy 7 row == 0 then
                     [ bgc majorGridLineColor, sHeight majorGridLineThickness ]
 
                 else
