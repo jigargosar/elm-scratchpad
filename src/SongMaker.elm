@@ -391,8 +391,8 @@ viewGrid ({ w, h, pp, cIdx, playState } as model) =
             , h100
             , positionAbsolute
             , noPointerEvents
-            , backgroundImageGridLines wGray "1px"
-            , backgroundSizeForGridWH w h
+            , backgroundImageForGridLines wGray "1px"
+            , backgroundSizeForGridLinesWH w h
             ]
             []
         , div
@@ -412,12 +412,12 @@ viewGrid ({ w, h, pp, cIdx, playState } as model) =
         ]
 
 
-backgroundSizeForGridWH w h =
+backgroundSizeForGridLinesWH w h =
     style "background-size"
         (fromFloat (100 / toFloat w) ++ "% " ++ (fromFloat (100 / toFloat h) ++ "%"))
 
 
-backgroundImageGridLines c t =
+backgroundImageForGridLines c t =
     backgroundImages
         [ "linear-gradient(to right, " ++ c ++ " " ++ t ++ ", transparent 0)"
         , "linear-gradient(to bottom, " ++ c ++ " " ++ t ++ ", transparent 0)"
