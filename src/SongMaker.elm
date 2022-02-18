@@ -388,13 +388,20 @@ viewGrid ({ w, h, pp, cIdx, playState } as model) =
             , h100
             , positionAbsolute
             , noPointerEvents
-            , style "background-image" "linear-gradient(to right, grey 1px, transparent 0), linear-gradient(to bottom, grey 1px, transparent 0)"
+            , backgroundImages
+                [ "linear-gradient(to right, grey 1px, transparent 0)"
+                , "linear-gradient(to bottom, grey 1px, transparent 0)"
+                ]
             , style "background-size"
                 (fromFloat (100 / toFloat w) ++ "% " ++ (fromFloat (100 / toFloat h) ++ "%"))
             , style "background-position" "-0.5px -0.5px"
             ]
             [ text "HH" ]
         ]
+
+
+backgroundImages ls =
+    style "background-image" (ls |> String.join ",")
 
 
 viewGridLines w h =
