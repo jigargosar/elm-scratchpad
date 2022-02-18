@@ -382,7 +382,7 @@ viewGrid ({ w, h, pp, cIdx, playState } as model) =
             , noUserSelect
             , notifyPointerUp OnPointerUp
             ]
-            (tiles ++ viewGridLines w h)
+            (tiles ++ (viewGridLines w h |> always []))
         , div
             [ w100
             , h100
@@ -398,7 +398,7 @@ viewGrid ({ w, h, pp, cIdx, playState } as model) =
             , positionAbsolute
             , noPointerEvents
             , backgroundImageGridLines wLightGray "2px"
-            , backgroundSizeForGridWH (w // 4) (h // 7)
+            , backgroundSizeForGridWH (w // 2) (h // 7)
             ]
             []
         ]
