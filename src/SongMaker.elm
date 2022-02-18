@@ -361,7 +361,7 @@ computeTileColorAtGP { pp, cIdx } (( x, _ ) as gp) =
         hsl 0.6 0.2 0.4
 
     else if modBy 16 x >= 8 then
-        hsl 0 0 0.11
+        hsl 0 0 0.1125
 
     else
         "transparent"
@@ -400,8 +400,14 @@ viewGrid ({ w, h, pp, cIdx, playState } as model) =
             , h100
             , positionAbsolute
             , noPointerEvents
-            , backgroundImageGridLines wLightGray "1px"
-            , backgroundSizeForGridWH (w // 2) (h // 7)
+            , backgroundImageGridLines (hsl 0 0 0.4) "1px"
+            , backgroundImages
+                [ "linear-gradient(to right, " ++ hsl 0 0 0.3 ++ " " ++ "1px" ++ ", transparent 0)"
+                , "linear-gradient(to bottom, " ++ hsl 0 0 0.3 ++ " " ++ "3px" ++ ", transparent 0)"
+                ]
+            , style "background-size"
+                (fromFloat (100 / (toFloat w / 2)) ++ "% " ++ (fromFloat (100 / (toFloat h / 7)) ++ "%"))
+            , style "background-position" "-0.5px -1.5px"
             ]
             []
         ]
