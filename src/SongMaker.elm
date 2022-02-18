@@ -386,25 +386,7 @@ viewGrid ({ w, h, pp, cIdx, playState } as model) =
             List.range 1 (h - 1) |> List.map viewHLine
 
         vLines =
-            List.range 1 (w - 1)
-                |> List.map
-                    (\x ->
-                        fRow
-                            [ style "grid-column" (fromInt x ++ "/" ++ fromInt (x + 2))
-                            , style "grid-row" "1/-1"
-                            , contentCenter
-                            , noPointerEvents
-                            ]
-                            [ div
-                                (if modBy 4 x == 0 then
-                                    [ bgc wLightGray, sWidth "2px" ]
-
-                                 else
-                                    [ bgc wGray, sWidth "1px" ]
-                                )
-                                []
-                            ]
-                    )
+            List.range 1 (w - 1) |> List.map viewVLine
     in
     (tiles ++ hLines ++ vLines)
         |> div
@@ -434,6 +416,23 @@ viewHLine y =
 
                 else
                     [ bgc wGray, sHeight "1px" ]
+               )
+        )
+        []
+
+
+viewVLine x =
+    div
+        ([ style "grid-column" (fromInt x ++ "/" ++ fromInt (x + 2))
+         , style "grid-row" "1/-1"
+         , noPointerEvents
+         , style "justify-self" "center"
+         ]
+            ++ (if modBy 7 x == 0 then
+                    [ bgc wLightGray, sWidth "2px" ]
+
+                else
+                    [ bgc wGray, sWidth "1px" ]
                )
         )
         []
