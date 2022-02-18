@@ -353,12 +353,15 @@ viewPlayButton playState =
 
 
 computeTileColorAtGP : Model -> Int2 -> String
-computeTileColorAtGP { pp, cIdx } gp =
+computeTileColorAtGP { pp, cIdx } (( x, _ ) as gp) =
     if Set.member gp pp then
         noteColorFromGP gp
 
-    else if first gp == cIdx then
+    else if x == cIdx then
         hsl 0.6 0.2 0.4
+
+    else if modBy 16 x >= 8 then
+        hsl 0 0 0.11
 
     else
         "transparent"
