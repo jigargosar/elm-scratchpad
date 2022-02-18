@@ -385,7 +385,7 @@ viewGrid ({ w, h, pp, cIdx, playState } as model) =
             , noUserSelect
             , notifyPointerUp OnPointerUp
             ]
-            (tiles ++ (viewGridLines w h |> always []))
+            tiles
         , div
             [ w100
             , h100
@@ -429,67 +429,6 @@ backgroundImages ls =
     style "background-image" (ls |> String.join ",")
 
 
-viewGridLines w h =
-    let
-        hLines =
-            List.range 1 (h - 1) |> List.map viewRowLineAfter
-
-        vLines =
-            List.range 1 (w - 1) |> List.map viewVLine
-    in
-    hLines ++ vLines
-
-
-minorGridLineColor =
-    wGray
-
-
-minorGridLineThickness =
-    "1px"
-
-
-majorGridLineColor =
-    wLightGray
-
-
-majorGridLineThickness =
-    "2px"
-
-
-viewRowLineAfter row =
-    div
-        ([ style "grid-row" (fromInt row ++ "/ span 2") -- "/" ++ fromInt (row + 2))
-         , style "grid-column" "1/-1"
-         , noPointerEvents
-         , style "align-self" "center"
-         ]
-            ++ (if modBy 7 row == 0 then
-                    [ bgc majorGridLineColor, sHeight majorGridLineThickness ]
-
-                else
-                    [ bgc minorGridLineColor, sHeight minorGridLineThickness ]
-               )
-        )
-        []
-
-
-viewVLine x =
-    div
-        ([ style "grid-column" (fromInt x ++ "/ span 2") -- "/" ++ fromInt (x + 2))
-         , style "grid-row" "1/-1"
-         , noPointerEvents
-         , style "justify-self" "center"
-         ]
-            ++ (if modBy 4 x == 0 then
-                    [ bgc majorGridLineColor, sWidth majorGridLineThickness ]
-
-                else
-                    [ bgc minorGridLineColor, sWidth minorGridLineThickness ]
-               )
-        )
-        []
-
-
 viewTile c (( x, y ) as gp) =
     let
         ( row, col ) =
@@ -498,8 +437,6 @@ viewTile c (( x, y ) as gp) =
     div
         [ bgc c
         , style "grid-area" (fromInt row ++ "/" ++ fromInt col)
-
-        --, sOutline ("0.5px solid " ++ wLightGray)
         , sMinHeight "20px"
         , notifyPointerDown (PointerDownOnGP gp)
         , notifyPointerEnter (PointerEnteredGP gp)
