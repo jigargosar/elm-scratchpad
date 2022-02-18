@@ -7,6 +7,7 @@ const app = Elm.SongMaker.init();
 const Player = (function () {
   const noteDuration = 0.1;
   const noteGap = "8n"
+  const bpm = 120;
 
   let seq = null;
   let steps = null;
@@ -25,7 +26,7 @@ const Player = (function () {
   Tone.Transport.on("stop", pollAndReportStateChange);
   Tone.Transport.on("pause", pollAndReportStateChange);
 
-  Tone.Transport.bpm.value = 120;
+  Tone.Transport.bpm.value = bpm;
 
   function updateStepsAndInitSeqIfRequired(steps_) {
     steps = steps_;
