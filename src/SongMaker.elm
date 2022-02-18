@@ -391,7 +391,7 @@ viewGrid ({ w, h, pp, cIdx, playState } as model) =
             , h100
             , positionAbsolute
             , noPointerEvents
-            , backgroundImageForGridLines wGray "1px"
+            , backgroundImageForGridLines (hsl 0 0 0.16) "1px"
             , backgroundSizeForGridLinesWH w h
             ]
             []
