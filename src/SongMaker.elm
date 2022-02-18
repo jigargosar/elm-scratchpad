@@ -401,8 +401,8 @@ viewGrid ({ w, h, pp, cIdx, playState } as model) =
             , positionAbsolute
             , noPointerEvents
             , backgroundImages
-                [ "linear-gradient(to right, " ++ hsl 0 0 0.3 ++ " " ++ "1px" ++ ", transparent 0)"
-                , "linear-gradient(to bottom, " ++ hsl 0 0 0.3 ++ " " ++ "3px" ++ ", transparent 0)"
+                [ columnGridLineGradiant (hsl 0 0 0.3) "1px"
+                , rowGridLineGradiant (hsl 0 0 0.3) "3px"
                 ]
             , style "background-position" "-0.5px -1.5px"
             , backgroundSizeForGridLinesWH (w // 2) (h // 7)
