@@ -383,7 +383,13 @@ viewGrid ({ w, h, pp, cIdx, playState } as model) =
             , notifyPointerUp OnPointerUp
             ]
             (tiles ++ viewGridLines w h)
-        , div [ w100, h100, positionAbsolute ] [ text "HH" ]
+        , div
+            [ w100
+            , h100
+            , positionAbsolute
+            , noPointerEvents
+            ]
+            [ text "HH" ]
         ]
 
 
