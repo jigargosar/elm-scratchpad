@@ -386,29 +386,37 @@ viewGrid ({ w, h, pp, cIdx, playState } as model) =
             , notifyPointerUp OnPointerUp
             ]
             tiles
-        , div
-            [ w100
-            , h100
-            , positionAbsolute
-            , noPointerEvents
-            , backgroundImageForGridLines (hsl 0 0 0.16) "1px"
-            , backgroundSizeForGridLinesWH w h
-            ]
-            []
-        , div
-            [ w100
-            , h100
-            , positionAbsolute
-            , noPointerEvents
-            , backgroundImages
-                [ columnGridLineGradiant (hsl 0 0 0.3) "1px"
-                , rowGridLineGradiant (hsl 0 0 0.3) "3px"
-                ]
-            , style "background-position" "-0.5px -1.5px"
-            , backgroundSizeForGridLinesWH (w // 2) (h // 7)
-            ]
-            []
+        , viewMinorGridLines w h
+        , viewMajorGridLines w h
         ]
+
+
+viewMinorGridLines w h =
+    div
+        [ w100
+        , h100
+        , positionAbsolute
+        , noPointerEvents
+        , backgroundImageForGridLines (hsl 0 0 0.16) "1px"
+        , backgroundSizeForGridLinesWH w h
+        ]
+        []
+
+
+viewMajorGridLines w h =
+    div
+        [ w100
+        , h100
+        , positionAbsolute
+        , noPointerEvents
+        , backgroundImages
+            [ columnGridLineGradiant (hsl 0 0 0.3) "1px"
+            , rowGridLineGradiant (hsl 0 0 0.3) "3px"
+            ]
+        , style "background-position" "-0.5px -1.5px"
+        , backgroundSizeForGridLinesWH (w // 2) (h // 7)
+        ]
+        []
 
 
 backgroundSizeForGridLinesWH w h =
