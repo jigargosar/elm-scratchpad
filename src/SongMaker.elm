@@ -370,14 +370,8 @@ viewGrid ({ w, h, pp, cIdx, playState } as model) =
         tiles =
             rangeWH w h
                 |> List.map (\gp -> viewTile (computeTileColorAtGP model gp) gp)
-
-        hLines =
-            List.range 1 (h - 1) |> List.map viewHLine
-
-        vLines =
-            List.range 1 (w - 1) |> List.map viewVLine
     in
-    (tiles ++ hLines ++ vLines)
+    (tiles ++ viewGridLines w h)
         |> div
             [ style "flex-grow" "1"
             , dGrid
@@ -389,6 +383,17 @@ viewGrid ({ w, h, pp, cIdx, playState } as model) =
             , noUserSelect
             , notifyPointerUp OnPointerUp
             ]
+
+
+viewGridLines w h =
+    let
+        hLines =
+            List.range 1 (h - 1) |> List.map viewHLine
+
+        vLines =
+            List.range 1 (w - 1) |> List.map viewVLine
+    in
+    hLines ++ vLines
 
 
 minorGridLineColor =
