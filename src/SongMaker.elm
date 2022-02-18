@@ -352,21 +352,6 @@ viewPlayButton playState =
         ]
 
 
-computeTileColorAtGP : Model -> Int2 -> String
-computeTileColorAtGP { pp, cIdx } (( x, _ ) as gp) =
-    if Set.member gp pp then
-        noteColorFromGP gp
-
-    else if x == cIdx then
-        hsl 0.6 0.2 0.4
-
-    else if modBy 16 x >= 8 then
-        hsl 0 0 0.1125
-
-    else
-        "transparent"
-
-
 viewGrid : Model -> Html Msg
 viewGrid ({ w, h } as model) =
     div [ dGrid, positionRelative, style "flex-grow" "1" ]
@@ -394,6 +379,21 @@ viewGridTiles ({ w, h } as model) =
         , notifyPointerUp OnPointerUp
         ]
         tiles
+
+
+computeTileColorAtGP : Model -> Int2 -> String
+computeTileColorAtGP { pp, cIdx } (( x, _ ) as gp) =
+    if Set.member gp pp then
+        noteColorFromGP gp
+
+    else if x == cIdx then
+        hsl 0.6 0.2 0.4
+
+    else if modBy 16 x >= 8 then
+        hsl 0 0 0.1125
+
+    else
+        "transparent"
 
 
 viewMinorGridLines w h =
