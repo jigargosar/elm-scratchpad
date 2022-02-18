@@ -369,11 +369,6 @@ computeTileColorAtGP { pp, cIdx } (( x, _ ) as gp) =
 
 viewGrid : Model -> Html Msg
 viewGrid ({ w, h, pp, cIdx, playState } as model) =
-    let
-        tiles =
-            rangeWH w h
-                |> List.map (\gp -> viewTile (computeTileColorAtGP model gp) gp)
-    in
     div [ dGrid, positionRelative, style "flex-grow" "1" ]
         [ viewGridTiles model
         , viewMinorGridLines w h
