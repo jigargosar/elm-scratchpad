@@ -446,7 +446,7 @@ backgroundGridLinesVertical strokeWidth color pctN =
     , "0"
     , "/"
     , fromFloat (pctN * 100) ++ "%"
-    , "auto"
+    , "100%"
     ]
         |> String.join " "
 
