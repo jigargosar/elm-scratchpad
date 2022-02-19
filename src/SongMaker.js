@@ -1,7 +1,7 @@
 import { Elm } from "./SongMaker.elm";
 import * as Tone from "tone/build/Tone.js";
 
-const synth = new Tone.PolySynth().toDestination();
+const synth = new Tone.PolySynth(Tone.MembraneSynth).toDestination();
 const app = Elm.SongMaker.init();
 
 const Player = (function () {
