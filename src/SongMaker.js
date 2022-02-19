@@ -1,13 +1,15 @@
 import { Elm } from "./SongMaker.elm";
 import * as Tone from "tone/build/Tone.js";
 
-const synth = new Tone.PolySynth(Tone.Synth).toDestination();
-const membraneSynth = new Tone.PolySynth(Tone.MembraneSynth).toDestination();
-const synths = { synth, membraneSynth };
+const synths = {
+  synth: new Tone.PolySynth(Tone.Synth).toDestination(),
+  membraneSynth: new Tone.PolySynth(Tone.MembraneSynth).toDestination(),
+  metalSynth: new Tone.PolySynth(Tone.MetalSynth).toDestination(),
+};
 const app = Elm.SongMaker.init();
 
 const Player = (function () {
-  const noteDuration = 0.1;
+  const noteDuration = 0.01;
   const noteGap = "8n";
   const bpm = 120;
 
