@@ -419,7 +419,6 @@ viewMajorGridLines w h =
             , rowGridLineGradiant (hsl 0 0 0.3) "3px"
             ]
         , style "background-position" "-0.5px -1.5px"
-        , backgroundSizeForGridLinesWH (w // 2) (h // 7)
         , style "background-size"
             (fromFloat (100 / toFloat (w // 2))
                 ++ "% "
