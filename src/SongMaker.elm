@@ -20,16 +20,16 @@ import Utils exposing (..)
 -}
 
 
-port play : List (List String) -> Cmd msg
+port play : List (List Note) -> Cmd msg
 
 
-port togglePlay : List (List String) -> Cmd msg
+port togglePlay : List (List Note) -> Cmd msg
 
 
-port playSingleNote : String -> Cmd msg
+port playSingleNote : Note -> Cmd msg
 
 
-port updateSteps : List (List String) -> Cmd msg
+port updateSteps : List (List Note) -> Cmd msg
 
 
 port stop : () -> Cmd msg
@@ -125,7 +125,7 @@ paintedPositionsEncoder =
     JE.set (\( a, b ) -> JE.list identity [ JE.int a, JE.int b ])
 
 
-toNotesColumns : Int -> Set Int2 -> List (List String)
+toNotesColumns : Int -> Set Int2 -> List (List Note)
 toNotesColumns w pp =
     let
         _ =
@@ -137,7 +137,7 @@ toNotesColumns w pp =
                 |> List.concat
                 |> List.map List.singleton
 
-        columnToNotesDict : Dict Int (List String)
+        columnToNotesDict : Dict Int (List Note)
         columnToNotesDict =
             groupEqBy first (Set.toList pp)
                 |> List.map (\( gp, gps ) -> ( first gp, List.map noteFromGP (gp :: gps) ))
@@ -147,27 +147,31 @@ toNotesColumns w pp =
         |> List.map (\x -> Dict.get x columnToNotesDict |> Maybe.withDefault [])
 
 
-noteFromGP : Int2 -> String
+type alias Note =
+    ( String, String )
+
+
+noteFromGP : Int2 -> Note
 noteFromGP ( _, y ) =
     listGetAtWithDefault
-        "C8"
+        ( "", "" )
         y
-        [ "C4"
-        , "D4"
-        , "E4"
-        , "F4"
-        , "G4"
-        , "A4"
-        , "B4"
-        , "C5"
-        , "D5"
-        , "E5"
-        , "F5"
-        , "G5"
-        , "A5"
-        , "B5"
-        , "C9"
-        , "C2"
+        [ ( "synth", "C4" )
+        , ( "synth", "D4" )
+        , ( "synth", "E4" )
+        , ( "synth", "F4" )
+        , ( "synth", "G4" )
+        , ( "synth", "A4" )
+        , ( "synth", "B4" )
+        , ( "synth", "C5" )
+        , ( "synth", "D5" )
+        , ( "synth", "E5" )
+        , ( "synth", "F5" )
+        , ( "synth", "G5" )
+        , ( "synth", "A5" )
+        , ( "synth", "B5" )
+        , ( "membraneSynth", "C9" )
+        , ( "membraneSynth", "C2" )
         ]
 
 

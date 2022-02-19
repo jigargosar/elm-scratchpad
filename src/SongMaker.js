@@ -1,12 +1,14 @@
 import { Elm } from "./SongMaker.elm";
 import * as Tone from "tone/build/Tone.js";
 
-const synth = new Tone.PolySynth(Tone.MembraneSynth).toDestination();
+const synth = new Tone.PolySynth(Tone.Synth).toDestination();
+const membraneSynth = new Tone.PolySynth(Tone.MembraneSynth).toDestination();
+const synths = { synth, membraneSynth };
 const app = Elm.SongMaker.init();
 
 const Player = (function () {
   const noteDuration = 0.1;
-  const noteGap = "8n"
+  const noteGap = "8n";
   const bpm = 120;
 
   let seq = null;
@@ -28,6 +30,10 @@ const Player = (function () {
 
   Tone.Transport.bpm.value = bpm;
 
+  function playNote([inst, note], time) {
+    synths[inst].triggerAttackRelease(note, noteDuration, time);
+  }
+
   function updateStepsAndInitSeqIfRequired(steps_) {
     steps = steps_;
     if (!seq) {
@@ -37,7 +43,8 @@ const Player = (function () {
             app.ports.selectColumn.send(i);
           }, time);
           // console.log(steps[i]);
-          synth.triggerAttackRelease(steps[i], noteDuration, time);
+
+          steps[i].forEach((data) => playNote(data, time));
         },
         steps.map((_, i) => i),
         noteGap
@@ -60,9 +67,9 @@ const Player = (function () {
       updateStepsAndInitSeqIfRequired(steps_);
       Tone.Transport.toggle();
     },
-    async playSingleNote(note) {
+    async playSingleNote(data) {
       await Tone.start();
-      synth.triggerAttackRelease(note, noteDuration);
+      playNote(data);
     },
     stop() {
       Tone.Transport.stop();
