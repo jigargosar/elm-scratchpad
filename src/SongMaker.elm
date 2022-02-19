@@ -424,6 +424,9 @@ viewMajorGridLines w h =
                 ++ "% "
                 ++ (fromFloat (100 / ((toFloat h + 2) / 7)) ++ "%")
             )
+
+        -- linear-gradient(to right, rgb(77, 77, 77) 1px, rgba(0, 0, 0, 0) 0px) -0.5px -1.5px / 6.25% 43.75%, linear-gradient(rgb(56, 57, 57) 3px, rgba(0, 0, 0, 0) 0px) repeat scroll -0.5px -1.5px / 6.25% 43.75% padding-box border-box
+        --, style "background" "linear-gradient"
         ]
         []
 
