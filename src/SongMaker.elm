@@ -431,6 +431,10 @@ viewMajorGridLines w h =
         []
 
 
+backgrounds =
+    style "background" << String.join ","
+
+
 backgroundSizeForGridLinesWH w h =
     style "background-size"
         (fromFloat (100 / toFloat w) ++ "% " ++ (fromFloat (100 / toFloat h) ++ "%"))
