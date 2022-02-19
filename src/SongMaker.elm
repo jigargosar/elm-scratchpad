@@ -444,6 +444,7 @@ backgroundGridLinesVertical strokeWidth color pctN =
     , "0"
     , fromFloat (strokeWidth / 2) ++ "px"
     , "/"
+    , "0"
     , fromFloat (pctN * 100) ++ "%"
     ]
 
