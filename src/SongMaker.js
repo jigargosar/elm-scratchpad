@@ -3,8 +3,8 @@ import * as Tone from "tone/build/Tone.js";
 
 const synths = {
   synth: new Tone.PolySynth(Tone.Synth).toDestination(),
-  membraneSynth: new Tone.MembraneSynth({ octaves: 3 }).toDestination(),
-  metalSynth: new Tone.PolySynth(Tone.MetalSynth).toDestination(),
+  membraneSynth: new Tone.MembraneSynth({ octaves: 4 }).toDestination(),
+  metalSynth: new Tone.MetalSynth().toDestination(),
   pluckSynth: new Tone.PolySynth(Tone.PluckSynth).toDestination(),
 };
 const app = Elm.SongMaker.init();
