@@ -356,9 +356,6 @@ viewGrid : Model -> Html Msg
 viewGrid ({ w, h } as model) =
     div [ dGrid, positionRelative, style "flex-grow" "1" ]
         [ viewGridTiles model
-
-        --, viewMinorGridLines w h
-        --, viewMajorGridLines w h
         , div
             [ w100
             , h100
@@ -415,37 +412,6 @@ computeTileColorAtGP { pp, cIdx } (( x, _ ) as gp) =
         "transparent"
 
 
-viewMinorGridLines w h =
-    div
-        [ w100
-        , h100
-        , positionAbsolute
-        , noPointerEvents
-
-        --, backgroundImageForGridLines (grayN 0.16) "1px"
-        --, backgroundSizeForGridLinesWH w (h + 2)
-        , backgrounds
-            [ backgroundGridLinesVertical 1 (grayN 0.16) (1 / toFloat w)
-            , backgroundGridLinesHorizontal 1 (grayN 0.16) (1 / (toFloat h + 2))
-            ]
-        ]
-        []
-
-
-viewMajorGridLines w h =
-    div
-        [ w100
-        , h100
-        , positionAbsolute
-        , noPointerEvents
-        , backgrounds
-            [ backgroundGridLinesVertical 1 (grayN 0.3) (2 / toFloat w)
-            , backgroundGridLinesHorizontal 3 (grayN 0.3) (7 / (toFloat h + 2))
-            ]
-        ]
-        []
-
-
 backgrounds =
     style "background" << String.join ","
 
@@ -470,26 +436,6 @@ backgroundGridLinesHorizontal strokeWidth color pctN =
     , fromFloat (pctN * 100) ++ "%"
     ]
         |> String.join " "
-
-
-backgroundSizeForGridLinesWH w h =
-    style "background-size"
-        (fromFloat (100 / toFloat w) ++ "% " ++ (fromFloat (100 / toFloat h) ++ "%"))
-
-
-backgroundImageForGridLines c t =
-    backgroundImages
-        [ columnGridLineGradiant c t
-        , rowGridLineGradiant c t
-        ]
-
-
-columnGridLineGradiant c t =
-    "linear-gradient(to right, " ++ c ++ " " ++ t ++ ", transparent 0)"
-
-
-rowGridLineGradiant c t =
-    "linear-gradient(to bottom, " ++ c ++ " " ++ t ++ ", transparent 0)"
 
 
 viewTile c (( x, y ) as gp) =
