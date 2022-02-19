@@ -371,7 +371,7 @@ viewGridTiles ({ w, h } as model) =
     div
         [ dGrid
         , style "grid-template"
-            (("repeat(" ++ fromInt h ++ ",1fr)")
+            (("repeat(" ++ fromInt (h + 2) ++ ",1fr)")
                 ++ "/"
                 ++ ("repeat(" ++ fromInt w ++ ",1fr)")
             )
@@ -403,7 +403,7 @@ viewMinorGridLines w h =
         , positionAbsolute
         , noPointerEvents
         , backgroundImageForGridLines (hsl 0 0 0.16) "1px"
-        , backgroundSizeForGridLinesWH w h
+        , backgroundSizeForGridLinesWH w (h + 2)
         ]
         []
 
@@ -420,6 +420,11 @@ viewMajorGridLines w h =
             ]
         , style "background-position" "-0.5px -1.5px"
         , backgroundSizeForGridLinesWH (w // 2) (h // 7)
+        , style "background-size"
+            (fromFloat (100 / toFloat (w // 2))
+                ++ "% "
+                ++ (fromFloat (100 / ((toFloat h + 2) / 7)) ++ "%")
+            )
         ]
         []
 
