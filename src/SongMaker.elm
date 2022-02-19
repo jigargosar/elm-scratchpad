@@ -371,9 +371,9 @@ viewGridTiles ({ w, h } as model) =
     div
         [ dGrid
         , style "grid-template"
-            (("repeat(" ++ fromInt h ++ ",1fr)")
+            (("repeat(" ++ fromInt h ++ ", 1fr)")
                 ++ "/"
-                ++ ("repeat(" ++ fromInt w ++ ",1fr)")
+                ++ ("repeat(" ++ fromInt w ++ ", 1fr)")
             )
         , noUserSelect
         , notifyPointerUp OnPointerUp
