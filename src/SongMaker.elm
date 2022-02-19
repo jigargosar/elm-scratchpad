@@ -414,19 +414,20 @@ viewMajorGridLines w h =
         , h100
         , positionAbsolute
         , noPointerEvents
-        , backgroundImages
-            [ columnGridLineGradiant (grayN 0.3) "1px"
-            , rowGridLineGradiant (grayN 0.3) "3px"
-            ]
-        , style "background-position" "-0.5px -1.5px"
-        , style "background-size"
-            (fromFloat (100 / toFloat (w // 2))
-                ++ "% "
-                ++ (fromFloat (100 / ((toFloat h + 2) / 7)) ++ "%")
-            )
 
+        --, backgroundImages
+        --    [ columnGridLineGradiant (grayN 0.3) "1px"
+        --    , rowGridLineGradiant (grayN 0.3) "3px"
+        --    ]
+        --, style "background-position" "-0.5px -1.5px"
+        --, style "background-size"
+        --    (fromFloat (100 / toFloat (w // 2))
+        --        ++ "% "
+        --        ++ (fromFloat (100 / ((toFloat h + 2) / 7)) ++ "%")
+        --    )
         -- linear-gradient(to right, rgb(77, 77, 77) 1px, rgba(0, 0, 0, 0) 0px) -0.5px -1.5px / 6.25% 43.75%, linear-gradient(rgb(56, 57, 57) 3px, rgba(0, 0, 0, 0) 0px) repeat scroll -0.5px -1.5px / 6.25% 43.75% padding-box border-box
         --, style "background" "linear-gradient"
+        , backgrounds [ backgroundGridLinesVertical 1 (grayN 0.3) (2 / toFloat w) ]
         ]
         []
 
@@ -441,12 +442,13 @@ backgroundGridLinesVertical strokeWidth color pctN =
             "linear-gradient(to right, rgb(77, 77, 77) 1px, rgba(0, 0, 0, 0) 0px) -0.5px -1.5px / 6.25% 43.75%"
     in
     [ "linear-gradient(to right, " ++ color ++ fromFloat strokeWidth ++ "px, transparent 0px)"
-    , "0"
     , fromFloat (strokeWidth / 2) ++ "px"
-    , "/"
     , "0"
+    , "/"
     , fromFloat (pctN * 100) ++ "%"
+    , "auto"
     ]
+        |> String.join " "
 
 
 backgroundSizeForGridLinesWH w h =
