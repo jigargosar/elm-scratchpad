@@ -435,6 +435,19 @@ backgrounds =
     style "background" << String.join ","
 
 
+backgroundGridLinesVertical strokeWidth color pctN =
+    let
+        _ =
+            "linear-gradient(to right, rgb(77, 77, 77) 1px, rgba(0, 0, 0, 0) 0px) -0.5px -1.5px / 6.25% 43.75%"
+    in
+    [ "linear-gradient(to right, " ++ color ++ fromFloat strokeWidth ++ "px, transparent 0px)"
+    , "0"
+    , fromFloat (strokeWidth / 2) ++ "px"
+    , "/"
+    , fromFloat (pctN * 100) ++ "%"
+    ]
+
+
 backgroundSizeForGridLinesWH w h =
     style "background-size"
         (fromFloat (100 / toFloat w) ++ "% " ++ (fromFloat (100 / toFloat h) ++ "%"))
