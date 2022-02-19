@@ -402,7 +402,7 @@ viewMinorGridLines w h =
         , h100
         , positionAbsolute
         , noPointerEvents
-        , backgroundImageForGridLines (hsl 0 0 0.16) "1px"
+        , backgroundImageForGridLines (grayN 0.16) "1px"
         , backgroundSizeForGridLinesWH w (h + 2)
         ]
         []
@@ -415,8 +415,8 @@ viewMajorGridLines w h =
         , positionAbsolute
         , noPointerEvents
         , backgroundImages
-            [ columnGridLineGradiant (hsl 0 0 0.3) "1px"
-            , rowGridLineGradiant (hsl 0 0 0.3) "3px"
+            [ columnGridLineGradiant (grayN 0.3) "1px"
+            , rowGridLineGradiant (grayN 0.3) "3px"
             ]
         , style "background-position" "-0.5px -1.5px"
         , style "background-size"
