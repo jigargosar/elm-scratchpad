@@ -389,7 +389,7 @@ viewGridTiles : Model -> Html Msg
 viewGridTiles ({ w, h } as model) =
     let
         tiles =
-            rangeWH w h
+            rangeWH w (h + 2)
                 |> List.map (\gp -> viewTile (computeTileColorAtGP model gp) gp)
     in
     div
