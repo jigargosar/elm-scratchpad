@@ -429,6 +429,7 @@ viewMajorGridLines w h =
         --, style "background" "linear-gradient"
         , backgrounds
             [ backgroundGridLinesVertical 1 (grayN 0.3) (2 / toFloat w)
+            , backgroundGridLinesHorizontal 3 (grayN 0.3) (7 / (toFloat h + 2))
             ]
         ]
         []
@@ -439,16 +440,23 @@ backgrounds =
 
 
 backgroundGridLinesVertical strokeWidth color pctN =
-    let
-        _ =
-            "linear-gradient(to right, rgb(77, 77, 77) 1px, rgba(0, 0, 0, 0) 0px) -0.5px -1.5px / 6.25% 43.75%"
-    in
     [ "linear-gradient(to right, " ++ color ++ fromFloat strokeWidth ++ "px, transparent 0px)"
-    , fromFloat (strokeWidth / 2) ++ "px"
+    , fromFloat (strokeWidth / -2) ++ "px"
     , "0"
     , "/"
     , fromFloat (pctN * 100) ++ "%"
     , "100%"
+    ]
+        |> String.join " "
+
+
+backgroundGridLinesHorizontal strokeWidth color pctN =
+    [ "linear-gradient(to bottom, " ++ color ++ fromFloat strokeWidth ++ "px, transparent 0px)"
+    , "0"
+    , fromFloat (strokeWidth / -2) ++ "px"
+    , "/"
+    , "100%"
+    , fromFloat (pctN * 100) ++ "%"
     ]
         |> String.join " "
 
