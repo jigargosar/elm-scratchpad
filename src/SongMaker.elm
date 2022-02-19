@@ -402,8 +402,13 @@ viewMinorGridLines w h =
         , h100
         , positionAbsolute
         , noPointerEvents
-        , backgroundImageForGridLines (grayN 0.16) "1px"
-        , backgroundSizeForGridLinesWH w (h + 2)
+
+        --, backgroundImageForGridLines (grayN 0.16) "1px"
+        --, backgroundSizeForGridLinesWH w (h + 2)
+        , backgrounds
+            [ backgroundGridLinesVertical 1 (grayN 0.16) (1 / toFloat w)
+            , backgroundGridLinesHorizontal 1 (grayN 0.16) (1 / (toFloat h + 2))
+            ]
         ]
         []
 
