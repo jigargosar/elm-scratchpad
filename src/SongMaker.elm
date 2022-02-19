@@ -150,7 +150,7 @@ toNotesColumns w pp =
 noteFromGP : Int2 -> String
 noteFromGP ( _, y ) =
     listGetAtWithDefault
-        ""
+        "C8"
         y
         [ "C4"
         , "D4"
