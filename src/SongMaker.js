@@ -3,7 +3,7 @@ import * as Tone from "tone/build/Tone.js";
 
 const synths = {
   synth: new Tone.PolySynth(Tone.Synth).toDestination(),
-  membraneSynth: new Tone.MembraneSynth({ octaves: 4 }).toDestination(),
+  membraneSynth: new Tone.MembraneSynth().toDestination(),
   metalSynth: new Tone.MetalSynth().toDestination(),
   pluckSynth: new Tone.PolySynth(Tone.PluckSynth).toDestination(),
 };
