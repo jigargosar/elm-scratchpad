@@ -360,7 +360,11 @@ viewGrid ({ w, h } as model) =
         ]
 
 
-viewGridLines w h =
+viewGridLines w_ h_ =
+    let
+        ( w, h ) =
+            ( toFloat w_, toFloat h_ + 2 )
+    in
     div
         [ w100
         , h100
@@ -369,12 +373,12 @@ viewGridLines w h =
         , backgrounds
             (List.reverse
                 [ -- minor grid lines
-                  backgroundGridLinesVertical 1 (grayN 0.16) (1 / toFloat w)
-                , backgroundGridLinesHorizontal 1 (grayN 0.16) (1 / (toFloat h + 2))
+                  backgroundGridLinesVertical 1 (grayN 0.16) (1 / w)
+                , backgroundGridLinesHorizontal 1 (grayN 0.16) (1 / h)
 
                 -- major grid lines
-                , backgroundGridLinesVertical 2 (grayN 0.3) (2 / toFloat w)
-                , backgroundGridLinesHorizontal 3 (grayN 0.3) (7 / (toFloat h + 2))
+                , backgroundGridLinesVertical 2 (grayN 0.3) (2 / w)
+                , backgroundGridLinesHorizontal 3 (grayN 0.3) (7 / h)
                 ]
             )
         ]
