@@ -5,6 +5,7 @@ const synths = {
   synth: new Tone.PolySynth(Tone.Synth).toDestination(),
   membraneSynth: new Tone.PolySynth(Tone.MembraneSynth).toDestination(),
   metalSynth: new Tone.PolySynth(Tone.MetalSynth).toDestination(),
+  pluckSynth: new Tone.PolySynth(Tone.PluckSynth).toDestination(),
 };
 const app = Elm.SongMaker.init();
 
