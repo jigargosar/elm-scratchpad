@@ -365,9 +365,11 @@ viewGrid ({ w, h } as model) =
             , positionAbsolute
             , noPointerEvents
             , backgrounds
-                [ --
+                [ -- major grid lines
                   backgroundGridLinesVertical 2 (grayN 0.3) (2 / toFloat w)
                 , backgroundGridLinesHorizontal 3 (grayN 0.3) (7 / (toFloat h + 2))
+
+                -- minor grid lines
                 , backgroundGridLinesVertical 1 (grayN 0.16) (1 / toFloat w)
                 , backgroundGridLinesHorizontal 1 (grayN 0.16) (1 / (toFloat h + 2))
                 ]
