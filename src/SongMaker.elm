@@ -356,8 +356,10 @@ viewGrid : Model -> Html Msg
 viewGrid ({ w, h } as model) =
     div [ dGrid, positionRelative, style "flex-grow" "1" ]
         [ viewGridTiles model
-        , viewMinorGridLines w h
-        , viewMajorGridLines w h
+
+        --, viewMinorGridLines w h
+        --, viewMajorGridLines w h
+        , viewGridLines w h
         ]
 
 
@@ -394,6 +396,11 @@ computeTileColorAtGP { pp, cIdx } (( x, _ ) as gp) =
 
     else
         "transparent"
+
+
+viewGridLines w h =
+    div [ w100, h100, positionAbsolute, noPointerEvents ]
+        [ viewMinorGridLines w h, viewMajorGridLines w h ]
 
 
 viewMinorGridLines w h =
