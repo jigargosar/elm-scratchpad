@@ -9,7 +9,8 @@ const fontPlayer = new WebAudioFontPlayer();
 const synth2Name = "_tone_" + "0000_SBLive_sf2";
 fontPlayer.loader.decodeAfterLoading(audioContext, synth2Name);
 
-const toneJSSynths = {
+const synths = {
+  synth2: synth2Name,
   synth: new Tone.PolySynth(Tone.Synth).toDestination(),
   membraneSynth: new Tone.MembraneSynth().toDestination(),
   metalSynth: new Tone.MetalSynth().toDestination(),
@@ -42,19 +43,20 @@ const Player = (function () {
   Tone.Transport.bpm.value = bpm;
 
   function playNote([inst, note], time) {
-    if (inst === "synth") {
-      playNote2(note, time);
+    const synth = synths[inst];
+    if (synth instanceof String) {
+      playSoundFont(synth, note, time);
     } else {
-      toneJSSynths[inst].triggerAttackRelease(note, noteDuration, time);
+      synth.triggerAttackRelease(note, noteDuration, time);
     }
   }
 
-  function playNote2(note, startTime = 0) {
+  function playSoundFont(preset, note, startTime = 0) {
     const ac = Tone.context._context._nativeAudioContext;
     fontPlayer.queueWaveTable(
       ac,
       ac.destination,
-      window[synth2Name],
+      window[preset],
       startTime,
       NoteParser.midi(note),
       Tone.Time("8n").toSeconds(),
