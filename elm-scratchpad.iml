@@ -15,5 +15,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="WebAudioFontPlayer" level="application" />
     <orderEntry type="library" name="0250_SoundBlasterOld_sf2" level="application" />
+    <orderEntry type="library" name="note-parser" level="application" />
   </component>
 </module>

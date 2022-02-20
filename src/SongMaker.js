@@ -1,7 +1,7 @@
 import { Elm } from "./SongMaker.elm";
 import * as Tone from "tone/build/Tone.js";
 
-const AudioContextFunc = window.AudioContext || window.webkitAudioContext;
+const AudioContextFunc = window.AudioContext || window["webkitAudioContext"];
 const audioContext = new AudioContextFunc();
 const player = new WebAudioFontPlayer();
 player.loader.decodeAfterLoading(
@@ -9,14 +9,15 @@ player.loader.decodeAfterLoading(
   "_tone_0250_SoundBlasterOld_sf2"
 );
 
-function play() {
+function playNote2(note, startTime) {
   player.queueWaveTable(
     audioContext,
     audioContext.destination,
     _tone_0250_SoundBlasterOld_sf2,
-    0,
-    12 * 4 + 7,
-    2
+    startTime,
+    NoteParser.midi(note),
+    // 2
+    Tone.Time("4n").toSeconds()
   );
   return false;
 }
@@ -54,7 +55,11 @@ const Player = (function () {
   Tone.Transport.bpm.value = bpm;
 
   function playNote([inst, note], time) {
-    synths[inst].triggerAttackRelease(note, noteDuration, time);
+    if (inst === "synth") {
+      playNote2(note, time? time : 0);
+    }else {
+      synths[inst].triggerAttackRelease(note, noteDuration, time);
+    }
   }
 
   function updateStepsAndInitSeqIfRequired(steps_) {
