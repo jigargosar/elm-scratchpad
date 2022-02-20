@@ -3,13 +3,13 @@ import * as Tone from "tone/build/Tone.js";
 
 // const AudioContextFunc = window.AudioContext || window["webkitAudioContext"];
 // const audioContext = new AudioContextFunc();
-const audioContext = Tone.context._context._nativeAudioContext;
+const audioContext = Tone.getContext().rawContext._nativeAudioContext;
 const player = new WebAudioFontPlayer();
 const fileName = "_tone_" + "0000_SBLive_sf2";
 player.loader.decodeAfterLoading(audioContext, fileName);
 
-function playNote2( note, startTime=0) {
-  const ac = Tone.context._context._nativeAudioContext
+function playNote2(note, startTime = 0) {
+  const ac = Tone.context._context._nativeAudioContext;
   player.queueWaveTable(
     ac,
     ac.destination,
@@ -111,8 +111,8 @@ const Player = (function () {
   };
 })();
 
-window.__Player = Player;
-window.__Tone = Tone;
+window.Player ??= Player;
+window.Tone ??= Tone;
 
 app.ports.play.subscribe(Player.play);
 app.ports.togglePlay.subscribe(Player.toggle);
