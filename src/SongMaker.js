@@ -17,7 +17,7 @@ function playNote2(note, startTime) {
     // 2,
     // Tone.Time("10n").toSeconds(),
     0.3,
-    0.5
+    0.4
   );
   return false;
 }
