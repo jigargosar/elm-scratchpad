@@ -1,6 +1,26 @@
 import { Elm } from "./SongMaker.elm";
 import * as Tone from "tone/build/Tone.js";
 
+const AudioContextFunc = window.AudioContext || window.webkitAudioContext;
+const audioContext = new AudioContextFunc();
+const player = new WebAudioFontPlayer();
+player.loader.decodeAfterLoading(
+  audioContext,
+  "_tone_0250_SoundBlasterOld_sf2"
+);
+
+function play() {
+  player.queueWaveTable(
+    audioContext,
+    audioContext.destination,
+    _tone_0250_SoundBlasterOld_sf2,
+    0,
+    12 * 4 + 7,
+    2
+  );
+  return false;
+}
+
 const synths = {
   synth: new Tone.PolySynth(Tone.Synth).toDestination(),
   membraneSynth: new Tone.MembraneSynth().toDestination(),
