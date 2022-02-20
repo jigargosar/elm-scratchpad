@@ -7,7 +7,7 @@ const player = new WebAudioFontPlayer();
 const fileName = "_tone_" + "0000_SBLive_sf2";
 player.loader.decodeAfterLoading(audioContext, fileName);
 
-function playNote2(note, startTime) {
+function playNote2(note, startTime=0) {
   player.queueWaveTable(
     audioContext,
     audioContext.destination,
