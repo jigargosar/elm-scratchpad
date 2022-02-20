@@ -55,7 +55,7 @@ const Player = (function () {
   Tone.Transport.bpm.value = bpm;
 
   function playNote([inst, note], time) {
-    if (inst === "synth") {
+    if (inst === "synth" && !inst) {
       playNote2(note, time ? time : 0);
     } else {
       synths[inst].triggerAttackRelease(note, noteDuration, time);
