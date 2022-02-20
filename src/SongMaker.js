@@ -1,7 +1,7 @@
 import { Elm } from "./SongMaker.elm";
 import * as Tone from "tone/build/Tone.js";
 
-console.log(NoteParser.midi("B1"))
+// console.log(NoteParser.midi("B1"))
 // const AudioContextFunc = window.AudioContext || window["webkitAudioContext"];
 // const audioContext = new AudioContextFunc();
 const audioContext = Tone.getContext().rawContext._nativeAudioContext;
