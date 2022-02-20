@@ -5,23 +5,9 @@ import * as Tone from "tone/build/Tone.js";
 // const audioContext = new AudioContextFunc();
 const audioContext = Tone.getContext().rawContext._nativeAudioContext;
 
-const player = new WebAudioFontPlayer();
+const fontPlayer = new WebAudioFontPlayer();
 const fileName = "_tone_" + "0000_SBLive_sf2";
-player.loader.decodeAfterLoading(audioContext, fileName);
-
-function playNote2(note, startTime = 0) {
-  const ac = Tone.context._context._nativeAudioContext;
-  player.queueWaveTable(
-    ac,
-    ac.destination,
-    window[fileName],
-    startTime,
-    NoteParser.midi(note),
-    Tone.Time("8n").toSeconds(),
-    0.5
-  );
-  return false;
-}
+fontPlayer.loader.decodeAfterLoading(audioContext, fileName);
 
 const synths = {
   synth: new Tone.PolySynth(Tone.Synth).toDestination(),
@@ -61,6 +47,20 @@ const Player = (function () {
     } else {
       synths[inst].triggerAttackRelease(note, noteDuration, time);
     }
+  }
+
+  function playNote2(note, startTime = 0) {
+    const ac = Tone.context._context._nativeAudioContext;
+    fontPlayer.queueWaveTable(
+      ac,
+      ac.destination,
+      window[fileName],
+      startTime,
+      NoteParser.midi(note),
+      Tone.Time("8n").toSeconds(),
+      0.5
+    );
+    return false;
   }
 
   function updateStepsAndInitSeqIfRequired(steps_) {
