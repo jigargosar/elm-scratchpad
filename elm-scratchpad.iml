@@ -23,5 +23,7 @@
     <orderEntry type="library" name="0010_Aspirin_sf2_file" level="application" />
     <orderEntry type="library" name="0000_FluidR3_GM_sf2_file" level="application" />
     <orderEntry type="library" name="0000_Aspirin_sf2_file" level="application" />
+    <orderEntry type="library" name="0010_Chaos_sf2_file" level="application" />
+    <orderEntry type="library" name="0000_Chaos_sf2_file" level="application" />
   </component>
 </module>

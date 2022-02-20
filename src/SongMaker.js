@@ -11,7 +11,9 @@ player.loader.decodeAfterLoading(
   // "_tone_0550_Chaos_sf2_file"
   // "_tone_0390_Aspirin_sf2_file"
   // "_tone_0010_Aspirin_sf2_file"
-  "_tone_0000_Aspirin_sf2_file"
+  // "_tone_0000_Aspirin_sf2_file"
+  "_tone_0000_Chaos_sf2_file"
+  // "_tone_0010_Chaos_sf2_file"
   // "_tone_0000_FluidR3_GM_sf2_file"
   // "_tone_0400_Aspirin_sf2_file"
 );
@@ -20,13 +22,13 @@ function playNote2(note, startTime) {
   player.queueWaveTable(
     audioContext,
     audioContext.destination,
-    _tone_0000_FluidR3_GM_sf2_file,
+    _tone_0000_Chaos_sf2_file,
     startTime,
-    NoteParser.midi(note),
+    NoteParser.midi(note) - 12,
     // 2,
     // Tone.Time("10n").toSeconds(),
     0.4,
-    1
+    0.5
   );
   return false;
 }
