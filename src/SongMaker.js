@@ -14,9 +14,7 @@ function playNote2(note, startTime) {
     window[fileName],
     startTime,
     NoteParser.midi(note),
-    // 2,
-    // Tone.Time("10n").toSeconds(),
-    0.3,
+    Tone.Time("8n").toSeconds(),
     0.5
   );
   return false;
