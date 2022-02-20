@@ -6,18 +6,23 @@ const audioContext = new AudioContextFunc();
 const player = new WebAudioFontPlayer();
 player.loader.decodeAfterLoading(
   audioContext,
-  "_tone_0250_SoundBlasterOld_sf2"
+  // "_tone_0250_SoundBlasterOld_sf2"
+  // "_tone_0480_Chaos_sf2_file"
+  // "_tone_0550_Chaos_sf2_file"
+  "_tone_0390_Aspirin_sf2_file"
 );
 
 function playNote2(note, startTime) {
   player.queueWaveTable(
     audioContext,
     audioContext.destination,
-    _tone_0250_SoundBlasterOld_sf2,
+    _tone_0390_Aspirin_sf2_file,
     startTime,
     NoteParser.midi(note),
-    // 2
-    Tone.Time("4n").toSeconds()
+    // 2,
+    Tone.Time("16n").toSeconds(),
+    // 0.3,
+    1
   );
   return false;
 }
@@ -56,8 +61,8 @@ const Player = (function () {
 
   function playNote([inst, note], time) {
     if (inst === "synth") {
-      playNote2(note, time? time : 0);
-    }else {
+      playNote2(note, time ? time : 0);
+    } else {
       synths[inst].triggerAttackRelease(note, noteDuration, time);
     }
   }

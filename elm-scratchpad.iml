@@ -16,5 +16,8 @@
     <orderEntry type="library" name="WebAudioFontPlayer" level="application" />
     <orderEntry type="library" name="0250_SoundBlasterOld_sf2" level="application" />
     <orderEntry type="library" name="note-parser" level="application" />
+    <orderEntry type="library" name="0480_Chaos_sf2_file" level="application" />
+    <orderEntry type="library" name="0550_Chaos_sf2_file" level="application" />
+    <orderEntry type="library" name="0390_Aspirin_sf2_file" level="application" />
   </component>
 </module>

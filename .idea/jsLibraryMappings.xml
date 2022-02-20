@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="JavaScriptLibraryMappings">
-    <file url="PROJECT" libraries="{0250_SoundBlasterOld_sf2, WebAudioFontPlayer, note-parser}" />
+    <file url="PROJECT" libraries="{0250_SoundBlasterOld_sf2, 0390_Aspirin_sf2_file, 0480_Chaos_sf2_file, 0550_Chaos_sf2_file, WebAudioFontPlayer, note-parser}" />
   </component>
 </project>
