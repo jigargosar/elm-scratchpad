@@ -46,7 +46,7 @@ const Player = (function () {
 
   function playNote([inst, note], time) {
     const synth = synths[inst];
-    if (synth instanceof String) {
+    if (typeof synth === 'string') {
       playSoundFont(synth, note, time);
     } else {
       synth.triggerAttackRelease(note, noteDuration, time);
