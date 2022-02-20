@@ -19,5 +19,9 @@
     <orderEntry type="library" name="0480_Chaos_sf2_file" level="application" />
     <orderEntry type="library" name="0550_Chaos_sf2_file" level="application" />
     <orderEntry type="library" name="0390_Aspirin_sf2_file" level="application" />
+    <orderEntry type="library" name="0400_Aspirin_sf2_file" level="application" />
+    <orderEntry type="library" name="0010_Aspirin_sf2_file" level="application" />
+    <orderEntry type="library" name="0000_FluidR3_GM_sf2_file" level="application" />
+    <orderEntry type="library" name="0000_Aspirin_sf2_file" level="application" />
   </component>
 </module>
