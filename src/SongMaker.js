@@ -4,6 +4,7 @@ import * as Tone from "tone/build/Tone.js";
 // const AudioContextFunc = window.AudioContext || window["webkitAudioContext"];
 // const audioContext = new AudioContextFunc();
 const audioContext = Tone.getContext().rawContext._nativeAudioContext;
+
 const player = new WebAudioFontPlayer();
 const fileName = "_tone_" + "0000_SBLive_sf2";
 player.loader.decodeAfterLoading(audioContext, fileName);
