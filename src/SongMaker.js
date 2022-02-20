@@ -8,9 +8,11 @@ const audioContext = Tone.getContext().rawContext._nativeAudioContext;
 const fontPlayer = new WebAudioFontPlayer();
 const synth2Name = "_tone_" + "0000_SBLive_sf2";
 fontPlayer.loader.decodeAfterLoading(audioContext, synth2Name);
-
+const bassDrum2Name = "_drum_35_0_Chaos_sf2_file"
+fontPlayer.loader.decodeAfterLoading(audioContext, bassDrum2Name)
 const synths = {
   synth2: synth2Name,
+  drum2: bassDrum2Name,
   synth: new Tone.PolySynth(Tone.Synth).toDestination(),
   membraneSynth: new Tone.MembraneSynth().toDestination(),
   metalSynth: new Tone.MetalSynth().toDestination(),
