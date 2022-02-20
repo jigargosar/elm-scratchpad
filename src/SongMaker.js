@@ -1,16 +1,18 @@
 import { Elm } from "./SongMaker.elm";
 import * as Tone from "tone/build/Tone.js";
 
-const AudioContextFunc = window.AudioContext || window["webkitAudioContext"];
-const audioContext = new AudioContextFunc();
+// const AudioContextFunc = window.AudioContext || window["webkitAudioContext"];
+// const audioContext = new AudioContextFunc();
+const audioContext = Tone.context._context._nativeAudioContext;
 const player = new WebAudioFontPlayer();
 const fileName = "_tone_" + "0000_SBLive_sf2";
 player.loader.decodeAfterLoading(audioContext, fileName);
 
-function playNote2(note, startTime=0) {
+function playNote2( note, startTime=0) {
+  const ac = Tone.context._context._nativeAudioContext
   player.queueWaveTable(
-    audioContext,
-    audioContext.destination,
+    ac,
+    ac.destination,
     window[fileName],
     startTime,
     NoteParser.midi(note),
