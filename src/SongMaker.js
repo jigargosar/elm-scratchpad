@@ -6,8 +6,8 @@ import * as Tone from "tone/build/Tone.js";
 const audioContext = Tone.getContext().rawContext._nativeAudioContext;
 
 const fontPlayer = new WebAudioFontPlayer();
-const synth2FileName = "_tone_" + "0000_SBLive_sf2";
-fontPlayer.loader.decodeAfterLoading(audioContext, synth2FileName);
+const synth2Name = "_tone_" + "0000_SBLive_sf2";
+fontPlayer.loader.decodeAfterLoading(audioContext, synth2Name);
 
 const synths = {
   synth: new Tone.PolySynth(Tone.Synth).toDestination(),
@@ -54,7 +54,7 @@ const Player = (function () {
     fontPlayer.queueWaveTable(
       ac,
       ac.destination,
-      window[synth2FileName],
+      window[synth2Name],
       startTime,
       NoteParser.midi(note),
       Tone.Time("8n").toSeconds(),
