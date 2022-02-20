@@ -4,7 +4,7 @@ import * as Tone from "tone/build/Tone.js";
 const AudioContextFunc = window.AudioContext || window["webkitAudioContext"];
 const audioContext = new AudioContextFunc();
 const player = new WebAudioFontPlayer();
-const fileName = "_tone_0000_JCLive_sf2_file";
+const fileName = "_tone_" + "0000_SBLive_sf2";
 player.loader.decodeAfterLoading(audioContext, fileName);
 
 function playNote2(note, startTime) {
@@ -17,7 +17,7 @@ function playNote2(note, startTime) {
     // 2,
     // Tone.Time("10n").toSeconds(),
     0.3,
-    0.4
+    0.5
   );
   return false;
 }
