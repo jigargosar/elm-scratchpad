@@ -9,7 +9,7 @@ const fontPlayer = new WebAudioFontPlayer();
 const synth2Name = "_tone_" + "0000_SBLive_sf2";
 fontPlayer.loader.decodeAfterLoading(audioContext, synth2Name);
 
-const synths = {
+const toneJSSynths = {
   synth: new Tone.PolySynth(Tone.Synth).toDestination(),
   membraneSynth: new Tone.MembraneSynth().toDestination(),
   metalSynth: new Tone.MetalSynth().toDestination(),
@@ -45,7 +45,7 @@ const Player = (function () {
     if (inst === "synth") {
       playNote2(note, time);
     } else {
-      synths[inst].triggerAttackRelease(note, noteDuration, time);
+      toneJSSynths[inst].triggerAttackRelease(note, noteDuration, time);
     }
   }
 
