@@ -54,7 +54,7 @@ const Player = (function () {
 
   function playNote([inst, note], time) {
     if (inst === "synth") {
-      playNote2(note, time ? time : 0);
+      playNote2(note, time);
     } else {
       synths[inst].triggerAttackRelease(note, noteDuration, time);
     }
