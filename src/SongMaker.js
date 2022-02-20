@@ -4,30 +4,19 @@ import * as Tone from "tone/build/Tone.js";
 const AudioContextFunc = window.AudioContext || window["webkitAudioContext"];
 const audioContext = new AudioContextFunc();
 const player = new WebAudioFontPlayer();
-player.loader.decodeAfterLoading(
-  audioContext,
-  // "_tone_0250_SoundBlasterOld_sf2"
-  // "_tone_0480_Chaos_sf2_file"
-  // "_tone_0550_Chaos_sf2_file"
-  // "_tone_0390_Aspirin_sf2_file"
-  // "_tone_0010_Aspirin_sf2_file"
-  // "_tone_0000_Aspirin_sf2_file"
-  "_tone_0000_Chaos_sf2_file"
-  // "_tone_0010_Chaos_sf2_file"
-  // "_tone_0000_FluidR3_GM_sf2_file"
-  // "_tone_0400_Aspirin_sf2_file"
-);
+const fileName = "_tone_0000_JCLive_sf2_file";
+player.loader.decodeAfterLoading(audioContext, fileName);
 
 function playNote2(note, startTime) {
   player.queueWaveTable(
     audioContext,
     audioContext.destination,
-    _tone_0000_Chaos_sf2_file,
+    window[fileName],
     startTime,
     NoteParser.midi(note) - 12,
     // 2,
     // Tone.Time("10n").toSeconds(),
-    0.4,
+    0.3,
     0.5
   );
   return false;
