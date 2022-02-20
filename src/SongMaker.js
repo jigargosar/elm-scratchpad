@@ -13,7 +13,7 @@ function playNote2(note, startTime) {
     audioContext.destination,
     window[fileName],
     startTime,
-    NoteParser.midi(note) - 12,
+    NoteParser.midi(note),
     // 2,
     // Tone.Time("10n").toSeconds(),
     0.3,
@@ -55,7 +55,7 @@ const Player = (function () {
   Tone.Transport.bpm.value = bpm;
 
   function playNote([inst, note], time) {
-    if (inst === "synth" && !inst) {
+    if (inst === "synth") {
       playNote2(note, time ? time : 0);
     } else {
       synths[inst].triggerAttackRelease(note, noteDuration, time);
