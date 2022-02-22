@@ -18,7 +18,6 @@ const synths = {
 const app = Elm.SongMakerSF.init();
 
 const Player = (function () {
-  const noteGap = "8n";
   const bpm = 120;
   const N = (4 * 60) / bpm;
   const pieceLen = 4 * N;
