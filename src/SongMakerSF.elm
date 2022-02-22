@@ -222,15 +222,15 @@ update msg model =
             ( model, Cmd.none )
 
         PointerDownOnGP gp ->
-            (if Set.member gp model.pp then
+            if Set.member gp model.pp then
                 { model | pp = Set.remove gp model.pp, drawState = Just Erasing }
                     |> withNoCmd
+                    |> addEffect updateStepsEffect
 
-             else
+            else
                 { model | pp = Set.insert gp model.pp, drawState = Just Drawing }
                     |> withCmd (playSingleNote (noteFromGP gp))
-            )
-                |> addEffect updateStepsEffect
+                    |> addEffect updateStepsEffect
 
         PointerEnteredGP gp ->
             case model.drawState of
