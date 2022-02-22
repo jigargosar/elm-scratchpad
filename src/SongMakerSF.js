@@ -82,7 +82,7 @@ const Player = (function () {
           const noteStartTimeInLoop = i * noteGap;
           if (noteStartTimeInLoop >= from && noteStartTimeInLoop < to) {
             const scheduleDelay = noteStartTimeInLoop - from;
-            setTimeout(() => app.ports.selectColumn.send(i), scheduleDelay);
+            setTimeout(() => app.ports.selectColumn.send(i), scheduleDelay - 0.1);
             const scheduleTime = wallClock + scheduleDelay;
             steps[i].forEach((data) => playNote(data, scheduleTime));
           }
@@ -109,8 +109,8 @@ const Player = (function () {
           fontPlayer,
           audioContext,
           0,
-          // ticker.lastPosition,
-          0,
+          ticker.lastPosition,
+          // 0,
           loopLengthInSeconds,
           steps_
         );
