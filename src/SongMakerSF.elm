@@ -32,9 +32,6 @@ port updateSteps : List (List Note) -> Cmd msg
 port selectColumn : (Int -> msg) -> Sub msg
 
 
-port stateChanged : (String -> msg) -> Sub msg
-
-
 main =
     browserApplication
         { init = init
@@ -189,14 +186,12 @@ type Msg
     | OnPointerUp
     | ToggleClicked
     | SelectColumn Int
-    | PlayerStateChanged String
     | OnKeyDown KeyEvent
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
     [ selectColumn SelectColumn
-    , stateChanged PlayerStateChanged
     , onBrowserKeyDown OnKeyDown
     ]
         |> Sub.batch
@@ -248,7 +243,16 @@ update msg model =
             ( { model | drawState = Nothing }, Cmd.none )
 
         ToggleClicked ->
-            model |> withEffect togglePlayEffect
+            { model
+                | playState =
+                    case model.playState of
+                        NotPlaying ->
+                            Playing
+
+                        Playing ->
+                            NotPlaying
+            }
+                |> withEffect togglePlayEffect
 
         OnKeyDown e ->
             if e.isTargetBodyElement && not e.repeat && e.key == " " then
@@ -265,19 +269,6 @@ update msg model =
 
         SelectColumn cIdx ->
             ( { model | cIdx = cIdx }, Cmd.none )
-
-        PlayerStateChanged playerStateString ->
-            ( { model
-                | playState =
-                    case playerStateString of
-                        "started" ->
-                            Playing
-
-                        _ ->
-                            NotPlaying
-              }
-            , Cmd.none
-            )
 
 
 viewDocument : Model -> Document Msg
