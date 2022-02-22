@@ -20,9 +20,6 @@ import Utils exposing (..)
 -}
 
 
-port play : List (List Note) -> Cmd msg
-
-
 port togglePlay : List (List Note) -> Cmd msg
 
 
@@ -30,12 +27,6 @@ port playSingleNote : Note -> Cmd msg
 
 
 port updateSteps : List (List Note) -> Cmd msg
-
-
-port stop : () -> Cmd msg
-
-
-port pause : () -> Cmd msg
 
 
 port selectColumn : (Int -> msg) -> Sub msg
@@ -196,9 +187,6 @@ type Msg
     | PointerDownOnGP Int2
     | PointerEnteredGP Int2
     | OnPointerUp
-    | PlayClicked
-    | StopClicked
-    | PauseClicked
     | ToggleClicked
     | SelectColumn Int
     | PlayerStateChanged String
@@ -212,11 +200,6 @@ subscriptions _ =
     , onBrowserKeyDown OnKeyDown
     ]
         |> Sub.batch
-
-
-playEffect : Model -> Cmd msg
-playEffect model =
-    play (toNotesColumns model.w model.pp)
 
 
 togglePlayEffect : Model -> Cmd msg
@@ -264,9 +247,6 @@ update msg model =
         OnPointerUp ->
             ( { model | drawState = Nothing }, Cmd.none )
 
-        PlayClicked ->
-            model |> withEffect playEffect
-
         ToggleClicked ->
             model |> withEffect togglePlayEffect
 
@@ -282,12 +262,6 @@ update msg model =
 
             else
                 ( model, Cmd.none )
-
-        StopClicked ->
-            ( model, stop () )
-
-        PauseClicked ->
-            ( model, pause () )
 
         SelectColumn cIdx ->
             ( { model | cIdx = cIdx }, Cmd.none )
