@@ -46,8 +46,6 @@ const Player = (function () {
   // Tone.Transport.on("start", pollAndReportStateChange);
   // Tone.Transport.on("stop", pollAndReportStateChange);
   // Tone.Transport.on("pause", pollAndReportStateChange);
-  //
-  // Tone.Transport.bpm.value = bpm;
 
   function playNote([inst, note], time) {
     const synth = synths[inst];
