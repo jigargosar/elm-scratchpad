@@ -207,6 +207,20 @@ updateStepsEffect model =
     updateSteps (toNotesColumns model.w model.pp)
 
 
+updateOnTogglePlay : Model -> ( Model, Cmd Msg )
+updateOnTogglePlay model =
+    { model
+        | playState =
+            case model.playState of
+                NotPlaying ->
+                    Playing
+
+                Playing ->
+                    NotPlaying
+    }
+        |> withEffect togglePlayEffect
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -243,16 +257,7 @@ update msg model =
             ( { model | drawState = Nothing }, Cmd.none )
 
         ToggleClicked ->
-            { model
-                | playState =
-                    case model.playState of
-                        NotPlaying ->
-                            Playing
-
-                        Playing ->
-                            NotPlaying
-            }
-                |> withEffect togglePlayEffect
+            updateOnTogglePlay model
 
         OnKeyDown e ->
             if e.isTargetBodyElement && not e.repeat && e.key == " " then
