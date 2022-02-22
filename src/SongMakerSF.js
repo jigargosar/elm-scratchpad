@@ -59,7 +59,8 @@ const Player = (function () {
       window[preset],
       startTime,
       NoteParser.midi(note),
-      Tone.Time("8n").toSeconds(),
+      // Tone.Time("8n").toSeconds(),
+      beatLen,
       0.5
     );
     return false;
