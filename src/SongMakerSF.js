@@ -15,14 +15,13 @@ const synths = {
   synth: synth2Name,
   drum: bassDrum2Name,
   // synth: new Tone.PolySynth(Tone.Synth).toDestination(),
-  membraneSynth: new Tone.MembraneSynth().toDestination(),
-  metalSynth: new Tone.MetalSynth().toDestination(),
-  pluckSynth: new Tone.PolySynth(Tone.PluckSynth).toDestination(),
+  // membraneSynth: new Tone.MembraneSynth().toDestination(),
+  // metalSynth: new Tone.MetalSynth().toDestination(),
+  // pluckSynth: new Tone.PolySynth(Tone.PluckSynth).toDestination(),
 };
 const app = Elm.SongMakerSF.init();
 
 const Player = (function () {
-  const noteDuration = 0.01;
   const noteGap = "8n";
   const bpm = 120;
 
@@ -47,11 +46,7 @@ const Player = (function () {
 
   function playNote([inst, note], time) {
     const synth = synths[inst];
-    if (typeof synth === 'string') {
-      playSoundFont(synth, note, time);
-    } else {
-      synth.triggerAttackRelease(note, noteDuration, time);
-    }
+    playSoundFont(synth, note, time);
   }
 
   function playSoundFont(preset, note, startTime = 0) {
