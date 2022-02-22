@@ -14,10 +14,6 @@ fontPlayer.loader.decodeAfterLoading(audioContext, bassDrum2Name)
 const synths = {
   synth: synth2Name,
   drum: bassDrum2Name,
-  // synth: new Tone.PolySynth(Tone.Synth).toDestination(),
-  // membraneSynth: new Tone.MembraneSynth().toDestination(),
-  // metalSynth: new Tone.MetalSynth().toDestination(),
-  // pluckSynth: new Tone.PolySynth(Tone.PluckSynth).toDestination(),
 };
 const app = Elm.SongMakerSF.init();
 
