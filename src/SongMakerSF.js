@@ -119,12 +119,6 @@ const Player = (function () {
     updateSteps(steps_) {
       steps = steps_;
     },
-    async play(steps_) {
-      // await Tone.start();
-      // updateStepsAndInitSeqIfRequired(steps_);
-      // Tone.Transport.start();
-      // playLoop(fontPlayer, audioContext, ticker.lastPosition, pieceLen, steps);
-    },
     async toggle(steps_) {
       await Tone.start();
       // updateStepsAndInitSeqIfRequired(steps_);
@@ -142,12 +136,6 @@ const Player = (function () {
       await Tone.start();
       playNote(data);
     },
-    stop() {
-      Tone.Transport.stop();
-    },
-    pause() {
-      Tone.Transport.pause();
-    },
     get seq() {
       return seq;
     },
@@ -157,9 +145,6 @@ const Player = (function () {
 window.Player ??= Player;
 window.Tone ??= Tone;
 
-app.ports.play.subscribe(Player.play);
 app.ports.togglePlay.subscribe(Player.toggle);
 app.ports.updateSteps.subscribe(Player.updateSteps);
 app.ports.playSingleNote.subscribe(Player.playSingleNote);
-app.ports.stop.subscribe(Player.stop);
-app.ports.pause.subscribe(Player.pause);
