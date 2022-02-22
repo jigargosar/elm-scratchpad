@@ -205,11 +205,16 @@ updateStepsEffect model =
     updateSteps (toNotesColumns model.w model.pp)
 
 
+startPlayingEffect : Model -> Cmd msg
+startPlayingEffect model =
+    start (toNotesColumns model.w model.pp)
+
+
 updateOnTogglePlay : Model -> ( Model, Cmd Msg )
 updateOnTogglePlay model =
     case model.playState of
         NotPlaying ->
-            ( { model | playState = Playing }, start (toNotesColumns model.w model.pp) )
+            { model | playState = Playing } |> withEffect startPlayingEffect
 
         Playing ->
             ( { model | playState = NotPlaying }, stop () )
