@@ -101,22 +101,22 @@ const Player = (function () {
     updateSteps(steps_) {
       steps = steps_;
     },
-    async toggle(steps_) {
-      if (ticker.state === ticker.statePlay) {
-        ticker.cancel();
-      } else {
-        playLoop(
-          fontPlayer,
-          audioContext,
-          0,
-          ticker.lastPosition,
-          // 0,
-          loopLengthInSeconds,
-          steps_
-        );
-      }
+    start(steps_){
+      ticker.cancel();
+      playLoop(
+        fontPlayer,
+        audioContext,
+        0,
+        ticker.lastPosition,
+        // 0,
+        loopLengthInSeconds,
+        steps_
+      );
     },
-    async playSingleNote(data) {
+    stop(){
+      ticker.cancel();
+    },
+    playSingleNote(data) {
       playNote(data);
     },
   };
@@ -124,6 +124,7 @@ const Player = (function () {
 
 window.Player ??= Player;
 
-app.ports.togglePlay.subscribe(Player.toggle);
+app.ports.start.subscribe(Player.start);
+app.ports.stop.subscribe(Player.stop);
 app.ports.updateSteps.subscribe(Player.updateSteps);
 app.ports.playSingleNote.subscribe(Player.playSingleNote);

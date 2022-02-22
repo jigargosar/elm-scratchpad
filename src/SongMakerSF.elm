@@ -20,7 +20,10 @@ import Utils exposing (..)
 -}
 
 
-port togglePlay : List (List Note) -> Cmd msg
+port start : List (List Note) -> Cmd msg
+
+
+port stop : () -> Cmd msg
 
 
 port playSingleNote : Note -> Cmd msg
@@ -197,11 +200,6 @@ subscriptions _ =
         |> Sub.batch
 
 
-togglePlayEffect : Model -> Cmd msg
-togglePlayEffect model =
-    togglePlay (toNotesColumns model.w model.pp)
-
-
 updateStepsEffect : Model -> Cmd msg
 updateStepsEffect model =
     updateSteps (toNotesColumns model.w model.pp)
@@ -209,16 +207,12 @@ updateStepsEffect model =
 
 updateOnTogglePlay : Model -> ( Model, Cmd Msg )
 updateOnTogglePlay model =
-    { model
-        | playState =
-            case model.playState of
-                NotPlaying ->
-                    Playing
+    case model.playState of
+        NotPlaying ->
+            ( { model | playState = Playing }, start (toNotesColumns model.w model.pp) )
 
-                Playing ->
-                    NotPlaying
-    }
-        |> withEffect togglePlayEffect
+        Playing ->
+            ( { model | playState = NotPlaying }, stop () )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
