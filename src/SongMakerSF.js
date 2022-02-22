@@ -103,6 +103,7 @@ const Player = (function () {
           const noteStartTimeInLoop = i * noteGap;
           if (noteStartTimeInLoop >= from && noteStartTimeInLoop < to) {
             const scheduleDelay = noteStartTimeInLoop - from;
+            setTimeout(() => app.ports.selectColumn.send(i), scheduleDelay);
             const scheduleTime = wallClock + scheduleDelay;
             console.log(wallClock, from, to);
             steps[i].forEach((data) => playNote(data, scheduleTime));
