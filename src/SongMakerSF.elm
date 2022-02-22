@@ -210,6 +210,11 @@ startPlayingEffect model =
     start (toNotesColumns model.w model.pp)
 
 
+stopCmd : Cmd msg
+stopCmd =
+    stop ()
+
+
 updateOnTogglePlay : Model -> ( Model, Cmd Msg )
 updateOnTogglePlay model =
     case model.playState of
@@ -217,7 +222,7 @@ updateOnTogglePlay model =
             { model | playState = Playing } |> withEffect startPlayingEffect
 
         Playing ->
-            ( { model | playState = NotPlaying }, stop () )
+            { model | playState = NotPlaying } |> withCmd stopCmd
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -229,8 +234,7 @@ update msg model =
         PointerDownOnGP gp ->
             if Set.member gp model.pp then
                 { model | pp = Set.remove gp model.pp, drawState = Just Erasing }
-                    |> withNoCmd
-                    |> addEffect updateStepsEffect
+                    |> withEffect updateStepsEffect
 
             else
                 { model | pp = Set.insert gp model.pp, drawState = Just Drawing }
