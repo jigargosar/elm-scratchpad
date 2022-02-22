@@ -97,12 +97,12 @@ const Player = (function () {
     steps = steps_;
     ticker.startTicks(
       audioContext,
-      function (currentACTime, from, to) {
+      function (when, from, to) {
         for (let i = 0; i < steps.length; i++) {
           const noteWhen = i * noteDuration;
           if (noteWhen >= from && noteWhen < to) {
-            const start = currentACTime + noteWhen - from;
-            console.log(currentACTime, from, to);
+            const start = when + noteWhen - from;
+            console.log(when, from, to);
             steps[i].forEach((data) => playNote(data, start));
             // playNote(steps[i], start);
             // player.queueWaveTable(audioContext, note.destination, note.preset, start, note.pitch, note.duration, note.volume, note.slides);
