@@ -25,8 +25,8 @@ const Player = (function () {
   const loopLengthInSeconds = totalBars * barLengthInSeconds;
   console.log("loopLengthInSeconds:", loopLengthInSeconds);
   // const noteDuration = (1 / 16) * barLengthInSeconds;
-  const noteScheduleInterval = (1 / 8) * barLengthInSeconds;
-  const noteDuration = noteScheduleInterval;
+  const noteGap = (1 / 8) * barLengthInSeconds;
+  const noteDuration = noteGap;
 
   const ticker = new WebAudioFontTicker();
 
@@ -100,7 +100,7 @@ const Player = (function () {
       audioContext,
       function (wallClock, from, to) {
         for (let i = 0; i < steps.length; i++) {
-          const noteStartTimeInLoop = i * noteScheduleInterval;
+          const noteStartTimeInLoop = i * noteGap;
           if (noteStartTimeInLoop >= from && noteStartTimeInLoop < to) {
             const scheduleDelay = noteStartTimeInLoop - from;
             const scheduleTime = wallClock + scheduleDelay;
