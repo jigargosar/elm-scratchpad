@@ -22,10 +22,10 @@ const Player = (function () {
   const barLengthInSeconds = (4 * 60) / bpm;
   const totalBars = 4;
   console.log("barLengthInSeconds: ", barLengthInSeconds);
-  const pieceLen = totalBars * barLengthInSeconds;
-  console.log("pieceLen:", pieceLen);
-  // const beatLen = (1 / 16) * barLengthInSeconds;
-  const beatLen = (1 / 8) * barLengthInSeconds;
+  const loopLengthInSeconds = totalBars * barLengthInSeconds;
+  console.log("loopLengthInSeconds:", loopLengthInSeconds);
+  // const noteDuration = (1 / 16) * barLengthInSeconds;
+  const noteDuration = (1 / 8) * barLengthInSeconds;
 
   const ticker = new WebAudioFontTicker();
 
@@ -61,7 +61,7 @@ const Player = (function () {
       startTime,
       NoteParser.midi(note),
       // Tone.Time("8n").toSeconds(),
-      beatLen,
+      noteDuration,
       0.5
     );
     return false;
@@ -99,7 +99,7 @@ const Player = (function () {
       audioContext,
       function (when, from, to) {
         for (let i = 0; i < steps.length; i++) {
-          const noteWhen = i * beatLen;
+          const noteWhen = i * noteDuration;
           if (noteWhen >= from && noteWhen < to) {
             const start = when + noteWhen - from;
             steps[i].forEach((data) => playNote(data, start));
@@ -134,7 +134,7 @@ const Player = (function () {
           audioContext,
           0,
           ticker.lastPosition,
-          pieceLen,
+          loopLengthInSeconds,
           steps_
         );
       }
