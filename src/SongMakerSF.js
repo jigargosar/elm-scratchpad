@@ -112,8 +112,7 @@ const Player = (function () {
       loopStart,
       loopPosition,
       loopEnd,
-      function (at) {
-        console.log("at", at);
+      function () {
         player.cancelQueue(audioContext);
       }
     );
