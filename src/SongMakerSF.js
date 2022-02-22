@@ -97,15 +97,14 @@ const Player = (function () {
     steps = steps_;
     ticker.startTicks(
       audioContext,
-      function (when, from, to) {
+      function (wallClock, from, to) {
         for (let i = 0; i < steps.length; i++) {
-          const noteWhen = i * noteDuration;
-          if (noteWhen >= from && noteWhen < to) {
-            const start = when + noteWhen - from;
-            console.log(when, from, to);
-            steps[i].forEach((data) => playNote(data, start));
-            // playNote(steps[i], start);
-            // player.queueWaveTable(audioContext, note.destination, note.preset, start, note.pitch, note.duration, note.volume, note.slides);
+          const noteStartTimeInLoop = i * noteDuration;
+          if (noteStartTimeInLoop >= from && noteStartTimeInLoop < to) {
+            const scheduleDelay = noteStartTimeInLoop - from;
+            const scheduleTime = wallClock + scheduleDelay;
+            console.log(wallClock, from, to);
+            steps[i].forEach((data) => playNote(data, scheduleTime));
           }
         }
       },
