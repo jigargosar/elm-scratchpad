@@ -19,13 +19,12 @@ const app = Elm.SongMakerSF.init();
 
 const Player = (function () {
   const bpm = 120;
-  // N = bar length ? in time
-  const N = (4 * 60) / bpm;
-  console.log("N: ",N);
-  const pieceLen = 4 * N;
-  console.log("pieceLen:",pieceLen);
-  // const beatLen = (1 / 16) * N;
-  const beatLen = (1 / 8) * N;
+  const barLengthInSeconds = (4 * 60) / bpm;
+  console.log("barLengthInSeconds: ", barLengthInSeconds);
+  const pieceLen = 4 * barLengthInSeconds;
+  console.log("pieceLen:", pieceLen);
+  // const beatLen = (1 / 16) * barLengthInSeconds;
+  const beatLen = (1 / 8) * barLengthInSeconds;
 
   const ticker = new WebAudioFontTicker();
 
