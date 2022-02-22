@@ -19,6 +19,7 @@ const app = Elm.SongMakerSF.init();
 
 const Player = (function () {
   const bpm = 120;
+  // N = bar length ? in time
   const N = (4 * 60) / bpm;
   const pieceLen = 4 * N;
   // const beatLen = (1 / 16) * N;
