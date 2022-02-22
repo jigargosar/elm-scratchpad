@@ -123,14 +123,18 @@ const Player = (function () {
       await Tone.start();
       // updateStepsAndInitSeqIfRequired(steps_);
       // Tone.Transport.toggle();
-      playLoop(
-        fontPlayer,
-        audioContext,
-        0,
-        ticker.lastPosition,
-        pieceLen,
-        steps_
-      );
+      if (ticker.state === ticker.statePlay) {
+        ticker.cancel();
+      } else {
+        playLoop(
+          fontPlayer,
+          audioContext,
+          0,
+          ticker.lastPosition,
+          pieceLen,
+          steps_
+        );
+      }
     },
     async playSingleNote(data) {
       await Tone.start();
