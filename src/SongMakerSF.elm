@@ -215,6 +215,11 @@ stopCmd =
     stop ()
 
 
+playSingleNoteCmd : Int2 -> Cmd msg
+playSingleNoteCmd gp =
+    playSingleNote (noteFromGP gp)
+
+
 updateOnTogglePlay : Model -> ( Model, Cmd Msg )
 updateOnTogglePlay model =
     case model.playState of
@@ -238,7 +243,7 @@ update msg model =
 
             else
                 { model | pp = Set.insert gp model.pp, drawState = Just Drawing }
-                    |> withCmd (playSingleNote (noteFromGP gp))
+                    |> withCmd (playSingleNoteCmd gp)
                     |> addEffect updateStepsEffect
 
         PointerEnteredGP gp ->
@@ -248,7 +253,7 @@ update msg model =
 
                 Just Drawing ->
                     { model | pp = Set.insert gp model.pp }
-                        |> withCmd (playSingleNote (noteFromGP gp))
+                        |> withCmd (playSingleNoteCmd gp)
                         |> addEffect updateStepsEffect
 
                 Just Erasing ->
