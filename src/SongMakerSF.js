@@ -51,10 +51,9 @@ const Player = (function () {
   }
 
   function playSoundFont(preset, note, startTime = 0) {
-    const ac = Tone.context._context._nativeAudioContext;
     fontPlayer.queueWaveTable(
-      ac,
-      ac.destination,
+      audioContext,
+      audioContext.destination,
       window[preset],
       startTime,
       NoteParser.midi(note),
