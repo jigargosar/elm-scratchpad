@@ -109,7 +109,8 @@ const Player = (function () {
           fontPlayer,
           audioContext,
           0,
-          ticker.lastPosition,
+          // ticker.lastPosition,
+          0,
           loopLengthInSeconds,
           steps_
         );
