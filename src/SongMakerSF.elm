@@ -261,7 +261,7 @@ update msg model =
 
         OnKeyDown e ->
             if e.isTargetBodyElement && not e.repeat && e.key == " " then
-                model |> withEffect togglePlayEffect
+                updateOnTogglePlay model
 
             else if e.key == "s" then
                 ( model
