@@ -66,24 +66,24 @@ const Player = (function () {
     return false;
   }
 
-  function updateStepsAndInitSeqIfRequired(steps_) {
-    steps = steps_;
-    if (!seq) {
-      seq = new Tone.Sequence(
-        (time, i) => {
-          Tone.Draw.schedule(function () {
-            app.ports.selectColumn.send(i);
-          }, time);
-          // console.log(steps[i]);
-
-          steps[i].forEach((data) => playNote(data, time));
-        },
-        steps.map((_, i) => i),
-        noteGap
-      );
-      seq.start(0);
-    }
-  }
+  // function updateStepsAndInitSeqIfRequired(steps_) {
+  //   steps = steps_;
+  //   if (!seq) {
+  //     seq = new Tone.Sequence(
+  //       (time, i) => {
+  //         Tone.Draw.schedule(function () {
+  //           app.ports.selectColumn.send(i);
+  //         }, time);
+  //         // console.log(steps[i]);
+  //
+  //         steps[i].forEach((data) => playNote(data, time));
+  //       },
+  //       steps.map((_, i) => i),
+  //       noteGap
+  //     );
+  //     seq.start(0);
+  //   }
+  // }
 
   function playLoop(
     player,
@@ -101,7 +101,7 @@ const Player = (function () {
           const noteWhen = i * beatLen;
           if (noteWhen >= from && noteWhen < to) {
             const start = when + noteWhen - from;
-            steps[i].forEach(data => playNote( data,start))
+            steps[i].forEach((data) => playNote(data, start));
             // playNote(steps[i], start);
             // player.queueWaveTable(audioContext, note.destination, note.preset, start, note.pitch, note.duration, note.volume, note.slides);
           }
@@ -111,6 +111,7 @@ const Player = (function () {
       loopPosition,
       loopEnd,
       function (at) {
+        console.log("at", at);
         player.cancelQueue(audioContext);
       }
     );
