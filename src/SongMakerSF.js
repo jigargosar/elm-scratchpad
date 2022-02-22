@@ -68,25 +68,6 @@ const Player = (function () {
     return false;
   }
 
-  // function updateStepsAndInitSeqIfRequired(steps_) {
-  //   steps = steps_;
-  //   if (!seq) {
-  //     seq = new Tone.Sequence(
-  //       (time, i) => {
-  //         Tone.Draw.schedule(function () {
-  //           app.ports.selectColumn.send(i);
-  //         }, time);
-  //         // console.log(steps[i]);
-  //
-  //         steps[i].forEach((data) => playNote(data, time));
-  //       },
-  //       steps.map((_, i) => i),
-  //       noteGap
-  //     );
-  //     seq.start(0);
-  //   }
-  // }
-
   function playLoop(
     player,
     audioContext,
@@ -123,9 +104,6 @@ const Player = (function () {
       steps = steps_;
     },
     async toggle(steps_) {
-      // await Tone.start();
-      // updateStepsAndInitSeqIfRequired(steps_);
-      // Tone.Transport.toggle();
       if (ticker.state === ticker.statePlay) {
         ticker.cancel();
       } else {
@@ -140,17 +118,12 @@ const Player = (function () {
       }
     },
     async playSingleNote(data) {
-      // await Tone.start();
       playNote(data);
     },
-    // get seq() {
-    //   return seq;
-    // },
   };
 })();
 
 window.Player ??= Player;
-// window.Tone ??= Tone;
 
 app.ports.togglePlay.subscribe(Player.toggle);
 app.ports.updateSteps.subscribe(Player.updateSteps);
