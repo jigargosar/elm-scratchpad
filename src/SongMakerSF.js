@@ -12,14 +12,14 @@ fontPlayer.loader.decodeAfterLoading(audioContext, synth2Name);
 const bassDrum2Name = "_drum_35_0_Chaos_sf2_file"
 fontPlayer.loader.decodeAfterLoading(audioContext, bassDrum2Name)
 const synths = {
-  synth2: synth2Name,
-  drum2: bassDrum2Name,
-  synth: new Tone.PolySynth(Tone.Synth).toDestination(),
+  synth: synth2Name,
+  drum: bassDrum2Name,
+  // synth: new Tone.PolySynth(Tone.Synth).toDestination(),
   membraneSynth: new Tone.MembraneSynth().toDestination(),
   metalSynth: new Tone.MetalSynth().toDestination(),
   pluckSynth: new Tone.PolySynth(Tone.PluckSynth).toDestination(),
 };
-const app = Elm.SongMaker.init();
+const app = Elm.SongMakerSF.init();
 
 const Player = (function () {
   const noteDuration = 0.01;
