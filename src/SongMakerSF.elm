@@ -170,7 +170,7 @@ noteFromGP ( _, y ) =
         , ( "synth", "G4" )
         , ( "synth", "A4" )
         , ( "synth", "B4" )
-        , ( "metalSynth", "C1" )
+        , ( "drum", "C1" )
         , ( "drum", "B1" )
         ]
 
