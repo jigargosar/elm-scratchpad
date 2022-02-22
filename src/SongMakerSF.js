@@ -9,8 +9,8 @@ const audioContext = Tone.getContext().rawContext._nativeAudioContext;
 const fontPlayer = new WebAudioFontPlayer();
 const synth2Name = "_tone_" + "0000_SBLive_sf2";
 fontPlayer.loader.decodeAfterLoading(audioContext, synth2Name);
-const bassDrum2Name = "_drum_35_0_Chaos_sf2_file"
-fontPlayer.loader.decodeAfterLoading(audioContext, bassDrum2Name)
+const bassDrum2Name = "_drum_35_0_Chaos_sf2_file";
+fontPlayer.loader.decodeAfterLoading(audioContext, bassDrum2Name);
 const synths = {
   synth: synth2Name,
   drum: bassDrum2Name,
@@ -20,6 +20,11 @@ const app = Elm.SongMakerSF.init();
 const Player = (function () {
   const noteGap = "8n";
   const bpm = 120;
+  const N = (4 * 60) / bpm;
+  const pieceLen = 4 * N;
+  const beatLen = (1 / 16) * N;
+
+  const ticker = new WebAudioFontTicker();
 
   let seq = null;
   let steps = null;
@@ -78,19 +83,59 @@ const Player = (function () {
     }
   }
 
+  function playLoop(
+    player,
+    audioContext,
+    loopStart,
+    loopPosition,
+    loopEnd,
+    steps_
+  ) {
+    steps = steps_;
+    ticker.startTicks(
+      audioContext,
+      function (when, from, to) {
+        for (let i = 0; i < steps.length; i++) {
+          const noteWhen = i * beatLen * 2;
+          if (noteWhen >= from && noteWhen < to) {
+            const start = when + noteWhen - from;
+            steps[i].forEach(data => playNote( data,start))
+            // playNote(steps[i], start);
+            // player.queueWaveTable(audioContext, note.destination, note.preset, start, note.pitch, note.duration, note.volume, note.slides);
+          }
+        }
+      },
+      loopStart,
+      loopPosition,
+      loopEnd,
+      function (at) {
+        player.cancelQueue(audioContext);
+      }
+    );
+  }
+
   return {
     updateSteps(steps_) {
       steps = steps_;
     },
     async play(steps_) {
-      await Tone.start();
-      updateStepsAndInitSeqIfRequired(steps_);
-      Tone.Transport.start();
+      // await Tone.start();
+      // updateStepsAndInitSeqIfRequired(steps_);
+      // Tone.Transport.start();
+      // playLoop(fontPlayer, audioContext, ticker.lastPosition, pieceLen, steps);
     },
     async toggle(steps_) {
       await Tone.start();
-      updateStepsAndInitSeqIfRequired(steps_);
-      Tone.Transport.toggle();
+      // updateStepsAndInitSeqIfRequired(steps_);
+      // Tone.Transport.toggle();
+      playLoop(
+        fontPlayer,
+        audioContext,
+        0,
+        ticker.lastPosition,
+        pieceLen,
+        steps_
+      );
     },
     async playSingleNote(data) {
       await Tone.start();
