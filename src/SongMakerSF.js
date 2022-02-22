@@ -1,10 +1,10 @@
 import { Elm } from "./SongMakerSF.elm";
-import * as Tone from "tone/build/Tone.js";
+// import * as Tone from "tone/build/Tone.js";
 
 // console.log(NoteParser.midi("B1"))
-// const AudioContextFunc = window.AudioContext || window["webkitAudioContext"];
-// const audioContext = new AudioContextFunc();
-const audioContext = Tone.getContext().rawContext._nativeAudioContext;
+const AudioContextFunc = window.AudioContext || window["webkitAudioContext"];
+const audioContext = new AudioContextFunc();
+// const audioContext = Tone.getContext().rawContext._nativeAudioContext;
 
 const fontPlayer = new WebAudioFontPlayer();
 const synth2Name = "_tone_" + "0000_SBLive_sf2";
@@ -29,24 +29,24 @@ const Player = (function () {
 
   const ticker = new WebAudioFontTicker();
 
-  let seq = null;
+  // let seq = null;
   let steps = null;
-  let state = "unknown";
+  // let state = "unknown";
 
-  function pollAndReportStateChange() {
-    if (state !== Tone.Transport.state) {
-      state = Tone.Transport.state;
-      app.ports.stateChanged.send(state);
-    }
-  }
-
-  pollAndReportStateChange();
-
-  Tone.Transport.on("start", pollAndReportStateChange);
-  Tone.Transport.on("stop", pollAndReportStateChange);
-  Tone.Transport.on("pause", pollAndReportStateChange);
-
-  Tone.Transport.bpm.value = bpm;
+  // function pollAndReportStateChange() {
+  //   if (state !== Tone.Transport.state) {
+  //     state = Tone.Transport.state;
+  //     app.ports.stateChanged.send(state);
+  //   }
+  // }
+  //
+  // pollAndReportStateChange();
+  //
+  // Tone.Transport.on("start", pollAndReportStateChange);
+  // Tone.Transport.on("stop", pollAndReportStateChange);
+  // Tone.Transport.on("pause", pollAndReportStateChange);
+  //
+  // Tone.Transport.bpm.value = bpm;
 
   function playNote([inst, note], time) {
     const synth = synths[inst];
@@ -123,7 +123,7 @@ const Player = (function () {
       steps = steps_;
     },
     async toggle(steps_) {
-      await Tone.start();
+      // await Tone.start();
       // updateStepsAndInitSeqIfRequired(steps_);
       // Tone.Transport.toggle();
       if (ticker.state === ticker.statePlay) {
@@ -140,17 +140,17 @@ const Player = (function () {
       }
     },
     async playSingleNote(data) {
-      await Tone.start();
+      // await Tone.start();
       playNote(data);
     },
-    get seq() {
-      return seq;
-    },
+    // get seq() {
+    //   return seq;
+    // },
   };
 })();
 
 window.Player ??= Player;
-window.Tone ??= Tone;
+// window.Tone ??= Tone;
 
 app.ports.togglePlay.subscribe(Player.toggle);
 app.ports.updateSteps.subscribe(Player.updateSteps);
