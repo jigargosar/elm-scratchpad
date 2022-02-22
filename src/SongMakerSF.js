@@ -22,7 +22,8 @@ const Player = (function () {
   const bpm = 120;
   const N = (4 * 60) / bpm;
   const pieceLen = 4 * N;
-  const beatLen = (1 / 16) * N;
+  // const beatLen = (1 / 16) * N;
+  const beatLen = (1 / 8) * N;
 
   const ticker = new WebAudioFontTicker();
 
@@ -96,7 +97,7 @@ const Player = (function () {
       audioContext,
       function (when, from, to) {
         for (let i = 0; i < steps.length; i++) {
-          const noteWhen = i * beatLen * 2;
+          const noteWhen = i * beatLen;
           if (noteWhen >= from && noteWhen < to) {
             const start = when + noteWhen - from;
             steps[i].forEach(data => playNote( data,start))
