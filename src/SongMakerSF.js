@@ -1,10 +1,7 @@
 import { Elm } from "./SongMakerSF.elm";
-// import * as Tone from "tone/build/Tone.js";
 
-// console.log(NoteParser.midi("B1"))
 const AudioContextFunc = window.AudioContext || window["webkitAudioContext"];
 const audioContext = new AudioContextFunc();
-// const audioContext = Tone.getContext().rawContext._nativeAudioContext;
 
 const fontPlayer = new WebAudioFontPlayer();
 const synth2Name = "_tone_" + "0000_SBLive_sf2";
@@ -17,7 +14,16 @@ const synths = {
 };
 const app = Elm.SongMakerSF.init();
 
-const Player = (function () {
+const Player = MakePlayer();
+
+window.Player ??= Player;
+
+app.ports.start.subscribe(Player.start);
+app.ports.stop.subscribe(Player.stop);
+app.ports.updateSteps.subscribe(Player.updateSteps);
+app.ports.playSingleNote.subscribe(Player.playSingleNote);
+
+function MakePlayer() {
   const bpm = 120;
   const barLengthInSeconds = (4 * 60) / bpm;
   const totalBars = 4;
@@ -82,7 +88,10 @@ const Player = (function () {
           const noteStartTimeInLoop = i * noteGap;
           if (noteStartTimeInLoop >= from && noteStartTimeInLoop < to) {
             const scheduleDelay = noteStartTimeInLoop - from;
-            setTimeout(() => app.ports.selectColumn.send(i), scheduleDelay - 0.1);
+            setTimeout(
+              () => app.ports.selectColumn.send(i),
+              scheduleDelay - 0.1
+            );
             const scheduleTime = wallClock + scheduleDelay;
             steps[i].forEach((data) => playNote(data, scheduleTime));
           }
@@ -101,7 +110,7 @@ const Player = (function () {
     updateSteps(steps_) {
       steps = steps_;
     },
-    start(steps_){
+    start(steps_) {
       ticker.cancel();
       playLoop(
         fontPlayer,
@@ -113,18 +122,11 @@ const Player = (function () {
         steps_
       );
     },
-    stop(){
+    stop() {
       ticker.cancel();
     },
     playSingleNote(data) {
       playNote(data);
     },
   };
-})();
-
-window.Player ??= Player;
-
-app.ports.start.subscribe(Player.start);
-app.ports.stop.subscribe(Player.stop);
-app.ports.updateSteps.subscribe(Player.updateSteps);
-app.ports.playSingleNote.subscribe(Player.playSingleNote);
+}
