@@ -52,21 +52,23 @@ function MakePlayer() {
     )
   }
 
+  function onTick(wallClock, from, to) {
+    for (let i = 0; i < steps.length; i++) {
+      const noteStartTimeInLoop = i * noteGap
+      if (noteStartTimeInLoop >= from && noteStartTimeInLoop < to) {
+        const scheduleDelay = noteStartTimeInLoop - from
+        setTimeout(() => notifyColumnChanged(i), scheduleDelay - 0.1)
+        const scheduleTime = wallClock + scheduleDelay
+        steps[i].forEach((data) => playNote(data, scheduleTime))
+      }
+    }
+  }
+
   function startLoop(steps_) {
     steps = steps_
     ticker.startTicks(
       audioContext,
-      function (wallClock, from, to) {
-        for (let i = 0; i < steps.length; i++) {
-          const noteStartTimeInLoop = i * noteGap
-          if (noteStartTimeInLoop >= from && noteStartTimeInLoop < to) {
-            const scheduleDelay = noteStartTimeInLoop - from
-            setTimeout(() => notifyColumnChanged(i), scheduleDelay - 0.1)
-            const scheduleTime = wallClock + scheduleDelay
-            steps[i].forEach((data) => playNote(data, scheduleTime))
-          }
-        }
-      },
+      onTick,
       0, // loopStart,
       ticker.lastPosition, // loopPosition,
       loopLengthInSeconds, // loopEnd,
