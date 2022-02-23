@@ -48,11 +48,11 @@ function MakePlayer() {
   let steps = null
 
   function playNote([presetName, note], at = 0) {
-    const presetVar = window[presetMap[presetName]]
+    const preset = window[presetMap[presetName]]
     fontPlayer.queueWaveTable(
       audioContext,
       audioContext.destination,
-      presetVar,
+      preset,
       at,
       NoteParser.midi(note),
       noteDuration,
