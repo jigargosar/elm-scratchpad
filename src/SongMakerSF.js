@@ -15,17 +15,6 @@ function notifyColumnChanged(i) {
   return app.ports.selectColumn.send(i)
 }
 
-function newAudioContext() {
-  const AudioContextFunc = window.AudioContext || window["webkitAudioContext"]
-  return new AudioContextFunc()
-}
-
-function loadPresets(audioContext, fontPlayer, presetNames) {
-  presetNames.forEach(function (presetVarName) {
-    fontPlayer.loader.decodeAfterLoading(audioContext, presetVarName)
-  })
-}
-
 
 function MakePlayer() {
   const audioContext = newAudioContext()
@@ -103,3 +92,15 @@ function MakePlayer() {
     },
   }
 }
+
+function newAudioContext() {
+  const AudioContextFunc = window.AudioContext || window["webkitAudioContext"]
+  return new AudioContextFunc()
+}
+
+function loadPresets(audioContext, fontPlayer, presetNames) {
+  presetNames.forEach(function (presetVarName) {
+    fontPlayer.loader.decodeAfterLoading(audioContext, presetVarName)
+  })
+}
+
