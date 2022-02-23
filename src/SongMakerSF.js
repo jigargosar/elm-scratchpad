@@ -72,9 +72,7 @@ function MakePlayer() {
       0, // loopStart,
       ticker.lastPosition, // loopPosition,
       loopLengthInSeconds, // loopEnd,
-      function () {
-        fontPlayer.cancelQueue(audioContext)
-      },
+      () => fontPlayer.cancelQueue(audioContext),
     )
   }
 
