@@ -1,17 +1,5 @@
 import { Elm } from "./SongMakerSF.elm";
 
-const AudioContextFunc = window.AudioContext || window["webkitAudioContext"];
-const audioContext = new AudioContextFunc();
-
-const fontPlayer = new WebAudioFontPlayer();
-const synth2Name = "_tone_" + "0000_SBLive_sf2";
-fontPlayer.loader.decodeAfterLoading(audioContext, synth2Name);
-const bassDrum2Name = "_drum_35_0_Chaos_sf2_file";
-fontPlayer.loader.decodeAfterLoading(audioContext, bassDrum2Name);
-const synths = {
-  synth: synth2Name,
-  drum: bassDrum2Name,
-};
 const app = Elm.SongMakerSF.init();
 
 const Player = MakePlayer();
@@ -24,6 +12,18 @@ app.ports.updateSteps.subscribe(Player.updateSteps);
 app.ports.playSingleNote.subscribe(Player.playSingleNote);
 
 function MakePlayer() {
+  const AudioContextFunc = window.AudioContext || window["webkitAudioContext"];
+  const audioContext = new AudioContextFunc();
+
+  const fontPlayer = new WebAudioFontPlayer();
+  const presetMap = {
+    synth: "_tone_" + "0000_SBLive_sf2",
+    drum: "_drum_35_0_Chaos_sf2_file",
+  };
+  Object.values(presetMap).forEach(function (presetVarName) {
+    fontPlayer.loader.decodeAfterLoading(audioContext, presetVarName);
+  });
+
   const bpm = 120;
   const barLengthInSeconds = (4 * 60) / bpm;
   const totalBars = 4;
@@ -36,40 +36,19 @@ function MakePlayer() {
 
   const ticker = new WebAudioFontTicker();
 
-  // let seq = null;
   let steps = null;
-  // let state = "unknown";
 
-  // function pollAndReportStateChange() {
-  //   if (state !== Tone.Transport.state) {
-  //     state = Tone.Transport.state;
-  //     app.ports.stateChanged.send(state);
-  //   }
-  // }
-  //
-  // pollAndReportStateChange();
-  //
-  // Tone.Transport.on("start", pollAndReportStateChange);
-  // Tone.Transport.on("stop", pollAndReportStateChange);
-  // Tone.Transport.on("pause", pollAndReportStateChange);
-
-  function playNote([inst, note], time) {
-    const synth = synths[inst];
-    playSoundFont(synth, note, time);
-  }
-
-  function playSoundFont(preset, note, startTime = 0) {
+  function playNote([presetName, note], time) {
     fontPlayer.queueWaveTable(
       audioContext,
       audioContext.destination,
-      window[preset],
-      startTime,
+      window[presetMap[presetName]],
+      time ?? 0,
       NoteParser.midi(note),
       // Tone.Time("8n").toSeconds(),
       noteDuration,
       0.5
     );
-    return false;
   }
 
   function playLoop(
