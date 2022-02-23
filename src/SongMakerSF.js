@@ -15,7 +15,6 @@ function notifyColumnChanged(i) {
   return app.ports.selectColumn.send(i)
 }
 
-
 function MakePlayer() {
   const audioContext = newAudioContext()
 
@@ -69,9 +68,9 @@ function MakePlayer() {
     ticker.startTicks(
       audioContext,
       onTick,
-      0, // loopStart,
-      ticker.lastPosition, // loopPosition,
-      loopLengthInSeconds, // loopEnd,
+      0,
+      ticker.lastPosition,
+      loopLengthInSeconds,
       () => fontPlayer.cancelQueue(audioContext),
     )
   }
@@ -103,4 +102,3 @@ function loadPresets(audioContext, fontPlayer, presetNames) {
     fontPlayer.loader.decodeAfterLoading(audioContext, presetVarName)
   })
 }
-
