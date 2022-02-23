@@ -39,8 +39,6 @@ function MakePlayer() {
   const loopLengthInSeconds = totalBars * barLengthInSeconds
   const noteGap = (1 / 8) * barLengthInSeconds
   const noteDuration = noteGap
-  console.log("barLengthInSeconds: ", barLengthInSeconds)
-  console.log("loopLengthInSeconds:", loopLengthInSeconds)
 
   const ticker = new WebAudioFontTicker()
 
