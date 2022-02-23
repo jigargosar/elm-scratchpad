@@ -8,7 +8,8 @@
     "sm2:dev": "cross-env PARCEL_ELM_NO_DEBUG=1 parcel --no-hmr src/SongMakerSF.html --open"
   },
   "prettier": {
-    "semi": false
+    "semi": false,
+    "trailingComma": "all"
   },
   "devDependencies": {
     "@parcel/transformer-elm": "^2.3.1",

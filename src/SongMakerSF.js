@@ -11,9 +11,13 @@ app.ports.stop.subscribe(Player.stop)
 app.ports.updateSteps.subscribe(Player.updateSteps)
 app.ports.playSingleNote.subscribe(Player.playSingleNote)
 
-function MakePlayer() {
+function newAudioContext() {
   const AudioContextFunc = window.AudioContext || window["webkitAudioContext"]
-  const audioContext = new AudioContextFunc()
+  return new AudioContextFunc()
+}
+
+function MakePlayer() {
+  const audioContext = newAudioContext()
 
   const fontPlayer = new WebAudioFontPlayer()
   const presetMap = {
@@ -48,7 +52,7 @@ function MakePlayer() {
       NoteParser.midi(note),
       noteDuration,
       0.5,
-      []
+      [],
     )
   }
 
@@ -58,7 +62,7 @@ function MakePlayer() {
     loopStart,
     loopPosition,
     loopEnd,
-    steps_
+    steps_,
   ) {
     steps = steps_
     ticker.startTicks(
@@ -70,7 +74,7 @@ function MakePlayer() {
             const scheduleDelay = noteStartTimeInLoop - from
             setTimeout(
               () => app.ports.selectColumn.send(i),
-              scheduleDelay - 0.1
+              scheduleDelay - 0.1,
             )
             const scheduleTime = wallClock + scheduleDelay
             steps[i].forEach((data) => playNote(data, scheduleTime))
@@ -82,7 +86,7 @@ function MakePlayer() {
       loopEnd,
       function () {
         player.cancelQueue(audioContext)
-      }
+      },
     )
   }
 
@@ -98,7 +102,7 @@ function MakePlayer() {
         0,
         ticker.lastPosition, // 0,
         loopLengthInSeconds,
-        steps_
+        steps_,
       )
     },
     stop() {
