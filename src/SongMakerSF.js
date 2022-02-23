@@ -16,6 +16,12 @@ function newAudioContext() {
   return new AudioContextFunc()
 }
 
+function loadPresets(audioContext, fontPlayer, presetNames) {
+  presetNames.forEach(function (presetVarName) {
+    fontPlayer.loader.decodeAfterLoading(audioContext, presetVarName)
+  })
+}
+
 function MakePlayer() {
   const audioContext = newAudioContext()
 
@@ -24,9 +30,8 @@ function MakePlayer() {
     synth: "_tone_" + "0000_SBLive_sf2",
     drum: "_drum_35_0_Chaos_sf2_file",
   }
-  Object.values(presetMap).forEach(function (presetVarName) {
-    fontPlayer.loader.decodeAfterLoading(audioContext, presetVarName)
-  })
+  const presetNames = Object.values(presetMap)
+  loadPresets(audioContext, fontPlayer, presetNames)
 
   const bpm = 120
   const barLengthInSeconds = (4 * 60) / bpm
