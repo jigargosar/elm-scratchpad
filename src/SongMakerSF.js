@@ -36,12 +36,11 @@ function MakePlayer() {
   const bpm = 120
   const barLengthInSeconds = (4 * 60) / bpm
   const totalBars = 4
-  console.log("barLengthInSeconds: ", barLengthInSeconds)
   const loopLengthInSeconds = totalBars * barLengthInSeconds
-  console.log("loopLengthInSeconds:", loopLengthInSeconds)
-  // const noteDuration = (1 / 16) * barLengthInSeconds;
   const noteGap = (1 / 8) * barLengthInSeconds
   const noteDuration = noteGap
+  console.log("barLengthInSeconds: ", barLengthInSeconds)
+  console.log("loopLengthInSeconds:", loopLengthInSeconds)
 
   const ticker = new WebAudioFontTicker()
 
