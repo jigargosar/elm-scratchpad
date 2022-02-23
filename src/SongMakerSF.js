@@ -61,14 +61,7 @@ function MakePlayer() {
     )
   }
 
-  function startLoop(
-    player,
-    audioContext,
-    loopStart,
-    loopPosition,
-    loopEnd,
-    steps_,
-  ) {
+  function startLoop(steps_) {
     steps = steps_
     ticker.startTicks(
       audioContext,
@@ -86,11 +79,11 @@ function MakePlayer() {
           }
         }
       },
-      loopStart,
-      loopPosition,
-      loopEnd,
+      0, // loopStart,
+      ticker.lastPosition, // loopPosition,
+      loopLengthInSeconds, // loopEnd,
       function () {
-        player.cancelQueue(audioContext)
+        fontPlayer.cancelQueue(audioContext)
       },
     )
   }
@@ -101,14 +94,7 @@ function MakePlayer() {
     },
     start(steps_) {
       ticker.cancel()
-      startLoop(
-        fontPlayer,
-        audioContext,
-        0,
-        ticker.lastPosition, // 0,
-        loopLengthInSeconds,
-        steps_,
-      )
+      startLoop(steps_)
     },
     stop() {
       ticker.cancel()
