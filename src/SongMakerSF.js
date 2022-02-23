@@ -11,6 +11,10 @@ app.ports.stop.subscribe(Player.stop)
 app.ports.updateSteps.subscribe(Player.updateSteps)
 app.ports.playSingleNote.subscribe(Player.playSingleNote)
 
+function notifyColumnChanged(i) {
+  return app.ports.selectColumn.send(i)
+}
+
 function newAudioContext() {
   const AudioContextFunc = window.AudioContext || window["webkitAudioContext"]
   return new AudioContextFunc()
@@ -21,6 +25,7 @@ function loadPresets(audioContext, fontPlayer, presetNames) {
     fontPlayer.loader.decodeAfterLoading(audioContext, presetVarName)
   })
 }
+
 
 function MakePlayer() {
   const audioContext = newAudioContext()
@@ -67,10 +72,7 @@ function MakePlayer() {
           const noteStartTimeInLoop = i * noteGap
           if (noteStartTimeInLoop >= from && noteStartTimeInLoop < to) {
             const scheduleDelay = noteStartTimeInLoop - from
-            setTimeout(
-              () => app.ports.selectColumn.send(i),
-              scheduleDelay - 0.1,
-            )
+            setTimeout(() => notifyColumnChanged(i), scheduleDelay - 0.1)
             const scheduleTime = wallClock + scheduleDelay
             steps[i].forEach((data) => playNote(data, scheduleTime))
           }
