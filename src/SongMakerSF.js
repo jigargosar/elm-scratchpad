@@ -38,12 +38,12 @@ function MakePlayer() {
 
   let steps = null;
 
-  function playNote([presetName, note], time) {
+  function playNote([presetName, note], time = 0) {
     fontPlayer.queueWaveTable(
       audioContext,
       audioContext.destination,
       window[presetMap[presetName]],
-      time ?? 0,
+      time,
       NoteParser.midi(note),
       // Tone.Time("8n").toSeconds(),
       noteDuration,
