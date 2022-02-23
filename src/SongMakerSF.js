@@ -96,8 +96,7 @@ function MakePlayer() {
         fontPlayer,
         audioContext,
         0,
-        ticker.lastPosition,
-        // 0,
+        ticker.lastPosition, // 0,
         loopLengthInSeconds,
         steps_
       );
