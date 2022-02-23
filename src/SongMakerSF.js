@@ -61,7 +61,7 @@ function MakePlayer() {
     )
   }
 
-  function playLoop(
+  function startLoop(
     player,
     audioContext,
     loopStart,
@@ -101,7 +101,7 @@ function MakePlayer() {
     },
     start(steps_) {
       ticker.cancel()
-      playLoop(
+      startLoop(
         fontPlayer,
         audioContext,
         0,
