@@ -63,25 +63,21 @@ function MakePlayer() {
     }
   }
 
-  function startLoop(steps_) {
-    steps = steps_
-    ticker.startTicks(
-      audioContext,
-      onTick,
-      0,
-      ticker.lastPosition,
-      loopLengthInSeconds,
-      () => fontPlayer.cancelQueue(audioContext),
-    )
-  }
-
   return {
     updateSteps(steps_) {
       steps = steps_
     },
     start(steps_) {
       ticker.cancel()
-      startLoop(steps_)
+      steps = steps_
+      ticker.startTicks(
+        audioContext,
+        onTick,
+        0,
+        ticker.lastPosition,
+        loopLengthInSeconds,
+        () => fontPlayer.cancelQueue(audioContext),
+      )
     },
     stop() {
       ticker.cancel()
