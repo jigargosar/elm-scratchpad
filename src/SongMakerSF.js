@@ -38,16 +38,17 @@ function MakePlayer() {
 
   let steps = null;
 
-  function playNote([presetName, note], time = 0) {
+  function playNote([presetName, note], at = 0) {
+    const presetVar = window[presetMap[presetName]];
     fontPlayer.queueWaveTable(
       audioContext,
       audioContext.destination,
-      window[presetMap[presetName]],
-      time,
+      presetVar,
+      at,
       NoteParser.midi(note),
-      // Tone.Time("8n").toSeconds(),
       noteDuration,
-      0.5
+      0.5,
+      []
     );
   }
 
