@@ -438,7 +438,7 @@ viewTile model gp =
             ( y + 1, x + 1 )
 
         anim =
-            if x == model.cIdx && c /= highlightBGColor then
+            if model.playState == Playing && x == model.cIdx && c /= highlightBGColor then
                 blink
 
             else
