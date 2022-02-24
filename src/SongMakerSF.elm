@@ -395,13 +395,17 @@ computeTileColorAtGP { pp, cIdx } (( x, _ ) as gp) =
         noteColorFromGP gp
 
     else if x == cIdx then
-        hsl 0.6 0.2 0.4
+        highlightBGColor
 
     else if modBy 16 x >= 8 then
         barBGColor2
 
     else
         "transparent"
+
+
+highlightBGColor =
+    hsl 0.6 0.2 0.4
 
 
 barBGColor2 =
