@@ -430,14 +430,8 @@ backgroundGridLinesHorizontal strokeWidth color pctN =
 viewTile : Model -> Int2 -> Html Msg
 viewTile model (( x, y ) as gp) =
     let
-        pp =
-            model.pp
-
-        cIdx =
-            model.cIdx
-
         ( bgColor, anim ) =
-            if Set.member gp pp then
+            if Set.member gp model.pp then
                 ( noteColorFromGP gp
                 , if model.playState == Playing && x == model.cIdx then
                     blink
@@ -446,7 +440,7 @@ viewTile model (( x, y ) as gp) =
                     Animation.empty
                 )
 
-            else if x == cIdx then
+            else if x == model.cIdx then
                 ( highlightBGColor, Animation.empty )
 
             else if modBy 16 x >= 8 then
