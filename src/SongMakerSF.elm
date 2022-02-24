@@ -322,10 +322,7 @@ viewBottomRow model =
             [ HA.value "120"
             , HA.type_ "number"
             , fontSize "20px"
-            , sWidth "5ch"
-            , sMaxWidth "5ch"
-            , style "flex-grow" "1"
-            , style "flex-shrink" "0"
+            , sWidth "6ch"
             ]
             []
         ]
