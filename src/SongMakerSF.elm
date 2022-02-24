@@ -436,7 +436,7 @@ viewTile model (( x, y ) as gp) =
         cIdx =
             model.cIdx
 
-        c =
+        bgcValue =
             if Set.member gp pp then
                 noteColorFromGP gp
 
@@ -454,7 +454,7 @@ viewTile model (( x, y ) as gp) =
             ( y + 1, x + 1 )
 
         anim =
-            if model.playState == Playing && x == model.cIdx && c /= highlightBGColor then
+            if model.playState == Playing && x == model.cIdx && bgcValue /= highlightBGColor then
                 blink
 
             else
@@ -462,7 +462,7 @@ viewTile model (( x, y ) as gp) =
     in
     Animated.div
         anim
-        [ bgc c
+        [ bgc bgcValue
         , style "grid-area" (fromInt row ++ "/" ++ fromInt col)
         , notifyPointerDown (PointerDownOnGP gp)
         , notifyPointerEnter (PointerEnteredGP gp)
