@@ -428,9 +428,29 @@ backgroundGridLinesHorizontal strokeWidth color pctN =
 
 
 viewTile : Model -> Int2 -> Html Msg
-viewTile model gp =
+viewTile model (( x, y ) as gp) =
     let
-        ( c, ( x, y ) ) =
+        pp =
+            model.pp
+
+        cIdx =
+            model.cIdx
+
+        _ =
+            if Set.member gp pp then
+                noteColorFromGP gp
+
+            else if x == cIdx then
+                highlightBGColor
+
+            else if modBy 16 x >= 8 then
+                barBGColor2
+
+            else
+                "transparent"
+    in
+    let
+        ( c, _ ) =
             ( computeTileColorAtGP model gp, gp )
     in
     let
