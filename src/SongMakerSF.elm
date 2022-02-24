@@ -499,8 +499,14 @@ blink2 =
         }
         [ Animation.step 50 [ P.opacity 0.2, P.scale 1.05 ]
         , let
+            barLengthSec =
+                2
+
+            noteGapSec =
+                (1 / 8) * barLengthSec
+
             noteGapMilli =
-                250
+                noteGapSec * 1000 |> round
           in
           Animation.step noteGapMilli [ P.opacity 1, P.scale 1 ]
         ]
