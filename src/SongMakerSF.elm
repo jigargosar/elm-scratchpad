@@ -324,6 +324,7 @@ viewBottomRow model =
                 [ HA.value "120"
                 , HA.type_ "number"
                 , fontSize "20px"
+                , sWidth "fit-content"
                 ]
                 []
             ]
