@@ -436,7 +436,7 @@ viewTile model (( x, y ) as gp) =
         cIdx =
             model.cIdx
 
-        _ =
+        c =
             if Set.member gp pp then
                 noteColorFromGP gp
 
@@ -448,10 +448,6 @@ viewTile model (( x, y ) as gp) =
 
             else
                 "transparent"
-    in
-    let
-        ( c, _ ) =
-            ( computeTileColorAtGP model gp, gp )
     in
     let
         ( row, col ) =
