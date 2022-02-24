@@ -441,7 +441,7 @@ viewTile model (( x, _ ) as gp) =
 
         anim =
             if isPlaying && isNoteTile && isHighlightedTile then
-                blink
+                blink2
 
             else
                 Animation.empty
@@ -489,3 +489,14 @@ blink =
         }
         [ P.opacity 0, P.scale 1.1 ]
         [ P.opacity 1, P.scale 1 ]
+
+
+blink2 : Animation
+blink2 =
+    Animation.steps
+        { startAt = [ P.opacity 1, P.scale 1 ]
+        , options = []
+        }
+        [ Animation.step 50 [ P.opacity 0, P.scale 1.1 ]
+        , Animation.step 200 [ P.opacity 1, P.scale 1 ]
+        ]
