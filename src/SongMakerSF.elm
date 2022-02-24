@@ -441,7 +441,7 @@ viewTile model (( x, _ ) as gp) =
 
         anim =
             if isPlaying && isNoteTile && isHighlightedTile then
-                blink2
+                blink
 
             else
                 Animation.empty
@@ -483,16 +483,6 @@ styleGridAreaFromGP ( x, y ) =
 
 blink : Animation
 blink =
-    Animation.fromTo
-        { duration = 400
-        , options = []
-        }
-        [ P.opacity 0, P.scale 1.1 ]
-        [ P.opacity 1, P.scale 1 ]
-
-
-blink2 : Animation
-blink2 =
     Animation.steps
         { startAt = [ P.opacity 1, P.scale 1 ]
         , options = []
