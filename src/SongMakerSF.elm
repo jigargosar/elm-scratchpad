@@ -498,5 +498,9 @@ blink2 =
         , options = []
         }
         [ Animation.step 50 [ P.opacity 0.2, P.scale 1.05 ]
-        , Animation.step 250 [ P.opacity 1, P.scale 1 ]
+        , let
+            noteGapMilli =
+                250
+          in
+          Animation.step noteGapMilli [ P.opacity 1, P.scale 1 ]
         ]
