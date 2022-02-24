@@ -449,14 +449,10 @@ viewTile model (( x, y ) as gp) =
             else
                 ( "transparent", Animation.empty )
     in
-    let
-        ( row, col ) =
-            ( y + 1, x + 1 )
-    in
     Animated.div
         anim
         [ bgc bgColor
-        , style "grid-area" (fromInt row ++ "/" ++ fromInt col)
+        , styleGridAreaFromGP gp
         , notifyPointerDown (PointerDownOnGP gp)
         , notifyPointerEnter (PointerEnteredGP gp)
         ]
