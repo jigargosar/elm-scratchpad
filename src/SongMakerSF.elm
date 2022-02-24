@@ -405,7 +405,7 @@ computeTileColorAtGP { pp, cIdx } (( x, _ ) as gp) =
 
 
 highlightBGColor =
-    hsl 0.6 0.2 0.4
+    hsl 0.8 1 0.2
 
 
 barBGColor2 =
