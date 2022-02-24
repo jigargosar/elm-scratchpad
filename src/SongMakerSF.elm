@@ -446,14 +446,17 @@ viewTile model (( x, _ ) as gp) =
             else
                 Animation.empty
 
+        isAlternateBarTile =
+            modBy 16 x >= 8
+
         bgColor =
-            if Set.member gp model.pp then
+            if isNoteTile then
                 noteColorFromGP gp
 
-            else if x == model.cIdx then
+            else if isHighlightedTile then
                 highlightBGColor
 
-            else if modBy 16 x >= 8 then
+            else if isAlternateBarTile then
                 barBGColor2
 
             else
