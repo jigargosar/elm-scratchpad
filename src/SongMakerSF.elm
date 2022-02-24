@@ -2,6 +2,8 @@ port module SongMakerSF exposing (main)
 
 import Browser.Navigation exposing (Key)
 import Dict exposing (Dict)
+import Html
+import Html.Attributes as HA
 import Json.Decode as JD exposing (Decoder)
 import Json.Encode as JE exposing (Value)
 import Random
@@ -316,6 +318,12 @@ viewBottomRow model =
             [--fRow [ itemsCenter ] [ text ("Current Step: " ++ fromInt (model.cIdx + 1)) ]
              --, fRow [ itemsCenter ] [ text ("Player State: " ++ Debug.toString model.playState) ]
             ]
+        , Html.input
+            [ HA.value "120"
+            , HA.type_ "number"
+            , fontSize "20px"
+            ]
+            []
         ]
 
 
