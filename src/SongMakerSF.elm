@@ -438,7 +438,7 @@ viewTile model gp =
             ( y + 1, x + 1 )
 
         anim =
-            if x == model.cIdx then
+            if x == model.cIdx && c /= highlightBGColor then
                 blink
 
             else
@@ -476,7 +476,7 @@ computeTileColorAtGP { pp, cIdx } (( x, _ ) as gp) =
 blink : Animation
 blink =
     Animation.fromTo
-        { duration = 100
+        { duration = 300
         , options =
             [--Animation.delay 1000
              --, Animation.yoyo
