@@ -484,7 +484,7 @@ styleGridAreaFromGP ( x, y ) =
 blink : Animation
 blink =
     Animation.fromTo
-        { duration = 300
+        { duration = 400
         , options = []
         }
         [ P.opacity 0, P.scale 1.1 ]
