@@ -288,6 +288,7 @@ viewDocument : Model -> Document Msg
 viewDocument model =
     Document "Song Maker"
         [ basicStylesNode
+        , animateCssNode
         , view model
         ]
 
@@ -374,7 +375,7 @@ viewGridTiles ({ w, h } as model) =
     let
         tiles =
             rangeWH w (h + 2)
-                |> List.map (\gp -> viewTile (computeTileColorAtGP model gp) gp)
+                |> List.map (viewTile model)
     in
     div
         [ dGrid
@@ -387,21 +388,6 @@ viewGridTiles ({ w, h } as model) =
         , notifyPointerUp OnPointerUp
         ]
         tiles
-
-
-computeTileColorAtGP : Model -> Int2 -> String
-computeTileColorAtGP { pp, cIdx } (( x, _ ) as gp) =
-    if Set.member gp pp then
-        noteColorFromGP gp
-
-    else if x == cIdx then
-        highlightBGColor
-
-    else if modBy 16 x >= 8 then
-        barBGColor2
-
-    else
-        "transparent"
 
 
 highlightBGColor =
@@ -438,7 +424,27 @@ backgroundGridLinesHorizontal strokeWidth color pctN =
         |> String.join " "
 
 
-viewTile c (( x, y ) as gp) =
+viewTile : Model -> Int2 -> Html Msg
+viewTile model gp =
+    viewTileHelp (computeTileColorAtGP model gp) gp
+
+
+computeTileColorAtGP : Model -> Int2 -> String
+computeTileColorAtGP { pp, cIdx } (( x, _ ) as gp) =
+    if Set.member gp pp then
+        noteColorFromGP gp
+
+    else if x == cIdx then
+        highlightBGColor
+
+    else if modBy 16 x >= 8 then
+        barBGColor2
+
+    else
+        "transparent"
+
+
+viewTileHelp c (( x, y ) as gp) =
     let
         ( row, col ) =
             ( y + 1, x + 1 )
