@@ -7,6 +7,9 @@ import Json.Encode as JE exposing (Value)
 import Random
 import Random.List
 import Set exposing (Set)
+import Simple.Animation as Animation exposing (Animation)
+import Simple.Animation.Animated as Animated
+import Simple.Animation.Property as P
 import Url exposing (Url)
 import Utils exposing (..)
 
@@ -339,7 +342,7 @@ viewPlayButton playState =
 
 viewGrid : Model -> Html Msg
 viewGrid ({ w, h } as model) =
-    div [ dGrid, positionRelative, style "flex-grow" "1" ]
+    div [ dGrid, positionRelative, overflowHidden, style "flex-grow" "1" ]
         [ viewGridTiles model
         , viewGridLines w h
         ]
@@ -449,14 +452,25 @@ viewTileHelp c (( x, y ) as gp) =
         ( row, col ) =
             ( y + 1, x + 1 )
     in
-    div
+    Animated.div
+        blink
         [ bgc c
         , style "grid-area" (fromInt row ++ "/" ++ fromInt col)
-        , classNames [ cnAnimated, "animate__pulse" ]
 
+        --, classNames [ cnAnimated, "animate__pulse" ]
         --, sMinHeight "20px"
         --, sMinWidth "30px"
         , notifyPointerDown (PointerDownOnGP gp)
         , notifyPointerEnter (PointerEnteredGP gp)
         ]
         []
+
+
+blink : Animation
+blink =
+    Animation.fromTo
+        { duration = 2000
+        , options = [ Animation.loop ]
+        }
+        [ P.opacity 1, P.scale 1 ]
+        [ P.opacity 0, P.scale 2 ]
