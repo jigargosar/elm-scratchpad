@@ -463,30 +463,11 @@ viewTile model (( x, y ) as gp) =
         []
 
 
-computeTileColorAtGP : Model -> Int2 -> String
-computeTileColorAtGP { pp, cIdx } (( x, _ ) as gp) =
-    if Set.member gp pp then
-        noteColorFromGP gp
-
-    else if x == cIdx then
-        highlightBGColor
-
-    else if modBy 16 x >= 8 then
-        barBGColor2
-
-    else
-        "transparent"
-
-
 blink : Animation
 blink =
     Animation.fromTo
         { duration = 300
-        , options =
-            [--Animation.delay 1000
-             --, Animation.yoyo
-             --, Animation.loop
-            ]
+        , options = []
         }
         [ P.opacity 0, P.scale 1.1 ]
         [ P.opacity 1, P.scale 1 ]
