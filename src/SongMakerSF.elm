@@ -398,7 +398,7 @@ computeTileColorAtGP { pp, cIdx } (( x, _ ) as gp) =
         hsl 0.6 0.2 0.4
 
     else if modBy 16 x >= 8 then
-        hsl 0 0 0.1125
+        hsl 0 0 0.2
 
     else
         "transparent"
