@@ -464,10 +464,6 @@ viewTile model (( x, y ) as gp) =
         anim
         [ bgc c
         , style "grid-area" (fromInt row ++ "/" ++ fromInt col)
-
-        --, classNames [ cnAnimated, "animate__pulse" ]
-        --, sMinHeight "20px"
-        --, sMinWidth "30px"
         , notifyPointerDown (PointerDownOnGP gp)
         , notifyPointerEnter (PointerEnteredGP gp)
         ]
