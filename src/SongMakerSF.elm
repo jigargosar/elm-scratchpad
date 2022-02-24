@@ -429,7 +429,33 @@ backgroundGridLinesHorizontal strokeWidth color pctN =
 
 viewTile : Model -> Int2 -> Html Msg
 viewTile model gp =
-    viewTileHelp (computeTileColorAtGP model gp) gp
+    let
+        ( c, ( x, y ) ) =
+            ( computeTileColorAtGP model gp, gp )
+    in
+    let
+        ( row, col ) =
+            ( y + 1, x + 1 )
+
+        anim =
+            if x == model.cIdx then
+                blink
+
+            else
+                Animation.empty
+    in
+    Animated.div
+        anim
+        [ bgc c
+        , style "grid-area" (fromInt row ++ "/" ++ fromInt col)
+
+        --, classNames [ cnAnimated, "animate__pulse" ]
+        --, sMinHeight "20px"
+        --, sMinWidth "30px"
+        , notifyPointerDown (PointerDownOnGP gp)
+        , notifyPointerEnter (PointerEnteredGP gp)
+        ]
+        []
 
 
 computeTileColorAtGP : Model -> Int2 -> String
@@ -447,30 +473,15 @@ computeTileColorAtGP { pp, cIdx } (( x, _ ) as gp) =
         "transparent"
 
 
-viewTileHelp c (( x, y ) as gp) =
-    let
-        ( row, col ) =
-            ( y + 1, x + 1 )
-    in
-    Animated.div
-        blink
-        [ bgc c
-        , style "grid-area" (fromInt row ++ "/" ++ fromInt col)
-
-        --, classNames [ cnAnimated, "animate__pulse" ]
-        --, sMinHeight "20px"
-        --, sMinWidth "30px"
-        , notifyPointerDown (PointerDownOnGP gp)
-        , notifyPointerEnter (PointerEnteredGP gp)
-        ]
-        []
-
-
 blink : Animation
 blink =
     Animation.fromTo
-        { duration = 1000
-        , options = [ Animation.loop ]
+        { duration = 100
+        , options =
+            [--Animation.delay 1000
+             --, Animation.yoyo
+             --, Animation.loop
+            ]
         }
         [ P.opacity 0, P.scale 1.1 ]
         [ P.opacity 1, P.scale 1 ]
