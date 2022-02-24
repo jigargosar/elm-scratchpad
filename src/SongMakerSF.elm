@@ -322,7 +322,9 @@ viewBottomRow model =
             [ text "Tempo: "
             , Html.input
                 [ HA.value "120"
-                , HA.type_ "number"
+                , HA.size 4
+
+                --, HA.type_ "number"
                 , fontSize "20px"
                 , sWidth "fit-content"
                 ]
