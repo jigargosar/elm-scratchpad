@@ -497,6 +497,6 @@ blink2 =
         { startAt = [ P.opacity 1, P.scale 1 ]
         , options = []
         }
-        [ Animation.step 50 [ P.opacity 0, P.scale 1.1 ]
-        , Animation.step 200 [ P.opacity 1, P.scale 1 ]
+        [ Animation.step 50 [ P.opacity 0.2, P.scale 1.05 ]
+        , Animation.step 250 [ P.opacity 1, P.scale 1 ]
         ]

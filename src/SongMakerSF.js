@@ -26,7 +26,7 @@ function MakePlayer() {
   const presetNames = Object.values(presetMap)
   loadPresets(audioContext, fontPlayer, presetNames)
 
-  const bpm = 120/2
+  const bpm = 120
   const barLengthInSeconds = (4 * 60) / bpm
   const totalBars = 4
   const loopLengthInSeconds = totalBars * barLengthInSeconds
