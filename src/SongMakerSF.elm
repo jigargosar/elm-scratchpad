@@ -463,6 +463,15 @@ viewTile model (( x, y ) as gp) =
         []
 
 
+styleGridAreaFromGP : Int2 -> Attribute msg
+styleGridAreaFromGP ( x, y ) =
+    let
+        ( row, col ) =
+            ( y + 1, x + 1 )
+    in
+    style "grid-area" (fromInt row ++ "/" ++ fromInt col)
+
+
 blink : Animation
 blink =
     Animation.fromTo
