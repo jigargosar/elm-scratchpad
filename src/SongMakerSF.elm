@@ -428,7 +428,7 @@ backgroundGridLinesHorizontal strokeWidth color pctN =
 
 
 viewTile : Model -> Int2 -> Html Msg
-viewTile model (( x, y ) as gp) =
+viewTile model (( x, _ ) as gp) =
     let
         ( bgColor, anim ) =
             if Set.member gp model.pp then
