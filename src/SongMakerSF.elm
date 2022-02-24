@@ -446,24 +446,18 @@ viewTile model (( x, _ ) as gp) =
             else
                 Animation.empty
 
-        ( bgColor, _ ) =
+        bgColor =
             if Set.member gp model.pp then
-                ( noteColorFromGP gp
-                , if model.playState == Playing && x == model.cIdx then
-                    blink
-
-                  else
-                    Animation.empty
-                )
+                noteColorFromGP gp
 
             else if x == model.cIdx then
-                ( highlightBGColor, Animation.empty )
+                highlightBGColor
 
             else if modBy 16 x >= 8 then
-                ( barBGColor2, Animation.empty )
+                barBGColor2
 
             else
-                ( "transparent", Animation.empty )
+                "transparent"
     in
     Animated.div
         anim
