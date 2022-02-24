@@ -469,8 +469,8 @@ viewTileHelp c (( x, y ) as gp) =
 blink : Animation
 blink =
     Animation.fromTo
-        { duration = 2000
+        { duration = 1000
         , options = [ Animation.loop ]
         }
+        [ P.opacity 0, P.scale 1.1 ]
         [ P.opacity 1, P.scale 1 ]
-        [ P.opacity 0, P.scale 2 ]
