@@ -452,6 +452,7 @@ viewTileHelp c (( x, y ) as gp) =
     div
         [ bgc c
         , style "grid-area" (fromInt row ++ "/" ++ fromInt col)
+        , classNames [ cnAnimated, "animate__pulse" ]
 
         --, sMinHeight "20px"
         --, sMinWidth "30px"
