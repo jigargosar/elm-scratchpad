@@ -224,40 +224,18 @@ noteFromGP ( _, y ) =
             , "C1"
             , "B1"
             ]
-
-        _ =
-            if y < 14 then
-                ( "synth", listGetAtOrDefault "" y noteNames )
-
-            else if y == 14 then
-                ( "drum", "C1" )
-
-            else if y == 15 then
-                ( "drum", "B1" )
-
-            else
-                ( "", "" )
     in
-    listGetAtOrDefault
+    if y < 14 then
+        ( "synth", listGetAtOrDefault "" y noteNames )
+
+    else if y == 14 then
+        ( "drum", "C1" )
+
+    else if y == 15 then
+        ( "drum", "B1" )
+
+    else
         ( "", "" )
-        y
-        [ ( "synth", "C3" )
-        , ( "synth", "D3" )
-        , ( "synth", "E3" )
-        , ( "synth", "F3" )
-        , ( "synth", "G3" )
-        , ( "synth", "A3" )
-        , ( "synth", "B3" )
-        , ( "synth", "C4" )
-        , ( "synth", "D4" )
-        , ( "synth", "E4" )
-        , ( "synth", "F4" )
-        , ( "synth", "G4" )
-        , ( "synth", "A4" )
-        , ( "synth", "B4" )
-        , ( "drum", "C1" )
-        , ( "drum", "B1" )
-        ]
 
 
 noteColorFromGP : Int2 -> String
