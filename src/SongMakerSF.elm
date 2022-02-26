@@ -321,6 +321,7 @@ viewDocument model =
         ]
 
 
+viewSettings : Html Msg
 viewSettings =
     fCol [ pa "20px", gap "20px" ]
         [ div [ fontSize "22px" ] [ text "SETTINGS" ]
