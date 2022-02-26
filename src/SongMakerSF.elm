@@ -241,6 +241,11 @@ updateOnTogglePlay model =
             { model | playState = NotPlaying } |> withCmd stopCmd
 
 
+attemptFocusCmd id =
+    Browser.Dom.focus id
+        |> Task.attempt (always NOP)
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -280,8 +285,7 @@ update msg model =
 
         SettingsClicked ->
             ( { model | showSettings = True }
-            , Browser.Dom.focus "cancel-settings-btn"
-                |> Task.attempt (always NOP)
+            , attemptFocusCmd "cancel-settings-btn"
             )
 
         CloseSettingsClicked ->
