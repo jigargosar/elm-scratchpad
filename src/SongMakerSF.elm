@@ -316,8 +316,7 @@ viewSettings =
             , viewSelect [ "C", "C#", "B" ]
             ]
         , Html.label [] [ text "Range: ", viewSelect [ "1", "2", "3" ] ]
-        , viewButton "Ok"
-        , viewButton "Cancel"
+        , fRow [] [ viewButton "Ok", viewButton "Cancel" ]
         ]
 
 
