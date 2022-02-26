@@ -71,7 +71,7 @@ type alias Settings =
     { bars : Int
     , beatsPerBar : Int
     , beatSplits : Int
-    , scale : MScale
+    , scale : MusicScale
     , startsOn : StartNote
     , octaves : Int
     }
@@ -81,7 +81,7 @@ type StartNote
     = StartNote
 
 
-type MScale
+type MusicScale
     = Major
 
 
