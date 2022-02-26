@@ -58,6 +58,7 @@ type alias Model =
     , cIdx : Int
     , playState : PlayerState
     , drawState : Maybe DrawState
+    , showSettings : Bool
     , key : Key
     }
 
@@ -105,6 +106,7 @@ init () url key =
       , cIdx = 0
       , playState = NotPlaying
       , drawState = Nothing
+      , showSettings = True
       , key = key
       }
     , Cmd.none
@@ -298,7 +300,7 @@ viewDocument model =
     Document "Song Maker"
         [ basicStylesNode
         , animateCssNode
-        , if True then
+        , if model.showSettings then
             view model
 
           else
