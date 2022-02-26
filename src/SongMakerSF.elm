@@ -1,5 +1,6 @@
 port module SongMakerSF exposing (main)
 
+import Browser.Dom
 import Browser.Navigation exposing (Key)
 import Dict exposing (Dict)
 import Html
@@ -12,6 +13,7 @@ import Set exposing (Set)
 import Simple.Animation as Animation exposing (Animation)
 import Simple.Animation.Animated as Animated
 import Simple.Animation.Property as P
+import Task
 import Url exposing (Url)
 import Utils exposing (..)
 
@@ -277,7 +279,10 @@ update msg model =
             updateOnTogglePlay model
 
         SettingsClicked ->
-            ( { model | showSettings = True }, Cmd.none )
+            ( { model | showSettings = True }
+            , Browser.Dom.focus "cancel-settings-btn"
+                |> Task.attempt (always NOP)
+            )
 
         CloseSettingsClicked ->
             ( { model | showSettings = False }, Cmd.none )
