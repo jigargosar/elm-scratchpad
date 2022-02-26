@@ -328,7 +328,7 @@ viewSettings =
         , fRow [ gap "20px" ]
             [ viewButton "Ok"
             , viewButton2
-                [ HA.id "close-settings-btn"
+                [ HA.id "cancel-settings-btn"
                 , notifyClick CloseSettingsClicked
                 ]
                 "Cancel"
