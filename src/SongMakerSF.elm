@@ -289,7 +289,7 @@ update msg model =
             )
 
         CloseSettingsClicked ->
-            ( { model | showSettings = False }, Cmd.none )
+            ( { model | showSettings = False }, focusOrIgnoreCmd "settings-btn" )
 
         OnKeyDown e ->
             if e.isTargetBodyElement && not e.repeat && e.key == " " then
@@ -388,7 +388,8 @@ viewBottomRow model =
 
 viewSettingsButton =
     button
-        [ fontSize "20px"
+        [ HA.id "settings-btn"
+        , fontSize "20px"
         , pa "0.5ch 1ch"
         , notifyClick SettingsClicked
         ]
