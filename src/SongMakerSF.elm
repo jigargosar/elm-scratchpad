@@ -241,7 +241,7 @@ updateOnTogglePlay model =
             { model | playState = NotPlaying } |> withCmd stopCmd
 
 
-attemptFocusCmd id =
+focusOrIgnoreCmd id =
     Browser.Dom.focus id
         |> Task.attempt (always NOP)
 
@@ -285,7 +285,7 @@ update msg model =
 
         SettingsClicked ->
             ( { model | showSettings = True }
-            , attemptFocusCmd "cancel-settings-btn"
+            , focusOrIgnoreCmd "cancel-settings-btn"
             )
 
         CloseSettingsClicked ->
