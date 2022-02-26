@@ -306,10 +306,16 @@ viewDocument model =
 viewSettings =
     fCol []
         [ text "Settings"
-        , Html.label [] [ text "Length (in Bars): ", Html.input [ HA.value "4" ] [] ]
-        , Html.label [] [ text "Beats per bar: ", Html.input [ HA.value "4" ] [] ]
-        , Html.label [] [ text "Split beats into: ", Html.input [ HA.value "2" ] [] ]
+        , Html.label [] [ text "Length (in Bars): ", viewSelect [ "4" ] ]
+        , Html.label [] [ text "Beats per bar: ", viewSelect [ "4" ] ]
+        , Html.label [] [ text "Split beats into: ", viewSelect [ "2" ] ]
         , Html.label [] [ text "Scale: ", viewSelect [ "Major", "Minor", "Chromatic" ] ]
+        , Html.label []
+            [ text "Start on: "
+            , viewSelect [ "Middle", "Low", "High" ]
+            , viewSelect [ "C", "C#", "B" ]
+            ]
+        , Html.label [] [ text "Range: ", viewSelect [ "1", "2", "3" ] ]
         ]
 
 
