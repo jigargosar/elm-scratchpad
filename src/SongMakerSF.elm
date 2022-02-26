@@ -61,6 +61,7 @@ type alias Model =
     , playState : PlayerState
     , drawState : Maybe DrawState
     , showSettings : Bool
+    , tempo : Int
     , key : Key
     }
 
@@ -109,6 +110,7 @@ init () url key =
       , playState = NotPlaying
       , drawState = Nothing
       , showSettings = False
+      , tempo = 120
       , key = key
       }
     , Cmd.none
