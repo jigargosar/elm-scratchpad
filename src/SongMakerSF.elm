@@ -242,7 +242,12 @@ noteFromGP model ( _, y ) =
                 ( "drum", "C1" )
 
     else if y == 15 then
-        ( "drum", "B1" )
+        case model.instrument2 of
+            Electronic ->
+                ( "drum", "B1" )
+
+            Blocks ->
+                ( "drum", "B1" )
 
     else
         ( "", "" )
