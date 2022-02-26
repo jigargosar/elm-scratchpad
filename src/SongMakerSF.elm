@@ -60,9 +60,19 @@ type alias Model =
     , drawState : Maybe DrawState
     , showSettings : Bool
     , settings : Settings
+    , instrument1 : Instrument1
+    , instrument2 : Instrument2
     , tempo : Int
     , key : Key
     }
+
+
+type Instrument1
+    = Piano
+
+
+type Instrument2
+    = Electronic
 
 
 type alias Settings =
@@ -152,6 +162,8 @@ init () url key =
       , drawState = Nothing
       , showSettings = False
       , settings = settings
+      , instrument1 = Piano
+      , instrument2 = Electronic
       , tempo = 120
       , key = key
       }
