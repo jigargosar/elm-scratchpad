@@ -330,7 +330,7 @@ viewButton s =
 
 
 viewSelect l =
-    Html.select [] (l |> List.map (\s -> Html.option [] [ text s ]))
+    Html.select [ fontSize "20px" ] (l |> List.map (\s -> Html.option [] [ text s ]))
 
 
 view : Model -> Html Msg
