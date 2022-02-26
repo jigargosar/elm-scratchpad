@@ -106,7 +106,7 @@ init () url key =
       , cIdx = 0
       , playState = NotPlaying
       , drawState = Nothing
-      , showSettings = True
+      , showSettings = False
       , key = key
       }
     , Cmd.none
@@ -276,7 +276,7 @@ update msg model =
             updateOnTogglePlay model
 
         SettingsClicked ->
-            ( model, Cmd.none )
+            ( { model | showSettings = True }, Cmd.none )
 
         OnKeyDown e ->
             if e.isTargetBodyElement && not e.repeat && e.key == " " then
