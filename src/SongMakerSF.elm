@@ -83,8 +83,6 @@ type CNote
 
 type MScale
     = Major
-    | Minor
-    | Chromatic
 
 
 initialSettings : Settings
