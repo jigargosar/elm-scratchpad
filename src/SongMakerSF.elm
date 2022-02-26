@@ -315,7 +315,37 @@ viewBottomRow model =
         ]
         [ viewPlayButton model.playState
         , viewTempoInput
+        , viewSettingsButton
+        , viewUndoButton
+        , viewSaveButton
         ]
+
+
+viewSettingsButton =
+    button
+        [ fontSize "20px"
+        , pa "0.5ch 1ch"
+        , notifyClick NOP
+        ]
+        [ text "Settings" ]
+
+
+viewUndoButton =
+    button
+        [ fontSize "20px"
+        , pa "0.5ch 1ch"
+        , notifyClick NOP
+        ]
+        [ text "Undo" ]
+
+
+viewSaveButton =
+    button
+        [ fontSize "20px"
+        , pa "0.5ch 1ch"
+        , notifyClick NOP
+        ]
+        [ text "Save" ]
 
 
 viewTempoInput =
