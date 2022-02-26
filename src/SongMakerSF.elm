@@ -299,7 +299,12 @@ viewDocument model =
         [ basicStylesNode
         , animateCssNode
         , view model
+        , viewSettings
         ]
+
+
+viewSettings =
+    div [] [ text "Settings" ]
 
 
 view : Model -> Html Msg
@@ -390,7 +395,11 @@ viewPlayButton playState =
 
 viewGrid : Model -> Html Msg
 viewGrid ({ w, h } as model) =
-    div [ dGrid, positionRelative, overflowHidden, style "flex-grow" "1" ]
+    div
+        [ dGrid
+        , positionRelative
+        , style "flex-grow" "1"
+        ]
         [ viewGridTiles model
         , viewGridLines w h
         ]
