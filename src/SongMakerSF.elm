@@ -68,12 +68,34 @@ type alias Model =
 
 
 type alias Settings =
-    {}
+    { bars : Int
+    , beatsPerBar : Int
+    , beatSplits : Int
+    , scale : MScale
+    , startsOn : CNote
+    , octaves : Int
+    }
+
+
+type CNote
+    = CNote
+
+
+type MScale
+    = Major
+    | Minor
+    | Chromatic
 
 
 initialSettings : Settings
 initialSettings =
-    {}
+    { bars = 4
+    , beatsPerBar = 4
+    , beatSplits = 2
+    , scale = Major
+    , startsOn = CNote
+    , octaves = 4
+    }
 
 
 type PlayerState
