@@ -377,8 +377,8 @@ viewBottomRow model =
         [ viewPlayButton model.playState
         , viewTempoInput
         , viewSettingsButton
-        , viewUndoButton
-        , viewSaveButton
+        , viewBtn [] "Undo"
+        , viewBtn [] "Save"
         ]
 
 
@@ -386,24 +386,6 @@ viewSettingsButton =
     viewBtn
         [ HA.id "settings-btn", notifyClick SettingsClicked ]
         "Settings"
-
-
-viewUndoButton =
-    button
-        [ fontSize "20px"
-        , pa "0.5ch 1ch"
-        , notifyClick NOP
-        ]
-        [ text "Undo" ]
-
-
-viewSaveButton =
-    button
-        [ fontSize "20px"
-        , pa "0.5ch 1ch"
-        , notifyClick NOP
-        ]
-        [ text "Save" ]
 
 
 viewTempoInput =
