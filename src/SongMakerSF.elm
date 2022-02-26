@@ -329,7 +329,7 @@ viewSettingsButton =
     button
         [ fontSize "20px"
         , pa "0.5ch 1ch"
-        , notifyClick NOP
+        , notifyClick SettingsClicked
         ]
         [ text "Settings" ]
 
