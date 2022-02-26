@@ -23,6 +23,7 @@ function MakePlayer() {
     piano: "_tone_" + "0000_SBLive_sf2",
     bassDrum2: "_drum_35_0_Chaos_sf2_file",
     bassDrum1: "_drum_36_0_Chaos_sf2_file",
+    snareDrum2: "_drum_40_0_Chaos_sf2_file",
   }
   const presetNames = Object.values(presetMap)
   loadPresets(audioContext, fontPlayer, presetNames)

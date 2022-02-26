@@ -234,18 +234,18 @@ noteFromGP model ( _, y ) =
     else if y == 14 then
         case model.instrument2 of
             Electronic ->
-                ( "bassDrum2", "C1" )
+                ( "snareDrum2", "40" )
 
             Blocks ->
-                ( "bassDrum2", "C1" )
+                ( "snareDrum2", "40" )
 
     else if y == 15 then
         case model.instrument2 of
             Electronic ->
-                ( "bassDrum1", "B1" )
+                ( "bassDrum1", "36" )
 
             Blocks ->
-                ( "bassDrum1", "B1" )
+                ( "bassDrum1", "36" )
 
     else
         Debug.todo (Debug.toString y)
