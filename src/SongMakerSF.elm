@@ -387,13 +387,7 @@ viewBottomRow model =
 
 
 viewSettingsButton =
-    button
-        [ HA.id "settings-btn"
-        , fontSize "20px"
-        , pa "0.5ch 1ch"
-        , notifyClick SettingsClicked
-        ]
-        [ text "Settings" ]
+    viewButton2 [ HA.id "settings-btn", notifyClick SettingsClicked ] "Settings"
 
 
 viewUndoButton =
