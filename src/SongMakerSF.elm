@@ -234,7 +234,12 @@ noteFromGP model ( _, y ) =
                 ( "synth", listGetAtOrDefault "" y noteNames )
 
     else if y == 14 then
-        ( "drum", "C1" )
+        case model.instrument2 of
+            Electronic ->
+                ( "drum", "C1" )
+
+            Blocks ->
+                ( "drum", "C1" )
 
     else if y == 15 then
         ( "drum", "B1" )
