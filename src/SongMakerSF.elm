@@ -316,7 +316,18 @@ viewSettings =
             , viewSelect [ "C", "C#", "B" ]
             ]
         , Html.label [] [ text "Range: ", viewSelect [ "1", "2", "3" ] ]
+        , viewButton "Ok"
+        , viewButton "Cancel"
         ]
+
+
+viewButton s =
+    button
+        [ fontSize "20px"
+        , pa "0.5ch 1ch"
+        , notifyClick SettingsClicked
+        ]
+        [ text s ]
 
 
 viewSelect l =
