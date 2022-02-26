@@ -314,10 +314,6 @@ viewBottomRow model =
         , itemsCenter
         ]
         [ viewPlayButton model.playState
-        , fRow [ gap "20px" ]
-            [--fRow [ itemsCenter ] [ text ("Current Step: " ++ fromInt (model.cIdx + 1)) ]
-             --, fRow [ itemsCenter ] [ text ("Player State: " ++ Debug.toString model.playState) ]
-            ]
         , Html.label []
             [ text "Tempo: "
             , Html.input
