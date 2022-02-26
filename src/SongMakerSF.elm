@@ -304,7 +304,10 @@ viewDocument model =
 
 
 viewSettings =
-    div [] [ text "Settings" ]
+    fCol []
+        [ text "Settings"
+        , Html.label [] [ text "Length (in Bars): ", Html.input [ HA.value "4" ] [] ]
+        ]
 
 
 view : Model -> Html Msg
