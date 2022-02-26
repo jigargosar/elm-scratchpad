@@ -414,6 +414,8 @@ viewBottomRow model =
         , itemsCenter
         ]
         [ viewPlayButton model.playState
+        , viewBtn [] "Piano"
+        , viewBtn [] "Electronic"
         , viewTempoInput
         , viewSettingsButton
         , viewBtn [] "Undo"
