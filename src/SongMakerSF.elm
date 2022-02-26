@@ -335,8 +335,8 @@ viewSettings =
             ]
         , Html.label [] [ text "Range: ", viewSelect [ "1", "2", "3" ] ]
         , fRow [ gap "20px" ]
-            [ viewButton "Ok"
-            , viewButton2
+            [ viewBtn [] "Ok"
+            , viewBtn
                 [ HA.id "cancel-settings-btn"
                 , notifyClick CloseSettingsClicked
                 ]
@@ -345,11 +345,7 @@ viewSettings =
         ]
 
 
-viewButton s =
-    viewButton2 [] s
-
-
-viewButton2 aa s =
+viewBtn aa s =
     button
         ([ fontSize "20px"
          , pa "0.5ch 1ch"
@@ -387,7 +383,7 @@ viewBottomRow model =
 
 
 viewSettingsButton =
-    viewButton2
+    viewBtn
         [ HA.id "settings-btn", notifyClick SettingsClicked ]
         "Settings"
 
