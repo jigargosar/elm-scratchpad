@@ -298,8 +298,11 @@ viewDocument model =
     Document "Song Maker"
         [ basicStylesNode
         , animateCssNode
-        , view model
-        , viewSettings
+        , if True then
+            view model
+
+          else
+            viewSettings
         ]
 
 
