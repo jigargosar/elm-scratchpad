@@ -21,7 +21,8 @@ function MakePlayer() {
   const fontPlayer = new WebAudioFontPlayer()
   const presetMap = {
     piano: "_tone_" + "0000_SBLive_sf2",
-    drum: "_drum_35_0_Chaos_sf2_file",
+    bassDrum2: "_drum_35_0_Chaos_sf2_file",
+    bassDrum1: "_drum_36_0_Chaos_sf2_file",
   }
   const presetNames = Object.values(presetMap)
   loadPresets(audioContext, fontPlayer, presetNames)

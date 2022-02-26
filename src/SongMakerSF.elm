@@ -114,7 +114,7 @@ initialSettings =
     , beatSplits = 2
     , scale = Major
     , startsOn = StartNote
-    , octaves = 4
+    , octaves = 2
     }
 
 
@@ -221,36 +221,34 @@ noteFromGP model ( _, y ) =
             , "G4"
             , "A4"
             , "B4"
-            , "C1"
-            , "B1"
             ]
     in
     if y < 14 then
         case model.instrument1 of
             Piano ->
-                ( "synth", listGetAtOrDefault "" y noteNames )
+                ( "piano", listGetAtOrDefault "" y noteNames )
 
             Strings ->
-                ( "synth", listGetAtOrDefault "" y noteNames )
+                ( "piano", listGetAtOrDefault "" y noteNames )
 
     else if y == 14 then
         case model.instrument2 of
             Electronic ->
-                ( "drum", "C1" )
+                ( "bassDrum2", "C1" )
 
             Blocks ->
-                ( "drum", "C1" )
+                ( "bassDrum2", "C1" )
 
     else if y == 15 then
         case model.instrument2 of
             Electronic ->
-                ( "drum", "B1" )
+                ( "bassDrum1", "B1" )
 
             Blocks ->
-                ( "drum", "B1" )
+                ( "bassDrum1", "B1" )
 
     else
-        ( "", "" )
+        Debug.todo (Debug.toString y)
 
 
 noteColorFromGP : Int2 -> String
