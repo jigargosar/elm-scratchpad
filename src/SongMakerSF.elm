@@ -205,6 +205,20 @@ type alias Note =
 
 noteFromGP : Int2 -> Note
 noteFromGP ( _, y ) =
+    let
+        _ =
+            if y < 14 then
+                ( "synth", "" )
+
+            else if y == 14 then
+                ( "drum", "C1" )
+
+            else if y == 15 then
+                ( "drum", "B1" )
+
+            else
+                ( "", "" )
+    in
     listGetAtWithDefault
         ( "", "" )
         y
