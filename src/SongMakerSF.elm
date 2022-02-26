@@ -61,9 +61,19 @@ type alias Model =
     , playState : PlayerState
     , drawState : Maybe DrawState
     , showSettings : Bool
+    , settings : Settings
     , tempo : Int
     , key : Key
     }
+
+
+type alias Settings =
+    {}
+
+
+initialSettings : Settings
+initialSettings =
+    {}
 
 
 type PlayerState
@@ -110,6 +120,7 @@ init () url key =
       , playState = NotPlaying
       , drawState = Nothing
       , showSettings = False
+      , settings = initialSettings
       , tempo = 120
       , key = key
       }
