@@ -193,6 +193,7 @@ type Msg
     | PointerEnteredGP Int2
     | OnPointerUp
     | TogglePlayClicked
+    | SettingsClicked
     | SelectColumn Int
     | OnKeyDown KeyEvent
 
@@ -271,6 +272,9 @@ update msg model =
 
         TogglePlayClicked ->
             updateOnTogglePlay model
+
+        SettingsClicked ->
+            ( model, Cmd.none )
 
         OnKeyDown e ->
             if e.isTargetBodyElement && not e.repeat && e.key == " " then
