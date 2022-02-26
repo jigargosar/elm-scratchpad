@@ -309,6 +309,7 @@ viewSettings =
         , Html.label [] [ text "Length (in Bars): ", Html.input [ HA.value "4" ] [] ]
         , Html.label [] [ text "Beats per bar: ", Html.input [ HA.value "4" ] [] ]
         , Html.label [] [ text "Split beats into: ", Html.input [ HA.value "2" ] [] ]
+        , Html.label [] [ text "Scale: ", Html.select [] [ Html.option [] [ text "Major" ] ] ]
         ]
 
 
