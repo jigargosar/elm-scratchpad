@@ -183,16 +183,16 @@ paintedPositionsEncoder =
     JE.set (\( a, b ) -> JE.list identity [ JE.int a, JE.int b ])
 
 
-toNotesColumns : Settings -> Set Int2 -> List (List Note)
-toNotesColumns s pp =
+toNotesColumns : Model -> List (List Note)
+toNotesColumns model =
     let
         w =
-            computeGridWidth s
+            computeGridWidth model.settings
 
         columnToNotesDict : Dict Int (List Note)
         columnToNotesDict =
-            groupEqBy first (Set.toList pp)
-                |> List.map (\( gp, gps ) -> ( first gp, List.map noteFromGP (gp :: gps) ))
+            groupEqBy first (Set.toList model.pp)
+                |> List.map (\( gp, gps ) -> ( first gp, List.map (noteFromGP model) (gp :: gps) ))
                 |> Dict.fromList
     in
     rangeN w
@@ -203,8 +203,8 @@ type alias Note =
     ( String, String )
 
 
-noteFromGP : Int2 -> Note
-noteFromGP ( _, y ) =
+noteFromGP : Model -> Int2 -> Note
+noteFromGP model ( _, y ) =
     let
         noteNames =
             [ "C3"
@@ -226,7 +226,12 @@ noteFromGP ( _, y ) =
             ]
     in
     if y < 14 then
-        ( "synth", listGetAtOrDefault "" y noteNames )
+        case model.instrument1 of
+            Piano ->
+                ( "synth", listGetAtOrDefault "" y noteNames )
+
+            Strings ->
+                ( "synth", listGetAtOrDefault "" y noteNames )
 
     else if y == 14 then
         ( "drum", "C1" )
@@ -276,12 +281,12 @@ subscriptions _ =
 
 updateStepsEffect : Model -> Cmd msg
 updateStepsEffect model =
-    updateSteps (toNotesColumns model.settings model.pp)
+    updateSteps (toNotesColumns model)
 
 
 startPlayingEffect : Model -> Cmd msg
 startPlayingEffect model =
-    start (toNotesColumns model.settings model.pp)
+    start (toNotesColumns model)
 
 
 stopCmd : Cmd msg
@@ -289,9 +294,9 @@ stopCmd =
     stop ()
 
 
-playSingleNoteCmd : Int2 -> Cmd msg
-playSingleNoteCmd gp =
-    playSingleNote (noteFromGP gp)
+playSingleNoteCmd : Model -> Int2 -> Cmd msg
+playSingleNoteCmd model gp =
+    playSingleNote (noteFromGP model gp)
 
 
 updateOnTogglePlay : Model -> ( Model, Cmd Msg )
@@ -322,7 +327,7 @@ update msg model =
 
             else
                 { model | pp = Set.insert gp model.pp, drawState = Just Drawing }
-                    |> withCmd (playSingleNoteCmd gp)
+                    |> withCmd (playSingleNoteCmd model gp)
                     |> addEffect updateStepsEffect
 
         PointerEnteredGP gp ->
@@ -332,7 +337,7 @@ update msg model =
 
                 Just Drawing ->
                     { model | pp = Set.insert gp model.pp }
-                        |> withCmd (playSingleNoteCmd gp)
+                        |> withCmd (playSingleNoteCmd model gp)
                         |> addEffect updateStepsEffect
 
                 Just Erasing ->
