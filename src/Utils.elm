@@ -1730,7 +1730,7 @@ listGetAt idx =
     List.drop idx >> List.head
 
 
-listGetAtWithDefault default idx =
+listGetAtOrDefault default idx =
     listGetAt idx >> Maybe.withDefault default
 
 

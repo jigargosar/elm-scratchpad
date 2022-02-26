@@ -206,9 +206,28 @@ type alias Note =
 noteFromGP : Int2 -> Note
 noteFromGP ( _, y ) =
     let
+        noteNames =
+            [ "C3"
+            , "D3"
+            , "E3"
+            , "F3"
+            , "G3"
+            , "A3"
+            , "B3"
+            , "C4"
+            , "D4"
+            , "E4"
+            , "F4"
+            , "G4"
+            , "A4"
+            , "B4"
+            , "C1"
+            , "B1"
+            ]
+
         _ =
             if y < 14 then
-                ( "synth", "" )
+                ( "synth", listGetAtOrDefault "" y noteNames )
 
             else if y == 14 then
                 ( "drum", "C1" )
@@ -219,7 +238,7 @@ noteFromGP ( _, y ) =
             else
                 ( "", "" )
     in
-    listGetAtWithDefault
+    listGetAtOrDefault
         ( "", "" )
         y
         [ ( "synth", "C3" )
@@ -254,7 +273,7 @@ noteColorFromGP ( _, y ) =
             , wGreen_lime
             ]
     in
-    listGetAtWithDefault "" (modBy 7 y) colors
+    listGetAtOrDefault "" (modBy 7 y) colors
 
 
 type Msg

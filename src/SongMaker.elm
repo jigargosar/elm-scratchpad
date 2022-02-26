@@ -153,7 +153,7 @@ type alias Note =
 
 noteFromGP : Int2 -> Note
 noteFromGP ( _, y ) =
-    listGetAtWithDefault
+    listGetAtOrDefault
         ( "", "" )
         y
         [ ( "synth", "C3" )
@@ -190,7 +190,7 @@ noteColorFromGP ( _, y ) =
             , wGreen_lime
             ]
     in
-    listGetAtWithDefault "" (modBy 7 y) colors
+    listGetAtOrDefault "" (modBy 7 y) colors
 
 
 type Msg
