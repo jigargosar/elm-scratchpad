@@ -304,8 +304,8 @@ viewDocument model =
 
 
 viewSettings =
-    fCol [ gap "20px" ]
-        [ text "Settings"
+    fCol [ pa "20px", gap "20px" ]
+        [ div [ fontSize "22px" ] [ text "SETTINGS" ]
         , Html.label [] [ text "Length (in Bars): ", viewSelect [ "4" ] ]
         , Html.label [] [ text "Beats per bar: ", viewSelect [ "4" ] ]
         , Html.label [] [ text "Split beats into: ", viewSelect [ "2" ] ]
