@@ -304,7 +304,7 @@ viewDocument model =
 
 
 viewSettings =
-    fCol []
+    fCol [ gap "20px" ]
         [ text "Settings"
         , Html.label [] [ text "Length (in Bars): ", viewSelect [ "4" ] ]
         , Html.label [] [ text "Beats per bar: ", viewSelect [ "4" ] ]
@@ -316,7 +316,7 @@ viewSettings =
             , viewSelect [ "C", "C#", "B" ]
             ]
         , Html.label [] [ text "Range: ", viewSelect [ "1", "2", "3" ] ]
-        , fRow [] [ viewButton "Ok", viewButton "Cancel" ]
+        , fRow [ gap "20px" ] [ viewButton "Ok", viewButton "Cancel" ]
         ]
 
 
