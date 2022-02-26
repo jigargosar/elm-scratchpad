@@ -196,6 +196,7 @@ type Msg
     | OnPointerUp
     | TogglePlayClicked
     | SettingsClicked
+    | CloseSettingsClicked
     | SelectColumn Int
     | OnKeyDown KeyEvent
 
@@ -277,6 +278,9 @@ update msg model =
 
         SettingsClicked ->
             ( { model | showSettings = True }, Cmd.none )
+
+        CloseSettingsClicked ->
+            ( { model | showSettings = False }, Cmd.none )
 
         OnKeyDown e ->
             if e.isTargetBodyElement && not e.repeat && e.key == " " then
