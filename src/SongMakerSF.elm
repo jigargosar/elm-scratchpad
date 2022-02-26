@@ -192,7 +192,7 @@ type Msg
     | PointerDownOnGP Int2
     | PointerEnteredGP Int2
     | OnPointerUp
-    | ToggleClicked
+    | TogglePlayClicked
     | SelectColumn Int
     | OnKeyDown KeyEvent
 
@@ -269,7 +269,7 @@ update msg model =
         OnPointerUp ->
             ( { model | drawState = Nothing }, Cmd.none )
 
-        ToggleClicked ->
+        TogglePlayClicked ->
             updateOnTogglePlay model
 
         OnKeyDown e ->
@@ -369,7 +369,7 @@ viewPlayButton playState =
         [ autofocus True
         , fontSize "20px"
         , pa "0.5ch 1ch"
-        , notifyClick ToggleClicked
+        , notifyClick TogglePlayClicked
         ]
         [ span [ style "display" "inline-block", sMinWidth "4ch" ]
             [ text
