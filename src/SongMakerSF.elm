@@ -54,9 +54,7 @@ main =
 
 
 type alias Model =
-    { w : Int
-    , h : Int
-    , pp : Set Int2
+    { pp : Set Int2
     , cIdx : Int
     , playState : PlayerState
     , drawState : Maybe DrawState
@@ -75,6 +73,18 @@ type alias Settings =
     , startsOn : StartNote
     , octaves : Int
     }
+
+
+computeGridWidth : Settings -> Int
+computeGridWidth s =
+    s.bars * s.beatsPerBar * s.beatSplits
+
+
+computeGridHeight : Settings -> Int
+computeGridHeight s =
+    case s.scale of
+        Major ->
+            7 * s.octaves + 2
 
 
 type StartNote
@@ -109,11 +119,14 @@ type DrawState
 init : () -> Url -> Key -> ( Model, Cmd Msg )
 init () url key =
     let
+        settings =
+            initialSettings
+
         w =
-            32
+            computeGridWidth settings
 
         h =
-            14
+            computeGridHeight settings
     in
     let
         initialPP : Set GPos
@@ -133,14 +146,12 @@ init () url key =
                 |> JD.decodeString paintedPositionsDecoder
                 |> Result.withDefault initialPP
     in
-    ( { w = w
-      , h = h
-      , pp = pp
+    ( { pp = pp
       , cIdx = 0
       , playState = NotPlaying
       , drawState = Nothing
       , showSettings = False
-      , settings = initialSettings
+      , settings = settings
       , tempo = 120
       , key = key
       }
@@ -158,17 +169,11 @@ paintedPositionsEncoder =
     JE.set (\( a, b ) -> JE.list identity [ JE.int a, JE.int b ])
 
 
-toNotesColumns : Int -> Set Int2 -> List (List Note)
-toNotesColumns w pp =
+toNotesColumns : Settings -> Set Int2 -> List (List Note)
+toNotesColumns s pp =
     let
-        _ =
-            [ [ "C4" ]
-            , [ "E4", "D4", "E4" ]
-            , [ "G4" ]
-            , [ "A4", "G4" ]
-            ]
-                |> List.concat
-                |> List.map List.singleton
+        w =
+            computeGridWidth s
 
         columnToNotesDict : Dict Int (List Note)
         columnToNotesDict =
@@ -246,12 +251,12 @@ subscriptions _ =
 
 updateStepsEffect : Model -> Cmd msg
 updateStepsEffect model =
-    updateSteps (toNotesColumns model.w model.pp)
+    updateSteps (toNotesColumns model.settings model.pp)
 
 
 startPlayingEffect : Model -> Cmd msg
 startPlayingEffect model =
-    start (toNotesColumns model.w model.pp)
+    start (toNotesColumns model.settings model.pp)
 
 
 stopCmd : Cmd msg
@@ -459,21 +464,21 @@ viewPlayButton playState =
 
 
 viewGrid : Model -> Html Msg
-viewGrid ({ w, h } as model) =
+viewGrid model =
     div
         [ dGrid
         , positionRelative
         , style "flex-grow" "1"
         ]
         [ viewGridTiles model
-        , viewGridLines w h
+        , viewGridLines model.settings
         ]
 
 
-viewGridLines w_ h_ =
+viewGridLines s =
     let
         ( w, h ) =
-            ( toFloat w_, toFloat h_ + 2 )
+            ( toFloat (computeGridWidth s), toFloat (computeGridHeight s) )
     in
     div
         [ w100
@@ -496,16 +501,22 @@ viewGridLines w_ h_ =
 
 
 viewGridTiles : Model -> Html Msg
-viewGridTiles ({ w, h } as model) =
+viewGridTiles model =
     let
+        w =
+            computeGridWidth model.settings
+
+        h =
+            computeGridHeight model.settings
+
         tiles =
-            rangeWH w (h + 2)
+            rangeWH w h
                 |> List.map (viewTile model)
     in
     div
         [ dGrid
         , style "grid-template"
-            (("repeat(" ++ fromInt (h + 2) ++ ",1fr)")
+            (("repeat(" ++ fromInt h ++ ",1fr)")
                 ++ "/"
                 ++ ("repeat(" ++ fromInt w ++ ",1fr)")
             )
