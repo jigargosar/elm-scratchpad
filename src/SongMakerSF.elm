@@ -72,13 +72,13 @@ type alias Settings =
     , beatsPerBar : Int
     , beatSplits : Int
     , scale : MScale
-    , startsOn : CNote
+    , startsOn : StartNote
     , octaves : Int
     }
 
 
-type CNote
-    = CNote
+type StartNote
+    = StartNote
 
 
 type MScale
@@ -91,7 +91,7 @@ initialSettings =
     , beatsPerBar = 4
     , beatSplits = 2
     , scale = Major
-    , startsOn = CNote
+    , startsOn = StartNote
     , octaves = 4
     }
 
