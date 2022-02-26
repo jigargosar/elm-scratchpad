@@ -20,7 +20,7 @@ function MakePlayer() {
 
   const fontPlayer = new WebAudioFontPlayer()
   const presetMap = {
-    synth: "_tone_" + "0000_SBLive_sf2",
+    piano: "_tone_" + "0000_SBLive_sf2",
     drum: "_drum_35_0_Chaos_sf2_file",
   }
   const presetNames = Object.values(presetMap)
