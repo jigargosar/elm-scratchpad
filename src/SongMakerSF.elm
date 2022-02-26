@@ -229,7 +229,7 @@ noteFromGP model ( _, y ) =
                 ( "piano", listGetAtOrDefault "" y noteNames )
 
             Strings ->
-                ( "piano", listGetAtOrDefault "" y noteNames )
+                ( "strings", listGetAtOrDefault "" y noteNames )
 
     else if y == 14 then
         case model.instrument2 of
