@@ -301,10 +301,10 @@ viewDocument model =
         [ basicStylesNode
         , animateCssNode
         , if model.showSettings then
-            view model
+            viewSettings
 
           else
-            viewSettings
+            view model
         ]
 
 
