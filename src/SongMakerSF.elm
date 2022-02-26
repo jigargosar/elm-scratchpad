@@ -69,10 +69,12 @@ type alias Model =
 
 type Instrument1
     = Piano
+    | Strings
 
 
 type Instrument2
     = Electronic
+    | Blocks
 
 
 type alias Settings =
