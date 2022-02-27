@@ -14,6 +14,7 @@ import Simple.Animation as Animation exposing (Animation)
 import Simple.Animation.Animated as Animated
 import Simple.Animation.Property as P
 import Task
+import Time
 import Url exposing (Url)
 import Utils exposing (..)
 
@@ -302,22 +303,28 @@ type alias Note2 =
     }
 
 
-note2FromGP : Model -> Int2 -> Note2
-note2FromGP model gp =
+noteDuration : Model -> Int
+noteDuration model =
     let
-        ( presetName, pitch ) =
-            noteFromGP model gp
-
         beatDurationInMilli =
             (60 * 1000) / toFloat model.tempo
 
         duration =
             round (beatDurationInMilli / toFloat model.settings.beatSplits)
     in
+    duration
+
+
+note2FromGP : Model -> Int2 -> Note2
+note2FromGP model gp =
+    let
+        ( presetName, pitch ) =
+            noteFromGP model gp
+    in
     { presetName = presetName
     , startOffset = 0
     , pitch = pitch
-    , duration = duration
+    , duration = noteDuration model
     }
 
 
@@ -400,6 +407,7 @@ type Msg
     | PointerEnteredGP Int2
     | OnPointerUp
     | TogglePlayClicked
+    | PlayNextNote Int
     | SettingsClicked
     | Instrument1ButtonClicked
     | Instrument2ButtonClicked
@@ -413,6 +421,7 @@ subscriptions : Model -> Sub Msg
 subscriptions _ =
     [ selectColumn SelectColumn
     , onBrowserKeyDown OnKeyDown
+    , Time.every 100 (Time.posixToMillis >> PlayNextNote)
     ]
         |> Sub.batch
 
@@ -420,16 +429,6 @@ subscriptions _ =
 updateStepsEffect : Model -> Cmd msg
 updateStepsEffect model =
     updateSteps (toNotesColumns model)
-
-
-startPlayingEffect : Model -> Cmd msg
-startPlayingEffect model =
-    start (toNotesColumns model)
-
-
-stopCmd : Cmd msg
-stopCmd =
-    stop ()
 
 
 playSingleNoteCmd : Model -> Int2 -> Cmd msg
@@ -492,6 +491,9 @@ update msg model =
 
         TogglePlayClicked ->
             updateOnTogglePlay model
+
+        PlayNextNote _ ->
+            ( model, Cmd.none )
 
         SettingsClicked ->
             ( { model | showSettings = True }
