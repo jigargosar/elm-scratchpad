@@ -80,6 +80,25 @@ type Instrument1
     | Marimba
 
 
+cycleInstrument1 : Instrument1 -> Instrument1
+cycleInstrument1 i1 =
+    case i1 of
+        Piano ->
+            Strings
+
+        Strings ->
+            Woodwind
+
+        Woodwind ->
+            Synth
+
+        Synth ->
+            Marimba
+
+        Marimba ->
+            Piano
+
+
 type Instrument2
     = Electronic
     | Blocks
@@ -285,6 +304,8 @@ type Msg
     | OnPointerUp
     | TogglePlayClicked
     | SettingsClicked
+    | Instrument1ButtonClicked
+    | Instrument2ButtonClicked
     | CloseSettingsClicked
     | SelectColumn Int
     | OnKeyDown KeyEvent
@@ -375,6 +396,14 @@ update msg model =
             , focusOrIgnoreCmd "cancel-settings-btn"
             )
 
+        Instrument1ButtonClicked ->
+            ( { model | instrument1 = cycleInstrument1 model.instrument1 }
+            , Cmd.none
+            )
+
+        Instrument2ButtonClicked ->
+            ( model, Cmd.none )
+
         CloseSettingsClicked ->
             ( { model | showSettings = False }, focusOrIgnoreCmd "settings-btn" )
 
@@ -463,7 +492,7 @@ viewBottomRow model =
         , itemsCenter
         ]
         [ viewPlayButton model.playState
-        , viewBtn [] "Piano"
+        , viewBtn [ notifyClick Instrument1ButtonClicked ] "Piano"
         , viewBtn [] "Electronic"
         , viewTempoInput
         , viewSettingsButton
