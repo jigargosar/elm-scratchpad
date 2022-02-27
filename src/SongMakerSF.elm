@@ -41,7 +41,7 @@ import Utils exposing (..)
 -}
 
 
-port playNote2 : Note2 -> Cmd msg
+port playNote2 : Note -> Cmd msg
 
 
 main =
@@ -260,8 +260,8 @@ paintedPositionsEncoder =
     JE.set (\( a, b ) -> JE.list identity [ JE.int a, JE.int b ])
 
 
-type alias Note2 =
-    { presetName : String
+type alias Note =
+    { preset : String
     , startOffset : Int
     , pitch : String
     , duration : Int
@@ -280,13 +280,13 @@ noteDuration model =
     duration
 
 
-note2FromGP : Model -> Int2 -> Note2
+note2FromGP : Model -> Int2 -> Note
 note2FromGP model gp =
     let
         ( presetName, pitch ) =
             notePresetAndPitchFromGP model gp
     in
-    { presetName = presetName
+    { preset = presetName
     , startOffset = 0
     , pitch = pitch
     , duration = noteDuration model
