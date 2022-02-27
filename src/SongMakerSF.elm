@@ -504,6 +504,9 @@ update msg model =
 
                 Playing _ ->
                     let
+                        stepsCount =
+                            computeGridWidth model.settings
+
                         cmd =
                             model.pp
                                 |> Set.filter (first >> eq model.cIdx)
@@ -511,7 +514,7 @@ update msg model =
                                 |> List.map (note2FromGP model >> playNote2)
                                 |> Cmd.batch
                     in
-                    ( { model | cIdx = model.cIdx + 1 }, cmd )
+                    ( { model | cIdx = model.cIdx + 1 |> modBy stepsCount }, cmd )
 
         SettingsClicked ->
             ( { model | showSettings = True }
