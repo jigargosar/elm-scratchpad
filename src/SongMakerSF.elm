@@ -485,12 +485,27 @@ update msg model =
                         ( { model | playState = Playing elapsed }, Cmd.none )
 
                     else
+                        let
+                            stepsCount =
+                                computeGridWidth model.settings
+
+                            cIdx =
+                                model.cIdx + 1 |> modBy stepsCount
+
+                            cmd =
+                                model.pp
+                                    |> Set.filter (first >> eq cIdx)
+                                    |> Set.toList
+                                    |> List.map (noteFromGP model >> playNote)
+                                    |> Cmd.batch
+                        in
                         ( { model
                             | playState =
                                 Playing
                                     (elapsed - stepMillis |> clamp 0 stepMillis)
+                            , cIdx = cIdx
                           }
-                        , Cmd.none
+                        , cmd
                         )
 
         PlayNextNote _ ->
