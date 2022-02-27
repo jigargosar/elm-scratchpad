@@ -274,8 +274,8 @@ type alias Note =
     }
 
 
-stepDuration : Model -> Float
-stepDuration model =
+stepDurationInMillis : Model -> Float
+stepDurationInMillis model =
     let
         beatDurationInMilli =
             (60 * 1000) / toFloat model.tempo
@@ -295,7 +295,7 @@ noteFromGP model gp =
     { preset = presetName
     , startOffset = 0
     , pitch = pitch
-    , duration = stepDuration model
+    , duration = stepDurationInMillis model
     }
 
 
@@ -488,7 +488,7 @@ update msg model =
                 Playing prevElapsed ->
                     let
                         stepMillis =
-                            stepDuration model
+                            stepDurationInMillis model
 
                         elapsed =
                             prevElapsed + delta
