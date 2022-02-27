@@ -373,6 +373,7 @@ type Msg
     | SettingsClicked
     | Instrument1ButtonClicked
     | Instrument2ButtonClicked
+    | TempoInputChanged String
     | CloseSettingsClicked
     | SelectColumn Int
     | OnKeyDown KeyEvent
@@ -473,6 +474,15 @@ update msg model =
             , Cmd.none
             )
 
+        TempoInputChanged str ->
+            let
+                tempo =
+                    String.toInt str
+                        |> Maybe.withDefault model.tempo
+                        |> clamp 10 300
+            in
+            ( { model | tempo = tempo }, Cmd.none )
+
         CloseSettingsClicked ->
             ( { model | showSettings = False }, focusOrIgnoreCmd "settings-btn" )
 
@@ -571,7 +581,7 @@ viewBottomBar model =
             , notifyClick Instrument2ButtonClicked
             ]
             (instrument2Name model.instrument2)
-        , viewTempoInput
+        , viewTempoInput model.tempo
         , viewSettingsButton
         , viewBtn [] "Undo"
         , viewBtn [] "Save"
@@ -584,11 +594,12 @@ viewSettingsButton =
         "Settings"
 
 
-viewTempoInput =
+viewTempoInput tempo =
     Html.label []
         [ text "Tempo "
         , Html.input
-            [ HA.value "120"
+            [ HA.value (fromInt tempo)
+            , onInput TempoInputChanged
             , HA.size 4
             , HA.type_ "number"
             , fontSize "20px"
