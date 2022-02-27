@@ -1,6 +1,7 @@
 port module SongMakerSF exposing (main)
 
 import Browser.Dom
+import Browser.Events
 import Browser.Navigation exposing (Key)
 import Html
 import Html.Attributes as HA
@@ -262,20 +263,20 @@ paintedPositionsEncoder =
 
 type alias Note =
     { preset : String
-    , startOffset : Int
+    , startOffset : Float
     , pitch : String
-    , duration : Int
+    , duration : Float
     }
 
 
-stepDuration : Model -> Int
+stepDuration : Model -> Float
 stepDuration model =
     let
         beatDurationInMilli =
             (60 * 1000) / toFloat model.tempo
 
         duration =
-            round (beatDurationInMilli / toFloat model.settings.beatSplits)
+            beatDurationInMilli / toFloat model.settings.beatSplits
     in
     duration
 
@@ -378,6 +379,7 @@ type Msg
     | TogglePlayClicked
     | TogglePlayWithNow Int
     | PlayNextNote Int
+    | OnTick Float
     | SettingsClicked
     | Instrument1ButtonClicked
     | Instrument2ButtonClicked
@@ -391,7 +393,8 @@ subscriptions model =
     [ onBrowserKeyDown OnKeyDown
     , case model.playState of
         Playing _ ->
-            Time.every (stepDuration model |> toFloat) (Time.posixToMillis >> PlayNextNote)
+            --Time.every (stepDuration model |> toFloat) (Time.posixToMillis >> PlayNextNote)
+            Browser.Events.onAnimationFrameDelta OnTick
 
         _ ->
             Sub.none
@@ -464,6 +467,25 @@ update msg model =
 
         TogglePlayWithNow now ->
             updateOnTogglePlay now model
+
+        OnTick delta ->
+            case model.playState of
+                NotPlaying ->
+                    ( model, Cmd.none )
+
+                Playing prevElapsed ->
+                    let
+                        elapsed =
+                            prevElapsed + delta
+
+                        stepMillis =
+                            stepDuration model
+                    in
+                    if elapsed < stepMillis then
+                        ( model, Cmd.none )
+
+                    else
+                        ( model, Cmd.none )
 
         PlayNextNote _ ->
             case model.playState of
