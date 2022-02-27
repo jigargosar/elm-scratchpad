@@ -167,6 +167,11 @@ type alias Settings =
 
 computeGridWidth : Settings -> Int
 computeGridWidth s =
+    totalSteps s
+
+
+totalSteps : Settings -> Int
+totalSteps s =
     s.bars * s.beatsPerBar * s.beatSplits
 
 
@@ -492,15 +497,11 @@ update msg model =
                         ( { model | playState = Playing elapsed }, Cmd.none )
 
                     else
-                        let
-                            stepsCount =
-                                computeGridWidth model.settings
-                        in
                         { model
                             | playState =
                                 Playing
                                     (elapsed - stepMillis |> clamp 0 stepMillis)
-                            , cIdx = model.cIdx + 1 |> modBy stepsCount
+                            , cIdx = model.cIdx + 1 |> modBy (totalSteps model.settings)
                         }
                             |> withEffect playCurrentStepEffect
 
