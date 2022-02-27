@@ -578,7 +578,7 @@ viewSettingsButton =
 
 viewTempoInput =
     Html.label []
-        [ text "Tempo: "
+        [ text "Tempo "
         , Html.input
             [ HA.value "120"
             , HA.size 4
