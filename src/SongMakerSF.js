@@ -7,6 +7,7 @@ const Player = MakePlayer()
 
 app.ports.playNote.subscribe(Player.playNote)
 
+
 function MakePlayer() {
   const audioContext = newAudioContext()
 
@@ -20,8 +21,18 @@ function MakePlayer() {
   const presetNames = Object.values(presetMap)
   loadPresets(audioContext, fontPlayer, presetNames)
 
+  let lastAudioContextTime = audioContext.currentTime
+  function animationFrameCallback() {
+    const deltaMilli = (audioContext.currentTime - lastAudioContextTime) * 1000
+    app.ports.onAudioContextDeltaMilli.send(deltaMilli)
+    lastAudioContextTime = audioContext.currentTime
+    requestAnimationFrame(animationFrameCallback)
+  }
+  requestAnimationFrame(animationFrameCallback)
+
   return {
-    playNote({ preset, startOffset, pitch, duration }) {
+    async playNote({preset, startOffset, pitch, duration}) {
+      await audioContext.resume()
       const presetVar = window[presetMap[preset]]
       fontPlayer.queueWaveTable(
         audioContext,

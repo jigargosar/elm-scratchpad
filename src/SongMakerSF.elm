@@ -45,6 +45,9 @@ import Utils exposing (..)
 port playNote : Note -> Cmd msg
 
 
+port onAudioContextDeltaMilli : (Float -> msg) -> Sub msg
+
+
 main =
     browserApplication
         { init = init
@@ -399,7 +402,7 @@ subscriptions model =
     , case model.playState of
         Playing _ ->
             --Time.every (stepDuration model |> toFloat) (Time.posixToMillis >> PlayNextNote)
-            Browser.Events.onAnimationFrameDelta OnTick
+            onAudioContextDeltaMilli OnTick
 
         _ ->
             Sub.none
