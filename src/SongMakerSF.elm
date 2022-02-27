@@ -50,6 +50,9 @@ port stop : () -> Cmd msg
 port playSingleNote : Note -> Cmd msg
 
 
+port playNote2 : Note2 -> Cmd msg
+
+
 port updateSteps : List (List Note) -> Cmd msg
 
 
@@ -290,6 +293,14 @@ toNotesColumns model =
 
 type alias Note =
     ( String, String )
+
+
+type alias Note2 =
+    { inst : String
+    , pitch : String
+    , duration : Int
+    , startOffset : Int
+    }
 
 
 noteFromGP : Model -> Int2 -> Note
