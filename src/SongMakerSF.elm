@@ -26,6 +26,7 @@ import Utils exposing (..)
 
     # Next
     * add all UI elements.
+    * make UI functional.
 
 
 -}
