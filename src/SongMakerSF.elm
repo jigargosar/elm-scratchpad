@@ -386,7 +386,6 @@ type Msg
     | OnPointerUp
     | TogglePlayClicked
     | TogglePlayWithNow Int
-    | PlayNextNote Int
     | OnTick Float
     | SettingsClicked
     | Instrument1ButtonClicked
@@ -507,25 +506,6 @@ update msg model =
                             , cIdx = model.cIdx + 1 |> modBy (totalSteps model.settings)
                         }
                             |> withEffect playCurrentStepEffect
-
-        PlayNextNote _ ->
-            case model.playState of
-                NotPlaying ->
-                    ( model, Cmd.none )
-
-                Playing _ ->
-                    let
-                        stepsCount =
-                            computeGridWidth model.settings
-
-                        cmd =
-                            model.pp
-                                |> Set.filter (first >> eq model.cIdx)
-                                |> Set.toList
-                                |> List.map (noteFromGP model >> playNote)
-                                |> Cmd.batch
-                    in
-                    ( { model | cIdx = model.cIdx + 1 |> modBy stepsCount }, cmd )
 
         SettingsClicked ->
             ( { model | showSettings = True }
