@@ -80,6 +80,25 @@ type Instrument1
     | Marimba
 
 
+instrument1Name : Instrument1 -> String
+instrument1Name i =
+    case i of
+        Piano ->
+            "Piano"
+
+        Strings ->
+            "Strings"
+
+        Woodwind ->
+            "Woodwind"
+
+        Synth ->
+            "Synth"
+
+        Marimba ->
+            "Marimba"
+
+
 cycleInstrument1 : Instrument1 -> Instrument1
 cycleInstrument1 i =
     case i of
@@ -102,6 +121,24 @@ cycleInstrument1 i =
 type Instrument2
     = Electronic
     | Blocks
+    | Kit
+    | Conga
+
+
+instrument2Name : Instrument2 -> String
+instrument2Name i =
+    case i of
+        Electronic ->
+            "Electronic"
+
+        Blocks ->
+            "Blocks"
+
+        Kit ->
+            "Kit"
+
+        Conga ->
+            "Conga"
 
 
 cycleInstrument2 : Instrument2 -> Instrument2
@@ -111,6 +148,12 @@ cycleInstrument2 i =
             Blocks
 
         Blocks ->
+            Kit
+
+        Kit ->
+            Conga
+
+        Conga ->
             Electronic
 
 
@@ -279,12 +322,18 @@ noteFromGP model ( _, y ) =
             Blocks ->
                 ( "snareDrum2", "40" )
 
+            _ ->
+                ( "snareDrum2", "40" )
+
     else if y == 15 then
         case model.instrument2 of
             Electronic ->
                 ( "bassDrum1", "36" )
 
             Blocks ->
+                ( "bassDrum1", "36" )
+
+            _ ->
                 ( "bassDrum1", "36" )
 
     else
@@ -504,8 +553,8 @@ viewBottomBar model =
         , itemsCenter
         ]
         [ viewPlayButton model.playState
-        , viewBtn [ notifyClick Instrument1ButtonClicked ] "Piano"
-        , viewBtn [] "Electronic"
+        , viewBtn [ notifyClick Instrument1ButtonClicked ] (instrument1Name model.instrument1)
+        , viewBtn [ notifyClick Instrument2ButtonClicked ] (instrument2Name model.instrument2)
         , viewTempoInput
         , viewSettingsButton
         , viewBtn [] "Undo"
