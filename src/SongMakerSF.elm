@@ -80,6 +80,7 @@ type alias Model =
     , instrument1 : Instrument1
     , instrument2 : Instrument2
     , tempo : Int
+    , now : Int
     , key : Key
     }
 
@@ -211,7 +212,7 @@ initialSettings =
 
 
 type PlayerState
-    = Playing
+    = Playing Int
     | NotPlaying
 
 
@@ -259,6 +260,7 @@ init () url key =
       , instrument1 = Piano
       , instrument2 = Electronic
       , tempo = 120
+      , now = 0
       , key = key
       }
     , Cmd.none
@@ -423,9 +425,9 @@ updateOnTogglePlay : Model -> ( Model, Cmd Msg )
 updateOnTogglePlay model =
     case model.playState of
         NotPlaying ->
-            { model | playState = Playing } |> withEffect startPlayingEffect
+            { model | playState = Playing model.now } |> withEffect startPlayingEffect
 
-        Playing ->
+        Playing _ ->
             { model | playState = NotPlaying } |> withCmd stopCmd
 
 
@@ -632,7 +634,7 @@ viewPlayButton playState =
         [ span [ style "display" "inline-block", sMinWidth "4ch" ]
             [ text
                 (case playState of
-                    Playing ->
+                    Playing _ ->
                         "Stop"
 
                     NotPlaying ->
@@ -743,7 +745,12 @@ viewTile : Model -> Int2 -> Html Msg
 viewTile model (( x, _ ) as gp) =
     let
         isPlaying =
-            model.playState == Playing
+            case model.playState of
+                Playing _ ->
+                    True
+
+                _ ->
+                    False
 
         isNoteTile =
             Set.member gp model.pp
