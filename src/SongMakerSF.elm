@@ -494,7 +494,15 @@ update msg model =
                     ( model, Cmd.none )
 
                 Playing nextAudioTime ->
-                    ( model, Cmd.none )
+                    let
+                        lookAheadDuration =
+                            100
+                    in
+                    if nextAudioTime - lookAheadDuration < audioContextTime then
+                        ( model, Cmd.none )
+
+                    else
+                        ( model, Cmd.none )
 
         SettingsClicked ->
             ( { model | showSettings = True }

@@ -22,7 +22,7 @@ function MakePlayer() {
   loadPresets(audioContext, fontPlayer, presetNames)
 
   function animationFrameCallback() {
-    app.ports.onAudioContextTime.send(audioContext.currentTime)
+    app.ports.onAudioContextTime.send(audioContext.currentTime * 1000)
     requestAnimationFrame(animationFrameCallback)
   }
   requestAnimationFrame(animationFrameCallback)
