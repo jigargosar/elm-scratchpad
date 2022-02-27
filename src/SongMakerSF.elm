@@ -298,10 +298,10 @@ type alias Note =
 
 
 type alias Note2 =
-    { inst : String
+    { presetName : String
+    , startOffset : Int
     , pitch : String
     , duration : Int
-    , startOffset : Int
     }
 
 

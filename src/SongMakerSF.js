@@ -10,6 +10,7 @@ app.ports.start.subscribe(Player.start)
 app.ports.stop.subscribe(Player.stop)
 app.ports.updateSteps.subscribe(Player.updateSteps)
 app.ports.playSingleNote.subscribe(Player.playSingleNote)
+app.ports.playNote2.subscribe(Player.playSingleNote)
 
 function notifyColumnChanged(i) {
   return app.ports.selectColumn.send(i)
@@ -86,6 +87,19 @@ function MakePlayer() {
     },
     playSingleNote(data) {
       playNote(data)
+    },
+    playNote2({ presetName, startOffset, pitch, duration }) {
+      const preset = window[presetMap[presetName]]
+      fontPlayer.queueWaveTable(
+        audioContext,
+        audioContext.destination,
+        preset,
+        audioContext.currentTime + startOffset / 1000,
+        NoteParser.midi(pitch),
+        duration / 1000,
+        0.5,
+        [],
+      )
     },
   }
 }
