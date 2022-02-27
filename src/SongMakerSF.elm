@@ -305,6 +305,25 @@ type alias Note2 =
     }
 
 
+note2FromGP : Model -> Int2 -> Note2
+note2FromGP model gp =
+    let
+        ( presetName, pitch ) =
+            noteFromGP model gp
+
+        beatDurationInMilli =
+            (60 * 1000) / toFloat model.tempo
+
+        duration =
+            round (beatDurationInMilli / toFloat model.settings.beatSplits)
+    in
+    { presetName = presetName
+    , startOffset = 0
+    , pitch = pitch
+    , duration = duration
+    }
+
+
 noteFromGP : Model -> Int2 -> Note
 noteFromGP model ( _, y ) =
     let
@@ -419,6 +438,7 @@ stopCmd =
 playSingleNoteCmd : Model -> Int2 -> Cmd msg
 playSingleNoteCmd model gp =
     playSingleNote (noteFromGP model gp)
+        |> always (playNote2 (note2FromGP model gp))
 
 
 updateOnTogglePlay : Model -> ( Model, Cmd Msg )
