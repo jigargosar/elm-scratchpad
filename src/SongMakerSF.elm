@@ -33,6 +33,7 @@ import Utils exposing (..)
         * Settings
         * Undo
         * Save
+    * Update player on tempo/settings change
 
 
 
