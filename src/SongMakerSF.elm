@@ -431,6 +431,15 @@ togglePlayCmd =
     Time.now |> Task.perform (Time.posixToMillis >> TogglePlayWithNow)
 
 
+playStepCmd : Model -> Int -> Cmd msg
+playStepCmd model cIdx =
+    model.pp
+        |> Set.filter (first >> eq cIdx)
+        |> Set.toList
+        |> List.map (noteFromGP model >> playNote)
+        |> Cmd.batch
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -491,13 +500,6 @@ update msg model =
 
                             cIdx =
                                 model.cIdx + 1 |> modBy stepsCount
-
-                            cmd =
-                                model.pp
-                                    |> Set.filter (first >> eq cIdx)
-                                    |> Set.toList
-                                    |> List.map (noteFromGP model >> playNote)
-                                    |> Cmd.batch
                         in
                         ( { model
                             | playState =
@@ -505,7 +507,7 @@ update msg model =
                                     (elapsed - stepMillis |> clamp 0 stepMillis)
                             , cIdx = cIdx
                           }
-                        , cmd
+                        , playStepCmd model cIdx
                         )
 
         PlayNextNote _ ->
