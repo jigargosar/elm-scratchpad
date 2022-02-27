@@ -418,7 +418,7 @@ updateOnTogglePlay _ model =
     case model.playState of
         NotPlaying ->
             { model | playState = Playing 0, cIdx = 0 }
-                |> withEffect (playCurrentStepEffect playDelay)
+                |> withEffect (playCurrentStepEffect 0)
 
         Playing _ ->
             { model | playState = NotPlaying }
@@ -436,7 +436,14 @@ togglePlayCmd =
 
 
 playCurrentStepEffect : Float -> Model -> Cmd Msg
-playCurrentStepEffect startOffset model =
+playCurrentStepEffect pastOffset model =
+    let
+        futureOffset =
+            100
+
+        startOffset =
+            futureOffset - pastOffset
+    in
     model.pp
         |> Set.filter (first >> eq model.cIdx)
         |> Set.toList
@@ -500,13 +507,13 @@ update msg model =
                     else
                         let
                             nextElapsed =
-                                elapsedMilli - stepMillis |> clamp 0 playDelay
+                                elapsedMilli - stepMillis |> clamp 0 stepMillis
                         in
                         { model
                             | playState = Playing nextElapsed
                             , cIdx = model.cIdx + 1 |> modBy (totalSteps model.settings)
                         }
-                            |> withEffect (playCurrentStepEffect (playDelay - nextElapsed))
+                            |> withEffect (playCurrentStepEffect nextElapsed)
 
         SettingsClicked ->
             ( { model | showSettings = True }
@@ -547,10 +554,6 @@ update msg model =
 
             else
                 ( model, Cmd.none )
-
-
-playDelay =
-    100
 
 
 viewDocument : Model -> Document Msg
