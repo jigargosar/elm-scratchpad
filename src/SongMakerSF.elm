@@ -268,8 +268,8 @@ type alias Note =
     }
 
 
-noteDuration : Model -> Int
-noteDuration model =
+stepDuration : Model -> Int
+stepDuration model =
     let
         beatDurationInMilli =
             (60 * 1000) / toFloat model.tempo
@@ -289,7 +289,7 @@ noteFromGP model gp =
     { preset = presetName
     , startOffset = 0
     , pitch = pitch
-    , duration = noteDuration model
+    , duration = stepDuration model
     }
 
 
@@ -391,7 +391,7 @@ subscriptions model =
     [ onBrowserKeyDown OnKeyDown
     , case model.playState of
         Playing _ ->
-            Time.every (noteDuration model |> toFloat) (Time.posixToMillis >> PlayNextNote)
+            Time.every (stepDuration model |> toFloat) (Time.posixToMillis >> PlayNextNote)
 
         _ ->
             Sub.none
