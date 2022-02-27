@@ -81,8 +81,8 @@ type Instrument1
 
 
 cycleInstrument1 : Instrument1 -> Instrument1
-cycleInstrument1 i1 =
-    case i1 of
+cycleInstrument1 i =
+    case i of
         Piano ->
             Strings
 
@@ -102,6 +102,16 @@ cycleInstrument1 i1 =
 type Instrument2
     = Electronic
     | Blocks
+
+
+cycleInstrument2 : Instrument2 -> Instrument2
+cycleInstrument2 i =
+    case i of
+        Electronic ->
+            Blocks
+
+        Blocks ->
+            Electronic
 
 
 type alias Settings =
@@ -402,7 +412,9 @@ update msg model =
             )
 
         Instrument2ButtonClicked ->
-            ( model, Cmd.none )
+            ( { model | instrument2 = cycleInstrument2 model.instrument2 }
+            , Cmd.none
+            )
 
         CloseSettingsClicked ->
             ( { model | showSettings = False }, focusOrIgnoreCmd "settings-btn" )
