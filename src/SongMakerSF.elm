@@ -418,7 +418,7 @@ updateOnTogglePlay _ model =
     case model.playState of
         NotPlaying ->
             { model | playState = Playing 0, cIdx = 0 }
-                |> withEffect (playCurrentStepEffect 0)
+                |> withNoCmd
 
         Playing _ ->
             { model | playState = NotPlaying }
@@ -436,14 +436,7 @@ togglePlayCmd =
 
 
 playCurrentStepEffect : Float -> Model -> Cmd Msg
-playCurrentStepEffect pastOffset model =
-    let
-        futureOffset =
-            100
-
-        startOffset =
-            futureOffset - pastOffset
-    in
+playCurrentStepEffect startOffset model =
     model.pp
         |> Set.filter (first >> eq model.cIdx)
         |> Set.toList
