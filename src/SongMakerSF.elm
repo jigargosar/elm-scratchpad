@@ -493,7 +493,20 @@ update msg model =
             updateOnTogglePlay model
 
         PlayNextNote _ ->
-            ( model, Cmd.none )
+            case model.playState of
+                NotPlaying ->
+                    ( model, Cmd.none )
+
+                Playing _ ->
+                    let
+                        cmd =
+                            model.pp
+                                |> Set.filter (first >> eq model.cIdx)
+                                |> Set.toList
+                                |> List.map (note2FromGP model >> playNote2)
+                                |> Cmd.batch
+                    in
+                    ( { model | cIdx = model.cIdx + 1 }, cmd )
 
         SettingsClicked ->
             ( { model | showSettings = True }
