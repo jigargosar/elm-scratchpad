@@ -1,7 +1,6 @@
 port module SongMakerSF exposing (main)
 
 import Browser.Dom
-import Browser.Events
 import Browser.Navigation exposing (Key)
 import Html
 import Html.Attributes as HA
@@ -289,13 +288,8 @@ stepDurationInMilli model =
     duration
 
 
-noteFromGP : Model -> Int2 -> Note
-noteFromGP model gp =
-    noteFromGPWithOffset model 0 gp
-
-
-noteFromGPWithOffset : Model -> Float -> Int2 -> Note
-noteFromGPWithOffset model startOffset gp =
+noteFromGPWithOffset : Float -> Model -> Int2 -> Note
+noteFromGPWithOffset startOffset model gp =
     let
         ( presetName, pitch ) =
             notePresetAndPitchFromGP model gp
@@ -416,7 +410,7 @@ subscriptions model =
 
 playSingleNoteCmd : Model -> Int2 -> Cmd msg
 playSingleNoteCmd model gp =
-    playNote (noteFromGP model gp)
+    playNote (noteFromGPWithOffset 0 model gp)
 
 
 updateOnTogglePlay : Int -> Model -> ( Model, Cmd Msg )
@@ -424,7 +418,7 @@ updateOnTogglePlay _ model =
     case model.playState of
         NotPlaying ->
             { model | playState = Playing 0, cIdx = 0 }
-                |> withEffect playCurrentStepEffect
+                |> withEffect (playCurrentStepEffect playDelay)
 
         Playing _ ->
             { model | playState = NotPlaying }
@@ -441,12 +435,12 @@ togglePlayCmd =
     Time.now |> Task.perform (Time.posixToMillis >> TogglePlayWithNow)
 
 
-playCurrentStepEffect : Model -> Cmd Msg
-playCurrentStepEffect model =
+playCurrentStepEffect : Float -> Model -> Cmd Msg
+playCurrentStepEffect startOffset model =
     model.pp
         |> Set.filter (first >> eq model.cIdx)
         |> Set.toList
-        |> List.map (noteFromGP model >> playNote)
+        |> List.map (noteFromGPWithOffset startOffset model >> playNote)
         |> Cmd.batch
 
 
@@ -504,13 +498,15 @@ update msg model =
                         ( { model | playState = Playing elapsedMilli }, Cmd.none )
 
                     else
+                        let
+                            nextElapsed =
+                                elapsedMilli - stepMillis |> clamp 0 playDelay
+                        in
                         { model
-                            | playState =
-                                Playing
-                                    (elapsedMilli - stepMillis |> clamp 0 stepMillis)
+                            | playState = Playing nextElapsed
                             , cIdx = model.cIdx + 1 |> modBy (totalSteps model.settings)
                         }
-                            |> withEffect playCurrentStepEffect
+                            |> withEffect (playCurrentStepEffect (playDelay - nextElapsed))
 
         SettingsClicked ->
             ( { model | showSettings = True }
@@ -551,6 +547,10 @@ update msg model =
 
             else
                 ( model, Cmd.none )
+
+
+playDelay =
+    100
 
 
 viewDocument : Model -> Document Msg
