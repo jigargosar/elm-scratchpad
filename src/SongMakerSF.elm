@@ -413,7 +413,7 @@ updateOnTogglePlay _ model =
         NotPlaying ->
             { model | playState = Playing 0, cIdx = 0 }
                 --|> withEffect startPlayingEffect
-                |> withNoCmd
+                |> withCmd (playStepCmd model 0)
 
         Playing _ ->
             { model | playState = NotPlaying }
