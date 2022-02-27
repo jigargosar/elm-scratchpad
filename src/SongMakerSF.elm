@@ -42,12 +42,6 @@ import Utils exposing (..)
 -}
 
 
-port start : List (List Note) -> Cmd msg
-
-
-port stop : () -> Cmd msg
-
-
 port playNote2 : Note2 -> Cmd msg
 
 
@@ -78,7 +72,6 @@ type alias Model =
     , instrument1 : Instrument1
     , instrument2 : Instrument2
     , tempo : Int
-    , now : Int
     , key : Key
     }
 
@@ -258,7 +251,6 @@ init () url key =
       , instrument1 = Piano
       , instrument2 = Electronic
       , tempo = 120
-      , now = 0
       , key = key
       }
     , Cmd.none
@@ -407,6 +399,7 @@ type Msg
     | PointerEnteredGP Int2
     | OnPointerUp
     | TogglePlayClicked
+    | TogglePlayWithNow Int
     | PlayNextNote Int
     | SettingsClicked
     | Instrument1ButtonClicked
@@ -441,11 +434,11 @@ playSingleNoteCmd model gp =
     playNote2 (note2FromGP model gp)
 
 
-updateOnTogglePlay : Model -> ( Model, Cmd Msg )
-updateOnTogglePlay model =
+updateOnTogglePlay : Int -> Model -> ( Model, Cmd Msg )
+updateOnTogglePlay now model =
     case model.playState of
         NotPlaying ->
-            { model | playState = Playing model.now }
+            { model | playState = Playing now }
                 --|> withEffect startPlayingEffect
                 |> withNoCmd
 
@@ -458,6 +451,11 @@ updateOnTogglePlay model =
 focusOrIgnoreCmd id =
     Browser.Dom.focus id
         |> Task.attempt (always NOP)
+
+
+togglePlayCmd : Cmd Msg
+togglePlayCmd =
+    Time.now |> Task.perform (Time.posixToMillis >> TogglePlayWithNow)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -495,7 +493,10 @@ update msg model =
             ( { model | drawState = Nothing }, Cmd.none )
 
         TogglePlayClicked ->
-            updateOnTogglePlay model
+            ( model, togglePlayCmd )
+
+        TogglePlayWithNow now ->
+            updateOnTogglePlay now model
 
         PlayNextNote _ ->
             case model.playState of
@@ -545,7 +546,7 @@ update msg model =
 
         OnKeyDown e ->
             if e.isTargetBodyElement && not e.repeat && e.key == " " then
-                updateOnTogglePlay model
+                ( model, togglePlayCmd )
 
             else if e.key == "s" then
                 ( model
