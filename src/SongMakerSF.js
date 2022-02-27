@@ -4,12 +4,7 @@ const app = Elm.SongMakerSF.init()
 
 const Player = MakePlayer()
 
-window.Player ??= Player
 
-// app.ports.start.subscribe(Player.start)
-// app.ports.stop.subscribe(Player.stop)
-// app.ports.updateSteps.subscribe(Player.updateSteps)
-// app.ports.playSingleNote.subscribe(Player.playSingleNote)
 app.ports.playNote.subscribe(Player.playNote)
 
 function MakePlayer() {
