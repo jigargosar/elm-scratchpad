@@ -291,12 +291,17 @@ stepDurationInMilli model =
 
 noteFromGP : Model -> Int2 -> Note
 noteFromGP model gp =
+    noteFromGPWithOffset model 0 gp
+
+
+noteFromGPWithOffset : Model -> Float -> Int2 -> Note
+noteFromGPWithOffset model startOffset gp =
     let
         ( presetName, pitch ) =
             notePresetAndPitchFromGP model gp
     in
     { preset = presetName
-    , startOffset = 0
+    , startOffset = startOffset
     , pitch = pitch
     , duration = stepDurationInMilli model
     }
