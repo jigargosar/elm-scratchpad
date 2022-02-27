@@ -553,8 +553,16 @@ viewBottomBar model =
         , itemsCenter
         ]
         [ viewPlayButton model.playState
-        , viewBtn [ notifyClick Instrument1ButtonClicked ] (instrument1Name model.instrument1)
-        , viewBtn [ notifyClick Instrument2ButtonClicked ] (instrument2Name model.instrument2)
+        , viewBtn
+            [ sWidth "14ch"
+            , notifyClick Instrument1ButtonClicked
+            ]
+            (instrument1Name model.instrument1)
+        , viewBtn
+            [ sWidth "14ch"
+            , notifyClick Instrument2ButtonClicked
+            ]
+            (instrument2Name model.instrument2)
         , viewTempoInput
         , viewSettingsButton
         , viewBtn [] "Undo"
