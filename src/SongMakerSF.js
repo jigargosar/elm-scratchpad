@@ -21,11 +21,8 @@ function MakePlayer() {
   const presetNames = Object.values(presetMap)
   loadPresets(audioContext, fontPlayer, presetNames)
 
-  let lastAudioContextTime = audioContext.currentTime
   function animationFrameCallback() {
-    const deltaMilli = (audioContext.currentTime - lastAudioContextTime) * 1000
-    app.ports.onAudioContextDeltaMilli.send(deltaMilli)
-    lastAudioContextTime = audioContext.currentTime
+    app.ports.onAudioContextTime.send(audioContext.currentTime)
     requestAnimationFrame(animationFrameCallback)
   }
   requestAnimationFrame(animationFrameCallback)

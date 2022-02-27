@@ -44,7 +44,7 @@ import Utils exposing (..)
 port playNote : Note -> Cmd msg
 
 
-port onAudioContextDeltaMilli : (Float -> msg) -> Sub msg
+port onAudioContextTime : (Float -> msg) -> Sub msg
 
 
 main =
@@ -385,7 +385,7 @@ type Msg
     | OnPointerUp
     | TogglePlayClicked
     | TogglePlayWithNow Int
-    | OnTick Float
+    | OnAudioContextTime Float
     | SettingsClicked
     | Instrument1ButtonClicked
     | Instrument2ButtonClicked
@@ -400,7 +400,7 @@ subscriptions model =
     , case model.playState of
         Playing _ ->
             --Time.every (stepDuration model |> toFloat) (Time.posixToMillis >> PlayNextNote)
-            onAudioContextDeltaMilli OnTick
+            onAudioContextTime OnAudioContextTime
 
         _ ->
             Sub.none
@@ -488,32 +488,13 @@ update msg model =
         TogglePlayWithNow now ->
             updateOnTogglePlay now model
 
-        OnTick delta ->
+        OnAudioContextTime audioContextTime ->
             case model.playState of
                 NotPlaying ->
                     ( model, Cmd.none )
 
-                Playing prevElapsed ->
-                    let
-                        stepMillis =
-                            stepDurationInMilli model
-
-                        elapsedMilli =
-                            prevElapsed + delta
-                    in
-                    if elapsedMilli < stepMillis then
-                        ( { model | playState = Playing elapsedMilli }, Cmd.none )
-
-                    else
-                        let
-                            nextElapsed =
-                                elapsedMilli - stepMillis |> clamp 0 stepMillis
-                        in
-                        { model
-                            | playState = Playing nextElapsed
-                            , cIdx = model.cIdx + 1 |> modBy (totalSteps model.settings)
-                        }
-                            |> withEffect (playCurrentStepEffect nextElapsed)
+                Playing nextAudioTime ->
+                    ( model, Cmd.none )
 
         SettingsClicked ->
             ( { model | showSettings = True }
