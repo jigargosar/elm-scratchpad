@@ -25,8 +25,16 @@ import Utils exposing (..)
     Clone: Chrome Music Labs - Song Maker.
 
     # Next
-    * add all UI elements.
-    * make UI functional.
+    * [x] add all UI elements.
+    * [x] make UI functional.
+    * implement features represented by UI.
+        * Instruments
+        * Tempo
+        * Settings
+        * Undo
+        * Save
+
+
 
 
 -}
