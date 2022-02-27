@@ -492,12 +492,12 @@ view : Model -> Html Msg
 view model =
     fCol []
         [ viewGrid model
-        , viewBottomRow model
+        , viewBottomBar model
         ]
 
 
-viewBottomRow : Model -> Html Msg
-viewBottomRow model =
+viewBottomBar : Model -> Html Msg
+viewBottomBar model =
     fRow
         [ pa "20px"
         , gap "20px"
