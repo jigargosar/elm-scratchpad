@@ -9,7 +9,7 @@ window.Player ??= Player
 app.ports.start.subscribe(Player.start)
 app.ports.stop.subscribe(Player.stop)
 app.ports.updateSteps.subscribe(Player.updateSteps)
-app.ports.playSingleNote.subscribe(Player.playSingleNote)
+// app.ports.playSingleNote.subscribe(Player.playSingleNote)
 app.ports.playNote2.subscribe(Player.playNote2)
 
 function notifyColumnChanged(i) {

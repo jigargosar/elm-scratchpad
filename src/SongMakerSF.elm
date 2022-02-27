@@ -47,9 +47,6 @@ port start : List (List Note) -> Cmd msg
 port stop : () -> Cmd msg
 
 
-port playSingleNote : Note -> Cmd msg
-
-
 port playNote2 : Note2 -> Cmd msg
 
 
@@ -437,8 +434,7 @@ stopCmd =
 
 playSingleNoteCmd : Model -> Int2 -> Cmd msg
 playSingleNoteCmd model gp =
-    playSingleNote (noteFromGP model gp)
-        |> always (playNote2 (note2FromGP model gp))
+    playNote2 (note2FromGP model gp)
 
 
 updateOnTogglePlay : Model -> ( Model, Cmd Msg )
