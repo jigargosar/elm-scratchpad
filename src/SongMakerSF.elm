@@ -196,7 +196,7 @@ initialSettings =
 
 
 type PlayerState
-    = Playing Int
+    = Playing Float
     | NotPlaying
 
 
@@ -405,10 +405,10 @@ playSingleNoteCmd model gp =
 
 
 updateOnTogglePlay : Int -> Model -> ( Model, Cmd Msg )
-updateOnTogglePlay now model =
+updateOnTogglePlay _ model =
     case model.playState of
         NotPlaying ->
-            { model | playState = Playing now }
+            { model | playState = Playing 0, cIdx = 0 }
                 --|> withEffect startPlayingEffect
                 |> withNoCmd
 
