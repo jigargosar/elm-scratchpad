@@ -2,7 +2,6 @@ port module SongMakerSF exposing (main)
 
 import Browser.Dom
 import Browser.Navigation exposing (Key)
-import Dict exposing (Dict)
 import Html
 import Html.Attributes as HA
 import Json.Decode as JD exposing (Decoder)
@@ -43,12 +42,6 @@ import Utils exposing (..)
 
 
 port playNote2 : Note2 -> Cmd msg
-
-
-port updateSteps : List (List Note) -> Cmd msg
-
-
-port selectColumn : (Int -> msg) -> Sub msg
 
 
 main =
@@ -267,26 +260,6 @@ paintedPositionsEncoder =
     JE.set (\( a, b ) -> JE.list identity [ JE.int a, JE.int b ])
 
 
-toNotesColumns : Model -> List (List Note)
-toNotesColumns model =
-    let
-        w =
-            computeGridWidth model.settings
-
-        columnToNotesDict : Dict Int (List Note)
-        columnToNotesDict =
-            groupEqBy first (Set.toList model.pp)
-                |> List.map (\( gp, gps ) -> ( first gp, List.map (noteFromGP model) (gp :: gps) ))
-                |> Dict.fromList
-    in
-    rangeN w
-        |> List.map (\x -> Dict.get x columnToNotesDict |> Maybe.withDefault [])
-
-
-type alias Note =
-    ( String, String )
-
-
 type alias Note2 =
     { presetName : String
     , startOffset : Int
@@ -311,7 +284,7 @@ note2FromGP : Model -> Int2 -> Note2
 note2FromGP model gp =
     let
         ( presetName, pitch ) =
-            noteFromGP model gp
+            notePresetAndPitchFromGP model gp
     in
     { presetName = presetName
     , startOffset = 0
@@ -320,8 +293,12 @@ note2FromGP model gp =
     }
 
 
-noteFromGP : Model -> Int2 -> Note
-noteFromGP model ( _, y ) =
+type alias NotePresetAndPitch =
+    ( String, String )
+
+
+notePresetAndPitchFromGP : Model -> Int2 -> NotePresetAndPitch
+notePresetAndPitchFromGP model ( _, y ) =
     let
         noteNames =
             [ "C3"
@@ -406,14 +383,12 @@ type Msg
     | Instrument2ButtonClicked
     | TempoInputChanged String
     | CloseSettingsClicked
-    | SelectColumn Int
     | OnKeyDown KeyEvent
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    [ selectColumn SelectColumn
-    , onBrowserKeyDown OnKeyDown
+    [ onBrowserKeyDown OnKeyDown
     , case model.playState of
         Playing _ ->
             Time.every (noteDuration model |> toFloat) (Time.posixToMillis >> PlayNextNote)
@@ -422,11 +397,6 @@ subscriptions model =
             Sub.none
     ]
         |> Sub.batch
-
-
-updateStepsEffect : Model -> Cmd msg
-updateStepsEffect model =
-    updateSteps (toNotesColumns model)
 
 
 playSingleNoteCmd : Model -> Int2 -> Cmd msg
@@ -467,12 +437,11 @@ update msg model =
         PointerDownOnGP gp ->
             if Set.member gp model.pp then
                 { model | pp = Set.remove gp model.pp, drawState = Just Erasing }
-                    |> withEffect updateStepsEffect
+                    |> withNoCmd
 
             else
                 { model | pp = Set.insert gp model.pp, drawState = Just Drawing }
                     |> withCmd (playSingleNoteCmd model gp)
-                    |> addEffect updateStepsEffect
 
         PointerEnteredGP gp ->
             case model.drawState of
@@ -482,12 +451,10 @@ update msg model =
                 Just Drawing ->
                     { model | pp = Set.insert gp model.pp }
                         |> withCmd (playSingleNoteCmd model gp)
-                        |> addEffect updateStepsEffect
 
                 Just Erasing ->
                     { model | pp = Set.remove gp model.pp }
                         |> withNoCmd
-                        |> addEffect updateStepsEffect
 
         OnPointerUp ->
             ( { model | drawState = Nothing }, Cmd.none )
@@ -556,9 +523,6 @@ update msg model =
 
             else
                 ( model, Cmd.none )
-
-        SelectColumn cIdx ->
-            ( { model | cIdx = cIdx }, Cmd.none )
 
 
 viewDocument : Model -> Document Msg
