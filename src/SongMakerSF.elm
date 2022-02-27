@@ -490,17 +490,17 @@ update msg model =
                         stepMillis =
                             stepDurationInMilli model
 
-                        elapsed =
+                        elapsedMilli =
                             prevElapsed + delta
                     in
-                    if elapsed < stepMillis then
-                        ( { model | playState = Playing elapsed }, Cmd.none )
+                    if elapsedMilli < stepMillis then
+                        ( { model | playState = Playing elapsedMilli }, Cmd.none )
 
                     else
                         { model
                             | playState =
                                 Playing
-                                    (elapsed - stepMillis |> clamp 0 stepMillis)
+                                    (elapsedMilli - stepMillis |> clamp 0 stepMillis)
                             , cIdx = model.cIdx + 1 |> modBy (totalSteps model.settings)
                         }
                             |> withEffect playCurrentStepEffect
