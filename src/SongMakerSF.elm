@@ -441,10 +441,14 @@ updateOnTogglePlay : Model -> ( Model, Cmd Msg )
 updateOnTogglePlay model =
     case model.playState of
         NotPlaying ->
-            { model | playState = Playing model.now } |> withEffect startPlayingEffect
+            { model | playState = Playing model.now }
+                --|> withEffect startPlayingEffect
+                |> withNoCmd
 
         Playing _ ->
-            { model | playState = NotPlaying } |> withCmd stopCmd
+            { model | playState = NotPlaying }
+                --|> withCmd stopCmd
+                |> withNoCmd
 
 
 focusOrIgnoreCmd id =
