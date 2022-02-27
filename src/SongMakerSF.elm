@@ -582,10 +582,9 @@ viewTempoInput =
         , Html.input
             [ HA.value "120"
             , HA.size 4
-
-            --, HA.type_ "number"
+            , HA.type_ "number"
             , fontSize "20px"
-            , sWidth "fit-content"
+            , sWidth "5ch"
             ]
             []
         ]
