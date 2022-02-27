@@ -22,6 +22,10 @@ import Utils exposing (..)
 {-
    THIS LINE IS FOR FIXING INDENTATION ISSUE WITH ELM-FORMAT. DETAILS?
     # Specs:
+    Clone: Chrome Music Labs - Song Maker.
+
+    # Next
+    * add all UI elements.
 
 
 -}
