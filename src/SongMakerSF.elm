@@ -412,12 +412,10 @@ updateOnTogglePlay _ model =
     case model.playState of
         NotPlaying ->
             { model | playState = Playing 0, cIdx = 0 }
-                --|> withEffect startPlayingEffect
-                |> withCmd (playStepCmd model 0)
+                |> withEffect playCurrentStepEffect
 
         Playing _ ->
             { model | playState = NotPlaying }
-                --|> withCmd stopCmd
                 |> withNoCmd
 
 
@@ -431,10 +429,10 @@ togglePlayCmd =
     Time.now |> Task.perform (Time.posixToMillis >> TogglePlayWithNow)
 
 
-playStepCmd : Model -> Int -> Cmd msg
-playStepCmd model cIdx =
+playCurrentStepEffect : Model -> Cmd Msg
+playCurrentStepEffect model =
     model.pp
-        |> Set.filter (first >> eq cIdx)
+        |> Set.filter (first >> eq model.cIdx)
         |> Set.toList
         |> List.map (noteFromGP model >> playNote)
         |> Cmd.batch
@@ -497,18 +495,14 @@ update msg model =
                         let
                             stepsCount =
                                 computeGridWidth model.settings
-
-                            cIdx =
-                                model.cIdx + 1 |> modBy stepsCount
                         in
-                        ( { model
+                        { model
                             | playState =
                                 Playing
                                     (elapsed - stepMillis |> clamp 0 stepMillis)
-                            , cIdx = cIdx
-                          }
-                        , playStepCmd model cIdx
-                        )
+                            , cIdx = model.cIdx + 1 |> modBy stepsCount
+                        }
+                            |> withEffect playCurrentStepEffect
 
         PlayNextNote _ ->
             case model.playState of
