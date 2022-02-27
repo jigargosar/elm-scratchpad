@@ -41,7 +41,7 @@ import Utils exposing (..)
 -}
 
 
-port playNote2 : Note -> Cmd msg
+port playNote : Note -> Cmd msg
 
 
 main =
@@ -401,7 +401,7 @@ subscriptions model =
 
 playSingleNoteCmd : Model -> Int2 -> Cmd msg
 playSingleNoteCmd model gp =
-    playNote2 (noteFromGP model gp)
+    playNote (noteFromGP model gp)
 
 
 updateOnTogglePlay : Int -> Model -> ( Model, Cmd Msg )
@@ -479,7 +479,7 @@ update msg model =
                             model.pp
                                 |> Set.filter (first >> eq model.cIdx)
                                 |> Set.toList
-                                |> List.map (noteFromGP model >> playNote2)
+                                |> List.map (noteFromGP model >> playNote)
                                 |> Cmd.batch
                     in
                     ( { model | cIdx = model.cIdx + 1 |> modBy stepsCount }, cmd )

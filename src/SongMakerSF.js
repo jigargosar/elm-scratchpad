@@ -10,7 +10,7 @@ window.Player ??= Player
 // app.ports.stop.subscribe(Player.stop)
 // app.ports.updateSteps.subscribe(Player.updateSteps)
 // app.ports.playSingleNote.subscribe(Player.playSingleNote)
-app.ports.playNote2.subscribe(Player.playNote2)
+app.ports.playNote.subscribe(Player.playNote)
 
 function MakePlayer() {
   const audioContext = newAudioContext()
@@ -26,7 +26,7 @@ function MakePlayer() {
   loadPresets(audioContext, fontPlayer, presetNames)
 
   return {
-    playNote2({ preset, startOffset, pitch, duration }) {
+    playNote({ preset, startOffset, pitch, duration }) {
       const presetVar = window[presetMap[preset]]
       fontPlayer.queueWaveTable(
         audioContext,
