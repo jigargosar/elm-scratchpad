@@ -475,17 +475,23 @@ update msg model =
 
                 Playing prevElapsed ->
                     let
-                        elapsed =
-                            prevElapsed + delta
-
                         stepMillis =
                             stepDuration model
+
+                        elapsed =
+                            prevElapsed + delta
                     in
                     if elapsed < stepMillis then
-                        ( model, Cmd.none )
+                        ( { model | playState = Playing elapsed }, Cmd.none )
 
                     else
-                        ( model, Cmd.none )
+                        ( { model
+                            | playState =
+                                Playing
+                                    (elapsed - stepMillis |> clamp 0 stepMillis)
+                          }
+                        , Cmd.none
+                        )
 
         PlayNextNote _ ->
             case model.playState of
