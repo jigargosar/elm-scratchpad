@@ -280,8 +280,8 @@ noteDuration model =
     duration
 
 
-note2FromGP : Model -> Int2 -> Note
-note2FromGP model gp =
+noteFromGP : Model -> Int2 -> Note
+noteFromGP model gp =
     let
         ( presetName, pitch ) =
             notePresetAndPitchFromGP model gp
@@ -401,7 +401,7 @@ subscriptions model =
 
 playSingleNoteCmd : Model -> Int2 -> Cmd msg
 playSingleNoteCmd model gp =
-    playNote2 (note2FromGP model gp)
+    playNote2 (noteFromGP model gp)
 
 
 updateOnTogglePlay : Int -> Model -> ( Model, Cmd Msg )
@@ -479,7 +479,7 @@ update msg model =
                             model.pp
                                 |> Set.filter (first >> eq model.cIdx)
                                 |> Set.toList
-                                |> List.map (note2FromGP model >> playNote2)
+                                |> List.map (noteFromGP model >> playNote2)
                                 |> Cmd.batch
                     in
                     ( { model | cIdx = model.cIdx + 1 |> modBy stepsCount }, cmd )
