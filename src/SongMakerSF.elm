@@ -418,10 +418,10 @@ type Msg
 
 
 subscriptions : Model -> Sub Msg
-subscriptions _ =
+subscriptions model =
     [ selectColumn SelectColumn
     , onBrowserKeyDown OnKeyDown
-    , Time.every 100 (Time.posixToMillis >> PlayNextNote)
+    , Time.every (noteDuration model |> toFloat) (Time.posixToMillis >> PlayNextNote)
     ]
         |> Sub.batch
 
