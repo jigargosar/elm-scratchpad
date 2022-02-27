@@ -421,7 +421,12 @@ subscriptions : Model -> Sub Msg
 subscriptions model =
     [ selectColumn SelectColumn
     , onBrowserKeyDown OnKeyDown
-    , Time.every (noteDuration model |> toFloat) (Time.posixToMillis >> PlayNextNote)
+    , case model.playState of
+        Playing _ ->
+            Time.every (noteDuration model |> toFloat) (Time.posixToMillis >> PlayNextNote)
+
+        _ ->
+            Sub.none
     ]
         |> Sub.batch
 
