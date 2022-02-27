@@ -75,6 +75,9 @@ type alias Model =
 type Instrument1
     = Piano
     | Strings
+    | Woodwind
+    | Synth
+    | Marimba
 
 
 type Instrument2
@@ -234,6 +237,9 @@ noteFromGP model ( _, y ) =
                 ( "piano", listGetAtOrDefault "" y noteNames )
 
             Strings ->
+                ( "strings", listGetAtOrDefault "" y noteNames )
+
+            _ ->
                 ( "strings", listGetAtOrDefault "" y noteNames )
 
     else if y == 14 then
