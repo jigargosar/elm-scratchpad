@@ -695,9 +695,18 @@ viewSettingsForm s =
             ]
         , Html.label []
             [ text "Beats per bar: "
-            , viewSelectLCR BeatsPerBarChanged (lcrRange 2 s.beatsPerBar 7 |> lcrMap fromInt)
+            , viewSelectLCR BeatsPerBarChanged
+                (lcrRange minBeatsPerBar s.beatsPerBar maxBeatsPerBar
+                    |> lcrMap fromInt
+                )
             ]
-        , Html.label [] [ text "Split beats into: ", viewSelect [ "2" ] ]
+        , Html.label []
+            [ text "Split beats into: "
+            , viewSelectLCR BeatSplitsChanged
+                (lcrRange minBeatSplits s.beatSplits maxBeatSplits
+                    |> lcrMap fromInt
+                )
+            ]
         , Html.label [] [ text "Scale: ", viewSelect [ "Major", "Minor", "Chromatic" ] ]
         , Html.label []
             [ text "Start on: "
