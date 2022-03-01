@@ -567,30 +567,28 @@ update msg model =
                 ( model, Cmd.none )
 
         BarCountChanged str ->
-            model
-                |> mapSettingsForm
-                    (\s ->
-                        { s
-                            | bars =
-                                String.toInt str
-                                    |> Maybe.map (clamp minBars maxBars)
-                                    |> Maybe.withDefault s.bars
-                        }
-                    )
-                |> withNoCmd
+            updateSettingsForm
+                (\s ->
+                    { s
+                        | bars =
+                            String.toInt str
+                                |> Maybe.map (clamp minBars maxBars)
+                                |> Maybe.withDefault s.bars
+                    }
+                )
+                model
 
         BeatsPerBarChanged str ->
-            model
-                |> mapSettingsForm
-                    (\s ->
-                        { s
-                            | beatsPerBar =
-                                String.toInt str
-                                    |> Maybe.map (clamp minBeatsPerBar maxBeatsPerBar)
-                                    |> Maybe.withDefault s.beatsPerBar
-                        }
-                    )
-                |> withNoCmd
+            updateSettingsForm
+                (\s ->
+                    { s
+                        | beatsPerBar =
+                            String.toInt str
+                                |> Maybe.map (clamp minBeatsPerBar maxBeatsPerBar)
+                                |> Maybe.withDefault s.beatsPerBar
+                    }
+                )
+                model
 
         BeatSplitsChanged str ->
             updateSettingsForm
