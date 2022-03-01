@@ -63,7 +63,7 @@ type alias Model =
     { paintedPositions : Set Int2
     , cIdx : Int
     , playState : PlayerState
-    , drawState : Maybe DrawState
+    , tool : Maybe Tool
     , settingsDialog : Maybe Settings
     , settings : Settings
     , instrument : Instrument
@@ -239,7 +239,7 @@ type PlayerState
     | NotPlaying
 
 
-type DrawState
+type Tool
     = Drawing
     | Erasing
 
@@ -283,7 +283,7 @@ init () url key =
     ( { paintedPositions = pp
       , cIdx = 0
       , playState = NotPlaying
-      , drawState = Nothing
+      , tool = Nothing
       , settingsDialog = Nothing
       , settings = settings
       , instrument = Piano
@@ -502,15 +502,21 @@ update msg model =
 
         PointerDownOnGP gp ->
             if Set.member gp model.paintedPositions then
-                { model | paintedPositions = Set.remove gp model.paintedPositions, drawState = Just Erasing }
+                { model
+                    | paintedPositions = Set.remove gp model.paintedPositions
+                    , tool = Just Erasing
+                }
                     |> withNoCmd
 
             else
-                { model | paintedPositions = Set.insert gp model.paintedPositions, drawState = Just Drawing }
+                { model
+                    | paintedPositions = Set.insert gp model.paintedPositions
+                    , tool = Just Drawing
+                }
                     |> withCmd (playSingleNoteCmd model gp)
 
         PointerEnteredGP gp ->
-            case model.drawState of
+            case model.tool of
                 Nothing ->
                     ( model, Cmd.none )
 
@@ -523,7 +529,7 @@ update msg model =
                         |> withNoCmd
 
         OnPointerUp ->
-            ( { model | drawState = Nothing }, Cmd.none )
+            ( { model | tool = Nothing }, Cmd.none )
 
         TogglePlayClicked ->
             ( model, togglePlayCmd )
