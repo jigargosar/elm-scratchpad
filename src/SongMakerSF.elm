@@ -934,7 +934,11 @@ resizeBarsToPaintedPositions settings bars =
 
         barsToPaintedPositions : List Bar -> Set Int2
         barsToPaintedPositions =
-            Debug.todo "todo"
+            List.concat
+                >> List.concat
+                >> List.indexedMap (\x -> List.map (pair x))
+                >> List.concat
+                >> Set.fromList
     in
     List.map resizeBar bars
         |> listResize [] settings.bars
