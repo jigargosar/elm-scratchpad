@@ -277,12 +277,6 @@ init () url key =
                 |> Maybe.withDefault ""
                 |> JD.decodeString paintedPositionsDecoder
                 |> Result.withDefault initialPP
-
-        _ =
-            paintedPositionsToBars settings pp
-                |> resizeBarsToPaintedPositions settings
-                |> eq pp
-                |> Debug.log "Debug: "
     in
     ( { paintedPositions = pp
       , stepIndex = 0
