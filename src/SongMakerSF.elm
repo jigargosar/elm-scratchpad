@@ -568,20 +568,27 @@ viewDocument model =
         [ basicStylesNode
         , animateCssNode
         , if model.showSettings then
-            viewSettings
+            viewSettings model.settings
 
           else
             view model
         ]
 
 
-viewSettings : Html Msg
-viewSettings =
+viewSettings : Settings -> Html Msg
+viewSettings s =
+    let
+        barsOptions =
+            ( List.range 1 (s.bars - 1) |> List.map fromInt
+            , fromInt s.bars
+            , List.range (s.bars + 1) 16 |> List.map fromInt
+            )
+    in
     fCol [ pa "20px", gap "20px" ]
         [ div [ fontSize "22px" ] [ text "SETTINGS" ]
         , Html.label []
             [ text "Length (in Bars): "
-            , viewSelectLCR ( [ "3" ], "4", [] )
+            , viewSelectLCR barsOptions
             ]
         , Html.label [] [ text "Beats per bar: ", viewSelect [ "4" ] ]
         , Html.label [] [ text "Split beats into: ", viewSelect [ "2" ] ]
