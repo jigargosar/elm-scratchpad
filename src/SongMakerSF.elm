@@ -880,12 +880,12 @@ viewGridLines s =
         []
 
 
-type alias SplitBeat =
+type alias BeatSlice =
     List Int
 
 
 type alias Beat =
-    List SplitBeat
+    List BeatSlice
 
 
 type alias Bar =
@@ -899,7 +899,7 @@ paintedPositionsToBars settings pp =
         ll =
             Set.toList pp
 
-        splitBeats : List SplitBeat
+        splitBeats : List BeatSlice
         splitBeats =
             List.range 0 (computeGridWidth settings)
                 |> List.map
