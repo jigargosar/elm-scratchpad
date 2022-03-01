@@ -326,14 +326,14 @@ stepDurationInMilli model =
     duration
 
 
-noteFromGPWithOffset : Float -> Model -> Int2 -> Note
-noteFromGPWithOffset startOffset model gp =
+noteFromGPWithAudioTime : Float -> Model -> Int2 -> Note
+noteFromGPWithAudioTime audioTime model gp =
     let
         ( presetName, pitch ) =
             notePresetAndPitchFromGP model gp
     in
     { preset = presetName
-    , atAudioTime = startOffset
+    , atAudioTime = audioTime
     , pitch = pitch
     , duration = stepDurationInMilli model
     }
@@ -447,7 +447,7 @@ subscriptions _ =
 
 playNoteAtGPCmd : Model -> Int2 -> Cmd msg
 playNoteAtGPCmd model gp =
-    playNote (noteFromGPWithOffset model.audioTime model gp)
+    playNote (noteFromGPWithAudioTime model.audioTime model gp)
 
 
 updateOnTogglePlay : Int -> Model -> ( Model, Cmd Msg )
@@ -490,7 +490,7 @@ playCurrentStepEffect atAudioTime model =
     model.paintedPositions
         |> Set.filter (first >> eq model.cIdx)
         |> Set.toList
-        |> List.map (noteFromGPWithOffset atAudioTime model >> playNote)
+        |> List.map (noteFromGPWithAudioTime atAudioTime model >> playNote)
         |> Cmd.batch
 
 
