@@ -448,31 +448,6 @@ playNoteAtGPCmd model gp =
     scheduleNote (noteFromGPWithAudioTime model.audioTime model gp)
 
 
-updateOnTogglePlay : Model -> ( Model, Cmd Msg )
-updateOnTogglePlay model =
-    case model.playState of
-        NotPlaying ->
-            let
-                initialDelay =
-                    100
-
-                currentStepAudioTime =
-                    model.audioTime + initialDelay
-
-                nextStepAudioTime =
-                    currentStepAudioTime + stepDurationInMilli model
-            in
-            { model
-                | playState = Playing nextStepAudioTime
-                , stepIndex = 0
-            }
-                |> withEffect (scheduleCurrentStepAtEffect currentStepAudioTime)
-
-        Playing _ ->
-            { model | playState = NotPlaying }
-                |> withNoCmd
-
-
 focusOrIgnoreCmd : String -> Cmd Msg
 focusOrIgnoreCmd id =
     Browser.Dom.focus id
@@ -641,6 +616,31 @@ mapSettingsForm fn model =
             model
 
 
+updateOnTogglePlay : Model -> ( Model, Cmd Msg )
+updateOnTogglePlay model =
+    case model.playState of
+        NotPlaying ->
+            let
+                initialDelay =
+                    100
+
+                currentStepAudioTime =
+                    model.audioTime + initialDelay
+
+                nextStepAudioTime =
+                    currentStepAudioTime + stepDurationInMilli model
+            in
+            { model
+                | playState = Playing nextStepAudioTime
+                , stepIndex = 0
+            }
+                |> withEffect (scheduleCurrentStepAtEffect currentStepAudioTime)
+
+        Playing _ ->
+            { model | playState = NotPlaying } |> withNoCmd
+
+
+updateAfterAudioTimeReceived : Model -> ( Model, Cmd Msg )
 updateAfterAudioTimeReceived model =
     case model.playState of
         NotPlaying ->
