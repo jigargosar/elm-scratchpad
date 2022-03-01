@@ -198,6 +198,11 @@ computeGridWidth s =
     totalSteps s
 
 
+totalBeatSplits : Settings -> Int
+totalBeatSplits =
+    totalSteps
+
+
 totalSteps : Settings -> Int
 totalSteps s =
     s.bars * s.beatsPerBar * s.beatSplits
@@ -880,12 +885,12 @@ viewGridLines s =
         []
 
 
-type alias BeatSlice =
+type alias BeatSplit =
     List Int
 
 
 type alias Beat =
-    List BeatSlice
+    List BeatSplit
 
 
 type alias Bar =
@@ -899,17 +904,18 @@ paintedPositionsToBars settings pp =
         ll =
             Set.toList pp
 
-        splitBeats : List BeatSlice
-        splitBeats =
-            List.range 0 (computeGridWidth settings)
-                |> List.map
-                    (\x ->
-                        List.filter (first >> eq x) ll |> List.map second
-                    )
+        beatSplitAtX : Int -> BeatSplit
+        beatSplitAtX x =
+            List.filter (first >> eq x) ll |> List.map second
+
+        beatSplits : List BeatSplit
+        beatSplits =
+            List.range 0 (totalBeatSplits settings)
+                |> List.map beatSplitAtX
 
         beats : List Beat
         beats =
-            List.Extra.groupsOf settings.beatSplits splitBeats
+            List.Extra.groupsOf settings.beatSplits beatSplits
 
         bars : List Bar
         bars =
