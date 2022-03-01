@@ -557,6 +557,10 @@ update msg model =
                     ( model, Cmd.none )
 
                 Just s ->
+                    let
+                        _ =
+                            Debug.log "Debug: " s
+                    in
                     ( { model | showSettings = Nothing, settings = s }
                     , focusOrIgnoreCmd "settings-btn"
                     )
@@ -849,6 +853,7 @@ viewGrid model =
         ]
 
 
+viewGridLines : Settings -> Html msg
 viewGridLines s =
     let
         ( w, h ) =
@@ -866,7 +871,7 @@ viewGridLines s =
                 , backgroundGridLinesHorizontal 1 (grayN 0.16) (1 / h)
 
                 -- major grid lines
-                , backgroundGridLinesVertical 2 (grayN 0.3) (2 / w)
+                , backgroundGridLinesVertical 2 (grayN 0.3) (toFloat s.beatSplits / w)
                 , backgroundGridLinesHorizontal 3 (grayN 0.3) (7 / h)
                 ]
             )
@@ -958,8 +963,11 @@ viewTile model (( x, _ ) as gp) =
             else
                 Animation.empty
 
+        notesPerBar =
+            model.settings.beatsPerBar * model.settings.beatSplits
+
         isAlternateBarTile =
-            modBy 16 x >= 8
+            modBy (notesPerBar * 2) x >= notesPerBar
 
         bgColor =
             if isNoteTile then
