@@ -64,7 +64,7 @@ type alias Model =
     , cIdx : Int
     , playState : PlayerState
     , drawState : Maybe DrawState
-    , showSettings : Maybe Settings
+    , settingsDialog : Maybe Settings
     , settings : Settings
     , instrument : Instrument
     , percussion : Percussion
@@ -284,7 +284,7 @@ init () url key =
       , cIdx = 0
       , playState = NotPlaying
       , drawState = Nothing
-      , showSettings = Nothing
+      , settingsDialog = Nothing
       , settings = settings
       , instrument = Piano
       , percussion = Electronic
@@ -535,7 +535,7 @@ update msg model =
             updateAfterAudioTimeReceived { model | audioTime = currentAudioTime }
 
         SettingsClicked ->
-            ( { model | showSettings = Just model.settings }
+            ( { model | settingsDialog = Just model.settings }
             , focusOrIgnoreCmd "cancel-settings-btn"
             )
 
@@ -559,12 +559,12 @@ update msg model =
             ( { model | tempo = tempo }, Cmd.none )
 
         CloseSettingsClicked ->
-            ( { model | showSettings = Nothing }
+            ( { model | settingsDialog = Nothing }
             , focusOrIgnoreCmd "settings-btn"
             )
 
         SaveSettingsClicked ->
-            case model.showSettings of
+            case model.settingsDialog of
                 Nothing ->
                     ( model, Cmd.none )
 
@@ -574,7 +574,7 @@ update msg model =
                             Debug.log "Debug: " newSettings
                     in
                     ( { model
-                        | showSettings = Nothing
+                        | settingsDialog = Nothing
                         , settings = newSettings
                         , paintedPositions = resizePaintedPositions model.settings newSettings model.paintedPositions
                       }
@@ -636,9 +636,9 @@ update msg model =
 
 mapSettingsForm : (Settings -> Settings) -> Model -> Model
 mapSettingsForm fn model =
-    case model.showSettings of
+    case model.settingsDialog of
         Just s ->
-            { model | showSettings = Just (fn s) }
+            { model | settingsDialog = Just (fn s) }
 
         Nothing ->
             model
@@ -677,7 +677,7 @@ viewDocument model =
     Document "Song Maker"
         [ basicStylesNode
         , animateCssNode
-        , case model.showSettings of
+        , case model.settingsDialog of
             Nothing ->
                 view model
 
