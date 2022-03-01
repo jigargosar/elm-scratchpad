@@ -473,6 +473,7 @@ updateOnTogglePlay model =
                 |> withNoCmd
 
 
+focusOrIgnoreCmd : String -> Cmd Msg
 focusOrIgnoreCmd id =
     Browser.Dom.focus id
         |> Task.attempt (always NOP)
