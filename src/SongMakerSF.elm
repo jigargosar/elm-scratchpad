@@ -573,7 +573,13 @@ update msg model =
                         _ =
                             Debug.log "Debug: " s
                     in
-                    ( { model | showSettings = Nothing, settings = s }
+                    ( { model
+                        | showSettings = Nothing
+                        , settings = s
+                        , pp =
+                            paintedPositionsToBars model.settings model.pp
+                                |> resizeBarsToPaintedPositions s
+                      }
                     , focusOrIgnoreCmd "settings-btn"
                     )
 
