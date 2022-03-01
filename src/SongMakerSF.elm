@@ -605,6 +605,7 @@ update msg model =
                 model
 
 
+updateSettingsForm : (Settings -> Settings) -> Model -> ( Model, Cmd msg )
 updateSettingsForm fn model =
     mapSettingsForm fn model |> withNoCmd
 
