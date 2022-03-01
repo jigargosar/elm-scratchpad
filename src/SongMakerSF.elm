@@ -547,10 +547,14 @@ update msg model =
             ( { model | tempo = tempo }, Cmd.none )
 
         CloseSettingsClicked ->
-            ( { model | showSettings = Nothing }, focusOrIgnoreCmd "settings-btn" )
+            ( { model | showSettings = Nothing }
+            , focusOrIgnoreCmd "settings-btn"
+            )
 
         SaveSettingsClicked ->
-            ( { model | showSettings = Nothing }, focusOrIgnoreCmd "settings-btn" )
+            ( { model | showSettings = Nothing }
+            , focusOrIgnoreCmd "settings-btn"
+            )
 
         OnKeyDown e ->
             if e.isTargetBodyElement && not e.repeat && e.key == " " then
