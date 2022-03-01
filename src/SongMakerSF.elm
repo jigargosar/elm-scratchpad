@@ -423,7 +423,6 @@ type Msg
     | OnAudioContextTime Float
       -- Bottom Bar
     | TogglePlayClicked
-    | TogglePlayWithNow Int
     | InstrumentButtonClicked
     | PercussionButtonClicked
     | TempoInputChanged String
@@ -449,8 +448,8 @@ playNoteAtGPCmd model gp =
     scheduleNote (noteFromGPWithAudioTime model.audioTime model gp)
 
 
-updateOnTogglePlay : Int -> Model -> ( Model, Cmd Msg )
-updateOnTogglePlay _ model =
+updateOnTogglePlay : Model -> ( Model, Cmd Msg )
+updateOnTogglePlay model =
     case model.playState of
         NotPlaying ->
             let
@@ -477,11 +476,6 @@ updateOnTogglePlay _ model =
 focusOrIgnoreCmd id =
     Browser.Dom.focus id
         |> Task.attempt (always NOP)
-
-
-togglePlayCmd : Cmd Msg
-togglePlayCmd =
-    Time.now |> Task.perform (Time.posixToMillis >> TogglePlayWithNow)
 
 
 scheduleCurrentStepAtEffect : Float -> Model -> Cmd Msg
@@ -531,10 +525,7 @@ update msg model =
             ( { model | tool = Nothing }, Cmd.none )
 
         TogglePlayClicked ->
-            ( model, togglePlayCmd )
-
-        TogglePlayWithNow now ->
-            updateOnTogglePlay now model
+            updateOnTogglePlay model
 
         OnAudioContextTime currentAudioTime ->
             updateAfterAudioTimeReceived { model | audioTime = currentAudioTime }
@@ -588,7 +579,7 @@ update msg model =
 
         OnBrowserKeyDown e ->
             if e.isTargetBodyElement && not e.repeat && e.key == " " then
-                ( model, togglePlayCmd )
+                updateOnTogglePlay model
 
             else if e.key == "s" then
                 ( model
