@@ -593,17 +593,20 @@ update msg model =
                 |> withNoCmd
 
         BeatSplitsChanged str ->
-            model
-                |> mapSettingsForm
-                    (\s ->
-                        { s
-                            | beatSplits =
-                                String.toInt str
-                                    |> Maybe.map (clamp minBeatSplits maxBeatSplits)
-                                    |> Maybe.withDefault s.beatSplits
-                        }
-                    )
-                |> withNoCmd
+            updateSettingsForm
+                (\s ->
+                    { s
+                        | beatSplits =
+                            String.toInt str
+                                |> Maybe.map (clamp minBeatSplits maxBeatSplits)
+                                |> Maybe.withDefault s.beatSplits
+                    }
+                )
+                model
+
+
+updateSettingsForm fn model =
+    mapSettingsForm fn model |> withNoCmd
 
 
 mapSettingsForm : (Settings -> Settings) -> Model -> Model
