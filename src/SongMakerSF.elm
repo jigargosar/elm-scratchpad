@@ -481,7 +481,7 @@ update msg model =
         TogglePlayWithNow now ->
             updateOnTogglePlay now model
 
-        OnAudioContextTime audioContextTime ->
+        OnAudioContextTime currentAudioTime ->
             case model.playState of
                 NotPlaying ->
                     ( model, Cmd.none )
@@ -491,7 +491,7 @@ update msg model =
                         lookAheadDuration =
                             100
                     in
-                    if nextAudioTime - lookAheadDuration < audioContextTime then
+                    if nextAudioTime - lookAheadDuration < currentAudioTime then
                         ( model, Cmd.none )
 
                     else
