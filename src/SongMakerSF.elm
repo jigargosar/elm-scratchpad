@@ -415,9 +415,14 @@ updateOnTogglePlay _ model =
         NotPlaying ->
             let
                 initialDelay =
-                    500
+                    100
             in
-            { model | playState = Playing (model.audioTime + initialDelay), cIdx = 0 }
+            { model
+                | playState =
+                    Playing
+                        (model.audioTime + initialDelay + stepDurationInMilli model)
+                , cIdx = 0
+            }
                 |> withEffect (playCurrentStepEffect initialDelay)
 
         Playing _ ->
