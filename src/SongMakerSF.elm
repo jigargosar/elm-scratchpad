@@ -59,8 +59,12 @@ main =
         }
 
 
+type alias PaintedPositions =
+    Set Int2
+
+
 type alias Model =
-    { paintedPositions : Set Int2
+    { paintedPositions : PaintedPositions
     , cIdx : Int
     , playState : PlayerState
     , tool : Maybe Tool
@@ -257,7 +261,7 @@ init () url key =
             computeGridHeight settings
     in
     let
-        initialPP : Set GPos
+        initialPP : PaintedPositions
         initialPP =
             rangeWH w h
                 |> Random.List.shuffle
@@ -296,12 +300,12 @@ init () url key =
     )
 
 
-paintedPositionsDecoder : Decoder (Set GPos)
+paintedPositionsDecoder : Decoder PaintedPositions
 paintedPositionsDecoder =
     JD.map Set.fromList (JD.list (JD.map2 Tuple.pair (JD.index 0 JD.int) (JD.index 1 JD.int)))
 
 
-paintedPositionsEncoder : Set GPos -> Value
+paintedPositionsEncoder : PaintedPositions -> Value
 paintedPositionsEncoder =
     JE.set (\( a, b ) -> JE.list identity [ JE.int a, JE.int b ])
 
@@ -918,13 +922,13 @@ type alias Bar =
     List Beat
 
 
-resizePaintedPositions : Settings -> Settings -> Set Int2 -> Set Int2
+resizePaintedPositions : Settings -> Settings -> PaintedPositions -> PaintedPositions
 resizePaintedPositions from to =
     paintedPositionsToBars from
         >> resizeBarsToPaintedPositions to
 
 
-paintedPositionsToBars : Settings -> Set Int2 -> List Bar
+paintedPositionsToBars : Settings -> PaintedPositions -> List Bar
 paintedPositionsToBars settings pp =
     let
         ll : List Int2
@@ -967,7 +971,7 @@ paintedPositionsToBars settings pp =
     bars
 
 
-resizeBarsToPaintedPositions : Settings -> List Bar -> Set Int2
+resizeBarsToPaintedPositions : Settings -> List Bar -> PaintedPositions
 resizeBarsToPaintedPositions settings bars =
     let
         beatToBeatSplits : Beat -> List BeatSplit
@@ -985,7 +989,7 @@ resizeBarsToPaintedPositions settings bars =
                 _ ->
                     []
 
-        barsToPaintedPositions : List Bar -> Set Int2
+        barsToPaintedPositions : List Bar -> PaintedPositions
         barsToPaintedPositions =
             List.concat
                 >> List.concatMap beatToBeatSplits
