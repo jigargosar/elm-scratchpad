@@ -66,15 +66,15 @@ type alias Model =
     , drawState : Maybe DrawState
     , showSettings : Maybe Settings
     , settings : Settings
-    , instrument1 : Instrument1
-    , instrument2 : Instrument2
+    , instrument : Instrument
+    , percussion : Percussion
     , tempo : Int
     , audioTime : Float
     , key : Key
     }
 
 
-type Instrument1
+type Instrument
     = Piano
     | Strings
     | Woodwind
@@ -82,7 +82,7 @@ type Instrument1
     | Marimba
 
 
-instrument1Name : Instrument1 -> String
+instrument1Name : Instrument -> String
 instrument1Name i =
     case i of
         Piano ->
@@ -101,7 +101,7 @@ instrument1Name i =
             "Marimba"
 
 
-cycleInstrument1 : Instrument1 -> Instrument1
+cycleInstrument1 : Instrument -> Instrument
 cycleInstrument1 i =
     case i of
         Piano ->
@@ -120,14 +120,14 @@ cycleInstrument1 i =
             Piano
 
 
-type Instrument2
+type Percussion
     = Electronic
     | Blocks
     | Kit
     | Conga
 
 
-instrument2Name : Instrument2 -> String
+instrument2Name : Percussion -> String
 instrument2Name i =
     case i of
         Electronic ->
@@ -143,7 +143,7 @@ instrument2Name i =
             "Conga"
 
 
-cycleInstrument2 : Instrument2 -> Instrument2
+cycleInstrument2 : Percussion -> Percussion
 cycleInstrument2 i =
     case i of
         Electronic ->
@@ -286,8 +286,8 @@ init () url key =
       , drawState = Nothing
       , showSettings = Nothing
       , settings = settings
-      , instrument1 = Piano
-      , instrument2 = Electronic
+      , instrument = Piano
+      , percussion = Electronic
       , tempo = 120
       , audioTime = 0
       , key = key
@@ -364,7 +364,7 @@ notePresetAndPitchFromGP model ( _, y ) =
             ]
     in
     if y < 14 then
-        case model.instrument1 of
+        case model.instrument of
             Piano ->
                 ( "piano", listGetAtOrDefault "" y noteNames )
 
@@ -375,7 +375,7 @@ notePresetAndPitchFromGP model ( _, y ) =
                 ( "strings", listGetAtOrDefault "" y noteNames )
 
     else if y == 14 then
-        case model.instrument2 of
+        case model.percussion of
             Electronic ->
                 ( "snareDrum2", "40" )
 
@@ -386,7 +386,7 @@ notePresetAndPitchFromGP model ( _, y ) =
                 ( "snareDrum2", "40" )
 
     else if y == 15 then
-        case model.instrument2 of
+        case model.percussion of
             Electronic ->
                 ( "bassDrum1", "36" )
 
@@ -540,12 +540,12 @@ update msg model =
             )
 
         Instrument1ButtonClicked ->
-            ( { model | instrument1 = cycleInstrument1 model.instrument1 }
+            ( { model | instrument = cycleInstrument1 model.instrument }
             , Cmd.none
             )
 
         Instrument2ButtonClicked ->
-            ( { model | instrument2 = cycleInstrument2 model.instrument2 }
+            ( { model | percussion = cycleInstrument2 model.percussion }
             , Cmd.none
             )
 
@@ -802,12 +802,12 @@ viewBottomBar model =
             [ sWidth "14ch"
             , notifyClick Instrument1ButtonClicked
             ]
-            (instrument1Name model.instrument1)
+            (instrument1Name model.instrument)
         , viewBtn
             [ sWidth "14ch"
             , notifyClick Instrument2ButtonClicked
             ]
-            (instrument2Name model.instrument2)
+            (instrument2Name model.percussion)
         , viewTempoInput model.tempo
         , viewSettingsButton
         , viewBtn [] "Undo"
