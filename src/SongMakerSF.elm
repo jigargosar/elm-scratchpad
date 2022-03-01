@@ -848,10 +848,10 @@ styleGridAreaFromGP ( x, y ) =
 blink : Animation
 blink =
     Animation.steps
-        { startAt = [ P.opacity 1, P.scale 1 ]
+        { startAt = [ P.opacity 1 ]
         , options = []
         }
-        [ Animation.step 50 [ P.opacity 0.2, P.scale 1.05 ]
+        [ Animation.step 50 [ P.opacity 0.2 ]
         , let
             barLengthSec =
                 2
@@ -862,5 +862,5 @@ blink =
             noteGapMilli =
                 noteGapSec * 1000 |> round
           in
-          Animation.step noteGapMilli [ P.opacity 1, P.scale 1 ]
+          Animation.step noteGapMilli [ P.opacity 1 ]
         ]
