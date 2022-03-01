@@ -575,14 +575,24 @@ viewDocument model =
         ]
 
 
+type alias LCR a =
+    ( List a, a, List a )
+
+
+mapLCR : (a -> b) -> LCR a -> LCR b
+mapLCR fn ( l, c, r ) =
+    ( List.map fn l, fn c, List.map fn r )
+
+
 viewSettings : Settings -> Html Msg
 viewSettings s =
     let
         barsOptions =
-            ( List.range 1 (s.bars - 1) |> List.map fromInt
-            , fromInt s.bars
-            , List.range (s.bars + 1) 16 |> List.map fromInt
+            ( List.range 1 (s.bars - 1)
+            , s.bars
+            , List.range (s.bars + 1) 16
             )
+                |> mapLCR fromInt
     in
     fCol [ pa "20px", gap "20px" ]
         [ div [ fontSize "22px" ] [ text "SETTINGS" ]
