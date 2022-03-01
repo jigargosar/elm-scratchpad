@@ -929,7 +929,8 @@ resizeBarsToPaintedPositions settings bars =
     let
         resizeBar : Bar -> Bar
         resizeBar bar =
-            Debug.todo "todo"
+            List.map (listResize [] settings.beatSplits) bar
+                |> listResize [] settings.beatsPerBar
 
         barsToPaintedPositions : List Bar -> Set Int2
         barsToPaintedPositions =
