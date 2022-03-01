@@ -419,17 +419,18 @@ type Msg
     | PointerDownOnGP Int2
     | PointerEnteredGP Int2
     | OnPointerUp
+    | OnBrowserKeyDown KeyEvent
+    | OnAudioContextTime Float
+      -- Bottom Bar
     | TogglePlayClicked
     | TogglePlayWithNow Int
-    | OnAudioContextTime Float
     | SettingsClicked
-    | Instrument1ButtonClicked
-    | Instrument2ButtonClicked
+    | InstrumentButtonClicked
+    | PercussionButtonClicked
     | TempoInputChanged String
+      -- Settings Dialog
     | CloseSettingsClicked
     | SaveSettingsClicked
-    | OnKeyDown KeyEvent
-      -- Settings
     | BarCountChanged String
     | BeatsPerBarChanged String
     | BeatSplitsChanged String
@@ -437,7 +438,7 @@ type Msg
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    [ onBrowserKeyDown OnKeyDown
+    [ onBrowserKeyDown OnBrowserKeyDown
     , onAudioContextTime OnAudioContextTime
     ]
         |> Sub.batch
@@ -543,12 +544,12 @@ update msg model =
             , focusOrIgnoreCmd "cancel-settings-btn"
             )
 
-        Instrument1ButtonClicked ->
+        InstrumentButtonClicked ->
             ( { model | instrument = cycleInstrument1 model.instrument }
             , Cmd.none
             )
 
-        Instrument2ButtonClicked ->
+        PercussionButtonClicked ->
             ( { model | percussion = cycleInstrument2 model.percussion }
             , Cmd.none
             )
@@ -585,7 +586,7 @@ update msg model =
                     , focusOrIgnoreCmd "settings-btn"
                     )
 
-        OnKeyDown e ->
+        OnBrowserKeyDown e ->
             if e.isTargetBodyElement && not e.repeat && e.key == " " then
                 ( model, togglePlayCmd )
 
@@ -804,12 +805,12 @@ viewBottomBar model =
         [ viewPlayButton model.playState
         , viewBtn
             [ sWidth "14ch"
-            , notifyClick Instrument1ButtonClicked
+            , notifyClick InstrumentButtonClicked
             ]
             (instrument1Name model.instrument)
         , viewBtn
             [ sWidth "14ch"
-            , notifyClick Instrument2ButtonClicked
+            , notifyClick PercussionButtonClicked
             ]
             (instrument2Name model.percussion)
         , viewTempoInput model.tempo
