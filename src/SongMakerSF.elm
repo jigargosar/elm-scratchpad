@@ -903,6 +903,11 @@ type alias Beat =
     ( ( BeatSplit, BeatSplit ), ( BeatSplit, BeatSplit ) )
 
 
+emptyBeat : Beat
+emptyBeat =
+    ( ( [], [] ), ( [], [] ) )
+
+
 type alias Bar =
     List Beat
 
@@ -942,7 +947,7 @@ paintedPositionsToBars settings pp =
                     ( ( first, second ), ( third, fourth ) )
 
                 _ ->
-                    ( ( [], [] ), ( [], [] ) )
+                    emptyBeat
 
         beats : List Beat
         beats =
@@ -959,21 +964,35 @@ paintedPositionsToBars settings pp =
 resizeBarsToPaintedPositions : Settings -> List Bar -> Set Int2
 resizeBarsToPaintedPositions settings bars =
     let
-        resizeBar : Bar -> Bar
-        resizeBar bar =
-            List.map (listResize [] settings.beatSplits) bar
-                |> listResize [] settings.beatsPerBar
+        resizedBars : List Bar
+        resizedBars =
+            List.map (listResize emptyBeat settings.beatsPerBar) bars
+                |> listResize [] settings.bars
+
+        beatToBeatSplits : Beat -> List BeatSplit
+        beatToBeatSplits ( ( first, second ), ( third, fourth ) ) =
+            case settings.beatSplits of
+                2 ->
+                    [ first, third ]
+
+                3 ->
+                    [ first, second, third ]
+
+                4 ->
+                    [ first, second, third, fourth ]
+
+                _ ->
+                    []
 
         barsToPaintedPositions : List Bar -> Set Int2
         barsToPaintedPositions =
             List.concat
-                >> List.concat
+                >> List.concatMap beatToBeatSplits
                 >> List.indexedMap (\x -> List.map (pair x))
                 >> List.concat
                 >> Set.fromList
     in
-    List.map resizeBar bars
-        |> listResize [] settings.bars
+    resizedBars
         |> barsToPaintedPositions
 
 
