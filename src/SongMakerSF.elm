@@ -272,7 +272,7 @@ paintedPositionsEncoder =
 
 type alias Note =
     { preset : String
-    , startOffset : Float
+    , atAudioTime : Float
     , pitch : String
     , duration : Float
     }
@@ -297,7 +297,7 @@ noteFromGPWithOffset startOffset model gp =
             notePresetAndPitchFromGP model gp
     in
     { preset = presetName
-    , startOffset = startOffset
+    , atAudioTime = startOffset
     , pitch = pitch
     , duration = stepDurationInMilli model
     }
@@ -406,7 +406,7 @@ subscriptions _ =
 
 playSingleNoteCmd : Model -> Int2 -> Cmd msg
 playSingleNoteCmd model gp =
-    playNote (noteFromGPWithOffset 0 model gp)
+    playNote (noteFromGPWithOffset model.audioTime model gp)
 
 
 updateOnTogglePlay : Int -> Model -> ( Model, Cmd Msg )
@@ -416,14 +416,18 @@ updateOnTogglePlay _ model =
             let
                 initialDelay =
                     100
+
+                currentStepAudioTime =
+                    model.audioTime + initialDelay
+
+                nextStepAudioTime =
+                    currentStepAudioTime + stepDurationInMilli model
             in
             { model
-                | playState =
-                    Playing
-                        (model.audioTime + initialDelay + stepDurationInMilli model)
+                | playState = Playing nextStepAudioTime
                 , cIdx = 0
             }
-                |> withEffect (playCurrentStepEffect initialDelay)
+                |> withEffect (playCurrentStepEffect currentStepAudioTime)
 
         Playing _ ->
             { model | playState = NotPlaying }
@@ -441,11 +445,11 @@ togglePlayCmd =
 
 
 playCurrentStepEffect : Float -> Model -> Cmd Msg
-playCurrentStepEffect startOffset model =
+playCurrentStepEffect atAudioTime model =
     model.pp
         |> Set.filter (first >> eq model.cIdx)
         |> Set.toList
-        |> List.map (noteFromGPWithOffset startOffset model >> playNote)
+        |> List.map (noteFromGPWithOffset atAudioTime model >> playNote)
         |> Cmd.batch
 
 
@@ -535,22 +539,24 @@ updateAfterAudioTimeReceived model =
         NotPlaying ->
             ( model, Cmd.none )
 
-        Playing nextStepAudioTime ->
+        Playing nextStepAudioTime_ ->
             let
                 diff =
-                    nextStepAudioTime - model.audioTime |> atLeast 0
+                    nextStepAudioTime_ - model.audioTime |> atLeast 0
             in
             if diff < 100 then
+                let
+                    currentStepAudioTime =
+                        model.audioTime + diff
+
+                    nextStepAudioTime =
+                        currentStepAudioTime + stepDurationInMilli model
+                in
                 { model
                     | cIdx = model.cIdx + 1 |> modBy (totalSteps model.settings)
-                    , playState =
-                        Playing
-                            (model.audioTime
-                                + diff
-                                + stepDurationInMilli model
-                            )
+                    , playState = Playing nextStepAudioTime
                 }
-                    |> withEffect (playCurrentStepEffect diff)
+                    |> withEffect (playCurrentStepEffect currentStepAudioTime)
 
             else
                 ( model, Cmd.none )
