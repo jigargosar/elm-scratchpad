@@ -68,6 +68,7 @@ type alias Model =
     , instrument1 : Instrument1
     , instrument2 : Instrument2
     , tempo : Int
+    , audioTime : Float
     , key : Key
     }
 
@@ -252,6 +253,7 @@ init () url key =
       , instrument1 = Piano
       , instrument2 = Electronic
       , tempo = 120
+      , audioTime = 0
       , key = key
       }
     , Cmd.none
@@ -397,13 +399,7 @@ type Msg
 subscriptions : Model -> Sub Msg
 subscriptions model =
     [ onBrowserKeyDown OnKeyDown
-    , case model.playState of
-        Playing _ ->
-            --Time.every (stepDuration model |> toFloat) (Time.posixToMillis >> PlayNextNote)
-            onAudioContextTime OnAudioContextTime
-
-        _ ->
-            Sub.none
+    , onAudioContextTime OnAudioContextTime
     ]
         |> Sub.batch
 
@@ -417,8 +413,12 @@ updateOnTogglePlay : Int -> Model -> ( Model, Cmd Msg )
 updateOnTogglePlay _ model =
     case model.playState of
         NotPlaying ->
-            { model | playState = Playing 0, cIdx = 0 }
-                |> withNoCmd
+            let
+                initialDelay =
+                    500
+            in
+            { model | playState = Playing (model.audioTime + initialDelay), cIdx = 0 }
+                |> withEffect (playCurrentStepEffect initialDelay)
 
         Playing _ ->
             { model | playState = NotPlaying }
@@ -482,29 +482,7 @@ update msg model =
             updateOnTogglePlay now model
 
         OnAudioContextTime currentAudioTime ->
-            case model.playState of
-                NotPlaying ->
-                    ( model, Cmd.none )
-
-                Playing nextStepAudioTime ->
-                    let
-                        diff =
-                            nextStepAudioTime - currentAudioTime |> atLeast 0
-                    in
-                    if diff < 100 then
-                        { model
-                            | cIdx = model.cIdx + 1 |> modBy (totalSteps model.settings)
-                            , playState =
-                                Playing
-                                    (currentAudioTime
-                                        + diff
-                                        + stepDurationInMilli model
-                                    )
-                        }
-                            |> withEffect (playCurrentStepEffect diff)
-
-                    else
-                        ( model, Cmd.none )
+            updateAfterAudioTimeReceived { model | audioTime = currentAudioTime }
 
         SettingsClicked ->
             ( { model | showSettings = True }
@@ -542,6 +520,32 @@ update msg model =
                 , Browser.Navigation.replaceUrl model.key
                     (paintedPositionsEncoder model.pp |> JE.encode 0)
                 )
+
+            else
+                ( model, Cmd.none )
+
+
+updateAfterAudioTimeReceived model =
+    case model.playState of
+        NotPlaying ->
+            ( model, Cmd.none )
+
+        Playing nextStepAudioTime ->
+            let
+                diff =
+                    nextStepAudioTime - model.audioTime |> atLeast 0
+            in
+            if diff < 100 then
+                { model
+                    | cIdx = model.cIdx + 1 |> modBy (totalSteps model.settings)
+                    , playState =
+                        Playing
+                            (model.audioTime
+                                + diff
+                                + stepDurationInMilli model
+                            )
+                }
+                    |> withEffect (playCurrentStepEffect diff)
 
             else
                 ( model, Cmd.none )
