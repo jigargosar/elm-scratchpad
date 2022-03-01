@@ -472,7 +472,7 @@ updateOnTogglePlay _ model =
                 | playState = Playing nextStepAudioTime
                 , stepIndex = 0
             }
-                |> withEffect (playCurrentStepEffect currentStepAudioTime)
+                |> withEffect (scheduleCurrentStepAtEffect currentStepAudioTime)
 
         Playing _ ->
             { model | playState = NotPlaying }
@@ -489,8 +489,8 @@ togglePlayCmd =
     Time.now |> Task.perform (Time.posixToMillis >> TogglePlayWithNow)
 
 
-playCurrentStepEffect : Float -> Model -> Cmd Msg
-playCurrentStepEffect atAudioTime model =
+scheduleCurrentStepAtEffect : Float -> Model -> Cmd Msg
+scheduleCurrentStepAtEffect atAudioTime model =
     model.paintedPositions
         |> Set.filter (first >> eq model.stepIndex)
         |> Set.toList
@@ -676,7 +676,7 @@ updateAfterAudioTimeReceived model =
                     | stepIndex = model.stepIndex + 1 |> modBy (totalSteps model.settings)
                     , playState = Playing nextStepAudioTime
                 }
-                    |> withEffect (playCurrentStepEffect currentStepAudioTime)
+                    |> withEffect (scheduleCurrentStepAtEffect currentStepAudioTime)
 
             else
                 ( model, Cmd.none )
