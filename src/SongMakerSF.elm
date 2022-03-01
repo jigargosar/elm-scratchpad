@@ -541,7 +541,16 @@ update msg model =
                     ( model, Cmd.none )
 
                 Just s ->
-                    ( { model | showSettings = Just { s | bars = String.toInt str |> Maybe.withDefault s.bars } }
+                    ( { model
+                        | showSettings =
+                            Just
+                                { s
+                                    | bars =
+                                        String.toInt str
+                                            |> Maybe.map (clamp 1 16)
+                                            |> Maybe.withDefault s.bars
+                                }
+                      }
                     , Cmd.none
                     )
 
