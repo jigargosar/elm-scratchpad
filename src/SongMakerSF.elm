@@ -168,6 +168,14 @@ type alias Settings =
     }
 
 
+minBars =
+    1
+
+
+maxBars =
+    16
+
+
 computeGridWidth : Settings -> Int
 computeGridWidth s =
     totalSteps s
@@ -542,7 +550,7 @@ update msg model =
                         { s
                             | bars =
                                 String.toInt str
-                                    |> Maybe.map (clamp 1 16)
+                                    |> Maybe.map (clamp minBars maxBars)
                                     |> Maybe.withDefault s.bars
                         }
                     )
@@ -597,7 +605,7 @@ viewDocument model =
                 view model
 
             Just s ->
-                viewSettings s
+                viewSettingsForm s
         ]
 
 
@@ -628,11 +636,11 @@ lcrRange lo c hi =
     )
 
 
-viewSettings : Settings -> Html Msg
-viewSettings s =
+viewSettingsForm : Settings -> Html Msg
+viewSettingsForm s =
     let
         barsOptions =
-            lcrRange 1 s.bars 16
+            lcrRange minBars s.bars maxBars
                 |> lcrMap fromInt
     in
     fCol [ pa "20px", gap "20px" ]
