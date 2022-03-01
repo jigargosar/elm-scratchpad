@@ -270,7 +270,7 @@ init () url key =
                 |> List.take 30
                 |> Set.fromList
 
-        pp =
+        paintedPositions =
             url.path
                 |> String.dropLeft 1
                 |> Url.percentDecode
@@ -278,7 +278,7 @@ init () url key =
                 |> JD.decodeString paintedPositionsDecoder
                 |> Result.withDefault initialPP
     in
-    ( { paintedPositions = pp
+    ( { paintedPositions = paintedPositions
       , stepIndex = 0
       , playState = NotPlaying
       , tool = Nothing
