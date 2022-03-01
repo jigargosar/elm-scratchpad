@@ -900,7 +900,7 @@ type alias BeatSplit =
 
 
 type alias Beat =
-    List BeatSplit
+    ( ( BeatSplit, BeatSplit ), ( BeatSplit, BeatSplit ) )
 
 
 type alias Bar =
@@ -929,9 +929,25 @@ paintedPositionsToBars settings pp =
             List.range 0 (totalBeatSplits settings)
                 |> List.map beatSplitAtX
 
+        beatFromBeatSplits : List BeatSplit -> Beat
+        beatFromBeatSplits splits =
+            case splits of
+                first :: second :: [] ->
+                    ( ( first, [] ), ( second, [] ) )
+
+                first :: second :: third :: [] ->
+                    ( ( first, second ), ( third, [] ) )
+
+                first :: second :: third :: fourth :: [] ->
+                    ( ( first, second ), ( third, fourth ) )
+
+                _ ->
+                    ( ( [], [] ), ( [], [] ) )
+
         beats : List Beat
         beats =
             List.Extra.groupsOf settings.beatSplits beatSplits
+                |> List.map beatFromBeatSplits
 
         bars : List Bar
         bars =
