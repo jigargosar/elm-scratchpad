@@ -579,20 +579,25 @@ type alias LCR a =
     ( List a, a, List a )
 
 
-mapLCR : (a -> b) -> LCR a -> LCR b
-mapLCR fn ( l, c, r ) =
+lcrMap : (a -> b) -> LCR a -> LCR b
+lcrMap fn ( l, c, r ) =
     ( List.map fn l, fn c, List.map fn r )
+
+
+lcrRange : Int -> Int -> Int -> LCR Int
+lcrRange lo c hi =
+    ( List.range lo (c - 1)
+    , c
+    , List.range (c + 1) hi
+    )
 
 
 viewSettings : Settings -> Html Msg
 viewSettings s =
     let
         barsOptions =
-            ( List.range 1 (s.bars - 1)
-            , s.bars
-            , List.range (s.bars + 1) 16
-            )
-                |> mapLCR fromInt
+            lcrRange 1 s.bars 16
+                |> lcrMap fromInt
     in
     fCol [ pa "20px", gap "20px" ]
         [ div [ fontSize "22px" ] [ text "SETTINGS" ]
