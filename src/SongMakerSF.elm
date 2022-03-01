@@ -568,17 +568,17 @@ update msg model =
                 Nothing ->
                     ( model, Cmd.none )
 
-                Just s ->
+                Just newSettings ->
                     let
                         _ =
-                            Debug.log "Debug: " s
+                            Debug.log "Debug: " newSettings
                     in
                     ( { model
                         | showSettings = Nothing
-                        , settings = s
+                        , settings = newSettings
                         , pp =
                             paintedPositionsToBars model.settings model.pp
-                                |> resizeBarsToPaintedPositions s
+                                |> resizeBarsToPaintedPositions newSettings
                       }
                     , focusOrIgnoreCmd "settings-btn"
                     )
