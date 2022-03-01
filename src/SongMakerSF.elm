@@ -488,11 +488,20 @@ update msg model =
 
                 Playing nextStepAudioTime ->
                     let
-                        lookAheadDuration =
-                            100
+                        diff =
+                            nextStepAudioTime - currentAudioTime |> atLeast 0
                     in
-                    if nextStepAudioTime - lookAheadDuration < currentAudioTime then
-                        ( model, Cmd.none )
+                    if diff < 100 then
+                        { model
+                            | cIdx = model.cIdx + 1 |> modBy (totalSteps model.settings)
+                            , playState =
+                                Playing
+                                    (currentAudioTime
+                                        + diff
+                                        + stepDurationInMilli model
+                                    )
+                        }
+                            |> withEffect (playCurrentStepEffect diff)
 
                     else
                         ( model, Cmd.none )
