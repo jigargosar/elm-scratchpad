@@ -28,13 +28,13 @@ import Utils exposing (..)
     # Next
     * [x] add all UI elements.
     * [x] make UI functional.
-    * implement features represented by UI.
-        * Instruments
-        * Tempo
-        * Settings
-        * Undo
-        * Save
-    * Update player on tempo/settings change
+    * [x] implement features represented by UI.
+        * [x] Instruments
+        * [x] Tempo
+        * [x] Settings
+    * [x] Update player on tempo/settings change
+    * Undo
+    * Save
 
 
 
