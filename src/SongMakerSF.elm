@@ -500,16 +500,24 @@ update msg model =
         OnPointerUp ->
             ( { model | tool = Nothing }, Cmd.none )
 
-        TogglePlayClicked ->
-            updateOnTogglePlay model
-
         OnAudioContextTime currentAudioTime ->
             updateAfterAudioTimeReceived { model | audioTime = currentAudioTime }
 
-        SettingsClicked ->
-            ( { model | settingsDialog = Just model.settings }
-            , focusOrIgnoreCmd "cancel-settings-btn"
-            )
+        OnBrowserKeyDown e ->
+            if e.isTargetBodyElement && not e.repeat && e.key == " " then
+                updateOnTogglePlay model
+
+            else if e.key == "s" then
+                ( model
+                , Browser.Navigation.replaceUrl model.key
+                    (paintedPositionsEncoder model.paintedPositions |> JE.encode 0)
+                )
+
+            else
+                ( model, Cmd.none )
+
+        TogglePlayClicked ->
+            updateOnTogglePlay model
 
         InstrumentButtonClicked ->
             ( { model | instrument = cycleInstrument1 model.instrument }
@@ -529,6 +537,9 @@ update msg model =
                         |> clamp 10 300
             in
             ( { model | tempo = tempo }, Cmd.none )
+
+        SettingsClicked ->
+            ( { model | settingsDialog = Just model.settings }, focusOrIgnoreCmd "cancel-settings-btn" )
 
         CloseSettingsClicked ->
             ( { model | settingsDialog = Nothing }
@@ -552,19 +563,6 @@ update msg model =
                       }
                     , focusOrIgnoreCmd "settings-btn"
                     )
-
-        OnBrowserKeyDown e ->
-            if e.isTargetBodyElement && not e.repeat && e.key == " " then
-                updateOnTogglePlay model
-
-            else if e.key == "s" then
-                ( model
-                , Browser.Navigation.replaceUrl model.key
-                    (paintedPositionsEncoder model.paintedPositions |> JE.encode 0)
-                )
-
-            else
-                ( model, Cmd.none )
 
         BarCountChanged str ->
             updateSettingsForm
