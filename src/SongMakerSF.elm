@@ -964,11 +964,6 @@ paintedPositionsToBars settings pp =
 resizeBarsToPaintedPositions : Settings -> List Bar -> Set Int2
 resizeBarsToPaintedPositions settings bars =
     let
-        resizedBars : List Bar
-        resizedBars =
-            List.map (listResize emptyBeat settings.beatsPerBar) bars
-                |> listResize [] settings.bars
-
         beatToBeatSplits : Beat -> List BeatSplit
         beatToBeatSplits ( ( first, second ), ( third, fourth ) ) =
             case settings.beatSplits of
@@ -992,7 +987,8 @@ resizeBarsToPaintedPositions settings bars =
                 >> List.concat
                 >> Set.fromList
     in
-    resizedBars
+    List.map (listResize emptyBeat settings.beatsPerBar) bars
+        |> listResize [] settings.bars
         |> barsToPaintedPositions
 
 
