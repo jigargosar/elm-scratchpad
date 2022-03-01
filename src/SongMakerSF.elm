@@ -397,7 +397,7 @@ type Msg
 
 
 subscriptions : Model -> Sub Msg
-subscriptions model =
+subscriptions _ =
     [ onBrowserKeyDown OnKeyDown
     , onAudioContextTime OnAudioContextTime
     ]
