@@ -60,7 +60,7 @@ main =
 
 
 type alias Model =
-    { pp : Set Int2
+    { paintedPositions : Set Int2
     , cIdx : Int
     , playState : PlayerState
     , drawState : Maybe DrawState
@@ -280,7 +280,7 @@ init () url key =
                 |> eq pp
                 |> Debug.log "Debug: "
     in
-    ( { pp = pp
+    ( { paintedPositions = pp
       , cIdx = 0
       , playState = NotPlaying
       , drawState = Nothing
@@ -487,7 +487,7 @@ togglePlayCmd =
 
 playCurrentStepEffect : Float -> Model -> Cmd Msg
 playCurrentStepEffect atAudioTime model =
-    model.pp
+    model.paintedPositions
         |> Set.filter (first >> eq model.cIdx)
         |> Set.toList
         |> List.map (noteFromGPWithOffset atAudioTime model >> playNote)
@@ -501,12 +501,12 @@ update msg model =
             ( model, Cmd.none )
 
         PointerDownOnGP gp ->
-            if Set.member gp model.pp then
-                { model | pp = Set.remove gp model.pp, drawState = Just Erasing }
+            if Set.member gp model.paintedPositions then
+                { model | paintedPositions = Set.remove gp model.paintedPositions, drawState = Just Erasing }
                     |> withNoCmd
 
             else
-                { model | pp = Set.insert gp model.pp, drawState = Just Drawing }
+                { model | paintedPositions = Set.insert gp model.paintedPositions, drawState = Just Drawing }
                     |> withCmd (playSingleNoteCmd model gp)
 
         PointerEnteredGP gp ->
@@ -515,11 +515,11 @@ update msg model =
                     ( model, Cmd.none )
 
                 Just Drawing ->
-                    { model | pp = Set.insert gp model.pp }
+                    { model | paintedPositions = Set.insert gp model.paintedPositions }
                         |> withCmd (playSingleNoteCmd model gp)
 
                 Just Erasing ->
-                    { model | pp = Set.remove gp model.pp }
+                    { model | paintedPositions = Set.remove gp model.paintedPositions }
                         |> withNoCmd
 
         OnPointerUp ->
@@ -576,7 +576,7 @@ update msg model =
                     ( { model
                         | showSettings = Nothing
                         , settings = newSettings
-                        , pp = resizePaintedPositions model.settings newSettings model.pp
+                        , paintedPositions = resizePaintedPositions model.settings newSettings model.paintedPositions
                       }
                     , focusOrIgnoreCmd "settings-btn"
                     )
@@ -588,7 +588,7 @@ update msg model =
             else if e.key == "s" then
                 ( model
                 , Browser.Navigation.replaceUrl model.key
-                    (paintedPositionsEncoder model.pp |> JE.encode 0)
+                    (paintedPositionsEncoder model.paintedPositions |> JE.encode 0)
                 )
 
             else
@@ -1081,7 +1081,7 @@ viewTile model (( x, _ ) as gp) =
                     False
 
         isNoteTile =
-            Set.member gp model.pp
+            Set.member gp model.paintedPositions
 
         isHighlightedTile =
             x == model.cIdx
