@@ -445,8 +445,8 @@ subscriptions _ =
         |> Sub.batch
 
 
-playSingleNoteCmd : Model -> Int2 -> Cmd msg
-playSingleNoteCmd model gp =
+playNoteAtGPCmd : Model -> Int2 -> Cmd msg
+playNoteAtGPCmd model gp =
     playNote (noteFromGPWithOffset model.audioTime model gp)
 
 
@@ -513,7 +513,7 @@ update msg model =
                     | paintedPositions = Set.insert gp model.paintedPositions
                     , tool = Just Drawing
                 }
-                    |> withCmd (playSingleNoteCmd model gp)
+                    |> withCmd (playNoteAtGPCmd model gp)
 
         PointerEnteredGP gp ->
             case model.tool of
@@ -522,7 +522,7 @@ update msg model =
 
                 Just Drawing ->
                     { model | paintedPositions = Set.insert gp model.paintedPositions }
-                        |> withCmd (playSingleNoteCmd model gp)
+                        |> withCmd (playNoteAtGPCmd model gp)
 
                 Just Erasing ->
                     { model | paintedPositions = Set.remove gp model.paintedPositions }
