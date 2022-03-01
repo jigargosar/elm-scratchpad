@@ -6,6 +6,7 @@ import Html
 import Html.Attributes as HA
 import Json.Decode as JD exposing (Decoder)
 import Json.Encode as JE exposing (Value)
+import List.Extra
 import Random
 import Random.List
 import Set exposing (Set)
@@ -877,6 +878,32 @@ viewGridLines s =
             )
         ]
         []
+
+
+paintedPositionsToBars : Settings -> Set Int2 -> List (List (List (List Int)))
+paintedPositionsToBars settings pp =
+    let
+        ll : List Int2
+        ll =
+            Set.toList pp
+
+        splitBeats : List (List Int)
+        splitBeats =
+            List.range 0 (computeGridWidth settings)
+                |> List.map
+                    (\x ->
+                        List.filter (first >> eq x) ll |> List.map second
+                    )
+
+        beats : List (List (List Int))
+        beats =
+            List.Extra.groupsOf settings.beatSplits splitBeats
+
+        bars : List (List (List (List Int)))
+        bars =
+            List.Extra.groupsOf settings.bars beats
+    in
+    bars
 
 
 viewGridTiles : Model -> Html Msg
