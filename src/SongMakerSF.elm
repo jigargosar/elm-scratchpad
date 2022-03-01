@@ -552,9 +552,14 @@ update msg model =
             )
 
         SaveSettingsClicked ->
-            ( { model | showSettings = Nothing }
-            , focusOrIgnoreCmd "settings-btn"
-            )
+            case model.showSettings of
+                Nothing ->
+                    ( model, Cmd.none )
+
+                Just s ->
+                    ( { model | showSettings = Nothing, settings = s }
+                    , focusOrIgnoreCmd "settings-btn"
+                    )
 
         OnKeyDown e ->
             if e.isTargetBodyElement && not e.repeat && e.key == " " then
