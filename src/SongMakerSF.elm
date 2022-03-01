@@ -576,9 +576,7 @@ update msg model =
                     ( { model
                         | showSettings = Nothing
                         , settings = newSettings
-                        , pp =
-                            paintedPositionsToBars model.settings model.pp
-                                |> resizeBarsToPaintedPositions newSettings
+                        , pp = resizePaintedPositions model.settings newSettings model.pp
                       }
                     , focusOrIgnoreCmd "settings-btn"
                     )
@@ -907,6 +905,12 @@ type alias Beat =
 
 type alias Bar =
     List Beat
+
+
+resizePaintedPositions : Settings -> Settings -> Set Int2 -> Set Int2
+resizePaintedPositions from to =
+    paintedPositionsToBars from
+        >> resizeBarsToPaintedPositions to
 
 
 paintedPositionsToBars : Settings -> Set Int2 -> List Bar
