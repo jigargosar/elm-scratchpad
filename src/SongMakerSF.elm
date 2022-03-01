@@ -880,14 +880,26 @@ viewGridLines s =
         []
 
 
-paintedPositionsToBars : Settings -> Set Int2 -> List (List (List (List Int)))
+type alias SplitBeat =
+    List Int
+
+
+type alias Beat =
+    List SplitBeat
+
+
+type alias Bar =
+    List Beat
+
+
+paintedPositionsToBars : Settings -> Set Int2 -> List Bar
 paintedPositionsToBars settings pp =
     let
         ll : List Int2
         ll =
             Set.toList pp
 
-        splitBeats : List (List Int)
+        splitBeats : List SplitBeat
         splitBeats =
             List.range 0 (computeGridWidth settings)
                 |> List.map
@@ -895,11 +907,11 @@ paintedPositionsToBars settings pp =
                         List.filter (first >> eq x) ll |> List.map second
                     )
 
-        beats : List (List (List Int))
+        beats : List Beat
         beats =
             List.Extra.groupsOf settings.beatSplits splitBeats
 
-        bars : List (List (List (List Int)))
+        bars : List Bar
         bars =
             List.Extra.groupsOf settings.bars beats
     in
