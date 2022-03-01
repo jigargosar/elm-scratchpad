@@ -395,7 +395,7 @@ type Msg
     | CloseSettingsClicked
     | OnKeyDown KeyEvent
       -- Settings
-    | BarLengthChanged String
+    | BarCountChanged String
 
 
 subscriptions : Model -> Sub Msg
@@ -535,7 +535,7 @@ update msg model =
             else
                 ( model, Cmd.none )
 
-        BarLengthChanged str ->
+        BarCountChanged str ->
             case model.showSettings of
                 Nothing ->
                     ( model, Cmd.none )
@@ -635,7 +635,7 @@ viewSettings s =
         [ div [ fontSize "22px" ] [ text "SETTINGS" ]
         , Html.label []
             [ text "Length (in Bars): "
-            , viewSelectLCR BarLengthChanged barsOptions
+            , viewSelectLCR BarCountChanged barsOptions
             ]
         , Html.label [] [ text "Beats per bar: ", viewSelect [ "4" ] ]
         , Html.label [] [ text "Split beats into: ", viewSelect [ "2" ] ]
