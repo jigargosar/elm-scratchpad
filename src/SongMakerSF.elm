@@ -486,12 +486,12 @@ update msg model =
                 NotPlaying ->
                     ( model, Cmd.none )
 
-                Playing nextAudioTime ->
+                Playing nextStepAudioTime ->
                     let
                         lookAheadDuration =
                             100
                     in
-                    if nextAudioTime - lookAheadDuration < currentAudioTime then
+                    if nextStepAudioTime - lookAheadDuration < currentAudioTime then
                         ( model, Cmd.none )
 
                     else
