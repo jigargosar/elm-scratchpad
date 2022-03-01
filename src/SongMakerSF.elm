@@ -176,6 +176,22 @@ maxBars =
     16
 
 
+minBeatsPerBar =
+    1
+
+
+maxBeatsPerBar =
+    16
+
+
+minSplitBeats =
+    1
+
+
+maxSplitBeats =
+    16
+
+
 computeGridWidth : Settings -> Int
 computeGridWidth s =
     totalSteps s
@@ -404,6 +420,7 @@ type Msg
     | OnKeyDown KeyEvent
       -- Settings
     | BarCountChanged String
+    | BeatsPerBarChanged String
 
 
 subscriptions : Model -> Sub Msg
@@ -556,6 +573,19 @@ update msg model =
                     )
                 |> withNoCmd
 
+        BeatsPerBarChanged str ->
+            model
+                |> mapSettingsForm
+                    (\s ->
+                        { s
+                            | beatsPerBar =
+                                String.toInt str
+                                    |> Maybe.map (clamp minBeatsPerBar maxBeatsPerBar)
+                                    |> Maybe.withDefault s.beatsPerBar
+                        }
+                    )
+                |> withNoCmd
+
 
 mapSettingsForm : (Settings -> Settings) -> Model -> Model
 mapSettingsForm fn model =
@@ -649,7 +679,10 @@ viewSettingsForm s =
             [ text "Length (in Bars): "
             , viewSelectLCR BarCountChanged barsOptions
             ]
-        , Html.label [] [ text "Beats per bar: ", viewSelect [ "4" ] ]
+        , Html.label []
+            [ text "Beats per bar: "
+            , viewSelectLCR BeatsPerBarChanged (lcrRange 2 s.beatsPerBar 7 |> lcrMap fromInt)
+            ]
         , Html.label [] [ text "Split beats into: ", viewSelect [ "2" ] ]
         , Html.label [] [ text "Scale: ", viewSelect [ "Major", "Minor", "Chromatic" ] ]
         , Html.label []
