@@ -28,14 +28,14 @@ function MakePlayer() {
   requestAnimationFrame(animationFrameCallback)
 
   return {
-    async playNote({preset, startOffset, pitch, duration}) {
+    async playNote({preset, atAudioTime, pitch, duration}) {
       await audioContext.resume()
       const presetVar = window[presetMap[preset]]
       fontPlayer.queueWaveTable(
         audioContext,
         audioContext.destination,
         presetVar,
-        audioContext.currentTime + startOffset / 1000,
+        atAudioTime / 1000,
         NoteParser.midi(pitch),
         duration / 1000,
         0.5,
