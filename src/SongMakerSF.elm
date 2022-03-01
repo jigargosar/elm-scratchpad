@@ -184,11 +184,11 @@ maxBeatsPerBar =
     16
 
 
-minSplitBeats =
+minBeatSplits =
     1
 
 
-maxSplitBeats =
+maxBeatSplits =
     16
 
 
@@ -421,6 +421,7 @@ type Msg
       -- Settings
     | BarCountChanged String
     | BeatsPerBarChanged String
+    | BeatSplitsChanged String
 
 
 subscriptions : Model -> Sub Msg
@@ -582,6 +583,19 @@ update msg model =
                                 String.toInt str
                                     |> Maybe.map (clamp minBeatsPerBar maxBeatsPerBar)
                                     |> Maybe.withDefault s.beatsPerBar
+                        }
+                    )
+                |> withNoCmd
+
+        BeatSplitsChanged str ->
+            model
+                |> mapSettingsForm
+                    (\s ->
+                        { s
+                            | beatSplits =
+                                String.toInt str
+                                    |> Maybe.map (clamp minBeatSplits maxBeatSplits)
+                                    |> Maybe.withDefault s.beatSplits
                         }
                     )
                 |> withNoCmd
