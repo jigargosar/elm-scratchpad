@@ -417,6 +417,7 @@ type Msg
     | Instrument2ButtonClicked
     | TempoInputChanged String
     | CloseSettingsClicked
+    | SaveSettingsClicked
     | OnKeyDown KeyEvent
       -- Settings
     | BarCountChanged String
@@ -546,6 +547,9 @@ update msg model =
             ( { model | tempo = tempo }, Cmd.none )
 
         CloseSettingsClicked ->
+            ( { model | showSettings = Nothing }, focusOrIgnoreCmd "settings-btn" )
+
+        SaveSettingsClicked ->
             ( { model | showSettings = Nothing }, focusOrIgnoreCmd "settings-btn" )
 
         OnKeyDown e ->
@@ -715,7 +719,7 @@ viewSettingsForm s =
             ]
         , Html.label [] [ text "Range: ", viewSelect [ "1", "2", "3" ] ]
         , fRow [ gap "20px" ]
-            [ viewBtn [] "Ok"
+            [ viewBtn [ notifyClick SaveSettingsClicked ] "Ok"
             , viewBtn
                 [ HA.id "cancel-settings-btn"
                 , notifyClick CloseSettingsClicked
