@@ -424,10 +424,10 @@ type Msg
       -- Bottom Bar
     | TogglePlayClicked
     | TogglePlayWithNow Int
-    | SettingsClicked
     | InstrumentButtonClicked
     | PercussionButtonClicked
     | TempoInputChanged String
+    | SettingsClicked
       -- Settings Dialog
     | CloseSettingsClicked
     | SaveSettingsClicked
