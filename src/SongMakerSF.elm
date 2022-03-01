@@ -579,9 +579,19 @@ type alias LCR a =
     ( List a, a, List a )
 
 
+lcrToList : LCR a -> List a
+lcrToList ( l, c, r ) =
+    l ++ c :: r
+
+
 lcrMap : (a -> b) -> LCR a -> LCR b
 lcrMap fn ( l, c, r ) =
     ( List.map fn l, fn c, List.map fn r )
+
+
+lcrMapCS : (a -> b) -> (a -> b) -> LCR a -> LCR b
+lcrMapCS fc fs ( l, c, r ) =
+    ( List.map fs l, fc c, List.map fs r )
 
 
 lcrRange : Int -> Int -> Int -> LCR Int
@@ -639,11 +649,13 @@ viewSelect l =
     Html.select [ fontSize "20px" ] (l |> List.map (\s -> Html.option [] [ text s ]))
 
 
-viewSelectLCR ( l, c, r ) =
+viewSelectLCR lcr =
     Html.select [ fontSize "20px" ]
-        ((l |> List.map (\s -> Html.option [] [ text s ]))
-            ++ Html.option [ HA.selected True ] [ text c ]
-            :: (r |> List.map (\s -> Html.option [] [ text s ]))
+        (lcrMapCS
+            (\c -> Html.option [ HA.selected True ] [ text c ])
+            (\s -> Html.option [] [ text s ])
+            lcr
+            |> lcrToList
         )
 
 
