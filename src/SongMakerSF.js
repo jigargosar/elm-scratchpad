@@ -4,7 +4,7 @@ const app = Elm.SongMakerSF.init()
 
 const Player = MakePlayer()
 
-app.ports.playNote.subscribe(Player.playNote)
+app.ports.scheduleNote.subscribe(Player.scheduleNote)
 
 function MakePlayer() {
   const audioContext = newAudioContext()
@@ -24,7 +24,7 @@ function MakePlayer() {
   }, 10)
 
   return {
-    async playNote({ preset, atAudioTime, pitch, duration }) {
+    async scheduleNote({ preset, atAudioTime, pitch, duration }) {
       await audioContext.resume()
       const presetVar = window[presetMap[preset]]
       fontPlayer.queueWaveTable(

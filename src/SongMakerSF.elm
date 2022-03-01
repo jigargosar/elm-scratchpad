@@ -42,7 +42,7 @@ import Utils exposing (..)
 -}
 
 
-port playNote : Note -> Cmd msg
+port scheduleNote : Note -> Cmd msg
 
 
 port onAudioContextTime : (Float -> msg) -> Sub msg
@@ -451,7 +451,7 @@ subscriptions _ =
 
 playNoteAtGPCmd : Model -> Int2 -> Cmd msg
 playNoteAtGPCmd model gp =
-    playNote (noteFromGPWithAudioTime model.audioTime model gp)
+    scheduleNote (noteFromGPWithAudioTime model.audioTime model gp)
 
 
 updateOnTogglePlay : Int -> Model -> ( Model, Cmd Msg )
@@ -494,7 +494,7 @@ scheduleCurrentStepAtEffect atAudioTime model =
     model.paintedPositions
         |> Set.filter (first >> eq model.stepIndex)
         |> Set.toList
-        |> List.map (noteFromGPWithAudioTime atAudioTime model >> playNote)
+        |> List.map (noteFromGPWithAudioTime atAudioTime model >> scheduleNote)
         |> Cmd.batch
 
 
