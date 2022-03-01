@@ -177,11 +177,11 @@ maxBars =
 
 
 minBeatsPerBar =
-    1
+    2
 
 
 maxBeatsPerBar =
-    16
+    7
 
 
 minBeatSplits =
@@ -189,7 +189,7 @@ minBeatSplits =
 
 
 maxBeatSplits =
-    16
+    4
 
 
 computeGridWidth : Settings -> Int
