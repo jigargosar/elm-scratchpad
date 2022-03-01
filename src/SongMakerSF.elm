@@ -394,6 +394,8 @@ type Msg
     | TempoInputChanged String
     | CloseSettingsClicked
     | OnKeyDown KeyEvent
+      -- Settings
+    | BarLengthChanged String
 
 
 subscriptions : Model -> Sub Msg
@@ -533,6 +535,16 @@ update msg model =
             else
                 ( model, Cmd.none )
 
+        BarLengthChanged str ->
+            case model.showSettings of
+                Nothing ->
+                    ( model, Cmd.none )
+
+                Just s ->
+                    ( { model | showSettings = Just { s | bars = String.toInt str |> Maybe.withDefault s.bars } }
+                    , Cmd.none
+                    )
+
 
 updateAfterAudioTimeReceived model =
     case model.playState of
@@ -614,7 +626,7 @@ viewSettings s =
         [ div [ fontSize "22px" ] [ text "SETTINGS" ]
         , Html.label []
             [ text "Length (in Bars): "
-            , viewSelectLCR barsOptions
+            , viewSelectLCR BarLengthChanged barsOptions
             ]
         , Html.label [] [ text "Beats per bar: ", viewSelect [ "4" ] ]
         , Html.label [] [ text "Split beats into: ", viewSelect [ "2" ] ]
@@ -650,8 +662,8 @@ viewSelect l =
     Html.select [ fontSize "20px" ] (l |> List.map (\s -> Html.option [] [ text s ]))
 
 
-viewSelectLCR lcr =
-    Html.select [ fontSize "20px" ]
+viewSelectLCR msg lcr =
+    Html.select [ fontSize "20px", onInput msg ]
         (lcrMapCS
             (\c -> Html.option [ HA.selected True ] [ text c ])
             (\s -> Html.option [] [ text s ])
