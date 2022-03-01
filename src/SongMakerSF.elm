@@ -536,23 +536,27 @@ update msg model =
                 ( model, Cmd.none )
 
         BarCountChanged str ->
-            case model.showSettings of
-                Nothing ->
-                    ( model, Cmd.none )
-
-                Just s ->
-                    ( { model
-                        | showSettings =
-                            Just
-                                { s
-                                    | bars =
-                                        String.toInt str
-                                            |> Maybe.map (clamp 1 16)
-                                            |> Maybe.withDefault s.bars
-                                }
-                      }
-                    , Cmd.none
+            model
+                |> mapSettingsForm
+                    (\s ->
+                        { s
+                            | bars =
+                                String.toInt str
+                                    |> Maybe.map (clamp 1 16)
+                                    |> Maybe.withDefault s.bars
+                        }
                     )
+                |> withNoCmd
+
+
+mapSettingsForm : (Settings -> Settings) -> Model -> Model
+mapSettingsForm fn model =
+    case model.showSettings of
+        Just s ->
+            { model | showSettings = Just (fn s) }
+
+        Nothing ->
+            model
 
 
 updateAfterAudioTimeReceived model =
