@@ -65,7 +65,7 @@ type alias PaintedPositions =
 
 type alias Model =
     { paintedPositions : PaintedPositions
-    , cIdx : Int
+    , stepIndex : Int
     , playState : PlayerState
     , tool : Maybe Tool
     , settingsDialog : Maybe Settings
@@ -285,7 +285,7 @@ init () url key =
                 |> Debug.log "Debug: "
     in
     ( { paintedPositions = pp
-      , cIdx = 0
+      , stepIndex = 0
       , playState = NotPlaying
       , tool = Nothing
       , settingsDialog = Nothing
@@ -470,7 +470,7 @@ updateOnTogglePlay _ model =
             in
             { model
                 | playState = Playing nextStepAudioTime
-                , cIdx = 0
+                , stepIndex = 0
             }
                 |> withEffect (playCurrentStepEffect currentStepAudioTime)
 
@@ -492,7 +492,7 @@ togglePlayCmd =
 playCurrentStepEffect : Float -> Model -> Cmd Msg
 playCurrentStepEffect atAudioTime model =
     model.paintedPositions
-        |> Set.filter (first >> eq model.cIdx)
+        |> Set.filter (first >> eq model.stepIndex)
         |> Set.toList
         |> List.map (noteFromGPWithAudioTime atAudioTime model >> playNote)
         |> Cmd.batch
@@ -673,7 +673,7 @@ updateAfterAudioTimeReceived model =
                         currentStepAudioTime + stepDurationInMilli model
                 in
                 { model
-                    | cIdx = model.cIdx + 1 |> modBy (totalSteps model.settings)
+                    | stepIndex = model.stepIndex + 1 |> modBy (totalSteps model.settings)
                     , playState = Playing nextStepAudioTime
                 }
                     |> withEffect (playCurrentStepEffect currentStepAudioTime)
@@ -1094,7 +1094,7 @@ viewTile model (( x, _ ) as gp) =
             Set.member gp model.paintedPositions
 
         isHighlightedTile =
-            x == model.cIdx
+            x == model.stepIndex
 
         anim =
             if isPlaying && isNoteTile && isHighlightedTile then
