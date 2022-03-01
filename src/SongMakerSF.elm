@@ -63,7 +63,7 @@ type alias Model =
     , cIdx : Int
     , playState : PlayerState
     , drawState : Maybe DrawState
-    , showSettings : Bool
+    , showSettings : Maybe Settings
     , settings : Settings
     , instrument1 : Instrument1
     , instrument2 : Instrument2
@@ -248,7 +248,7 @@ init () url key =
       , cIdx = 0
       , playState = NotPlaying
       , drawState = Nothing
-      , showSettings = False
+      , showSettings = Nothing
       , settings = settings
       , instrument1 = Piano
       , instrument2 = Electronic
@@ -494,7 +494,7 @@ update msg model =
             updateAfterAudioTimeReceived { model | audioTime = currentAudioTime }
 
         SettingsClicked ->
-            ( { model | showSettings = True }
+            ( { model | showSettings = Just model.settings }
             , focusOrIgnoreCmd "cancel-settings-btn"
             )
 
@@ -518,7 +518,7 @@ update msg model =
             ( { model | tempo = tempo }, Cmd.none )
 
         CloseSettingsClicked ->
-            ( { model | showSettings = False }, focusOrIgnoreCmd "settings-btn" )
+            ( { model | showSettings = Nothing }, focusOrIgnoreCmd "settings-btn" )
 
         OnKeyDown e ->
             if e.isTargetBodyElement && not e.repeat && e.key == " " then
@@ -567,11 +567,12 @@ viewDocument model =
     Document "Song Maker"
         [ basicStylesNode
         , animateCssNode
-        , if model.showSettings then
-            viewSettings model.settings
+        , case model.showSettings of
+            Nothing ->
+                view model
 
-          else
-            view model
+            Just s ->
+                viewSettings s
         ]
 
 
