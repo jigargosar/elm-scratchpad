@@ -924,6 +924,39 @@ paintedPositionsToBars settings pp =
     bars
 
 
+resizeBarsToPaintedPositions : Settings -> List Bar -> Set Int2
+resizeBarsToPaintedPositions settings bars =
+    let
+        resizeBar : Bar -> Bar
+        resizeBar bar =
+            Debug.todo "todo"
+
+        barsToPaintedPositions : List Bar -> Set Int2
+        barsToPaintedPositions =
+            Debug.todo "todo"
+    in
+    List.map resizeBar bars
+        |> listResize [] settings.bars
+        |> barsToPaintedPositions
+
+
+listResize : a -> Int -> List a -> List a
+listResize default toLength list =
+    let
+        fromLength =
+            List.length list
+    in
+    case compare fromLength toLength of
+        LT ->
+            list ++ List.repeat (toLength - fromLength) default
+
+        EQ ->
+            list
+
+        GT ->
+            List.take toLength list
+
+
 viewGridTiles : Model -> Html Msg
 viewGridTiles model =
     let
