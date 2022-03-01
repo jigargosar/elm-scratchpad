@@ -579,7 +579,10 @@ viewSettings : Html Msg
 viewSettings =
     fCol [ pa "20px", gap "20px" ]
         [ div [ fontSize "22px" ] [ text "SETTINGS" ]
-        , Html.label [] [ text "Length (in Bars): ", viewSelect [ "3", "4" ] ]
+        , Html.label []
+            [ text "Length (in Bars): "
+            , viewSelectLCR ( [ "3" ], "4", [] )
+            ]
         , Html.label [] [ text "Beats per bar: ", viewSelect [ "4" ] ]
         , Html.label [] [ text "Split beats into: ", viewSelect [ "2" ] ]
         , Html.label [] [ text "Scale: ", viewSelect [ "Major", "Minor", "Chromatic" ] ]
@@ -612,6 +615,14 @@ viewBtn aa s =
 
 viewSelect l =
     Html.select [ fontSize "20px" ] (l |> List.map (\s -> Html.option [] [ text s ]))
+
+
+viewSelectLCR ( l, c, r ) =
+    Html.select [ fontSize "20px" ]
+        ((l |> List.map (\s -> Html.option [] [ text s ]))
+            ++ Html.option [ HA.selected True ] [ text c ]
+            :: (r |> List.map (\s -> Html.option [] [ text s ]))
+        )
 
 
 view : Model -> Html Msg
