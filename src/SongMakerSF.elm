@@ -610,6 +610,47 @@ stepDurationInMilli model =
     duration
 
 
+pitchAtY : Settings -> Int -> String
+pitchAtY settings y =
+    let
+        notesInScale =
+            [ "C"
+            , "D"
+            , "E"
+            , "F"
+            , "G"
+            , "A"
+            , "B"
+            ]
+
+        octaveNum =
+            case settings.startsOn.octave of
+                High ->
+                    5
+
+                Mid ->
+                    4
+
+                Low ->
+                    3
+
+        firstOctaveNum =
+            octaveNum - 1
+
+        scaleLen =
+            musicScaleLength settings.scale
+
+        pitchOctaveNum =
+            firstOctaveNum + (scaleLen // y)
+    in
+    case notesInScale |> listGetAt (modBy scaleLen y) of
+        Nothing ->
+            Debug.todo "should never happen"
+
+        Just noteName ->
+            noteName ++ fromInt pitchOctaveNum
+
+
 instrumentNoteFromGP : Float -> Model -> Int2 -> Note
 instrumentNoteFromGP audioTime model ( _, y ) =
     let
@@ -664,7 +705,7 @@ instrumentNoteFromGP audioTime model ( _, y ) =
     in
     { preset = presetName
     , atAudioTime = audioTime
-    , pitch = pitch
+    , pitch = pitchAtY settings y
     , duration = stepDurationInMilli model
     }
 
