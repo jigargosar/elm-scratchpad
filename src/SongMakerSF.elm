@@ -347,9 +347,10 @@ paintedPositionsDecoder =
     JD.map Set.fromList (JD.list (JD.map2 Tuple.pair (JD.index 0 JD.int) (JD.index 1 JD.int)))
 
 
-paintedPositionsEncoder : PaintedPositions -> Value
-paintedPositionsEncoder =
-    JE.set (\( a, b ) -> JE.list identity [ JE.int a, JE.int b ])
+
+--paintedPositionsEncoder : PaintedPositions -> Value
+--paintedPositionsEncoder =
+--    JE.set (\( a, b ) -> JE.list identity [ JE.int a, JE.int b ])
 
 
 type alias Note =
