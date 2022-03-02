@@ -592,20 +592,36 @@ update msg model =
             ( model, Cmd.none )
 
         PointerDownOnGP gt gp ->
-            --if Set.member gp model.paintedPositions then
-            --    { model
-            --        | paintedPositions = Set.remove gp model.paintedPositions
-            --        , tool = Just Erasing
-            --    }
-            --        |> withNoCmd
-            --
-            --else
-            --    { model
-            --        | paintedPositions = Set.insert gp model.paintedPositions
-            --        , tool = Just Drawing
-            --    }
-            --        |> withCmd (playNoteAtGPCmd model gp)
-            ( model, Cmd.none )
+            case gt of
+                InstrumentGrid ->
+                    if Set.member gp model.instrumentPositions then
+                        { model
+                            | instrumentPositions = Set.remove gp model.instrumentPositions
+                            , drawState = Just ( Erasing, InstrumentGrid )
+                        }
+                            |> withNoCmd
+
+                    else
+                        { model
+                            | instrumentPositions = Set.insert gp model.instrumentPositions
+                            , drawState = Just ( Drawing, InstrumentGrid )
+                        }
+                            |> withCmd (playInstrumentNoteAtGPCmd model gp)
+
+                PercussionGrid ->
+                    if Set.member gp model.percussionPositions then
+                        { model
+                            | percussionPositions = Set.remove gp model.percussionPositions
+                            , drawState = Just ( Erasing, PercussionGrid )
+                        }
+                            |> withNoCmd
+
+                    else
+                        { model
+                            | percussionPositions = Set.insert gp model.percussionPositions
+                            , drawState = Just ( Drawing, PercussionGrid )
+                        }
+                            |> withCmd (playPercussionNoteAtGPCmd model gp)
 
         PointerEnteredGP gt gp ->
             case model.drawState of
