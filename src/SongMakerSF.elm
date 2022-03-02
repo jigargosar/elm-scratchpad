@@ -14,7 +14,6 @@ import Simple.Animation as Animation exposing (Animation)
 import Simple.Animation.Animated as Animated
 import Simple.Animation.Property as P
 import Task
-import Time
 import Url exposing (Url)
 import Utils exposing (..)
 
