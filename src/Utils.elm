@@ -241,6 +241,11 @@ jdAndMap =
     JD.map2 (|>)
 
 
+jdRequired : String -> Decoder a -> Decoder (a -> b) -> Decoder b
+jdRequired field decoder =
+    jdAndMap (JD.field field decoder)
+
+
 offsetSizeDecoder : Decoder Float2
 offsetSizeDecoder =
     JD.map2 Tuple.pair

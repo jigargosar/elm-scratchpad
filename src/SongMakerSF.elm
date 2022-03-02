@@ -118,7 +118,101 @@ dataModelDecoderV1 =
 
 dataModelDecoderV2 : Decoder DataModel
 dataModelDecoderV2 =
-    JD.fail "not implemented"
+    JD.succeed DataModel
+        |> jdRequired "instrumentPositions" paintedPositionsDecoder
+        |> jdRequired "percussionPositions" paintedPositionsDecoder
+        |> jdRequired "settings" settingsDecoder
+        |> jdRequired "instrument" instrumentDecoder
+        |> jdRequired "percussion" percussionDecoder
+        |> jdRequired "tempo" JD.int
+
+
+musicScaleDecoder : Decoder MusicScale
+musicScaleDecoder =
+    let
+        get id =
+            case id of
+                "Major" ->
+                    JD.succeed Major
+
+                _ ->
+                    JD.fail ("unknown value for MusicScale: " ++ id)
+    in
+    JD.string |> JD.andThen get
+
+
+startNoteDecoder : Decoder StartNote
+startNoteDecoder =
+    let
+        get id =
+            case id of
+                "StartNote" ->
+                    JD.succeed StartNote
+
+                _ ->
+                    JD.fail ("unknown value for StartNote: " ++ id)
+    in
+    JD.string |> JD.andThen get
+
+
+settingsDecoder : Decoder Settings
+settingsDecoder =
+    JD.succeed Settings
+        |> jdRequired "bars" JD.int
+        |> jdRequired "beatsPerBar" JD.int
+        |> jdRequired "beatSplits" JD.int
+        |> jdRequired "scale" musicScaleDecoder
+        |> jdRequired "startsOn" startNoteDecoder
+        |> jdRequired "octaveRange" JD.int
+
+
+instrumentDecoder : Decoder Instrument
+instrumentDecoder =
+    let
+        get id =
+            case id of
+                "Piano" ->
+                    JD.succeed Piano
+
+                "Strings" ->
+                    JD.succeed Strings
+
+                "Woodwind" ->
+                    JD.succeed Woodwind
+
+                "Synth" ->
+                    JD.succeed Synth
+
+                "Marimba" ->
+                    JD.succeed Marimba
+
+                _ ->
+                    JD.fail ("unknown value for Instrument: " ++ id)
+    in
+    JD.string |> JD.andThen get
+
+
+percussionDecoder : Decoder Percussion
+percussionDecoder =
+    let
+        get id =
+            case id of
+                "Electronic" ->
+                    JD.succeed Electronic
+
+                "Blocks" ->
+                    JD.succeed Blocks
+
+                "Kit" ->
+                    JD.succeed Kit
+
+                "Conga" ->
+                    JD.succeed Conga
+
+                _ ->
+                    JD.fail ("unknown value for Percussion: " ++ id)
+    in
+    JD.string |> JD.andThen get
 
 
 type Instrument
