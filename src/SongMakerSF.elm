@@ -116,6 +116,11 @@ dataModelDecoderV1 =
     paintedPositionsDecoder |> JD.map dataModelFromPaintedPositionsV1
 
 
+dataModelDecoderV2 : Decoder DataModel
+dataModelDecoderV2 =
+    JD.fail "not implemented"
+
+
 type Instrument
     = Piano
     | Strings
@@ -342,7 +347,7 @@ init () url key =
                 |> Set.fromList
 
         dataModelDecoder =
-            JD.oneOf [ dataModelDecoderV1 ]
+            JD.oneOf [ dataModelDecoderV1, dataModelDecoderV2 ]
 
         dataModel =
             url.path
