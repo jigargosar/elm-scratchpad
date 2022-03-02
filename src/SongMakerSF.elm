@@ -120,9 +120,22 @@ encodeMusicScale musicScale =
 
 encodeStartNote : StartNote -> Value
 encodeStartNote startNote =
-    case startNote of
-        StartNote ->
-            JE.string "StartNote"
+    JE.object <|
+        [ ( "octave", encodeOctave startNote.octave )
+        ]
+
+
+encodeOctave : Octave -> Value
+encodeOctave octave =
+    case octave of
+        High ->
+            JE.string "High"
+
+        Mid ->
+            JE.string "Mid"
+
+        Low ->
+            JE.string "Low"
 
 
 encodeSettings : Settings -> Value
@@ -218,8 +231,45 @@ settingsDecoder =
         |> jdRequired "beatsPerBar" JD.int
         |> jdRequired "beatSplits" JD.int
         |> jdRequired "scale" (JD.succeed Major)
-        |> jdRequired "startsOn" (JD.succeed StartNote)
+        |> jdRequired "startsOn" startNodeDecoder
         |> jdRequired "octaveRange" JD.int
+
+
+startNodeDecoder : Decoder StartNote
+startNodeDecoder =
+    JD.oneOf
+        [ JD.succeed StartNote
+            |> jdRequired "octave" octaveDecoder
+        , JD.string
+            |> JD.andThen
+                (\s ->
+                    if s == "StartNote" then
+                        JD.succeed { octave = Mid }
+
+                    else
+                        JD.fail ("Invalid Start Note String" ++ s)
+                )
+        ]
+
+
+octaveDecoder : Decoder Octave
+octaveDecoder =
+    let
+        get id =
+            case id of
+                "High" ->
+                    JD.succeed High
+
+                "Mid" ->
+                    JD.succeed Mid
+
+                "Low" ->
+                    JD.succeed Low
+
+                _ ->
+                    JD.fail ("unknown value for Octave: " ++ id)
+    in
+    JD.string |> JD.andThen get
 
 
 instrumentDecoder : Decoder Instrument
@@ -435,8 +485,14 @@ musicScaleLength musicScale =
             7
 
 
-type StartNote
-    = StartNote
+type alias StartNote =
+    { octave : Octave }
+
+
+type Octave
+    = High
+    | Mid
+    | Low
 
 
 type MusicScale
@@ -449,7 +505,7 @@ initialSettingsV1 =
     , beatsPerBar = 4
     , beatSplits = 2
     , scale = Major
-    , startsOn = StartNote
+    , startsOn = StartNote Mid
     , octaveRange = 2
     }
 
@@ -567,22 +623,33 @@ instrumentNoteFromGP audioTime model ( _, y ) =
             , "B"
             ]
 
-        noteNames =
-            [ "C3"
-            , "D3"
-            , "E3"
-            , "F3"
-            , "G3"
-            , "A3"
-            , "B3"
-            , "C4"
-            , "D4"
-            , "E4"
-            , "F4"
-            , "G4"
-            , "A4"
-            , "B4"
-            ]
+        settings =
+            model.settings
+
+        octaveNum =
+            case settings.startsOn.octave of
+                High ->
+                    5
+
+                Mid ->
+                    4
+
+                Low ->
+                    3
+
+        firstOctaveNum =
+            octaveNum
+                - 1
+
+        scaleLen =
+            musicScaleLength settings.scale
+
+        pitch =
+            notesInScale
+                |> listGetAt (modBy scaleLen y)
+                |> Maybe.map (\n -> n ++ fromInt (firstOctaveNum + (scaleLen // y)))
+                |> Maybe.withDefault ""
+                |> Debug.log "Debug: "
 
         presetName =
             case model.instrument of
@@ -597,7 +664,7 @@ instrumentNoteFromGP audioTime model ( _, y ) =
     in
     { preset = presetName
     , atAudioTime = audioTime
-    , pitch = listGetAtOrDefault "" y noteNames
+    , pitch = pitch
     , duration = stepDurationInMilli model
     }
 
