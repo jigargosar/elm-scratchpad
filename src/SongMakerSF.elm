@@ -834,7 +834,7 @@ viewSelectLCR msg lcr =
 view : Model -> Html Msg
 view model =
     fCol []
-        [ viewGrid2 model
+        [ viewGrid model
         , viewBottomBar model
         ]
 
@@ -908,18 +908,6 @@ viewPlayButton playState =
 
 viewGrid : Model -> Html Msg
 viewGrid model =
-    div
-        [ dGrid
-        , positionRelative
-        , style "flex-grow" "1"
-        ]
-        [ viewGridTiles model
-        , viewGridLines model.settings
-        ]
-
-
-viewGrid2 : Model -> Html Msg
-viewGrid2 model =
     fCol
         [ positionRelative
         , style "flex-grow" "1"
