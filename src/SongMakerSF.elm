@@ -64,14 +64,14 @@ type alias PaintedPositions =
 type alias Model =
     { instrumentPositions : PaintedPositions
     , percussionPositions : PaintedPositions
-    , stepIndex : Int
-    , playState : PlayerState
-    , drawState : Maybe ( Tool, GridType )
-    , settingsDialog : Maybe Settings
     , settings : Settings
     , instrument : Instrument
     , percussion : Percussion
     , tempo : Int
+    , stepIndex : Int
+    , playState : PlayerState
+    , drawState : Maybe ( Tool, GridType )
+    , settingsDialog : Maybe Settings
     , audioTime : Float
     , key : Key
     }
