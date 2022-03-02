@@ -67,7 +67,7 @@ type alias Model =
     , percussionPositions : PaintedPositions
     , stepIndex : Int
     , playState : PlayerState
-    , tool : Maybe Tool
+    , drawState : Maybe ( Tool, GridType )
     , settingsDialog : Maybe Settings
     , settings : Settings
     , instrument : Instrument
@@ -282,6 +282,11 @@ type Tool
     | Erasing
 
 
+type GridType
+    = InstrumentGrid
+    | PercussionGrid
+
+
 init : () -> Url -> Key -> ( Model, Cmd Msg )
 init () url key =
     let
@@ -324,7 +329,7 @@ init () url key =
                 |> Set.map (mapSecond (add -igh))
       , stepIndex = 0
       , playState = NotPlaying
-      , tool = Nothing
+      , drawState = Nothing
       , settingsDialog = Nothing
       , settings = settings
       , instrument = Piano
@@ -520,8 +525,8 @@ noteColorFromGP ( _, y ) =
 
 type Msg
     = NOP
-    | PointerDownOnGP Int2
-    | PointerEnteredGP Int2
+    | PointerDownOnGP GridType Int2
+    | PointerEnteredGP GridType Int2
     | OnPointerUp
     | OnBrowserKeyDown KeyEvent
     | OnAudioContextTime Float
@@ -548,10 +553,14 @@ subscriptions _ =
         |> Sub.batch
 
 
-playNoteAtGPCmd : Model -> Int2 -> Cmd msg
-playNoteAtGPCmd model gp =
-    --scheduleNote (noteFromGPWithAudioTime model.audioTime model gp)
-    Cmd.none
+playInstrumentNoteAtGPCmd : Model -> Int2 -> Cmd msg
+playInstrumentNoteAtGPCmd model gp =
+    scheduleNote (instrumentNoteFromGP model.audioTime model gp)
+
+
+playPercussionNoteAtGPCmd : Model -> Int2 -> Cmd msg
+playPercussionNoteAtGPCmd model gp =
+    scheduleNote (percussionNoteFromGP model.audioTime model gp)
 
 
 focusOrIgnoreCmd : String -> Cmd Msg
@@ -582,7 +591,7 @@ update msg model =
         NOP ->
             ( model, Cmd.none )
 
-        PointerDownOnGP gp ->
+        PointerDownOnGP gt gp ->
             --if Set.member gp model.paintedPositions then
             --    { model
             --        | paintedPositions = Set.remove gp model.paintedPositions
@@ -598,22 +607,30 @@ update msg model =
             --        |> withCmd (playNoteAtGPCmd model gp)
             ( model, Cmd.none )
 
-        PointerEnteredGP gp ->
-            --case model.tool of
-            --    Nothing ->
-            --        ( model, Cmd.none )
-            --
-            --    Just Drawing ->
-            --        { model | paintedPositions = Set.insert gp model.paintedPositions }
-            --            |> withCmd (playNoteAtGPCmd model gp)
-            --
-            --    Just Erasing ->
-            --        { model | paintedPositions = Set.remove gp model.paintedPositions }
-            --            |> withNoCmd
-            ( model, Cmd.none )
+        PointerEnteredGP gt gp ->
+            case model.drawState of
+                Nothing ->
+                    ( model, Cmd.none )
+
+                Just ( tool, activeGT ) ->
+                    if activeGT == gt then
+                        case ( tool, gt ) of
+                            ( Drawing, InstrumentGrid ) ->
+                                { model | instrumentPositions = Set.insert gp model.instrumentPositions }
+                                    |> withCmd (playInstrumentNoteAtGPCmd model gp)
+
+                            ( Erasing, InstrumentGrid ) ->
+                                { model | instrumentPositions = Set.remove gp model.instrumentPositions }
+                                    |> withNoCmd
+
+                            _ ->
+                                ( model, Cmd.none )
+
+                    else
+                        ( model, Cmd.none )
 
         OnPointerUp ->
-            ( { model | tool = Nothing }, Cmd.none )
+            ( { model | drawState = Nothing }, Cmd.none )
 
         OnAudioContextTime currentAudioTime ->
             updateAfterAudioTimeReceived { model | audioTime = currentAudioTime }
@@ -1311,8 +1328,8 @@ viewPercussionTileAt model (( x, _ ) as gp) =
         anim
         [ bgc bgColor
         , styleGridAreaFromGP gp
-        , notifyPointerDown (PointerDownOnGP gp)
-        , notifyPointerEnter (PointerEnteredGP gp)
+        , notifyPointerDown (PointerDownOnGP PercussionGrid gp)
+        , notifyPointerEnter (PointerEnteredGP PercussionGrid gp)
         ]
         []
 
@@ -1364,8 +1381,8 @@ viewInstrumentTileAt model (( x, _ ) as gp) =
         anim
         [ bgc bgColor
         , styleGridAreaFromGP gp
-        , notifyPointerDown (PointerDownOnGP gp)
-        , notifyPointerEnter (PointerEnteredGP gp)
+        , notifyPointerDown (PointerDownOnGP InstrumentGrid gp)
+        , notifyPointerEnter (PointerEnteredGP InstrumentGrid gp)
         ]
         []
 
