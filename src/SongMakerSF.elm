@@ -906,17 +906,6 @@ viewGrid model =
 
 viewGrid2 : Model -> Html Msg
 viewGrid2 model =
-    let
-        w =
-            computeGridWidth model.settings
-
-        h =
-            computeGridHeight model.settings
-
-        tiles =
-            rangeWH w h
-                |> List.map (viewTile model)
-    in
     div
         [ dGrid
         , positionRelative
@@ -924,8 +913,43 @@ viewGrid2 model =
         , notifyPointerUp OnPointerUp
         , noUserSelect
         ]
-        [ div [ dGrid, styleGridTemplate w h ] tiles
-        , viewGridLines model.settings
+        [ let
+            w =
+                computeGridWidth model.settings
+
+            h =
+                computeGridHeight model.settings
+
+            tiles =
+                rangeWH w h
+                    |> List.map (viewTile model)
+          in
+          div [ dGrid, styleGridTemplate w h ] tiles
+        , let
+            s =
+                model.settings
+
+            ( w, h ) =
+                ( toFloat (computeGridWidth s), toFloat (computeGridHeight s) )
+          in
+          div
+            [ w100
+            , h100
+            , positionAbsolute
+            , noPointerEvents
+            , backgrounds
+                (List.reverse
+                    [ -- minor grid lines
+                      backgroundGridLinesVertical 1 (grayN 0.16) (1 / w)
+                    , backgroundGridLinesHorizontal 1 (grayN 0.16) (1 / h)
+
+                    -- major grid lines
+                    , backgroundGridLinesVertical 2 (grayN 0.3) (toFloat s.beatSplits / w)
+                    , backgroundGridLinesHorizontal 3 (grayN 0.3) (7 / h)
+                    ]
+                )
+            ]
+            []
         ]
 
 
