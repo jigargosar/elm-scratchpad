@@ -974,14 +974,17 @@ viewGrid2 model =
               in
               div [ dGrid, styleGridTemplate w h ]
                 (rangeWH w h |> List.map (viewPercussionTileAt model))
-            , viewPercussionGridLines
-                (computeGridWidth model.settings)
-                model.settings.beatSplits
+            , viewPercussionGridLines model.settings
             ]
         ]
 
 
-viewPercussionGridLines w beatSplits =
+viewPercussionGridLines : Settings -> Html msg
+viewPercussionGridLines s =
+    let
+        w =
+            toFloat (computeGridWidth s)
+    in
     div
         [ w100
         , h100
@@ -990,10 +993,15 @@ viewPercussionGridLines w beatSplits =
         , backgrounds
             (List.reverse
                 [ -- minor grid lines
-                  backgroundGridLinesVertical 1 (grayN 0.16) (1 / toFloat w)
+                  backgroundGridLinesVertical 1 (grayN 0.16) (1 / w)
 
+                --, backgroundGridLinesHorizontal 1 (grayN 0.16) (1 / h)
                 -- major grid lines
-                , backgroundGridLinesVertical 2 (grayN 0.3) (toFloat beatSplits / toFloat w)
+                , backgroundGridLinesVertical 2 (grayN 0.3) (toFloat s.beatSplits / w)
+
+                --, backgroundGridLinesHorizontal 3
+                --    (grayN 0.3)
+                --    (toFloat (musicScaleLength s.scale) / h)
                 ]
             )
         ]
