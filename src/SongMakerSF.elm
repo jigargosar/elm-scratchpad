@@ -1006,6 +1006,25 @@ viewGrid2 model =
         ]
 
 
+viewPercussionGridLines { w, beatSplits } =
+    div
+        [ w100
+        , h100
+        , positionAbsolute
+        , noPointerEvents
+        , backgrounds
+            (List.reverse
+                [ -- minor grid lines
+                  backgroundGridLinesVertical 1 (grayN 0.16) (1 / w)
+
+                -- major grid lines
+                , backgroundGridLinesVertical 2 (grayN 0.3) (toFloat beatSplits / w)
+                ]
+            )
+        ]
+        []
+
+
 viewGridLines : Settings -> Html msg
 viewGridLines s =
     let
