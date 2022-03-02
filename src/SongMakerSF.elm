@@ -742,7 +742,7 @@ viewSettingsForm s =
             , viewSelect [ "Middle", "Low", "High" ]
             , viewSelect [ "C", "C#", "B" ]
             ]
-        , Html.label [] [ text "Range: ", viewSelect [ "1", "2", "3" ] ]
+        , Html.label [] [ text "Range (in Octaves): ", viewSelect [ "1", "2", "3" ] ]
         , fRow [ gap "20px" ]
             [ viewBtn [ notifyClick SaveSettingsClicked ] "Ok"
             , viewBtn
