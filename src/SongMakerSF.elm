@@ -168,7 +168,7 @@ type alias Settings =
     , beatSplits : Int
     , scale : MusicScale
     , startsOn : StartNote
-    , octaves : Int
+    , octaveRange : Int
     }
 
 
@@ -196,6 +196,14 @@ maxBeatSplits =
     4
 
 
+minOctaveRange =
+    1
+
+
+maxOctaveRange =
+    3
+
+
 computeGridWidth : Settings -> Int
 computeGridWidth s =
     totalSteps s
@@ -215,7 +223,7 @@ computeGridHeight : Settings -> Int
 computeGridHeight s =
     case s.scale of
         Major ->
-            7 * s.octaves + 2
+            7 * s.octaveRange + 2
 
 
 type StartNote
@@ -233,7 +241,7 @@ initialSettings =
     , beatSplits = 2
     , scale = Major
     , startsOn = StartNote
-    , octaves = 2
+    , octaveRange = 2
     }
 
 
@@ -432,6 +440,7 @@ type Msg
     | BarCountChanged String
     | BeatsPerBarChanged String
     | BeatSplitsChanged String
+    | OctaveRangeChanged String
 
 
 subscriptions : Model -> Sub Msg
@@ -599,6 +608,18 @@ update msg model =
                 )
                 model
 
+        OctaveRangeChanged str ->
+            updateSettingsForm
+                (\s ->
+                    { s
+                        | octaveRange =
+                            String.toInt str
+                                |> Maybe.map (clamp minOctaveRange maxOctaveRange)
+                                |> Maybe.withDefault s.octaveRange
+                    }
+                )
+                model
+
 
 updateSettingsForm : (Settings -> Settings) -> Model -> ( Model, Cmd msg )
 updateSettingsForm fn model =
@@ -742,7 +763,13 @@ viewSettingsForm s =
             , viewSelect [ "Middle", "Low", "High" ]
             , viewSelect [ "C", "C#", "B" ]
             ]
-        , Html.label [] [ text "Range (in Octaves): ", viewSelect [ "1", "2", "3" ] ]
+        , Html.label []
+            [ text "Range (in Octave): "
+            , viewSelectLCR OctaveRangeChanged
+                (lcrRange minOctaveRange s.octaveRange maxOctaveRange
+                    |> lcrMap fromInt
+                )
+            ]
         , fRow [ gap "20px" ]
             [ viewBtn [ notifyClick SaveSettingsClicked ] "Ok"
             , viewBtn
