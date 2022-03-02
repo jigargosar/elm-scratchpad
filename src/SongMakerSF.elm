@@ -919,12 +919,9 @@ viewGrid2 model =
 
             h =
                 computeGridHeight model.settings
-
-            tiles =
-                rangeWH w h
-                    |> List.map (viewTile model)
           in
-          div [ dGrid, styleGridTemplate w h ] tiles
+          div [ dGrid, styleGridTemplate w h ]
+            (rangeWH w h |> List.map (viewTile model))
         , let
             s =
                 model.settings
