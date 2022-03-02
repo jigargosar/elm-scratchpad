@@ -651,13 +651,17 @@ update msg model =
                 Just newSettings ->
                     ( { model
                         | settingsDialog = Nothing
-
-                        --, settings = newSettings
-                        --, paintedPositions =
-                        --    resizePaintedPositions
-                        --        model.settings
-                        --        newSettings
-                        --        model.paintedPositions
+                        , settings = newSettings
+                        , instrumentPositions =
+                            resizeXPositions
+                                model.settings
+                                newSettings
+                                model.instrumentPositions
+                        , percussionPositions =
+                            resizeXPositions
+                                model.settings
+                                newSettings
+                                model.percussionPositions
                       }
                     , focusOrIgnoreCmd "settings-btn"
                     )
@@ -1079,8 +1083,8 @@ type alias Bar =
     List Beat
 
 
-resizePaintedPositions : Settings -> Settings -> PaintedPositions -> PaintedPositions
-resizePaintedPositions from to =
+resizeXPositions : Settings -> Settings -> PaintedPositions -> PaintedPositions
+resizeXPositions from to =
     paintedPositionsToBars from
         >> resizeBarsToPaintedPositions to
 
