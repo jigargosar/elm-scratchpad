@@ -88,6 +88,34 @@ type alias DataModel =
     }
 
 
+dataModelFromPaintedPositionsV1 : PaintedPositions -> DataModel
+dataModelFromPaintedPositionsV1 paintedPositions =
+    let
+        settings =
+            initialSettingsV1
+
+        igh =
+            instrumentGridHeight settings
+    in
+    { instrumentPositions =
+        paintedPositions
+            |> Set.filter (second >> (\y -> y < igh))
+    , percussionPositions =
+        paintedPositions
+            |> Set.filter (second >> (\y -> y >= igh))
+            |> Set.map (mapSecond (add -igh))
+    , settings = settings
+    , instrument = Piano
+    , percussion = Electronic
+    , tempo = 120
+    }
+
+
+dataModelDecoderV1 : Decoder DataModel
+dataModelDecoderV1 =
+    paintedPositionsDecoder |> JD.map dataModelFromPaintedPositionsV1
+
+
 type Instrument
     = Piano
     | Strings
@@ -260,8 +288,8 @@ type MusicScale
     = Major
 
 
-initialSettings : Settings
-initialSettings =
+initialSettingsV1 : Settings
+initialSettingsV1 =
     { bars = 4
     , beatsPerBar = 4
     , beatSplits = 2
@@ -269,6 +297,11 @@ initialSettings =
     , startsOn = StartNote
     , octaveRange = 2
     }
+
+
+initialSettings : Settings
+initialSettings =
+    initialSettingsV1
 
 
 type PlayerState
@@ -308,32 +341,27 @@ init () url key =
                 |> List.take 30
                 |> Set.fromList
 
-        paintedPositions =
+        dataModelDecoder =
+            JD.oneOf [ dataModelDecoderV1 ]
+
+        dataModel =
             url.path
                 |> String.dropLeft 1
                 |> Url.percentDecode
                 |> Maybe.withDefault ""
-                |> JD.decodeString paintedPositionsDecoder
-                |> Result.withDefault initialPP
-
-        igh =
-            instrumentGridHeight settings
+                |> JD.decodeString dataModelDecoder
+                |> Result.withDefault (dataModelFromPaintedPositionsV1 initialPP)
     in
-    ( { instrumentPositions =
-            paintedPositions
-                |> Set.filter (second >> (\y -> y < igh))
-      , percussionPositions =
-            paintedPositions
-                |> Set.filter (second >> (\y -> y >= igh))
-                |> Set.map (mapSecond (add -igh))
+    ( { instrumentPositions = dataModel.instrumentPositions
+      , percussionPositions = dataModel.percussionPositions
+      , settings = dataModel.settings
+      , instrument = dataModel.instrument
+      , percussion = dataModel.percussion
+      , tempo = dataModel.tempo
       , stepIndex = 0
       , playState = NotPlaying
       , drawState = Nothing
       , settingsDialog = Nothing
-      , settings = settings
-      , instrument = Piano
-      , percussion = Electronic
-      , tempo = 120
       , audioTime = 0
       , key = key
       }
