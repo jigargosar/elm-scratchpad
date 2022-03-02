@@ -820,6 +820,7 @@ view : Model -> Html Msg
 view model =
     fCol []
         [ viewGrid model
+        , viewGrid2 model
         , viewBottomBar model
         ]
 
@@ -899,6 +900,35 @@ viewGrid model =
         , style "flex-grow" "1"
         ]
         [ viewGridTiles model
+        , viewGridLines model.settings
+        ]
+
+
+viewGrid2 : Model -> Html Msg
+viewGrid2 model =
+    let
+        w =
+            computeGridWidth model.settings
+
+        h =
+            computeGridHeight model.settings
+
+        tiles =
+            rangeWH w h
+                |> List.map (viewTile model)
+    in
+    div
+        [ dGrid
+        , positionRelative
+        , style "flex-grow" "1"
+        , notifyPointerUp OnPointerUp
+        ]
+        [ div
+            [ dGrid
+            , styleGridTemplate w h
+            , noUserSelect
+            ]
+            tiles
         , viewGridLines model.settings
         ]
 
@@ -1058,15 +1088,20 @@ viewGridTiles model =
     in
     div
         [ dGrid
-        , style "grid-template"
-            (("repeat(" ++ fromInt h ++ ",1fr)")
-                ++ "/"
-                ++ ("repeat(" ++ fromInt w ++ ",1fr)")
-            )
+        , styleGridTemplate w h
         , noUserSelect
         , notifyPointerUp OnPointerUp
         ]
         tiles
+
+
+styleGridTemplate : Int -> Int -> Attribute msg
+styleGridTemplate w h =
+    style "grid-template"
+        (("repeat(" ++ fromInt h ++ ",1fr)")
+            ++ "/"
+            ++ ("repeat(" ++ fromInt w ++ ",1fr)")
+        )
 
 
 highlightBGColor =
