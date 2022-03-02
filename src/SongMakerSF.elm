@@ -922,13 +922,9 @@ viewGrid2 model =
         , positionRelative
         , style "flex-grow" "1"
         , notifyPointerUp OnPointerUp
+        , noUserSelect
         ]
-        [ div
-            [ dGrid
-            , styleGridTemplate w h
-            , noUserSelect
-            ]
-            tiles
+        [ div [ dGrid, styleGridTemplate w h ] tiles
         , viewGridLines model.settings
         ]
 
