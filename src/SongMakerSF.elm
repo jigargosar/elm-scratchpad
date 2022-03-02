@@ -834,8 +834,7 @@ viewSelectLCR msg lcr =
 view : Model -> Html Msg
 view model =
     fCol []
-        [ viewGrid model
-        , viewGrid2 model
+        [ viewGrid2 model
         , viewBottomBar model
         ]
 
