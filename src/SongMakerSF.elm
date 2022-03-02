@@ -936,33 +936,7 @@ viewGrid2 model =
               in
               div [ dGrid, styleGridTemplate w h ]
                 (rangeWH w h |> List.map (viewTileAt model))
-            , let
-                s =
-                    model.settings
-
-                ( w, h ) =
-                    ( toFloat (computeGridWidth s), toFloat (instrumentGridHeight s) )
-              in
-              div
-                [ w100
-                , h100
-                , positionAbsolute
-                , noPointerEvents
-                , backgrounds
-                    (List.reverse
-                        [ -- minor grid lines
-                          backgroundGridLinesVertical 1 (grayN 0.16) (1 / w)
-                        , backgroundGridLinesHorizontal 1 (grayN 0.16) (1 / h)
-
-                        -- major grid lines
-                        , backgroundGridLinesVertical 2 (grayN 0.3) (toFloat s.beatSplits / w)
-                        , backgroundGridLinesHorizontal 3
-                            (grayN 0.3)
-                            (toFloat (musicScaleLength s.scale) / h)
-                        ]
-                    )
-                ]
-                []
+            , viewInstrumentGridLines model.settings
             ]
         , div [ dGrid, positionRelative, sHeight "20%" ]
             [ let
@@ -977,6 +951,34 @@ viewGrid2 model =
             , viewPercussionGridLines model.settings
             ]
         ]
+
+
+viewInstrumentGridLines : Settings -> Html msg
+viewInstrumentGridLines s =
+    let
+        ( w, h ) =
+            ( toFloat (computeGridWidth s), toFloat (instrumentGridHeight s) )
+    in
+    div
+        [ w100
+        , h100
+        , positionAbsolute
+        , noPointerEvents
+        , backgrounds
+            (List.reverse
+                [ -- minor grid lines
+                  backgroundGridLinesVertical 1 (grayN 0.16) (1 / w)
+                , backgroundGridLinesHorizontal 1 (grayN 0.16) (1 / h)
+
+                -- major grid lines
+                , backgroundGridLinesVertical 2 (grayN 0.3) (toFloat s.beatSplits / w)
+                , backgroundGridLinesHorizontal 3
+                    (grayN 0.3)
+                    (toFloat (musicScaleLength s.scale) / h)
+                ]
+            )
+        ]
+        []
 
 
 viewPercussionGridLines : Settings -> Html msg
