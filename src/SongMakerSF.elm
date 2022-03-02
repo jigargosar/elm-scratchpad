@@ -651,43 +651,8 @@ pitchAtY settings y =
 instrumentNoteFromGP : Float -> Model -> Int2 -> Note
 instrumentNoteFromGP audioTime model ( _, y ) =
     let
-        notesInScale =
-            [ "C"
-            , "D"
-            , "E"
-            , "F"
-            , "G"
-            , "A"
-            , "B"
-            ]
-
         settings =
             model.settings
-
-        octaveNum =
-            case settings.startsOn.octave of
-                High ->
-                    5
-
-                Mid ->
-                    4
-
-                Low ->
-                    3
-
-        firstOctaveNum =
-            octaveNum
-                - 1
-
-        scaleLen =
-            musicScaleLength settings.scale
-
-        pitch =
-            notesInScale
-                |> listGetAt (modBy scaleLen y)
-                |> Maybe.map (\n -> n ++ fromInt (firstOctaveNum + (scaleLen // y)))
-                |> Maybe.withDefault ""
-                |> Debug.log "Debug: "
 
         presetName =
             case model.instrument of
