@@ -237,9 +237,14 @@ computeGridHeight s =
 
 instrumentGridHeight : Settings -> Int
 instrumentGridHeight s =
-    case s.scale of
+    musicScaleLength s.scale * s.octaveRange
+
+
+musicScaleLength : MusicScale -> Int
+musicScaleLength musicScale =
+    case musicScale of
         Major ->
-            7 * s.octaveRange
+            7
 
 
 type StartNote
@@ -947,7 +952,9 @@ viewGrid2 model =
 
                     -- major grid lines
                     , backgroundGridLinesVertical 2 (grayN 0.3) (toFloat s.beatSplits / w)
-                    , backgroundGridLinesHorizontal 3 (grayN 0.3) (7 / h)
+                    , backgroundGridLinesHorizontal 3
+                        (grayN 0.3)
+                        (toFloat (musicScaleLength s.scale) / h)
                     ]
                 )
             ]
