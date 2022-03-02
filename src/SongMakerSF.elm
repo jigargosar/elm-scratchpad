@@ -232,9 +232,14 @@ totalSteps s =
 
 computeGridHeight : Settings -> Int
 computeGridHeight s =
+    instrumentGridHeight s + 2
+
+
+instrumentGridHeight : Settings -> Int
+instrumentGridHeight s =
     case s.scale of
         Major ->
-            7 * s.octaveRange + 2
+            7 * s.octaveRange
 
 
 type StartNote
@@ -918,7 +923,7 @@ viewGrid2 model =
                 computeGridWidth model.settings
 
             h =
-                computeGridHeight model.settings
+                instrumentGridHeight model.settings
           in
           div [ dGrid, styleGridTemplate w h ]
             (rangeWH w h |> List.map (viewTileAt model))
@@ -927,7 +932,7 @@ viewGrid2 model =
                 model.settings
 
             ( w, h ) =
-                ( toFloat (computeGridWidth s), toFloat (computeGridHeight s) )
+                ( toFloat (computeGridWidth s), toFloat (instrumentGridHeight s) )
           in
           div
             [ w100
