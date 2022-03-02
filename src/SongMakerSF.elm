@@ -88,6 +88,75 @@ type alias DataModel =
     }
 
 
+dataModelEncoderV2 : DataModel -> Value
+dataModelEncoderV2 dataModel =
+    JE.object <|
+        [ ( "instrumentPositions", paintedPositionsEncoder dataModel.instrumentPositions )
+        , ( "percussionPositions", paintedPositionsEncoder dataModel.percussionPositions )
+        , ( "settings", encodeSettings dataModel.settings )
+        , ( "instrument", encodeInstrument dataModel.instrument )
+        , ( "percussion", encodePercussion dataModel.percussion )
+        , ( "tempo", JE.int dataModel.tempo )
+        ]
+
+
+encodeMusicScale : MusicScale -> Value
+encodeMusicScale Major =
+    JE.string "Major"
+
+
+encodeStartNote : StartNote -> Value
+encodeStartNote StartNote =
+    JE.string "StartNote"
+
+
+encodeSettings : Settings -> Value
+encodeSettings settings =
+    JE.object <|
+        [ ( "bars", JE.int settings.bars )
+        , ( "beatsPerBar", JE.int settings.beatsPerBar )
+        , ( "beatSplits", JE.int settings.beatSplits )
+        , ( "scale", encodeMusicScale settings.scale )
+        , ( "startsOn", encodeStartNote settings.startsOn )
+        , ( "octaveRange", JE.int settings.octaveRange )
+        ]
+
+
+encodeInstrument : Instrument -> Value
+encodeInstrument instrument =
+    case instrument of
+        Piano ->
+            JE.string "Piano"
+
+        Strings ->
+            JE.string "Strings"
+
+        Woodwind ->
+            JE.string "Woodwind"
+
+        Synth ->
+            JE.string "Synth"
+
+        Marimba ->
+            JE.string "Marimba"
+
+
+encodePercussion : Percussion -> Value
+encodePercussion percussion =
+    case percussion of
+        Electronic ->
+            JE.string "Electronic"
+
+        Blocks ->
+            JE.string "Blocks"
+
+        Kit ->
+            JE.string "Kit"
+
+        Conga ->
+            JE.string "Conga"
+
+
 dataModelDecoderV1 : Decoder DataModel
 dataModelDecoderV1 =
     paintedPositionsDecoder |> JD.map dataModelDecoderHelpV1
