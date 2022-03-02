@@ -450,63 +450,6 @@ percussionNoteFromGP audioTime model ( _, y ) =
     }
 
 
-notePresetAndPitchFromGP : Model -> Int2 -> NotePresetAndPitch
-notePresetAndPitchFromGP model ( _, y ) =
-    let
-        noteNames =
-            [ "C3"
-            , "D3"
-            , "E3"
-            , "F3"
-            , "G3"
-            , "A3"
-            , "B3"
-            , "C4"
-            , "D4"
-            , "E4"
-            , "F4"
-            , "G4"
-            , "A4"
-            , "B4"
-            ]
-    in
-    if y < 14 then
-        case model.instrument of
-            Piano ->
-                ( "piano", listGetAtOrDefault "" y noteNames )
-
-            Strings ->
-                ( "strings", listGetAtOrDefault "" y noteNames )
-
-            _ ->
-                ( "strings", listGetAtOrDefault "" y noteNames )
-
-    else if y == 14 then
-        case model.percussion of
-            Electronic ->
-                ( "snareDrum2", "40" )
-
-            Blocks ->
-                ( "snareDrum2", "40" )
-
-            _ ->
-                ( "snareDrum2", "40" )
-
-    else if y == 15 then
-        case model.percussion of
-            Electronic ->
-                ( "bassDrum1", "36" )
-
-            Blocks ->
-                ( "bassDrum1", "36" )
-
-            _ ->
-                ( "bassDrum1", "36" )
-
-    else
-        Debug.todo (Debug.toString y)
-
-
 noteColorFromGP : Int2 -> String
 noteColorFromGP ( _, y ) =
     let
@@ -1113,32 +1056,6 @@ viewPercussionGridLines s =
                 --, backgroundGridLinesHorizontal 3
                 --    (grayN 0.3)
                 --    (toFloat (musicScaleLength s.scale) / h)
-                ]
-            )
-        ]
-        []
-
-
-viewGridLines : Settings -> Html msg
-viewGridLines s =
-    let
-        ( w, h ) =
-            ( toFloat (computeGridWidth s), toFloat (computeGridHeight s) )
-    in
-    div
-        [ w100
-        , h100
-        , positionAbsolute
-        , noPointerEvents
-        , backgrounds
-            (List.reverse
-                [ -- minor grid lines
-                  backgroundGridLinesVertical 1 (grayN 0.16) (1 / w)
-                , backgroundGridLinesHorizontal 1 (grayN 0.16) (1 / h)
-
-                -- major grid lines
-                , backgroundGridLinesVertical 2 (grayN 0.3) (toFloat s.beatSplits / w)
-                , backgroundGridLinesHorizontal 3 (grayN 0.3) (7 / h)
                 ]
             )
         ]
