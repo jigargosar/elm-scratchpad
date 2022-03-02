@@ -101,13 +101,17 @@ dataModelEncoderV2 dataModel =
 
 
 encodeMusicScale : MusicScale -> Value
-encodeMusicScale Major =
-    JE.string "Major"
+encodeMusicScale musicScale =
+    case musicScale of
+        Major ->
+            JE.string "Major"
 
 
 encodeStartNote : StartNote -> Value
-encodeStartNote StartNote =
-    JE.string "StartNote"
+encodeStartNote startNote =
+    case startNote of
+        StartNote ->
+            JE.string "StartNote"
 
 
 encodeSettings : Settings -> Value
