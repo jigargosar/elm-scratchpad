@@ -78,6 +78,17 @@ type alias Model =
     }
 
 
+toDataModel : Model -> DataModel
+toDataModel model =
+    { instrumentPositions = model.instrumentPositions
+    , percussionPositions = model.percussionPositions
+    , settings = model.settings
+    , instrument = model.instrument
+    , percussion = model.percussion
+    , tempo = model.tempo
+    }
+
+
 type alias DataModel =
     { instrumentPositions : PaintedPositions
     , percussionPositions : PaintedPositions
@@ -776,9 +787,8 @@ update msg model =
 
             else if e.key == "s" then
                 ( model
-                , --Browser.Navigation.replaceUrl model.key
-                  --    (paintedPositionsEncoder model.paintedPositions |> JE.encode 0)
-                  Cmd.none
+                , Browser.Navigation.replaceUrl model.key
+                    (dataModelEncoderV2 (toDataModel model) |> JE.encode 0)
                 )
 
             else
