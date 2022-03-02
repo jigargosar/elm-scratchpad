@@ -921,7 +921,7 @@ viewGrid2 model =
                 computeGridHeight model.settings
           in
           div [ dGrid, styleGridTemplate w h ]
-            (rangeWH w h |> List.map (viewTile model))
+            (rangeWH w h |> List.map (viewTileAt model))
         , let
             s =
                 model.settings
@@ -1101,7 +1101,7 @@ viewGridTiles model =
 
         tiles =
             rangeWH w h
-                |> List.map (viewTile model)
+                |> List.map (viewTileAt model)
     in
     div
         [ dGrid
@@ -1155,8 +1155,8 @@ backgroundGridLinesHorizontal strokeWidth color pctN =
         |> String.join " "
 
 
-viewTile : Model -> Int2 -> Html Msg
-viewTile model (( x, _ ) as gp) =
+viewTileAt : Model -> Int2 -> Html Msg
+viewTileAt model (( x, _ ) as gp) =
     let
         isPlaying =
             case model.playState of
