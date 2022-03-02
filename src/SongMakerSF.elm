@@ -194,8 +194,8 @@ type Instrument
     | Marimba
 
 
-instrument1Name : Instrument -> String
-instrument1Name i =
+instrumentName : Instrument -> String
+instrumentName i =
     case i of
         Piano ->
             "Piano"
@@ -213,8 +213,8 @@ instrument1Name i =
             "Marimba"
 
 
-cycleInstrument1 : Instrument -> Instrument
-cycleInstrument1 i =
+cycleInstrument : Instrument -> Instrument
+cycleInstrument i =
     case i of
         Piano ->
             Strings
@@ -239,8 +239,8 @@ type Percussion
     | Conga
 
 
-instrument2Name : Percussion -> String
-instrument2Name i =
+percussionName : Percussion -> String
+percussionName i =
     case i of
         Electronic ->
             "Electronic"
@@ -255,8 +255,8 @@ instrument2Name i =
             "Conga"
 
 
-cycleInstrument2 : Percussion -> Percussion
-cycleInstrument2 i =
+cyclePercussion : Percussion -> Percussion
+cyclePercussion i =
     case i of
         Electronic ->
             Blocks
@@ -715,12 +715,12 @@ update msg model =
             updateOnTogglePlay model
 
         InstrumentButtonClicked ->
-            ( { model | instrument = cycleInstrument1 model.instrument }
+            ( { model | instrument = cycleInstrument model.instrument }
             , Cmd.none
             )
 
         PercussionButtonClicked ->
-            ( { model | percussion = cycleInstrument2 model.percussion }
+            ( { model | percussion = cyclePercussion model.percussion }
             , Cmd.none
             )
 
@@ -1017,12 +1017,12 @@ viewBottomBar model =
             [ sWidth "14ch"
             , notifyClick InstrumentButtonClicked
             ]
-            (instrument1Name model.instrument)
+            (instrumentName model.instrument)
         , viewBtn
             [ sWidth "14ch"
             , notifyClick PercussionButtonClicked
             ]
-            (instrument2Name model.percussion)
+            (percussionName model.percussion)
         , viewTempoInput model.tempo
         , viewSettingsButton
         , viewBtn [] "Undo"
