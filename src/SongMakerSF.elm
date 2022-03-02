@@ -978,8 +978,8 @@ viewGrid2 model =
                 s =
                     model.settings
 
-                ( w, h ) =
-                    ( toFloat (computeGridWidth s), toFloat percussionGridHeight )
+                w =
+                    toFloat (computeGridWidth s)
               in
               div
                 [ w100
