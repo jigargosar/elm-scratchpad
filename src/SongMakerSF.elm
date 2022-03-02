@@ -623,8 +623,13 @@ update msg model =
                                 { model | instrumentPositions = Set.remove gp model.instrumentPositions }
                                     |> withNoCmd
 
-                            _ ->
-                                ( model, Cmd.none )
+                            ( Drawing, PercussionGrid ) ->
+                                { model | percussionPositions = Set.insert gp model.percussionPositions }
+                                    |> withCmd (playPercussionNoteAtGPCmd model gp)
+
+                            ( Erasing, PercussionGrid ) ->
+                                { model | percussionPositions = Set.remove gp model.percussionPositions }
+                                    |> withNoCmd
 
                     else
                         ( model, Cmd.none )
