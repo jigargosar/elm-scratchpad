@@ -347,7 +347,7 @@ init () url key =
                 |> Set.fromList
 
         dataModelDecoder =
-            JD.oneOf [ dataModelDecoderV1, dataModelDecoderV2 ]
+            JD.oneOf [ dataModelDecoderV2, dataModelDecoderV1 ]
 
         dataModel =
             url.path
