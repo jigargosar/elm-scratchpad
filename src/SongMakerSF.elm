@@ -77,6 +77,15 @@ type alias Model =
     }
 
 
+type alias DataModel =
+    { paintedPositions : PaintedPositions
+    , settings : Settings
+    , instrument : Instrument
+    , percussion : Percussion
+    , tempo : Int
+    }
+
+
 type Instrument
     = Piano
     | Strings
