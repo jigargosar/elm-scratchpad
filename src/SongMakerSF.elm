@@ -634,14 +634,11 @@ pitchAtY settings y =
                 Low ->
                     3
 
-        firstOctaveNum =
-            octaveNum - 1
-
         scaleLen =
             musicScaleLength settings.scale
 
         pitchOctaveNum =
-            firstOctaveNum + (scaleLen // y)
+            octaveNum - 1 + (scaleLen // y)
     in
     case notesInScale |> listGetAt (modBy scaleLen y) of
         Nothing ->
