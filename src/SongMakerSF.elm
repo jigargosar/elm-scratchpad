@@ -557,6 +557,16 @@ stepDurationInMilli model =
 instrumentNoteFromGP : Float -> Model -> Int2 -> Note
 instrumentNoteFromGP audioTime model ( _, y ) =
     let
+        notesInScale =
+            [ "C"
+            , "D"
+            , "E"
+            , "F"
+            , "G"
+            , "A"
+            , "B"
+            ]
+
         noteNames =
             [ "C3"
             , "D3"
