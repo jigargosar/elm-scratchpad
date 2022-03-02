@@ -975,15 +975,13 @@ viewGrid2 model =
               div [ dGrid, styleGridTemplate w h ]
                 (rangeWH w h |> List.map (viewPercussionTileAt model))
             , viewPercussionGridLines
-                { w = computeGridWidth model.settings
-                , beatSplits = model.settings.beatSplits
-                }
+                (computeGridWidth model.settings)
+                model.settings.beatSplits
             ]
         ]
 
 
-viewPercussionGridLines : { a | w : Int, beatSplits : Int } -> Html msg
-viewPercussionGridLines { w, beatSplits } =
+viewPercussionGridLines w beatSplits =
     div
         [ w100
         , h100
