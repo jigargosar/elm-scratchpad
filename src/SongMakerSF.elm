@@ -5,7 +5,6 @@ import Browser.Navigation exposing (Key)
 import Html
 import Html.Attributes as HA
 import Json.Decode as JD exposing (Decoder)
-import Json.Encode as JE exposing (Value)
 import List.Extra
 import Random
 import Random.List
@@ -127,42 +126,14 @@ dataModelDecoderV2 =
         |> jdRequired "tempo" JD.int
 
 
-musicScaleDecoder : Decoder MusicScale
-musicScaleDecoder =
-    let
-        get id =
-            case id of
-                "Major" ->
-                    JD.succeed Major
-
-                _ ->
-                    JD.fail ("unknown value for MusicScale: " ++ id)
-    in
-    JD.string |> JD.andThen get
-
-
-startNoteDecoder : Decoder StartNote
-startNoteDecoder =
-    let
-        get id =
-            case id of
-                "StartNote" ->
-                    JD.succeed StartNote
-
-                _ ->
-                    JD.fail ("unknown value for StartNote: " ++ id)
-    in
-    JD.string |> JD.andThen get
-
-
 settingsDecoder : Decoder Settings
 settingsDecoder =
     JD.succeed Settings
         |> jdRequired "bars" JD.int
         |> jdRequired "beatsPerBar" JD.int
         |> jdRequired "beatSplits" JD.int
-        |> jdRequired "scale" musicScaleDecoder
-        |> jdRequired "startsOn" startNoteDecoder
+        |> jdRequired "scale" (JD.succeed Major)
+        |> jdRequired "startsOn" (JD.succeed StartNote)
         |> jdRequired "octaveRange" JD.int
 
 
