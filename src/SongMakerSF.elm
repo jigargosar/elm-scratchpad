@@ -87,8 +87,13 @@ type alias DataModel =
     }
 
 
-dataModelFromPaintedPositionsV1 : PaintedPositions -> DataModel
-dataModelFromPaintedPositionsV1 paintedPositions =
+dataModelDecoderV1 : Decoder DataModel
+dataModelDecoderV1 =
+    paintedPositionsDecoder |> JD.map dataModelDecoderHelpV1
+
+
+dataModelDecoderHelpV1 : PaintedPositions -> DataModel
+dataModelDecoderHelpV1 paintedPositions =
     let
         settings =
             initialSettingsV1
@@ -108,11 +113,6 @@ dataModelFromPaintedPositionsV1 paintedPositions =
     , percussion = Electronic
     , tempo = 120
     }
-
-
-dataModelDecoderV1 : Decoder DataModel
-dataModelDecoderV1 =
-    paintedPositionsDecoder |> JD.map dataModelFromPaintedPositionsV1
 
 
 dataModelDecoderV2 : Decoder DataModel
@@ -420,7 +420,7 @@ init () url key =
                 |> Url.percentDecode
                 |> Maybe.withDefault ""
                 |> JD.decodeString dataModelDecoder
-                |> Result.withDefault (dataModelFromPaintedPositionsV1 initialPP)
+                |> Result.withDefault (dataModelDecoderHelpV1 initialPP)
     in
     ( { instrumentPositions = dataModel.instrumentPositions
       , percussionPositions = dataModel.percussionPositions
