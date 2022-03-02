@@ -64,6 +64,8 @@ type alias PaintedPositions =
 
 type alias Model =
     { paintedPositions : PaintedPositions
+    , instrumentPositions : PaintedPositions
+    , percussionPositions : PaintedPositions
     , stepIndex : Int
     , playState : PlayerState
     , tool : Maybe Tool
@@ -312,6 +314,8 @@ init () url key =
                 |> Result.withDefault initialPP
     in
     ( { paintedPositions = paintedPositions
+      , instrumentPositions = paintedPositions
+      , percussionPositions = paintedPositions
       , stepIndex = 0
       , playState = NotPlaying
       , tool = Nothing
