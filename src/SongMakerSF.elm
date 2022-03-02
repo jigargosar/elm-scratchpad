@@ -992,10 +992,10 @@ viewPercussionGridLines { w, beatSplits } =
         , backgrounds
             (List.reverse
                 [ -- minor grid lines
-                  backgroundGridLinesVertical 1 (grayN 0.16) (1 / w)
+                  backgroundGridLinesVertical 1 (grayN 0.16) (1 / toFloat w)
 
                 -- major grid lines
-                , backgroundGridLinesVertical 2 (grayN 0.3) (toFloat beatSplits / w)
+                , backgroundGridLinesVertical 2 (grayN 0.3) (toFloat beatSplits / toFloat w)
                 ]
             )
         ]
