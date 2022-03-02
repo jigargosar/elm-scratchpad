@@ -312,10 +312,18 @@ init () url key =
                 |> Maybe.withDefault ""
                 |> JD.decodeString paintedPositionsDecoder
                 |> Result.withDefault initialPP
+
+        igh =
+            instrumentGridHeight settings
     in
     ( { paintedPositions = paintedPositions
-      , instrumentPositions = paintedPositions
-      , percussionPositions = paintedPositions
+      , instrumentPositions =
+            paintedPositions
+                |> Set.filter (first >> (\x -> x < igh))
+      , percussionPositions =
+            paintedPositions
+                |> Set.filter (first >> (\x -> x >= igh))
+                |> Set.map (mapFirst (add -igh))
       , stepIndex = 0
       , playState = NotPlaying
       , tool = Nothing
