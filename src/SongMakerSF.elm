@@ -554,10 +554,6 @@ stepDurationInMilli model =
     duration
 
 
-type alias NotePresetAndPitch =
-    ( String, String )
-
-
 instrumentNoteFromGP : Float -> Model -> Int2 -> Note
 instrumentNoteFromGP audioTime model ( _, y ) =
     let
