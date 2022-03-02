@@ -974,12 +974,7 @@ viewGrid2 model =
                     percussionGridHeight
               in
               div [ dGrid, styleGridTemplate w h ]
-                (rangeWH w h
-                    |> List.map
-                        (mapSecond (add (instrumentGridHeight model.settings))
-                            >> viewTileAt model
-                        )
-                )
+                (rangeWH w h |> List.map (viewTileAt model))
             , let
                 s =
                     model.settings
