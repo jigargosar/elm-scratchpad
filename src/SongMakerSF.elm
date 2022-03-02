@@ -63,8 +63,7 @@ type alias PaintedPositions =
 
 
 type alias Model =
-    { paintedPositions : PaintedPositions
-    , instrumentPositions : PaintedPositions
+    { instrumentPositions : PaintedPositions
     , percussionPositions : PaintedPositions
     , stepIndex : Int
     , playState : PlayerState
@@ -316,14 +315,13 @@ init () url key =
         igh =
             instrumentGridHeight settings
     in
-    ( { paintedPositions = paintedPositions
-      , instrumentPositions =
+    ( { instrumentPositions =
             paintedPositions
-                |> Set.filter (first >> (\x -> x < igh))
+                |> Set.filter (second >> (\y -> y < igh))
       , percussionPositions =
             paintedPositions
-                |> Set.filter (first >> (\x -> x >= igh))
-                |> Set.map (mapFirst (add -igh))
+                |> Set.filter (second >> (\y -> y >= igh))
+                |> Set.map (mapSecond (add -igh))
       , stepIndex = 0
       , playState = NotPlaying
       , tool = Nothing
@@ -369,21 +367,82 @@ stepDurationInMilli model =
     duration
 
 
-noteFromGPWithAudioTime : Float -> Model -> Int2 -> Note
-noteFromGPWithAudioTime audioTime model gp =
+type alias NotePresetAndPitch =
+    ( String, String )
+
+
+instrumentNoteFromGP : Float -> Model -> Int2 -> Note
+instrumentNoteFromGP audioTime model ( _, y ) =
+    let
+        noteNames =
+            [ "C3"
+            , "D3"
+            , "E3"
+            , "F3"
+            , "G3"
+            , "A3"
+            , "B3"
+            , "C4"
+            , "D4"
+            , "E4"
+            , "F4"
+            , "G4"
+            , "A4"
+            , "B4"
+            ]
+
+        presetName =
+            case model.instrument of
+                Piano ->
+                    "piano"
+
+                Strings ->
+                    "strings"
+
+                _ ->
+                    "strings"
+    in
+    { preset = presetName
+    , atAudioTime = audioTime
+    , pitch = listGetAtOrDefault "" y noteNames
+    , duration = stepDurationInMilli model
+    }
+
+
+percussionNoteFromGP : Float -> Model -> Int2 -> Note
+percussionNoteFromGP audioTime model ( _, y ) =
     let
         ( presetName, pitch ) =
-            notePresetAndPitchFromGP model gp
+            if y == 0 then
+                case model.percussion of
+                    Electronic ->
+                        ( "snareDrum2", "40" )
+
+                    Blocks ->
+                        ( "snareDrum2", "40" )
+
+                    _ ->
+                        ( "snareDrum2", "40" )
+
+            else if y == 1 then
+                case model.percussion of
+                    Electronic ->
+                        ( "bassDrum1", "36" )
+
+                    Blocks ->
+                        ( "bassDrum1", "36" )
+
+                    _ ->
+                        ( "bassDrum1", "36" )
+
+            else
+                Debug.todo (Debug.toString y)
     in
     { preset = presetName
     , atAudioTime = audioTime
     , pitch = pitch
     , duration = stepDurationInMilli model
     }
-
-
-type alias NotePresetAndPitch =
-    ( String, String )
 
 
 notePresetAndPitchFromGP : Model -> Int2 -> NotePresetAndPitch
@@ -491,7 +550,8 @@ subscriptions _ =
 
 playNoteAtGPCmd : Model -> Int2 -> Cmd msg
 playNoteAtGPCmd model gp =
-    scheduleNote (noteFromGPWithAudioTime model.audioTime model gp)
+    --scheduleNote (noteFromGPWithAudioTime model.audioTime model gp)
+    Cmd.none
 
 
 focusOrIgnoreCmd : String -> Cmd Msg
@@ -502,10 +562,17 @@ focusOrIgnoreCmd id =
 
 scheduleCurrentStepAtEffect : Float -> Model -> Cmd Msg
 scheduleCurrentStepAtEffect atAudioTime model =
-    model.paintedPositions
+    [ model.instrumentPositions
         |> Set.filter (first >> eq model.stepIndex)
         |> Set.toList
-        |> List.map (noteFromGPWithAudioTime atAudioTime model >> scheduleNote)
+        |> List.map (instrumentNoteFromGP atAudioTime model >> scheduleNote)
+        |> Cmd.batch
+    , model.percussionPositions
+        |> Set.filter (first >> eq model.stepIndex)
+        |> Set.toList
+        |> List.map (percussionNoteFromGP atAudioTime model >> scheduleNote)
+        |> Cmd.batch
+    ]
         |> Cmd.batch
 
 
@@ -516,32 +583,34 @@ update msg model =
             ( model, Cmd.none )
 
         PointerDownOnGP gp ->
-            if Set.member gp model.paintedPositions then
-                { model
-                    | paintedPositions = Set.remove gp model.paintedPositions
-                    , tool = Just Erasing
-                }
-                    |> withNoCmd
-
-            else
-                { model
-                    | paintedPositions = Set.insert gp model.paintedPositions
-                    , tool = Just Drawing
-                }
-                    |> withCmd (playNoteAtGPCmd model gp)
+            --if Set.member gp model.paintedPositions then
+            --    { model
+            --        | paintedPositions = Set.remove gp model.paintedPositions
+            --        , tool = Just Erasing
+            --    }
+            --        |> withNoCmd
+            --
+            --else
+            --    { model
+            --        | paintedPositions = Set.insert gp model.paintedPositions
+            --        , tool = Just Drawing
+            --    }
+            --        |> withCmd (playNoteAtGPCmd model gp)
+            ( model, Cmd.none )
 
         PointerEnteredGP gp ->
-            case model.tool of
-                Nothing ->
-                    ( model, Cmd.none )
-
-                Just Drawing ->
-                    { model | paintedPositions = Set.insert gp model.paintedPositions }
-                        |> withCmd (playNoteAtGPCmd model gp)
-
-                Just Erasing ->
-                    { model | paintedPositions = Set.remove gp model.paintedPositions }
-                        |> withNoCmd
+            --case model.tool of
+            --    Nothing ->
+            --        ( model, Cmd.none )
+            --
+            --    Just Drawing ->
+            --        { model | paintedPositions = Set.insert gp model.paintedPositions }
+            --            |> withCmd (playNoteAtGPCmd model gp)
+            --
+            --    Just Erasing ->
+            --        { model | paintedPositions = Set.remove gp model.paintedPositions }
+            --            |> withNoCmd
+            ( model, Cmd.none )
 
         OnPointerUp ->
             ( { model | tool = Nothing }, Cmd.none )
@@ -555,8 +624,9 @@ update msg model =
 
             else if e.key == "s" then
                 ( model
-                , Browser.Navigation.replaceUrl model.key
-                    (paintedPositionsEncoder model.paintedPositions |> JE.encode 0)
+                , --Browser.Navigation.replaceUrl model.key
+                  --    (paintedPositionsEncoder model.paintedPositions |> JE.encode 0)
+                  Cmd.none
                 )
 
             else
@@ -600,12 +670,13 @@ update msg model =
                 Just newSettings ->
                     ( { model
                         | settingsDialog = Nothing
-                        , settings = newSettings
-                        , paintedPositions =
-                            resizePaintedPositions
-                                model.settings
-                                newSettings
-                                model.paintedPositions
+
+                        --, settings = newSettings
+                        --, paintedPositions =
+                        --    resizePaintedPositions
+                        --        model.settings
+                        --        newSettings
+                        --        model.paintedPositions
                       }
                     , focusOrIgnoreCmd "settings-btn"
                     )
@@ -935,7 +1006,7 @@ viewGrid model =
                     instrumentGridHeight model.settings
               in
               div [ dGrid, styleGridTemplate w h ]
-                (rangeWH w h |> List.map (viewTileAt model))
+                (rangeWH w h |> List.map (viewInstrumentTileAt model))
             , viewInstrumentGridLines model.settings
             ]
         , div [ dGrid, positionRelative, sHeight "20%" ]
@@ -1150,28 +1221,6 @@ listResize default toLength list =
             List.take toLength list
 
 
-viewGridTiles : Model -> Html Msg
-viewGridTiles model =
-    let
-        w =
-            computeGridWidth model.settings
-
-        h =
-            computeGridHeight model.settings
-
-        tiles =
-            rangeWH w h
-                |> List.map (viewTileAt model)
-    in
-    div
-        [ dGrid
-        , styleGridTemplate w h
-        , noUserSelect
-        , notifyPointerUp OnPointerUp
-        ]
-        tiles
-
-
 styleGridTemplate : Int -> Int -> Attribute msg
 styleGridTemplate w h =
     style "grid-template"
@@ -1216,11 +1265,8 @@ backgroundGridLinesHorizontal strokeWidth color pctN =
 
 
 viewPercussionTileAt : Model -> Int2 -> Html Msg
-viewPercussionTileAt model (( x, _ ) as renderGP) =
+viewPercussionTileAt model (( x, _ ) as gp) =
     let
-        gp =
-            ( x, second renderGP + instrumentGridHeight model.settings )
-
         isPlaying =
             case model.playState of
                 Playing _ ->
@@ -1230,7 +1276,7 @@ viewPercussionTileAt model (( x, _ ) as renderGP) =
                     False
 
         isNoteTile =
-            Set.member gp model.paintedPositions
+            Set.member gp model.percussionPositions
 
         isHighlightedTile =
             x == model.stepIndex
@@ -1264,15 +1310,15 @@ viewPercussionTileAt model (( x, _ ) as renderGP) =
     Animated.div
         anim
         [ bgc bgColor
-        , styleGridAreaFromGP renderGP
+        , styleGridAreaFromGP gp
         , notifyPointerDown (PointerDownOnGP gp)
         , notifyPointerEnter (PointerEnteredGP gp)
         ]
         []
 
 
-viewTileAt : Model -> Int2 -> Html Msg
-viewTileAt model (( x, _ ) as gp) =
+viewInstrumentTileAt : Model -> Int2 -> Html Msg
+viewInstrumentTileAt model (( x, _ ) as gp) =
     let
         isPlaying =
             case model.playState of
@@ -1283,7 +1329,7 @@ viewTileAt model (( x, _ ) as gp) =
                     False
 
         isNoteTile =
-            Set.member gp model.paintedPositions
+            Set.member gp model.instrumentPositions
 
         isHighlightedTile =
             x == model.stepIndex
