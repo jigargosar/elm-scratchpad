@@ -990,8 +990,8 @@ viewGrid2 model =
                     (List.reverse
                         [ -- minor grid lines
                           backgroundGridLinesVertical 1 (grayN 0.16) (1 / w)
-                        , backgroundGridLinesHorizontal 1 (grayN 0.16) (1 / h)
 
+                        --, backgroundGridLinesHorizontal 1 (grayN 0.16) (1 / h)
                         -- major grid lines
                         , backgroundGridLinesVertical 2 (grayN 0.3) (toFloat s.beatSplits / w)
 
