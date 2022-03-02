@@ -974,7 +974,7 @@ viewGrid2 model =
                     percussionGridHeight
               in
               div [ dGrid, styleGridTemplate w h ]
-                (rangeWH w h |> List.map (viewTileAt model))
+                (rangeWH w h |> List.map (viewPercussionTileAt model))
             , let
                 s =
                     model.settings
@@ -1210,6 +1210,62 @@ backgroundGridLinesHorizontal strokeWidth color pctN =
     , fromFloat (pctN * 100) ++ "%"
     ]
         |> String.join " "
+
+
+viewPercussionTileAt : Model -> Int2 -> Html Msg
+viewPercussionTileAt model (( x, _ ) as renderGP) =
+    let
+        gp =
+            ( x, second renderGP + instrumentGridHeight model.settings )
+
+        isPlaying =
+            case model.playState of
+                Playing _ ->
+                    True
+
+                _ ->
+                    False
+
+        isNoteTile =
+            Set.member gp model.paintedPositions
+
+        isHighlightedTile =
+            x == model.stepIndex
+
+        anim =
+            if isPlaying && isNoteTile && isHighlightedTile then
+                blink
+
+            else
+                Animation.empty
+
+        notesPerBar =
+            model.settings.beatsPerBar * model.settings.beatSplits
+
+        isAlternateBarTile =
+            modBy (notesPerBar * 2) x >= notesPerBar
+
+        bgColor =
+            if isNoteTile then
+                noteColorFromGP gp
+
+            else if isHighlightedTile then
+                highlightBGColor
+
+            else if isAlternateBarTile then
+                barBGColor2
+
+            else
+                "transparent"
+    in
+    Animated.div
+        anim
+        [ bgc bgColor
+        , styleGridAreaFromGP renderGP
+        , notifyPointerDown (PointerDownOnGP gp)
+        , notifyPointerEnter (PointerEnteredGP gp)
+        ]
+        []
 
 
 viewTileAt : Model -> Int2 -> Html Msg
