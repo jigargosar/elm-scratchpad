@@ -1499,11 +1499,14 @@ viewInstrumentTileAt model (( x, _ ) as gp) =
 
             else
                 "transparent"
+
+        renderGP =
+            gp |> mapSecond (\y -> instrumentGridHeight model.settings - y - 1)
     in
     Animated.div
         anim
         [ bgc bgColor
-        , styleGridAreaFromGP gp
+        , styleGridAreaFromGP renderGP
         , notifyPointerDown (PointerDownOnGP InstrumentGrid gp)
         , notifyPointerEnter (PointerEnteredGP InstrumentGrid gp)
         ]
