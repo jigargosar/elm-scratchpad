@@ -79,8 +79,7 @@ type alias Model =
 
 
 type alias DataModel =
-    { paintedPositions : PaintedPositions
-    , instrumentPositions : PaintedPositions
+    { instrumentPositions : PaintedPositions
     , percussionPositions : PaintedPositions
     , settings : Settings
     , instrument : Instrument
