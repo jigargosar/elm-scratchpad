@@ -240,6 +240,11 @@ instrumentGridHeight s =
     musicScaleLength s.scale * s.octaveRange
 
 
+percussionGridHeight : Int
+percussionGridHeight =
+    2
+
+
 musicScaleLength : MusicScale -> Int
 musicScaleLength musicScale =
     case musicScale of
@@ -916,49 +921,94 @@ viewGrid model =
 
 viewGrid2 : Model -> Html Msg
 viewGrid2 model =
-    div
-        [ dGrid
-        , positionRelative
+    fCol
+        [ positionRelative
         , style "flex-grow" "1"
         , notifyPointerUp OnPointerUp
         , noUserSelect
         ]
-        [ let
-            w =
-                computeGridWidth model.settings
+        [ div [ dGrid, positionRelative, style "flex-grow" "1" ]
+            [ let
+                w =
+                    computeGridWidth model.settings
 
-            h =
-                instrumentGridHeight model.settings
-          in
-          div [ dGrid, styleGridTemplate w h ]
-            (rangeWH w h |> List.map (viewTileAt model))
-        , let
-            s =
-                model.settings
+                h =
+                    instrumentGridHeight model.settings
+              in
+              div [ dGrid, styleGridTemplate w h ]
+                (rangeWH w h |> List.map (viewTileAt model))
+            , let
+                s =
+                    model.settings
 
-            ( w, h ) =
-                ( toFloat (computeGridWidth s), toFloat (instrumentGridHeight s) )
-          in
-          div
-            [ w100
-            , h100
-            , positionAbsolute
-            , noPointerEvents
-            , backgrounds
-                (List.reverse
-                    [ -- minor grid lines
-                      backgroundGridLinesVertical 1 (grayN 0.16) (1 / w)
-                    , backgroundGridLinesHorizontal 1 (grayN 0.16) (1 / h)
+                ( w, h ) =
+                    ( toFloat (computeGridWidth s), toFloat (instrumentGridHeight s) )
+              in
+              div
+                [ w100
+                , h100
+                , positionAbsolute
+                , noPointerEvents
+                , backgrounds
+                    (List.reverse
+                        [ -- minor grid lines
+                          backgroundGridLinesVertical 1 (grayN 0.16) (1 / w)
+                        , backgroundGridLinesHorizontal 1 (grayN 0.16) (1 / h)
 
-                    -- major grid lines
-                    , backgroundGridLinesVertical 2 (grayN 0.3) (toFloat s.beatSplits / w)
-                    , backgroundGridLinesHorizontal 3
-                        (grayN 0.3)
-                        (toFloat (musicScaleLength s.scale) / h)
-                    ]
-                )
+                        -- major grid lines
+                        , backgroundGridLinesVertical 2 (grayN 0.3) (toFloat s.beatSplits / w)
+                        , backgroundGridLinesHorizontal 3
+                            (grayN 0.3)
+                            (toFloat (musicScaleLength s.scale) / h)
+                        ]
+                    )
+                ]
+                []
             ]
-            []
+        , div [ dGrid, positionRelative, sHeight "20%" ]
+            [ let
+                w =
+                    computeGridWidth model.settings
+
+                h =
+                    percussionGridHeight
+              in
+              div [ dGrid, styleGridTemplate w h ]
+                (rangeWH w h
+                    |> List.map
+                        (mapSecond (add (instrumentGridHeight model.settings))
+                            >> viewTileAt model
+                        )
+                )
+            , let
+                s =
+                    model.settings
+
+                ( w, h ) =
+                    ( toFloat (computeGridWidth s), toFloat percussionGridHeight )
+              in
+              div
+                [ w100
+                , h100
+                , positionAbsolute
+                , noPointerEvents
+                , backgrounds
+                    (List.reverse
+                        [ -- minor grid lines
+                          backgroundGridLinesVertical 1 (grayN 0.16) (1 / w)
+                        , backgroundGridLinesHorizontal 1 (grayN 0.16) (1 / h)
+
+                        -- major grid lines
+                        , backgroundGridLinesVertical 2 (grayN 0.3) (toFloat s.beatSplits / w)
+
+                        --, backgroundGridLinesHorizontal 3
+                        --    (grayN 0.3)
+                        --    (toFloat (musicScaleLength s.scale) / h)
+                        ]
+                    )
+                ]
+                []
+            ]
         ]
 
 
