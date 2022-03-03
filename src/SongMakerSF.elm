@@ -793,7 +793,7 @@ update msg model =
 
             else if e.key == "s" then
                 ( model
-                , Browser.Navigation.replaceUrl model.key
+                , Browser.Navigation.pushUrl model.key
                     (dataModelEncoderV2 (toDataModel model) |> JE.encode 0)
                 )
 
