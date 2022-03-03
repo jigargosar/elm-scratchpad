@@ -254,17 +254,16 @@ jdHardcoded a =
 
 jdOptional : String -> Decoder a -> a -> Decoder (a -> b) -> Decoder b
 jdOptional field decoder fallback =
-    jdAndMap
-        (JD.value
-            |> JD.andThen
-                (JD.decodeValue (JD.field field JD.value)
-                    >> Result.map
-                        (always
-                            (JD.field field (JD.oneOf [ JD.null fallback, decoder ]))
-                        )
-                    >> Result.withDefault (JD.succeed fallback)
-                )
-        )
+    JD.value
+        |> JD.andThen
+            (JD.decodeValue (JD.field field JD.value)
+                >> Result.map
+                    (always
+                        (JD.field field (JD.oneOf [ JD.null fallback, decoder ]))
+                    )
+                >> Result.withDefault (JD.succeed fallback)
+            )
+        |> jdAndMap
 
 
 offsetSizeDecoder : Decoder Float2
