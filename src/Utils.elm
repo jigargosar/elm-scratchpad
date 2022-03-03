@@ -250,10 +250,16 @@ jpRequired field decoder =
 jpOptional : String -> Decoder a -> a -> Decoder (a -> b) -> Decoder b
 jpOptional field decoder fallback =
     JD.map2 (|>)
-        (JD.oneOf
-            [ jdSucceedWhenFieldAbsent field fallback
-            , JD.field field (jdNullableWithFallback decoder fallback)
-            ]
+        (JD.maybe (JD.field field JD.value)
+            |> JD.andThen
+                (\mb ->
+                    case mb of
+                        Nothing ->
+                            JD.succeed fallback
+
+                        Just _ ->
+                            JD.field field (jdNullOr decoder fallback)
+                )
         )
 
 
@@ -262,18 +268,8 @@ jpHardcoded a =
     JD.map2 (|>) (JD.succeed a)
 
 
-jdSucceedWhenFieldAbsent : String -> a -> Decoder a
-jdSucceedWhenFieldAbsent field fallback =
-    JD.andThen
-        (JD.decodeValue (JD.field field JD.value)
-            >> Result.map (always (JD.fail ("field not expected: " ++ field)))
-            >> Result.withDefault (JD.succeed fallback)
-        )
-        JD.value
-
-
-jdNullableWithFallback : Decoder a -> a -> Decoder a
-jdNullableWithFallback decoder fallback =
+jdNullOr : Decoder a -> a -> Decoder a
+jdNullOr decoder fallback =
     JD.oneOf [ JD.null fallback, decoder ]
 
 
