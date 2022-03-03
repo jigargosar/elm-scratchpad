@@ -129,16 +129,13 @@ dataModelFromUrl url =
     let
         dataModelDecoder =
             JD.oneOf [ dataModelDecoderV2, dataModelDecoderV1 ]
-
-        dataModel =
-            url.path
-                |> String.dropLeft 1
-                |> Url.percentDecode
-                |> Maybe.withDefault ""
-                |> JD.decodeString dataModelDecoder
-                |> Result.withDefault initialDataModel
     in
-    dataModel
+    url.path
+        |> String.dropLeft 1
+        |> Url.percentDecode
+        |> Maybe.withDefault ""
+        |> JD.decodeString dataModelDecoder
+        |> Result.withDefault initialDataModel
 
 
 dataModelEncoderV2 : DataModel -> Value
