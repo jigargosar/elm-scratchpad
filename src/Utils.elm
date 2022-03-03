@@ -255,9 +255,8 @@ jdOptional field decoder fallback =
             |> JD.andThen
                 (JD.decodeValue (JD.field field JD.value)
                     >> Result.map
-                        (\_ ->
-                            JD.field field
-                                (JD.nullable decoder |> JD.map (Maybe.withDefault fallback))
+                        (always
+                            (JD.field field (JD.oneOf [ JD.null fallback, decoder ]))
                         )
                     >> Result.withDefault (JD.succeed fallback)
                 )
