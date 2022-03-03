@@ -111,18 +111,20 @@ dataModelEncoderV2 dataModel =
         ]
 
 
-encodeMusicScale : MusicScale -> Value
-encodeMusicScale musicScale =
-    case musicScale of
-        Major ->
-            JE.string "Major"
 
-
-encodeStartNote : StartNote -> Value
-encodeStartNote startNote =
-    case startNote of
-        StartNote ->
-            JE.string "StartNote"
+--encodeMusicScale : MusicScale -> Value
+--encodeMusicScale musicScale =
+--    case musicScale of
+--        Major ->
+--            JE.string "Major"
+--
+--
+--encodeStartNote : StartNote -> Value
+--encodeStartNote startNote =
+--    case startNote of
+--        StartNote ->
+--            JE.string "StartNote"
+--
 
 
 encodeSettings : Settings -> Value
@@ -131,9 +133,10 @@ encodeSettings settings =
         [ ( "bars", JE.int settings.bars )
         , ( "beatsPerBar", JE.int settings.beatsPerBar )
         , ( "beatSplits", JE.int settings.beatSplits )
-        , ( "scale", encodeMusicScale settings.scale )
-        , ( "startsOn", encodeStartNote settings.startsOn )
-        , ( "octaveRange", JE.int settings.octaveRange )
+
+        --, ( "scale", encodeMusicScale settings.scale )
+        --, ( "startsOn", encodeStartNote settings.startsOn )
+        --, ( "octaveRange", JE.int settings.octaveRange )
         ]
 
 
@@ -219,7 +222,7 @@ settingsDecoder =
         |> jdRequired "beatSplits" JD.int
         |> jdRequired "scale" (JD.succeed Major)
         |> jdRequired "startsOn" (JD.succeed StartNote)
-        |> jdRequired "octaveRange" JD.int
+        |> jdRequired "octaveRange" (JD.succeed 2)
 
 
 instrumentDecoder : Decoder Instrument
