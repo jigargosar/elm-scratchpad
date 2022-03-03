@@ -111,6 +111,19 @@ dataModelEncoderV2 dataModel =
         ]
 
 
+encodeSettings : Settings -> Value
+encodeSettings settings =
+    JE.object <|
+        [ ( "bars", JE.int settings.bars )
+        , ( "beatsPerBar", JE.int settings.beatsPerBar )
+        , ( "beatSplits", JE.int settings.beatSplits )
+
+        --, ( "scale", encodeMusicScale settings.scale )
+        --, ( "startsOn", encodeStartNote settings.startsOn )
+        --, ( "octaveRange", JE.int settings.octaveRange )
+        ]
+
+
 
 --encodeMusicScale : MusicScale -> Value
 --encodeMusicScale musicScale =
@@ -125,19 +138,6 @@ dataModelEncoderV2 dataModel =
 --        StartNote ->
 --            JE.string "StartNote"
 --
-
-
-encodeSettings : Settings -> Value
-encodeSettings settings =
-    JE.object <|
-        [ ( "bars", JE.int settings.bars )
-        , ( "beatsPerBar", JE.int settings.beatsPerBar )
-        , ( "beatSplits", JE.int settings.beatSplits )
-
-        --, ( "scale", encodeMusicScale settings.scale )
-        --, ( "startsOn", encodeStartNote settings.startsOn )
-        --, ( "octaveRange", JE.int settings.octaveRange )
-        ]
 
 
 encodeInstrument : Instrument -> Value
