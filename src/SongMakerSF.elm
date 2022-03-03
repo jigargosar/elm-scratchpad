@@ -581,6 +581,9 @@ instrumentNoteFromGP audioTime model ( _, y ) =
             , "B4"
             ]
 
+        pitch =
+            listGetAtOrDefault "" y noteNames
+
         presetName =
             case model.instrument of
                 Piano ->
@@ -594,7 +597,7 @@ instrumentNoteFromGP audioTime model ( _, y ) =
     in
     { preset = presetName
     , atAudioTime = audioTime
-    , pitch = listGetAtOrDefault "" y noteNames
+    , pitch = pitch
     , duration = stepDurationInMilli model
     }
 
