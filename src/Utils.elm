@@ -256,7 +256,7 @@ jdSucceedWhenFieldAbsent : String -> a -> Decoder a
 jdSucceedWhenFieldAbsent field fallback =
     JD.andThen
         (JD.decodeValue (JD.field field JD.value)
-            >> Result.map (always (JD.fail ("field notExpected: " ++ field)))
+            >> Result.map (always (JD.fail ("field not expected: " ++ field)))
             >> Result.withDefault (JD.succeed fallback)
         )
         JD.value
