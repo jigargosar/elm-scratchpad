@@ -263,9 +263,14 @@ jpOptional field decoder fallback =
                             JD.succeed fallback
 
                         Just _ ->
-                            JD.field field (jdNullOr decoder fallback)
+                            jdNullableField field decoder fallback
                 )
         )
+
+
+jdNullableField : String -> Decoder c -> c -> Decoder c
+jdNullableField field decoder fallback =
+    JD.field field (jdNullOr decoder fallback)
 
 
 jpHardcoded : a -> Decoder (a -> b) -> Decoder b
