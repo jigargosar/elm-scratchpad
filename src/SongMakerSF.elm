@@ -781,7 +781,7 @@ update msg model =
                     Debug.todo (JD.errorToString err)
 
                 Ok dataModel ->
-                    ( applyDataModel dataModel model, Cmd.none )
+                    ( applyDataModel dataModel { model | url = url }, Cmd.none )
 
         PointerDownOnGP gt gp ->
             case gt of
