@@ -244,7 +244,8 @@ jdAndMap =
 
 jdRequired : String -> Decoder a -> Decoder (a -> b) -> Decoder b
 jdRequired field decoder =
-    jdAndMap (JD.field field decoder)
+    JD.field field decoder
+        |> JD.map2 (|>)
 
 
 jdHardcoded : a -> Decoder (a -> b) -> Decoder b
