@@ -249,7 +249,7 @@ jdRequired field decoder =
 
 jdHardcoded : a -> Decoder (a -> b) -> Decoder b
 jdHardcoded a =
-    jdAndMap (JD.succeed a)
+    JD.succeed a |> JD.map2 (|>)
 
 
 jdOptional : String -> Decoder a -> a -> Decoder (a -> b) -> Decoder b
@@ -263,7 +263,8 @@ jdOptional field decoder fallback =
                     )
                 >> Result.withDefault (JD.succeed fallback)
             )
-        |> jdAndMap
+        --|> jdAndMap
+        |> JD.map2 (|>)
 
 
 offsetSizeDecoder : Decoder Float2
