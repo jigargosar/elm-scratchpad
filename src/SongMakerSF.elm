@@ -51,7 +51,7 @@ main =
     browserApplication
         { init = init
         , onUrlRequest = Debug.log "onUrlRequest: " >> always NOP
-        , onUrlChange = Debug.log "onUrlChange: " >> always NOP
+        , onUrlChange = Debug.log "onUrlChange: " >> UrlChanged
         , subscriptions = subscriptions
         , update = update
         , view = viewDocument
@@ -656,6 +656,7 @@ noteColorFromGP ( _, y ) =
 
 type Msg
     = NOP
+    | UrlChanged Url
     | PointerDownOnGP GridType Int2
     | PointerEnteredGP GridType Int2
     | OnPointerUp
@@ -720,6 +721,9 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         NOP ->
+            ( model, Cmd.none )
+
+        UrlChanged url ->
             ( model, Cmd.none )
 
         PointerDownOnGP gt gp ->
