@@ -99,6 +99,31 @@ type alias DataModel =
     }
 
 
+initialDataModel : DataModel
+initialDataModel =
+    let
+        settings =
+            initialSettingsV1
+
+        w =
+            computeGridWidth settings
+
+        h =
+            computeGridHeight settings
+    in
+    let
+        initialPP : PaintedPositions
+        initialPP =
+            rangeWH w h
+                |> Random.List.shuffle
+                |> Random.andThen Random.List.shuffle
+                |> stepWithInitialSeed 2
+                |> List.take 30
+                |> Set.fromList
+    in
+    dataModelFromPaintedPositionsV1 initialPP
+
+
 dataModelFromUrl : Url -> DataModel
 dataModelFromUrl url =
     let
