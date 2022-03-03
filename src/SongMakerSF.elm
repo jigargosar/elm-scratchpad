@@ -519,11 +519,6 @@ initialSettingsV1 =
     }
 
 
-initialSettings : Settings
-initialSettings =
-    initialSettingsV1
-
-
 type PlayerState
     = Playing Float
     | NotPlaying
