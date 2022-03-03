@@ -270,16 +270,8 @@ jdWhen pred true false =
 
 
 jdWhenFieldExists : String -> Decoder a -> Decoder a -> Decoder a
-jdWhenFieldExists field true false =
-    JD.andThen
-        (\exists ->
-            if exists then
-                true
-
-            else
-                false
-        )
-        (jdFieldExistsDecoder field)
+jdWhenFieldExists field =
+    jdWhen (jdFieldExistsDecoder field)
 
 
 jdFieldExistsDecoder : String -> Decoder Bool
