@@ -262,6 +262,11 @@ jdSucceedWhenFieldAbsent field fallback =
         JD.value
 
 
+jdNullableWithDefault : Decoder a -> a -> Decoder a
+jdNullableWithDefault decoder fallback =
+    JD.oneOf [ JD.null fallback, decoder ]
+
+
 jdOptional : String -> Decoder a -> a -> Decoder (a -> b) -> Decoder b
 jdOptional field decoder fallback =
     JD.map2 (|>)
