@@ -12,6 +12,7 @@ import Html exposing (Html)
 import Html.Attributes as HA
 import Html.Events
 import Json.Decode as JD exposing (Decoder)
+import Json.Decode.Pipeline as JP
 import Random exposing (Generator)
 import Random.Char
 import Random.Extra
@@ -244,6 +245,23 @@ jdAndMap =
 jdRequired : String -> Decoder a -> Decoder (a -> b) -> Decoder b
 jdRequired field decoder =
     jdAndMap (JD.field field decoder)
+
+
+jdOptional : String -> Decoder a -> a -> Decoder (a -> b) -> Decoder b
+jdOptional field decoder fallback =
+    --jdAndMap (JD.ma
+    jdAndMap
+        (JD.value
+            |> JD.andThen
+                (JD.decodeValue (JD.field field JD.value)
+                    >> Result.map
+                        (\_ ->
+                            JD.field field
+                                (JD.nullable decoder |> JD.map (Maybe.withDefault fallback))
+                        )
+                    >> Result.withDefault (JD.succeed fallback)
+                )
+        )
 
 
 offsetSizeDecoder : Decoder Float2
