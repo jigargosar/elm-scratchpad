@@ -271,13 +271,10 @@ jdWhen pred true false =
 
 jdWhenFieldExists : String -> Decoder a -> Decoder a -> Decoder a
 jdWhenFieldExists field =
-    jdWhen (jdFieldExistsDecoder field)
-
-
-jdFieldExistsDecoder : String -> Decoder Bool
-jdFieldExistsDecoder field =
-    JD.maybe (JD.field field JD.value)
-        |> JD.map maybeToBool
+    jdWhen
+        (JD.maybe (JD.field field JD.value)
+            |> JD.map maybeToBool
+        )
 
 
 maybeToBool : Maybe a -> Bool
