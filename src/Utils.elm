@@ -261,13 +261,8 @@ jdOptionalField : String -> Decoder a -> a -> Decoder a
 jdOptionalField field decoder fallback =
     JD.maybe (JD.field field JD.value)
         |> JD.andThen
-            (\mb ->
-                case mb of
-                    Nothing ->
-                        JD.succeed fallback
-
-                    Just _ ->
-                        jdFieldNullOr field decoder fallback
+            (Maybe.map (always (JD.succeed fallback))
+                >> Maybe.withDefault (jdFieldNullOr field decoder fallback)
             )
 
 
