@@ -50,8 +50,8 @@ port onAudioContextTime : (Float -> msg) -> Sub msg
 main =
     browserApplication
         { init = init
-        , onUrlRequest = always NOP
-        , onUrlChange = always NOP
+        , onUrlRequest = Debug.log "onUrlRequest: " >> always NOP
+        , onUrlChange = Debug.log "onUrlChange: " >> always NOP
         , subscriptions = subscriptions
         , update = update
         , view = viewDocument
