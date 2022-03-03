@@ -237,51 +237,6 @@ modifiersDecoder =
         |> bool "altKey"
 
 
-jdAndMap : Decoder a -> Decoder (a -> b) -> Decoder b
-jdAndMap =
-    JD.map2 (|>)
-
-
-jdWhen : Decoder Bool -> Decoder a -> Decoder a -> Decoder a
-jdWhen pred true false =
-    JD.andThen
-        (\exists ->
-            if exists then
-                true
-
-            else
-                false
-        )
-        pred
-
-
-jdWhenFieldExists : String -> Decoder a -> Decoder a -> Decoder a
-jdWhenFieldExists field =
-    jdWhen
-        (JD.maybe (JD.field field JD.value)
-            |> JD.map maybeToBool
-        )
-
-
-jpRequired : String -> Decoder a -> Decoder (a -> b) -> Decoder b
-jpRequired field decoder =
-    JD.map2 (|>) (JD.field field decoder)
-
-
-jpOptional : String -> Decoder a -> a -> Decoder (a -> b) -> Decoder b
-jpOptional field decoder fallback =
-    JD.map2 (|>)
-        (jdWhenFieldExists field
-            (JD.field field (JD.oneOf [ JD.null fallback, decoder ]))
-            (JD.succeed fallback)
-        )
-
-
-jpHardcoded : a -> Decoder (a -> b) -> Decoder b
-jpHardcoded a =
-    JD.map2 (|>) (JD.succeed a)
-
-
 offsetSizeDecoder : Decoder Float2
 offsetSizeDecoder =
     JD.map2 Tuple.pair
@@ -2516,3 +2471,55 @@ setToggleMember e s =
 
     else
         Set.insert e s
+
+
+
+-- JSON DECODE HELPERS
+
+
+jdAndMap : Decoder a -> Decoder (a -> b) -> Decoder b
+jdAndMap =
+    JD.map2 (|>)
+
+
+jdWhen : Decoder Bool -> Decoder a -> Decoder a -> Decoder a
+jdWhen pred true false =
+    JD.andThen
+        (\exists ->
+            if exists then
+                true
+
+            else
+                false
+        )
+        pred
+
+
+
+-- JSON DECODE PIPELINE HELPERS
+
+
+jpRequired : String -> Decoder a -> Decoder (a -> b) -> Decoder b
+jpRequired field decoder =
+    JD.map2 (|>) (JD.field field decoder)
+
+
+jpOptional : String -> Decoder a -> a -> Decoder (a -> b) -> Decoder b
+jpOptional field decoder fallback =
+    let
+        whenFieldExists =
+            jdWhen
+                (JD.maybe (JD.field field JD.value)
+                    |> JD.map maybeToBool
+                )
+    in
+    JD.map2 (|>)
+        (whenFieldExists
+            (JD.field field (JD.oneOf [ JD.null fallback, decoder ]))
+            (JD.succeed fallback)
+        )
+
+
+jpHardcoded : a -> Decoder (a -> b) -> Decoder b
+jpHardcoded a =
+    JD.map2 (|>) (JD.succeed a)
