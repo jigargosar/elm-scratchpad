@@ -252,6 +252,16 @@ jdHardcoded a =
     JD.map2 (|>) (JD.succeed a)
 
 
+jdSucceedWhenFieldAbsent : String -> a -> Decoder a
+jdSucceedWhenFieldAbsent field fallback =
+    JD.andThen
+        (JD.decodeValue (JD.field field JD.value)
+            >> Result.map (always (JD.fail ("field notExpected: " ++ field)))
+            >> Result.withDefault (JD.succeed fallback)
+        )
+        JD.value
+
+
 jdOptional : String -> Decoder a -> a -> Decoder (a -> b) -> Decoder b
 jdOptional field decoder fallback =
     JD.map2 (|>)
