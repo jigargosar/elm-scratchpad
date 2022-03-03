@@ -99,29 +99,6 @@ type alias DataModel =
     }
 
 
-dataModelFromPaintedPositions : PaintedPositions -> DataModel
-dataModelFromPaintedPositions paintedPositions =
-    let
-        settings =
-            initialSettingsV1
-
-        igh =
-            instrumentGridHeight settings
-    in
-    { instrumentPositions =
-        paintedPositions
-            |> Set.filter (second >> (\y -> y < igh))
-    , percussionPositions =
-        paintedPositions
-            |> Set.filter (second >> (\y -> y >= igh))
-            |> Set.map (mapSecond (add -igh))
-    , settings = settings
-    , instrument = Piano
-    , percussion = Electronic
-    , tempo = 120
-    }
-
-
 dataModelFromUrl : Url -> DataModel
 dataModelFromUrl url =
     let
@@ -153,7 +130,7 @@ dataModelFromUrl url =
                 |> Url.percentDecode
                 |> Maybe.withDefault ""
                 |> JD.decodeString dataModelDecoder
-                |> Result.withDefault (dataModelFromPaintedPositions initialPP)
+                |> Result.withDefault (dataModelFromPaintedPositionsV1 initialPP)
     in
     dataModel
 
@@ -236,7 +213,30 @@ encodePercussion percussion =
 
 dataModelDecoderV1 : Decoder DataModel
 dataModelDecoderV1 =
-    paintedPositionsDecoder |> JD.map dataModelFromPaintedPositions
+    paintedPositionsDecoder |> JD.map dataModelFromPaintedPositionsV1
+
+
+dataModelFromPaintedPositionsV1 : PaintedPositions -> DataModel
+dataModelFromPaintedPositionsV1 paintedPositions =
+    let
+        settings =
+            initialSettingsV1
+
+        igh =
+            instrumentGridHeight settings
+    in
+    { instrumentPositions =
+        paintedPositions
+            |> Set.filter (second >> (\y -> y < igh))
+    , percussionPositions =
+        paintedPositions
+            |> Set.filter (second >> (\y -> y >= igh))
+            |> Set.map (mapSecond (add -igh))
+    , settings = settings
+    , instrument = Piano
+    , percussion = Electronic
+    , tempo = 120
+    }
 
 
 dataModelDecoderV2 : Decoder DataModel
