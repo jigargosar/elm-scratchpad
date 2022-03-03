@@ -120,22 +120,9 @@ encodeMusicScale musicScale =
 
 encodeStartNote : StartNote -> Value
 encodeStartNote startNote =
-    JE.object <|
-        [ ( "octave", encodeOctave startNote.octave )
-        ]
-
-
-encodeOctave : Octave -> Value
-encodeOctave octave =
-    case octave of
-        High ->
-            JE.string "High"
-
-        Mid ->
-            JE.string "Mid"
-
-        Low ->
-            JE.string "Low"
+    case startNote of
+        StartNote ->
+            JE.string "StartNote"
 
 
 encodeSettings : Settings -> Value
@@ -231,45 +218,8 @@ settingsDecoder =
         |> jdRequired "beatsPerBar" JD.int
         |> jdRequired "beatSplits" JD.int
         |> jdRequired "scale" (JD.succeed Major)
-        |> jdRequired "startsOn" startNodeDecoder
+        |> jdRequired "startsOn" (JD.succeed StartNote)
         |> jdRequired "octaveRange" JD.int
-
-
-startNodeDecoder : Decoder StartNote
-startNodeDecoder =
-    JD.oneOf
-        [ JD.succeed StartNote
-            |> jdRequired "octave" octaveDecoder
-        , JD.string
-            |> JD.andThen
-                (\s ->
-                    if s == "StartNote" then
-                        JD.succeed { octave = Mid }
-
-                    else
-                        JD.fail ("Invalid Start Note String" ++ s)
-                )
-        ]
-
-
-octaveDecoder : Decoder Octave
-octaveDecoder =
-    let
-        get id =
-            case id of
-                "High" ->
-                    JD.succeed High
-
-                "Mid" ->
-                    JD.succeed Mid
-
-                "Low" ->
-                    JD.succeed Low
-
-                _ ->
-                    JD.fail ("unknown value for Octave: " ++ id)
-    in
-    JD.string |> JD.andThen get
 
 
 instrumentDecoder : Decoder Instrument
@@ -485,14 +435,8 @@ musicScaleLength musicScale =
             7
 
 
-type alias StartNote =
-    { octave : Octave }
-
-
-type Octave
-    = High
-    | Mid
-    | Low
+type StartNote
+    = StartNote
 
 
 type MusicScale
@@ -505,7 +449,7 @@ initialSettingsV1 =
     , beatsPerBar = 4
     , beatSplits = 2
     , scale = Major
-    , startsOn = StartNote Mid
+    , startsOn = StartNote
     , octaveRange = 2
     }
 
@@ -610,49 +554,29 @@ stepDurationInMilli model =
     duration
 
 
-pitchAtY : Settings -> Int -> String
-pitchAtY settings y =
-    let
-        notesInScale =
-            [ "C"
-            , "D"
-            , "E"
-            , "F"
-            , "G"
-            , "A"
-            , "B"
-            ]
-
-        octaveNum =
-            case settings.startsOn.octave of
-                High ->
-                    5
-
-                Mid ->
-                    4
-
-                Low ->
-                    3
-
-        scaleLen =
-            musicScaleLength settings.scale
-
-        pitchOctaveNum =
-            octaveNum - 1 + (scaleLen // y)
-    in
-    case notesInScale |> listGetAt (modBy scaleLen y) of
-        Nothing ->
-            Debug.todo "should never happen"
-
-        Just noteName ->
-            noteName ++ fromInt pitchOctaveNum
+type alias NotePresetAndPitch =
+    ( String, String )
 
 
 instrumentNoteFromGP : Float -> Model -> Int2 -> Note
 instrumentNoteFromGP audioTime model ( _, y ) =
     let
-        settings =
-            model.settings
+        noteNames =
+            [ "C3"
+            , "D3"
+            , "E3"
+            , "F3"
+            , "G3"
+            , "A3"
+            , "B3"
+            , "C4"
+            , "D4"
+            , "E4"
+            , "F4"
+            , "G4"
+            , "A4"
+            , "B4"
+            ]
 
         presetName =
             case model.instrument of
@@ -667,7 +591,7 @@ instrumentNoteFromGP audioTime model ( _, y ) =
     in
     { preset = presetName
     , atAudioTime = audioTime
-    , pitch = pitchAtY settings y
+    , pitch = listGetAtOrDefault "" y noteNames
     , duration = stepDurationInMilli model
     }
 
@@ -1575,14 +1499,11 @@ viewInstrumentTileAt model (( x, _ ) as gp) =
 
             else
                 "transparent"
-
-        renderGP =
-            gp |> mapSecond (\y -> instrumentGridHeight model.settings - y - 1)
     in
     Animated.div
         anim
         [ bgc bgColor
-        , styleGridAreaFromGP renderGP
+        , styleGridAreaFromGP gp
         , notifyPointerDown (PointerDownOnGP InstrumentGrid gp)
         , notifyPointerEnter (PointerEnteredGP InstrumentGrid gp)
         ]
