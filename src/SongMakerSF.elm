@@ -746,6 +746,11 @@ scheduleCurrentStepAtEffect atAudioTime model =
         |> Cmd.batch
 
 
+updateUrlEffect model =
+    Browser.Navigation.pushUrl model.key
+        (dataModelEncoderV2 (toDataModel model) |> JE.encode 0)
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -830,10 +835,8 @@ update msg model =
                 updateOnTogglePlay model
 
             else if e.key == "s" then
-                ( model
-                , Browser.Navigation.pushUrl model.key
-                    (dataModelEncoderV2 (toDataModel model) |> JE.encode 0)
-                )
+                model
+                    |> withEffect updateUrlEffect
 
             else
                 ( model, Cmd.none )
