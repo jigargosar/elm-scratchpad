@@ -256,6 +256,19 @@ jpOptional field decoder fallback =
         )
 
 
+jdWhen : Decoder Bool -> Decoder a -> Decoder a -> Decoder a
+jdWhen pred true false =
+    JD.andThen
+        (\exists ->
+            if exists then
+                true
+
+            else
+                false
+        )
+        pred
+
+
 jdWhenFieldExists : String -> Decoder a -> Decoder a -> Decoder a
 jdWhenFieldExists field true false =
     JD.andThen
