@@ -75,6 +75,7 @@ type alias Model =
     , settingsDialog : Maybe Settings
     , audioTime : Float
     , key : Key
+    , url : Url
     }
 
 
@@ -148,11 +149,16 @@ decodeDataModelFromUrl url =
         dataModelDecoder =
             JD.oneOf [ dataModelDecoderV2, dataModelDecoderV1 ]
     in
+    payloadStringFromUrl url
+        |> JD.decodeString dataModelDecoder
+
+
+payloadStringFromUrl : Url -> String
+payloadStringFromUrl url =
     url.path
         |> String.dropLeft 1
         |> Url.percentDecode
         |> Maybe.withDefault ""
-        |> JD.decodeString dataModelDecoder
 
 
 dataModelEncoderV2 : DataModel -> Value
@@ -551,6 +557,7 @@ init () url key =
       , settingsDialog = Nothing
       , audioTime = 0
       , key = key
+      , url = url
       }
     , Cmd.none
     )
@@ -746,9 +753,20 @@ scheduleCurrentStepAtEffect atAudioTime model =
         |> Cmd.batch
 
 
-updateUrlEffect model =
-    Browser.Navigation.pushUrl model.key
-        (dataModelEncoderV2 (toDataModel model) |> JE.encode 0)
+updateBrowserUrlEffect : Model -> Cmd msg
+updateBrowserUrlEffect model =
+    let
+        new =
+            dataModelEncoderV2 (toDataModel model) |> JE.encode 0
+
+        old =
+            payloadStringFromUrl model.url
+    in
+    if new /= old then
+        Browser.Navigation.pushUrl model.key new
+
+    else
+        Cmd.none
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -836,7 +854,7 @@ update msg model =
 
             else if e.key == "s" then
                 model
-                    |> withEffect updateUrlEffect
+                    |> withEffect updateBrowserUrlEffect
 
             else
                 ( model, Cmd.none )
