@@ -78,6 +78,18 @@ type alias Model =
     }
 
 
+applyDataModel : DataModel -> Model -> Model
+applyDataModel dataModel model =
+    { model
+        | instrumentPositions = dataModel.instrumentPositions
+        , percussionPositions = dataModel.percussionPositions
+        , settings = dataModel.settings
+        , instrument = dataModel.instrument
+        , percussion = dataModel.percussion
+        , tempo = dataModel.tempo
+    }
+
+
 toDataModel : Model -> DataModel
 toDataModel model =
     { instrumentPositions = model.instrumentPositions
@@ -741,7 +753,12 @@ update msg model =
             ( model, Cmd.none )
 
         UrlChanged url ->
-            ( model, Cmd.none )
+            case decodeDataModelFromUrl url of
+                Err err ->
+                    Debug.todo (JD.errorToString err)
+
+                Ok dataModel ->
+                    ( applyDataModel dataModel model, Cmd.none )
 
         PointerDownOnGP gt gp ->
             case gt of
