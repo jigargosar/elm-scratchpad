@@ -99,6 +99,65 @@ type alias DataModel =
     }
 
 
+dataModelFromPaintedPositionsV1 : PaintedPositions -> DataModel
+dataModelFromPaintedPositionsV1 paintedPositions =
+    let
+        settings =
+            initialSettingsV1
+
+        igh =
+            instrumentGridHeight settings
+    in
+    { instrumentPositions =
+        paintedPositions
+            |> Set.filter (second >> (\y -> y < igh))
+    , percussionPositions =
+        paintedPositions
+            |> Set.filter (second >> (\y -> y >= igh))
+            |> Set.map (mapSecond (add -igh))
+    , settings = settings
+    , instrument = Piano
+    , percussion = Electronic
+    , tempo = 120
+    }
+
+
+dataModelFromUrl : Url -> DataModel
+dataModelFromUrl url =
+    let
+        settings =
+            initialSettings
+
+        w =
+            computeGridWidth settings
+
+        h =
+            computeGridHeight settings
+    in
+    let
+        initialPP : PaintedPositions
+        initialPP =
+            rangeWH w h
+                |> Random.List.shuffle
+                |> Random.andThen Random.List.shuffle
+                |> stepWithInitialSeed 2
+                |> List.take 30
+                |> Set.fromList
+
+        dataModelDecoder =
+            JD.oneOf [ dataModelDecoderV2, dataModelDecoderV1 ]
+
+        dataModel =
+            url.path
+                |> String.dropLeft 1
+                |> Url.percentDecode
+                |> Maybe.withDefault ""
+                |> JD.decodeString dataModelDecoder
+                |> Result.withDefault (dataModelFromPaintedPositionsV1 initialPP)
+    in
+    dataModel
+
+
 dataModelEncoderV2 : DataModel -> Value
 dataModelEncoderV2 dataModel =
     JE.object <|
@@ -177,30 +236,7 @@ encodePercussion percussion =
 
 dataModelDecoderV1 : Decoder DataModel
 dataModelDecoderV1 =
-    paintedPositionsDecoder |> JD.map dataModelDecoderHelpV1
-
-
-dataModelDecoderHelpV1 : PaintedPositions -> DataModel
-dataModelDecoderHelpV1 paintedPositions =
-    let
-        settings =
-            initialSettingsV1
-
-        igh =
-            instrumentGridHeight settings
-    in
-    { instrumentPositions =
-        paintedPositions
-            |> Set.filter (second >> (\y -> y < igh))
-    , percussionPositions =
-        paintedPositions
-            |> Set.filter (second >> (\y -> y >= igh))
-            |> Set.map (mapSecond (add -igh))
-    , settings = settings
-    , instrument = Piano
-    , percussion = Electronic
-    , tempo = 120
-    }
+    paintedPositionsDecoder |> JD.map dataModelFromPaintedPositionsV1
 
 
 dataModelDecoderV2 : Decoder DataModel
@@ -480,35 +516,8 @@ type GridType
 init : () -> Url -> Key -> ( Model, Cmd Msg )
 init () url key =
     let
-        settings =
-            initialSettings
-
-        w =
-            computeGridWidth settings
-
-        h =
-            computeGridHeight settings
-    in
-    let
-        initialPP : PaintedPositions
-        initialPP =
-            rangeWH w h
-                |> Random.List.shuffle
-                |> Random.andThen Random.List.shuffle
-                |> stepWithInitialSeed 2
-                |> List.take 30
-                |> Set.fromList
-
-        dataModelDecoder =
-            JD.oneOf [ dataModelDecoderV2, dataModelDecoderV1 ]
-
         dataModel =
-            url.path
-                |> String.dropLeft 1
-                |> Url.percentDecode
-                |> Maybe.withDefault ""
-                |> JD.decodeString dataModelDecoder
-                |> Result.withDefault (dataModelDecoderHelpV1 initialPP)
+            dataModelFromUrl url
     in
     ( { instrumentPositions = dataModel.instrumentPositions
       , percussionPositions = dataModel.percussionPositions
