@@ -2509,12 +2509,12 @@ jpOptional field decoder fallback =
     let
         fieldExists =
             JD.maybe (JD.field field JD.value) |> JD.map maybeToBool
+
+        fieldWithFallback =
+            JD.field field (JD.oneOf [ JD.null fallback, decoder ])
     in
     JD.map2 (|>)
-        (jdWhen fieldExists
-            (JD.field field (JD.oneOf [ JD.null fallback, decoder ]))
-            (JD.succeed fallback)
-        )
+        (jdWhen fieldExists fieldWithFallback (JD.succeed fallback))
 
 
 jpHardcoded : a -> Decoder (a -> b) -> Decoder b
