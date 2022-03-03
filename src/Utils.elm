@@ -242,13 +242,23 @@ jdAndMap =
     JD.map2 (|>)
 
 
-jdRequired : String -> Decoder a -> Decoder (a -> b) -> Decoder b
-jdRequired field decoder =
+jpRequired : String -> Decoder a -> Decoder (a -> b) -> Decoder b
+jpRequired field decoder =
     JD.map2 (|>) (JD.field field decoder)
 
 
-jdHardcoded : a -> Decoder (a -> b) -> Decoder b
-jdHardcoded a =
+jpOptional : String -> Decoder a -> a -> Decoder (a -> b) -> Decoder b
+jpOptional field decoder fallback =
+    JD.map2 (|>)
+        (JD.oneOf
+            [ jdSucceedWhenFieldAbsent field fallback
+            , JD.field field (jdNullableWithFallback decoder fallback)
+            ]
+        )
+
+
+jpHardcoded : a -> Decoder (a -> b) -> Decoder b
+jpHardcoded a =
     JD.map2 (|>) (JD.succeed a)
 
 
@@ -262,19 +272,9 @@ jdSucceedWhenFieldAbsent field fallback =
         JD.value
 
 
-jdNullableWithDefault : Decoder a -> a -> Decoder a
-jdNullableWithDefault decoder fallback =
+jdNullableWithFallback : Decoder a -> a -> Decoder a
+jdNullableWithFallback decoder fallback =
     JD.oneOf [ JD.null fallback, decoder ]
-
-
-jdOptional : String -> Decoder a -> a -> Decoder (a -> b) -> Decoder b
-jdOptional field decoder fallback =
-    JD.map2 (|>)
-        (JD.oneOf
-            [ jdSucceedWhenFieldAbsent field fallback
-            , JD.field field (JD.oneOf [ JD.null fallback, decoder ])
-            ]
-        )
 
 
 offsetSizeDecoder : Decoder Float2

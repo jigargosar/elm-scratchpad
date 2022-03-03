@@ -206,23 +206,23 @@ dataModelDecoderHelpV1 paintedPositions =
 dataModelDecoderV2 : Decoder DataModel
 dataModelDecoderV2 =
     JD.succeed DataModel
-        |> jdRequired "instrumentPositions" paintedPositionsDecoder
-        |> jdRequired "percussionPositions" paintedPositionsDecoder
-        |> jdRequired "settings" settingsDecoder
-        |> jdRequired "instrument" instrumentDecoder
-        |> jdRequired "percussion" percussionDecoder
-        |> jdRequired "tempo" JD.int
+        |> jpRequired "instrumentPositions" paintedPositionsDecoder
+        |> jpRequired "percussionPositions" paintedPositionsDecoder
+        |> jpRequired "settings" settingsDecoder
+        |> jpRequired "instrument" instrumentDecoder
+        |> jpRequired "percussion" percussionDecoder
+        |> jpRequired "tempo" JD.int
 
 
 settingsDecoder : Decoder Settings
 settingsDecoder =
     JD.succeed Settings
-        |> jdRequired "bars" JD.int
-        |> jdRequired "beatsPerBar" JD.int
-        |> jdRequired "beatSplits" JD.int
-        |> jdHardcoded Major
-        |> jdHardcoded StartNote
-        |> jdHardcoded 2
+        |> jpRequired "bars" JD.int
+        |> jpRequired "beatsPerBar" JD.int
+        |> jpRequired "beatSplits" JD.int
+        |> jpHardcoded Major
+        |> jpHardcoded StartNote
+        |> jpHardcoded 2
 
 
 instrumentDecoder : Decoder Instrument
