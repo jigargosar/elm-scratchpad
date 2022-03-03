@@ -242,6 +242,11 @@ jdAndMap =
     JD.map2 (|>)
 
 
+jdNullOr : Decoder a -> a -> Decoder a
+jdNullOr decoder fallback =
+    JD.oneOf [ JD.null fallback, decoder ]
+
+
 jpRequired : String -> Decoder a -> Decoder (a -> b) -> Decoder b
 jpRequired field decoder =
     JD.map2 (|>) (JD.field field decoder)
@@ -266,11 +271,6 @@ jpOptional field decoder fallback =
 jpHardcoded : a -> Decoder (a -> b) -> Decoder b
 jpHardcoded a =
     JD.map2 (|>) (JD.succeed a)
-
-
-jdNullOr : Decoder a -> a -> Decoder a
-jdNullOr decoder fallback =
-    JD.oneOf [ JD.null fallback, decoder ]
 
 
 offsetSizeDecoder : Decoder Float2
