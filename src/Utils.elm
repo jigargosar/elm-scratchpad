@@ -277,16 +277,6 @@ jpOptional field decoder fallback =
         )
 
 
-maybeToBool : Maybe a -> Bool
-maybeToBool maybe =
-    case maybe of
-        Just _ ->
-            True
-
-        Nothing ->
-            False
-
-
 jpHardcoded : a -> Decoder (a -> b) -> Decoder b
 jpHardcoded a =
     JD.map2 (|>) (JD.succeed a)
@@ -2131,6 +2121,16 @@ maybeFromBool bool v =
 
     else
         Nothing
+
+
+maybeToBool : Maybe a -> Bool
+maybeToBool maybe =
+    case maybe of
+        Just _ ->
+            True
+
+        Nothing ->
+            False
 
 
 
