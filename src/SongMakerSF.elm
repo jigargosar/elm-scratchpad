@@ -127,25 +127,6 @@ initialDataModel =
 dataModelFromUrl : Url -> DataModel
 dataModelFromUrl url =
     let
-        settings =
-            initialSettings
-
-        w =
-            computeGridWidth settings
-
-        h =
-            computeGridHeight settings
-    in
-    let
-        initialPP : PaintedPositions
-        initialPP =
-            rangeWH w h
-                |> Random.List.shuffle
-                |> Random.andThen Random.List.shuffle
-                |> stepWithInitialSeed 2
-                |> List.take 30
-                |> Set.fromList
-
         dataModelDecoder =
             JD.oneOf [ dataModelDecoderV2, dataModelDecoderV1 ]
 
@@ -155,7 +136,7 @@ dataModelFromUrl url =
                 |> Url.percentDecode
                 |> Maybe.withDefault ""
                 |> JD.decodeString dataModelDecoder
-                |> Result.withDefault (dataModelFromPaintedPositionsV1 initialPP)
+                |> Result.withDefault initialDataModel
     in
     dataModel
 
