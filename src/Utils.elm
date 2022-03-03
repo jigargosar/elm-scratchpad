@@ -247,6 +247,11 @@ jdRequired field decoder =
     jdAndMap (JD.field field decoder)
 
 
+jdHardcoded : a -> Decoder (a -> b) -> Decoder b
+jdHardcoded a =
+    jdAndMap (JD.succeed a)
+
+
 jdOptional : String -> Decoder a -> a -> Decoder (a -> b) -> Decoder b
 jdOptional field decoder fallback =
     --jdAndMap (JD.ma

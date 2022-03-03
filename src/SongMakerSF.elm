@@ -220,9 +220,9 @@ settingsDecoder =
         |> jdRequired "bars" JD.int
         |> jdRequired "beatsPerBar" JD.int
         |> jdRequired "beatSplits" JD.int
-        |> jdRequired "scale" (JD.succeed Major)
-        |> jdRequired "startsOn" (JD.succeed StartNote)
-        |> jdRequired "octaveRange" (JD.succeed 2)
+        |> jdHardcoded Major
+        |> jdHardcoded StartNote
+        |> jdHardcoded 2
 
 
 instrumentDecoder : Decoder Instrument
