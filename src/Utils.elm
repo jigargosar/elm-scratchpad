@@ -244,19 +244,18 @@ jdAndMap =
 
 jdRequired : String -> Decoder a -> Decoder (a -> b) -> Decoder b
 jdRequired field decoder =
-    JD.field field decoder
-        |> JD.map2 (|>)
+    JD.map2 (|>) (JD.field field decoder)
 
 
 jdHardcoded : a -> Decoder (a -> b) -> Decoder b
 jdHardcoded a =
-    JD.succeed a |> JD.map2 (|>)
+    JD.map2 (|>) (JD.succeed a)
 
 
 jdOptional : String -> Decoder a -> a -> Decoder (a -> b) -> Decoder b
 jdOptional field decoder fallback =
-    JD.value
-        |> JD.andThen
+    JD.map2 (|>)
+        (JD.andThen
             (JD.decodeValue (JD.field field JD.value)
                 >> Result.map
                     (always
@@ -264,8 +263,8 @@ jdOptional field decoder fallback =
                     )
                 >> Result.withDefault (JD.succeed fallback)
             )
-        --|> jdAndMap
-        |> JD.map2 (|>)
+            JD.value
+        )
 
 
 offsetSizeDecoder : Decoder Float2
