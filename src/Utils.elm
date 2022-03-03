@@ -242,20 +242,6 @@ jdAndMap =
     JD.map2 (|>)
 
 
-jpRequired : String -> Decoder a -> Decoder (a -> b) -> Decoder b
-jpRequired field decoder =
-    JD.map2 (|>) (JD.field field decoder)
-
-
-jpOptional : String -> Decoder a -> a -> Decoder (a -> b) -> Decoder b
-jpOptional field decoder fallback =
-    JD.map2 (|>)
-        (jdWhenFieldExists field
-            (JD.field field (JD.oneOf [ JD.null fallback, decoder ]))
-            (JD.succeed fallback)
-        )
-
-
 jdWhen : Decoder Bool -> Decoder a -> Decoder a -> Decoder a
 jdWhen pred true false =
     JD.andThen
@@ -274,6 +260,20 @@ jdWhenFieldExists field =
     jdWhen
         (JD.maybe (JD.field field JD.value)
             |> JD.map maybeToBool
+        )
+
+
+jpRequired : String -> Decoder a -> Decoder (a -> b) -> Decoder b
+jpRequired field decoder =
+    JD.map2 (|>) (JD.field field decoder)
+
+
+jpOptional : String -> Decoder a -> a -> Decoder (a -> b) -> Decoder b
+jpOptional field decoder fallback =
+    JD.map2 (|>)
+        (jdWhenFieldExists field
+            (JD.field field (JD.oneOf [ JD.null fallback, decoder ]))
+            (JD.succeed fallback)
         )
 
 
