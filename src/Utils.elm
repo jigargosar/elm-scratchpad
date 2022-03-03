@@ -2507,14 +2507,11 @@ jpRequired field decoder =
 jpOptional : String -> Decoder a -> a -> Decoder (a -> b) -> Decoder b
 jpOptional field decoder fallback =
     let
-        whenFieldExists =
-            jdWhen
-                (JD.maybe (JD.field field JD.value)
-                    |> JD.map maybeToBool
-                )
+        fieldExists =
+            JD.maybe (JD.field field JD.value) |> JD.map maybeToBool
     in
     JD.map2 (|>)
-        (whenFieldExists
+        (jdWhen fieldExists
             (JD.field field (JD.oneOf [ JD.null fallback, decoder ]))
             (JD.succeed fallback)
         )
