@@ -99,8 +99,8 @@ type alias DataModel =
     }
 
 
-dataModelFromPaintedPositionsV1 : PaintedPositions -> DataModel
-dataModelFromPaintedPositionsV1 paintedPositions =
+dataModelFromPaintedPositions : PaintedPositions -> DataModel
+dataModelFromPaintedPositions paintedPositions =
     let
         settings =
             initialSettingsV1
@@ -153,7 +153,7 @@ dataModelFromUrl url =
                 |> Url.percentDecode
                 |> Maybe.withDefault ""
                 |> JD.decodeString dataModelDecoder
-                |> Result.withDefault (dataModelFromPaintedPositionsV1 initialPP)
+                |> Result.withDefault (dataModelFromPaintedPositions initialPP)
     in
     dataModel
 
@@ -236,7 +236,7 @@ encodePercussion percussion =
 
 dataModelDecoderV1 : Decoder DataModel
 dataModelDecoderV1 =
-    paintedPositionsDecoder |> JD.map dataModelFromPaintedPositionsV1
+    paintedPositionsDecoder |> JD.map dataModelFromPaintedPositions
 
 
 dataModelDecoderV2 : Decoder DataModel
