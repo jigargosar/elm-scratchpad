@@ -254,18 +254,21 @@ jpRequired field decoder =
 
 jpOptional : String -> Decoder a -> a -> Decoder (a -> b) -> Decoder b
 jpOptional field decoder fallback =
-    JD.map2 (|>)
-        (JD.maybe (JD.field field JD.value)
-            |> JD.andThen
-                (\mb ->
-                    case mb of
-                        Nothing ->
-                            JD.succeed fallback
+    JD.map2 (|>) (jdOptionalField field decoder fallback)
 
-                        Just _ ->
-                            jdFieldNullOr field decoder fallback
-                )
-        )
+
+jdOptionalField : String -> Decoder a -> a -> Decoder a
+jdOptionalField field decoder fallback =
+    JD.maybe (JD.field field JD.value)
+        |> JD.andThen
+            (\mb ->
+                case mb of
+                    Nothing ->
+                        JD.succeed fallback
+
+                    Just _ ->
+                        jdFieldNullOr field decoder fallback
+            )
 
 
 jdFieldNullOr : String -> Decoder c -> c -> Decoder c
