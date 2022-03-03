@@ -250,13 +250,39 @@ jpRequired field decoder =
 jpOptional : String -> Decoder a -> a -> Decoder (a -> b) -> Decoder b
 jpOptional field decoder fallback =
     JD.map2 (|>)
-        (JD.maybe (JD.field field JD.value)
-            |> JD.andThen
-                (Maybe.map
-                    (\_ -> JD.field field (JD.oneOf [ JD.null fallback, decoder ]))
-                    >> Maybe.withDefault (JD.succeed fallback)
-                )
+        (jdWhenFieldExists field
+            (JD.field field (JD.oneOf [ JD.null fallback, decoder ]))
+            (JD.succeed fallback)
         )
+
+
+jdWhenFieldExists : String -> Decoder a -> Decoder a -> Decoder a
+jdWhenFieldExists field true false =
+    JD.andThen
+        (\exists ->
+            if exists then
+                true
+
+            else
+                false
+        )
+        (jdFieldExistsDecoder field)
+
+
+jdFieldExistsDecoder : String -> Decoder Bool
+jdFieldExistsDecoder field =
+    JD.maybe (JD.field field JD.value)
+        |> JD.map maybeToBool
+
+
+maybeToBool : Maybe a -> Bool
+maybeToBool maybe =
+    case maybe of
+        Just _ ->
+            True
+
+        Nothing ->
+            False
 
 
 jpHardcoded : a -> Decoder (a -> b) -> Decoder b
