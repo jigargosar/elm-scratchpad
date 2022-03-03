@@ -126,6 +126,12 @@ initialDataModel =
 
 dataModelFromUrl : Url -> DataModel
 dataModelFromUrl url =
+    decodeDataModelFromUrl url
+        |> Result.withDefault initialDataModel
+
+
+decodeDataModelFromUrl : Url -> Result JD.Error DataModel
+decodeDataModelFromUrl url =
     let
         dataModelDecoder =
             JD.oneOf [ dataModelDecoderV2, dataModelDecoderV1 ]
@@ -135,7 +141,6 @@ dataModelFromUrl url =
         |> Url.percentDecode
         |> Maybe.withDefault ""
         |> JD.decodeString dataModelDecoder
-        |> Result.withDefault initialDataModel
 
 
 dataModelEncoderV2 : DataModel -> Value
