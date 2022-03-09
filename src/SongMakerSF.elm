@@ -1034,6 +1034,12 @@ update msg model =
                 )
                 model
 
+        StartOctaveChanged str ->
+            updateSettingsForm2
+                (\startOctave s -> { s | startOctave = startOctave })
+                (octaveFromString str)
+                model
+
         OctaveRangeChanged str ->
             updateSettingsForm
                 (\s ->
@@ -1044,12 +1050,6 @@ update msg model =
                                 |> Maybe.withDefault s.octaveRange
                     }
                 )
-                model
-
-        StartOctaveChanged str ->
-            updateSettingsForm2
-                (\startOctave s -> { s | startOctave = startOctave })
-                (octaveFromString str)
                 model
 
 
