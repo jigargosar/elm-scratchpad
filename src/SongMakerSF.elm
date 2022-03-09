@@ -7,6 +7,7 @@ import Html.Attributes as HA
 import Json.Decode as JD exposing (Decoder)
 import Json.Encode as JE exposing (Value)
 import List.Extra
+import Pivot exposing (Pivot)
 import Random
 import Random.List
 import Set exposing (Set)
@@ -518,6 +519,19 @@ octaveFromString string =
 
         _ ->
             Nothing
+
+
+octaveToString : Octave -> String
+octaveToString octave =
+    case octave of
+        Low ->
+            "Low"
+
+        Mid ->
+            "Mid"
+
+        High ->
+            "High"
 
 
 octaveToInt : Octave -> Int
@@ -1166,6 +1180,11 @@ lcrRange lo c hi =
     )
 
 
+lcrFromPivot : Pivot a -> LCR a
+lcrFromPivot p =
+    ( Pivot.getL p, Pivot.getC p, Pivot.getR p )
+
+
 viewSettingsForm : Settings -> Html Msg
 viewSettingsForm s =
     let
@@ -1196,7 +1215,12 @@ viewSettingsForm s =
         , Html.label [] [ text "Scale: ", viewSelect [ "Major", "Minor", "Chromatic" ] ]
         , Html.label []
             [ text "Start on: "
-            , viewSelect [ "Middle", "Low", "High" ]
+            , viewSelectLCR StartOctaveChanged
+                (Pivot.fromCons Low [ Mid, High ]
+                    |> withRollback (Pivot.firstWith (eq s.startOctave))
+                    |> Pivot.mapA octaveToString
+                    |> lcrFromPivot
+                )
             , viewSelect [ "C", "C#", "B" ]
             ]
         , Html.label []
