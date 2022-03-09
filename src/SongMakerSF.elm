@@ -632,14 +632,14 @@ instrumentNoteFromGP audioTime model ( _, y ) =
         noteOctaveNum =
             startOctaveNum + octaveOffset
 
-        pitch2 =
+        pitch =
             noteName ++ fromInt noteOctaveNum
 
         _ =
-            if pitch2 /= pitch then
+            if pitch /= pitch1 then
                 let
                     _ =
-                        Debug.log "Debug: " ( ( y, octaveOffset ), pitch, pitch2 )
+                        Debug.log "Debug: " ( ( y, octaveOffset ), pitch1, pitch )
                 in
                 Debug.todo "ERROR: ^^^"
 
@@ -663,7 +663,7 @@ instrumentNoteFromGP audioTime model ( _, y ) =
             , "B4"
             ]
 
-        pitch =
+        pitch1 =
             listGetAtOrDefault "" y noteNames
 
         presetName =
