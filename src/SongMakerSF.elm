@@ -604,9 +604,25 @@ type alias NotePresetAndPitch =
     ( String, String )
 
 
-instrumentPitch : Settings -> Int -> String
-instrumentPitch settings y =
-    Debug.todo "todo"
+instrumentPitchAtY : Settings -> Int -> String
+instrumentPitchAtY settings y =
+    let
+        noteName =
+            noteNameOfMusicScaleAtY settings.scale y
+
+        startOctaveNum =
+            3
+
+        octaveOffset =
+            y // musicScaleLength settings.scale
+
+        noteOctaveNum =
+            startOctaveNum + octaveOffset
+
+        pitch =
+            noteName ++ fromInt noteOctaveNum
+    in
+    pitch
 
 
 noteNameOfMusicScaleAtY : MusicScale -> Int -> String
@@ -633,7 +649,7 @@ instrumentNoteFromGP audioTime model ( _, y ) =
             startOctaveNum + octaveOffset
 
         pitch =
-            noteName ++ fromInt noteOctaveNum
+            instrumentPitchAtY model.settings y
 
         presetName =
             case model.instrument of
