@@ -548,12 +548,7 @@ octaveToInt octave =
 
 
 startOctaveNum : Octave -> Int -> Int
-startOctaveNum _ octaveRange =
-    let
-        startOctave : Octave
-        startOctave =
-            Mid
-    in
+startOctaveNum startOctave octaveRange =
     case octaveRange of
         1 ->
             octaveToInt startOctave
