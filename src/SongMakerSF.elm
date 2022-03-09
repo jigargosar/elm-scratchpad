@@ -516,9 +516,18 @@ octaveToInt octave =
             5
 
 
-startOctaveNum : Octave -> Int
-startOctaveNum startOctave =
-    octaveToInt startOctave - 1
+startOctaveNum : Settings -> Int
+startOctaveNum settings =
+    let
+        startOctave =
+            Med
+    in
+    case settings.octaveRange of
+        1 ->
+            octaveToInt startOctave
+
+        _ ->
+            octaveToInt startOctave - 1
 
 
 type MusicScale
@@ -634,17 +643,11 @@ instrumentPitchAtY settings y =
         noteName =
             noteNameOfMusicScaleAtY settings.scale y
 
-        startOctaveNum1 =
-            3
-
-        startOctave =
-            Med
-
         octaveOffset =
             y // musicScaleLength settings.scale
 
         noteOctaveNum =
-            startOctaveNum startOctave + octaveOffset
+            startOctaveNum settings + octaveOffset
 
         pitch =
             noteName ++ fromInt noteOctaveNum
