@@ -33,6 +33,7 @@ import Utils exposing (..)
         * [x] Tempo
         * [x] Settings
     * [x] Update player on tempo/settings change
+    * start noteName
     * Undo
     * Save
 
