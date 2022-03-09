@@ -1216,7 +1216,7 @@ viewSettingsForm s =
                     |> Pivot.mapA octaveToString
                     |> lcrFromPivot
                 )
-            , viewSelect [ "C", "C#", "B" ]
+            , viewSelect [ "C" ]
             ]
         , Html.label []
             [ text "Range (in Octave): "
