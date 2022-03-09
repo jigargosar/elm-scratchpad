@@ -667,11 +667,19 @@ instrumentPitchesFromYS settings ys =
             instrumentPitches settings
 
         pitchAt y =
-            listGetAt y pitches
+            case listGetAt y pitches of
+                Nothing ->
+                    Debug.todo "instrumentPitchesFromYS: invalid y"
+
+                Just a ->
+                    a
     in
     List.map pitchAt ys
-        |> Debug.log "instrumentPitchesFromYS: "
-        |> List.filterMap identity
+
+
+
+--|> Debug.log "instrumentPitchesFromYS: "
+--|> List.filterMap identity
 
 
 instrumentNoteFromPitch : Float -> Model -> String -> Note
