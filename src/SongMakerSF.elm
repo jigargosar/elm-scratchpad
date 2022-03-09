@@ -648,7 +648,7 @@ instrumentPitches settings =
         noteNames =
             noteNamesFromScale settings.scale
     in
-    List.range octaveStart (octaveStart + settings.octaveRange)
+    List.range octaveStart (octaveStart + settings.octaveRange - 1)
         |> List.map (\i -> List.map (\n -> n ++ fromInt i) noteNames)
         |> List.concat
 
