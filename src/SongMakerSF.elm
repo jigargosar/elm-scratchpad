@@ -660,11 +660,6 @@ noteNameOfMusicScaleAtY s y =
     listGetAt (modBy (musicScaleLength s) y) (noteNamesFromScale s)
 
 
-instrumentNoteFromGP : Float -> Model -> Int2 -> Maybe Note
-instrumentNoteFromGP audioTime model ( _, y ) =
-    instrumentNoteAtY audioTime model y
-
-
 instrumentNoteAtY : Float -> Model -> Int -> Maybe Note
 instrumentNoteAtY audioTime model y =
     instrumentPitchAtY model.settings y
@@ -776,8 +771,8 @@ subscriptions _ =
 
 
 playInstrumentNoteAtGPCmd : Model -> Int2 -> Cmd msg
-playInstrumentNoteAtGPCmd model gp =
-    instrumentNoteFromGP model.audioTime model gp
+playInstrumentNoteAtGPCmd model ( _, y ) =
+    instrumentNoteAtY model.audioTime model y
         |> Maybe.map scheduleNote
         |> Maybe.withDefault Cmd.none
 
@@ -798,7 +793,7 @@ scheduleCurrentStepAtEffect atAudioTime model =
     [ model.instrumentPositions
         |> Set.toList
         |> keep (first >> eq model.stepIndex)
-        |> List.filterMap (instrumentNoteFromGP atAudioTime model)
+        |> List.filterMap (second >> instrumentNoteAtY atAudioTime model)
         |> List.map scheduleNote
         |> Cmd.batch
     , model.percussionPositions
