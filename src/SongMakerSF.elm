@@ -497,6 +497,30 @@ type StartNote
     = StartNote
 
 
+type Octave
+    = Low
+    | Med
+    | High
+
+
+octaveToInt : Octave -> Int
+octaveToInt octave =
+    case octave of
+        Low ->
+            3
+
+        Med ->
+            4
+
+        High ->
+            5
+
+
+startOctaveNum : Octave -> Int
+startOctaveNum startOctave =
+    octaveToInt startOctave - 1
+
+
 type MusicScale
     = Major
 
@@ -610,19 +634,17 @@ instrumentPitchAtY settings y =
         noteName =
             noteNameOfMusicScaleAtY settings.scale y
 
-        startOctaveNum =
+        startOctaveNum1 =
             3
 
-        _ =
-            case settings.startsOn of
-                StartNote ->
-                    1
+        startOctave =
+            Med
 
         octaveOffset =
             y // musicScaleLength settings.scale
 
         noteOctaveNum =
-            startOctaveNum + octaveOffset
+            startOctaveNum startOctave + octaveOffset
 
         pitch =
             noteName ++ fromInt noteOctaveNum
