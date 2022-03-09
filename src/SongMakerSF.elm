@@ -648,6 +648,21 @@ instrumentPitches settings =
         |> List.concat
 
 
+instrumentNotesFromYS : Float -> Model -> List Int -> List Note
+instrumentNotesFromYS audioTime model ys =
+    let
+        pitches =
+            instrumentPitches model.settings
+
+        pitchAt y =
+            listGetAt y pitches
+    in
+    List.map pitchAt ys
+        |> Debug.log "instrumentPitchAtY: "
+        |> List.filterMap identity
+        |> List.map (instrumentNoteFromPitch audioTime model)
+
+
 instrumentNoteAtY : Float -> Model -> Int -> Maybe Note
 instrumentNoteAtY audioTime model y =
     listGetAt y (instrumentPitches model.settings)
