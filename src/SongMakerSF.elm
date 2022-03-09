@@ -1041,15 +1041,9 @@ update msg model =
                 model
 
         OctaveRangeChanged str ->
-            updateSettingsForm
-                (\s ->
-                    { s
-                        | octaveRange =
-                            String.toInt str
-                                |> Maybe.map (clamp minOctaveRange maxOctaveRange)
-                                |> Maybe.withDefault s.octaveRange
-                    }
-                )
+            updateSettingsForm2
+                (\octaveRange s -> { s | octaveRange = octaveRange })
+                (String.toInt str |> Maybe.map (clamp minOctaveRange maxOctaveRange))
                 model
 
 
