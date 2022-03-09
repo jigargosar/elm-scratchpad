@@ -653,6 +653,7 @@ instrumentPitchAtY settings y =
             noteName ++ fromInt noteOctaveNum
     in
     pitch
+        |> Debug.log "instrumentPitchAtY: "
 
 
 noteNameOfMusicScaleAtY : MusicScale -> Int -> String
