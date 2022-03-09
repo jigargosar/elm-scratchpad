@@ -640,6 +640,7 @@ instrumentPitchAtY settings y =
         |> Debug.log "instrumentPitchAtY: "
 
 
+instrumentPitchAtYHelp : Settings -> Int -> String -> String
 instrumentPitchAtYHelp settings y noteName =
     let
         octaveOffset =
