@@ -650,17 +650,22 @@ instrumentPitches settings =
 
 instrumentNotesFromYS : Float -> Model -> List Int -> List Note
 instrumentNotesFromYS audioTime model ys =
+    instrumentPitchesFromYS model.settings ys
+        |> List.map (instrumentNoteFromPitch audioTime model)
+
+
+instrumentPitchesFromYS : Settings -> List Int -> List String
+instrumentPitchesFromYS settings ys =
     let
         pitches =
-            instrumentPitches model.settings
+            instrumentPitches settings
 
         pitchAt y =
             listGetAt y pitches
     in
     List.map pitchAt ys
-        |> Debug.log "instrumentPitchAtY: "
+        |> Debug.log "instrumentPitchesFromYS: "
         |> List.filterMap identity
-        |> List.map (instrumentNoteFromPitch audioTime model)
 
 
 instrumentNoteAtY : Float -> Model -> Int -> Maybe Note
