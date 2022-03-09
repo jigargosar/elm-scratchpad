@@ -1047,14 +1047,20 @@ update msg model =
                 model
 
         StartOctaveChanged str ->
-            case octaveFromString str of
-                Nothing ->
-                    ( model, Cmd.none )
+            updateSettingsForm2
+                (\startOctave s -> { s | startOctave = startOctave })
+                (octaveFromString str)
+                model
 
-                Just startOctave ->
-                    updateSettingsForm
-                        (\s -> { s | startOctave = startOctave })
-                        model
+
+updateSettingsForm2 : (a -> Settings -> Settings) -> Maybe a -> Model -> ( Model, Cmd msg )
+updateSettingsForm2 fn maybe model =
+    case ( model.settingsDialog, maybe ) of
+        ( Just s, Just a ) ->
+            { model | settingsDialog = Just (fn a s) } |> withNoCmd
+
+        _ ->
+            model |> withNoCmd
 
 
 updateSettingsForm : (Settings -> Settings) -> Model -> ( Model, Cmd msg )
