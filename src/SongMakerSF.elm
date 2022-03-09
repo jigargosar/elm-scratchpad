@@ -919,7 +919,10 @@ update msg model =
             updateAfterAudioTimeReceived { model | audioTime = currentAudioTime }
 
         OnBrowserKeyDown e ->
-            if e.isTargetBodyElement && not e.repeat && e.key == " " then
+            if e.isTargetBodyElement && not e.repeat && matchesNoModifiers [ " " ] e then
+                updateOnTogglePlay model
+
+            else if not e.repeat && matchesNoModifiers [ "p" ] e then
                 updateOnTogglePlay model
 
             else if e.key == "s" then
