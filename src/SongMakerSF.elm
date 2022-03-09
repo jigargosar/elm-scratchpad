@@ -493,19 +493,31 @@ percussionGridHeight =
     2
 
 
-musicScaleLength : MusicScale -> Int
-musicScaleLength musicScale =
-    case musicScale of
-        Major ->
-            7
-
-
 type StartNote
     = StartNote
 
 
 type MusicScale
     = Major
+
+
+musicScaleLength : MusicScale -> Int
+musicScaleLength =
+    noteNamesFromScale >> List.length
+
+
+noteNamesFromScale : MusicScale -> List String
+noteNamesFromScale s =
+    case s of
+        Major ->
+            [ "C"
+            , "D"
+            , "E"
+            , "F"
+            , "G"
+            , "A"
+            , "B"
+            ]
 
 
 initialSettingsV1 : Settings
@@ -597,20 +609,6 @@ instrumentPitch settings y =
     Debug.todo "todo"
 
 
-noteNamesFromScale : MusicScale -> List String
-noteNamesFromScale s =
-    case s of
-        Major ->
-            [ "C"
-            , "D"
-            , "E"
-            , "F"
-            , "G"
-            , "A"
-            , "B"
-            ]
-
-
 noteNameOfMusicScaleAtY : MusicScale -> Int -> String
 noteNameOfMusicScaleAtY s y =
     listGetAtOr (modBy (musicScaleLength s) y) "" (noteNamesFromScale s)
@@ -628,19 +626,22 @@ instrumentNoteFromGP audioTime model ( _, y ) =
         startOctaveNum =
             3
 
+        octaveOffset =
+            y // musicScaleLength settings.scale
+
         noteOctaveNum =
-            startOctaveNum + modBy (musicScaleLength settings.scale) y
+            startOctaveNum + octaveOffset
 
         pitch2 =
             noteName ++ fromInt noteOctaveNum
 
         _ =
-            if pitch2 /= pitch then
-                Debug.todo (Debug.toString ( pitch, pitch2 ))
+            --if pitch2 /= pitch then
+            --    Debug.todo
+            Debug.log "Debug: " ( ( y, octaveOffset ), pitch, pitch2 )
 
-            else
-                1
-
+        --else
+        --    1
         noteNames =
             [ "C3"
             , "D3"
