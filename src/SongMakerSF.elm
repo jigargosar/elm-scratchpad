@@ -44,6 +44,11 @@ import Utils exposing (..)
 port scheduleNote : Note -> Cmd msg
 
 
+scheduleNotes : List Note -> Cmd msg
+scheduleNotes =
+    List.map scheduleNote >> Cmd.batch
+
+
 port onAudioContextTime : (Float -> msg) -> Sub msg
 
 
@@ -648,10 +653,11 @@ instrumentPitches settings =
         |> List.concat
 
 
-instrumentNotesFromYS : Float -> Model -> List Int -> List Note
-instrumentNotesFromYS audioTime model ys =
+scheduleInstrumentNotes : Float -> Model -> List Int -> Cmd msg
+scheduleInstrumentNotes audioTime model ys =
     instrumentPitchesFromYS model.settings ys
         |> List.map (instrumentNoteFromPitch audioTime model)
+        |> scheduleNotes
 
 
 instrumentPitchesFromYS : Settings -> List Int -> List String
@@ -668,11 +674,12 @@ instrumentPitchesFromYS settings ys =
         |> List.filterMap identity
 
 
-instrumentNoteAtY : Float -> Model -> Int -> Maybe Note
-instrumentNoteAtY audioTime model y =
-    listGetAt y (instrumentPitches model.settings)
-        |> Debug.log "instrumentPitchAtY: "
-        |> Maybe.map (instrumentNoteFromPitch audioTime model)
+
+--instrumentNoteAtY : Float -> Model -> Int -> Maybe Note
+--instrumentNoteAtY audioTime model y =
+--    listGetAt y (instrumentPitches model.settings)
+--        |> Debug.log "instrumentPitchAtY: "
+--        |> Maybe.map (instrumentNoteFromPitch audioTime model)
 
 
 instrumentNoteFromPitch : Float -> Model -> String -> Note
@@ -781,9 +788,7 @@ subscriptions _ =
 
 playInstrumentNoteAtGPCmd : Model -> Int2 -> Cmd msg
 playInstrumentNoteAtGPCmd model ( _, y ) =
-    instrumentNoteAtY model.audioTime model y
-        |> Maybe.map scheduleNote
-        |> Maybe.withDefault Cmd.none
+    scheduleInstrumentNotes model.audioTime model [ y ]
 
 
 playPercussionNoteAtGPCmd : Model -> Int2 -> Cmd msg
@@ -802,9 +807,8 @@ scheduleCurrentStepAtEffect atAudioTime model =
     [ model.instrumentPositions
         |> Set.toList
         |> keep (first >> eq model.stepIndex)
-        |> List.filterMap (second >> instrumentNoteAtY atAudioTime model)
-        |> List.map scheduleNote
-        |> Cmd.batch
+        |> List.map second
+        |> scheduleInstrumentNotes atAudioTime model
     , model.percussionPositions
         |> Set.filter (first >> eq model.stepIndex)
         |> Set.toList
