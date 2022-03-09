@@ -288,7 +288,7 @@ settingsDecoder =
         |> jpRequired "beatsPerBar" JD.int
         |> jpRequired "beatSplits" JD.int
         |> jpHardcoded Major
-        |> jpHardcoded StartNote
+        |> jpHardcoded Mid
         |> jpHardcoded 2
 
 
@@ -431,7 +431,7 @@ type alias Settings =
     , beatsPerBar : Int
     , beatSplits : Int
     , scale : MusicScale
-    , startsOn : StartNote
+    , startOctave : Octave
     , octaveRange : Int
     }
 
@@ -498,14 +498,26 @@ percussionGridHeight =
     2
 
 
-type StartNote
-    = StartNote
-
-
 type Octave
     = Low
-    | Med
+    | Mid
     | High
+
+
+octaveFromString : String -> Maybe Octave
+octaveFromString string =
+    case string of
+        "Low" ->
+            Just Low
+
+        "Mid" ->
+            Just Mid
+
+        "High" ->
+            Just High
+
+        _ ->
+            Nothing
 
 
 octaveToInt : Octave -> Int
@@ -514,19 +526,19 @@ octaveToInt octave =
         Low ->
             3
 
-        Med ->
+        Mid ->
             4
 
         High ->
             5
 
 
-startOctaveNum : StartNote -> Int -> Int
+startOctaveNum : Octave -> Int -> Int
 startOctaveNum _ octaveRange =
     let
         startOctave : Octave
         startOctave =
-            Med
+            Mid
     in
     case octaveRange of
         1 ->
@@ -565,7 +577,7 @@ initialSettingsV1 =
     , beatsPerBar = 4
     , beatSplits = 2
     , scale = Major
-    , startsOn = StartNote
+    , startOctave = Mid
     , octaveRange = 2
     }
 
@@ -643,7 +655,7 @@ instrumentPitches : Settings -> List String
 instrumentPitches settings =
     let
         octaveStart =
-            startOctaveNum settings.startsOn settings.octaveRange
+            startOctaveNum settings.startOctave settings.octaveRange
 
         noteNames =
             noteNamesFromScale settings.scale
@@ -775,6 +787,7 @@ type Msg
     | BarCountChanged String
     | BeatsPerBarChanged String
     | BeatSplitsChanged String
+    | StartOctaveChanged String
     | OctaveRangeChanged String
 
 
@@ -1029,6 +1042,18 @@ update msg model =
                             String.toInt str
                                 |> Maybe.map (clamp minOctaveRange maxOctaveRange)
                                 |> Maybe.withDefault s.octaveRange
+                    }
+                )
+                model
+
+        StartOctaveChanged str ->
+            updateSettingsForm
+                (\s ->
+                    { s
+                        | startOctave =
+                            str
+                                |> octaveFromString
+                                |> Maybe.withDefault s.startOctave
                     }
                 )
                 model
