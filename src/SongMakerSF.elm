@@ -658,8 +658,8 @@ instrumentPitchAtYHelp settings y noteName =
 
 
 noteNameOfMusicScaleAtY : MusicScale -> Int -> Maybe String
-noteNameOfMusicScaleAtY s y =
-    listGetAt (modBy (musicScaleLength s) y) (noteNamesFromScale s)
+noteNameOfMusicScaleAtY musicScale y =
+    listGetAt (modBy (musicScaleLength musicScale) y) (noteNamesFromScale musicScale)
 
 
 instrumentNoteAtY : Float -> Model -> Int -> Maybe Note
