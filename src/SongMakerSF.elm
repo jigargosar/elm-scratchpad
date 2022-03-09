@@ -633,16 +633,15 @@ stepDurationInMilli model =
     duration
 
 
-type alias NotePresetAndPitch =
-    ( String, String )
-
-
-instrumentPitchAtY : Settings -> Int -> String
+instrumentPitchAtY : Settings -> Int -> Maybe String
 instrumentPitchAtY settings y =
-    let
-        noteName =
-            noteNameOfMusicScaleAtY settings.scale y
+    noteNameOfMusicScaleAtY settings.scale y
+        |> Maybe.map (instrumentPitchAtYHelp settings y)
+        |> Debug.log "instrumentPitchAtY: "
 
+
+instrumentPitchAtYHelp settings y noteName =
+    let
         octaveOffset =
             y // musicScaleLength settings.scale
 
@@ -656,13 +655,24 @@ instrumentPitchAtY settings y =
         |> Debug.log "instrumentPitchAtY: "
 
 
-noteNameOfMusicScaleAtY : MusicScale -> Int -> String
+noteNameOfMusicScaleAtY : MusicScale -> Int -> Maybe String
 noteNameOfMusicScaleAtY s y =
-    listGetAtOr (modBy (musicScaleLength s) y) "" (noteNamesFromScale s)
+    listGetAt (modBy (musicScaleLength s) y) (noteNamesFromScale s)
 
 
-instrumentNoteFromGP : Float -> Model -> Int2 -> Note
+instrumentNoteFromGP : Float -> Model -> Int2 -> Maybe Note
 instrumentNoteFromGP audioTime model ( _, y ) =
+    instrumentNoteAtY audioTime model y
+
+
+instrumentNoteAtY : Float -> Model -> Int -> Maybe Note
+instrumentNoteAtY audioTime model y =
+    instrumentPitchAtY model.settings y
+        |> Maybe.map (instrumentNoteFromPitch audioTime model)
+
+
+instrumentNoteFromPitch : Float -> Model -> String -> Note
+instrumentNoteFromPitch audioTime model pitch =
     let
         presetName =
             case model.instrument of
@@ -677,7 +687,7 @@ instrumentNoteFromGP audioTime model ( _, y ) =
     in
     { preset = presetName
     , atAudioTime = audioTime
-    , pitch = instrumentPitchAtY model.settings y
+    , pitch = pitch
     , duration = stepDurationInMilli model
     }
 
@@ -767,7 +777,9 @@ subscriptions _ =
 
 playInstrumentNoteAtGPCmd : Model -> Int2 -> Cmd msg
 playInstrumentNoteAtGPCmd model gp =
-    scheduleNote (instrumentNoteFromGP model.audioTime model gp)
+    instrumentNoteFromGP model.audioTime model gp
+        |> Maybe.map scheduleNote
+        |> Maybe.withDefault Cmd.none
 
 
 playPercussionNoteAtGPCmd : Model -> Int2 -> Cmd msg
@@ -784,9 +796,10 @@ focusOrIgnoreCmd id =
 scheduleCurrentStepAtEffect : Float -> Model -> Cmd Msg
 scheduleCurrentStepAtEffect atAudioTime model =
     [ model.instrumentPositions
-        |> Set.filter (first >> eq model.stepIndex)
         |> Set.toList
-        |> List.map (instrumentNoteFromGP atAudioTime model >> scheduleNote)
+        |> keep (first >> eq model.stepIndex)
+        |> List.filterMap (instrumentNoteFromGP atAudioTime model)
+        |> List.map scheduleNote
         |> Cmd.batch
     , model.percussionPositions
         |> Set.filter (first >> eq model.stepIndex)
