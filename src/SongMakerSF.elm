@@ -633,24 +633,6 @@ noteNameOfMusicScaleAtY s y =
 instrumentNoteFromGP : Float -> Model -> Int2 -> Note
 instrumentNoteFromGP audioTime model ( _, y ) =
     let
-        settings =
-            model.settings
-
-        noteName =
-            noteNameOfMusicScaleAtY settings.scale y
-
-        startOctaveNum =
-            3
-
-        octaveOffset =
-            y // musicScaleLength settings.scale
-
-        noteOctaveNum =
-            startOctaveNum + octaveOffset
-
-        pitch =
-            instrumentPitchAtY model.settings y
-
         presetName =
             case model.instrument of
                 Piano ->
@@ -664,7 +646,7 @@ instrumentNoteFromGP audioTime model ( _, y ) =
     in
     { preset = presetName
     , atAudioTime = audioTime
-    , pitch = pitch
+    , pitch = instrumentPitchAtY model.settings y
     , duration = stepDurationInMilli model
     }
 
