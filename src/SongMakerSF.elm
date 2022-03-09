@@ -804,9 +804,14 @@ focusOrIgnoreCmd id =
 
 scheduleCurrentStepAtEffect : Float -> Model -> Cmd Msg
 scheduleCurrentStepAtEffect atAudioTime model =
-    [ model.instrumentPositions
+    [ let
+        igh =
+            instrumentGridHeight model.settings
+      in
+      model.instrumentPositions
         |> Set.toList
         |> keep (first >> eq model.stepIndex)
+        |> reject (second >> (\y -> y >= igh))
         |> List.map second
         |> scheduleInstrumentNotes atAudioTime model
     , model.percussionPositions
