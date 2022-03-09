@@ -634,37 +634,24 @@ stepDurationInMilli model =
     duration
 
 
-instrumentPitchAtY : Settings -> Int -> Maybe String
-instrumentPitchAtY settings y =
-    noteNameOfMusicScaleAtY settings.scale y
-        |> Maybe.map (instrumentPitchAtYHelp settings y)
-        |> Debug.log "instrumentPitchAtY: "
-
-
-instrumentPitchAtYHelp : Settings -> Int -> String -> String
-instrumentPitchAtYHelp settings y noteName =
+instrumentPitches : Settings -> List String
+instrumentPitches settings =
     let
-        octaveOffset =
-            y // musicScaleLength settings.scale
+        octaveStart =
+            startOctaveNum settings.startsOn settings.octaveRange
 
-        noteOctaveNum =
-            startOctaveNum settings.startsOn settings.octaveRange + octaveOffset
-
-        pitch =
-            noteName ++ fromInt noteOctaveNum
+        noteNames =
+            noteNamesFromScale settings.scale
     in
-    pitch
-        |> Debug.log "instrumentPitchAtY: "
-
-
-noteNameOfMusicScaleAtY : MusicScale -> Int -> Maybe String
-noteNameOfMusicScaleAtY musicScale y =
-    listGetAt (modBy (musicScaleLength musicScale) y) (noteNamesFromScale musicScale)
+    List.range octaveStart (octaveStart + settings.octaveRange)
+        |> List.map (\i -> List.map (\n -> n ++ fromInt i) noteNames)
+        |> List.concat
 
 
 instrumentNoteAtY : Float -> Model -> Int -> Maybe Note
 instrumentNoteAtY audioTime model y =
-    instrumentPitchAtY model.settings y
+    listGetAt y (instrumentPitches model.settings)
+        |> Debug.log "instrumentPitchAtY: "
         |> Maybe.map (instrumentNoteFromPitch audioTime model)
 
 
