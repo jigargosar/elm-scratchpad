@@ -613,6 +613,11 @@ instrumentPitchAtY settings y =
         startOctaveNum =
             3
 
+        _ =
+            case settings.startsOn of
+                StartNote ->
+                    1
+
         octaveOffset =
             y // musicScaleLength settings.scale
 
