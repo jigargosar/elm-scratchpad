@@ -592,9 +592,55 @@ type alias NotePresetAndPitch =
     ( String, String )
 
 
+instrumentPitch : Settings -> Int -> String
+instrumentPitch settings y =
+    Debug.todo "todo"
+
+
+noteNamesFromScale : MusicScale -> List String
+noteNamesFromScale s =
+    case s of
+        Major ->
+            [ "C"
+            , "D"
+            , "E"
+            , "F"
+            , "G"
+            , "A"
+            , "B"
+            ]
+
+
+noteNameOfMusicScaleAtY : MusicScale -> Int -> String
+noteNameOfMusicScaleAtY s y =
+    listGetAtOr (modBy (musicScaleLength s) y) "" (noteNamesFromScale s)
+
+
 instrumentNoteFromGP : Float -> Model -> Int2 -> Note
 instrumentNoteFromGP audioTime model ( _, y ) =
     let
+        settings =
+            model.settings
+
+        noteName =
+            noteNameOfMusicScaleAtY settings.scale y
+
+        startOctaveNum =
+            3
+
+        noteOctaveNum =
+            startOctaveNum + modBy (musicScaleLength settings.scale) y
+
+        pitch2 =
+            noteName ++ fromInt noteOctaveNum
+
+        _ =
+            if pitch2 /= pitch then
+                Debug.todo (Debug.toString ( pitch, pitch2 ))
+
+            else
+                1
+
         noteNames =
             [ "C3"
             , "D3"

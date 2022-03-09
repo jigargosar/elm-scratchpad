@@ -1726,8 +1726,12 @@ listGetAt idx =
     List.drop idx >> List.head
 
 
-listGetAtOrDefault default idx =
-    listGetAt idx >> Maybe.withDefault default
+listGetAtOrDefault fallback idx =
+    listGetAtOr idx fallback
+
+
+listGetAtOr idx fallback =
+    listGetAt idx >> Maybe.withDefault fallback
 
 
 minBy : (a -> comparable) -> a -> a -> a
