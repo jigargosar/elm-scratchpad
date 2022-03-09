@@ -636,12 +636,16 @@ instrumentNoteFromGP audioTime model ( _, y ) =
             noteName ++ fromInt noteOctaveNum
 
         _ =
-            --if pitch2 /= pitch then
-            --    Debug.todo
-            Debug.log "Debug: " ( ( y, octaveOffset ), pitch, pitch2 )
+            if pitch2 /= pitch then
+                let
+                    _ =
+                        Debug.log "Debug: " ( ( y, octaveOffset ), pitch, pitch2 )
+                in
+                Debug.todo "ERROR: ^^^"
 
-        --else
-        --    1
+            else
+                1
+
         noteNames =
             [ "C3"
             , "D3"
