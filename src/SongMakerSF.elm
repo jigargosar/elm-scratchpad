@@ -674,14 +674,6 @@ instrumentPitchesFromYS settings ys =
         |> List.filterMap identity
 
 
-
---instrumentNoteAtY : Float -> Model -> Int -> Maybe Note
---instrumentNoteAtY audioTime model y =
---    listGetAt y (instrumentPitches model.settings)
---        |> Debug.log "instrumentPitchAtY: "
---        |> Maybe.map (instrumentNoteFromPitch audioTime model)
-
-
 instrumentNoteFromPitch : Float -> Model -> String -> Note
 instrumentNoteFromPitch audioTime model pitch =
     let
