@@ -1207,7 +1207,7 @@ viewSettingsForm s =
                     |> lcrMap fromInt
                 )
             ]
-        , Html.label [] [ text "Scale: ", viewSelect [ "Major", "Minor", "Chromatic" ] ]
+        , Html.label [] [ text "Scale: ", viewSelect [ "Major" ] ]
         , Html.label []
             [ text "Start on: "
             , viewSelectLCR StartOctaveChanged
