@@ -701,8 +701,8 @@ stepDurationInMilli model =
     duration
 
 
-scheduleInstrumentNotes : Float -> Model -> List Int -> Cmd msg
-scheduleInstrumentNotes audioTime model ys =
+scheduleInstrumentNotesFromYS : Float -> Model -> List Int -> Cmd msg
+scheduleInstrumentNotesFromYS audioTime model ys =
     instrumentPitchesFromYS model.settings ys
         |> List.map (instrumentNoteFromPitch audioTime model)
         |> scheduleNotes
@@ -846,7 +846,7 @@ subscriptions _ =
 
 playInstrumentNoteAtGPCmd : Model -> Int2 -> Cmd msg
 playInstrumentNoteAtGPCmd model ( _, y ) =
-    scheduleInstrumentNotes model.audioTime model [ y ]
+    scheduleInstrumentNotesFromYS model.audioTime model [ y ]
 
 
 playPercussionNoteAtGPCmd : Model -> Int2 -> Cmd msg
@@ -871,7 +871,7 @@ scheduleCurrentStepAtEffect atAudioTime model =
         |> keep (first >> eq model.stepIndex)
         |> reject (second >> (\y -> y >= igh))
         |> List.map second
-        |> scheduleInstrumentNotes atAudioTime model
+        |> scheduleInstrumentNotesFromYS atAudioTime model
     , model.percussionPositions
         |> Set.filter (first >> eq model.stepIndex)
         |> Set.toList
