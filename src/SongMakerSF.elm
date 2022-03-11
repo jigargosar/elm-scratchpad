@@ -709,7 +709,6 @@ instrumentPitches settings =
 
         noteNames =
             noteClassesFromScale settings.scale
-                |> Debug.log "Debug: "
     in
     List.range octaveStart (octaveStart + settings.octaveRange - 1)
         |> List.map (\i -> List.map (\n -> (12 * (i + 1)) + n |> fromInt) noteNames)
