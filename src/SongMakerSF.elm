@@ -730,11 +730,8 @@ instrumentPitchesFromYS settings ys =
 instrumentPitches : Settings -> List String
 instrumentPitches settings =
     let
-        startNoteClass =
-            0
-
         noteClasses =
-            noteClassesForScaleStartingAt settings.scale startNoteClass
+            noteClassesForScaleStartingAt settings.scale settings.startNoteClass
 
         pitchesForOctaveNum o =
             List.map (\n -> (12 * o) + n |> fromInt) noteClasses
