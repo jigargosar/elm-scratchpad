@@ -562,9 +562,16 @@ type MusicScale
     = Major
 
 
+majorScaleToneIntervals : List ToneInterval
+majorScaleToneIntervals =
+    [ FullTone, FullTone, HalfTone, FullTone, FullTone, FullTone ]
+
+
 musicScaleLength : MusicScale -> Int
-musicScaleLength =
-    noteClassesFromScale >> List.length
+musicScaleLength ms =
+    case ms of
+        Major ->
+            (majorScaleToneIntervals |> List.length) + 1
 
 
 noteClassesFromScale : MusicScale -> List Int
@@ -601,10 +608,6 @@ toneIntervalToHalfTones ti =
 
         FullTone ->
             2
-
-
-majorScaleToneIntervals =
-    [ FullTone, FullTone, HalfTone, FullTone, FullTone, FullTone ]
 
 
 
