@@ -1292,9 +1292,14 @@ viewSettingsForm s =
                     |> Pivot.mapA octaveToString
                     |> lcrFromPivot
                 )
-            , viewSelectLCR StartNoteClassChanged
-                (lcrRange minStartNoteClass s.startNoteClass maxStartNoteClass
-                    |> lcrMap fromInt
+            , viewSelectLCR2 StartNoteClassChanged
+                ([ "C", "C#", "D", "D#", "E", "E#" ]
+                    |> List.indexedMap (\i t -> ( i, t ))
+                    |> List.drop 1
+                    |> Pivot.fromCons ( 0, "C" )
+                    |> withRollback (Pivot.firstWith (first >> eq s.startNoteClass))
+                    |> lcrFromPivot
+                    |> lcrMap (mapFirst fromInt)
                 )
             ]
         , Html.label []
@@ -1334,6 +1339,16 @@ viewSelectLCR msg lcr =
         (lcrMapCS
             (\c -> Html.option [ HA.selected True ] [ text c ])
             (\s -> Html.option [] [ text s ])
+            lcr
+            |> lcrToList
+        )
+
+
+viewSelectLCR2 msg lcr =
+    Html.select [ fontSize "20px", onInput msg ]
+        (lcrMapCS
+            (\( v, t ) -> Html.option [ HA.value v, HA.selected True ] [ text t ])
+            (\( v, t ) -> Html.option [ HA.value v ] [ text t ])
             lcr
             |> lcrToList
         )
