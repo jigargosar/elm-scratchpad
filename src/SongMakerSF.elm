@@ -591,10 +591,6 @@ pitchClassesForScaleStartingAt musicScale startPitchClass =
                 |> second
 
 
-
---[ 0, 2, 4, 5, 7, 9, 11 ]
-
-
 type ToneInterval
     = HalfTone
     | FullTone
@@ -608,21 +604,6 @@ toneIntervalToHalfTones ti =
 
         FullTone ->
             2
-
-
-
---noteNamesFromScale : MusicScale -> List String
---noteNamesFromScale s =
---    case s of
---        Major ->
---            [ "C"
---            , "D"
---            , "E"
---            , "F"
---            , "G"
---            , "A"
---            , "B"
---            ]
 
 
 initialSettingsV1 : Settings
