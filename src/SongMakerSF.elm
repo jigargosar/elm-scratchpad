@@ -701,20 +701,6 @@ stepDurationInMilli model =
     duration
 
 
-instrumentPitches : Settings -> List String
-instrumentPitches settings =
-    let
-        octaveStart =
-            startOctaveNum settings.startOctave settings.octaveRange
-
-        noteNames =
-            noteClassesFromScale settings.scale
-    in
-    List.range octaveStart (octaveStart + settings.octaveRange - 1)
-        |> List.map (\i -> List.map (\n -> (12 * (i + 1)) + n |> fromInt) noteNames)
-        |> List.concat
-
-
 scheduleInstrumentNotes : Float -> Model -> List Int -> Cmd msg
 scheduleInstrumentNotes audioTime model ys =
     instrumentPitchesFromYS model.settings ys
@@ -739,9 +725,18 @@ instrumentPitchesFromYS settings ys =
     List.map pitchAt ys
 
 
+instrumentPitches : Settings -> List String
+instrumentPitches settings =
+    let
+        octaveStart =
+            startOctaveNum settings.startOctave settings.octaveRange
 
---|> Debug.log "instrumentPitchesFromYS: "
---|> List.filterMap identity
+        noteNames =
+            noteClassesFromScale settings.scale
+    in
+    List.range octaveStart (octaveStart + settings.octaveRange - 1)
+        |> List.map (\i -> List.map (\n -> (12 * (i + 1)) + n |> fromInt) noteNames)
+        |> List.concat
 
 
 instrumentNoteFromPitch : Float -> Model -> String -> Note
