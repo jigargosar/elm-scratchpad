@@ -738,6 +738,26 @@ instrumentPitches settings =
         |> List.concat
 
 
+octaveNumbers : Octave -> Int -> List Int
+octaveNumbers centralOctave octaveRange =
+    let
+        centralOctaveNum =
+            octaveToInt centralOctave
+
+        start =
+            case octaveRange of
+                1 ->
+                    centralOctaveNum
+
+                _ ->
+                    centralOctaveNum - 1
+
+        end =
+            start + octaveRange - 1
+    in
+    List.range start end
+
+
 startOctaveNum : Octave -> Int -> Int
 startOctaveNum startOctave octaveRange =
     case octaveRange of
