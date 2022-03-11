@@ -1314,7 +1314,7 @@ viewSettingsForm s =
 
 startNoteClassSelectLCR : Int -> LCR ( String, String )
 startNoteClassSelectLCR startNoteClass =
-    [ "C", "C#", "D", "D#", "E", "E#" ]
+    [ "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" ]
         |> List.indexedMap (\i t -> ( i, t ))
         |> List.drop 1
         |> Pivot.fromCons ( 0, "C" )
