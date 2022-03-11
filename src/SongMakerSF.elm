@@ -564,8 +564,8 @@ musicScaleLength ms =
             (majorScaleToneIntervals |> List.length) + 1
 
 
-noteClassesForScaleStartingAt : MusicScale -> List Int
-noteClassesForScaleStartingAt musicScale =
+noteClassesForScaleStartingAt : MusicScale -> Int -> List Int
+noteClassesForScaleStartingAt musicScale startNoteClass =
     case musicScale of
         Major ->
             List.foldl
@@ -576,7 +576,7 @@ noteClassesForScaleStartingAt musicScale =
                     in
                     ( curr, acc ++ [ curr ] )
                 )
-                ( 0, [ 0 ] )
+                ( startNoteClass, [ startNoteClass ] )
                 majorScaleToneIntervals
                 |> second
 
@@ -727,8 +727,11 @@ instrumentPitchesFromYS settings ys =
 instrumentPitches : Settings -> List String
 instrumentPitches settings =
     let
+        startNoteClass =
+            1
+
         noteClasses =
-            noteClassesForScaleStartingAt settings.scale
+            noteClassesForScaleStartingAt settings.scale startNoteClass
 
         pitchesForOctaveNum o =
             List.map (\n -> (12 * o) + n |> fromInt) noteClasses
