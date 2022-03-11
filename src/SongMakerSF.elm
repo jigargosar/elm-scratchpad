@@ -291,6 +291,7 @@ settingsDecoder =
         |> jpRequired "beatSplits" JD.int
         |> jpHardcoded Major
         |> jpHardcoded Mid
+        |> jpHardcoded 0
         |> jpHardcoded 2
 
 
@@ -434,6 +435,7 @@ type alias Settings =
     , beatSplits : Int
     , scale : MusicScale
     , centralOctave : Octave
+    , startNoteClass : Int
     , octaveRange : Int
     }
 
@@ -622,6 +624,7 @@ initialSettingsV1 =
     , beatSplits = 2
     , scale = Major
     , centralOctave = Mid
+    , startNoteClass = 0
     , octaveRange = 2
     }
 
