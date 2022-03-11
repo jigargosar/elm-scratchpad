@@ -564,7 +564,7 @@ type MusicScale
 
 musicScaleLength : MusicScale -> Int
 musicScaleLength =
-    noteNamesFromScale >> List.length
+    noteClassesFromScale >> List.length
 
 
 noteClassesFromScale : MusicScale -> List Int
@@ -607,18 +607,19 @@ majorScaleToneIntervals =
     [ FullTone, FullTone, HalfTone, FullTone, FullTone, FullTone ]
 
 
-noteNamesFromScale : MusicScale -> List String
-noteNamesFromScale s =
-    case s of
-        Major ->
-            [ "C"
-            , "D"
-            , "E"
-            , "F"
-            , "G"
-            , "A"
-            , "B"
-            ]
+
+--noteNamesFromScale : MusicScale -> List String
+--noteNamesFromScale s =
+--    case s of
+--        Major ->
+--            [ "C"
+--            , "D"
+--            , "E"
+--            , "F"
+--            , "G"
+--            , "A"
+--            , "B"
+--            ]
 
 
 initialSettingsV1 : Settings
