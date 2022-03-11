@@ -741,7 +741,7 @@ midiOctaveNumbers : Octave -> Int -> List Int
 midiOctaveNumbers centralOctave octaveRange =
     let
         start =
-            startOctaveNum centralOctave octaveRange
+            startOctaveNumber centralOctave octaveRange
 
         end =
             start + octaveRange - 1
@@ -751,8 +751,8 @@ midiOctaveNumbers centralOctave octaveRange =
         |> List.map (add 1)
 
 
-startOctaveNum : Octave -> Int -> Int
-startOctaveNum centralOctave octaveRange =
+startOctaveNumber : Octave -> Int -> Int
+startOctaveNumber centralOctave octaveRange =
     case octaveRange of
         1 ->
             octaveToInt centralOctave
