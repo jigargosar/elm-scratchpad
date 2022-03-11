@@ -472,6 +472,14 @@ maxOctaveRange =
     3
 
 
+minStartNoteClass =
+    0
+
+
+maxStartNoteClass =
+    11
+
+
 computeGridWidth : Settings -> Int
 computeGridWidth s =
     totalSteps s
@@ -858,6 +866,7 @@ type Msg
     | BeatsPerBarChanged String
     | BeatSplitsChanged String
     | StartOctaveChanged String
+    | StartNoteClassChanged String
     | OctaveRangeChanged String
 
 
@@ -1106,8 +1115,14 @@ update msg model =
 
         StartOctaveChanged str ->
             updateSettingsForm2
-                (\startOctave s -> { s | centralOctave = startOctave })
+                (\v s -> { s | centralOctave = v })
                 (octaveFromString str)
+                model
+
+        StartNoteClassChanged str ->
+            updateSettingsForm2
+                (\v s -> { s | startNoteClass = v })
+                (String.toInt str |> Maybe.map (clamp minStartNoteClass maxStartNoteClass))
                 model
 
         OctaveRangeChanged str ->
@@ -1277,7 +1292,10 @@ viewSettingsForm s =
                     |> Pivot.mapA octaveToString
                     |> lcrFromPivot
                 )
-            , viewSelect [ "C" ]
+            , viewSelectLCR StartNoteClassChanged
+                (lcrRange minStartNoteClass s.startNoteClass maxStartNoteClass
+                    |> lcrMap fromInt
+                )
             ]
         , Html.label []
             [ text "Range (in Octave): "
