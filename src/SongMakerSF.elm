@@ -708,10 +708,11 @@ instrumentPitches settings =
             startOctaveNum settings.startOctave settings.octaveRange
 
         noteNames =
-            noteNamesFromScale settings.scale
+            noteClassesFromScale settings.scale
+                |> Debug.log "Debug: "
     in
     List.range octaveStart (octaveStart + settings.octaveRange - 1)
-        |> List.map (\i -> List.map (\n -> n ++ fromInt i) noteNames)
+        |> List.map (\i -> List.map (\n -> (12 * (i + 1)) + n |> fromInt) noteNames)
         |> List.concat
 
 
