@@ -571,7 +571,40 @@ noteClassesFromScale : MusicScale -> List Int
 noteClassesFromScale musicScale =
     case musicScale of
         Major ->
-            [ 0, 2, 4, 5, 7, 9, 11 ]
+            List.foldl
+                (\ti ( prev, acc ) ->
+                    let
+                        curr =
+                            prev + toneIntervalToHalfTones ti
+                    in
+                    ( curr, acc ++ [ curr ] )
+                )
+                ( 0, [ 0 ] )
+                majorScaleToneIntervals
+                |> second
+
+
+
+--[ 0, 2, 4, 5, 7, 9, 11 ]
+
+
+type ToneInterval
+    = HalfTone
+    | FullTone
+
+
+toneIntervalToHalfTones : ToneInterval -> number
+toneIntervalToHalfTones ti =
+    case ti of
+        HalfTone ->
+            1
+
+        FullTone ->
+            2
+
+
+majorScaleToneIntervals =
+    [ FullTone, FullTone, HalfTone, FullTone, FullTone, FullTone ]
 
 
 noteNamesFromScale : MusicScale -> List String
