@@ -435,7 +435,7 @@ type alias Settings =
     , beatSplits : Int
     , scale : MusicScale
     , centralOctave : Octave
-    , startNoteClass : Int
+    , startPitchClass : Int
     , octaveRange : Int
     }
 
@@ -472,11 +472,11 @@ maxOctaveRange =
     3
 
 
-minStartNoteClass =
+minStartPitchClass =
     0
 
 
-maxStartNoteClass =
+maxStartPitchClass =
     11
 
 
@@ -574,8 +574,8 @@ musicScaleLength ms =
             (majorScaleToneIntervals |> List.length) + 1
 
 
-noteClassesForScaleStartingAt : MusicScale -> Int -> List Int
-noteClassesForScaleStartingAt musicScale startNoteClass =
+pitchClassesForScaleStartingAt : MusicScale -> Int -> List Int
+pitchClassesForScaleStartingAt musicScale startPitchClass =
     case musicScale of
         Major ->
             List.foldl
@@ -586,7 +586,7 @@ noteClassesForScaleStartingAt musicScale startNoteClass =
                     in
                     ( curr, acc ++ [ curr ] )
                 )
-                ( startNoteClass, [ startNoteClass ] )
+                ( startPitchClass, [ startPitchClass ] )
                 majorScaleToneIntervals
                 |> second
 
@@ -632,7 +632,7 @@ initialSettingsV1 =
     , beatSplits = 2
     , scale = Major
     , centralOctave = Mid
-    , startNoteClass = 0
+    , startPitchClass = 0
     , octaveRange = 2
     }
 
@@ -738,11 +738,11 @@ instrumentPitchesFromYS settings ys =
 instrumentPitches : Settings -> List String
 instrumentPitches settings =
     let
-        noteClasses =
-            noteClassesForScaleStartingAt settings.scale settings.startNoteClass
+        pitchClasses =
+            pitchClassesForScaleStartingAt settings.scale settings.startPitchClass
 
         pitchesForOctaveNum o =
-            List.map (\n -> (12 * o) + n |> fromInt) noteClasses
+            List.map (\n -> (12 * o) + n |> fromInt) pitchClasses
     in
     midiOctaveNumbers settings.centralOctave settings.octaveRange
         |> List.concatMap pitchesForOctaveNum
@@ -866,7 +866,7 @@ type Msg
     | BeatsPerBarChanged String
     | BeatSplitsChanged String
     | StartOctaveChanged String
-    | StartNoteClassChanged String
+    | StartPitchClassChanged String
     | OctaveRangeChanged String
 
 
@@ -1119,10 +1119,10 @@ update msg model =
                 (octaveFromString str)
                 model
 
-        StartNoteClassChanged str ->
+        StartPitchClassChanged str ->
             updateSettingsForm2
-                (\v s -> { s | startNoteClass = v })
-                (String.toInt str |> Maybe.map (clamp minStartNoteClass maxStartNoteClass))
+                (\v s -> { s | startPitchClass = v })
+                (String.toInt str |> Maybe.map (clamp minStartPitchClass maxStartPitchClass))
                 model
 
         OctaveRangeChanged str ->
@@ -1292,7 +1292,7 @@ viewSettingsForm s =
                     |> Pivot.mapA octaveToString
                     |> lcrFromPivot
                 )
-            , viewSelectLCR2 StartNoteClassChanged (startNoteClassSelectLCR s.startNoteClass)
+            , viewSelectLCR2 StartPitchClassChanged (startPitchClassSelectLCR s.startPitchClass)
             ]
         , Html.label []
             [ text "Range (in Octave): "
@@ -1312,13 +1312,13 @@ viewSettingsForm s =
         ]
 
 
-startNoteClassSelectLCR : Int -> LCR ( String, String )
-startNoteClassSelectLCR startNoteClass =
+startPitchClassSelectLCR : Int -> LCR ( String, String )
+startPitchClassSelectLCR startPitchClass =
     [ "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" ]
         |> List.indexedMap (\i t -> ( i, t ))
         |> List.drop 1
         |> Pivot.fromCons ( 0, "C" )
-        |> withRollback (Pivot.firstWith (first >> eq startNoteClass))
+        |> withRollback (Pivot.firstWith (first >> eq startPitchClass))
         |> lcrFromPivot
         |> lcrMap (mapFirst fromInt)
 
