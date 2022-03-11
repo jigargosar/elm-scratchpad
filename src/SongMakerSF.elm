@@ -703,9 +703,14 @@ stepDurationInMilli model =
 
 scheduleInstrumentNotesFromYS : Float -> Model -> List Int -> Cmd msg
 scheduleInstrumentNotesFromYS audioTime model ys =
+    instrumentNotesFromYS audioTime model ys
+        |> scheduleNotes
+
+
+instrumentNotesFromYS : Float -> Model -> List Int -> List Note
+instrumentNotesFromYS audioTime model ys =
     instrumentPitchesFromYS model.settings ys
         |> List.map (instrumentNoteFromPitch audioTime model)
-        |> scheduleNotes
 
 
 instrumentPitchesFromYS : Settings -> List Int -> List String
