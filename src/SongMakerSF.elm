@@ -548,16 +548,6 @@ octaveToInt octave =
             5
 
 
-startOctaveNum : Octave -> Int -> Int
-startOctaveNum startOctave octaveRange =
-    case octaveRange of
-        1 ->
-            octaveToInt startOctave
-
-        _ ->
-            octaveToInt startOctave - 1
-
-
 type MusicScale
     = Major
 
@@ -746,6 +736,16 @@ instrumentPitches settings =
     List.range octaveStart (octaveStart + settings.octaveRange - 1)
         |> List.map (\i -> List.map (\n -> (12 * (i + 1)) + n |> fromInt) noteNames)
         |> List.concat
+
+
+startOctaveNum : Octave -> Int -> Int
+startOctaveNum startOctave octaveRange =
+    case octaveRange of
+        1 ->
+            octaveToInt startOctave
+
+        _ ->
+            octaveToInt startOctave - 1
 
 
 instrumentNoteFromPitch : Float -> Model -> String -> Note
