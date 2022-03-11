@@ -1292,15 +1292,7 @@ viewSettingsForm s =
                     |> Pivot.mapA octaveToString
                     |> lcrFromPivot
                 )
-            , viewSelectLCR2 StartNoteClassChanged
-                ([ "C", "C#", "D", "D#", "E", "E#" ]
-                    |> List.indexedMap (\i t -> ( i, t ))
-                    |> List.drop 1
-                    |> Pivot.fromCons ( 0, "C" )
-                    |> withRollback (Pivot.firstWith (first >> eq s.startNoteClass))
-                    |> lcrFromPivot
-                    |> lcrMap (mapFirst fromInt)
-                )
+            , viewSelectLCR2 StartNoteClassChanged (startNoteClassSelectLCR s.startNoteClass)
             ]
         , Html.label []
             [ text "Range (in Octave): "
@@ -1318,6 +1310,17 @@ viewSettingsForm s =
                 "Cancel"
             ]
         ]
+
+
+startNoteClassSelectLCR : Int -> LCR ( String, String )
+startNoteClassSelectLCR startNoteClass =
+    [ "C", "C#", "D", "D#", "E", "E#" ]
+        |> List.indexedMap (\i t -> ( i, t ))
+        |> List.drop 1
+        |> Pivot.fromCons ( 0, "C" )
+        |> withRollback (Pivot.firstWith (first >> eq startNoteClass))
+        |> lcrFromPivot
+        |> lcrMap (mapFirst fromInt)
 
 
 viewBtn aa s =
