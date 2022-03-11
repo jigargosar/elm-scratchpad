@@ -740,16 +740,8 @@ instrumentPitches settings =
 midiOctaveNumbers : Octave -> Int -> List Int
 midiOctaveNumbers centralOctave octaveRange =
     let
-        centralOctaveNum =
-            octaveToInt centralOctave
-
         start =
-            case octaveRange of
-                1 ->
-                    centralOctaveNum
-
-                _ ->
-                    centralOctaveNum - 1
+            startOctaveNum centralOctave octaveRange
 
         end =
             start + octaveRange - 1
@@ -760,13 +752,13 @@ midiOctaveNumbers centralOctave octaveRange =
 
 
 startOctaveNum : Octave -> Int -> Int
-startOctaveNum startOctave octaveRange =
+startOctaveNum centralOctave octaveRange =
     case octaveRange of
         1 ->
-            octaveToInt startOctave
+            octaveToInt centralOctave
 
         _ ->
-            octaveToInt startOctave - 1
+            octaveToInt centralOctave - 1
 
 
 instrumentNoteFromPitch : Float -> Model -> String -> Note
