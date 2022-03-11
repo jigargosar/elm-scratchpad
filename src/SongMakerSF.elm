@@ -567,6 +567,13 @@ musicScaleLength =
     noteNamesFromScale >> List.length
 
 
+noteClassesFromScale : MusicScale -> List Int
+noteClassesFromScale musicScale =
+    case musicScale of
+        Major ->
+            [ 0, 2, 4, 5, 7, 9, 11 ]
+
+
 noteNamesFromScale : MusicScale -> List String
 noteNamesFromScale s =
     case s of
