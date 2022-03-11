@@ -747,7 +747,7 @@ midiOctaveNumbers centralOctave octaveRange =
             start + octaveRange - 1
     in
     List.range start end
-        -- midi octaves start from -1
+        -- NOTE: midi octaves start from -1
         |> List.map (add 1)
 
 
