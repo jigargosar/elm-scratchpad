@@ -433,7 +433,7 @@ type alias Settings =
     , beatsPerBar : Int
     , beatSplits : Int
     , scale : MusicScale
-    , startOctave : Octave
+    , centralOctave : Octave
     , octaveRange : Int
     }
 
@@ -621,7 +621,7 @@ initialSettingsV1 =
     , beatsPerBar = 4
     , beatSplits = 2
     , scale = Major
-    , startOctave = Mid
+    , centralOctave = Mid
     , octaveRange = 2
     }
 
@@ -728,7 +728,7 @@ instrumentPitches : Settings -> List String
 instrumentPitches settings =
     let
         octaveStart =
-            startOctaveNum settings.startOctave settings.octaveRange
+            startOctaveNum settings.centralOctave settings.octaveRange
 
         noteNames =
             noteClassesFromScale settings.scale
@@ -1090,7 +1090,7 @@ update msg model =
 
         StartOctaveChanged str ->
             updateSettingsForm2
-                (\startOctave s -> { s | startOctave = startOctave })
+                (\startOctave s -> { s | centralOctave = startOctave })
                 (octaveFromString str)
                 model
 
@@ -1257,7 +1257,7 @@ viewSettingsForm s =
             [ text "Start on: "
             , viewSelectLCR StartOctaveChanged
                 (Pivot.fromCons Low [ Mid, High ]
-                    |> withRollback (Pivot.firstWith (eq s.startOctave))
+                    |> withRollback (Pivot.firstWith (eq s.centralOctave))
                     |> Pivot.mapA octaveToString
                     |> lcrFromPivot
                 )
