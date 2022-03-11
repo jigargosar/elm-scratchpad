@@ -728,7 +728,7 @@ instrumentPitches : Settings -> List String
 instrumentPitches settings =
     let
         startNoteClass =
-            1
+            0
 
         noteClasses =
             noteClassesForScaleStartingAt settings.scale startNoteClass
