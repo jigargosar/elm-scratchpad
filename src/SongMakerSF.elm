@@ -38,6 +38,7 @@ import Utils exposing (..)
     * [x] chromatic scale
     * Undo
     * Save
+    * pentatonic scale
 
 
 
