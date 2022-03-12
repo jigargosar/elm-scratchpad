@@ -42,6 +42,7 @@ import Utils exposing (..)
     * instrument/percussion backend
     * chromatic scale colors
     * percussion grid visuals
+    * additional settings persistence
 
 
 
