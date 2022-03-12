@@ -561,6 +561,7 @@ octaveToInt octave =
 
 type MusicScale
     = Major
+    | Chromatic
 
 
 majorScaleToneIntervals : List ToneInterval
@@ -572,7 +573,10 @@ musicScaleLength : MusicScale -> Int
 musicScaleLength ms =
     case ms of
         Major ->
-            (majorScaleToneIntervals |> List.length) + 1
+            7
+
+        Chromatic ->
+            12
 
 
 pitchClassesForScaleStartingAt : MusicScale -> Int -> List Int
@@ -590,6 +594,10 @@ pitchClassesForScaleStartingAt musicScale startPitchClass =
                 ( startPitchClass, [ startPitchClass ] )
                 majorScaleToneIntervals
                 |> second
+
+        Chromatic ->
+            List.range 0 11
+                |> List.map (add startPitchClass)
 
 
 type ToneInterval
@@ -1536,13 +1544,33 @@ resizeXPositions from to =
 resizeYPositions : Settings -> Settings -> PaintedPositions -> PaintedPositions
 resizeYPositions from to pp =
     case ( from.scale, to.scale ) of
-        ( Major, Major ) ->
+        ( Major, Chromatic ) ->
+            Set.map (mapSecond majorToChromatic) pp
+
+        ( Chromatic, Major ) ->
+            Set.foldl
+                (\( x, y ) acc ->
+                    case chromaticToMajor y of
+                        Nothing ->
+                            acc
+
+                        Just ny ->
+                            Set.insert ( x, ny ) acc
+                )
+                Set.empty
+                pp
+
+        _ ->
             pp
+
+
+majorToChromaticList =
+    [ 0, 2, 4, 5, 7, 9, 11 ]
 
 
 chromaticToMajor : Int -> Maybe Int
 chromaticToMajor y =
-    [ 0, 2, 4, 5, 7, 9, 11 ]
+    majorToChromaticList
         |> List.Extra.elemIndex y
 
 
@@ -1556,7 +1584,7 @@ majorToChromatic y =
             modBy 7 y
 
         chromaticScaleOffset =
-            listGetAt majorScaleOffset [ 0, 2, 4, 5, 7, 9, 11 ]
+            listGetAt majorScaleOffset majorToChromaticList
                 |> Maybe.withDefault 0
     in
     octaveOffset * 12 + chromaticScaleOffset
