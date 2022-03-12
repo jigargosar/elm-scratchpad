@@ -1587,16 +1587,7 @@ resizeYPositions from to pp =
             Set.map (mapSecond majorToChromatic) pp
 
         ( Chromatic, Major ) ->
-            Set.foldl
-                (\( x, y ) acc ->
-                    case chromaticToMajor y of
-                        Nothing ->
-                            acc
-
-                        Just ny ->
-                            Set.insert ( x, ny ) acc
-                )
-                Set.empty
+            setFilterMap (filterMapSecond chromaticToMajor)
                 pp
 
         _ ->

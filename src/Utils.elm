@@ -16,7 +16,7 @@ import Json.Decode.Pipeline as JP
 import Random exposing (Generator)
 import Random.Char
 import Random.Extra
-import Set
+import Set exposing (Set)
 import Svg
 import Svg.Attributes as SA
 import Svg.Keyed
@@ -1525,6 +1525,18 @@ first =
     Tuple.first
 
 
+second =
+    Tuple.second
+
+
+mapSecond =
+    Tuple.mapSecond
+
+
+mapFirst =
+    Tuple.mapFirst
+
+
 mapBoth =
     Tuple.mapBoth
 
@@ -1538,47 +1550,14 @@ mapEach fn =
     mapBoth fn fn
 
 
+filterMapSecond : (b -> Maybe c) -> ( a, b ) -> Maybe ( a, c )
+filterMapSecond fn ( a, b ) =
+    fn b |> Maybe.map (pair a)
+
+
 toFloat2 : Int2 -> Float2
 toFloat2 =
     mapEach toFloat
-
-
-second =
-    Tuple.second
-
-
-keep : (a -> Bool) -> List a -> List a
-keep =
-    List.filter
-
-
-reject : (a -> Bool) -> List a -> List a
-reject fn =
-    keep (fn >> not)
-
-
-uncons : List a -> Maybe ( a, List a )
-uncons xs =
-    case xs of
-        h :: t ->
-            Just ( h, t )
-
-        _ ->
-            Nothing
-
-
-cons =
-    (::)
-
-
-headOfSingleton : List a -> Maybe a
-headOfSingleton list =
-    case list of
-        h :: [] ->
-            Just h
-
-        _ ->
-            Nothing
 
 
 {-| Only when `from` is member and `to` is not member.
@@ -1625,17 +1604,9 @@ renameKey fn =
     Dict.toList >> List.map (Tuple.mapFirst fn) >> Dict.fromList
 
 
-mapSecond =
-    Tuple.mapSecond
-
-
 dictGet2 : comparable -> comparable -> Dict comparable v -> Maybe ( v, v )
 dictGet2 a b dict =
     Maybe.map2 Tuple.pair (Dict.get a dict) (Dict.get b dict)
-
-
-mapFirst =
-    Tuple.mapFirst
 
 
 withRollback : (a -> Maybe a) -> a -> a
@@ -1972,6 +1943,40 @@ getInDict dict key =
 
 
 -- LIST HELPERS
+
+
+keep : (a -> Bool) -> List a -> List a
+keep =
+    List.filter
+
+
+reject : (a -> Bool) -> List a -> List a
+reject fn =
+    keep (fn >> not)
+
+
+uncons : List a -> Maybe ( a, List a )
+uncons xs =
+    case xs of
+        h :: t ->
+            Just ( h, t )
+
+        _ ->
+            Nothing
+
+
+cons =
+    (::)
+
+
+headOfSingleton : List a -> Maybe a
+headOfSingleton list =
+    case list of
+        h :: [] ->
+            Just h
+
+        _ ->
+            Nothing
 
 
 listLast =
@@ -2524,3 +2529,21 @@ jpOptional field decoder fallback =
 jpHardcoded : a -> Decoder (a -> b) -> Decoder b
 jpHardcoded a =
     JD.map2 (|>) (JD.succeed a)
+
+
+
+-- SET UTILS
+
+
+setFilterMap : (a -> Maybe comparable) -> Set a -> Set comparable
+setFilterMap fn =
+    Set.foldl
+        (\v acc ->
+            case fn v of
+                Nothing ->
+                    acc
+
+                Just nv ->
+                    Set.insert nv acc
+        )
+        Set.empty
