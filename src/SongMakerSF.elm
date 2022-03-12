@@ -39,9 +39,6 @@ import Utils exposing (..)
     --
     * Undo
         * reset on navigation
-        * include ?
-            * painted positions
-            * settings
         * introduce undo pivot and explicitly add changes in every message.
 
     * percussion grid visuals
