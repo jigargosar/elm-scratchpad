@@ -39,7 +39,10 @@ import Utils exposing (..)
     --
     * Undo
         * reset on navigation
-        * settings to include
+        * include ?
+            * painted positions
+            * settings
+
     * percussion grid visuals
     --
     * Save btn
