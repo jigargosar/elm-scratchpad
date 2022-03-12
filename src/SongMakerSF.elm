@@ -1082,7 +1082,7 @@ update msg model =
                                 model.settings
                                 newSettings
                                 model.instrumentPositions
-                                |> resizeYPositions
+                                |> remapYPositions
                                     model.settings
                                     newSettings
                         , percussionPositions =
@@ -1580,8 +1580,8 @@ resizeXPositions from to =
         >> resizeBarsToPaintedPositions to
 
 
-resizeYPositions : Settings -> Settings -> PaintedPositions -> PaintedPositions
-resizeYPositions from to pp =
+remapYPositions : Settings -> Settings -> PaintedPositions -> PaintedPositions
+remapYPositions from to pp =
     case ( from.scale, to.scale ) of
         ( Major, Chromatic ) ->
             Set.map (mapSecond majorToChromatic) pp
