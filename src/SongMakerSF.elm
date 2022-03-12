@@ -4,6 +4,7 @@ import Browser.Dom
 import Browser.Navigation exposing (Key)
 import Html
 import Html.Attributes as HA
+import Html.Lazy
 import Json.Decode as JD exposing (Decoder)
 import Json.Encode as JE exposing (Value)
 import List.Extra
@@ -1201,7 +1202,7 @@ viewDocument model =
                 view model
 
             Just s ->
-                viewSettingsForm s
+                Html.Lazy.lazy viewSettingsForm s
         ]
 
 
@@ -1273,7 +1274,8 @@ viewSettingsForm s =
                     |> Pivot.mapA octaveToString
                     |> lcrFromPivot
                 )
-            , viewSelectLCR2 StartPitchClassChanged (startPitchClassSelectLCR s.startPitchClass)
+            , viewSelectLCR2 StartPitchClassChanged
+                (startPitchClassSelectLCR s.startPitchClass)
             ]
         , Html.label []
             [ text "Range (in Octave): "
