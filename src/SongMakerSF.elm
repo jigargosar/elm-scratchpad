@@ -1050,6 +1050,9 @@ update msg model =
                                 model.settings
                                 newSettings
                                 model.instrumentPositions
+                                |> resizeYPositions
+                                    model.settings
+                                    newSettings
                         , percussionPositions =
                             resizeXPositions
                                 model.settings
@@ -1528,6 +1531,35 @@ resizeXPositions : Settings -> Settings -> PaintedPositions -> PaintedPositions
 resizeXPositions from to =
     paintedPositionsToBars from
         >> resizeBarsToPaintedPositions to
+
+
+resizeYPositions : Settings -> Settings -> PaintedPositions -> PaintedPositions
+resizeYPositions from to pp =
+    case ( from.scale, to.scale ) of
+        ( Major, Major ) ->
+            pp
+
+
+chromaticToMajor : Int -> Maybe Int
+chromaticToMajor y =
+    [ 0, 2, 4, 5, 7, 9, 11 ]
+        |> List.Extra.elemIndex y
+
+
+majorToChromatic : Int -> Int
+majorToChromatic y =
+    let
+        octaveOffset =
+            y // 7
+
+        majorScaleOffset =
+            modBy 7 y
+
+        chromaticScaleOffset =
+            listGetAt majorScaleOffset [ 0, 2, 4, 5, 7, 9, 11 ]
+                |> Maybe.withDefault 0
+    in
+    octaveOffset * 12 + chromaticScaleOffset
 
 
 paintedPositionsToBars : Settings -> PaintedPositions -> List Bar
