@@ -1692,13 +1692,13 @@ resizeBarsToPaintedPositions settings bars =
                 >> List.concat
                 >> Set.fromList
     in
-    List.map (listResize emptyBeat settings.beatsPerBar) bars
-        |> listResize [] settings.bars
+    List.map (listPadRight emptyBeat settings.beatsPerBar) bars
+        |> listPadRight [] settings.bars
         |> barsToPaintedPositions
 
 
-listResize : a -> Int -> List a -> List a
-listResize default toLength list =
+listPadRight : a -> Int -> List a -> List a
+listPadRight default toLength list =
     let
         fromLength =
             List.length list
