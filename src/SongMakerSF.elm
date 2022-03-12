@@ -36,8 +36,10 @@ import Utils exposing (..)
     * [x] Update player on tempo/settings change
     * [x] start noteName
     * [x] chromatic scale
+    --
     * percussion grid visuals
     * Undo
+    --
     * Save btn
     * pentatonic scale
     * instrument/percussion backend
