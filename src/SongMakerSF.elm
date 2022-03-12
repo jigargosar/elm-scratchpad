@@ -1697,23 +1697,6 @@ resizeBarsToPaintedPositions settings bars =
         |> barsToPaintedPositions
 
 
-listPadRight : a -> Int -> List a -> List a
-listPadRight default toLength list =
-    let
-        fromLength =
-            List.length list
-    in
-    case compare fromLength toLength of
-        LT ->
-            list ++ List.repeat (toLength - fromLength) default
-
-        EQ ->
-            list
-
-        GT ->
-            List.take toLength list
-
-
 styleGridTemplate : Int -> Int -> Attribute msg
 styleGridTemplate w h =
     style "grid-template"
