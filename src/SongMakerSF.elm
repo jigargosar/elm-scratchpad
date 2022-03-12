@@ -37,7 +37,9 @@ import Utils exposing (..)
     * [x] start noteName
     * [x] chromatic scale
     --
-    * Undo (reset on navigation)
+    * Undo
+        * reset on navigation
+        * settings to include
     * percussion grid visuals
     --
     * Save btn
