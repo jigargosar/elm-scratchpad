@@ -564,6 +564,29 @@ type MusicScale
     | Chromatic
 
 
+scaleFromString : String -> Maybe MusicScale
+scaleFromString s =
+    case s of
+        "Major" ->
+            Just Major
+
+        "Chromatic" ->
+            Just Chromatic
+
+        _ ->
+            Nothing
+
+
+scaleToString : MusicScale -> String
+scaleToString musicScale =
+    case musicScale of
+        Major ->
+            "Major"
+
+        Chromatic ->
+            "Chromatic"
+
+
 majorScaleToneIntervals : List ToneInterval
 majorScaleToneIntervals =
     [ FullTone, FullTone, HalfTone, FullTone, FullTone, FullTone ]
@@ -855,6 +878,7 @@ type Msg
     | BarCountChanged String
     | BeatsPerBarChanged String
     | BeatSplitsChanged String
+    | ScaleChanged String
     | CentralOctaveChanged String
     | StartPitchClassChanged String
     | OctaveRangeChanged String
@@ -1106,6 +1130,12 @@ update msg model =
                 )
                 model
 
+        ScaleChanged str ->
+            updateSettingsForm2
+                (\v s -> { s | scale = v })
+                (scaleFromString str)
+                model
+
         CentralOctaveChanged str ->
             updateSettingsForm2
                 (\v s -> { s | centralOctave = v })
@@ -1276,7 +1306,15 @@ viewSettingsForm s =
                     |> lcrMap fromInt
                 )
             ]
-        , Html.label [] [ text "Scale: ", viewSelect [ "Major" ] ]
+        , Html.label []
+            [ text "Scale: "
+            , viewSelectLCR ScaleChanged
+                (Pivot.fromCons Major [ Chromatic ]
+                    |> withRollback (Pivot.firstWith (eq s.scale))
+                    |> Pivot.mapA scaleToString
+                    |> lcrFromPivot
+                )
+            ]
         , Html.label []
             [ text "Start on: "
             , viewSelectLCR CentralOctaveChanged
@@ -1327,8 +1365,9 @@ viewBtn aa s =
         [ text s ]
 
 
-viewSelect l =
-    Html.select [ fontSize "20px" ] (l |> List.map (\s -> Html.option [] [ text s ]))
+
+--viewSelect l =
+--    Html.select [ fontSize "20px" ] (l |> List.map (\s -> Html.option [] [ text s ]))
 
 
 viewSelectLCR msg lcr =
@@ -1570,8 +1609,15 @@ majorToChromaticList =
 
 chromaticToMajor : Int -> Maybe Int
 chromaticToMajor y =
-    majorToChromaticList
-        |> List.Extra.elemIndex y
+    let
+        octaveOffset =
+            y // 12
+
+        chromaticScaleOffset =
+            modBy 12 y
+    in
+    List.Extra.elemIndex chromaticScaleOffset majorToChromaticList
+        |> Maybe.map (add (octaveOffset * 7))
 
 
 majorToChromatic : Int -> Int
