@@ -733,7 +733,7 @@ midiOctaveNumbers : Octave -> Int -> List Int
 midiOctaveNumbers centralOctave octaveRange =
     let
         start =
-            startOctaveNumber centralOctave octaveRange
+            centralOctaveNumber centralOctave octaveRange
 
         end =
             start + octaveRange - 1
@@ -743,8 +743,8 @@ midiOctaveNumbers centralOctave octaveRange =
         |> List.map (add 1)
 
 
-startOctaveNumber : Octave -> Int -> Int
-startOctaveNumber centralOctave octaveRange =
+centralOctaveNumber : Octave -> Int -> Int
+centralOctaveNumber centralOctave octaveRange =
     case octaveRange of
         1 ->
             octaveToInt centralOctave
@@ -846,7 +846,7 @@ type Msg
     | BarCountChanged String
     | BeatsPerBarChanged String
     | BeatSplitsChanged String
-    | StartOctaveChanged String
+    | CentralOctaveChanged String
     | StartPitchClassChanged String
     | OctaveRangeChanged String
 
@@ -1094,7 +1094,7 @@ update msg model =
                 )
                 model
 
-        StartOctaveChanged str ->
+        CentralOctaveChanged str ->
             updateSettingsForm2
                 (\v s -> { s | centralOctave = v })
                 (octaveFromString str)
@@ -1267,7 +1267,7 @@ viewSettingsForm s =
         , Html.label [] [ text "Scale: ", viewSelect [ "Major" ] ]
         , Html.label []
             [ text "Start on: "
-            , viewSelectLCR StartOctaveChanged
+            , viewSelectLCR CentralOctaveChanged
                 (Pivot.fromCons Low [ Mid, High ]
                     |> withRollback (Pivot.firstWith (eq s.centralOctave))
                     |> Pivot.mapA octaveToString
