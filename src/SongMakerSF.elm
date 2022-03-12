@@ -34,7 +34,8 @@ import Utils exposing (..)
         * [x] Tempo
         * [x] Settings
     * [x] Update player on tempo/settings change
-    * start noteName
+    * [x] start noteName
+    * [x] chromatic scale
     * Undo
     * Save
 
