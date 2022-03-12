@@ -1365,11 +1365,6 @@ viewBtn aa s =
         [ text s ]
 
 
-
---viewSelect l =
---    Html.select [ fontSize "20px" ] (l |> List.map (\s -> Html.option [] [ text s ]))
-
-
 viewSelectLCR msg lcr =
     Html.select [ fontSize "20px", onInput msg ]
         (lcrMapCS
