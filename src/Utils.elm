@@ -13,6 +13,7 @@ import Html.Attributes as HA
 import Html.Events
 import Json.Decode as JD exposing (Decoder)
 import Json.Decode.Pipeline as JP
+import List.Extra
 import Random exposing (Generator)
 import Random.Char
 import Random.Extra
@@ -1977,6 +1978,14 @@ headOfSingleton list =
 
         _ ->
             Nothing
+
+
+indexOf =
+    List.Extra.elemIndex
+
+
+findIndex =
+    List.Extra.findIndex
 
 
 listLast =
