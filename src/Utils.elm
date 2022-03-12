@@ -14,6 +14,7 @@ import Html.Events
 import Json.Decode as JD exposing (Decoder)
 import Json.Decode.Pipeline as JP
 import List.Extra
+import Pivot exposing (Pivot)
 import Random exposing (Generator)
 import Random.Char
 import Random.Extra
@@ -2573,3 +2574,39 @@ setFilterMap fn =
                     Set.insert nv acc
         )
         Set.empty
+
+
+
+-- LCR UTILS
+
+
+type alias LCR a =
+    ( List a, a, List a )
+
+
+lcrToList : LCR a -> List a
+lcrToList ( l, c, r ) =
+    l ++ c :: r
+
+
+lcrMap : (a -> b) -> LCR a -> LCR b
+lcrMap fn ( l, c, r ) =
+    ( List.map fn l, fn c, List.map fn r )
+
+
+lcrMapCS : (a -> b) -> (a -> b) -> LCR a -> LCR b
+lcrMapCS fc fs ( l, c, r ) =
+    ( List.map fs l, fc c, List.map fs r )
+
+
+lcrRange : Int -> Int -> Int -> LCR Int
+lcrRange lo c hi =
+    ( List.range lo (c - 1)
+    , c
+    , List.range (c + 1) hi
+    )
+
+
+lcrFromPivot : Pivot a -> LCR a
+lcrFromPivot p =
+    ( Pivot.getL p, Pivot.getC p, Pivot.getR p )

@@ -1233,6 +1233,151 @@ updateAfterAudioTimeReceived model =
                 ( model, Cmd.none )
 
 
+type alias BeatSplit =
+    List Int
+
+
+type alias Beat =
+    ( ( BeatSplit, BeatSplit ), ( BeatSplit, BeatSplit ) )
+
+
+emptyBeat : Beat
+emptyBeat =
+    ( ( [], [] ), ( [], [] ) )
+
+
+type alias Bar =
+    List Beat
+
+
+remapXPositions : Settings -> Settings -> PaintedPositions -> PaintedPositions
+remapXPositions from to =
+    paintedPositionsToBars from
+        >> resizeBarsToPaintedPositions to
+
+
+remapYPositions : Settings -> Settings -> PaintedPositions -> PaintedPositions
+remapYPositions from to pp =
+    case ( from.scale, to.scale ) of
+        ( Major, Chromatic ) ->
+            Set.map (mapSecond majorToChromatic) pp
+
+        ( Chromatic, Major ) ->
+            setFilterMap (filterMapSecond chromaticToMajor)
+                pp
+
+        _ ->
+            pp
+
+
+chromaticOffsetsOfMajorScale : List Int
+chromaticOffsetsOfMajorScale =
+    [ 0, 2, 4, 5, 7, 9, 11 ]
+
+
+chromaticToMajor : Int -> Maybe Int
+chromaticToMajor y =
+    let
+        octaveOffset =
+            y // 12
+
+        chromaticScaleOffset =
+            modBy 12 y
+    in
+    List.Extra.elemIndex chromaticScaleOffset chromaticOffsetsOfMajorScale
+        |> Maybe.map (add (octaveOffset * 7))
+
+
+majorToChromatic : Int -> Int
+majorToChromatic y =
+    let
+        octaveOffset =
+            y // 7
+
+        majorScaleOffset =
+            modBy 7 y
+
+        chromaticScaleOffset =
+            listGetAt majorScaleOffset chromaticOffsetsOfMajorScale
+                |> Maybe.withDefault 0
+    in
+    octaveOffset * 12 + chromaticScaleOffset
+
+
+paintedPositionsToBars : Settings -> PaintedPositions -> List Bar
+paintedPositionsToBars settings pp =
+    let
+        ll : List Int2
+        ll =
+            Set.toList pp
+
+        beatSplitAtX : Int -> BeatSplit
+        beatSplitAtX x =
+            List.filter (first >> eq x) ll |> List.map second
+
+        beatSplits : List BeatSplit
+        beatSplits =
+            List.range 0 (totalBeatSplits settings)
+                |> List.map beatSplitAtX
+
+        beatFromBeatSplits : List BeatSplit -> Beat
+        beatFromBeatSplits splits =
+            case splits of
+                first :: second :: [] ->
+                    ( ( first, [] ), ( second, [] ) )
+
+                first :: second :: third :: [] ->
+                    ( ( first, second ), ( third, [] ) )
+
+                first :: second :: third :: fourth :: [] ->
+                    ( ( first, second ), ( third, fourth ) )
+
+                _ ->
+                    emptyBeat
+
+        beats : List Beat
+        beats =
+            List.Extra.groupsOf settings.beatSplits beatSplits
+                |> List.map beatFromBeatSplits
+
+        bars : List Bar
+        bars =
+            List.Extra.groupsOf settings.bars beats
+    in
+    bars
+
+
+resizeBarsToPaintedPositions : Settings -> List Bar -> PaintedPositions
+resizeBarsToPaintedPositions settings bars =
+    let
+        beatToBeatSplits : Beat -> List BeatSplit
+        beatToBeatSplits ( ( first, second ), ( third, fourth ) ) =
+            case settings.beatSplits of
+                2 ->
+                    [ first, third ]
+
+                3 ->
+                    [ first, second, third ]
+
+                4 ->
+                    [ first, second, third, fourth ]
+
+                _ ->
+                    []
+
+        barsToPaintedPositions : List Bar -> PaintedPositions
+        barsToPaintedPositions =
+            List.concat
+                >> List.concatMap beatToBeatSplits
+                >> List.indexedMap (\x -> List.map (pair x))
+                >> List.concat
+                >> Set.fromList
+    in
+    List.map (listPadRight emptyBeat settings.beatsPerBar) bars
+        |> listPadRight [] settings.bars
+        |> barsToPaintedPositions
+
+
 viewDocument : Model -> Document Msg
 viewDocument model =
     Document "Song Maker"
@@ -1245,38 +1390,6 @@ viewDocument model =
             Just s ->
                 Html.Lazy.lazy viewSettingsForm s
         ]
-
-
-type alias LCR a =
-    ( List a, a, List a )
-
-
-lcrToList : LCR a -> List a
-lcrToList ( l, c, r ) =
-    l ++ c :: r
-
-
-lcrMap : (a -> b) -> LCR a -> LCR b
-lcrMap fn ( l, c, r ) =
-    ( List.map fn l, fn c, List.map fn r )
-
-
-lcrMapCS : (a -> b) -> (a -> b) -> LCR a -> LCR b
-lcrMapCS fc fs ( l, c, r ) =
-    ( List.map fs l, fc c, List.map fs r )
-
-
-lcrRange : Int -> Int -> Int -> LCR Int
-lcrRange lo c hi =
-    ( List.range lo (c - 1)
-    , c
-    , List.range (c + 1) hi
-    )
-
-
-lcrFromPivot : Pivot a -> LCR a
-lcrFromPivot p =
-    ( Pivot.getL p, Pivot.getC p, Pivot.getR p )
 
 
 viewSettingsForm : Settings -> Html Msg
@@ -1550,151 +1663,6 @@ viewPercussionGridLines s =
             )
         ]
         []
-
-
-type alias BeatSplit =
-    List Int
-
-
-type alias Beat =
-    ( ( BeatSplit, BeatSplit ), ( BeatSplit, BeatSplit ) )
-
-
-emptyBeat : Beat
-emptyBeat =
-    ( ( [], [] ), ( [], [] ) )
-
-
-type alias Bar =
-    List Beat
-
-
-remapXPositions : Settings -> Settings -> PaintedPositions -> PaintedPositions
-remapXPositions from to =
-    paintedPositionsToBars from
-        >> resizeBarsToPaintedPositions to
-
-
-remapYPositions : Settings -> Settings -> PaintedPositions -> PaintedPositions
-remapYPositions from to pp =
-    case ( from.scale, to.scale ) of
-        ( Major, Chromatic ) ->
-            Set.map (mapSecond majorToChromatic) pp
-
-        ( Chromatic, Major ) ->
-            setFilterMap (filterMapSecond chromaticToMajor)
-                pp
-
-        _ ->
-            pp
-
-
-chromaticOffsetsOfMajorScale : List Int
-chromaticOffsetsOfMajorScale =
-    [ 0, 2, 4, 5, 7, 9, 11 ]
-
-
-chromaticToMajor : Int -> Maybe Int
-chromaticToMajor y =
-    let
-        octaveOffset =
-            y // 12
-
-        chromaticScaleOffset =
-            modBy 12 y
-    in
-    List.Extra.elemIndex chromaticScaleOffset chromaticOffsetsOfMajorScale
-        |> Maybe.map (add (octaveOffset * 7))
-
-
-majorToChromatic : Int -> Int
-majorToChromatic y =
-    let
-        octaveOffset =
-            y // 7
-
-        majorScaleOffset =
-            modBy 7 y
-
-        chromaticScaleOffset =
-            listGetAt majorScaleOffset chromaticOffsetsOfMajorScale
-                |> Maybe.withDefault 0
-    in
-    octaveOffset * 12 + chromaticScaleOffset
-
-
-paintedPositionsToBars : Settings -> PaintedPositions -> List Bar
-paintedPositionsToBars settings pp =
-    let
-        ll : List Int2
-        ll =
-            Set.toList pp
-
-        beatSplitAtX : Int -> BeatSplit
-        beatSplitAtX x =
-            List.filter (first >> eq x) ll |> List.map second
-
-        beatSplits : List BeatSplit
-        beatSplits =
-            List.range 0 (totalBeatSplits settings)
-                |> List.map beatSplitAtX
-
-        beatFromBeatSplits : List BeatSplit -> Beat
-        beatFromBeatSplits splits =
-            case splits of
-                first :: second :: [] ->
-                    ( ( first, [] ), ( second, [] ) )
-
-                first :: second :: third :: [] ->
-                    ( ( first, second ), ( third, [] ) )
-
-                first :: second :: third :: fourth :: [] ->
-                    ( ( first, second ), ( third, fourth ) )
-
-                _ ->
-                    emptyBeat
-
-        beats : List Beat
-        beats =
-            List.Extra.groupsOf settings.beatSplits beatSplits
-                |> List.map beatFromBeatSplits
-
-        bars : List Bar
-        bars =
-            List.Extra.groupsOf settings.bars beats
-    in
-    bars
-
-
-resizeBarsToPaintedPositions : Settings -> List Bar -> PaintedPositions
-resizeBarsToPaintedPositions settings bars =
-    let
-        beatToBeatSplits : Beat -> List BeatSplit
-        beatToBeatSplits ( ( first, second ), ( third, fourth ) ) =
-            case settings.beatSplits of
-                2 ->
-                    [ first, third ]
-
-                3 ->
-                    [ first, second, third ]
-
-                4 ->
-                    [ first, second, third, fourth ]
-
-                _ ->
-                    []
-
-        barsToPaintedPositions : List Bar -> PaintedPositions
-        barsToPaintedPositions =
-            List.concat
-                >> List.concatMap beatToBeatSplits
-                >> List.indexedMap (\x -> List.map (pair x))
-                >> List.concat
-                >> Set.fromList
-    in
-    List.map (listPadRight emptyBeat settings.beatsPerBar) bars
-        |> listPadRight [] settings.bars
-        |> barsToPaintedPositions
 
 
 styleGridTemplate : Int -> Int -> Attribute msg
