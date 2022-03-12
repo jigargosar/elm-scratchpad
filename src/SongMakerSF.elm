@@ -1603,7 +1603,7 @@ resizeYPositions from to pp =
             pp
 
 
-majorScaleChromaticValues =
+chromaticOffsetsOfMajorScale =
     [ 0, 2, 4, 5, 7, 9, 11 ]
 
 
@@ -1616,7 +1616,7 @@ chromaticToMajor y =
         chromaticScaleOffset =
             modBy 12 y
     in
-    List.Extra.elemIndex chromaticScaleOffset majorScaleChromaticValues
+    List.Extra.elemIndex chromaticScaleOffset chromaticOffsetsOfMajorScale
         |> Maybe.map (add (octaveOffset * 7))
 
 
@@ -1630,7 +1630,7 @@ majorToChromatic y =
             modBy 7 y
 
         chromaticScaleOffset =
-            listGetAt majorScaleOffset majorScaleChromaticValues
+            listGetAt majorScaleOffset chromaticOffsetsOfMajorScale
                 |> Maybe.withDefault 0
     in
     octaveOffset * 12 + chromaticScaleOffset
