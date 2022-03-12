@@ -37,8 +37,8 @@ import Utils exposing (..)
     * [x] start noteName
     * [x] chromatic scale
     --
-    * percussion grid visuals
     * Undo
+    * percussion grid visuals
     --
     * Save btn
     * pentatonic scale
