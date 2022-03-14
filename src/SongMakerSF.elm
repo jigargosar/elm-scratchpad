@@ -1095,18 +1095,28 @@ update msg model =
             )
 
         PercussionButtonClicked ->
-            ( { model | percussion = cyclePercussion model.percussion }
+            ( mapDataModel
+                (\dataModel ->
+                    { dataModel | percussion = cyclePercussion dataModel.percussion }
+                )
+                model
             , Cmd.none
             )
 
         TempoInputChanged str ->
-            let
-                tempo =
-                    String.toInt str
-                        |> Maybe.withDefault model.tempo
-                        |> clamp 10 300
-            in
-            ( { model | tempo = tempo }, Cmd.none )
+            ( mapDataModel
+                (\dataModel ->
+                    let
+                        tempo =
+                            String.toInt str
+                                |> Maybe.withDefault dataModel.tempo
+                                |> clamp 10 300
+                    in
+                    { dataModel | tempo = tempo }
+                )
+                model
+            , Cmd.none
+            )
 
         SettingsClicked ->
             ( { model | settingsDialog = Just model.settings }, focusOrIgnoreCmd "cancel-settings-btn" )
