@@ -1078,7 +1078,6 @@ update msg model =
                             Debug.todo (JD.errorToString err)
 
                         Ok dataModel ->
-                            --( pushDataModel dataModel { model | url = url }, Cmd.none )
                             loadDataModel dataModel
                                 >> withNoCmd
                    )
