@@ -1009,7 +1009,7 @@ mapPositions fn gt =
             mapInstrumentPositions fn
 
         PercussionGrid ->
-            mapInstrumentPositions fn
+            mapPercussionPositions fn
 
 
 mapInstrumentPositions : (PaintedPositions -> PaintedPositions) -> DataModel -> DataModel
