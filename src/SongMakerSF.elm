@@ -1656,14 +1656,14 @@ viewBottomBar model =
         ]
 
 
-tempoInputValue : Model -> String
+tempoInputValue : Model -> ( String, Bool )
 tempoInputValue model =
     case model.transientState of
         EditTempo str ->
-            str
+            ( str, True )
 
         _ ->
-            fromInt (currentDataModel model).tempo
+            ( fromInt (currentDataModel model).tempo, False )
 
 
 viewSettingsButton =
@@ -1672,8 +1672,8 @@ viewSettingsButton =
         "Settings"
 
 
-viewTempoInput : String -> Html Msg
-viewTempoInput tempo =
+viewTempoInput : ( String, Bool ) -> Html Msg
+viewTempoInput ( tempo, editing ) =
     Html.label []
         [ text "Tempo "
         , Html.input
@@ -1687,7 +1687,7 @@ viewTempoInput tempo =
             , sWidth "5ch"
             ]
             []
-        , text "*"
+        , viewBool editing (text "*")
         ]
 
 
