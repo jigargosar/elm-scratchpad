@@ -28,19 +28,9 @@ import Utils exposing (..)
     Clone: Chrome Music Labs - Song Maker.
 
     # Next
-    * [x] add all UI elements.
-    * [x] make UI functional.
-    * [x] implement features represented by UI.
-        * [x] Instruments
-        * [x] Tempo
-        * [x] Settings
-    * [x] Update player on tempo/settings change
-    * [x] start noteName
-    * [x] chromatic scale
-    --
     * Undo
         * reset on navigation
-        * introduce undo pivot ~~and explicitly add changes in every message~~.
+        * [x] introduce undo pivot ~~and explicitly add changes in every message~~.
         * [x] tempo: throttle / delay applying. for easier undo.
     * percussion grid visuals
     --
@@ -49,6 +39,18 @@ import Utils exposing (..)
     * instrument/percussion backend
     * chromatic scale colors
     * additional settings persistence
+
+
+    # Archived
+        * [x] add all UI elements.
+        * [x] make UI functional.
+        * [x] implement features represented by UI.
+            * [x] Instruments
+            * [x] Tempo
+            * [x] Settings
+        * [x] Update player on tempo/settings change
+        * [x] start noteName
+        * [x] chromatic scale
 
 
 
