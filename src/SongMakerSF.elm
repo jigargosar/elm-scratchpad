@@ -877,6 +877,8 @@ type Msg
     | PercussionButtonClicked
     | TempoInputChanged String
     | SettingsClicked
+    | UndoClicked
+    | SaveClicked
       -- Settings Dialog
     | CloseSettingsClicked
     | SaveSettingsClicked
@@ -1133,6 +1135,12 @@ update msg model =
             ( { model | settingsDialog = Just (currentDataModel model).settings }
             , focusOrIgnoreCmd "cancel-settings-btn"
             )
+
+        UndoClicked ->
+            ( model, Cmd.none )
+
+        SaveClicked ->
+            ( model, Cmd.none )
 
         CloseSettingsClicked ->
             ( { model | settingsDialog = Nothing }
