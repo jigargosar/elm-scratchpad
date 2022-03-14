@@ -5,7 +5,7 @@
     "shg:dev": "cross-env PARCEL_ELM_NO_DEBUG=1 parcel --no-hmr src/StickHeroGame.html --open",
     "ptl:dev": "cross-env PARCEL_ELM_NO_DEBUG=1 parcel --no-hmr src/PopTheLock.html --open",
     "sm:dev": "cross-env PARCEL_ELM_NO_DEBUG=1 parcel --no-hmr src/SongMaker.html --open",
-    "sm2:dev": "cross-env PARCEL_ELM_NO_DEBUG=1 parcel --no-hmr src/SongMakerSF.html --open"
+    "sm2:dev": "cross-env PARCEL_ELM_NO_DEBUG=1 parcel --no-hmr src/SongMakerSF.html"
   },
   "prettier": {
     "semi": false,
