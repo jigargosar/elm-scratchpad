@@ -101,14 +101,14 @@ currentTool gridType =
     maybeFilter (second >> eq gridType) >> Maybe.map first
 
 
-applyDataModel : DataModel -> Model -> Model
-applyDataModel dataModel model =
+setDataModel : DataModel -> Model -> Model
+setDataModel dataModel model =
     { model | dataModel = dataModel }
 
 
-toDataModel : Model -> DataModel
-toDataModel =
-    .dataModel
+mapDataModel : (DataModel -> DataModel) -> Model -> Model
+mapDataModel fn model =
+    setDataModel (fn model.dataModel) model
 
 
 type alias DataModel =
@@ -950,7 +950,7 @@ updateBrowserUrlEffect : Model -> Cmd msg
 updateBrowserUrlEffect model =
     let
         new =
-            dataModelEncoderV2 (toDataModel model) |> JE.encode 0
+            dataModelEncoderV2 model.dataModel |> JE.encode 0
 
         old =
             payloadStringFromUrl model.url
@@ -982,8 +982,8 @@ getPaintedPositions gridType =
             .percussionPositions
 
 
-updatePosition : Int2 -> Tool -> GridType -> DataModel -> DataModel
-updatePosition gp tool =
+setPosition : Int2 -> Tool -> GridType -> DataModel -> DataModel
+setPosition gp tool =
     case tool of
         Drawing ->
             paintPosition gp
@@ -1034,7 +1034,7 @@ update msg model =
                     Debug.todo (JD.errorToString err)
 
                 Ok dataModel ->
-                    ( applyDataModel dataModel { model | url = url }, Cmd.none )
+                    ( setDataModel dataModel { model | url = url }, Cmd.none )
 
         PointerDownOnGP gridType gp ->
             let
@@ -1046,7 +1046,7 @@ update msg model =
                         Drawing
             in
             { model
-                | dataModel = updatePosition gp tool gridType model.dataModel
+                | dataModel = setPosition gp tool gridType model.dataModel
             }
                 |> setDrawState tool gridType
                 |> withCmd (playNoteIfDrawingCmd model gridType tool gp)
@@ -1058,7 +1058,7 @@ update msg model =
 
                 Just tool ->
                     { model
-                        | dataModel = updatePosition gp tool gridType model.dataModel
+                        | dataModel = setPosition gp tool gridType model.dataModel
                     }
                         |> withCmd (playNoteIfDrawingCmd model gridType tool gp)
 
@@ -1086,7 +1086,11 @@ update msg model =
             updateOnTogglePlay model
 
         InstrumentButtonClicked ->
-            ( { model | instrument = cycleInstrument model.instrument }
+            ( mapDataModel
+                (\dataModel ->
+                    { dataModel | instrument = cycleInstrument dataModel.instrument }
+                )
+                model
             , Cmd.none
             )
 
