@@ -81,12 +81,7 @@ type alias PaintedPositions =
 
 
 type alias Model =
-    { instrumentPositions : PaintedPositions
-    , percussionPositions : PaintedPositions
-    , settings : Settings
-    , instrument : Instrument
-    , percussion : Percussion
-    , tempo : Int
+    { dataModel : DataModel
     , stepIndex : Int
     , playState : PlayerState
     , drawState : Maybe ( Tool, GridType )
@@ -99,25 +94,12 @@ type alias Model =
 
 applyDataModel : DataModel -> Model -> Model
 applyDataModel dataModel model =
-    { model
-        | instrumentPositions = dataModel.instrumentPositions
-        , percussionPositions = dataModel.percussionPositions
-        , settings = dataModel.settings
-        , instrument = dataModel.instrument
-        , percussion = dataModel.percussion
-        , tempo = dataModel.tempo
-    }
+    { model | dataModel = dataModel }
 
 
 toDataModel : Model -> DataModel
-toDataModel model =
-    { instrumentPositions = model.instrumentPositions
-    , percussionPositions = model.percussionPositions
-    , settings = model.settings
-    , instrument = model.instrument
-    , percussion = model.percussion
-    , tempo = model.tempo
-    }
+toDataModel =
+    .dataModel
 
 
 type alias DataModel =
@@ -681,12 +663,7 @@ init () url key =
         dataModel =
             dataModelFromUrl url
     in
-    ( { instrumentPositions = dataModel.instrumentPositions
-      , percussionPositions = dataModel.percussionPositions
-      , settings = dataModel.settings
-      , instrument = dataModel.instrument
-      , percussion = dataModel.percussion
-      , tempo = dataModel.tempo
+    ( { dataModel = dataModel
       , stepIndex = 0
       , playState = NotPlaying
       , drawState = Nothing
@@ -717,7 +694,7 @@ type alias Note =
     }
 
 
-stepDurationInMilli : Model -> Float
+stepDurationInMilli : DataModel -> Float
 stepDurationInMilli model =
     let
         beatDurationInMilli =
@@ -729,13 +706,13 @@ stepDurationInMilli model =
     duration
 
 
-scheduleInstrumentNotesFromYS : Float -> Model -> List Int -> Cmd msg
+scheduleInstrumentNotesFromYS : Float -> DataModel -> List Int -> Cmd msg
 scheduleInstrumentNotesFromYS audioTime model ys =
     instrumentNotesFromYS audioTime model ys
         |> scheduleNotes
 
 
-instrumentNotesFromYS : Float -> Model -> List Int -> List Note
+instrumentNotesFromYS : Float -> DataModel -> List Int -> List Note
 instrumentNotesFromYS audioTime model ys =
     instrumentPitchesFromYS model.settings ys
         |> List.map (instrumentNoteFromPitch audioTime model)
@@ -795,7 +772,7 @@ centralOctaveNumber centralOctave octaveRange =
             octaveToInt centralOctave - 1
 
 
-instrumentNoteFromPitch : Float -> Model -> String -> Note
+instrumentNoteFromPitch : Float -> DataModel -> String -> Note
 instrumentNoteFromPitch audioTime model pitch =
     let
         presetName =
@@ -816,7 +793,7 @@ instrumentNoteFromPitch audioTime model pitch =
     }
 
 
-percussionNoteFromGP : Float -> Model -> Int2 -> Note
+percussionNoteFromGP : Float -> DataModel -> Int2 -> Note
 percussionNoteFromGP audioTime model ( _, y ) =
     let
         ( presetName, pitch ) =
@@ -904,12 +881,12 @@ subscriptions _ =
 
 playInstrumentNoteAtGPCmd : Model -> Int2 -> Cmd msg
 playInstrumentNoteAtGPCmd model ( _, y ) =
-    scheduleInstrumentNotesFromYS model.audioTime model [ y ]
+    scheduleInstrumentNotesFromYS model.audioTime model.dataModel [ y ]
 
 
 playPercussionNoteAtGPCmd : Model -> Int2 -> Cmd msg
 playPercussionNoteAtGPCmd model gp =
-    scheduleNote (percussionNoteFromGP model.audioTime model gp)
+    scheduleNote (percussionNoteFromGP model.audioTime model.dataModel gp)
 
 
 focusOrIgnoreCmd : String -> Cmd Msg
@@ -919,21 +896,21 @@ focusOrIgnoreCmd id =
 
 
 scheduleCurrentStepAtEffect : Float -> Model -> Cmd Msg
-scheduleCurrentStepAtEffect atAudioTime model =
+scheduleCurrentStepAtEffect atAudioTime { dataModel, stepIndex } =
     [ let
         igh =
-            instrumentGridHeight model.settings
+            instrumentGridHeight dataModel.settings
       in
-      model.instrumentPositions
+      dataModel.instrumentPositions
         |> Set.toList
-        |> keep (first >> eq model.stepIndex)
+        |> keep (first >> eq stepIndex)
         |> reject (second >> (\y -> y >= igh))
         |> List.map second
-        |> scheduleInstrumentNotesFromYS atAudioTime model
-    , model.percussionPositions
-        |> Set.filter (first >> eq model.stepIndex)
+        |> scheduleInstrumentNotesFromYS atAudioTime dataModel
+    , dataModel.percussionPositions
+        |> Set.filter (first >> eq stepIndex)
         |> Set.toList
-        |> List.map (percussionNoteFromGP atAudioTime model >> scheduleNote)
+        |> List.map (percussionNoteFromGP atAudioTime dataModel >> scheduleNote)
         |> Cmd.batch
     ]
         |> Cmd.batch
@@ -1202,7 +1179,7 @@ updateOnTogglePlay model =
                     model.audioTime + initialDelay
 
                 nextStepAudioTime =
-                    currentStepAudioTime + stepDurationInMilli model
+                    currentStepAudioTime + stepDurationInMilli model.dataModel
             in
             { model
                 | playState = Playing nextStepAudioTime
@@ -1231,10 +1208,10 @@ updateAfterAudioTimeReceived model =
                         model.audioTime + diff
 
                     nextStepAudioTime =
-                        currentStepAudioTime + stepDurationInMilli model
+                        currentStepAudioTime + stepDurationInMilli model.dataModel
                 in
                 { model
-                    | stepIndex = model.stepIndex + 1 |> modBy (totalSteps model.settings)
+                    | stepIndex = model.stepIndex + 1 |> modBy (totalSteps model.dataModel.settings)
                     , playState = Playing nextStepAudioTime
                 }
                     |> withEffect (scheduleCurrentStepAtEffect currentStepAudioTime)
@@ -1518,6 +1495,10 @@ view model =
 
 viewBottomBar : Model -> Html Msg
 viewBottomBar model =
+    let
+        dataModel =
+            model.dataModel
+    in
     fRow
         [ pa "20px"
         , gap "20px"
@@ -1528,13 +1509,13 @@ viewBottomBar model =
             [ sWidth "14ch"
             , notifyClick InstrumentButtonClicked
             ]
-            (instrumentName model.instrument)
+            (instrumentName dataModel.instrument)
         , viewBtn
             [ sWidth "14ch"
             , notifyClick PercussionButtonClicked
             ]
-            (percussionName model.percussion)
-        , viewTempoInput model.tempo
+            (percussionName dataModel.percussion)
+        , viewTempoInput dataModel.tempo
         , viewSettingsButton
         , viewBtn [] "Undo"
         , viewBtn [] "Save"
@@ -1585,6 +1566,10 @@ viewPlayButton playState =
 
 viewGrid : Model -> Html Msg
 viewGrid model =
+    let
+        settings =
+            model.dataModel.settings
+    in
     fCol
         [ positionRelative
         , style "flex-grow" "1"
@@ -1594,26 +1579,26 @@ viewGrid model =
         [ div [ dGrid, positionRelative, style "flex-grow" "1" ]
             [ let
                 w =
-                    computeGridWidth model.settings
+                    computeGridWidth settings
 
                 h =
-                    instrumentGridHeight model.settings
+                    instrumentGridHeight settings
               in
               div [ dGrid, styleGridTemplate w h ]
                 (rangeWH w h |> List.map (viewInstrumentTileAt model))
-            , viewInstrumentGridLines model.settings
+            , viewInstrumentGridLines settings
             ]
         , div [ dGrid, positionRelative, sHeight "20%" ]
             [ let
                 w =
-                    computeGridWidth model.settings
+                    computeGridWidth settings
 
                 h =
                     percussionGridHeight
               in
               div [ dGrid, styleGridTemplate w h ]
                 (rangeWH w h |> List.map (viewPercussionTileAt model))
-            , viewPercussionGridLines model.settings
+            , viewPercussionGridLines settings
             ]
         ]
 
@@ -1721,6 +1706,12 @@ backgroundGridLinesHorizontal strokeWidth color pctN =
 viewPercussionTileAt : Model -> Int2 -> Html Msg
 viewPercussionTileAt model (( x, _ ) as gp) =
     let
+        dataModel =
+            model.dataModel
+
+        settings =
+            dataModel.settings
+
         isPlaying =
             case model.playState of
                 Playing _ ->
@@ -1730,7 +1721,7 @@ viewPercussionTileAt model (( x, _ ) as gp) =
                     False
 
         isNoteTile =
-            Set.member gp model.percussionPositions
+            Set.member gp dataModel.percussionPositions
 
         isHighlightedTile =
             x == model.stepIndex
@@ -1743,7 +1734,7 @@ viewPercussionTileAt model (( x, _ ) as gp) =
                 Animation.empty
 
         notesPerBar =
-            model.settings.beatsPerBar * model.settings.beatSplits
+            settings.beatsPerBar * settings.beatSplits
 
         isAlternateBarTile =
             modBy (notesPerBar * 2) x >= notesPerBar
@@ -1774,6 +1765,12 @@ viewPercussionTileAt model (( x, _ ) as gp) =
 viewInstrumentTileAt : Model -> Int2 -> Html Msg
 viewInstrumentTileAt model (( x, _ ) as gp) =
     let
+        dataModel =
+            model.dataModel
+
+        settings =
+            dataModel.settings
+
         isPlaying =
             case model.playState of
                 Playing _ ->
@@ -1783,7 +1780,7 @@ viewInstrumentTileAt model (( x, _ ) as gp) =
                     False
 
         isNoteTile =
-            Set.member gp model.instrumentPositions
+            Set.member gp dataModel.instrumentPositions
 
         isHighlightedTile =
             x == model.stepIndex
@@ -1796,7 +1793,7 @@ viewInstrumentTileAt model (( x, _ ) as gp) =
                 Animation.empty
 
         notesPerBar =
-            model.settings.beatsPerBar * model.settings.beatSplits
+            settings.beatsPerBar * settings.beatSplits
 
         isAlternateBarTile =
             modBy (notesPerBar * 2) x >= notesPerBar
