@@ -1137,7 +1137,11 @@ update msg model =
             )
 
         UndoClicked ->
-            ( model, Cmd.none )
+            ( { model
+                | dataModelPivot = withRollback Pivot.goL model.dataModelPivot
+              }
+            , Cmd.none
+            )
 
         SaveClicked ->
             ( model, Cmd.none )
@@ -1615,7 +1619,10 @@ viewBottomBar model =
             (percussionName dataModel.percussion)
         , viewTempoInput dataModel.tempo
         , viewSettingsButton
-        , viewBtn [] ("Undo " ++ fromInt (model.dataModelPivot |> Pivot.lengthL))
+        , viewBtn
+            [ notifyClick UndoClicked
+            ]
+            ("Undo " ++ fromInt (model.dataModelPivot |> Pivot.lengthL))
         , viewBtn [] "Save"
         ]
 
