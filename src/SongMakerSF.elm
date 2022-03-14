@@ -84,12 +84,21 @@ type alias Model =
     { dataModel : DataModel
     , stepIndex : Int
     , playState : PlayerState
-    , drawState : Maybe ( Tool, GridType )
+    , drawState : DrawState
     , settingsDialog : Maybe Settings
     , audioTime : Float
     , key : Key
     , url : Url
     }
+
+
+type alias DrawState =
+    Maybe ( Tool, GridType )
+
+
+currentTool : GridType -> DrawState -> Maybe Tool
+currentTool gridType =
+    maybeFilter (second >> eq gridType) >> Maybe.map first
 
 
 applyDataModel : DataModel -> Model -> Model
@@ -1043,14 +1052,11 @@ update msg model =
                     |> withCmd (playNoteCmd model gridType gp)
 
         PointerEnteredGP gridType gp ->
-            case
-                model.drawState
-                    |> maybeFilter (second >> eq gridType)
-            of
+            case currentTool gridType model.drawState of
                 Nothing ->
                     ( model, Cmd.none )
 
-                Just ( tool, _ ) ->
+                Just tool ->
                     { model
                         | dataModel = updatePosition gp tool gridType model.dataModel
                     }
