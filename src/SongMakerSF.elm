@@ -1037,19 +1037,19 @@ update msg model =
                     ( applyDataModel dataModel { model | url = url }, Cmd.none )
 
         PointerDownOnGP gridType gp ->
-            if isPainted gp gridType model.dataModel then
-                { model
-                    | dataModel = updatePosition gp Erasing gridType model.dataModel
-                }
-                    |> setDrawState Erasing gridType
-                    |> withNoCmd
+            let
+                tool =
+                    if isPainted gp gridType model.dataModel then
+                        Erasing
 
-            else
-                { model
-                    | dataModel = updatePosition gp Drawing gridType model.dataModel
-                }
-                    |> setDrawState Drawing gridType
-                    |> withCmd (playNoteCmd model gridType gp)
+                    else
+                        Drawing
+            in
+            { model
+                | dataModel = updatePosition gp tool gridType model.dataModel
+            }
+                |> setDrawState tool gridType
+                |> withCmd (playNoteIfDrawingCmd model gridType tool gp)
 
         PointerEnteredGP gridType gp ->
             case currentTool gridType model.drawState of
