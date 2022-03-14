@@ -1983,14 +1983,7 @@ viewInstrumentTileAt model (( x, _ ) as gp) =
             else
                 "transparent"
     in
-    Animated.div
-        anim
-        [ bgc bgColor
-        , styleGridAreaFromGP gp
-        , notifyPointerDown (PointerDownOnGP InstrumentGrid gp)
-        , notifyPointerEnter (PointerEnteredGP InstrumentGrid gp)
-        ]
-        []
+    viewTile anim bgColor InstrumentGrid gp
 
 
 styleGridAreaFromGP : Int2 -> Attribute msg
