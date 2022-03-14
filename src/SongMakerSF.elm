@@ -84,8 +84,7 @@ type alias Model =
     { dataModelPivot : Pivot DataModel
     , stepIndex : Int
     , playState : PlayerState
-    , drawState : DrawState
-    , settingsDialog : Maybe Settings
+    , transientState : TransientState
     , audioTime : Float
     , key : Key
     , url : Url
@@ -94,16 +93,22 @@ type alias Model =
 
 type TransientState
     = SettingsDialog Settings
-    | Draw Tool GridType
+    | Drawing Tool GridType
+    | None
 
 
-type alias DrawState =
-    Maybe ( Tool, GridType )
+currentTool : GridType -> TransientState -> Maybe Tool
+currentTool gridType ts =
+    case ts of
+        Drawing tool gridType_ ->
+            if gridType == gridType_ then
+                Just tool
 
+            else
+                Nothing
 
-currentTool : GridType -> DrawState -> Maybe Tool
-currentTool gridType =
-    maybeFilter (second >> eq gridType) >> Maybe.map first
+        _ ->
+            Nothing
 
 
 pushDataModel : DataModel -> Model -> Model
@@ -689,8 +694,7 @@ init () url key =
     ( { dataModelPivot = Pivot.singleton dataModel
       , stepIndex = 0
       , playState = NotPlaying
-      , drawState = Nothing
-      , settingsDialog = Nothing
+      , transientState = None
       , audioTime = 0
       , key = key
       , url = url
@@ -873,7 +877,7 @@ type Msg
     | UrlChanged Url
     | PointerDownOnGP GridType Int2
     | PointerEnteredGP GridType Int2
-    | OnPointerUp
+    | PointerUpOnGrid
     | OnBrowserKeyDown KeyEvent
     | OnAudioContextTime Float
       -- Bottom Bar
@@ -984,7 +988,7 @@ updateBrowserUrlEffect model =
 
 setDrawState : Tool -> GridType -> Model -> Model
 setDrawState tool gridType model =
-    { model | drawState = Just ( tool, gridType ) }
+    { model | transientState = Drawing tool gridType }
 
 
 isPainted : Int2 -> GridType -> DataModel -> Bool
@@ -1071,7 +1075,7 @@ update msg model =
                 |> withCmd (playNoteIfDrawingCmd model gridType tool gp)
 
         PointerEnteredGP gridType gp ->
-            case currentTool gridType model.drawState of
+            case currentTool gridType model.transientState of
                 Nothing ->
                     ( model, Cmd.none )
 
@@ -1080,8 +1084,15 @@ update msg model =
                         |> mapPushDataModel (setPosition gp tool gridType)
                         |> withCmd (playNoteIfDrawingCmd model gridType tool gp)
 
-        OnPointerUp ->
-            ( { model | drawState = Nothing }, Cmd.none )
+        PointerUpOnGrid ->
+            ( case model.transientState of
+                Drawing _ _ ->
+                    { model | transientState = None }
+
+                _ ->
+                    model
+            , Cmd.none
+            )
 
         OnAudioContextTime currentAudioTime ->
             updateAfterAudioTimeReceived { model | audioTime = currentAudioTime }
@@ -1137,7 +1148,7 @@ update msg model =
             )
 
         SettingsClicked ->
-            ( { model | settingsDialog = Just (currentDataModel model).settings }
+            ( { model | transientState = SettingsDialog (currentDataModel model).settings }
             , focusOrIgnoreCmd "cancel-settings-btn"
             )
 
@@ -1152,17 +1163,14 @@ update msg model =
             ( model, Cmd.none )
 
         CloseSettingsClicked ->
-            ( { model | settingsDialog = Nothing }
+            ( { model | transientState = None }
             , focusOrIgnoreCmd "settings-btn"
             )
 
         SaveSettingsClicked ->
-            case model.settingsDialog of
-                Nothing ->
-                    ( model, Cmd.none )
-
-                Just newSettings ->
-                    ( { model | settingsDialog = Nothing }
+            case model.transientState of
+                SettingsDialog newSettings ->
+                    ( { model | transientState = None }
                         |> mapPushDataModel
                             (\dataModel ->
                                 { dataModel
@@ -1184,6 +1192,9 @@ update msg model =
                             )
                     , focusOrIgnoreCmd "settings-btn"
                     )
+
+                _ ->
+                    ( model, Cmd.none )
 
         BarCountChanged str ->
             updateSettingsForm
@@ -1248,9 +1259,9 @@ update msg model =
 
 updateSettingsForm2 : (a -> Settings -> Settings) -> Maybe a -> Model -> ( Model, Cmd msg )
 updateSettingsForm2 fn maybe model =
-    case ( model.settingsDialog, maybe ) of
-        ( Just s, Just a ) ->
-            { model | settingsDialog = Just (fn a s) } |> withNoCmd
+    case ( model.transientState, maybe ) of
+        ( SettingsDialog s, Just a ) ->
+            { model | transientState = SettingsDialog (fn a s) } |> withNoCmd
 
         _ ->
             model |> withNoCmd
@@ -1263,11 +1274,11 @@ updateSettingsForm fn model =
 
 mapSettingsForm : (Settings -> Settings) -> Model -> Model
 mapSettingsForm fn model =
-    case model.settingsDialog of
-        Just s ->
-            { model | settingsDialog = Just (fn s) }
+    case model.transientState of
+        SettingsDialog s ->
+            { model | transientState = SettingsDialog (fn s) }
 
-        Nothing ->
+        _ ->
             model
 
 
@@ -1477,12 +1488,15 @@ viewDocument model =
     Document "Song Maker"
         [ basicStylesNode
         , animateCssNode
-        , case model.settingsDialog of
-            Nothing ->
+        , case model.transientState of
+            SettingsDialog settings ->
+                Html.Lazy.lazy viewSettingsForm settings
+
+            Drawing _ _ ->
                 view model
 
-            Just s ->
-                Html.Lazy.lazy viewSettingsForm s
+            None ->
+                view model
         ]
 
 
@@ -1683,7 +1697,7 @@ viewGrid model =
     fCol
         [ positionRelative
         , style "flex-grow" "1"
-        , notifyPointerUp OnPointerUp
+        , notifyPointerUp PointerUpOnGrid
         , noUserSelect
         ]
         [ div [ dGrid, positionRelative, style "flex-grow" "1" ]
