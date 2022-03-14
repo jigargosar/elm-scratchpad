@@ -1078,8 +1078,7 @@ update msg model =
                             Debug.todo (JD.errorToString err)
 
                         Ok dataModel ->
-                            loadDataModel dataModel
-                                >> withNoCmd
+                            loadDataModel dataModel >> withNoCmd
                    )
 
         PointerDownOnGP gridType gp ->
