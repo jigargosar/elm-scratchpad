@@ -1043,19 +1043,18 @@ update msg model =
                     |> withCmd (playNoteCmd model gridType gp)
 
         PointerEnteredGP gridType gp ->
-            case model.drawState of
+            case
+                model.drawState
+                    |> maybeFilter (second >> eq gridType)
+            of
                 Nothing ->
                     ( model, Cmd.none )
 
-                Just ( tool, activeGridType ) ->
-                    if activeGridType == gridType then
-                        { model
-                            | dataModel = updatePosition gp tool gridType model.dataModel
-                        }
-                            |> withCmd (playNoteIfDrawingCmd model gridType tool gp)
-
-                    else
-                        ( model, Cmd.none )
+                Just ( tool, _ ) ->
+                    { model
+                        | dataModel = updatePosition gp tool gridType model.dataModel
+                    }
+                        |> withCmd (playNoteIfDrawingCmd model gridType tool gp)
 
         OnPointerUp ->
             ( { model | drawState = Nothing }, Cmd.none )
