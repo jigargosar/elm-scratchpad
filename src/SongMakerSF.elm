@@ -1603,7 +1603,7 @@ viewBottomBar model =
             (percussionName dataModel.percussion)
         , viewTempoInput dataModel.tempo
         , viewSettingsButton
-        , viewBtn [] "Undo"
+        , viewBtn [] ("Undo " ++ fromInt (model.dataModelPivot |> Pivot.lengthL))
         , viewBtn [] "Save"
         ]
 
