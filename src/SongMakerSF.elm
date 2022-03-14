@@ -1919,7 +1919,7 @@ viewPercussionTileAt model (( x, _ ) as gp) =
             else
                 "transparent"
     in
-    Html.Lazy.lazy4 viewTile anim bgColor PercussionGrid gp
+    viewTile anim bgColor PercussionGrid gp
 
 
 viewTile : Animation -> String -> GridType -> Int2 -> Html Msg
@@ -1983,7 +1983,7 @@ viewInstrumentTileAt model (( x, _ ) as gp) =
             else
                 "transparent"
     in
-    Html.Lazy.lazy4 viewTile anim bgColor InstrumentGrid gp
+    viewTile anim bgColor InstrumentGrid gp
 
 
 styleGridAreaFromGP : Int2 -> Attribute msg
