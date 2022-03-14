@@ -1919,12 +1919,17 @@ viewPercussionTileAt model (( x, _ ) as gp) =
             else
                 "transparent"
     in
+    viewTile anim bgColor PercussionGrid gp
+
+
+viewTile : Animation -> String -> GridType -> Int2 -> Html Msg
+viewTile anim bgColor gridType gp =
     Animated.div
         anim
         [ bgc bgColor
         , styleGridAreaFromGP gp
-        , notifyPointerDown (PointerDownOnGP PercussionGrid gp)
-        , notifyPointerEnter (PointerEnteredGP PercussionGrid gp)
+        , notifyPointerDown (PointerDownOnGP gridType gp)
+        , notifyPointerEnter (PointerEnteredGP gridType gp)
         ]
         []
 
