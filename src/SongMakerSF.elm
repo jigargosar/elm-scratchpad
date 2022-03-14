@@ -1687,6 +1687,7 @@ viewTempoInput tempo =
             , sWidth "5ch"
             ]
             []
+        , text "*"
         ]
 
 
