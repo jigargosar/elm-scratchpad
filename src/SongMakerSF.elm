@@ -103,7 +103,11 @@ currentTool gridType =
 
 pushDataModel : DataModel -> Model -> Model
 pushDataModel dataModel model =
-    { model | dataModelPivot = Pivot.appendGoR dataModel model.dataModelPivot }
+    if dataModel /= currentDataModel model then
+        { model | dataModelPivot = Pivot.appendGoR dataModel model.dataModelPivot }
+
+    else
+        model
 
 
 mapPushDataModel : (DataModel -> DataModel) -> Model -> Model
