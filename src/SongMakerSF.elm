@@ -992,9 +992,11 @@ scheduleCurrentStepAtEffect atAudioTime ({ stepIndex } as model) =
 updateBrowserUrlEffect : Model -> Cmd msg
 updateBrowserUrlEffect model =
     let
+        new : String
         new =
             dataModelEncoderV2 (currentDataModel model) |> JE.encode 0
 
+        old : String
         old =
             payloadStringFromUrl model.url
     in
@@ -1126,8 +1128,7 @@ update msg model =
                 updateOnTogglePlay model
 
             else if e.key == "s" then
-                model
-                    |> withEffect updateBrowserUrlEffect
+                model |> withEffect updateBrowserUrlEffect
 
             else
                 ( model, Cmd.none )
