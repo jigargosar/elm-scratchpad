@@ -115,15 +115,14 @@ currentTool gridType ts =
             Nothing
 
 
-loadDataModel : Url -> DataModel -> Model -> Model
-loadDataModel url dataModel model =
+loadDataModel : DataModel -> Model -> Model
+loadDataModel dataModel model =
     if dataModel /= currentDataModel model then
         { model
             | dataModelPivot = Pivot.singleton dataModel
             , transientState = None
             , stepIndex = 0
             , playState = NotPlaying
-            , url = url
         }
 
     else
@@ -1073,12 +1072,16 @@ update msg model =
             ( model, Cmd.none )
 
         UrlChanged url ->
-            case decodeDataModelFromUrl url of
-                Err err ->
-                    Debug.todo (JD.errorToString err)
+            { model | url = url }
+                |> (case decodeDataModelFromUrl url of
+                        Err err ->
+                            Debug.todo (JD.errorToString err)
 
-                Ok dataModel ->
-                    ( loadDataModel url dataModel model, Cmd.none )
+                        Ok dataModel ->
+                            --( pushDataModel dataModel { model | url = url }, Cmd.none )
+                            loadDataModel dataModel
+                                >> withNoCmd
+                   )
 
         PointerDownOnGP gridType gp ->
             let
