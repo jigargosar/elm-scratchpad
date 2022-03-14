@@ -81,7 +81,7 @@ type alias PaintedPositions =
 
 
 type alias Model =
-    { dataModel : DataModel
+    { dataModelPivot : Pivot DataModel
     , stepIndex : Int
     , playState : PlayerState
     , drawState : DrawState
@@ -101,14 +101,19 @@ currentTool gridType =
     maybeFilter (second >> eq gridType) >> Maybe.map first
 
 
-setDataModel : DataModel -> Model -> Model
-setDataModel dataModel model =
-    { model | dataModel = dataModel }
+pushDataModel : DataModel -> Model -> Model
+pushDataModel dataModel model =
+    { model | dataModelPivot = Pivot.appendGoR dataModel model.dataModelPivot }
 
 
-mapDataModel : (DataModel -> DataModel) -> Model -> Model
-mapDataModel fn model =
-    setDataModel (fn model.dataModel) model
+mapPushDataModel : (DataModel -> DataModel) -> Model -> Model
+mapPushDataModel fn model =
+    pushDataModel (fn (currentDataModel model)) model
+
+
+currentDataModel : Model -> DataModel
+currentDataModel model =
+    Pivot.getC model.dataModelPivot
 
 
 type alias DataModel =
@@ -672,7 +677,7 @@ init () url key =
         dataModel =
             dataModelFromUrl url
     in
-    ( { dataModel = dataModel
+    ( { dataModelPivot = Pivot.singleton dataModel
       , stepIndex = 0
       , playState = NotPlaying
       , drawState = Nothing
@@ -902,10 +907,10 @@ playNoteCmd : Model -> GridType -> Int2 -> Cmd msg
 playNoteCmd model gridType (( _, y ) as gp) =
     case gridType of
         InstrumentGrid ->
-            scheduleInstrumentNotesFromYS model.audioTime model.dataModel [ y ]
+            scheduleInstrumentNotesFromYS model.audioTime (currentDataModel model) [ y ]
 
         PercussionGrid ->
-            scheduleNote (percussionNoteFromGP model.audioTime model.dataModel gp)
+            scheduleNote (percussionNoteFromGP model.audioTime (currentDataModel model) gp)
 
 
 
@@ -926,7 +931,11 @@ focusOrIgnoreCmd id =
 
 
 scheduleCurrentStepAtEffect : Float -> Model -> Cmd Msg
-scheduleCurrentStepAtEffect atAudioTime { dataModel, stepIndex } =
+scheduleCurrentStepAtEffect atAudioTime ({ stepIndex } as model) =
+    let
+        dataModel =
+            currentDataModel model
+    in
     [ let
         igh =
             instrumentGridHeight dataModel.settings
@@ -950,7 +959,7 @@ updateBrowserUrlEffect : Model -> Cmd msg
 updateBrowserUrlEffect model =
     let
         new =
-            dataModelEncoderV2 model.dataModel |> JE.encode 0
+            dataModelEncoderV2 (currentDataModel model) |> JE.encode 0
 
         old =
             payloadStringFromUrl model.url
@@ -1034,20 +1043,19 @@ update msg model =
                     Debug.todo (JD.errorToString err)
 
                 Ok dataModel ->
-                    ( setDataModel dataModel { model | url = url }, Cmd.none )
+                    ( pushDataModel dataModel { model | url = url }, Cmd.none )
 
         PointerDownOnGP gridType gp ->
             let
                 tool =
-                    if isPainted gp gridType model.dataModel then
+                    if isPainted gp gridType (currentDataModel model) then
                         Erasing
 
                     else
                         Drawing
             in
-            { model
-                | dataModel = setPosition gp tool gridType model.dataModel
-            }
+            model
+                |> mapPushDataModel (setPosition gp tool gridType)
                 |> setDrawState tool gridType
                 |> withCmd (playNoteIfDrawingCmd model gridType tool gp)
 
@@ -1057,9 +1065,8 @@ update msg model =
                     ( model, Cmd.none )
 
                 Just tool ->
-                    { model
-                        | dataModel = setPosition gp tool gridType model.dataModel
-                    }
+                    model
+                        |> mapPushDataModel (setPosition gp tool gridType)
                         |> withCmd (playNoteIfDrawingCmd model gridType tool gp)
 
         OnPointerUp ->
@@ -1086,7 +1093,7 @@ update msg model =
             updateOnTogglePlay model
 
         InstrumentButtonClicked ->
-            ( mapDataModel
+            ( mapPushDataModel
                 (\dataModel ->
                     { dataModel | instrument = cycleInstrument dataModel.instrument }
                 )
@@ -1095,7 +1102,7 @@ update msg model =
             )
 
         PercussionButtonClicked ->
-            ( mapDataModel
+            ( mapPushDataModel
                 (\dataModel ->
                     { dataModel | percussion = cyclePercussion dataModel.percussion }
                 )
@@ -1104,7 +1111,7 @@ update msg model =
             )
 
         TempoInputChanged str ->
-            ( mapDataModel
+            ( mapPushDataModel
                 (\dataModel ->
                     let
                         tempo =
@@ -1119,7 +1126,7 @@ update msg model =
             )
 
         SettingsClicked ->
-            ( { model | settingsDialog = Just model.dataModel.settings }
+            ( { model | settingsDialog = Just (currentDataModel model).settings }
             , focusOrIgnoreCmd "cancel-settings-btn"
             )
 
@@ -1135,7 +1142,7 @@ update msg model =
 
                 Just newSettings ->
                     ( { model | settingsDialog = Nothing }
-                        |> mapDataModel
+                        |> mapPushDataModel
                             (\dataModel ->
                                 { dataModel
                                     | settings = newSettings
@@ -1255,7 +1262,7 @@ updateOnTogglePlay model =
                     model.audioTime + initialDelay
 
                 nextStepAudioTime =
-                    currentStepAudioTime + stepDurationInMilli model.dataModel
+                    currentStepAudioTime + stepDurationInMilli (currentDataModel model)
             in
             { model
                 | playState = Playing nextStepAudioTime
@@ -1283,11 +1290,14 @@ updateAfterAudioTimeReceived model =
                     currentStepAudioTime =
                         model.audioTime + diff
 
+                    dataModel =
+                        currentDataModel model
+
                     nextStepAudioTime =
-                        currentStepAudioTime + stepDurationInMilli model.dataModel
+                        currentStepAudioTime + stepDurationInMilli dataModel
                 in
                 { model
-                    | stepIndex = model.stepIndex + 1 |> modBy (totalSteps model.dataModel.settings)
+                    | stepIndex = model.stepIndex + 1 |> modBy (totalSteps dataModel.settings)
                     , playState = Playing nextStepAudioTime
                 }
                     |> withEffect (scheduleCurrentStepAtEffect currentStepAudioTime)
@@ -1573,7 +1583,7 @@ viewBottomBar : Model -> Html Msg
 viewBottomBar model =
     let
         dataModel =
-            model.dataModel
+            currentDataModel model
     in
     fRow
         [ pa "20px"
@@ -1644,7 +1654,7 @@ viewGrid : Model -> Html Msg
 viewGrid model =
     let
         settings =
-            model.dataModel.settings
+            (currentDataModel model).settings
     in
     fCol
         [ positionRelative
@@ -1783,7 +1793,7 @@ viewPercussionTileAt : Model -> Int2 -> Html Msg
 viewPercussionTileAt model (( x, _ ) as gp) =
     let
         dataModel =
-            model.dataModel
+            currentDataModel model
 
         settings =
             dataModel.settings
@@ -1842,7 +1852,7 @@ viewInstrumentTileAt : Model -> Int2 -> Html Msg
 viewInstrumentTileAt model (( x, _ ) as gp) =
     let
         dataModel =
-            model.dataModel
+            currentDataModel model
 
         settings =
             dataModel.settings
