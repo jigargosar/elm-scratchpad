@@ -1136,18 +1136,7 @@ update msg model =
             )
 
         TempoInputChanged str ->
-            ( --mapPushDataModel
-              --    (\dataModel ->
-              --        let
-              --            tempo =
-              --                String.toInt str
-              --                    |> Maybe.withDefault dataModel.tempo
-              --                    |> clamp 10 300
-              --        in
-              --        { dataModel | tempo = tempo }
-              --    )
-              --    model
-              { model | transientState = EditTempo str }
+            ( { model | transientState = EditTempo str }
             , Cmd.none
             )
 
