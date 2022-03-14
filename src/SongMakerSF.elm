@@ -879,14 +879,25 @@ subscriptions _ =
         |> Sub.batch
 
 
-playInstrumentNoteAtGPCmd : Model -> Int2 -> Cmd msg
-playInstrumentNoteAtGPCmd model ( _, y ) =
-    scheduleInstrumentNotesFromYS model.audioTime model.dataModel [ y ]
+playNoteCmd : Model -> GridType -> Int2 -> Cmd msg
+playNoteCmd model gridType (( _, y ) as gp) =
+    case gridType of
+        InstrumentGrid ->
+            scheduleInstrumentNotesFromYS model.audioTime model.dataModel [ y ]
+
+        PercussionGrid ->
+            scheduleNote (percussionNoteFromGP model.audioTime model.dataModel gp)
 
 
-playPercussionNoteAtGPCmd : Model -> Int2 -> Cmd msg
-playPercussionNoteAtGPCmd model gp =
-    scheduleNote (percussionNoteFromGP model.audioTime model.dataModel gp)
+
+--playInstrumentNoteAtGPCmd : Model -> Int2 -> Cmd msg
+--playInstrumentNoteAtGPCmd model ( _, y ) =
+--    scheduleInstrumentNotesFromYS model.audioTime model.dataModel [ y ]
+--
+--
+--playPercussionNoteAtGPCmd : Model -> Int2 -> Cmd msg
+--playPercussionNoteAtGPCmd model gp =
+--    scheduleNote (percussionNoteFromGP model.audioTime model.dataModel gp)
 
 
 focusOrIgnoreCmd : String -> Cmd Msg
@@ -932,6 +943,66 @@ updateBrowserUrlEffect model =
         Cmd.none
 
 
+setDrawState : Tool -> GridType -> Model -> Model
+setDrawState tool gridType model =
+    { model | drawState = Just ( tool, gridType ) }
+
+
+isPainted : Int2 -> GridType -> DataModel -> Bool
+isPainted gp gt model =
+    Set.member gp (getPaintedPositions gt model)
+
+
+getPaintedPositions : GridType -> DataModel -> PaintedPositions
+getPaintedPositions gridType =
+    case gridType of
+        InstrumentGrid ->
+            .instrumentPositions
+
+        PercussionGrid ->
+            .percussionPositions
+
+
+updatePosition : Int2 -> Tool -> GridType -> DataModel -> DataModel
+updatePosition gp tool =
+    case tool of
+        Drawing ->
+            paintPosition gp
+
+        Erasing ->
+            erasePosition gp
+
+
+paintPosition : Int2 -> GridType -> DataModel -> DataModel
+paintPosition gp gridType =
+    mapPositions (Set.insert gp) gridType
+
+
+erasePosition : Int2 -> GridType -> DataModel -> DataModel
+erasePosition gp gridType =
+    mapPositions (Set.remove gp) gridType
+
+
+mapPositions : (PaintedPositions -> PaintedPositions) -> GridType -> DataModel -> DataModel
+mapPositions fn gt =
+    case gt of
+        InstrumentGrid ->
+            mapInstrumentPositions fn
+
+        PercussionGrid ->
+            mapInstrumentPositions fn
+
+
+mapInstrumentPositions : (PaintedPositions -> PaintedPositions) -> DataModel -> DataModel
+mapInstrumentPositions fn model =
+    { model | instrumentPositions = fn model.instrumentPositions }
+
+
+mapPercussionPositions : (PaintedPositions -> PaintedPositions) -> DataModel -> DataModel
+mapPercussionPositions fn model =
+    { model | percussionPositions = fn model.percussionPositions }
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -946,60 +1017,39 @@ update msg model =
                 Ok dataModel ->
                     ( applyDataModel dataModel { model | url = url }, Cmd.none )
 
-        PointerDownOnGP gt gp ->
-            case gt of
-                InstrumentGrid ->
-                    if Set.member gp model.instrumentPositions then
-                        { model
-                            | instrumentPositions = Set.remove gp model.instrumentPositions
-                            , drawState = Just ( Erasing, InstrumentGrid )
-                        }
-                            |> withNoCmd
+        PointerDownOnGP gridType gp ->
+            if isPainted gp gridType model.dataModel then
+                { model
+                    | dataModel = updatePosition gp Erasing gridType model.dataModel
+                }
+                    |> setDrawState Erasing gridType
+                    |> withNoCmd
 
-                    else
-                        { model
-                            | instrumentPositions = Set.insert gp model.instrumentPositions
-                            , drawState = Just ( Drawing, InstrumentGrid )
-                        }
-                            |> withCmd (playInstrumentNoteAtGPCmd model gp)
+            else
+                { model
+                    | dataModel = updatePosition gp Drawing gridType model.dataModel
+                }
+                    |> setDrawState Drawing gridType
+                    |> withCmd (playNoteCmd model gridType gp)
 
-                PercussionGrid ->
-                    if Set.member gp model.percussionPositions then
-                        { model
-                            | percussionPositions = Set.remove gp model.percussionPositions
-                            , drawState = Just ( Erasing, PercussionGrid )
-                        }
-                            |> withNoCmd
-
-                    else
-                        { model
-                            | percussionPositions = Set.insert gp model.percussionPositions
-                            , drawState = Just ( Drawing, PercussionGrid )
-                        }
-                            |> withCmd (playPercussionNoteAtGPCmd model gp)
-
-        PointerEnteredGP gt gp ->
+        PointerEnteredGP gridType gp ->
             case model.drawState of
                 Nothing ->
                     ( model, Cmd.none )
 
                 Just ( tool, activeGT ) ->
-                    if activeGT == gt then
-                        case ( tool, gt ) of
-                            ( Drawing, InstrumentGrid ) ->
-                                { model | instrumentPositions = Set.insert gp model.instrumentPositions }
-                                    |> withCmd (playInstrumentNoteAtGPCmd model gp)
+                    if activeGT == gridType then
+                        case tool of
+                            Drawing ->
+                                { model
+                                    | dataModel = updatePosition gp tool gridType model.dataModel
+                                }
+                                    |> withCmd (playNoteCmd model gridType gp)
 
-                            ( Erasing, InstrumentGrid ) ->
-                                { model | instrumentPositions = Set.remove gp model.instrumentPositions }
-                                    |> withNoCmd
-
-                            ( Drawing, PercussionGrid ) ->
-                                { model | percussionPositions = Set.insert gp model.percussionPositions }
-                                    |> withCmd (playPercussionNoteAtGPCmd model gp)
-
-                            ( Erasing, PercussionGrid ) ->
-                                { model | percussionPositions = Set.remove gp model.percussionPositions }
+                            Erasing ->
+                                { model
+                                    | dataModel = updatePosition gp tool gridType model.dataModel
+                                }
                                     |> withNoCmd
 
                     else
