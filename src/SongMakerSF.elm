@@ -40,8 +40,8 @@ import Utils exposing (..)
     --
     * Undo
         * reset on navigation
-        * introduce undo pivot and explicitly add changes in every message.
-        * tempo: throttle / delay applying. for easier undo.
+        * introduce undo pivot ~~and explicitly add changes in every message~~.
+        * [x] tempo: throttle / delay applying. for easier undo.
     * percussion grid visuals
     --
     * Save btn
