@@ -115,6 +115,21 @@ currentTool gridType ts =
             Nothing
 
 
+loadDataModel : Url -> DataModel -> Model -> Model
+loadDataModel url dataModel model =
+    if dataModel /= currentDataModel model then
+        { model
+            | dataModelPivot = Pivot.singleton dataModel
+            , transientState = None
+            , stepIndex = 0
+            , playState = NotPlaying
+            , url = url
+        }
+
+    else
+        model
+
+
 pushDataModel : DataModel -> Model -> Model
 pushDataModel dataModel model =
     if dataModel /= currentDataModel model then
@@ -1063,7 +1078,7 @@ update msg model =
                     Debug.todo (JD.errorToString err)
 
                 Ok dataModel ->
-                    ( pushDataModel dataModel { model | url = url }, Cmd.none )
+                    ( loadDataModel url dataModel model, Cmd.none )
 
         PointerDownOnGP gridType gp ->
             let
