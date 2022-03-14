@@ -4,6 +4,7 @@ import Browser.Dom
 import Browser.Navigation exposing (Key)
 import Html
 import Html.Attributes as HA
+import Html.Events exposing (onBlur)
 import Html.Lazy
 import Json.Decode as JD exposing (Decoder)
 import Json.Encode as JE exposing (Value)
@@ -886,6 +887,7 @@ type Msg
     | InstrumentButtonClicked
     | PercussionButtonClicked
     | TempoInputChanged String
+    | CommitTempoInput
     | SettingsClicked
     | UndoClicked
     | SaveClicked
@@ -1146,6 +1148,26 @@ update msg model =
               --    )
               --    model
               { model | transientState = EditTempo str }
+            , Cmd.none
+            )
+
+        CommitTempoInput ->
+            ( case model.transientState of
+                EditTempo str ->
+                    { model | transientState = None }
+                        |> mapPushDataModel
+                            (\dataModel ->
+                                let
+                                    tempo =
+                                        String.toInt str
+                                            |> Maybe.withDefault dataModel.tempo
+                                            |> clamp 10 300
+                                in
+                                { dataModel | tempo = tempo }
+                            )
+
+                _ ->
+                    model
             , Cmd.none
             )
 
@@ -1635,7 +1657,7 @@ viewBottomBar model =
             , notifyClick PercussionButtonClicked
             ]
             (percussionName dataModel.percussion)
-        , viewTempoInput dataModel.tempo
+        , viewTempoInput (tempoInputValue model)
         , viewSettingsButton
         , viewBtn
             [ notifyClick UndoClicked
@@ -1645,18 +1667,31 @@ viewBottomBar model =
         ]
 
 
+tempoInputValue : Model -> String
+tempoInputValue model =
+    case model.transientState of
+        EditTempo str ->
+            str
+
+        _ ->
+            fromInt (currentDataModel model).tempo
+
+
 viewSettingsButton =
     viewBtn
         [ HA.id "settings-btn", notifyClick SettingsClicked ]
         "Settings"
 
 
+viewTempoInput : String -> Html Msg
 viewTempoInput tempo =
     Html.label []
         [ text "Tempo "
         , Html.input
-            [ HA.value (fromInt tempo)
+            [ HA.value tempo
             , onInput TempoInputChanged
+            , onBlur CommitTempoInput
+            , onEnter CommitTempoInput
             , HA.size 4
             , HA.type_ "number"
             , fontSize "20px"
