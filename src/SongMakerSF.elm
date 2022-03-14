@@ -879,6 +879,16 @@ subscriptions _ =
         |> Sub.batch
 
 
+playNoteIfDrawingCmd : Model -> GridType -> Tool -> Int2 -> Cmd msg
+playNoteIfDrawingCmd model gridType tool gp =
+    case tool of
+        Drawing ->
+            playNoteCmd model gridType gp
+
+        Erasing ->
+            Cmd.none
+
+
 playNoteCmd : Model -> GridType -> Int2 -> Cmd msg
 playNoteCmd model gridType (( _, y ) as gp) =
     case gridType of
@@ -1037,20 +1047,12 @@ update msg model =
                 Nothing ->
                     ( model, Cmd.none )
 
-                Just ( tool, activeGT ) ->
-                    if activeGT == gridType then
-                        case tool of
-                            Drawing ->
-                                { model
-                                    | dataModel = updatePosition gp tool gridType model.dataModel
-                                }
-                                    |> withCmd (playNoteCmd model gridType gp)
-
-                            Erasing ->
-                                { model
-                                    | dataModel = updatePosition gp tool gridType model.dataModel
-                                }
-                                    |> withNoCmd
+                Just ( tool, activeGridType ) ->
+                    if activeGridType == gridType then
+                        { model
+                            | dataModel = updatePosition gp tool gridType model.dataModel
+                        }
+                            |> withCmd (playNoteIfDrawingCmd model gridType tool gp)
 
                     else
                         ( model, Cmd.none )
