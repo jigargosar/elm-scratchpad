@@ -94,6 +94,7 @@ type alias Model =
 type TransientState
     = SettingsDialog Settings
     | Drawing Tool GridType
+    | EditTempo String
     | None
 
 
@@ -1133,17 +1134,18 @@ update msg model =
             )
 
         TempoInputChanged str ->
-            ( mapPushDataModel
-                (\dataModel ->
-                    let
-                        tempo =
-                            String.toInt str
-                                |> Maybe.withDefault dataModel.tempo
-                                |> clamp 10 300
-                    in
-                    { dataModel | tempo = tempo }
-                )
-                model
+            ( --mapPushDataModel
+              --    (\dataModel ->
+              --        let
+              --            tempo =
+              --                String.toInt str
+              --                    |> Maybe.withDefault dataModel.tempo
+              --                    |> clamp 10 300
+              --        in
+              --        { dataModel | tempo = tempo }
+              --    )
+              --    model
+              { model | transientState = EditTempo str }
             , Cmd.none
             )
 
@@ -1492,10 +1494,7 @@ viewDocument model =
             SettingsDialog settings ->
                 Html.Lazy.lazy viewSettingsForm settings
 
-            Drawing _ _ ->
-                view model
-
-            None ->
+            _ ->
                 view model
         ]
 
