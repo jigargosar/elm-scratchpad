@@ -1119,7 +1119,9 @@ update msg model =
             )
 
         SettingsClicked ->
-            ( { model | settingsDialog = Just model.settings }, focusOrIgnoreCmd "cancel-settings-btn" )
+            ( { model | settingsDialog = Just model.dataModel.settings }
+            , focusOrIgnoreCmd "cancel-settings-btn"
+            )
 
         CloseSettingsClicked ->
             ( { model | settingsDialog = Nothing }
@@ -1132,23 +1134,26 @@ update msg model =
                     ( model, Cmd.none )
 
                 Just newSettings ->
-                    ( { model
-                        | settingsDialog = Nothing
-                        , settings = newSettings
-                        , instrumentPositions =
-                            remapXPositions
-                                model.settings
-                                newSettings
-                                model.instrumentPositions
-                                |> remapYPositions
-                                    model.settings
-                                    newSettings
-                        , percussionPositions =
-                            remapXPositions
-                                model.settings
-                                newSettings
-                                model.percussionPositions
-                      }
+                    ( { model | settingsDialog = Nothing }
+                        |> mapDataModel
+                            (\dataModel ->
+                                { dataModel
+                                    | settings = newSettings
+                                    , instrumentPositions =
+                                        remapXPositions
+                                            dataModel.settings
+                                            newSettings
+                                            dataModel.instrumentPositions
+                                            |> remapYPositions
+                                                dataModel.settings
+                                                newSettings
+                                    , percussionPositions =
+                                        remapXPositions
+                                            dataModel.settings
+                                            newSettings
+                                            dataModel.percussionPositions
+                                }
+                            )
                     , focusOrIgnoreCmd "settings-btn"
                     )
 
