@@ -92,6 +92,11 @@ type alias Model =
     }
 
 
+type TransientState
+    = SettingsDialog Settings
+    | Draw Tool GridType
+
+
 type alias DrawState =
     Maybe ( Tool, GridType )
 
@@ -666,8 +671,8 @@ type PlayerState
 
 
 type Tool
-    = Drawing
-    | Erasing
+    = Pen
+    | Eraser
 
 
 type GridType
@@ -902,10 +907,10 @@ subscriptions _ =
 playNoteIfDrawingCmd : Model -> GridType -> Tool -> Int2 -> Cmd msg
 playNoteIfDrawingCmd model gridType tool gp =
     case tool of
-        Drawing ->
+        Pen ->
             playNoteCmd model gridType gp
 
-        Erasing ->
+        Eraser ->
             Cmd.none
 
 
@@ -1000,10 +1005,10 @@ getPaintedPositions gridType =
 setPosition : Int2 -> Tool -> GridType -> DataModel -> DataModel
 setPosition gp tool =
     case tool of
-        Drawing ->
+        Pen ->
             paintPosition gp
 
-        Erasing ->
+        Eraser ->
             erasePosition gp
 
 
@@ -1055,10 +1060,10 @@ update msg model =
             let
                 tool =
                     if isPainted gp gridType (currentDataModel model) then
-                        Erasing
+                        Eraser
 
                     else
-                        Drawing
+                        Pen
             in
             model
                 |> mapPushDataModel (setPosition gp tool gridType)
