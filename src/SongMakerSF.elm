@@ -1788,11 +1788,24 @@ viewInstrumentGrid settings model =
 
             instrumentPositions =
                 dataModel.instrumentPositions
+
+            ( staticPositions, animatedPositions ) =
+                case model.playState of
+                    Playing _ ->
+                        ( instrumentPositions, Set.empty )
+
+                    NotPlaying ->
+                        ( instrumentPositions, Set.empty )
           in
           div [ dGrid, styleGridTemplate w h, positionAbsolute, w100, h100 ]
-            (instrumentPositions
+            ((staticPositions
                 |> Set.toList
                 |> List.map (viewInstrumentTileAt model)
+             )
+                ++ (animatedPositions
+                        |> Set.toList
+                        |> List.map (viewInstrumentTileAt model)
+                   )
             )
         , viewInstrumentGridLines settings
         , let
