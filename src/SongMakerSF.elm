@@ -1536,7 +1536,7 @@ viewDocument model =
         , animateCssNode
         , case model.transientState of
             SettingsDialog settings ->
-                Html.Lazy.lazy viewSettingsForm settings
+                viewSettingsForm settings
 
             _ ->
                 view model
@@ -1829,10 +1829,6 @@ viewGridEventDispatcherTiles gridWidth gridHeight gridType =
 
 viewInstrumentTiles : Int -> Int -> Bool -> Int -> PaintedPositions -> Html Msg
 viewInstrumentTiles gridWidth gridHeight playing stepIndex instrumentPositions =
-    let
-        _ =
-            Debug.log "Debug: " "vit"
-    in
     viewAbsoluteGridLayout gridWidth gridHeight [] <|
         viewInstrumentTilesHelp
             playing
