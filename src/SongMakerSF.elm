@@ -1769,7 +1769,7 @@ viewGrid model =
         , notifyPointerUp PointerUpOnGrid
         , noUserSelect
         ]
-        [ viewInstrumentGrid settings stepIndex playing instrumentPositions
+        [ Html.Lazy.lazy4 viewInstrumentGrid settings stepIndex playing instrumentPositions
         , div [ dGrid, positionRelative, sHeight "20%" ]
             [ let
                 w =
