@@ -17,7 +17,6 @@ import Set exposing (Set)
 import Simple.Animation as Animation exposing (Animation)
 import Simple.Animation.Animated as Animated
 import Simple.Animation.Property as P
-import Svg
 import Svg.Attributes
 import Task
 import Url exposing (Url)
