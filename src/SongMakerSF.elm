@@ -1789,12 +1789,6 @@ viewInstrumentGrid settings model =
             instrumentPositions =
                 dataModel.instrumentPositions
 
-            viewAnimatedInstrumentTile gp =
-                viewInstrumentTileAt True gp
-
-            viewStaticInstrumentTile gp =
-                viewInstrumentTileAt False gp
-
             viewInstrumentTileWhenPlaying gp =
                 if first gp == model.stepIndex then
                     viewAnimatedInstrumentTile gp
@@ -1802,21 +1796,27 @@ viewInstrumentGrid settings model =
                 else
                     viewStaticInstrumentTile gp
 
-            tileViews =
-                case model.playState of
+            isPlaying playState =
+                case playState of
                     Playing _ ->
-                        instrumentPositions
-                            |> Set.toList
-                            |> List.map viewInstrumentTileWhenPlaying
+                        True
 
                     NotPlaying ->
-                        instrumentPositions
-                            |> Set.toList
-                            |> List.map viewStaticInstrumentTile
+                        False
+
+            isAnimated gp =
+                isPlaying model.playState && first gp == model.stepIndex
+
+            viewInstrumentTile_ gp =
+                if isAnimated gp then
+                    viewAnimatedInstrumentTile gp
+
+                else
+                    viewStaticInstrumentTile gp
           in
           div
             [ dGrid, styleGridTemplate w h, positionAbsolute, w100, h100 ]
-            tileViews
+            (instrumentPositions |> Set.toList |> List.map viewInstrumentTile_)
         , viewInstrumentGridLines settings
         , let
             w =
@@ -1956,8 +1956,16 @@ backgroundGridLinesHorizontal strokeWidth color pctN =
         |> String.join " "
 
 
-viewInstrumentTileAt : Bool -> Int2 -> Html Msg
-viewInstrumentTileAt isAnimated gp =
+viewAnimatedInstrumentTile gp =
+    viewInstrumentTile True gp
+
+
+viewStaticInstrumentTile gp =
+    viewInstrumentTile False gp
+
+
+viewInstrumentTile : Bool -> Int2 -> Html Msg
+viewInstrumentTile isAnimated gp =
     let
         anim =
             if isAnimated then
