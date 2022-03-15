@@ -1778,17 +1778,27 @@ viewInstrumentGrid settings model =
     let
         ( gridWidth, gridHeight ) =
             ( computeGridWidth settings, instrumentGridHeight settings )
+
+        stepIndex =
+            model.stepIndex
+
+        playing =
+            isPlaying model.playState
+
+        instrumentPositions =
+            (currentDataModel model).instrumentPositions
     in
     div [ dGrid, positionRelative, style "flex-grow" "1" ]
-        [ viewGridBarBackground settings.bars
-        , viewGridHighlightedColumnBackground gridWidth model.stepIndex
-        , viewAbsoluteGridLayout gridWidth gridHeight [] <|
-            viewInstrumentTiles
-                model.playState
-                model.stepIndex
-                (currentDataModel model).instrumentPositions
-        , viewInstrumentGridLines settings
-        , viewGridEventDispatcherTiles gridWidth gridHeight InstrumentGrid
+        [ Html.Lazy.lazy viewGridBarBackground settings.bars
+        , Html.Lazy.lazy2 viewGridHighlightedColumnBackground gridWidth stepIndex
+        , Html.Lazy.lazy5 viewInstrumentTiles
+            gridWidth
+            gridHeight
+            playing
+            stepIndex
+            instrumentPositions
+        , Html.Lazy.lazy viewInstrumentGridLines settings
+        , Html.Lazy.lazy3 viewGridEventDispatcherTiles gridWidth gridHeight InstrumentGrid
         ]
 
 
@@ -1810,11 +1820,24 @@ viewGridEventDispatcherTiles gridWidth gridHeight gridType =
         )
 
 
-viewInstrumentTiles : PlayerState -> Int -> PaintedPositions -> List (Html Msg)
-viewInstrumentTiles playState stepIndex instrumentPositions =
+viewInstrumentTiles : Int -> Int -> Bool -> Int -> PaintedPositions -> Html Msg
+viewInstrumentTiles gridWidth gridHeight playing stepIndex instrumentPositions =
+    let
+        _ =
+            Debug.log "Debug: " "vit"
+    in
+    viewAbsoluteGridLayout gridWidth gridHeight [] <|
+        viewInstrumentTilesHelp
+            playing
+            stepIndex
+            instrumentPositions
+
+
+viewInstrumentTilesHelp : Bool -> Int -> PaintedPositions -> List (Html Msg)
+viewInstrumentTilesHelp playing stepIndex instrumentPositions =
     let
         isTileAnimated gp =
-            isPlaying playState && first gp == stepIndex
+            playing && first gp == stepIndex
 
         viewInstrumentTile_ gp =
             if isTileAnimated gp then
