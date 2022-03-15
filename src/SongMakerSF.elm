@@ -693,6 +693,16 @@ type PlayerState
     | NotPlaying
 
 
+isPlaying : PlayerState -> Bool
+isPlaying playState =
+    case playState of
+        Playing _ ->
+            True
+
+        NotPlaying ->
+            False
+
+
 type Tool
     = Pen
     | Eraser
@@ -1765,37 +1775,33 @@ viewGrid model =
 
 viewInstrumentGrid : Settings -> Model -> Html Msg
 viewInstrumentGrid settings model =
+    let
+        ( gridWidth, gridHeight ) =
+            ( computeGridWidth settings, instrumentGridHeight settings )
+    in
     div [ dGrid, positionRelative, style "flex-grow" "1" ]
         [ viewGridBarBackground settings.bars
         , let
             w =
-                computeGridWidth settings
+                gridWidth
 
             h =
                 1
           in
-          div [ dGrid, styleGridTemplate w h, positionAbsolute, w100, h100 ]
+          viewAbsoluteGridLayout w h [] <|
             [ div [ bgc highlightBGColor, styleGridAreaFromGP ( model.stepIndex, 0 ) ] [] ]
         , let
             w =
-                computeGridWidth settings
+                gridWidth
 
             h =
-                instrumentGridHeight settings
+                gridHeight
 
             dataModel =
                 currentDataModel model
 
             instrumentPositions =
                 dataModel.instrumentPositions
-
-            isPlaying playState =
-                case playState of
-                    Playing _ ->
-                        True
-
-                    NotPlaying ->
-                        False
 
             isTileAnimated gp =
                 isPlaying model.playState && first gp == model.stepIndex
@@ -1807,20 +1813,19 @@ viewInstrumentGrid settings model =
                 else
                     viewStaticInstrumentTile gp
           in
-          div
-            [ dGrid, styleGridTemplate w h, positionAbsolute, w100, h100 ]
+          viewAbsoluteGridLayout w h [] <|
             (instrumentPositions |> Set.toList |> List.map viewInstrumentTile_)
         , viewInstrumentGridLines settings
-        , let
-            w =
-                computeGridWidth settings
-
-            h =
-                instrumentGridHeight settings
-          in
-          div [ dGrid, styleGridTemplate w h, positionAbsolute, w100, h100 ]
-            (rangeWH w h |> List.map (viewEventDispatcherTile InstrumentGrid))
+        , viewAbsoluteGridLayout gridWidth gridHeight [] <|
+            (rangeWH gridWidth gridHeight
+                |> List.map (viewEventDispatcherTile InstrumentGrid)
+            )
         ]
+
+
+viewAbsoluteGridLayout : Int -> Int -> List (Attribute msg) -> List (Html msg) -> Html msg
+viewAbsoluteGridLayout w h attrs =
+    div ([ dGrid, styleGridTemplate w h, positionAbsolute, w100, h100 ] ++ attrs)
 
 
 viewEventDispatcherTile : GridType -> Int2 -> Html Msg
@@ -1982,14 +1987,6 @@ viewPercussionTileAt model (( x, _ ) as gp) =
         settings =
             dataModel.settings
 
-        isPlaying =
-            case model.playState of
-                Playing _ ->
-                    True
-
-                _ ->
-                    False
-
         isNoteTile =
             Set.member gp dataModel.percussionPositions
 
@@ -1997,7 +1994,7 @@ viewPercussionTileAt model (( x, _ ) as gp) =
             x == model.stepIndex
 
         anim =
-            if isPlaying && isNoteTile && isHighlightedTile then
+            if isPlaying model.playState && isNoteTile && isHighlightedTile then
                 blink
 
             else
