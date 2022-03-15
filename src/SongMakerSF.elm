@@ -30,7 +30,7 @@ import Utils exposing (..)
     Clone: Chrome Music Labs - Song Maker.
 
     # Next
-    * percussion grid visuals
+    * [x] percussion grid visuals
     --
     * Save btn
     * pentatonic scale
