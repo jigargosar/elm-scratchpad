@@ -905,7 +905,7 @@ type Msg
     | UrlChanged Url
     | PointerDownOnGP GridType Int2
     | PointerEnteredGP GridType Int2
-    | PointerUpOnGrid
+    | OnPointerUp
     | OnBrowserKeyDown KeyEvent
     | OnAudioContextTime Float
       -- Bottom Bar
@@ -1117,7 +1117,7 @@ update msg model =
                         |> mapPushDataModel (setPosition gp tool gridType)
                         |> withCmd (playNoteIfDrawingCmd model gridType tool gp)
 
-        PointerUpOnGrid ->
+        OnPointerUp ->
             ( case model.transientState of
                 Drawing _ _ ->
                     { model | transientState = None }
@@ -1651,7 +1651,7 @@ viewSelectLCR2 msg lcr =
 
 view : Model -> Html Msg
 view model =
-    fCol []
+    fCol [ notifyPointerUp OnPointerUp ]
         [ viewGrid model
         , viewBottomBar model
         ]
@@ -1769,7 +1769,6 @@ viewGrid model =
     fCol
         [ positionRelative
         , style "flex-grow" "1"
-        , notifyPointerUp PointerUpOnGrid
         , noUserSelect
         ]
         [ Html.Lazy.lazy4 viewInstrumentGrid
