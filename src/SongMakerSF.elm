@@ -1769,7 +1769,11 @@ viewGrid model =
         , notifyPointerUp PointerUpOnGrid
         , noUserSelect
         ]
-        [ Html.Lazy.lazy4 viewInstrumentGrid settings stepIndex playing instrumentPositions
+        [ Html.Lazy.lazy4 viewInstrumentGrid
+            settings
+            stepIndex
+            playing
+            instrumentPositions
         , div [ dGrid, positionRelative, sHeight "20%" ]
             [ let
                 w =
@@ -1792,16 +1796,16 @@ viewInstrumentGrid settings stepIndex playing instrumentPositions =
             ( computeGridWidth settings, instrumentGridHeight settings )
     in
     div [ dGrid, positionRelative, style "flex-grow" "1" ]
-        [ Html.Lazy.lazy viewGridBarBackground settings.bars
-        , Html.Lazy.lazy2 viewGridHighlightedColumnBackground gridWidth stepIndex
-        , Html.Lazy.lazy5 viewInstrumentTiles
+        [ viewGridBarBackground settings.bars
+        , viewGridHighlightedColumnBackground gridWidth stepIndex
+        , viewInstrumentTiles
             gridWidth
             gridHeight
             playing
             stepIndex
             instrumentPositions
-        , Html.Lazy.lazy viewInstrumentGridLines settings
-        , Html.Lazy.lazy3 viewGridEventDispatcherTiles gridWidth gridHeight InstrumentGrid
+        , viewInstrumentGridLines settings
+        , viewGridEventDispatcherTiles gridWidth gridHeight InstrumentGrid
         ]
 
 
