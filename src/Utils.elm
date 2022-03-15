@@ -11,6 +11,7 @@ import Float.Extra
 import Html exposing (Html)
 import Html.Attributes as HA
 import Html.Events
+import Html.Keyed
 import Json.Decode as JD exposing (Decoder)
 import Json.Decode.Pipeline as JP
 import List.Extra
@@ -2330,6 +2331,10 @@ applyAll fns a =
 
 
 -- HTML UTILS
+
+
+keyedDiv =
+    Html.Keyed.node "div"
 
 
 noView : Html msg

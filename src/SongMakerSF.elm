@@ -5,7 +5,6 @@ import Browser.Navigation exposing (Key)
 import Html
 import Html.Attributes as HA
 import Html.Events exposing (onBlur)
-import Html.Keyed
 import Html.Lazy
 import Json.Decode as JD exposing (Decoder)
 import Json.Encode as JE exposing (Value)
@@ -1799,7 +1798,7 @@ viewInstrumentGrid settings model =
                     NotPlaying ->
                         ( instrumentPositions, Set.empty )
           in
-          Html.Keyed.node "div"
+          keyedDiv
             [ dGrid, styleGridTemplate w h, positionAbsolute, w100, h100 ]
             ((staticPositions
                 |> Set.toList
