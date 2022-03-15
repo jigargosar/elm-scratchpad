@@ -1790,7 +1790,7 @@ viewGridBarBackground bars =
             1
     in
     div [ dGrid, styleGridTemplate w h, positionAbsolute, w100, h100 ]
-        ([ div [] [], div [ bgc white ] [] ]
+        ([ div [] [], div [ bgc barBGColor2 ] [] ]
             |> List.repeat (w // 2)
             |> List.concat
         )
@@ -1902,9 +1902,6 @@ viewInstrumentTileAt model (( x, _ ) as gp) =
         dataModel =
             currentDataModel model
 
-        settings =
-            dataModel.settings
-
         isPlaying =
             case model.playState of
                 Playing _ ->
@@ -1926,21 +1923,12 @@ viewInstrumentTileAt model (( x, _ ) as gp) =
             else
                 Animation.empty
 
-        notesPerBar =
-            settings.beatsPerBar * settings.beatSplits
-
-        isAlternateBarTile =
-            modBy (notesPerBar * 2) x >= notesPerBar
-
         bgColor =
             if isNoteTile then
                 noteColorFromGP gp
 
             else if isHighlightedTile then
                 highlightBGColor
-
-            else if isAlternateBarTile then
-                barBGColor2
 
             else
                 "transparent"
