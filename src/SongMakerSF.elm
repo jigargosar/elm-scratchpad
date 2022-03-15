@@ -1772,6 +1772,15 @@ viewInstrumentGrid settings model =
                 computeGridWidth settings
 
             h =
+                1
+          in
+          div [ dGrid, styleGridTemplate w h, positionAbsolute, w100, h100 ]
+            [ div [ bgc highlightBGColor, styleGridAreaFromGP ( model.stepIndex, 0 ) ] [] ]
+        , let
+            w =
+                computeGridWidth settings
+
+            h =
                 instrumentGridHeight settings
 
             dataModel =
@@ -1779,24 +1788,11 @@ viewInstrumentGrid settings model =
 
             instrumentPositions =
                 dataModel.instrumentPositions
-
-            currentStepPositions =
-                rangeN h
-                    |> List.map (pair model.stepIndex)
-                    |> Set.fromList
-
-            highlightedPositions =
-                Set.diff currentStepPositions instrumentPositions
           in
           div [ dGrid, styleGridTemplate w h, positionAbsolute, w100, h100 ]
-            ((instrumentPositions
+            (instrumentPositions
                 |> Set.toList
                 |> List.map (viewInstrumentTileAt model)
-             )
-                ++ (highlightedPositions
-                        |> Set.toList
-                        |> List.map (viewInstrumentTileAt model)
-                   )
             )
         , viewInstrumentGridLines settings
         , let
@@ -1940,9 +1936,6 @@ backgroundGridLinesHorizontal strokeWidth color pctN =
 viewInstrumentTileAt : Model -> Int2 -> Html Msg
 viewInstrumentTileAt model (( x, _ ) as gp) =
     let
-        dataModel =
-            currentDataModel model
-
         isPlaying =
             case model.playState of
                 Playing _ ->
@@ -1951,28 +1944,18 @@ viewInstrumentTileAt model (( x, _ ) as gp) =
                 _ ->
                     False
 
-        isNoteTile =
-            Set.member gp dataModel.instrumentPositions
-
         isHighlightedTile =
             x == model.stepIndex
 
         anim =
-            if isPlaying && isNoteTile && isHighlightedTile then
+            if isPlaying && isHighlightedTile then
                 blink
 
             else
                 Animation.empty
 
         bgColor =
-            if isNoteTile then
-                noteColorFromGP gp
-
-            else if isHighlightedTile then
-                highlightBGColor
-
-            else
-                "transparent"
+            noteColorFromGP gp
     in
     viewTile anim bgColor InstrumentGrid gp
 
