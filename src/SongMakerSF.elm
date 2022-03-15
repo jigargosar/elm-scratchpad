@@ -1782,7 +1782,8 @@ viewInstrumentGrid settings model =
     div [ dGrid, positionRelative, style "flex-grow" "1" ]
         [ viewGridBarBackground settings.bars
         , viewGridHighlightedColumnBackground gridWidth model.stepIndex
-        , viewInstrumentTiles gridWidth
+        , viewInstrumentTiles
+            gridWidth
             gridHeight
             model.playState
             model.stepIndex
