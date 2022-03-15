@@ -1,6 +1,7 @@
 port module SongMakerSF exposing (main)
 
 import Browser.Dom
+import Browser.Events
 import Browser.Navigation exposing (Key)
 import Html
 import Html.Attributes as HA
@@ -905,7 +906,7 @@ type Msg
     | UrlChanged Url
     | PointerDownOnGP GridType Int2
     | PointerEnteredGP GridType Int2
-    | OnPointerUp
+    | OnBrowserMouseUp
     | OnBrowserKeyDown KeyEvent
     | OnAudioContextTime Float
       -- Bottom Bar
@@ -933,6 +934,7 @@ subscriptions : Model -> Sub Msg
 subscriptions _ =
     [ onBrowserKeyDown OnBrowserKeyDown
     , onAudioContextTime OnAudioContextTime
+    , Browser.Events.onMouseUp (JD.succeed OnBrowserMouseUp)
     ]
         |> Sub.batch
 
@@ -1117,7 +1119,7 @@ update msg model =
                         |> mapPushDataModel (setPosition gp tool gridType)
                         |> withCmd (playNoteIfDrawingCmd model gridType tool gp)
 
-        OnPointerUp ->
+        OnBrowserMouseUp ->
             ( case model.transientState of
                 Drawing _ _ ->
                     { model | transientState = None }
@@ -1651,7 +1653,7 @@ viewSelectLCR2 msg lcr =
 
 view : Model -> Html Msg
 view model =
-    fCol [ notifyPointerUp OnPointerUp ]
+    fCol []
         [ viewGrid model
         , viewBottomBar model
         ]
