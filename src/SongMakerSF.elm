@@ -1814,7 +1814,7 @@ viewInstrumentGrid settings model =
                             |> Set.toList
                             |> List.map viewStaticInstrumentTile
           in
-          keyedDiv
+          div
             [ dGrid, styleGridTemplate w h, positionAbsolute, w100, h100 ]
             tileViews
         , viewInstrumentGridLines settings
@@ -1956,7 +1956,7 @@ backgroundGridLinesHorizontal strokeWidth color pctN =
         |> String.join " "
 
 
-viewInstrumentTileAt : Bool -> Int2 -> ( String, Html Msg )
+viewInstrumentTileAt : Bool -> Int2 -> Html Msg
 viewInstrumentTileAt isAnimated gp =
     let
         anim =
@@ -1969,7 +1969,7 @@ viewInstrumentTileAt isAnimated gp =
         bgColor =
             noteColorFromGP gp
     in
-    ( Debug.toString gp, viewTile anim bgColor InstrumentGrid gp )
+    viewTile anim bgColor InstrumentGrid gp
 
 
 viewPercussionTileAt : Model -> Int2 -> Html Msg
