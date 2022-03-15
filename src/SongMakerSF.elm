@@ -1789,24 +1789,25 @@ viewInstrumentGrid settings model =
             instrumentPositions =
                 dataModel.instrumentPositions
 
-            ( staticPositions, animatedPositions ) =
+            animatedPositions =
                 case model.playState of
                     Playing _ ->
-                        Set.partition (first >> neq model.stepIndex) instrumentPositions
+                        Set.filter (first >> eq model.stepIndex) instrumentPositions
 
                     NotPlaying ->
-                        ( instrumentPositions, Set.empty )
+                        Set.empty
+
+            isAnimated gp =
+                Set.member gp animatedPositions
+
+            viewHelp gp =
+                viewInstrumentTileAt (isAnimated gp) gp
           in
           keyedDiv
             [ dGrid, styleGridTemplate w h, positionAbsolute, w100, h100 ]
-            ((staticPositions
+            (instrumentPositions
                 |> Set.toList
-                |> List.map (viewInstrumentTileAt model)
-             )
-                ++ (animatedPositions
-                        |> Set.toList
-                        |> List.map (viewInstrumentTileAt model)
-                   )
+                |> List.map viewHelp
             )
         , viewInstrumentGridLines settings
         , let
@@ -1947,22 +1948,11 @@ backgroundGridLinesHorizontal strokeWidth color pctN =
         |> String.join " "
 
 
-viewInstrumentTileAt : Model -> Int2 -> ( String, Html Msg )
-viewInstrumentTileAt model (( x, _ ) as gp) =
+viewInstrumentTileAt : Bool -> Int2 -> ( String, Html Msg )
+viewInstrumentTileAt isAnimated gp =
     let
-        isPlaying =
-            case model.playState of
-                Playing _ ->
-                    True
-
-                _ ->
-                    False
-
-        isHighlightedTile =
-            x == model.stepIndex
-
         anim =
-            if isPlaying && isHighlightedTile then
+            if isAnimated then
                 blink
 
             else
