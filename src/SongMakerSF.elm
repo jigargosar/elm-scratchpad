@@ -1791,18 +1791,6 @@ viewInstrumentGrid settings model =
           viewAbsoluteGridLayout w h [] <|
             [ div [ bgc highlightBGColor, styleGridAreaFromGP ( model.stepIndex, 0 ) ] [] ]
         , let
-            w =
-                gridWidth
-
-            h =
-                gridHeight
-
-            dataModel =
-                currentDataModel model
-
-            instrumentPositions =
-                dataModel.instrumentPositions
-
             isTileAnimated gp =
                 isPlaying model.playState && first gp == model.stepIndex
 
@@ -1813,8 +1801,12 @@ viewInstrumentGrid settings model =
                 else
                     viewStaticInstrumentTile gp
           in
-          viewAbsoluteGridLayout w h [] <|
-            (instrumentPositions |> Set.toList |> List.map viewInstrumentTile_)
+          viewAbsoluteGridLayout gridWidth gridHeight [] <|
+            (currentDataModel model
+                |> .instrumentPositions
+                |> Set.toList
+                |> List.map viewInstrumentTile_
+            )
         , viewInstrumentGridLines settings
         , viewAbsoluteGridLayout gridWidth gridHeight [] <|
             (rangeWH gridWidth gridHeight
