@@ -1985,17 +1985,14 @@ viewStaticInstrumentTile gp =
 viewInstrumentTile : Bool -> Int2 -> Html Msg
 viewInstrumentTile isAnimated gp =
     let
-        anim =
+        animDiv =
             if isAnimated then
-                blink
+                Animated.div blink
 
             else
-                Animation.empty
-
-        bgColor =
-            noteColorFromGP gp
+                div
     in
-    viewTile anim bgColor InstrumentGrid gp
+    animDiv [ bgc (noteColorFromGP gp), styleGridAreaFromGP gp ] []
 
 
 viewPercussionTileAt : Model -> Int2 -> Html Msg
