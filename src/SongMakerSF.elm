@@ -1825,7 +1825,13 @@ viewPercussionTile isAnimated gp =
         [ bgc (noteColorFromGP gp)
         , styleGridAreaFromGP gp
         , style "clip-path" "circle(closest-side at center)"
+        , style "clip-path" "polygon(50% 0%, 100% 100%, 0% 100%)"
+        , style "clip-path" "polygon(0% 87%, 50% 0%, 50% 0%, 100% 87%)"
+        , style "aspect-ratio" "1/1"
         , style "margin" "10%"
+
+        --, style "place-self" "center"
+        --, style "width" "100%"
         ]
         []
 
