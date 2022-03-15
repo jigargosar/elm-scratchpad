@@ -1763,6 +1763,7 @@ viewGrid model =
         ]
 
 
+viewInstrumentGrid : Settings -> Model -> Html Msg
 viewInstrumentGrid settings model =
     div [ dGrid, positionRelative, style "flex-grow" "1" ]
         [ let
