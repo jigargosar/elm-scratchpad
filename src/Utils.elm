@@ -1405,6 +1405,14 @@ polyline pts aa =
     Svg.polyline (TA.points pts :: aa) []
 
 
+rotateTurns =
+    rotateF << turns
+
+
+triangle r =
+    vPolygon (ngonVertices 3 r)
+
+
 vPolygon : List Vec -> List (Attribute msg) -> Svg.Svg msg
 vPolygon vs =
     polygon (List.map vToTuple vs)

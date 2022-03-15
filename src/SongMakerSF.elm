@@ -1847,7 +1847,7 @@ viewPercussionTile isAnimated gp =
             circle 50 [ fill bgColor ]
 
           else
-            vPolygon (ngonVertices 3 50) [ fill bgColor, transforms [ rotateF (turns -0.25) ] ]
+            triangle 50 [ fill bgColor, transforms [ rotateTurns -0.25 ] ]
         ]
 
 
