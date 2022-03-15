@@ -1821,7 +1821,12 @@ viewPercussionTile isAnimated gp =
             else
                 div
     in
-    animDiv [ bgc (noteColorFromGP gp), styleGridAreaFromGP gp ] []
+    animDiv
+        [ bgc (noteColorFromGP gp)
+        , styleGridAreaFromGP gp
+        , style "clip-path" "circle(closest-side at center)"
+        ]
+        []
 
 
 viewInstrumentGrid : Settings -> Int -> Bool -> PaintedPositions -> Html Msg
