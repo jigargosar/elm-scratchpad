@@ -28,10 +28,6 @@ import Utils exposing (..)
     Clone: Chrome Music Labs - Song Maker.
 
     # Next
-    * Undo
-        * reset on navigation
-        * [x] introduce undo pivot ~~and explicitly add changes in every message~~.
-        * [x] tempo: throttle / delay applying. for easier undo.
     * percussion grid visuals
     --
     * Save btn
@@ -42,15 +38,19 @@ import Utils exposing (..)
 
 
     # Archived
-        * [x] add all UI elements.
-        * [x] make UI functional.
-        * [x] implement features represented by UI.
-            * [x] Instruments
-            * [x] Tempo
-            * [x] Settings
-        * [x] Update player on tempo/settings change
-        * [x] start noteName
-        * [x] chromatic scale
+    * [x] add all UI elements.
+    * [x] make UI functional.
+    * [x] implement features represented by UI.
+        * [x] Instruments
+        * [x] Tempo
+        * [x] Settings
+    * [x] Update player on tempo/settings change
+    * [x] start noteName
+    * [x] chromatic scale
+    * [x] Undo
+            * [x] reset on navigation
+            * [x] introduce undo pivot ~~and explicitly add changes in every message~~.
+            * [x] tempo: throttle / delay applying. for easier undo.
 
 
 
