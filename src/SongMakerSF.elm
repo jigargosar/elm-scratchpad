@@ -5,6 +5,7 @@ import Browser.Navigation exposing (Key)
 import Html
 import Html.Attributes as HA
 import Html.Events exposing (onBlur)
+import Html.Keyed
 import Html.Lazy
 import Json.Decode as JD exposing (Decoder)
 import Json.Encode as JE exposing (Value)
@@ -1794,10 +1795,12 @@ viewInstrumentGrid settings model =
                     Playing _ ->
                         Set.partition (first >> neq model.stepIndex) instrumentPositions
 
+                    --( instrumentPositions, Set.empty )
                     NotPlaying ->
                         ( instrumentPositions, Set.empty )
           in
-          div [ dGrid, styleGridTemplate w h, positionAbsolute, w100, h100 ]
+          Html.Keyed.node "div"
+            [ dGrid, styleGridTemplate w h, positionAbsolute, w100, h100 ]
             ((staticPositions
                 |> Set.toList
                 |> List.map (viewInstrumentTileAt model)
@@ -1946,7 +1949,7 @@ backgroundGridLinesHorizontal strokeWidth color pctN =
         |> String.join " "
 
 
-viewInstrumentTileAt : Model -> Int2 -> Html Msg
+viewInstrumentTileAt : Model -> Int2 -> ( String, Html Msg )
 viewInstrumentTileAt model (( x, _ ) as gp) =
     let
         isPlaying =
@@ -1970,7 +1973,7 @@ viewInstrumentTileAt model (( x, _ ) as gp) =
         bgColor =
             noteColorFromGP gp
     in
-    viewTile anim bgColor InstrumentGrid gp
+    ( Debug.toString gp, viewTile anim bgColor InstrumentGrid gp )
 
 
 viewPercussionTileAt : Model -> Int2 -> Html Msg
