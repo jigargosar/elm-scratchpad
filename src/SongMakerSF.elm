@@ -1777,7 +1777,29 @@ viewInstrumentGrid settings model =
           div [ dGrid, styleGridTemplate w h, positionAbsolute, w100, h100 ]
             (rangeWH w h |> List.map (viewInstrumentTileAt model))
         , viewInstrumentGridLines settings
+        , let
+            w =
+                computeGridWidth settings
+
+            h =
+                instrumentGridHeight settings
+          in
+          div [ dGrid, styleGridTemplate w h, positionAbsolute, w100, h100 ]
+            (rangeWH w h
+                |> List.map
+                    (viewEventDispatcherTile InstrumentGrid)
+            )
         ]
+
+
+viewEventDispatcherTile : GridType -> Int2 -> Html Msg
+viewEventDispatcherTile gridType gp =
+    div
+        [ styleGridAreaFromGP gp
+        , notifyPointerDown (PointerDownOnGP gridType gp)
+        , notifyPointerEnter (PointerEnteredGP gridType gp)
+        ]
+        []
 
 
 viewGridBarBackground : Int -> Html msg
