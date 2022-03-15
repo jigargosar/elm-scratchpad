@@ -1773,6 +1773,15 @@ viewInstrumentGrid settings model =
             h =
                 instrumentGridHeight settings
           in
+          div [ dGrid, styleGridTemplate w h, positionAbsolute ]
+            (rangeWH w h |> List.map (viewInstrumentTileAt model))
+        , let
+            w =
+                computeGridWidth settings
+
+            h =
+                instrumentGridHeight settings
+          in
           div [ dGrid, styleGridTemplate w h ]
             (rangeWH w h |> List.map (viewInstrumentTileAt model))
         , viewInstrumentGridLines settings
