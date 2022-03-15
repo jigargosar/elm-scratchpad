@@ -17,6 +17,7 @@ import Set exposing (Set)
 import Simple.Animation as Animation exposing (Animation)
 import Simple.Animation.Animated as Animated
 import Simple.Animation.Property as P
+import Svg
 import Svg.Attributes
 import Task
 import Url exposing (Url)
@@ -1846,7 +1847,7 @@ viewPercussionTile isAnimated gp =
             circle 50 [ fill bgColor ]
 
           else
-            square 100 [ fill bgColor ]
+            vPolygon (ngonVertices 3 50) [ fill bgColor, transforms [ rotateF (turns -0.25) ] ]
         ]
 
 

@@ -1400,9 +1400,19 @@ vPolyline vs =
     polyline (List.map vToTuple vs)
 
 
-polyline : List ( Float, Float ) -> List (Attribute msg) -> Svg msg
+polyline : List Float2 -> List (Attribute msg) -> Svg msg
 polyline pts aa =
     Svg.polyline (TA.points pts :: aa) []
+
+
+vPolygon : List Vec -> List (Attribute msg) -> Svg.Svg msg
+vPolygon vs =
+    polygon (List.map vToTuple vs)
+
+
+polygon : List Float2 -> List (Attribute msg) -> Svg.Svg msg
+polygon pts attrs =
+    Svg.polygon (TA.points pts :: attrs) []
 
 
 viewBoxC : Float -> Float -> Attribute a
