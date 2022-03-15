@@ -86,7 +86,7 @@ type alias PaintedPositions =
 type alias Model =
     { dataModelPivot : Pivot DataModel
     , stepIndex : Int
-    , playState : PlayerState
+    , playState : PlayState
     , transientState : TransientState
     , audioTime : Float
     , key : Key
@@ -688,13 +688,13 @@ initialSettingsV1 =
     }
 
 
-type PlayerState
+type PlayState
     = Playing Float
     | NotPlaying
 
 
-isPlaying : PlayerState -> Bool
-isPlaying playState =
+checkIfPlaying : PlayState -> Bool
+checkIfPlaying playState =
     case playState of
         Playing _ ->
             True
@@ -1724,7 +1724,7 @@ viewTempoInput ( tempo, editing ) =
         ]
 
 
-viewPlayButton : PlayerState -> Html Msg
+viewPlayButton : PlayState -> Html Msg
 viewPlayButton playState =
     button
         [ autofocus True
@@ -1757,8 +1757,8 @@ viewGrid model =
         stepIndex =
             model.stepIndex
 
-        playing =
-            isPlaying model.playState
+        isPlaying =
+            checkIfPlaying model.playState
 
         instrumentPositions =
             dataModel.instrumentPositions
@@ -1772,7 +1772,7 @@ viewGrid model =
         [ Html.Lazy.lazy4 viewInstrumentGrid
             settings
             stepIndex
-            playing
+            isPlaying
             instrumentPositions
         , div [ dGrid, positionRelative, sHeight "20%" ]
             [ let
@@ -1790,7 +1790,7 @@ viewGrid model =
 
 
 viewInstrumentGrid : Settings -> Int -> Bool -> PaintedPositions -> Html Msg
-viewInstrumentGrid settings stepIndex playing instrumentPositions =
+viewInstrumentGrid settings stepIndex isPlaying instrumentPositions =
     let
         ( gridWidth, gridHeight ) =
             ( computeGridWidth settings, instrumentGridHeight settings )
@@ -1801,7 +1801,7 @@ viewInstrumentGrid settings stepIndex playing instrumentPositions =
         , viewInstrumentTiles
             gridWidth
             gridHeight
-            playing
+            isPlaying
             stepIndex
             instrumentPositions
         , viewInstrumentGridLines settings
@@ -1828,10 +1828,10 @@ viewGridEventDispatcherTiles gridWidth gridHeight gridType =
 
 
 viewInstrumentTiles : Int -> Int -> Bool -> Int -> PaintedPositions -> Html Msg
-viewInstrumentTiles gridWidth gridHeight playing stepIndex instrumentPositions =
+viewInstrumentTiles gridWidth gridHeight isPlaying stepIndex instrumentPositions =
     let
         isTileAnimated gp =
-            playing && first gp == stepIndex
+            isPlaying && first gp == stepIndex
 
         viewInstrumentTile_ gp =
             if isTileAnimated gp then
@@ -2014,7 +2014,7 @@ viewPercussionTileAt model (( x, _ ) as gp) =
             x == model.stepIndex
 
         anim =
-            if isPlaying model.playState && isNoteTile && isHighlightedTile then
+            if checkIfPlaying model.playState && isNoteTile && isHighlightedTile then
                 blink
 
             else
