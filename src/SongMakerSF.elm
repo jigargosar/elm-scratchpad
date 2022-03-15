@@ -1748,8 +1748,20 @@ viewPlayButton playState =
 viewGrid : Model -> Html Msg
 viewGrid model =
     let
+        dataModel =
+            currentDataModel model
+
         settings =
-            (currentDataModel model).settings
+            dataModel.settings
+
+        stepIndex =
+            model.stepIndex
+
+        playing =
+            isPlaying model.playState
+
+        instrumentPositions =
+            dataModel.instrumentPositions
     in
     fCol
         [ positionRelative
@@ -1757,7 +1769,7 @@ viewGrid model =
         , notifyPointerUp PointerUpOnGrid
         , noUserSelect
         ]
-        [ viewInstrumentGrid settings model
+        [ viewInstrumentGrid settings stepIndex playing instrumentPositions
         , div [ dGrid, positionRelative, sHeight "20%" ]
             [ let
                 w =
@@ -1773,20 +1785,11 @@ viewGrid model =
         ]
 
 
-viewInstrumentGrid : Settings -> Model -> Html Msg
-viewInstrumentGrid settings model =
+viewInstrumentGrid : Settings -> Int -> Bool -> PaintedPositions -> Html Msg
+viewInstrumentGrid settings stepIndex playing instrumentPositions =
     let
         ( gridWidth, gridHeight ) =
             ( computeGridWidth settings, instrumentGridHeight settings )
-
-        stepIndex =
-            model.stepIndex
-
-        playing =
-            isPlaying model.playState
-
-        instrumentPositions =
-            (currentDataModel model).instrumentPositions
     in
     div [ dGrid, positionRelative, style "flex-grow" "1" ]
         [ Html.Lazy.lazy viewGridBarBackground settings.bars
