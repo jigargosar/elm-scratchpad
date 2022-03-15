@@ -17,6 +17,7 @@ import Set exposing (Set)
 import Simple.Animation as Animation exposing (Animation)
 import Simple.Animation.Animated as Animated
 import Simple.Animation.Property as P
+import Svg.Attributes
 import Task
 import Url exposing (Url)
 import Utils exposing (..)
@@ -1811,29 +1812,41 @@ viewPercussionGrid settings stepIndex isPlaying percussionPositions =
         ]
 
 
+animatedSvg :
+    (List (Attribute msg) -> List (Html msg) -> Html msg)
+    -> Animation
+    -> List (Attribute msg)
+    -> List (Html msg)
+    -> Html msg
+animatedSvg =
+    Animated.svg { class = Svg.Attributes.class }
+
+
 viewPercussionTile : Bool -> Int2 -> Html Msg
 viewPercussionTile isAnimated gp =
     let
-        animDiv =
+        animContainer =
             if isAnimated then
-                Animated.div blink
+                animatedSvg svg blink
 
             else
-                div
-    in
-    animDiv
-        [ bgc (noteColorFromGP gp)
-        , styleGridAreaFromGP gp
-        , style "clip-path" "circle(closest-side at center)"
-        , style "clip-path" "polygon(50% 0%, 100% 100%, 0% 100%)"
-        , style "clip-path" "polygon(0% 87%, 50% 0%, 50% 0%, 100% 87%)"
-        , style "aspect-ratio" "1/1"
-        , style "margin" "10%"
+                svg
 
-        --, style "place-self" "center"
-        --, style "width" "100%"
+        bgColor =
+            noteColorFromGP gp
+    in
+    animContainer
+        [ styleGridAreaFromGP gp
+        , viewBoxC 100 100
+        , style "place-self" "center"
+        , style "padding" "10%"
         ]
-        []
+        [ if second gp == 0 then
+            circle 50 [ fill bgColor ]
+
+          else
+            square 100 [ fill bgColor ]
+        ]
 
 
 viewInstrumentGrid : Settings -> Int -> Bool -> PaintedPositions -> Html Msg
