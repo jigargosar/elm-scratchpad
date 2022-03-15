@@ -1773,9 +1773,31 @@ viewInstrumentGrid settings model =
 
             h =
                 instrumentGridHeight settings
+
+            dataModel =
+                currentDataModel model
+
+            instrumentPositions =
+                dataModel.instrumentPositions
+
+            currentStepPositions =
+                rangeN h
+                    |> List.map (pair model.stepIndex)
+                    |> Set.fromList
+
+            highlightedPositions =
+                Set.diff currentStepPositions instrumentPositions
           in
           div [ dGrid, styleGridTemplate w h, positionAbsolute, w100, h100 ]
-            (rangeWH w h |> List.map (viewInstrumentTileAt model))
+            ((instrumentPositions
+                |> Set.toList
+                |> List.map (viewInstrumentTileAt model)
+             )
+                ++ (highlightedPositions
+                        |> Set.toList
+                        |> List.map (viewInstrumentTileAt model)
+                   )
+            )
         , viewInstrumentGridLines settings
         , let
             w =
