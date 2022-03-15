@@ -1785,10 +1785,7 @@ viewInstrumentGrid settings model =
                 instrumentGridHeight settings
           in
           div [ dGrid, styleGridTemplate w h, positionAbsolute, w100, h100 ]
-            (rangeWH w h
-                |> List.map
-                    (viewEventDispatcherTile InstrumentGrid)
-            )
+            (rangeWH w h |> List.map (viewEventDispatcherTile InstrumentGrid))
         ]
 
 
