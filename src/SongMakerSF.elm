@@ -1788,11 +1788,26 @@ viewInstrumentGrid settings model =
                 model.stepIndex
                 (currentDataModel model).instrumentPositions
         , viewInstrumentGridLines settings
-        , viewAbsoluteGridLayout gridWidth gridHeight [] <|
-            (rangeWH gridWidth gridHeight
-                |> List.map (viewEventDispatcherTile InstrumentGrid)
-            )
+        , viewGridEventDispatcherTiles gridWidth gridHeight InstrumentGrid
         ]
+
+
+viewGridEventDispatcherTiles : Int -> Int -> GridType -> Html Msg
+viewGridEventDispatcherTiles gridWidth gridHeight gridType =
+    let
+        viewEventDispatcherTile : Int2 -> Html Msg
+        viewEventDispatcherTile gp =
+            div
+                [ styleGridAreaFromGP gp
+                , notifyPointerDown (PointerDownOnGP gridType gp)
+                , notifyPointerEnter (PointerEnteredGP gridType gp)
+                ]
+                []
+    in
+    viewAbsoluteGridLayout gridWidth gridHeight [] <|
+        (rangeWH gridWidth gridHeight
+            |> List.map viewEventDispatcherTile
+        )
 
 
 viewInstrumentTiles : PlayerState -> Int -> PaintedPositions -> List (Html Msg)
@@ -1822,16 +1837,6 @@ viewGridHighlightedColumnBackground gridWidth stepIndex =
 viewAbsoluteGridLayout : Int -> Int -> List (Attribute msg) -> List (Html msg) -> Html msg
 viewAbsoluteGridLayout w h attrs =
     div ([ dGrid, styleGridTemplate w h, positionAbsolute, w100, h100 ] ++ attrs)
-
-
-viewEventDispatcherTile : GridType -> Int2 -> Html Msg
-viewEventDispatcherTile gridType gp =
-    div
-        [ styleGridAreaFromGP gp
-        , notifyPointerDown (PointerDownOnGP gridType gp)
-        , notifyPointerEnter (PointerEnteredGP gridType gp)
-        ]
-        []
 
 
 viewGridBarBackground : Int -> Html msg
