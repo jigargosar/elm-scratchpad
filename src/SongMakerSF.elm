@@ -1833,13 +1833,14 @@ viewPercussionTile isAnimated gp =
                 svg
 
         bgColor =
-            noteColorFromGP gp
+            --noteColorFromGP gp
+            wBlue
     in
     animContainer
         [ styleGridAreaFromGP gp
         , viewBoxC 100 100
         , style "place-self" "center"
-        , style "padding" "10%"
+        , style "padding" "20%"
         ]
         [ if second gp == 0 then
             circle 50 [ fill bgColor ]
