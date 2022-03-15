@@ -1789,13 +1789,6 @@ viewInstrumentGrid settings model =
             instrumentPositions =
                 dataModel.instrumentPositions
 
-            viewInstrumentTileWhenPlaying gp =
-                if first gp == model.stepIndex then
-                    viewAnimatedInstrumentTile gp
-
-                else
-                    viewStaticInstrumentTile gp
-
             isPlaying playState =
                 case playState of
                     Playing _ ->
