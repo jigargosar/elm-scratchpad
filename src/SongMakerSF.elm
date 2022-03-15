@@ -1781,14 +1781,7 @@ viewInstrumentGrid settings model =
     in
     div [ dGrid, positionRelative, style "flex-grow" "1" ]
         [ viewGridBarBackground settings.bars
-        , let
-            w =
-                gridWidth
-
-            h =
-                1
-          in
-          viewAbsoluteGridLayout w h [] <|
+        , viewAbsoluteGridLayout gridWidth 1 [] <|
             [ div [ bgc highlightBGColor, styleGridAreaFromGP ( model.stepIndex, 0 ) ] [] ]
         , let
             isTileAnimated gp =
