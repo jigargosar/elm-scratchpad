@@ -1747,18 +1747,7 @@ viewGrid model =
         , notifyPointerUp PointerUpOnGrid
         , noUserSelect
         ]
-        [ div [ dGrid, positionRelative, style "flex-grow" "1" ]
-            [ let
-                w =
-                    computeGridWidth settings
-
-                h =
-                    instrumentGridHeight settings
-              in
-              div [ dGrid, styleGridTemplate w h ]
-                (rangeWH w h |> List.map (viewInstrumentTileAt model))
-            , viewInstrumentGridLines settings
-            ]
+        [ viewInstrumentGrid settings model
         , div [ dGrid, positionRelative, sHeight "20%" ]
             [ let
                 w =
@@ -1771,6 +1760,21 @@ viewGrid model =
                 (rangeWH w h |> List.map (viewPercussionTileAt model))
             , viewPercussionGridLines settings
             ]
+        ]
+
+
+viewInstrumentGrid settings model =
+    div [ dGrid, positionRelative, style "flex-grow" "1" ]
+        [ let
+            w =
+                computeGridWidth settings
+
+            h =
+                instrumentGridHeight settings
+          in
+          div [ dGrid, styleGridTemplate w h ]
+            (rangeWH w h |> List.map (viewInstrumentTileAt model))
+        , viewInstrumentGridLines settings
         ]
 
 
