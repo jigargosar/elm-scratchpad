@@ -1320,7 +1320,7 @@ updateOnTogglePlay model =
         NotPlaying ->
             let
                 initialDelay =
-                    100
+                    scheduleDelay
 
                 currentStepAudioTime =
                     model.audioTime + initialDelay
@@ -1338,6 +1338,10 @@ updateOnTogglePlay model =
             { model | playState = NotPlaying } |> withNoCmd
 
 
+scheduleDelay =
+    100
+
+
 updateAfterAudioTimeReceived : Model -> ( Model, Cmd Msg )
 updateAfterAudioTimeReceived model =
     case model.playState of
@@ -1349,7 +1353,7 @@ updateAfterAudioTimeReceived model =
                 diff =
                     nextStepAudioTime_ - model.audioTime |> atLeast 0
             in
-            if diff < 100 then
+            if diff <= scheduleDelay then
                 let
                     currentStepAudioTime =
                         model.audioTime + diff

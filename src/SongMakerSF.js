@@ -4,7 +4,7 @@ const app = Elm.SongMakerSF.init()
 
 const Player = MakePlayer()
 
-app.ports.scheduleNote.subscribe(Player.scheduleNote)
+app.ports.scheduleNote?.subscribe(Player.scheduleNote)
 
 function MakePlayer() {
   const audioContext = newAudioContext()
@@ -19,9 +19,13 @@ function MakePlayer() {
   const presetNames = Object.values(presetMap)
   loadPresets(audioContext, fontPlayer, presetNames)
 
+  const scheduleDelay = 100
+
   setInterval(function () {
-    app.ports.onAudioContextTime.send(audioContext.currentTime * 1000)
-  }, 10)
+    // requestAnimationFrame(() => {
+    app.ports.onAudioContextTime?.send(audioContext.currentTime * 1000)
+    // })
+  }, scheduleDelay / 2)
 
   return {
     async scheduleNote({ preset, atAudioTime, pitch, duration }) {
