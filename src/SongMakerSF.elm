@@ -1789,26 +1789,34 @@ viewInstrumentGrid settings model =
             instrumentPositions =
                 dataModel.instrumentPositions
 
-            animatedPositions =
+            viewAnimatedInstrumentTile gp =
+                viewInstrumentTileAt True gp
+
+            viewStaticInstrumentTile gp =
+                viewInstrumentTileAt False gp
+
+            viewInstrumentTileWhenPlaying gp =
+                if first gp == model.stepIndex then
+                    viewAnimatedInstrumentTile gp
+
+                else
+                    viewStaticInstrumentTile gp
+
+            tileViews =
                 case model.playState of
                     Playing _ ->
-                        Set.filter (first >> eq model.stepIndex) instrumentPositions
+                        instrumentPositions
+                            |> Set.toList
+                            |> List.map viewInstrumentTileWhenPlaying
 
                     NotPlaying ->
-                        Set.empty
-
-            isAnimated gp =
-                Set.member gp animatedPositions
-
-            viewHelp gp =
-                viewInstrumentTileAt (isAnimated gp) gp
+                        instrumentPositions
+                            |> Set.toList
+                            |> List.map viewStaticInstrumentTile
           in
           keyedDiv
             [ dGrid, styleGridTemplate w h, positionAbsolute, w100, h100 ]
-            (instrumentPositions
-                |> Set.toList
-                |> List.map viewHelp
-            )
+            tileViews
         , viewInstrumentGridLines settings
         , let
             w =
