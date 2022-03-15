@@ -1840,10 +1840,10 @@ viewPercussionTile isAnimated gp =
         [ styleGridAreaFromGP gp
         , viewBoxC 100 100
         , style "place-self" "center"
-        , style "padding" "20%"
+        , style "padding" "10%"
         ]
         [ if second gp == 0 then
-            circle 50 [ fill bgColor ]
+            circle 40 [ fill bgColor ]
 
           else
             triangle 50 [ fill bgColor, transforms [ rotateTurns -0.25 ] ]
