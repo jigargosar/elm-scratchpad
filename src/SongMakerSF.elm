@@ -48,9 +48,9 @@ import Utils exposing (..)
     * [x] start noteName
     * [x] chromatic scale
     * [x] Undo
-            * [x] reset on navigation
-            * [x] introduce undo pivot ~~and explicitly add changes in every message~~.
-            * [x] tempo: throttle / delay applying. for easier undo.
+        * [x] reset on navigation
+        * [x] introduce undo pivot ~~and explicitly add changes in every message~~.
+        * [x] tempo: throttle / delay applying. for easier undo.
 
 
 
