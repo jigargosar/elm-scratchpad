@@ -1794,7 +1794,6 @@ viewInstrumentGrid settings model =
                     Playing _ ->
                         Set.partition (first >> neq model.stepIndex) instrumentPositions
 
-                    --( instrumentPositions, Set.empty )
                     NotPlaying ->
                         ( instrumentPositions, Set.empty )
           in
