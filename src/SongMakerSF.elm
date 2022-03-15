@@ -1834,17 +1834,26 @@ viewInstrumentTiles gridWidth gridHeight isPlaying stepIndex instrumentPositions
             isPlaying && first gp == stepIndex
 
         viewInstrumentTile_ gp =
-            if isTileAnimated gp then
-                viewAnimatedInstrumentTile gp
-
-            else
-                viewStaticInstrumentTile gp
+            viewInstrumentTile (isTileAnimated gp) gp
     in
     viewAbsoluteGridLayout gridWidth gridHeight [] <|
         (instrumentPositions
             |> Set.toList
             |> List.map viewInstrumentTile_
         )
+
+
+viewInstrumentTile : Bool -> Int2 -> Html Msg
+viewInstrumentTile isAnimated gp =
+    let
+        animDiv =
+            if isAnimated then
+                Animated.div blink
+
+            else
+                div
+    in
+    animDiv [ bgc (noteColorFromGP gp), styleGridAreaFromGP gp ] []
 
 
 viewGridHighlightedColumnBackground : Int -> Int -> Html msg
@@ -1972,27 +1981,6 @@ backgroundGridLinesHorizontal strokeWidth color pctN =
     , fromFloat (pctN * 100) ++ "%"
     ]
         |> String.join " "
-
-
-viewAnimatedInstrumentTile gp =
-    viewInstrumentTile True gp
-
-
-viewStaticInstrumentTile gp =
-    viewInstrumentTile False gp
-
-
-viewInstrumentTile : Bool -> Int2 -> Html Msg
-viewInstrumentTile isAnimated gp =
-    let
-        animDiv =
-            if isAnimated then
-                Animated.div blink
-
-            else
-                div
-    in
-    animDiv [ bgc (noteColorFromGP gp), styleGridAreaFromGP gp ] []
 
 
 viewPercussionTileAt : Model -> Int2 -> Html Msg
