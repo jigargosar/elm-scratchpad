@@ -1792,7 +1792,7 @@ viewInstrumentGrid settings model =
             ( staticPositions, animatedPositions ) =
                 case model.playState of
                     Playing _ ->
-                        ( instrumentPositions, Set.empty )
+                        Set.partition (first >> neq model.stepIndex) instrumentPositions
 
                     NotPlaying ->
                         ( instrumentPositions, Set.empty )
