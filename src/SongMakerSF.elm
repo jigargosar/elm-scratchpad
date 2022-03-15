@@ -2018,62 +2018,6 @@ backgroundGridLinesHorizontal strokeWidth color pctN =
         |> String.join " "
 
 
-viewPercussionTileAt : Model -> Int2 -> Html Msg
-viewPercussionTileAt model (( x, _ ) as gp) =
-    let
-        dataModel =
-            currentDataModel model
-
-        settings =
-            dataModel.settings
-
-        isNoteTile =
-            Set.member gp dataModel.percussionPositions
-
-        isHighlightedTile =
-            x == model.stepIndex
-
-        anim =
-            if checkIfPlaying model.playState && isNoteTile && isHighlightedTile then
-                blink
-
-            else
-                Animation.empty
-
-        notesPerBar =
-            settings.beatsPerBar * settings.beatSplits
-
-        isAlternateBarTile =
-            modBy (notesPerBar * 2) x >= notesPerBar
-
-        bgColor =
-            if isNoteTile then
-                noteColorFromGP gp
-
-            else if isHighlightedTile then
-                highlightBGColor
-
-            else if isAlternateBarTile then
-                barBGColor2
-
-            else
-                "transparent"
-    in
-    viewTile anim bgColor PercussionGrid gp
-
-
-viewTile : Animation -> String -> GridType -> Int2 -> Html Msg
-viewTile anim bgColor gridType gp =
-    Animated.div
-        anim
-        [ bgc bgColor
-        , styleGridAreaFromGP gp
-        , notifyPointerDown (PointerDownOnGP gridType gp)
-        , notifyPointerEnter (PointerEnteredGP gridType gp)
-        ]
-        []
-
-
 styleGridAreaFromGP : Int2 -> Attribute msg
 styleGridAreaFromGP ( x, y ) =
     let
