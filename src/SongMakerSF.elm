@@ -1762,6 +1762,9 @@ viewGrid model =
 
         instrumentPositions =
             dataModel.instrumentPositions
+
+        percussionPositions =
+            dataModel.percussionPositions
     in
     fCol
         [ positionRelative
@@ -1774,19 +1777,50 @@ viewGrid model =
             stepIndex
             isPlaying
             instrumentPositions
-        , div [ dGrid, positionRelative, sHeight "20%" ]
-            [ let
-                w =
-                    computeGridWidth settings
-
-                h =
-                    percussionGridHeight
-              in
-              div [ dGrid, styleGridTemplate w h ]
-                (rangeWH w h |> List.map (viewPercussionTileAt model))
-            , viewPercussionGridLines settings
-            ]
+        , Html.Lazy.lazy4 viewPercussionGrid
+            settings
+            stepIndex
+            isPlaying
+            percussionPositions
         ]
+
+
+viewPercussionGrid : Settings -> Int -> Bool -> Set ( Int, Int ) -> Html Msg
+viewPercussionGrid settings stepIndex isPlaying percussionPositions =
+    let
+        ( gridWidth, gridHeight ) =
+            ( computeGridWidth settings, percussionGridHeight )
+
+        isTileAnimated gp =
+            isPlaying && first gp == stepIndex
+
+        viewPercussionTile_ gp =
+            viewPercussionTile (isTileAnimated gp) gp
+    in
+    div [ dGrid, positionRelative, sHeight "20%" ]
+        [ viewGridBarBackground settings.bars
+        , viewGridHighlightedColumnBackground gridWidth stepIndex
+        , viewAbsoluteGridLayout gridWidth gridHeight [] <|
+            (percussionPositions
+                |> Set.toList
+                |> List.map viewPercussionTile_
+            )
+        , viewPercussionGridLines settings
+        , viewGridEventDispatcherTiles gridWidth gridHeight PercussionGrid
+        ]
+
+
+viewPercussionTile : Bool -> Int2 -> Html Msg
+viewPercussionTile isAnimated gp =
+    let
+        animDiv =
+            if isAnimated then
+                Animated.div blink
+
+            else
+                div
+    in
+    animDiv [ bgc (noteColorFromGP gp), styleGridAreaFromGP gp ] []
 
 
 viewInstrumentGrid : Settings -> Int -> Bool -> PaintedPositions -> Html Msg
