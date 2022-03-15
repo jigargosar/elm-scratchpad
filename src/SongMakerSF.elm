@@ -1766,7 +1766,8 @@ viewGrid model =
 viewInstrumentGrid : Settings -> Model -> Html Msg
 viewInstrumentGrid settings model =
     div [ dGrid, positionRelative, style "flex-grow" "1" ]
-        [ let
+        [ viewGridBarBackground settings.bars
+        , let
             w =
                 computeGridWidth settings
 
@@ -1775,7 +1776,6 @@ viewInstrumentGrid settings model =
           in
           div [ dGrid, styleGridTemplate w h, positionAbsolute, w100, h100 ]
             (rangeWH w h |> List.map (viewInstrumentTileAt model))
-        , viewGridBarBackground settings.bars
         , viewInstrumentGridLines settings
         ]
 
