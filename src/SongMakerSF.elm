@@ -1804,11 +1804,11 @@ viewInstrumentGrid settings model =
                     NotPlaying ->
                         False
 
-            isAnimated gp =
+            isTileAnimated gp =
                 isPlaying model.playState && first gp == model.stepIndex
 
             viewInstrumentTile_ gp =
-                if isAnimated gp then
+                if isTileAnimated gp then
                     viewAnimatedInstrumentTile gp
 
                 else
