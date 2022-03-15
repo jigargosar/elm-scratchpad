@@ -1781,31 +1781,44 @@ viewInstrumentGrid settings model =
     in
     div [ dGrid, positionRelative, style "flex-grow" "1" ]
         [ viewGridBarBackground settings.bars
-        , viewAbsoluteGridLayout gridWidth 1 [] <|
-            [ div [ bgc highlightBGColor, styleGridAreaFromGP ( model.stepIndex, 0 ) ] [] ]
-        , let
-            isTileAnimated gp =
-                isPlaying model.playState && first gp == model.stepIndex
-
-            viewInstrumentTile_ gp =
-                if isTileAnimated gp then
-                    viewAnimatedInstrumentTile gp
-
-                else
-                    viewStaticInstrumentTile gp
-          in
-          viewAbsoluteGridLayout gridWidth gridHeight [] <|
-            (currentDataModel model
-                |> .instrumentPositions
-                |> Set.toList
-                |> List.map viewInstrumentTile_
-            )
+        , viewGridHighlightedColumnBackground gridWidth model.stepIndex
+        , viewInstrumentTiles gridWidth
+            gridHeight
+            model.playState
+            model.stepIndex
+            (currentDataModel model).instrumentPositions
         , viewInstrumentGridLines settings
         , viewAbsoluteGridLayout gridWidth gridHeight [] <|
             (rangeWH gridWidth gridHeight
                 |> List.map (viewEventDispatcherTile InstrumentGrid)
             )
         ]
+
+
+viewInstrumentTiles : Int -> Int -> PlayerState -> Int -> PaintedPositions -> Html Msg
+viewInstrumentTiles gridWidth gridHeight playState stepIndex instrumentPositions =
+    let
+        isTileAnimated gp =
+            isPlaying playState && first gp == stepIndex
+
+        viewInstrumentTile_ gp =
+            if isTileAnimated gp then
+                viewAnimatedInstrumentTile gp
+
+            else
+                viewStaticInstrumentTile gp
+    in
+    viewAbsoluteGridLayout gridWidth gridHeight [] <|
+        (instrumentPositions
+            |> Set.toList
+            |> List.map viewInstrumentTile_
+        )
+
+
+viewGridHighlightedColumnBackground : Int -> Int -> Html msg
+viewGridHighlightedColumnBackground gridWidth stepIndex =
+    viewAbsoluteGridLayout gridWidth 1 [] <|
+        [ div [ bgc highlightBGColor, styleGridAreaFromGP ( stepIndex, 0 ) ] [] ]
 
 
 viewAbsoluteGridLayout : Int -> Int -> List (Attribute msg) -> List (Html msg) -> Html msg
