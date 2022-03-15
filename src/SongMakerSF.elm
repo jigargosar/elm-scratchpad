@@ -1825,6 +1825,7 @@ viewPercussionTile isAnimated gp =
         [ bgc (noteColorFromGP gp)
         , styleGridAreaFromGP gp
         , style "clip-path" "circle(closest-side at center)"
+        , style "margin" "10%"
         ]
         []
 
