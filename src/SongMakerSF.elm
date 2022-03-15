@@ -1782,12 +1782,11 @@ viewInstrumentGrid settings model =
     div [ dGrid, positionRelative, style "flex-grow" "1" ]
         [ viewGridBarBackground settings.bars
         , viewGridHighlightedColumnBackground gridWidth model.stepIndex
-        , viewInstrumentTiles
-            gridWidth
-            gridHeight
-            model.playState
-            model.stepIndex
-            (currentDataModel model).instrumentPositions
+        , viewAbsoluteGridLayout gridWidth gridHeight [] <|
+            viewInstrumentTiles
+                model.playState
+                model.stepIndex
+                (currentDataModel model).instrumentPositions
         , viewInstrumentGridLines settings
         , viewAbsoluteGridLayout gridWidth gridHeight [] <|
             (rangeWH gridWidth gridHeight
@@ -1796,8 +1795,8 @@ viewInstrumentGrid settings model =
         ]
 
 
-viewInstrumentTiles : Int -> Int -> PlayerState -> Int -> PaintedPositions -> Html Msg
-viewInstrumentTiles gridWidth gridHeight playState stepIndex instrumentPositions =
+viewInstrumentTiles : PlayerState -> Int -> PaintedPositions -> List (Html Msg)
+viewInstrumentTiles playState stepIndex instrumentPositions =
     let
         isTileAnimated gp =
             isPlaying playState && first gp == stepIndex
@@ -1809,11 +1808,9 @@ viewInstrumentTiles gridWidth gridHeight playState stepIndex instrumentPositions
             else
                 viewStaticInstrumentTile gp
     in
-    viewAbsoluteGridLayout gridWidth gridHeight [] <|
-        (instrumentPositions
-            |> Set.toList
-            |> List.map viewInstrumentTile_
-        )
+    instrumentPositions
+        |> Set.toList
+        |> List.map viewInstrumentTile_
 
 
 viewGridHighlightedColumnBackground : Int -> Int -> Html msg
