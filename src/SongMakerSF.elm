@@ -1829,15 +1829,6 @@ viewGridEventDispatcherTiles gridWidth gridHeight gridType =
 
 viewInstrumentTiles : Int -> Int -> Bool -> Int -> PaintedPositions -> Html Msg
 viewInstrumentTiles gridWidth gridHeight playing stepIndex instrumentPositions =
-    viewAbsoluteGridLayout gridWidth gridHeight [] <|
-        viewInstrumentTilesHelp
-            playing
-            stepIndex
-            instrumentPositions
-
-
-viewInstrumentTilesHelp : Bool -> Int -> PaintedPositions -> List (Html Msg)
-viewInstrumentTilesHelp playing stepIndex instrumentPositions =
     let
         isTileAnimated gp =
             playing && first gp == stepIndex
@@ -1849,9 +1840,11 @@ viewInstrumentTilesHelp playing stepIndex instrumentPositions =
             else
                 viewStaticInstrumentTile gp
     in
-    instrumentPositions
-        |> Set.toList
-        |> List.map viewInstrumentTile_
+    viewAbsoluteGridLayout gridWidth gridHeight [] <|
+        (instrumentPositions
+            |> Set.toList
+            |> List.map viewInstrumentTile_
+        )
 
 
 viewGridHighlightedColumnBackground : Int -> Int -> Html msg
