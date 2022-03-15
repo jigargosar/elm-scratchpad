@@ -1874,6 +1874,58 @@ backgroundGridLinesHorizontal strokeWidth color pctN =
         |> String.join " "
 
 
+viewInstrumentTileAt : Model -> Int2 -> Html Msg
+viewInstrumentTileAt model (( x, _ ) as gp) =
+    let
+        dataModel =
+            currentDataModel model
+
+        settings =
+            dataModel.settings
+
+        isPlaying =
+            case model.playState of
+                Playing _ ->
+                    True
+
+                _ ->
+                    False
+
+        isNoteTile =
+            Set.member gp dataModel.instrumentPositions
+
+        isHighlightedTile =
+            x == model.stepIndex
+
+        anim =
+            if isPlaying && isNoteTile && isHighlightedTile then
+                blink
+
+            else
+                Animation.empty
+
+        notesPerBar =
+            settings.beatsPerBar * settings.beatSplits
+
+        isAlternateBarTile =
+            modBy (notesPerBar * 2) x >= notesPerBar
+
+        bgColor =
+            if isNoteTile then
+                noteColorFromGP gp
+
+            else if isHighlightedTile then
+                highlightBGColor
+
+            else if isAlternateBarTile then
+                barBGColor2
+
+            else
+                "transparent"
+    in
+    viewTile anim bgColor InstrumentGrid gp
+
+
 viewPercussionTileAt : Model -> Int2 -> Html Msg
 viewPercussionTileAt model (( x, _ ) as gp) =
     let
@@ -1936,58 +1988,6 @@ viewTile anim bgColor gridType gp =
         , notifyPointerEnter (PointerEnteredGP gridType gp)
         ]
         []
-
-
-viewInstrumentTileAt : Model -> Int2 -> Html Msg
-viewInstrumentTileAt model (( x, _ ) as gp) =
-    let
-        dataModel =
-            currentDataModel model
-
-        settings =
-            dataModel.settings
-
-        isPlaying =
-            case model.playState of
-                Playing _ ->
-                    True
-
-                _ ->
-                    False
-
-        isNoteTile =
-            Set.member gp dataModel.instrumentPositions
-
-        isHighlightedTile =
-            x == model.stepIndex
-
-        anim =
-            if isPlaying && isNoteTile && isHighlightedTile then
-                blink
-
-            else
-                Animation.empty
-
-        notesPerBar =
-            settings.beatsPerBar * settings.beatSplits
-
-        isAlternateBarTile =
-            modBy (notesPerBar * 2) x >= notesPerBar
-
-        bgColor =
-            if isNoteTile then
-                noteColorFromGP gp
-
-            else if isHighlightedTile then
-                highlightBGColor
-
-            else if isAlternateBarTile then
-                barBGColor2
-
-            else
-                "transparent"
-    in
-    viewTile anim bgColor InstrumentGrid gp
 
 
 styleGridAreaFromGP : Int2 -> Attribute msg
