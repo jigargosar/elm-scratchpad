@@ -1773,19 +1773,27 @@ viewInstrumentGrid settings model =
             h =
                 instrumentGridHeight settings
           in
-          div [ dGrid, styleGridTemplate w h, positionAbsolute ]
+          div [ dGrid, styleGridTemplate w h, positionAbsolute, w100, h100 ]
             (rangeWH w h |> List.map (viewInstrumentTileAt model))
-        , let
-            w =
-                computeGridWidth settings
-
-            h =
-                instrumentGridHeight settings
-          in
-          div [ dGrid, styleGridTemplate w h ]
-            (rangeWH w h |> List.map (viewInstrumentTileAt model))
+        , viewGridBarBackground settings.bars
         , viewInstrumentGridLines settings
         ]
+
+
+viewGridBarBackground : Int -> Html msg
+viewGridBarBackground bars =
+    let
+        w =
+            bars
+
+        h =
+            1
+    in
+    div [ dGrid, styleGridTemplate w h, positionAbsolute, w100, h100 ]
+        ([ div [] [], div [ bgc white ] [] ]
+            |> List.repeat (w // 2)
+            |> List.concat
+        )
 
 
 viewInstrumentGridLines : Settings -> Html msg
