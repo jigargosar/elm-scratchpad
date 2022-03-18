@@ -632,11 +632,6 @@ scaleToString musicScale =
             "Pentatonic"
 
 
-majorScaleToneIntervals : List ToneInterval
-majorScaleToneIntervals =
-    [ FullTone, FullTone, HalfTone, FullTone, FullTone, FullTone ]
-
-
 musicScaleLength : MusicScale -> Int
 musicScaleLength ms =
     case ms of
@@ -665,21 +660,6 @@ pitchClassesForScaleStartingAt musicScale startPitchClass =
                     pentatonicOffsetsOfMajorScale
     in
     pitchClasses |> List.map (add startPitchClass)
-
-
-type ToneInterval
-    = HalfTone
-    | FullTone
-
-
-toneIntervalToHalfTones : ToneInterval -> number
-toneIntervalToHalfTones ti =
-    case ti of
-        HalfTone ->
-            1
-
-        FullTone ->
-            2
 
 
 initialSettingsV1 : Settings
