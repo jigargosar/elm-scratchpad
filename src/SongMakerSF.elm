@@ -652,27 +652,19 @@ musicScaleLength ms =
 
 pitchClassesForScaleStartingAt : MusicScale -> Int -> List Int
 pitchClassesForScaleStartingAt musicScale startPitchClass =
-    case musicScale of
-        Major ->
-            List.foldl
-                (\ti ( prev, acc ) ->
-                    let
-                        curr =
-                            prev + toneIntervalToHalfTones ti
-                    in
-                    ( curr, acc ++ [ curr ] )
-                )
-                ( startPitchClass, [ startPitchClass ] )
-                majorScaleToneIntervals
-                |> second
+    let
+        pitchClasses =
+            case musicScale of
+                Major ->
+                    chromaticOffsetsOfMajorScale
 
-        Chromatic ->
-            List.range 0 11
-                |> List.map (add startPitchClass)
+                Chromatic ->
+                    List.range 0 11
 
-        Pentatonic ->
-            pentatonicOffsetsOfMajorScale
-                |> List.map (add startPitchClass)
+                Pentatonic ->
+                    pentatonicOffsetsOfMajorScale
+    in
+    pitchClasses |> List.map (add startPitchClass)
 
 
 type ToneInterval
