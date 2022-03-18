@@ -32,11 +32,11 @@ import Utils exposing (..)
     # Next
     * [x] percussion grid visuals
     --
-    * Save btn
     * pentatonic scale
     * instrument/percussion backend
     * chromatic scale colors
     * percussion colors
+    * Save btn
     * additional settings persistence
 
 
