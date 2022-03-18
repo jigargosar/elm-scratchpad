@@ -603,6 +603,7 @@ octaveToInt octave =
 type MusicScale
     = Major
     | Chromatic
+    | Pentatonic
 
 
 scaleFromString : String -> Maybe MusicScale
@@ -627,6 +628,9 @@ scaleToString musicScale =
         Chromatic ->
             "Chromatic"
 
+        Pentatonic ->
+            "Pentatonic"
+
 
 majorScaleToneIntervals : List ToneInterval
 majorScaleToneIntervals =
@@ -641,6 +645,9 @@ musicScaleLength ms =
 
         Chromatic ->
             12
+
+        Pentatonic ->
+            5
 
 
 pitchClassesForScaleStartingAt : MusicScale -> Int -> List Int
@@ -661,6 +668,10 @@ pitchClassesForScaleStartingAt musicScale startPitchClass =
 
         Chromatic ->
             List.range 0 11
+                |> List.map (add startPitchClass)
+
+        Pentatonic ->
+            pentatonicOffsetsOfMajorScale
                 |> List.map (add startPitchClass)
 
 
@@ -1428,6 +1439,11 @@ remapYPositions from to pp =
 chromaticOffsetsOfMajorScale : List Int
 chromaticOffsetsOfMajorScale =
     [ 0, 2, 4, 5, 7, 9, 11 ]
+
+
+pentatonicOffsetsOfMajorScale : List Int
+pentatonicOffsetsOfMajorScale =
+    [ 0, 2, 4, 7, 9 ]
 
 
 chromaticToMajor : Int -> Maybe Int
