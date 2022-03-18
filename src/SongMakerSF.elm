@@ -1444,6 +1444,11 @@ remapXPositions from to =
         >> resizeBarsToPaintedPositions to
 
 
+remapYPositions : Settings -> Settings -> PaintedPositions -> PaintedPositions
+remapYPositions from to =
+    toChromatic from.scale >> fromChromatic to.scale
+
+
 toChromatic : MusicScale -> PaintedPositions -> PaintedPositions
 toChromatic fromMusicScale =
     case fromMusicScale of
@@ -1468,11 +1473,6 @@ fromChromatic toMusicScale =
 
         Pentatonic ->
             setFilterMap (filterMapSecond chromaticToPentatonic)
-
-
-remapYPositions : Settings -> Settings -> PaintedPositions -> PaintedPositions
-remapYPositions from to =
-    toChromatic from.scale >> fromChromatic to.scale
 
 
 chromaticOffsetsOfMajorScale : List Int
