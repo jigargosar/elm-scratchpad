@@ -1440,8 +1440,7 @@ type alias Bar =
 
 remapXPositions : Settings -> Settings -> PaintedPositions -> PaintedPositions
 remapXPositions from to =
-    paintedPositionsToBars from
-        >> resizeBarsToPaintedPositions to
+    paintedPositionsToBars from >> resizeBarsToPaintedPositions to
 
 
 remapYPositions : Settings -> Settings -> PaintedPositions -> PaintedPositions
