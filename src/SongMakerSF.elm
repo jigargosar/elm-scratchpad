@@ -33,8 +33,8 @@ import Utils exposing (..)
     * [x] percussion grid visuals
     * [x] pentatonic scale
     * [x] additional settings persistence
-    * instrument/percussion backend
     * chromatic scale colors
+    * instrument/percussion backend
     * percussion colors
     * Save btn
     * bottom bar visuals
@@ -1982,7 +1982,7 @@ viewInstrumentTiles gridWidth gridHeight isPlaying stepIndex instrumentPositions
             isPlaying && first gp == stepIndex
 
         viewInstrumentTile_ gp =
-            viewInstrumentTile (isTileAnimated gp) gp
+            viewInstrumentTile (isTileAnimated gp) (noteColorFromGP gp) gp
     in
     viewAbsoluteGridLayout gridWidth gridHeight [] <|
         (instrumentPositions
@@ -1991,8 +1991,8 @@ viewInstrumentTiles gridWidth gridHeight isPlaying stepIndex instrumentPositions
         )
 
 
-viewInstrumentTile : Bool -> Int2 -> Html Msg
-viewInstrumentTile isAnimated gp =
+viewInstrumentTile : Bool -> String -> Int2 -> Html Msg
+viewInstrumentTile isAnimated color gp =
     let
         animDiv =
             if isAnimated then
@@ -2001,7 +2001,7 @@ viewInstrumentTile isAnimated gp =
             else
                 div
     in
-    animDiv [ bgc (noteColorFromGP gp), styleGridAreaFromGP gp ] []
+    animDiv [ bgc color, styleGridAreaFromGP gp ] []
 
 
 viewGridHighlightedColumnBackground : Int -> Int -> Html msg
