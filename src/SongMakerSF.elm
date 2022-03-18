@@ -707,7 +707,7 @@ pitchClassesForScaleStartingAt musicScale startPitchClass =
                     List.range 0 11
 
                 Pentatonic ->
-                    pentatonicOffsetsOfMajorScale
+                    chromaticOffsetsOfPentatonicScale
     in
     pitchClasses |> List.map (add startPitchClass)
 
@@ -1444,18 +1444,35 @@ remapXPositions from to =
         >> resizeBarsToPaintedPositions to
 
 
-remapYPositions : Settings -> Settings -> PaintedPositions -> PaintedPositions
-remapYPositions from to pp =
-    case ( from.scale, to.scale ) of
-        ( Major, Chromatic ) ->
-            Set.map (mapSecond majorToChromatic) pp
+toChromatic : MusicScale -> PaintedPositions -> PaintedPositions
+toChromatic fromMusicScale =
+    case fromMusicScale of
+        Major ->
+            Set.map (mapSecond majorToChromatic)
 
-        ( Chromatic, Major ) ->
+        Chromatic ->
+            identity
+
+        Pentatonic ->
+            Set.map (mapSecond pentatonicToChromatic)
+
+
+fromChromatic : MusicScale -> PaintedPositions -> PaintedPositions
+fromChromatic toMusicScale =
+    case toMusicScale of
+        Major ->
             setFilterMap (filterMapSecond chromaticToMajor)
-                pp
 
-        _ ->
-            pp
+        Chromatic ->
+            identity
+
+        Pentatonic ->
+            setFilterMap (filterMapSecond chromaticToPentatonic)
+
+
+remapYPositions : Settings -> Settings -> PaintedPositions -> PaintedPositions
+remapYPositions from to =
+    toChromatic from.scale >> fromChromatic to.scale
 
 
 chromaticOffsetsOfMajorScale : List Int
@@ -1463,8 +1480,8 @@ chromaticOffsetsOfMajorScale =
     [ 0, 2, 4, 5, 7, 9, 11 ]
 
 
-pentatonicOffsetsOfMajorScale : List Int
-pentatonicOffsetsOfMajorScale =
+chromaticOffsetsOfPentatonicScale : List Int
+chromaticOffsetsOfPentatonicScale =
     [ 0, 2, 4, 7, 9 ]
 
 
@@ -1481,6 +1498,19 @@ chromaticToMajor y =
         |> Maybe.map (add (octaveOffset * 7))
 
 
+chromaticToPentatonic : Int -> Maybe Int
+chromaticToPentatonic y =
+    let
+        octaveOffset =
+            y // 12
+
+        chromaticScaleOffset =
+            modBy 12 y
+    in
+    List.Extra.elemIndex chromaticScaleOffset chromaticOffsetsOfPentatonicScale
+        |> Maybe.map (add (octaveOffset * 5))
+
+
 majorToChromatic : Int -> Int
 majorToChromatic y =
     let
@@ -1492,6 +1522,22 @@ majorToChromatic y =
 
         chromaticScaleOffset =
             listGetAt majorScaleOffset chromaticOffsetsOfMajorScale
+                |> Maybe.withDefault 0
+    in
+    octaveOffset * 12 + chromaticScaleOffset
+
+
+pentatonicToChromatic : Int -> Int
+pentatonicToChromatic y =
+    let
+        octaveOffset =
+            y // 5
+
+        pentatonicScaleOffset =
+            modBy 5 y
+
+        chromaticScaleOffset =
+            listGetAt pentatonicScaleOffset chromaticOffsetsOfPentatonicScale
                 |> Maybe.withDefault 0
     in
     octaveOffset * 12 + chromaticScaleOffset
@@ -1615,7 +1661,7 @@ viewSettingsForm s =
         , Html.label []
             [ text "Scale: "
             , viewSelectLCR ScaleChanged
-                (Pivot.fromCons Major [ Chromatic ]
+                (Pivot.fromCons Major [ Pentatonic, Chromatic ]
                     |> withRollback (Pivot.firstWith (eq s.scale))
                     |> Pivot.mapA scaleToString
                     |> lcrFromPivot
