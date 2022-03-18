@@ -923,20 +923,24 @@ percussionNoteFromGP audioTime model ( _, y ) =
     }
 
 
-noteColorFromGP : Int2 -> String
-noteColorFromGP ( _, y ) =
+noteColor : MusicScale -> Int2 -> String
+noteColor musicScale ( _, y ) =
     let
-        colors =
-            [ wPink
-            , wPurple
-            , wBlue
-            , wGreen2_sea
-            , wOrange
-            , wYellow
-            , wGreen_lime
-            ]
+        len =
+            musicScaleLength musicScale
+
+        idx =
+            modBy (musicScaleLength musicScale) y
+
+        pct =
+            toFloat idx / toFloat len
     in
-    listGetAtOrDefault "" (modBy 7 y) colors
+    hsl ((pct - 0.025) |> fractionalModBy 1) 1 0.6
+
+
+fractionalModBy : Float -> Float -> Float
+fractionalModBy by v =
+    modBy (by * 1000 |> round) (v * 1000 |> round) |> toFloat |> mul 0.001
 
 
 type Msg
@@ -1951,6 +1955,7 @@ viewInstrumentGrid settings stepIndex isPlaying instrumentPositions =
             gridHeight
             isPlaying
             stepIndex
+            settings.scale
             instrumentPositions
         , viewInstrumentGridLines settings
         , viewGridEventDispatcherTiles gridWidth gridHeight InstrumentGrid
@@ -1975,14 +1980,14 @@ viewGridEventDispatcherTiles gridWidth gridHeight gridType =
         )
 
 
-viewInstrumentTiles : Int -> Int -> Bool -> Int -> PaintedPositions -> Html Msg
-viewInstrumentTiles gridWidth gridHeight isPlaying stepIndex instrumentPositions =
+viewInstrumentTiles : Int -> Int -> Bool -> Int -> MusicScale -> PaintedPositions -> Html Msg
+viewInstrumentTiles gridWidth gridHeight isPlaying stepIndex musicScale instrumentPositions =
     let
         isTileAnimated gp =
             isPlaying && first gp == stepIndex
 
         viewInstrumentTile_ gp =
-            viewInstrumentTile (isTileAnimated gp) (noteColorFromGP gp) gp
+            viewInstrumentTile (isTileAnimated gp) (noteColor musicScale gp) gp
     in
     viewAbsoluteGridLayout gridWidth gridHeight [] <|
         (instrumentPositions
