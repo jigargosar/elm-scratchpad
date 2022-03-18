@@ -662,6 +662,9 @@ scaleFromString s =
         "Major" ->
             Just Major
 
+        "Pentatonic" ->
+            Just Pentatonic
+
         "Chromatic" ->
             Just Chromatic
 
