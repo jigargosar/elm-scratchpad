@@ -341,11 +341,50 @@ settingsDecoder =
         |> jpRequired "bars" JD.int
         |> jpRequired "beatsPerBar" JD.int
         |> jpRequired "beatSplits" JD.int
-        --|> jpOptional "scale"
-        |> jpHardcoded Major
-        |> jpHardcoded Mid
-        |> jpHardcoded 0
-        |> jpHardcoded 2
+        |> jpOptional "scale" musicScaleDecoder Major
+        |> jpOptional "centralOctave" octaveDecoder Mid
+        |> jpOptional "startPitchClass" JD.int 0
+        |> jpOptional "octaveRange" JD.int 2
+
+
+musicScaleDecoder : Decoder MusicScale
+musicScaleDecoder =
+    let
+        get id =
+            case id of
+                "Major" ->
+                    JD.succeed Major
+
+                "Chromatic" ->
+                    JD.succeed Chromatic
+
+                "Pentatonic" ->
+                    JD.succeed Pentatonic
+
+                _ ->
+                    JD.fail ("unknown value for MusicScale: " ++ id)
+    in
+    JD.string |> JD.andThen get
+
+
+octaveDecoder : Decoder Octave
+octaveDecoder =
+    let
+        get id =
+            case id of
+                "Low" ->
+                    JD.succeed Low
+
+                "Mid" ->
+                    JD.succeed Mid
+
+                "High" ->
+                    JD.succeed High
+
+                _ ->
+                    JD.fail ("unknown value for Octave: " ++ id)
+    in
+    JD.string |> JD.andThen get
 
 
 instrumentDecoder : Decoder Instrument
