@@ -37,6 +37,7 @@ import Utils exposing (..)
     * chromatic scale colors
     * percussion colors
     * Save btn
+    * bottom bar visuals
 
 
     # Archived
