@@ -228,27 +228,23 @@ encodeSettings settings =
         [ ( "bars", JE.int settings.bars )
         , ( "beatsPerBar", JE.int settings.beatsPerBar )
         , ( "beatSplits", JE.int settings.beatSplits )
-
-        --, ( "scale", encodeMusicScale settings.scale )
-        --, ( "startsOn", encodeStartNote settings.startsOn )
-        --, ( "octaveRange", JE.int settings.octaveRange )
+        , ( "scale", encodeMusicScale settings.scale )
+        , ( "startPitchClass", JE.int settings.startPitchClass )
+        , ( "octaveRange", JE.int settings.octaveRange )
         ]
 
 
+encodeMusicScale : MusicScale -> Value
+encodeMusicScale musicScale =
+    case musicScale of
+        Major ->
+            JE.string "Major"
 
---encodeMusicScale : MusicScale -> Value
---encodeMusicScale musicScale =
---    case musicScale of
---        Major ->
---            JE.string "Major"
---
---
---encodeStartNote : StartNote -> Value
---encodeStartNote startNote =
---    case startNote of
---        StartNote ->
---            JE.string "StartNote"
---
+        Chromatic ->
+            JE.string "Chromatic"
+
+        Pentatonic ->
+            JE.string "Pentatonic"
 
 
 encodeInstrument : Instrument -> Value
