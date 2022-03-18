@@ -36,6 +36,7 @@ import Utils exposing (..)
     * pentatonic scale
     * instrument/percussion backend
     * chromatic scale colors
+    * percussion colors
     * additional settings persistence
 
 
