@@ -228,10 +228,24 @@ encodeSettings settings =
         [ ( "bars", JE.int settings.bars )
         , ( "beatsPerBar", JE.int settings.beatsPerBar )
         , ( "beatSplits", JE.int settings.beatSplits )
+        , ( "centralOctave", encodeOctave settings.centralOctave )
         , ( "scale", encodeMusicScale settings.scale )
         , ( "startPitchClass", JE.int settings.startPitchClass )
         , ( "octaveRange", JE.int settings.octaveRange )
         ]
+
+
+encodeOctave : Octave -> Value
+encodeOctave octave =
+    case octave of
+        Low ->
+            JE.string "Low"
+
+        Mid ->
+            JE.string "Mid"
+
+        High ->
+            JE.string "High"
 
 
 encodeMusicScale : MusicScale -> Value
@@ -327,6 +341,7 @@ settingsDecoder =
         |> jpRequired "bars" JD.int
         |> jpRequired "beatsPerBar" JD.int
         |> jpRequired "beatSplits" JD.int
+        --|> jpOptional "scale"
         |> jpHardcoded Major
         |> jpHardcoded Mid
         |> jpHardcoded 0
