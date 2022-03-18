@@ -1985,22 +1985,6 @@ viewGridEventDispatcherTiles gridWidth gridHeight gridType =
         )
 
 
-viewInstrumentTiles : Int -> Int -> Bool -> Int -> MusicScale -> PaintedPositions -> Html Msg
-viewInstrumentTiles gridWidth gridHeight isPlaying stepIndex musicScale instrumentPositions =
-    let
-        isTileAnimated gp =
-            isPlaying && first gp == stepIndex
-
-        viewInstrumentTile_ gp =
-            viewInstrumentTile (isTileAnimated gp) (noteColor musicScale gp) gp
-    in
-    viewAbsoluteGridLayout gridWidth gridHeight [] <|
-        (instrumentPositions
-            |> Set.toList
-            |> List.map viewInstrumentTile_
-        )
-
-
 viewInstrumentTile : Bool -> String -> Int2 -> Html Msg
 viewInstrumentTile isAnimated color gp =
     let
