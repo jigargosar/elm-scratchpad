@@ -935,12 +935,12 @@ noteColor musicScale ( _, y ) =
         pct =
             toFloat idx / toFloat len
     in
-    hsl ((pct - 0.025) |> fractionalModBy 1) 1 0.6
+    noteColorHelp pct
 
 
-fractionalModBy : Float -> Float -> Float
-fractionalModBy by v =
-    modBy (by * 1000 |> round) (v * 1000 |> round) |> toFloat |> mul 0.001
+noteColorHelp : Float -> String
+noteColorHelp pct =
+    "hsla(" ++ fromInt (pct |> mul 360 |> round |> add -15) ++ "deg 100% 60%)"
 
 
 type Msg
@@ -1947,16 +1947,21 @@ viewInstrumentGrid settings stepIndex isPlaying instrumentPositions =
         ( gridWidth, gridHeight ) =
             ( computeGridWidth settings, instrumentGridHeight settings )
     in
+    let
+        isTileAnimated gp =
+            isPlaying && first gp == stepIndex
+
+        viewInstrumentTile_ gp =
+            viewInstrumentTile (isTileAnimated gp) (noteColor settings.scale gp) gp
+    in
     div [ dGrid, positionRelative, style "flex-grow" "1" ]
         [ viewGridBarBackground settings.bars
         , viewGridHighlightedColumnBackground gridWidth stepIndex
-        , viewInstrumentTiles
-            gridWidth
-            gridHeight
-            isPlaying
-            stepIndex
-            settings.scale
-            instrumentPositions
+        , viewAbsoluteGridLayout gridWidth gridHeight [] <|
+            (instrumentPositions
+                |> Set.toList
+                |> List.map viewInstrumentTile_
+            )
         , viewInstrumentGridLines settings
         , viewGridEventDispatcherTiles gridWidth gridHeight InstrumentGrid
         ]
