@@ -1845,19 +1845,26 @@ viewPlayButton2 : PlayState -> Html Msg
 viewPlayButton2 playState =
     button
         [ autofocus True
-        , fontSize "20px"
-        , pa "0.5ch 1ch"
         , notifyClick TogglePlayClicked
+        , style "border" "none"
+        , pa "0"
+        , ma "0"
+        , displayInlineBlock
         ]
-        [ span [ style "display" "inline-block", sMinWidth "4ch" ]
-            [ text
-                (case playState of
-                    Playing _ ->
-                        "Stop"
+        [ svg
+            [ sWidth "60px"
+            , sHeight "60px"
+            , viewBoxC 100 100
+            , fill "white"
+            , bgc wBlue
+            , borderRadius "50%"
+            ]
+            [ case playState of
+                Playing _ ->
+                    square 35 []
 
-                    NotPlaying ->
-                        "Play"
-                )
+                NotPlaying ->
+                    triangle 25 []
             ]
         ]
 

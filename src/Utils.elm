@@ -1202,6 +1202,10 @@ dFlex =
     style "display" "flex"
 
 
+displayInlineBlock =
+    style "display" "inline-block"
+
+
 dBlock =
     style "display" "block"
 
