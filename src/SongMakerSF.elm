@@ -31,7 +31,7 @@ import Utils exposing (..)
 
     # Next
     * instrument/percussion backend
-    * Save btn
+    * Save btn dialog
     * bottom bar visuals
     * redo
 
