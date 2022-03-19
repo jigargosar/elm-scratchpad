@@ -1847,9 +1847,11 @@ viewPlayButton2 playState =
         [ autofocus True
         , notifyClick TogglePlayClicked
         , style "border" "none"
-        , pa "0"
-        , ma "0"
-        , displayInlineBlock
+        , bgcTransparent
+
+        --, pa "0"
+        --, ma "0"
+        --, displayInlineBlock
         ]
         [ svg
             [ sWidth "60px"
