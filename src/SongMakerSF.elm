@@ -2195,14 +2195,14 @@ blink =
 
 pianoIconInnerSvg : Svg msg
 pianoIconInnerSvg =
-    Svg.path [ SA.path pianoIconSvgPath ] []
+    Svg.path [ SA.d pianoIconSvgPath ] []
 
 
 electronicIconInnerSvg : Svg msg
 electronicIconInnerSvg =
     Svg.path
-        [ style "transform" "translate(13.000000, 18.000000)"
-        , SA.d electronicIconSvgPath
+        [ SA.d electronicIconSvgPath
+        , style "transform" "translate(13px, 18px)"
         ]
         []
 
