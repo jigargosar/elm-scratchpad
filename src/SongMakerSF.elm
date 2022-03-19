@@ -1803,6 +1803,17 @@ viewBottomBar model =
             (percussionName dataModel.percussion)
             electronicIconInnerSvg
         , viewTempoInput (tempoInputValue model)
+        , button
+            [ style "background-image" "url(https://musiclab.chromeexperiments.com/Song-Maker/client/images/icon-settings-gray.svg)"
+            , style "background-position" "center"
+            , style "background-size" "contain"
+            , style "background-repeat" "no-repeat"
+            , bgcTransparent
+            , styleWidth "46px"
+            , styleHeight "46px"
+            , borderNone
+            ]
+            []
         , viewSettingsButton
         , viewBtn
             [ notifyClick UndoClicked
