@@ -30,11 +30,6 @@ import Utils exposing (..)
     Clone: Chrome Music Labs - Song Maker.
 
     # Next
-    * [x] percussion grid visuals
-    * [x] pentatonic scale
-    * [x] additional settings persistence
-    * [x] chromatic scale colors
-    * [x] percussion colors
     * instrument/percussion backend
     * Save btn
     * bottom bar visuals
@@ -55,6 +50,11 @@ import Utils exposing (..)
         * [x] reset on navigation
         * [x] introduce undo pivot ~~and explicitly add changes in every message~~.
         * [x] tempo: throttle / delay applying. for easier undo.
+    * [x] percussion grid visuals
+        * [x] pentatonic scale
+        * [x] additional settings persistence
+        * [x] chromatic scale colors
+        * [x] percussion colors
 
 
 
