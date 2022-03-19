@@ -33,9 +33,9 @@ import Utils exposing (..)
     * [x] percussion grid visuals
     * [x] pentatonic scale
     * [x] additional settings persistence
-    * chromatic scale colors
+    * [x] chromatic scale colors
+    * [x] percussion colors
     * instrument/percussion backend
-    * percussion colors
     * Save btn
     * bottom bar visuals
 
