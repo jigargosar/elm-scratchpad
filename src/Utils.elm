@@ -741,6 +741,10 @@ borderRadius =
     style "border-radius"
 
 
+borderNone =
+    style "border" "none"
+
+
 sOutline =
     style "outline"
 

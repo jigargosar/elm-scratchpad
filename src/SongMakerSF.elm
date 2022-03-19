@@ -1764,6 +1764,28 @@ viewBottomBar model =
         , itemsCenter
         ]
         [ viewPlayButton model.playState
+        , button
+            [ bgcTransparent
+            , fg white
+            , borderNone
+            , fontSize "12px"
+            , style "flex" "0 0 auto"
+            , sWidth "10ch"
+            , dFlex
+            , fDCol
+            , itemsCenter
+            , gap "1ch"
+            , notifyClick InstrumentButtonClicked
+            ]
+            [ svg
+                [ viewBoxC 100 100
+                , sWidth "46px"
+                , fill "white"
+                ]
+                [ circle 50 []
+                ]
+            , text (instrumentName dataModel.instrument)
+            ]
         , viewBtn
             [ sWidth "14ch"
             , notifyClick InstrumentButtonClicked
@@ -1824,7 +1846,7 @@ viewPlayButton playState =
     button
         [ autofocus True
         , notifyClick TogglePlayClicked
-        , style "border" "none"
+        , borderNone
         , bgc wBlue
         , borderRadius "50%"
         , style "flex" "0 0 auto"
