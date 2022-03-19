@@ -2203,6 +2203,8 @@ electronicIconInnerSvg =
     Svg.path
         [ SA.d electronicIconSvgPath
         , style "transform" "translate(13px, 18px)"
+
+        --, transforms [ translateF2 ( 13, 18 ) ]
         ]
         []
 
