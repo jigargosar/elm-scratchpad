@@ -1854,10 +1854,10 @@ viewPlayButton2 playState =
         [ svg
             [ sWidth "60px"
             , sHeight "60px"
-            , viewBoxC 100 100
-            , fill "white"
             , bgc wBlue
             , borderRadius "50%"
+            , viewBoxC 100 100
+            , fill "white"
             ]
             [ case playState of
                 Playing _ ->
