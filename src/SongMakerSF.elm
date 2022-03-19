@@ -1764,6 +1764,7 @@ viewBottomBar model =
         , itemsCenter
         ]
         [ viewPlayButton model.playState
+        , viewPlayButton2 model.playState
         , viewBtn
             [ sWidth "14ch"
             , notifyClick InstrumentButtonClicked
@@ -1821,6 +1822,27 @@ viewTempoInput ( tempo, editing ) =
 
 viewPlayButton : PlayState -> Html Msg
 viewPlayButton playState =
+    button
+        [ autofocus True
+        , fontSize "20px"
+        , pa "0.5ch 1ch"
+        , notifyClick TogglePlayClicked
+        ]
+        [ span [ style "display" "inline-block", sMinWidth "4ch" ]
+            [ text
+                (case playState of
+                    Playing _ ->
+                        "Stop"
+
+                    NotPlaying ->
+                        "Play"
+                )
+            ]
+        ]
+
+
+viewPlayButton2 : PlayState -> Html Msg
+viewPlayButton2 playState =
     button
         [ autofocus True
         , fontSize "20px"
