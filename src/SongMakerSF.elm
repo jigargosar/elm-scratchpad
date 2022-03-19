@@ -1873,6 +1873,8 @@ viewPlayButton playState =
         [ svg
             [ viewBoxC 100 100
             , fill "white"
+
+            --, fill wBlack
             ]
             [ case playState of
                 Playing _ ->
