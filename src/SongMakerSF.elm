@@ -38,6 +38,7 @@ import Utils exposing (..)
     * instrument/percussion backend
     * Save btn
     * bottom bar visuals
+    * redo
 
 
     # Archived
