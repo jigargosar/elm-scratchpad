@@ -2191,58 +2191,43 @@ blink =
 -- SVG ICONS
 
 
-iconContainerSize : Int
-iconContainerSize =
-    62
-
-
-iconSize : Int
-iconSize =
-    32
-
-
 pianoIcon : Html msg
 pianoIcon =
     svgIconContainer
-        [ svg
-            [ viewBoxLT 48 48
-            , styleWidth (fromInt iconSize)
-            , fill wBlue
-            ]
-            [ Svg.path [ SA.d pianoIconSvgPath ] []
-            ]
-        ]
+        [ pianoIconSvg iconSize wBlue ]
 
 
 electronicIcon : Html msg
 electronicIcon =
     svgIconContainer
-        [ electronicIconSvg iconContainerSize wBlue ]
+        [ electronicIconSvg 60 wBlue ]
 
 
 settingsIcon : Html msg
 settingsIcon =
-    materialIconHelp Material.Icons.settings
+    svgIconContainer
+        [ Material.Icons.settings iconSize Material.Icons.Types.Inherit ]
 
 
 undoIcon : Html msg
 undoIcon =
-    materialIconHelp Material.Icons.undo
+    svgIconContainer
+        [ Material.Icons.undo iconSize Material.Icons.Types.Inherit ]
 
 
 saveIcon : Html msg
 saveIcon =
-    materialIconHelp Material.Icons.check
-
-
-materialIconHelp : Material.Icons.Types.Icon msg -> Html msg
-materialIconHelp materialIcon =
     svgIconContainer
-        [ materialIcon iconSize Material.Icons.Types.Inherit ]
+        [ Material.Icons.check iconSize Material.Icons.Types.Inherit ]
 
 
 svgIconContainer : List (Html msg) -> Html msg
 svgIconContainer =
+    let
+        iconContainerSize : Int
+        iconContainerSize =
+            62
+    in
     div
         [ styleWidth (fromInt iconContainerSize ++ "px")
         , styleHeight (fromInt iconContainerSize ++ "px")
@@ -2254,8 +2239,25 @@ svgIconContainer =
         ]
 
 
+iconSize : Int
+iconSize =
+    32
 
--- SVG PATH STRINGS
+
+
+-- SVG ICONS
+
+
+pianoIconSvg : Int -> String -> Html msg
+pianoIconSvg size fillValue =
+    svg
+        [ viewBoxLT 48 48
+        , styleWidth (fromInt size)
+        , styleHeight (fromInt size)
+        , fill fillValue
+        ]
+        [ Svg.path [ SA.d pianoIconSvgPath ] []
+        ]
 
 
 pianoIconSvgPath : String
