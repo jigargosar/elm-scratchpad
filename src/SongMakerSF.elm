@@ -2214,16 +2214,7 @@ innerIconSizeInt =
 
 pianoIcon : Html msg
 pianoIcon =
-    div
-        [ styleWidth iconSize
-        , styleHeight iconSize
-        , styleLineHeight iconSize
-        , borderRadius "50%"
-        , style "border" ("1px solid " ++ grayN 0.3)
-        , displayGrid
-        , placeContentCenter
-        ]
-        [ pianoIconSvg ]
+    svgIconContainer [ pianoIconSvg ]
 
 
 pianoIconSvg : Svg msg
@@ -2273,6 +2264,12 @@ saveIcon =
 
 materialIconHelp : Material.Icons.Types.Icon msg -> Html msg
 materialIconHelp materialIcon =
+    svgIconContainer
+        [ materialIcon innerIconSizeInt Material.Icons.Types.Inherit ]
+
+
+svgIconContainer : List (Html msg) -> Html msg
+svgIconContainer =
     div
         [ styleWidth iconSize
         , styleHeight iconSize
@@ -2282,7 +2279,6 @@ materialIconHelp materialIcon =
         , displayGrid
         , placeContentCenter
         ]
-        [ materialIcon innerIconSizeInt Material.Icons.Types.Inherit ]
 
 
 
