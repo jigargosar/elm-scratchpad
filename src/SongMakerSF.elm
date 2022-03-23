@@ -2191,23 +2191,13 @@ blink =
 -- SVG ICONS
 
 
-iconSize : String
-iconSize =
-    fromInt iconSizeInt ++ "px"
-
-
-iconSizeInt : Int
-iconSizeInt =
+iconContainerSize : Int
+iconContainerSize =
     62
 
 
-innerIconSize : String
-innerIconSize =
-    fromInt innerIconSizeInt ++ "px"
-
-
-innerIconSizeInt : Int
-innerIconSizeInt =
+iconSize : Int
+iconSize =
     32
 
 
@@ -2216,7 +2206,7 @@ pianoIcon =
     svgIconContainer
         [ svg
             [ viewBoxLT 48 48
-            , styleWidth innerIconSize
+            , styleWidth (fromInt iconSize)
             , fill wBlue
             ]
             [ Svg.path [ SA.d pianoIconSvgPath ] []
@@ -2227,7 +2217,7 @@ pianoIcon =
 electronicIcon : Html msg
 electronicIcon =
     svgIconContainer
-        [ electronicIconSvg iconSizeInt wBlue ]
+        [ electronicIconSvg iconContainerSize wBlue ]
 
 
 settingsIcon : Html msg
@@ -2248,20 +2238,25 @@ saveIcon =
 materialIconHelp : Material.Icons.Types.Icon msg -> Html msg
 materialIconHelp materialIcon =
     svgIconContainer
-        [ materialIcon innerIconSizeInt Material.Icons.Types.Inherit ]
+        [ materialIcon iconSize Material.Icons.Types.Inherit ]
 
 
 svgIconContainer : List (Html msg) -> Html msg
 svgIconContainer =
     div
-        [ styleWidth iconSize
-        , styleHeight iconSize
-        , styleLineHeight iconSize
+        [ styleWidth iconContainerSizeAsPxString
+        , styleHeight iconContainerSizeAsPxString
+        , styleLineHeight iconContainerSizeAsPxString
         , borderRadius "50%"
         , style "border" ("1px solid " ++ grayN 0.3)
         , displayGrid
         , placeContentCenter
         ]
+
+
+iconContainerSizeAsPxString : String
+iconContainerSizeAsPxString =
+    fromInt iconContainerSize ++ "px"
 
 
 
