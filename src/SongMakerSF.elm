@@ -2224,13 +2224,13 @@ saveIcon =
 svgIconContainer : List (Html msg) -> Html msg
 svgIconContainer =
     let
-        sizeInPx =
+        containerSizeInPx =
             fromInt 62 ++ "px"
     in
     div
-        [ styleWidth sizeInPx
-        , styleHeight sizeInPx
-        , styleLineHeight sizeInPx
+        [ styleWidth containerSizeInPx
+        , styleHeight containerSizeInPx
+        , styleLineHeight containerSizeInPx
         , borderRadius "50%"
         , style "border" ("1px solid " ++ grayN 0.3)
         , displayGrid
