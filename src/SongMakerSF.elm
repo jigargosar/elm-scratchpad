@@ -1827,7 +1827,7 @@ tempoInputValue model =
 
 viewTempoInput : ( String, Bool ) -> Html Msg
 viewTempoInput ( tempo, editing ) =
-    Html.label []
+    Html.label [ fontSize "20px" ]
         [ text "Tempo "
         , Html.input
             [ HA.value tempo
@@ -1836,7 +1836,7 @@ viewTempoInput ( tempo, editing ) =
             , onEnter CommitTempoInput
             , HA.size 4
             , HA.type_ "number"
-            , fontSize "20px"
+            , fontSize "inherit"
             , sWidth "5ch"
             ]
             []
@@ -1855,6 +1855,7 @@ viewPlayButton playState =
         , style "flex" "0 0 auto"
         , sWidth "80px"
         , sHeight "80px"
+        , cursorPointer
         ]
         [ svg
             [ viewBoxC 100 100
