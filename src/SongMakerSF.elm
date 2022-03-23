@@ -3,7 +3,6 @@ port module SongMakerSF exposing (main)
 import Browser.Dom
 import Browser.Events
 import Browser.Navigation exposing (Key)
-import Color
 import Html
 import Html.Attributes as HA
 import Html.Events exposing (onBlur)
