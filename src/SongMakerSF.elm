@@ -1726,7 +1726,7 @@ iconButton msg labelText bAttrs iconEl =
          , borderNone
          , fontSize "inherit"
          , style "flex" "0 0 auto"
-         , sWidth "10ch"
+         , styleWidth "10ch"
          , displayFlex
          , flexColumn
          , itemsCenter
