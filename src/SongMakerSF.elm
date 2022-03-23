@@ -1808,11 +1808,11 @@ viewBottomBar model =
         , iconButton UndoClicked
             ("Undo " ++ fromInt (model.dataModelPivot |> Pivot.lengthL))
             []
-            undoIconSvg
+            undoIcon
         , iconButton NOP
             "Save"
             []
-            saveIconSvg
+            saveIcon
         ]
 
 
@@ -2250,6 +2250,25 @@ materialIconColor =
 
 settingsIcon : Html msg
 settingsIcon =
+    materialIconHelp Material.Icons.settings
+
+
+undoIcon : Html msg
+undoIcon =
+    materialIconHelp Material.Icons.undo
+
+
+saveIcon : Html msg
+saveIcon =
+    materialIconHelp Material.Icons.check
+
+
+type alias MaterialIcon msg =
+    Material.Icons.Types.Icon msg
+
+
+materialIconHelp : MaterialIcon msg -> Html msg
+materialIconHelp materialIconFunction =
     div
         [ styleWidth iconSizePxString
         , styleHeight iconSizePxString
@@ -2258,17 +2277,7 @@ settingsIcon =
         , displayGrid
         , placeContentCenter
         ]
-        [ Material.Icons.settings innerIconSize materialIconColor ]
-
-
-undoIconSvg : Svg msg
-undoIconSvg =
-    Material.Icons.undo iconSize materialIconColor
-
-
-saveIconSvg : Svg msg
-saveIconSvg =
-    Material.Icons.check iconSize materialIconColor
+        [ materialIconFunction innerIconSize materialIconColor ]
 
 
 
