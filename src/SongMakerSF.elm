@@ -1721,19 +1721,19 @@ startPitchClassSelectLCR startPitchClass =
 iconButton : msg -> String -> List (Attribute msg) -> Html msg -> Html msg
 iconButton msg labelText bAttrs iconEl =
     button
-        ([ bgcTransparent
-         , fg iconColor
+        ([ style "flex" "0 0 auto"
+         , bgcTransparent
          , borderNone
+         , fg iconColor
          , fontSize "inherit"
-         , style "flex" "0 0 auto"
          , styleWidth "10ch"
+         , noUserSelect
+         , cursorPointer
+         , notifyClick msg
          , displayFlex
          , flexColumn
          , itemsCenter
          , gap "1ch"
-         , noUserSelect
-         , cursorPointer
-         , notifyClick msg
          ]
             ++ bAttrs
         )
@@ -2246,10 +2246,6 @@ iconColor =
     Color.toCssString iconColor_
 
 
-materialIconColor =
-    Material.Icons.Types.Color iconColor_
-
-
 settingsIcon : Html msg
 settingsIcon =
     materialIconHelp Material.Icons.settings
@@ -2280,7 +2276,7 @@ materialIconHelp materialIcon =
         , displayGrid
         , placeContentCenter
         ]
-        [ materialIcon innerIconSize materialIconColor ]
+        [ materialIcon innerIconSize (Material.Icons.Types.Color iconColor_) ]
 
 
 
