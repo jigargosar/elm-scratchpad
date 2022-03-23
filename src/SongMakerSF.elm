@@ -1722,7 +1722,7 @@ iconButton : msg -> String -> List (Attribute msg) -> Html msg -> Html msg
 iconButton msg labelText bAttrs iconEl =
     button
         ([ bgcTransparent
-         , fg white
+         , fg iconColor
          , borderNone
          , fontSize "inherit"
          , style "flex" "0 0 auto"
@@ -2232,8 +2232,16 @@ electronicIconSvg =
         ]
 
 
+iconColor_ =
+    Color.white
+
+
+iconColor =
+    Color.toCssString iconColor_
+
+
 materialIconColor =
-    Material.Icons.Types.Color Color.lightCharcoal
+    Material.Icons.Types.Color iconColor_
 
 
 settingsIconSvg : Svg msg
