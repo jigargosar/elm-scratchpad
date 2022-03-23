@@ -2202,7 +2202,12 @@ iconSizeInt =
     62
 
 
+innerIconSize : String
 innerIconSize =
+    fromInt innerIconSizeInt ++ "px"
+
+
+innerIconSizeInt =
     32
 
 
@@ -2264,7 +2269,7 @@ materialIconHelp materialIcon =
         , displayGrid
         , placeContentCenter
         ]
-        [ materialIcon innerIconSize Material.Icons.Types.Inherit ]
+        [ materialIcon innerIconSizeInt Material.Icons.Types.Inherit ]
 
 
 
