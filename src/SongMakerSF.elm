@@ -1784,9 +1784,9 @@ viewBottomBar model =
             currentDataModel model
     in
     fRow
-        [ pa "10px"
+        [ fontSize "14px"
+        , pa "10px"
         , gap "3ch"
-        , fontSize "14px"
         , itemsCenter
         ]
         [ viewPlayButton model.playState
