@@ -1727,15 +1727,15 @@ iconButton msg labelText bAttrs iconEl =
          , fontSize "inherit"
          , style "flex" "0 0 auto"
          , sWidth "10ch"
-         , dFlex
-         , fDCol
+         , displayFlex
+         , flexColumn
          , itemsCenter
          , gap "1ch"
          , noUserSelect
          , cursorPointer
+         , notifyClick msg
          ]
-            ++ notifyClick msg
-            :: bAttrs
+            ++ bAttrs
         )
         [ iconEl, text labelText ]
 

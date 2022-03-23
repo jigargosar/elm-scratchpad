@@ -1234,8 +1234,16 @@ gridAutoFlowRow =
     style "grid-auto-flow" "row"
 
 
-fDCol =
+flexColumn =
     style "flex-direction" "column"
+
+
+flexRow =
+    style "flex-direction" "row"
+
+
+fDCol =
+    flexColumn
 
 
 noUserSelect =
