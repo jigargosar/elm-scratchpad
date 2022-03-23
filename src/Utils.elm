@@ -741,6 +741,10 @@ borderRadius =
     style "border-radius"
 
 
+borderRadius50 =
+    borderRadius "50%"
+
+
 borderNone =
     style "border" "none"
 

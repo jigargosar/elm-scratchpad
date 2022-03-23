@@ -1851,7 +1851,7 @@ viewPlayButton playState =
         , notifyClick TogglePlayClicked
         , borderNone
         , bgc wBlue
-        , borderRadius "50%"
+        , borderRadius50
         , style "flex" "0 0 auto"
         , sWidth "80px"
         , sHeight "80px"
@@ -2231,7 +2231,7 @@ svgIconContainer =
         [ styleWidth containerSizeInPx
         , styleHeight containerSizeInPx
         , styleLineHeight containerSizeInPx
-        , borderRadius "50%"
+        , borderRadius50
         , style "border" ("1px solid " ++ grayN 0.3)
         , displayGrid
         , placeContentCenter
