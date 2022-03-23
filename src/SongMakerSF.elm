@@ -2197,7 +2197,7 @@ iconSizePxString =
 
 
 iconSize =
-    62
+    60
 
 
 pianoIconSvg : Html msg
