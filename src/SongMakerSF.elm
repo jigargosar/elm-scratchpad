@@ -1730,6 +1730,8 @@ iconButton msg labelText bAttrs iconEl =
          , fDCol
          , itemsCenter
          , gap "1ch"
+         , noUserSelect
+         , cursorPointer
          ]
             ++ notifyClick msg
             :: bAttrs
