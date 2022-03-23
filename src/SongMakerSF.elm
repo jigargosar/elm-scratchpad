@@ -1717,38 +1717,24 @@ startPitchClassSelectLCR startPitchClass =
         |> lcrMap (mapFirst fromInt)
 
 
-iconButton : msg -> String -> Svg msg -> Html msg
-iconButton msg label innerSvg =
-    iconButtonHelp msg
-        [ svg
-            [ viewBoxLT 60 60
-            , sWidth "46px"
-            , noFill
-            , borderRadius "50%"
-            , style "border" ("1px solid " ++ grayN 0.3)
-            , fill wBlue
-            ]
-            [ innerSvg
-            ]
-        , text label
-        ]
-
-
-iconButtonHelp : msg -> List (Html msg) -> Html msg
-iconButtonHelp msg =
+iconButton : msg -> String -> List (Attribute msg) -> Html msg -> Html msg
+iconButton msg labelText bAttrs iconEl =
     button
-        [ bgcTransparent
-        , fg white
-        , borderNone
-        , fontSize "12px"
-        , style "flex" "0 0 auto"
-        , sWidth "10ch"
-        , dFlex
-        , fDCol
-        , itemsCenter
-        , gap "1ch"
-        , notifyClick msg
-        ]
+        ([ bgcTransparent
+         , fg white
+         , borderNone
+         , fontSize "12px"
+         , style "flex" "0 0 auto"
+         , sWidth "10ch"
+         , dFlex
+         , fDCol
+         , itemsCenter
+         , gap "1ch"
+         ]
+            ++ notifyClick msg
+            :: bAttrs
+        )
+        [ iconEl, text labelText ]
 
 
 viewBtn aa s =
@@ -1804,11 +1790,13 @@ viewBottomBar model =
         , iconButton
             InstrumentButtonClicked
             (instrumentName dataModel.instrument)
-            pianoIconInnerSvg
+            []
+            pianoIconSvg
         , iconButton
             PercussionButtonClicked
             (percussionName dataModel.percussion)
-            electronicIconInnerSvg
+            []
+            electronicIconSvg
         , viewTempoInput (tempoInputValue model)
         , button
             [ bgcTransparent
@@ -2236,20 +2224,36 @@ blink =
 -- SVG ICON PATH
 
 
-pianoIconInnerSvg : Svg msg
-pianoIconInnerSvg =
-    Svg.path [ SA.d pianoIconSvgPath ] []
-
-
-electronicIconInnerSvg : Svg msg
-electronicIconInnerSvg =
-    Svg.path
-        [ SA.d electronicIconSvgPath
-        , style "transform" "translate(13px, 18px)"
-
-        --, transforms [ translateF2 ( 13, 18 ) ]
+pianoIconSvg : Html msg
+pianoIconSvg =
+    svg
+        [ viewBoxLT 60 60
+        , sWidth "46px"
+        , borderRadius "50%"
+        , style "border" ("1px solid " ++ grayN 0.3)
+        , fill wBlue
         ]
-        []
+        [ Svg.path [ SA.d pianoIconSvgPath ] []
+        ]
+
+
+electronicIconSvg : Html msg
+electronicIconSvg =
+    svg
+        [ viewBoxLT 60 60
+        , sWidth "46px"
+        , borderRadius "50%"
+        , style "border" ("1px solid " ++ grayN 0.3)
+        , fill wBlue
+        ]
+        [ Svg.path
+            [ SA.d electronicIconSvgPath
+            , style "transform" "translate(13px, 18px)"
+
+            --, transforms [ translateF2 ( 13, 18 ) ]
+            ]
+            []
+        ]
 
 
 pianoIconSvgPath : String
