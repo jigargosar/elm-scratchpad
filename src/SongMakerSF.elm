@@ -2214,36 +2214,31 @@ innerIconSizeInt =
 
 pianoIcon : Html msg
 pianoIcon =
-    svgIconContainer [ pianoIconSvg ]
-
-
-pianoIconSvg : Svg msg
-pianoIconSvg =
-    svg
-        [ viewBoxLT 48 48
-        , styleWidth innerIconSize
-        , fill wBlue
-        ]
-        [ Svg.path [ SA.d pianoIconSvgPath ] []
+    svgIconContainer
+        [ svg
+            [ viewBoxLT 48 48
+            , styleWidth innerIconSize
+            , fill wBlue
+            ]
+            [ Svg.path [ SA.d pianoIconSvgPath ] []
+            ]
         ]
 
 
 electronicIconSvg : Html msg
 electronicIconSvg =
-    svg
-        [ viewBoxLT 60 60
-        , sWidth iconSize
-        , borderRadius "50%"
-        , style "border" ("1px solid " ++ grayN 0.3)
-        , fill wBlue
-        ]
-        [ Svg.path
-            [ SA.d electronicIconSvgPath
-            , style "transform" "translate(13px, 18px)"
-
-            --, transforms [ translateF2 ( 13, 18 ) ]
+    svgIconContainer
+        [ svg
+            [ viewBoxLT 60 60
+            , styleWidth iconSize
+            , fill wBlue
             ]
-            []
+            [ Svg.path
+                [ style "transform" "translate(13px, 18px)"
+                , SA.d electronicIconSvgPath
+                ]
+                []
+            ]
         ]
 
 
