@@ -1800,11 +1800,14 @@ viewBottomBar model =
             "Settings"
             [ HA.id "settings-btn" ]
             settingsIconSvg
-        , viewBtn
-            [ notifyClick UndoClicked
-            ]
+        , iconButton UndoClicked
             ("Undo " ++ fromInt (model.dataModelPivot |> Pivot.lengthL))
-        , viewBtn [] "Save"
+            []
+            undoIconSvg
+        , iconButton NOP
+            "Save"
+            []
+            saveIconSvg
         ]
 
 
@@ -2220,6 +2223,16 @@ electronicIconSvg =
 settingsIconSvg : Svg msg
 settingsIconSvg =
     Material.Icons.settings 46 Material.Icons.Types.Inherit
+
+
+undoIconSvg : Svg msg
+undoIconSvg =
+    Material.Icons.undo 46 Material.Icons.Types.Inherit
+
+
+saveIconSvg : Svg msg
+saveIconSvg =
+    Material.Icons.check 46 Material.Icons.Types.Inherit
 
 
 
