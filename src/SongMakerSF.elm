@@ -1723,7 +1723,7 @@ iconButton msg labelText bAttrs iconEl =
         ([ bgcTransparent
          , fg white
          , borderNone
-         , fontSize "12px"
+         , fontSize "14px"
          , style "flex" "0 0 auto"
          , sWidth "10ch"
          , dFlex
@@ -1785,7 +1785,7 @@ viewBottomBar model =
     in
     fRow
         [ pa "16px"
-        , gap "10px"
+        , gap "16px"
         , itemsCenter
         ]
         [ viewPlayButton model.playState
@@ -1852,8 +1852,8 @@ viewPlayButton playState =
         , bgc wBlue
         , borderRadius "50%"
         , style "flex" "0 0 auto"
-        , sWidth "64px"
-        , sHeight "64px"
+        , sWidth "80px"
+        , sHeight "80px"
         ]
         [ svg
             [ viewBoxC 100 100
@@ -2195,7 +2195,7 @@ pianoIconSvg : Html msg
 pianoIconSvg =
     svg
         [ viewBoxLT 60 60
-        , sWidth "46px"
+        , sWidth "62px"
         , borderRadius "50%"
         , style "border" ("1px solid " ++ grayN 0.3)
         , fill wBlue
@@ -2208,7 +2208,7 @@ electronicIconSvg : Html msg
 electronicIconSvg =
     svg
         [ viewBoxLT 60 60
-        , sWidth "46px"
+        , sWidth "62px"
         , borderRadius "50%"
         , style "border" ("1px solid " ++ grayN 0.3)
         , fill wBlue
@@ -2225,17 +2225,17 @@ electronicIconSvg =
 
 settingsIconSvg : Svg msg
 settingsIconSvg =
-    Material.Icons.settings 46 Material.Icons.Types.Inherit
+    Material.Icons.settings 62 Material.Icons.Types.Inherit
 
 
 undoIconSvg : Svg msg
 undoIconSvg =
-    Material.Icons.undo 46 Material.Icons.Types.Inherit
+    Material.Icons.undo 62 Material.Icons.Types.Inherit
 
 
 saveIconSvg : Svg msg
 saveIconSvg =
-    Material.Icons.check 46 Material.Icons.Types.Inherit
+    Material.Icons.check 62 Material.Icons.Types.Inherit
 
 
 
