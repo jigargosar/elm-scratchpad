@@ -2194,7 +2194,7 @@ blink =
 pianoIcon : Html msg
 pianoIcon =
     svgIconContainer
-        [ pianoIconSvg iconSize wBlue ]
+        [ pianoIconSvg 30 wBlue ]
 
 
 electronicIcon : Html msg
@@ -2206,19 +2206,19 @@ electronicIcon =
 settingsIcon : Html msg
 settingsIcon =
     svgIconContainer
-        [ Material.Icons.settings iconSize Material.Icons.Types.Inherit ]
+        [ Material.Icons.settings 32 Material.Icons.Types.Inherit ]
 
 
 undoIcon : Html msg
 undoIcon =
     svgIconContainer
-        [ Material.Icons.undo iconSize Material.Icons.Types.Inherit ]
+        [ Material.Icons.undo 32 Material.Icons.Types.Inherit ]
 
 
 saveIcon : Html msg
 saveIcon =
     svgIconContainer
-        [ Material.Icons.check iconSize Material.Icons.Types.Inherit ]
+        [ Material.Icons.check 32 Material.Icons.Types.Inherit ]
 
 
 svgIconContainer : List (Html msg) -> Html msg
@@ -2237,11 +2237,6 @@ svgIconContainer =
         , displayGrid
         , placeContentCenter
         ]
-
-
-iconSize : Int
-iconSize =
-    32
 
 
 
