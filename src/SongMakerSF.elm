@@ -2207,6 +2207,7 @@ innerIconSize =
     fromInt innerIconSizeInt ++ "px"
 
 
+innerIconSizeInt : Int
 innerIconSizeInt =
     32
 
