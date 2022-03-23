@@ -2197,7 +2197,7 @@ iconSizePxString =
 
 
 iconSize =
-    60
+    62
 
 
 innerIconSize =
