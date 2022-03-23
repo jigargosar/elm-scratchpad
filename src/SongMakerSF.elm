@@ -1782,8 +1782,8 @@ viewBottomBar model =
             currentDataModel model
     in
     fRow
-        [ pa "20px"
-        , gap "20px"
+        [ pa "16px"
+        , gap "10px"
         , itemsCenter
         ]
         [ viewPlayButton model.playState
@@ -1795,7 +1795,8 @@ viewBottomBar model =
             (percussionName dataModel.percussion)
             []
             electronicIconSvg
-        , viewTempoInput (tempoInputValue model)
+        , fRow [ style "flex-grow" "1", contentCenter ]
+            [ viewTempoInput (tempoInputValue model) ]
         , iconButton SettingsClicked
             "Settings"
             [ HA.id "settings-btn" ]
