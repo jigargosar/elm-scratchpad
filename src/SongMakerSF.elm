@@ -1723,7 +1723,7 @@ iconButton msg labelText bAttrs iconEl =
         ([ bgcTransparent
          , fg white
          , borderNone
-         , fontSize "14px"
+         , fontSize "inherit"
          , style "flex" "0 0 auto"
          , sWidth "10ch"
          , dFlex
@@ -1784,8 +1784,9 @@ viewBottomBar model =
             currentDataModel model
     in
     fRow
-        [ pa "16px"
-        , gap "16px"
+        [ pa "10px"
+        , gap "3ch"
+        , fontSize "14px"
         , itemsCenter
         ]
         [ viewPlayButton model.playState
