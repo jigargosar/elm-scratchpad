@@ -1787,52 +1787,19 @@ viewBottomBar model =
         , itemsCenter
         ]
         [ viewPlayButton model.playState
-        , iconButton
-            InstrumentButtonClicked
+        , iconButton InstrumentButtonClicked
             (instrumentName dataModel.instrument)
             []
             pianoIconSvg
-        , iconButton
-            PercussionButtonClicked
+        , iconButton PercussionButtonClicked
             (percussionName dataModel.percussion)
             []
             electronicIconSvg
         , viewTempoInput (tempoInputValue model)
-        , button
-            [ bgcTransparent
-            , fg white
-            , borderNone
-            , fontSize "12px"
-            , style "flex" "0 0 auto"
-            , sWidth "10ch"
-            , dFlex
-            , fDCol
-            , itemsCenter
-            , gap "1ch"
-
-            --, notifyClick msg
-            ]
-            [ div
-                [ --styleWidth "46px"
-                  --, styleHeight "46px"
-                  displayInlineBlock
-                , borderRadius "50%"
-                , style "border" ("1px solid " ++ grayN 0.3)
-                ]
-                [ Material.Icons.settings 46 Material.Icons.Types.Inherit ]
-            ]
-        , button
-            [ style "background-image" "url(https://musiclab.chromeexperiments.com/Song-Maker/client/images/icon-settings-gray.svg)"
-            , style "background-position" "center"
-            , style "background-size" "contain"
-            , style "background-repeat" "no-repeat"
-            , bgcTransparent
-            , styleWidth "46px"
-            , styleHeight "46px"
-            , borderNone
-            ]
-            []
-        , viewSettingsButton
+        , iconButton SettingsClicked
+            "Settings"
+            [ HA.id "settings-btn" ]
+            settingsIconSvg
         , viewBtn
             [ notifyClick UndoClicked
             ]
@@ -1849,12 +1816,6 @@ tempoInputValue model =
 
         _ ->
             ( fromInt (currentDataModel model).tempo, False )
-
-
-viewSettingsButton =
-    viewBtn
-        [ HA.id "settings-btn", notifyClick SettingsClicked ]
-        "Settings"
 
 
 viewTempoInput : ( String, Bool ) -> Html Msg
@@ -2254,6 +2215,15 @@ electronicIconSvg =
             ]
             []
         ]
+
+
+settingsIconSvg : Svg msg
+settingsIconSvg =
+    Material.Icons.settings 46 Material.Icons.Types.Inherit
+
+
+
+-- SVG PATH STRINGS
 
 
 pianoIconSvgPath : String
