@@ -10,6 +10,8 @@ import Html.Lazy
 import Json.Decode as JD exposing (Decoder)
 import Json.Encode as JE exposing (Value)
 import List.Extra
+import Material.Icons
+import Material.Icons.Types
 import Pivot exposing (Pivot)
 import Random
 import Random.List
@@ -1717,6 +1719,23 @@ startPitchClassSelectLCR startPitchClass =
 
 iconButton : msg -> String -> Svg msg -> Html msg
 iconButton msg label innerSvg =
+    iconButtonHelp msg
+        [ svg
+            [ viewBoxLT 60 60
+            , sWidth "46px"
+            , noFill
+            , borderRadius "50%"
+            , style "border" ("1px solid " ++ grayN 0.3)
+            , fill wBlue
+            ]
+            [ innerSvg
+            ]
+        , text label
+        ]
+
+
+iconButtonHelp : msg -> List (Html msg) -> Html msg
+iconButtonHelp msg =
     button
         [ bgcTransparent
         , fg white
@@ -1729,18 +1748,6 @@ iconButton msg label innerSvg =
         , itemsCenter
         , gap "1ch"
         , notifyClick msg
-        ]
-        [ svg
-            [ viewBoxLT 60 60
-            , sWidth "46px"
-            , noFill
-            , borderRadius "50%"
-            , style "border" ("1px solid " ++ grayN 0.3)
-            , fill wBlue
-            ]
-            [ innerSvg
-            ]
-        , text label
         ]
 
 
@@ -1803,6 +1810,29 @@ viewBottomBar model =
             (percussionName dataModel.percussion)
             electronicIconInnerSvg
         , viewTempoInput (tempoInputValue model)
+        , button
+            [ bgcTransparent
+            , fg white
+            , borderNone
+            , fontSize "12px"
+            , style "flex" "0 0 auto"
+            , sWidth "10ch"
+            , dFlex
+            , fDCol
+            , itemsCenter
+            , gap "1ch"
+
+            --, notifyClick msg
+            ]
+            [ div
+                [ --styleWidth "46px"
+                  --, styleHeight "46px"
+                  displayInlineBlock
+                , borderRadius "50%"
+                , style "border" ("1px solid " ++ grayN 0.3)
+                ]
+                [ Material.Icons.settings 46 Material.Icons.Types.Inherit ]
+            ]
         , button
             [ style "background-image" "url(https://musiclab.chromeexperiments.com/Song-Maker/client/images/icon-settings-gray.svg)"
             , style "background-position" "center"

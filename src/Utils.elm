@@ -1202,6 +1202,10 @@ paf =
     fpx >> pa
 
 
+displayFlex =
+    dFlex
+
+
 dFlex =
     style "display" "flex"
 
