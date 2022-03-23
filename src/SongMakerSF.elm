@@ -2192,11 +2192,19 @@ blink =
 -- SVG ICON PATH
 
 
+iconSizePxString =
+    fromInt iconSize ++ "px"
+
+
+iconSize =
+    62
+
+
 pianoIconSvg : Html msg
 pianoIconSvg =
     svg
         [ viewBoxLT 60 60
-        , sWidth "62px"
+        , sWidth iconSizePxString
         , borderRadius "50%"
         , style "border" ("1px solid " ++ grayN 0.3)
         , fill wBlue
@@ -2209,7 +2217,7 @@ electronicIconSvg : Html msg
 electronicIconSvg =
     svg
         [ viewBoxLT 60 60
-        , sWidth "62px"
+        , sWidth iconSizePxString
         , borderRadius "50%"
         , style "border" ("1px solid " ++ grayN 0.3)
         , fill wBlue
@@ -2224,17 +2232,13 @@ electronicIconSvg =
         ]
 
 
-iconSize =
-    62
+materialIconColor =
+    Material.Icons.Types.Color Color.lightCharcoal
 
 
 settingsIconSvg : Svg msg
 settingsIconSvg =
     Material.Icons.settings iconSize materialIconColor
-
-
-materialIconColor =
-    Material.Icons.Types.Color Color.lightCharcoal
 
 
 undoIconSvg : Svg msg
