@@ -3,6 +3,7 @@ port module SongMakerSF exposing (main)
 import Browser.Dom
 import Browser.Events
 import Browser.Navigation exposing (Key)
+import Color
 import Html
 import Html.Attributes as HA
 import Html.Events exposing (onBlur)
@@ -2223,19 +2224,27 @@ electronicIconSvg =
         ]
 
 
+iconSize =
+    62
+
+
 settingsIconSvg : Svg msg
 settingsIconSvg =
-    Material.Icons.settings 62 Material.Icons.Types.Inherit
+    Material.Icons.settings iconSize materialIconColor
+
+
+materialIconColor =
+    Material.Icons.Types.Color Color.lightCharcoal
 
 
 undoIconSvg : Svg msg
 undoIconSvg =
-    Material.Icons.undo 62 Material.Icons.Types.Inherit
+    Material.Icons.undo iconSize materialIconColor
 
 
 saveIconSvg : Svg msg
 saveIconSvg =
-    Material.Icons.check 62 Material.Icons.Types.Inherit
+    Material.Icons.check iconSize materialIconColor
 
 
 
