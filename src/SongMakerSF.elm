@@ -2192,11 +2192,13 @@ blink =
 -- SVG ICONS
 
 
-iconSizePxString =
-    fromInt iconSize ++ "px"
-
-
+iconSize : String
 iconSize =
+    fromInt iconSizeInt ++ "px"
+
+
+iconSizeInt : Int
+iconSizeInt =
     62
 
 
@@ -2208,7 +2210,7 @@ pianoIconSvg : Html msg
 pianoIconSvg =
     svg
         [ viewBoxLT 60 60
-        , sWidth iconSizePxString
+        , styleWidth iconSize
         , borderRadius "50%"
         , style "border" ("1px solid " ++ grayN 0.3)
         , fill wBlue
@@ -2221,7 +2223,7 @@ electronicIconSvg : Html msg
 electronicIconSvg =
     svg
         [ viewBoxLT 60 60
-        , sWidth iconSizePxString
+        , sWidth iconSize
         , borderRadius "50%"
         , style "border" ("1px solid " ++ grayN 0.3)
         , fill wBlue
@@ -2268,16 +2270,17 @@ type alias MaterialIcon msg =
 
 
 materialIconHelp : MaterialIcon msg -> Html msg
-materialIconHelp materialIconFunction =
+materialIconHelp materialIcon =
     div
-        [ styleWidth iconSizePxString
-        , styleHeight iconSizePxString
+        [ styleWidth iconSize
+        , styleHeight iconSize
+        , styleLineHeight iconSize
         , borderRadius "50%"
         , style "border" ("1px solid " ++ grayN 0.3)
         , displayGrid
         , placeContentCenter
         ]
-        [ materialIconFunction innerIconSize materialIconColor ]
+        [ materialIcon innerIconSize materialIconColor ]
 
 
 

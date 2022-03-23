@@ -994,6 +994,10 @@ styleHeight =
     style "height"
 
 
+styleLineHeight =
+    style "line-height"
+
+
 styleWidthFPx =
     styleWidth << fpx
 
