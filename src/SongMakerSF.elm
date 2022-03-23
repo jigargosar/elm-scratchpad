@@ -1724,7 +1724,7 @@ iconButton msg labelText bAttrs iconEl =
         ([ style "flex" "0 0 auto"
          , bgcTransparent
          , borderNone
-         , fg iconColor
+         , fg white
          , fontSize "inherit"
          , styleWidth "10ch"
          , noUserSelect
@@ -2238,14 +2238,6 @@ electronicIconSvg =
         ]
 
 
-iconColor_ =
-    Color.white
-
-
-iconColor =
-    Color.toCssString iconColor_
-
-
 settingsIcon : Html msg
 settingsIcon =
     materialIconHelp Material.Icons.settings
@@ -2272,7 +2264,7 @@ materialIconHelp materialIcon =
         , displayGrid
         , placeContentCenter
         ]
-        [ materialIcon innerIconSize (Material.Icons.Types.Color iconColor_) ]
+        [ materialIcon innerIconSize Material.Icons.Types.Inherit ]
 
 
 
