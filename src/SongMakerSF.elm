@@ -2228,10 +2228,7 @@ pianoIcon =
 electronicIcon : Html msg
 electronicIcon =
     svgIconContainer
-        [ electronicIconSvg iconSizeInt
-            [ fill wBlue
-            ]
-        ]
+        [ electronicIconSvg iconSizeInt wBlue [] ]
 
 
 settingsIcon : Html msg
@@ -2277,12 +2274,13 @@ pianoIconSvgPath =
     "M39,16h-8c-3.859,0-7-3.141-7-7c0-4.963-4.038-9-9-9H9C4.038,0,0,4.037,0,9v38h2v1h44.002v-1H48V25 C48,20.037,43.963,16,39,16z M8,46H4V30h3v9h1V46z M14,46h-4v-7h1v-9h2v9h1V46z M20,46h-4v-7h1v-9h3V46z M26,46h-3.999V30H25v9h1V46 z M32,46h-4v-7h1v-9h2v9h1V46z M38,46h-4v-7h1v-9h2v9h1V46z M44.002,46H40v-7h1v-9h3.002V46z M46,28H2V9c0-3.859,3.14-7,7-7h6 c3.86,0,7,3.141,7,7c0,4.963,4.037,9,9,9h8c3.859,0,7,3.141,7,7V28z"
 
 
-electronicIconSvg : Int -> List (Attribute msg) -> Html msg
-electronicIconSvg size attrs =
+electronicIconSvg : Int -> String -> List (Attribute msg) -> Html msg
+electronicIconSvg size fillValue attrs =
     svg
         (viewBoxLT 60 60
             :: styleWidth (fromInt size)
             :: styleHeight (fromInt size)
+            :: fill fillValue
             :: attrs
         )
         [ Svg.path
