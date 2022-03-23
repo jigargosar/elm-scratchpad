@@ -2261,11 +2261,7 @@ saveIcon =
     materialIconHelp Material.Icons.check
 
 
-type alias MaterialIcon msg =
-    Material.Icons.Types.Icon msg
-
-
-materialIconHelp : MaterialIcon msg -> Html msg
+materialIconHelp : Material.Icons.Types.Icon msg -> Html msg
 materialIconHelp materialIcon =
     div
         [ styleWidth iconSize
