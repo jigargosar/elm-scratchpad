@@ -2189,7 +2189,7 @@ blink =
 
 
 
--- SVG ICON PATH
+-- SVG ICONS
 
 
 iconSizePxString =
