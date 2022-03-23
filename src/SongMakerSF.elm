@@ -31,9 +31,9 @@ import Utils exposing (..)
     Clone: Chrome Music Labs - Song Maker.
 
     # Next
+    * bottom bar visuals
     * instrument/percussion backend
     * Save btn dialog
-    * bottom bar visuals
     * redo
 
 
