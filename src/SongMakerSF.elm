@@ -2244,19 +2244,14 @@ materialIconHelp materialIcon =
 svgIconContainer : List (Html msg) -> Html msg
 svgIconContainer =
     div
-        [ styleWidth iconContainerSizeAsPxString
-        , styleHeight iconContainerSizeAsPxString
-        , styleLineHeight iconContainerSizeAsPxString
+        [ styleWidth (fromInt iconContainerSize ++ "px")
+        , styleHeight (fromInt iconContainerSize ++ "px")
+        , styleLineHeight (fromInt iconContainerSize ++ "px")
         , borderRadius "50%"
         , style "border" ("1px solid " ++ grayN 0.3)
         , displayGrid
         , placeContentCenter
         ]
-
-
-iconContainerSizeAsPxString : String
-iconContainerSizeAsPxString =
-    fromInt iconContainerSize ++ "px"
 
 
 
