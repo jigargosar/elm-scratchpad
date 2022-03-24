@@ -1741,7 +1741,24 @@ iconButton msg labelText bAttrs iconEl =
          ]
             ++ bAttrs
         )
-        [ svgIconContainer [ iconEl ], text labelText ]
+        [ iconButtonImageWrapper [ iconEl ], text labelText ]
+
+
+iconButtonImageWrapper : List (Html msg) -> Html msg
+iconButtonImageWrapper =
+    let
+        containerSizeInPx =
+            fromInt 62 ++ "px"
+    in
+    div
+        [ styleWidth containerSizeInPx
+        , styleHeight containerSizeInPx
+        , styleLineHeight containerSizeInPx
+        , borderRadius50
+        , style "border" ("1px solid " ++ grayN 0.3)
+        , displayGrid
+        , placeContentCenter
+        ]
 
 
 viewBtn aa s =
@@ -2227,23 +2244,6 @@ undoIcon =
 saveIcon : Html msg
 saveIcon =
     Material.Icons.check 32 Material.Icons.Types.Inherit
-
-
-svgIconContainer : List (Html msg) -> Html msg
-svgIconContainer =
-    let
-        containerSizeInPx =
-            fromInt 62 ++ "px"
-    in
-    div
-        [ styleWidth containerSizeInPx
-        , styleHeight containerSizeInPx
-        , styleLineHeight containerSizeInPx
-        , borderRadius50
-        , style "border" ("1px solid " ++ grayN 0.3)
-        , displayGrid
-        , placeContentCenter
-        ]
 
 
 
