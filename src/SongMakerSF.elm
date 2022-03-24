@@ -1883,20 +1883,23 @@ viewTempoInput ( tempo, editing ) =
             , HA.max (second tempoInterval |> fromInt)
             ]
             []
-        , Html.input
-            [ HA.value tempo
-            , fg "inherit"
-            , bgc "inherit"
-            , tac
-            , borderNone
-            , onInput TempoInputChanged
-            , onBlur CommitTempoInput
-            , onEnter CommitTempoInput
-            , HA.type_ "number"
-            , HA.min (first tempoInterval |> fromInt)
-            , HA.max (second tempoInterval |> fromInt)
+        , div [ displayFlex, flexRow ]
+            [ div [ styleWidth "1ch" ] [ viewBool editing (text "*") ]
+            , Html.input
+                [ HA.value tempo
+                , fg "inherit"
+                , bgc "inherit"
+                , tac
+                , borderNone
+                , onInput TempoInputChanged
+                , onBlur CommitTempoInput
+                , onEnter CommitTempoInput
+                , HA.type_ "number"
+                , HA.min (first tempoInterval |> fromInt)
+                , HA.max (second tempoInterval |> fromInt)
+                ]
+                []
             ]
-            []
         ]
 
 
