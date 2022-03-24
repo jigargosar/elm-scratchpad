@@ -1832,8 +1832,7 @@ viewBottomBar model =
             (percussionName dataModel.percussion)
             []
             snareDrumIcon
-        , fRow [ style "flex-grow" "1", contentCenter ]
-            [ viewTempoInput (tempoInputValue model) ]
+        , viewTempoInput (tempoInputValue model)
         , iconButton SettingsClicked
             "Settings"
             [ HA.id "settings-btn" ]
@@ -1862,7 +1861,7 @@ tempoInputValue model =
 viewTempoInput : ( String, Bool ) -> Html Msg
 viewTempoInput ( tempo, editing ) =
     Html.label
-        [ style "flex-grow" "1"
+        [ style "flex" "1 0 auto"
         , displayFlex
         , flexRow
         , gap "1ch"
