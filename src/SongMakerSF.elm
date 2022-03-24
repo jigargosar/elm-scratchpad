@@ -1890,8 +1890,6 @@ viewTempoInput ( tempo, editing ) =
             , HA.type_ "number"
             , HA.min (first tempoInterval |> fromInt)
             , HA.max (second tempoInterval |> fromInt)
-
-            --, sWidth "6ch"
             , style "accent-color" wBlue
             ]
             []
