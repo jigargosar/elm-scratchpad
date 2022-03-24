@@ -1860,7 +1860,13 @@ tempoInputValue model =
 
 viewTempoInput : ( String, Bool ) -> Html Msg
 viewTempoInput ( tempo, editing ) =
-    Html.label [ style "flex-grow" "1", displayFlex, flexRow, gap "1ch" ]
+    Html.label
+        [ style "flex-grow" "1"
+        , displayFlex
+        , flexRow
+        , gap "1ch"
+        , contentCenter
+        ]
         [ text "Tempo "
         , Html.input
             [ HA.value tempo
@@ -1875,13 +1881,17 @@ viewTempoInput ( tempo, editing ) =
             []
         , Html.input
             [ HA.value tempo
+            , fg "inherit"
+            , bgc "inherit"
+            , borderNone
             , onInput TempoInputChanged
             , onBlur CommitTempoInput
             , onEnter CommitTempoInput
             , HA.type_ "number"
             , HA.min (first tempoInterval |> fromInt)
             , HA.max (second tempoInterval |> fromInt)
-            , sWidth "6ch"
+
+            --, sWidth "6ch"
             , style "accent-color" wBlue
             ]
             []
