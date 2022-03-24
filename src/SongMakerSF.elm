@@ -1875,6 +1875,8 @@ viewTempoInput ( tempo, editing ) =
             , onBlur CommitTempoInput
             , onEnter CommitTempoInput
             , HA.type_ "range"
+            , style "flex" "1 1 auto"
+            , sMaxWidth "250px"
 
             --, style "flex" "1 0 auto"
             , HA.min (first tempoInterval |> fromInt)
