@@ -1741,7 +1741,7 @@ iconButton msg labelText bAttrs iconEl =
          ]
             ++ bAttrs
         )
-        [ iconEl, text labelText ]
+        [ svgIconContainer [ iconEl ], text labelText ]
 
 
 viewBtn aa s =
@@ -2197,8 +2197,7 @@ blink =
 
 pianoIcon : Html msg
 pianoIcon =
-    svgIconContainer
-        [ pianoIconSvg 30 wBlue ]
+    pianoIconSvg 32 wBlue
 
 
 
@@ -2207,32 +2206,27 @@ pianoIcon =
 
 electronicIcon : Html msg
 electronicIcon =
-    svgIconContainer
-        [ electronicIconSvg 62 wBlue ]
+    electronicIconSvg 62 wBlue
 
 
 snareDrumIcon : Html msg
 snareDrumIcon =
-    svgIconContainer
-        [ snareDrumIconSvg 30 wBlue ]
+    snareDrumIconSvg 32 wBlue
 
 
 settingsIcon : Html msg
 settingsIcon =
-    svgIconContainer
-        [ Material.Icons.settings 32 Material.Icons.Types.Inherit ]
+    Material.Icons.settings 32 Material.Icons.Types.Inherit
 
 
 undoIcon : Html msg
 undoIcon =
-    svgIconContainer
-        [ Material.Icons.undo 32 Material.Icons.Types.Inherit ]
+    Material.Icons.undo 32 Material.Icons.Types.Inherit
 
 
 saveIcon : Html msg
 saveIcon =
-    svgIconContainer
-        [ Material.Icons.check 32 Material.Icons.Types.Inherit ]
+    Material.Icons.check 32 Material.Icons.Types.Inherit
 
 
 svgIconContainer : List (Html msg) -> Html msg
