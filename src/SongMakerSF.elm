@@ -1631,7 +1631,16 @@ viewDocument : Model -> Document Msg
 viewDocument model =
     Document "Song Maker"
         [ basicStylesNode
-        , animateCssNode
+        , styleNode """
+            input,button{
+                font-size:inherit;
+                font-family:inherit;
+            }
+            button{
+                cursor:pointer;
+                user-select:none;
+            }
+        """
         , case model.transientState of
             SettingsDialog settings ->
                 viewSettingsForm settings
@@ -1724,15 +1733,11 @@ iconButton msg labelText bAttrs iconEl =
          , bgcTransparent
          , borderNone
          , fg white
-         , fontSize "inherit"
          , styleWidth "10ch"
-         , noUserSelect
-         , cursorPointer
          , notifyClick msg
          , displayFlex
          , flexColumn
          , itemsCenter
-         , gap "1ch"
          ]
             ++ bAttrs
         )
@@ -1836,8 +1841,6 @@ viewTempoInput ( tempo, editing ) =
             , onEnter CommitTempoInput
             , HA.size 4
             , HA.type_ "number"
-            , fontSize "inherit"
-            , fontFamily "inherit"
             , sWidth "6ch"
             ]
             []
