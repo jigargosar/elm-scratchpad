@@ -1821,6 +1821,7 @@ viewBottomBar model =
         , pa "10px"
         , gap "3ch"
         , itemsCenter
+        , styleAccentColor wBlue
         ]
         [ viewPlayButton model.playState
         , iconButton InstrumentButtonClicked
@@ -1876,7 +1877,6 @@ viewTempoInput ( tempo, editing ) =
             , HA.type_ "range"
             , HA.min (first tempoInterval |> fromInt)
             , HA.max (second tempoInterval |> fromInt)
-            , style "accent-color" wBlue
             ]
             []
         , Html.input
@@ -1890,7 +1890,6 @@ viewTempoInput ( tempo, editing ) =
             , HA.type_ "number"
             , HA.min (first tempoInterval |> fromInt)
             , HA.max (second tempoInterval |> fromInt)
-            , style "accent-color" wBlue
             ]
             []
         , viewBool editing (text "*")

@@ -851,6 +851,10 @@ fg =
     style "color"
 
 
+styleAccentColor =
+    style "accent-color"
+
+
 fgCurrentColor =
     fg "currentColor"
 
