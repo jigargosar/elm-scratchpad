@@ -579,6 +579,14 @@ maxStartPitchClass =
     11
 
 
+tempoInterval =
+    ( 10, 300 )
+
+
+clampInInterval ( lo, hi ) =
+    clamp lo hi
+
+
 computeGridWidth : Settings -> Int
 computeGridWidth s =
     totalSteps s
@@ -1230,7 +1238,7 @@ update msg model =
                                     tempo =
                                         String.toInt str
                                             |> Maybe.withDefault dataModel.tempo
-                                            |> clamp 10 300
+                                            |> clampInInterval tempoInterval
                                 in
                                 { dataModel | tempo = tempo }
                             )
@@ -1852,16 +1860,29 @@ tempoInputValue model =
 
 viewTempoInput : ( String, Bool ) -> Html Msg
 viewTempoInput ( tempo, editing ) =
-    Html.label [ fontSize "inherit" ]
+    Html.label [ style "flex-grow" "1", displayFlex, flexRow, gap "1ch" ]
         [ text "Tempo "
         , Html.input
             [ HA.value tempo
             , onInput TempoInputChanged
             , onBlur CommitTempoInput
             , onEnter CommitTempoInput
-            , HA.size 4
+            , HA.type_ "range"
+            , HA.min (first tempoInterval |> fromInt)
+            , HA.max (second tempoInterval |> fromInt)
+            , style "accent-color" wBlue
+            ]
+            []
+        , Html.input
+            [ HA.value tempo
+            , onInput TempoInputChanged
+            , onBlur CommitTempoInput
+            , onEnter CommitTempoInput
             , HA.type_ "number"
+            , HA.min (first tempoInterval |> fromInt)
+            , HA.max (second tempoInterval |> fromInt)
             , sWidth "6ch"
+            , style "accent-color" wBlue
             ]
             []
         , viewBool editing (text "*")
