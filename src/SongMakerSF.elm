@@ -33,10 +33,13 @@ import Utils exposing (..)
     Clone: Chrome Music Labs - Song Maker.
 
     # Next
-    * bottom bar visuals
+    * [x] bottom bar visuals
+    * tempo input visuals
     * instrument/percussion backend
     * Save btn dialog
     * redo
+    --
+    * various instrument icons
 
 
     # Archived
