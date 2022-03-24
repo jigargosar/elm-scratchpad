@@ -942,6 +942,14 @@ fontSize =
     style "font-size"
 
 
+fontSizeInherit =
+    fontSize "inherit"
+
+
+fontFamilyInherit =
+    fontFamily "inherit"
+
+
 positionAbsolute =
     style "position" "absolute"
 

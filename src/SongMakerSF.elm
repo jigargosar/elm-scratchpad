@@ -1784,7 +1784,7 @@ viewBottomBar model =
             currentDataModel model
     in
     fRow
-        [ fontSize "14px"
+        [ fontSize "15px"
         , pa "10px"
         , gap "3ch"
         , itemsCenter
@@ -1827,7 +1827,7 @@ tempoInputValue model =
 
 viewTempoInput : ( String, Bool ) -> Html Msg
 viewTempoInput ( tempo, editing ) =
-    Html.label [ fontSize "20px" ]
+    Html.label [ fontSize "inherit" ]
         [ text "Tempo "
         , Html.input
             [ HA.value tempo
@@ -1837,7 +1837,8 @@ viewTempoInput ( tempo, editing ) =
             , HA.size 4
             , HA.type_ "number"
             , fontSize "inherit"
-            , sWidth "5ch"
+            , fontFamily "inherit"
+            , sWidth "6ch"
             ]
             []
         , viewBool editing (text "*")
