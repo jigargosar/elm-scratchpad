@@ -2204,7 +2204,7 @@ pianoIcon =
 electronicIcon : Html msg
 electronicIcon =
     svgIconContainer
-        [ electronicIconSvg 60 wBlue ]
+        [ electronicIconSvg 62 wBlue ]
 
 
 settingsIcon : Html msg
