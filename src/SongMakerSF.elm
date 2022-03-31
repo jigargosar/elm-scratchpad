@@ -811,8 +811,12 @@ stepDurationInMilli model =
     duration
 
 
-scheduleInstrumentNotes : Float -> DataModel -> List Int -> Cmd msg
-scheduleInstrumentNotes audioTime model indices =
+scheduleInstrumentNotesAtIndex audioTime model index =
+    scheduleInstrumentNotesAtIndices audioTime model [ index ]
+
+
+scheduleInstrumentNotesAtIndices : Float -> DataModel -> List Int -> Cmd msg
+scheduleInstrumentNotesAtIndices audioTime model indices =
     instrumentPitchesAtIndices model.settings indices
         |> List.map (instrumentNoteFromPitch audioTime model)
         |> scheduleNotes
@@ -1017,7 +1021,7 @@ playNoteCmd : Model -> GridType -> Int2 -> Cmd msg
 playNoteCmd model gridType (( _, y ) as gp) =
     case gridType of
         InstrumentGrid ->
-            scheduleInstrumentNotes model.audioTime (currentDataModel model) [ y ]
+            scheduleInstrumentNotesAtIndex model.audioTime (currentDataModel model) y
 
         PercussionGrid ->
             scheduleNote (percussionNoteFromGP model.audioTime (currentDataModel model) gp)
@@ -1044,7 +1048,7 @@ scheduleCurrentStepAtEffect atAudioTime ({ stepIndex } as model) =
         |> keep (first >> eq stepIndex)
         |> reject (second >> (\y -> y >= igh))
         |> List.map second
-        |> scheduleInstrumentNotes atAudioTime dataModel
+        |> scheduleInstrumentNotesAtIndices atAudioTime dataModel
     , dataModel.percussionPositions
         |> Set.filter (first >> eq stepIndex)
         |> Set.toList
