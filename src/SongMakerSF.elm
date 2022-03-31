@@ -1062,38 +1062,32 @@ scheduleNotesAtCurrentStepEffect atAudioTime model =
             currentDataModel model
 
         notes =
-            notesAtStep InstrumentGrid model.stepIndex atAudioTime dataModel
-                ++ notesAtStep PercussionGrid model.stepIndex atAudioTime dataModel
+            instrumentNotesAtStep model.stepIndex atAudioTime dataModel
+                ++ percussionNotesAtStep model.stepIndex atAudioTime dataModel
     in
     notes |> List.map scheduleNote |> Cmd.batch
 
 
-notesAtStep : GridType -> Int -> Float -> DataModel -> List Note
-notesAtStep gridType stepIndex atAudioTime dataModel =
-    case gridType of
-        InstrumentGrid ->
-            instrumentNotesAtStep stepIndex atAudioTime dataModel
-
-        PercussionGrid ->
-            percussionNotesAtStep stepIndex atAudioTime dataModel
+instrumentNotesAtStep : Int -> Float -> DataModel -> List Note
+instrumentNotesAtStep stepIndex atAudioTime dataModel =
+    paintedPositionsToIndicesAtStep InstrumentGrid dataModel stepIndex
+        |> instrumentNotesAtIndices atAudioTime dataModel
 
 
 percussionNotesAtStep : Int -> Float -> DataModel -> List Note
 percussionNotesAtStep stepIndex atAudioTime dataModel =
-    paintedPositions PercussionGrid dataModel
-        |> paintedPositionsToIndicesAtStep stepIndex
+    paintedPositionsToIndicesAtStep PercussionGrid dataModel stepIndex
         |> percussionNotesAtIndices atAudioTime dataModel
 
 
-instrumentNotesAtStep : Int -> Float -> DataModel -> List Note
-instrumentNotesAtStep stepIndex atAudioTime dataModel =
-    paintedPositions InstrumentGrid dataModel
-        |> paintedPositionsToIndicesAtStep stepIndex
-        |> instrumentNotesAtIndices atAudioTime dataModel
+paintedPositionsToIndicesAtStep : GridType -> DataModel -> Int -> List Int
+paintedPositionsToIndicesAtStep gridType dataModel stepIndex =
+    paintedPositions gridType dataModel
+        |> paintedPositionsToIndicesAtStepHelp stepIndex
 
 
-paintedPositionsToIndicesAtStep : Int -> PaintedPositions -> List Int
-paintedPositionsToIndicesAtStep stepIndex positions =
+paintedPositionsToIndicesAtStepHelp : Int -> PaintedPositions -> List Int
+paintedPositionsToIndicesAtStepHelp stepIndex positions =
     positions
         |> Set.toList
         |> keep (first >> eq stepIndex)
