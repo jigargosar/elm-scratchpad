@@ -163,6 +163,16 @@ type alias DataModel =
     }
 
 
+paintedPositions : GridType -> DataModel -> PaintedPositions
+paintedPositions gridType =
+    case gridType of
+        InstrumentGrid ->
+            .instrumentPositions
+
+        PercussionGrid ->
+            .percussionPositions
+
+
 initialDataModel : DataModel
 initialDataModel =
     let
@@ -304,7 +314,7 @@ dataModelDecoderV1 =
 
 
 dataModelFromPaintedPositionsV1 : PaintedPositions -> DataModel
-dataModelFromPaintedPositionsV1 paintedPositions =
+dataModelFromPaintedPositionsV1 paintedPositions_ =
     let
         settings =
             initialSettingsV1
@@ -313,10 +323,10 @@ dataModelFromPaintedPositionsV1 paintedPositions =
             instrumentGridHeight settings
     in
     { instrumentPositions =
-        paintedPositions
+        paintedPositions_
             |> Set.filter (second >> (\y -> y < igh))
     , percussionPositions =
-        paintedPositions
+        paintedPositions_
             |> Set.filter (second >> (\y -> y >= igh))
             |> Set.map (mapSecond (add -igh))
     , settings = settings
@@ -1070,14 +1080,14 @@ notesAtStep gridType stepIndex atAudioTime dataModel =
 
 percussionNotesAtStep : Int -> Float -> DataModel -> List Note
 percussionNotesAtStep stepIndex atAudioTime dataModel =
-    dataModel.percussionPositions
+    paintedPositions PercussionGrid dataModel
         |> paintedPositionsToIndicesAtStep stepIndex
         |> percussionNotesAtIndices atAudioTime dataModel
 
 
 instrumentNotesAtStep : Int -> Float -> DataModel -> List Note
 instrumentNotesAtStep stepIndex atAudioTime dataModel =
-    dataModel.instrumentPositions
+    paintedPositions InstrumentGrid dataModel
         |> paintedPositionsToIndicesAtStep stepIndex
         |> instrumentNotesAtIndices atAudioTime dataModel
 
