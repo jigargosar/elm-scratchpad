@@ -829,6 +829,7 @@ instrumentNotesForIndices audioTime dataModel indices =
             )
 
 
+instrumentPitchAtIndex : List Int -> Int -> Int
 instrumentPitchAtIndex pitches index =
     case listGetAt index pitches of
         Nothing ->
