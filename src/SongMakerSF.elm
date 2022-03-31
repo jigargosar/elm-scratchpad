@@ -70,11 +70,6 @@ import Utils exposing (..)
 port scheduleNote : Note -> Cmd msg
 
 
-scheduleNotes : List Note -> Cmd msg
-scheduleNotes =
-    List.map scheduleNote >> Cmd.batch
-
-
 port onAudioContextTime : (Float -> msg) -> Sub msg
 
 
@@ -813,14 +808,25 @@ stepDurationInMilli model =
 
 instrumentNoteFromIndex : Float -> DataModel -> Int -> Note
 instrumentNoteFromIndex audioTime dataModel index =
-    instrumentPitchAtIndex (instrumentPitches dataModel.settings) index
+    let
+        pitches =
+            instrumentPitches dataModel.settings
+    in
+    instrumentPitchAtIndex pitches index
         |> instrumentNoteFromPitch audioTime dataModel
 
 
 instrumentNotesForIndices : Float -> DataModel -> List Int -> List Note
-instrumentNotesForIndices audioTime model indices =
-    instrumentPitchesAtIndices model.settings indices
-        |> List.map (instrumentNoteFromPitch audioTime model)
+instrumentNotesForIndices audioTime dataModel indices =
+    let
+        pitches =
+            instrumentPitches dataModel.settings
+    in
+    indices
+        |> List.map
+            (instrumentPitchAtIndex pitches
+                >> instrumentNoteFromPitch audioTime dataModel
+            )
 
 
 instrumentPitchAtIndex pitches index =
@@ -830,24 +836,6 @@ instrumentPitchAtIndex pitches index =
 
         Just a ->
             a
-
-
-instrumentPitchesAtIndices : Settings -> List Int -> List Int
-instrumentPitchesAtIndices settings indices =
-    let
-        pitches : List Int
-        pitches =
-            instrumentPitches settings
-
-        pitchAt y =
-            case listGetAt y pitches of
-                Nothing ->
-                    Debug.todo "instrumentPitchesFromYS: invalid y"
-
-                Just a ->
-                    a
-    in
-    List.map pitchAt indices
 
 
 instrumentPitches : Settings -> List Int
