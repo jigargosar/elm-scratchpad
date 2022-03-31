@@ -34,7 +34,7 @@ import Utils exposing (..)
 
     # Next
     * [x] bottom bar visuals
-    * tempo input visuals
+    * [x] tempo input visuals
     * instrument/percussion backend
     * Save btn dialog
     * redo
