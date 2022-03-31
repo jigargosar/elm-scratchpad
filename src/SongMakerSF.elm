@@ -821,15 +821,6 @@ instrumentNoteAtIndexHelp pitches audioTime dataModel index =
         |> instrumentNoteFromPitch audioTime dataModel
 
 
-instrumentNotesAtIndices : Float -> DataModel -> List Int -> List Note
-instrumentNotesAtIndices audioTime dataModel =
-    let
-        pitches =
-            instrumentPitches dataModel.settings
-    in
-    List.map (instrumentNoteAtIndexHelp pitches audioTime dataModel)
-
-
 instrumentPitchAtIndex : List Int -> Int -> Int
 instrumentPitchAtIndex pitches index =
     case listGetAt index pitches of
@@ -1040,18 +1031,13 @@ scheduleCurrentStepAtEffect atAudioTime ({ stepIndex } as model) =
             currentDataModel model
     in
     [ let
-        igh =
-            instrumentGridHeight dataModel.settings
-
         pitches =
             instrumentPitches dataModel.settings
       in
       dataModel.instrumentPositions
         |> Set.toList
         |> keep (first >> eq stepIndex)
-        |> reject (second >> (\y -> y >= igh))
-        |> List.map second
-        |> List.map (instrumentNoteAtIndexHelp pitches atAudioTime dataModel >> scheduleNote)
+        |> List.map (second >> instrumentNoteAtIndexHelp pitches atAudioTime dataModel >> scheduleNote)
         |> Cmd.batch
     , dataModel.percussionPositions
         |> Set.filter (first >> eq stepIndex)
