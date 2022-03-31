@@ -904,10 +904,10 @@ centralOctaveNumber centralOctave octaveRange =
 
 
 instrumentNoteFromPitch : Float -> DataModel -> Int -> Note
-instrumentNoteFromPitch audioTime model pitch =
+instrumentNoteFromPitch audioTime dataModel pitch =
     let
         presetName =
-            case model.instrument of
+            case dataModel.instrument of
                 Piano ->
                     "piano"
 
@@ -917,11 +917,24 @@ instrumentNoteFromPitch audioTime model pitch =
                 _ ->
                     "strings"
     in
-    { preset = presetName
+    { preset = instrumentToPresetName dataModel.instrument
     , atAudioTime = audioTime
     , pitch = fromInt pitch
-    , duration = stepDurationInMilli model
+    , duration = stepDurationInMilli dataModel
     }
+
+
+instrumentToPresetName : Instrument -> String
+instrumentToPresetName instrument =
+    case instrument of
+        Piano ->
+            "piano"
+
+        Strings ->
+            "strings"
+
+        _ ->
+            "strings"
 
 
 percussionNotesAtIndices : Float -> DataModel -> List Int -> List Note
@@ -1057,29 +1070,19 @@ focusOrIgnoreCmd id =
 
 scheduleNotesAtCurrentStepEffect : Float -> Model -> Cmd Msg
 scheduleNotesAtCurrentStepEffect atAudioTime model =
-    let
-        dataModel =
-            currentDataModel model
-
-        notes =
-            instrumentNotesAtStep model.stepIndex atAudioTime dataModel
-                ++ percussionNotesAtStep model.stepIndex atAudioTime dataModel
-    in
-    notes |> List.map scheduleNote |> Cmd.batch
+    notesAtStep model.stepIndex atAudioTime (currentDataModel model)
+        |> List.map scheduleNote
+        |> Cmd.batch
 
 
-instrumentNotesAtStep : Int -> Float -> DataModel -> List Note
-instrumentNotesAtStep =
-    notesAtStep InstrumentGrid
+notesAtStep : Int -> Float -> DataModel -> List Note
+notesAtStep stepIndex atAudioTime dataModel =
+    gridNotesAtStep InstrumentGrid stepIndex atAudioTime dataModel
+        ++ gridNotesAtStep PercussionGrid stepIndex atAudioTime dataModel
 
 
-percussionNotesAtStep : Int -> Float -> DataModel -> List Note
-percussionNotesAtStep =
-    notesAtStep PercussionGrid
-
-
-notesAtStep : GridType -> Int -> Float -> DataModel -> List Note
-notesAtStep gridType stepIndex atAudioTime dataModel =
+gridNotesAtStep : GridType -> Int -> Float -> DataModel -> List Note
+gridNotesAtStep gridType stepIndex atAudioTime dataModel =
     paintedPositionsToIndicesAtStep gridType dataModel stepIndex
         |> notesAtIndices gridType atAudioTime dataModel
 
