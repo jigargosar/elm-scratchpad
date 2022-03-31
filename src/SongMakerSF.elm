@@ -806,27 +806,28 @@ stepDurationInMilli model =
     duration
 
 
-instrumentNoteFromIndex : Float -> DataModel -> Int -> Note
-instrumentNoteFromIndex audioTime dataModel index =
+instrumentNoteAtIndex : Float -> DataModel -> Int -> Note
+instrumentNoteAtIndex audioTime dataModel index =
     let
         pitches =
             instrumentPitches dataModel.settings
     in
+    instrumentNoteAtIndexHelp pitches audioTime dataModel index
+
+
+instrumentNoteAtIndexHelp : List Int -> Float -> DataModel -> Int -> Note
+instrumentNoteAtIndexHelp pitches audioTime dataModel index =
     instrumentPitchAtIndex pitches index
         |> instrumentNoteFromPitch audioTime dataModel
 
 
-instrumentNotesForIndices : Float -> DataModel -> List Int -> List Note
-instrumentNotesForIndices audioTime dataModel indices =
+instrumentNotesAtIndices : Float -> DataModel -> List Int -> List Note
+instrumentNotesAtIndices audioTime dataModel =
     let
         pitches =
             instrumentPitches dataModel.settings
     in
-    indices
-        |> List.map
-            (instrumentPitchAtIndex pitches
-                >> instrumentNoteFromPitch audioTime dataModel
-            )
+    List.map (instrumentNoteAtIndexHelp pitches audioTime dataModel)
 
 
 instrumentPitchAtIndex : List Int -> Int -> Int
@@ -1020,7 +1021,7 @@ playNoteCmd : Model -> GridType -> Int2 -> Cmd msg
 playNoteCmd model gridType (( _, y ) as gp) =
     case gridType of
         InstrumentGrid ->
-            scheduleNote (instrumentNoteFromIndex model.audioTime (currentDataModel model) y)
+            scheduleNote (instrumentNoteAtIndex model.audioTime (currentDataModel model) y)
 
         PercussionGrid ->
             scheduleNote (percussionNoteFromGP model.audioTime (currentDataModel model) gp)
@@ -1047,7 +1048,7 @@ scheduleCurrentStepAtEffect atAudioTime ({ stepIndex } as model) =
         |> keep (first >> eq stepIndex)
         |> reject (second >> (\y -> y >= igh))
         |> List.map second
-        |> instrumentNotesForIndices atAudioTime dataModel
+        |> instrumentNotesAtIndices atAudioTime dataModel
         |> List.map scheduleNote
         |> Cmd.batch
     , dataModel.percussionPositions
