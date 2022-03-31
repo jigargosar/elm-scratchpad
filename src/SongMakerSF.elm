@@ -806,15 +806,6 @@ stepDurationInMilli model =
     duration
 
 
-instrumentNoteAtIndex : Float -> DataModel -> Int -> Note
-instrumentNoteAtIndex audioTime dataModel index =
-    let
-        pitches =
-            instrumentPitches dataModel.settings
-    in
-    instrumentNoteAtIndexHelp pitches audioTime dataModel index
-
-
 instrumentNoteAtIndexHelp : List Int -> Float -> DataModel -> Int -> Note
 instrumentNoteAtIndexHelp pitches audioTime dataModel index =
     instrumentPitchAtIndex pitches index
@@ -1010,12 +1001,37 @@ playNoteIfDrawingCmd model gridType tool gp =
 
 playNoteCmd : Model -> GridType -> Int2 -> Cmd msg
 playNoteCmd model gridType ( _, y ) =
+    let
+        dataModel =
+            currentDataModel model
+
+        atAudioTime =
+            model.audioTime
+    in
     case gridType of
         InstrumentGrid ->
-            scheduleNote (instrumentNoteAtIndex model.audioTime (currentDataModel model) y)
+            let
+                pitches =
+                    instrumentPitches dataModel.settings
+            in
+            scheduleNote (instrumentNoteAtIndexHelp pitches atAudioTime dataModel y)
 
         PercussionGrid ->
-            scheduleNote (percussionNoteAtIndex model.audioTime (currentDataModel model) y)
+            scheduleNote (percussionNoteAtIndex atAudioTime dataModel y)
+
+
+noteAtIndex : GridType -> Float -> DataModel -> Int -> Note
+noteAtIndex gridType atAudioTime dataModel index =
+    case gridType of
+        InstrumentGrid ->
+            let
+                pitches =
+                    instrumentPitches dataModel.settings
+            in
+            instrumentNoteAtIndexHelp pitches atAudioTime dataModel index
+
+        PercussionGrid ->
+            percussionNoteAtIndex atAudioTime dataModel index
 
 
 focusOrIgnoreCmd : String -> Cmd Msg
