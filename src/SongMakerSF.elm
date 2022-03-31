@@ -1016,17 +1016,6 @@ playNoteCmd model gridType (( _, y ) as gp) =
             scheduleNote (percussionNoteFromGP model.audioTime (currentDataModel model) gp)
 
 
-
---playInstrumentNoteAtGPCmd : Model -> Int2 -> Cmd msg
---playInstrumentNoteAtGPCmd model ( _, y ) =
---    scheduleInstrumentNotesFromYS model.audioTime model.dataModel [ y ]
---
---
---playPercussionNoteAtGPCmd : Model -> Int2 -> Cmd msg
---playPercussionNoteAtGPCmd model gp =
---    scheduleNote (percussionNoteFromGP model.audioTime model.dataModel gp)
-
-
 focusOrIgnoreCmd : String -> Cmd Msg
 focusOrIgnoreCmd id =
     Browser.Dom.focus id
