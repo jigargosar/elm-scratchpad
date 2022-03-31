@@ -846,8 +846,17 @@ instrumentPitches settings =
         pitchClasses =
             pitchClassesForMusicScale settings.scale
 
-        pitchesForOctaveNum o =
-            List.map (\n -> (12 * o) + n + settings.startPitchClass |> fromInt) pitchClasses
+        toMidiPitch midiOctaveNum pitchClass =
+            (12 * midiOctaveNum) + pitchClass
+
+        pitchesForOctaveNum midiOctaveNumber =
+            List.map
+                (\pitchClass ->
+                    toMidiPitch midiOctaveNumber pitchClass
+                        + settings.startPitchClass
+                        |> fromInt
+                )
+                pitchClasses
     in
     midiOctaveNumbers settings.centralOctave settings.octaveRange
         |> List.concatMap pitchesForOctaveNum
