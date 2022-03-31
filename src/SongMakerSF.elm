@@ -843,27 +843,39 @@ instrumentPitchesFromYS settings ys =
 instrumentPitches : Settings -> List String
 instrumentPitches settings =
     let
+        pitchClasses : List Int
         pitchClasses =
             pitchClassesForMusicScale settings.scale
+                |> List.map (add settings.startPitchClass)
 
+        midiOctaveNumbers : List Int
+        midiOctaveNumbers =
+            computeMidiOctaveNumbers settings.centralOctave settings.octaveRange
+    in
+    instrumentPitchesHelp pitchClasses midiOctaveNumbers
+
+
+instrumentPitchesHelp : List Int -> List Int -> List String
+instrumentPitchesHelp pitchClasses midiOctaveNums =
+    midiOctaveNums
+        |> List.concatMap (pitchesForOctaveNum pitchClasses)
+
+
+pitchesForOctaveNum pitchClasses midiOctaveNumber =
+    let
         toMidiPitch midiOctaveNum pitchClass =
             (12 * midiOctaveNum) + pitchClass
-
-        pitchesForOctaveNum midiOctaveNumber =
-            List.map
-                (\pitchClass ->
-                    toMidiPitch midiOctaveNumber pitchClass
-                        + settings.startPitchClass
-                        |> fromInt
-                )
-                pitchClasses
     in
-    midiOctaveNumbers settings.centralOctave settings.octaveRange
-        |> List.concatMap pitchesForOctaveNum
+    List.map
+        (\pitchClass ->
+            toMidiPitch midiOctaveNumber pitchClass
+                |> fromInt
+        )
+        pitchClasses
 
 
-midiOctaveNumbers : Octave -> Int -> List Int
-midiOctaveNumbers centralOctave octaveRange =
+computeMidiOctaveNumbers : Octave -> Int -> List Int
+computeMidiOctaveNumbers centralOctave octaveRange =
     let
         start =
             centralOctaveNumber centralOctave octaveRange
