@@ -905,18 +905,6 @@ centralOctaveNumber centralOctave octaveRange =
 
 instrumentNoteFromPitch : Float -> DataModel -> Int -> Note
 instrumentNoteFromPitch audioTime dataModel pitch =
-    let
-        presetName =
-            case dataModel.instrument of
-                Piano ->
-                    "piano"
-
-                Strings ->
-                    "strings"
-
-                _ ->
-                    "strings"
-    in
     { preset = instrumentToPresetName dataModel.instrument
     , atAudioTime = audioTime
     , pitch = fromInt pitch
