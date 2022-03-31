@@ -811,15 +811,25 @@ stepDurationInMilli model =
     duration
 
 
-scheduleInstrumentNotesAtIndex audioTime model index =
-    scheduleInstrumentNotesAtIndices audioTime model [ index ]
+instrumentNoteFromIndex : Float -> DataModel -> Int -> Note
+instrumentNoteFromIndex audioTime dataModel index =
+    instrumentPitchAtIndex (instrumentPitches dataModel.settings) index
+        |> instrumentNoteFromPitch audioTime dataModel
 
 
-scheduleInstrumentNotesAtIndices : Float -> DataModel -> List Int -> Cmd msg
-scheduleInstrumentNotesAtIndices audioTime model indices =
+instrumentNotesForIndices : Float -> DataModel -> List Int -> List Note
+instrumentNotesForIndices audioTime model indices =
     instrumentPitchesAtIndices model.settings indices
         |> List.map (instrumentNoteFromPitch audioTime model)
-        |> scheduleNotes
+
+
+instrumentPitchAtIndex pitches index =
+    case listGetAt index pitches of
+        Nothing ->
+            Debug.todo "instrumentPitchesFromYS: invalid y"
+
+        Just a ->
+            a
 
 
 instrumentPitchesAtIndices : Settings -> List Int -> List Int
@@ -1021,7 +1031,7 @@ playNoteCmd : Model -> GridType -> Int2 -> Cmd msg
 playNoteCmd model gridType (( _, y ) as gp) =
     case gridType of
         InstrumentGrid ->
-            scheduleInstrumentNotesAtIndex model.audioTime (currentDataModel model) y
+            scheduleNote (instrumentNoteFromIndex model.audioTime (currentDataModel model) y)
 
         PercussionGrid ->
             scheduleNote (percussionNoteFromGP model.audioTime (currentDataModel model) gp)
@@ -1048,7 +1058,9 @@ scheduleCurrentStepAtEffect atAudioTime ({ stepIndex } as model) =
         |> keep (first >> eq stepIndex)
         |> reject (second >> (\y -> y >= igh))
         |> List.map second
-        |> scheduleInstrumentNotesAtIndices atAudioTime dataModel
+        |> instrumentNotesForIndices atAudioTime dataModel
+        |> List.map scheduleNote
+        |> Cmd.batch
     , dataModel.percussionPositions
         |> Set.filter (first >> eq stepIndex)
         |> Set.toList
