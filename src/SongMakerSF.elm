@@ -993,31 +993,16 @@ playNoteIfDrawingCmd : Model -> GridType -> Tool -> Int2 -> Cmd msg
 playNoteIfDrawingCmd model gridType tool gp =
     case tool of
         Pen ->
-            playNoteCmd model gridType gp
+            playNoteAtGPCmd model gridType gp
 
         Eraser ->
             Cmd.none
 
 
-playNoteCmd : Model -> GridType -> Int2 -> Cmd msg
-playNoteCmd model gridType ( _, y ) =
-    let
-        dataModel =
-            currentDataModel model
-
-        atAudioTime =
-            model.audioTime
-    in
-    case gridType of
-        InstrumentGrid ->
-            let
-                pitches =
-                    instrumentPitches dataModel.settings
-            in
-            scheduleNote (instrumentNoteAtIndexHelp pitches atAudioTime dataModel y)
-
-        PercussionGrid ->
-            scheduleNote (percussionNoteAtIndex atAudioTime dataModel y)
+playNoteAtGPCmd : Model -> GridType -> Int2 -> Cmd msg
+playNoteAtGPCmd model gridType ( _, y ) =
+    noteAtIndex gridType model.audioTime (currentDataModel model) y
+        |> scheduleNote
 
 
 noteAtIndex : GridType -> Float -> DataModel -> Int -> Note
