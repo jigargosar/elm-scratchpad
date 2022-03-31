@@ -713,21 +713,17 @@ musicScaleLength ms =
             5
 
 
-pitchClassesForScaleStartingAt : MusicScale -> Int -> List Int
-pitchClassesForScaleStartingAt musicScale startPitchClass =
-    let
-        pitchClasses =
-            case musicScale of
-                Major ->
-                    chromaticOffsetsOfMajorScale
+pitchClassesForMusicScale : MusicScale -> List Int
+pitchClassesForMusicScale musicScale =
+    case musicScale of
+        Major ->
+            chromaticOffsetsOfMajorScale
 
-                Chromatic ->
-                    List.range 0 11
+        Chromatic ->
+            List.range 0 11
 
-                Pentatonic ->
-                    chromaticOffsetsOfPentatonicScale
-    in
-    pitchClasses |> List.map (add startPitchClass)
+        Pentatonic ->
+            chromaticOffsetsOfPentatonicScale
 
 
 initialSettingsV1 : Settings
@@ -848,10 +844,10 @@ instrumentPitches : Settings -> List String
 instrumentPitches settings =
     let
         pitchClasses =
-            pitchClassesForScaleStartingAt settings.scale settings.startPitchClass
+            pitchClassesForMusicScale settings.scale
 
         pitchesForOctaveNum o =
-            List.map (\n -> (12 * o) + n |> fromInt) pitchClasses
+            List.map (\n -> (12 * o) + n + settings.startPitchClass |> fromInt) pitchClasses
     in
     midiOctaveNumbers settings.centralOctave settings.octaveRange
         |> List.concatMap pitchesForOctaveNum
