@@ -819,13 +819,14 @@ scheduleInstrumentNotesFromYS audioTime model ys =
 
 instrumentNotesFromYS : Float -> DataModel -> List Int -> List Note
 instrumentNotesFromYS audioTime model ys =
-    instrumentPitchesFromYS model.settings ys
+    instrumentPitchesAtIndices model.settings ys
         |> List.map (instrumentNoteFromPitch audioTime model)
 
 
-instrumentPitchesFromYS : Settings -> List Int -> List String
-instrumentPitchesFromYS settings ys =
+instrumentPitchesAtIndices : Settings -> List Int -> List Int
+instrumentPitchesAtIndices settings indices =
     let
+        pitches : List Int
         pitches =
             instrumentPitches settings
 
@@ -837,10 +838,10 @@ instrumentPitchesFromYS settings ys =
                 Just a ->
                     a
     in
-    List.map pitchAt ys
+    List.map pitchAt indices
 
 
-instrumentPitches : Settings -> List String
+instrumentPitches : Settings -> List Int
 instrumentPitches settings =
     let
         pitchClasses : List Int
@@ -855,13 +856,13 @@ instrumentPitches settings =
     instrumentPitchesHelp pitchClasses midiOctaveNumbers
 
 
-instrumentPitchesHelp : List Int -> List Int -> List String
+instrumentPitchesHelp : List Int -> List Int -> List Int
 instrumentPitchesHelp pitchClasses midiOctaveNumbers =
     let
         midiPitchesForMidiOctaveNumber octaveNumber =
             List.map
                 (\pitchClass ->
-                    fromInt ((12 * octaveNumber) + pitchClass)
+                    (12 * octaveNumber) + pitchClass
                 )
                 pitchClasses
     in
@@ -892,7 +893,7 @@ centralOctaveNumber centralOctave octaveRange =
             octaveToInt centralOctave - 1
 
 
-instrumentNoteFromPitch : Float -> DataModel -> String -> Note
+instrumentNoteFromPitch : Float -> DataModel -> Int -> Note
 instrumentNoteFromPitch audioTime model pitch =
     let
         presetName =
@@ -908,7 +909,7 @@ instrumentNoteFromPitch audioTime model pitch =
     in
     { preset = presetName
     , atAudioTime = audioTime
-    , pitch = pitch
+    , pitch = fromInt pitch
     , duration = stepDurationInMilli model
     }
 
