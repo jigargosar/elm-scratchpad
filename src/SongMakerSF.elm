@@ -838,7 +838,7 @@ instrumentNotesAtIndices atAudioTime dataModel indices =
 instrumentNoteAtIndexHelp : List Int -> Float -> DataModel -> Int -> Note
 instrumentNoteAtIndexHelp pitches audioTime dataModel index =
     instrumentPitchAtIndex pitches index
-        |> instrumentNoteFromPitch audioTime dataModel
+        |> initInstrumentNote dataModel.instrument audioTime (stepDurationInMilli dataModel)
 
 
 instrumentPitchAtIndex : List Int -> Int -> Int
@@ -903,21 +903,12 @@ centralOctaveNumber centralOctave octaveRange =
             octaveToInt centralOctave - 1
 
 
-initInstrumentNote : Instrument -> Float -> Int -> Float -> Note
-initInstrumentNote instrument audioTime pitch duration =
+initInstrumentNote : Instrument -> Float -> Float -> Int -> Note
+initInstrumentNote instrument audioTime duration pitch =
     { preset = instrumentToPresetName instrument
     , atAudioTime = audioTime
     , pitch = fromInt pitch
     , duration = duration
-    }
-
-
-instrumentNoteFromPitch : Float -> DataModel -> Int -> Note
-instrumentNoteFromPitch audioTime dataModel pitch =
-    { preset = instrumentToPresetName dataModel.instrument
-    , atAudioTime = audioTime
-    , pitch = fromInt pitch
-    , duration = stepDurationInMilli dataModel
     }
 
 
