@@ -903,6 +903,15 @@ centralOctaveNumber centralOctave octaveRange =
             octaveToInt centralOctave - 1
 
 
+initInstrumentNote : Instrument -> Float -> Int -> Float -> Note
+initInstrumentNote instrument audioTime pitch duration =
+    { preset = instrumentToPresetName instrument
+    , atAudioTime = audioTime
+    , pitch = fromInt pitch
+    , duration = duration
+    }
+
+
 instrumentNoteFromPitch : Float -> DataModel -> Int -> Note
 instrumentNoteFromPitch audioTime dataModel pitch =
     { preset = instrumentToPresetName dataModel.instrument
