@@ -856,22 +856,16 @@ instrumentPitches settings =
 
 
 instrumentPitchesHelp : List Int -> List Int -> List String
-instrumentPitchesHelp pitchClasses midiOctaveNums =
-    midiOctaveNums
-        |> List.concatMap (pitchesForOctaveNum pitchClasses)
-
-
-pitchesForOctaveNum pitchClasses midiOctaveNumber =
+instrumentPitchesHelp pitchClasses midiOctaveNumbers =
     let
-        toMidiPitch midiOctaveNum pitchClass =
-            (12 * midiOctaveNum) + pitchClass
+        midiPitchesForMidiOctaveNumber octaveNumber =
+            List.map
+                (\pitchClass ->
+                    fromInt ((12 * octaveNumber) + pitchClass)
+                )
+                pitchClasses
     in
-    List.map
-        (\pitchClass ->
-            toMidiPitch midiOctaveNumber pitchClass
-                |> fromInt
-        )
-        pitchClasses
+    List.concatMap midiPitchesForMidiOctaveNumber midiOctaveNumbers
 
 
 computeMidiOctaveNumbers : Octave -> Int -> List Int
