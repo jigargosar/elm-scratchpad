@@ -806,6 +806,25 @@ stepDurationInMilli model =
     duration
 
 
+instrumentNoteAtIndex : Float -> DataModel -> Int -> Note
+instrumentNoteAtIndex atAudioTime dataModel index =
+    let
+        pitches =
+            instrumentPitches dataModel.settings
+    in
+    instrumentNoteAtIndexHelp pitches atAudioTime dataModel index
+
+
+instrumentNotesAtIndices : Float -> DataModel -> List Int -> List Note
+instrumentNotesAtIndices atAudioTime dataModel indices =
+    let
+        pitches =
+            instrumentPitches dataModel.settings
+    in
+    indices
+        |> List.map (instrumentNoteAtIndexHelp pitches atAudioTime dataModel)
+
+
 instrumentNoteAtIndexHelp : List Int -> Float -> DataModel -> Int -> Note
 instrumentNoteAtIndexHelp pitches audioTime dataModel index =
     instrumentPitchAtIndex pitches index
@@ -893,6 +912,11 @@ instrumentNoteFromPitch audioTime model pitch =
     , pitch = fromInt pitch
     , duration = stepDurationInMilli model
     }
+
+
+percussionNotesAtIndices : Float -> DataModel -> List Int -> List Note
+percussionNotesAtIndices atAudioTime dataModel indices =
+    indices |> List.map (percussionNoteAtIndex atAudioTime dataModel)
 
 
 percussionNoteAtIndex : Float -> DataModel -> Int -> Note
@@ -1009,11 +1033,7 @@ noteAtIndex : GridType -> Float -> DataModel -> Int -> Note
 noteAtIndex gridType atAudioTime dataModel index =
     case gridType of
         InstrumentGrid ->
-            let
-                pitches =
-                    instrumentPitches dataModel.settings
-            in
-            instrumentNoteAtIndexHelp pitches atAudioTime dataModel index
+            instrumentNoteAtIndex atAudioTime dataModel index
 
         PercussionGrid ->
             percussionNoteAtIndex atAudioTime dataModel index
@@ -1040,27 +1060,34 @@ scheduleNotesAtCurrentStepEffect atAudioTime model =
 
 notesAtStep : GridType -> Int -> Float -> DataModel -> List Note
 notesAtStep gridType stepIndex atAudioTime dataModel =
-    let
-        positionsToIndicesAtStep positions =
-            positions
-                |> Set.toList
-                |> keep (first >> eq stepIndex)
-                |> List.map second
-    in
     case gridType of
         InstrumentGrid ->
-            let
-                pitches =
-                    instrumentPitches dataModel.settings
-            in
-            dataModel.instrumentPositions
-                |> positionsToIndicesAtStep
-                |> List.map (instrumentNoteAtIndexHelp pitches atAudioTime dataModel)
+            instrumentNotesAtStep stepIndex atAudioTime dataModel
 
         PercussionGrid ->
-            dataModel.percussionPositions
-                |> positionsToIndicesAtStep
-                |> List.map (percussionNoteAtIndex atAudioTime dataModel)
+            percussionNotesAtStep stepIndex atAudioTime dataModel
+
+
+percussionNotesAtStep : Int -> Float -> DataModel -> List Note
+percussionNotesAtStep stepIndex atAudioTime dataModel =
+    dataModel.percussionPositions
+        |> paintedPositionsToIndicesAtStep stepIndex
+        |> percussionNotesAtIndices atAudioTime dataModel
+
+
+instrumentNotesAtStep : Int -> Float -> DataModel -> List Note
+instrumentNotesAtStep stepIndex atAudioTime dataModel =
+    dataModel.instrumentPositions
+        |> paintedPositionsToIndicesAtStep stepIndex
+        |> instrumentNotesAtIndices atAudioTime dataModel
+
+
+paintedPositionsToIndicesAtStep : Int -> PaintedPositions -> List Int
+paintedPositionsToIndicesAtStep stepIndex positions =
+    positions
+        |> Set.toList
+        |> keep (first >> eq stepIndex)
+        |> List.map second
 
 
 updateBrowserUrlEffect : Model -> Cmd msg
