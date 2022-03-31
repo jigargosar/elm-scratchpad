@@ -1069,15 +1069,19 @@ scheduleNotesAtCurrentStepEffect atAudioTime model =
 
 
 instrumentNotesAtStep : Int -> Float -> DataModel -> List Note
-instrumentNotesAtStep stepIndex atAudioTime dataModel =
-    paintedPositionsToIndicesAtStep InstrumentGrid dataModel stepIndex
-        |> notesAtIndices InstrumentGrid atAudioTime dataModel
+instrumentNotesAtStep =
+    notesAtStep InstrumentGrid
 
 
 percussionNotesAtStep : Int -> Float -> DataModel -> List Note
-percussionNotesAtStep stepIndex atAudioTime dataModel =
-    paintedPositionsToIndicesAtStep PercussionGrid dataModel stepIndex
-        |> notesAtIndices PercussionGrid atAudioTime dataModel
+percussionNotesAtStep =
+    notesAtStep PercussionGrid
+
+
+notesAtStep : GridType -> Int -> Float -> DataModel -> List Note
+notesAtStep gridType stepIndex atAudioTime dataModel =
+    paintedPositionsToIndicesAtStep gridType dataModel stepIndex
+        |> notesAtIndices gridType atAudioTime dataModel
 
 
 notesAtIndices : GridType -> Float -> DataModel -> List Int -> List Note
