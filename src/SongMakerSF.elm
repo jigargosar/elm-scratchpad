@@ -1042,14 +1042,16 @@ scheduleCurrentStepAtEffect atAudioTime ({ stepIndex } as model) =
     [ let
         igh =
             instrumentGridHeight dataModel.settings
+
+        pitches =
+            instrumentPitches dataModel.settings
       in
       dataModel.instrumentPositions
         |> Set.toList
         |> keep (first >> eq stepIndex)
         |> reject (second >> (\y -> y >= igh))
         |> List.map second
-        |> instrumentNotesAtIndices atAudioTime dataModel
-        |> List.map scheduleNote
+        |> List.map (instrumentNoteAtIndexHelp pitches atAudioTime dataModel >> scheduleNote)
         |> Cmd.batch
     , dataModel.percussionPositions
         |> Set.filter (first >> eq stepIndex)
