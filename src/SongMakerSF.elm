@@ -904,8 +904,8 @@ instrumentNoteFromPitch audioTime model pitch =
     }
 
 
-percussionNoteFromGP : Float -> DataModel -> Int2 -> Note
-percussionNoteFromGP audioTime model ( _, y ) =
+percussionNoteAtIndex : Float -> DataModel -> Int -> Note
+percussionNoteAtIndex audioTime model y =
     let
         ( presetName, pitch ) =
             if y == 0 then
@@ -1009,13 +1009,13 @@ playNoteIfDrawingCmd model gridType tool gp =
 
 
 playNoteCmd : Model -> GridType -> Int2 -> Cmd msg
-playNoteCmd model gridType (( _, y ) as gp) =
+playNoteCmd model gridType ( _, y ) =
     case gridType of
         InstrumentGrid ->
             scheduleNote (instrumentNoteAtIndex model.audioTime (currentDataModel model) y)
 
         PercussionGrid ->
-            scheduleNote (percussionNoteFromGP model.audioTime (currentDataModel model) gp)
+            scheduleNote (percussionNoteAtIndex model.audioTime (currentDataModel model) y)
 
 
 focusOrIgnoreCmd : String -> Cmd Msg
@@ -1024,28 +1024,42 @@ focusOrIgnoreCmd id =
         |> Task.attempt (always NOP)
 
 
-scheduleCurrentStepAtEffect : Float -> Model -> Cmd Msg
-scheduleCurrentStepAtEffect atAudioTime ({ stepIndex } as model) =
+scheduleNotesAtCurrentStepEffect : Float -> Model -> Cmd Msg
+scheduleNotesAtCurrentStepEffect atAudioTime model =
     let
         dataModel =
             currentDataModel model
+
+        notes =
+            notesAtStep InstrumentGrid model.stepIndex atAudioTime dataModel
+                ++ notesAtStep PercussionGrid model.stepIndex atAudioTime dataModel
     in
-    [ let
-        pitches =
-            instrumentPitches dataModel.settings
-      in
-      dataModel.instrumentPositions
-        |> Set.toList
-        |> keep (first >> eq stepIndex)
-        |> List.map (second >> instrumentNoteAtIndexHelp pitches atAudioTime dataModel >> scheduleNote)
-        |> Cmd.batch
-    , dataModel.percussionPositions
-        |> Set.filter (first >> eq stepIndex)
-        |> Set.toList
-        |> List.map (percussionNoteFromGP atAudioTime dataModel >> scheduleNote)
-        |> Cmd.batch
-    ]
-        |> Cmd.batch
+    notes |> List.map scheduleNote |> Cmd.batch
+
+
+notesAtStep : GridType -> Int -> Float -> DataModel -> List Note
+notesAtStep gridType stepIndex atAudioTime dataModel =
+    let
+        positionsToIndicesAtStep positions =
+            positions
+                |> Set.toList
+                |> keep (first >> eq stepIndex)
+                |> List.map second
+    in
+    case gridType of
+        InstrumentGrid ->
+            let
+                pitches =
+                    instrumentPitches dataModel.settings
+            in
+            dataModel.instrumentPositions
+                |> positionsToIndicesAtStep
+                |> List.map (instrumentNoteAtIndexHelp pitches atAudioTime dataModel)
+
+        PercussionGrid ->
+            dataModel.percussionPositions
+                |> positionsToIndicesAtStep
+                |> List.map (percussionNoteAtIndex atAudioTime dataModel)
 
 
 updateBrowserUrlEffect : Model -> Cmd msg
@@ -1391,7 +1405,7 @@ updateOnTogglePlay model =
                 | playState = Playing nextStepAudioTime
                 , stepIndex = 0
             }
-                |> withEffect (scheduleCurrentStepAtEffect currentStepAudioTime)
+                |> withEffect (scheduleNotesAtCurrentStepEffect currentStepAudioTime)
 
         Playing _ ->
             { model | playState = NotPlaying } |> withNoCmd
@@ -1427,7 +1441,7 @@ updateAfterAudioTimeReceived model =
                     | stepIndex = model.stepIndex + 1 |> modBy (totalSteps dataModel.settings)
                     , playState = Playing nextStepAudioTime
                 }
-                    |> withEffect (scheduleCurrentStepAtEffect currentStepAudioTime)
+                    |> withEffect (scheduleNotesAtCurrentStepEffect currentStepAudioTime)
 
             else
                 ( model, Cmd.none )
