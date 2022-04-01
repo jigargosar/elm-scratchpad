@@ -16,8 +16,10 @@ function MakePlayer() {
     // bassDrum2: "_drum_35_0_Chaos_sf2_file",
     bassDrum1: "_drum_36_0_Chaos_sf2_file",
     snareDrum2: "_drum_40_0_Chaos_sf2_file",
-    highWoodBlock: "_drum_76_0_Chaos_sf2_file",
-    lowWoodBlock: "_drum_77_0_Chaos_sf2_file",
+    // highWoodBlock: "_drum_76_0_Chaos_sf2_file",
+    // lowWoodBlock: "_drum_77_0_Chaos_sf2_file",
+    highWoodBlock: "_drum_76_0_JCLive_sf2_file",
+    lowWoodBlock: "_drum_77_0_JCLive_sf2_file",
   }
   const presetNames = Object.values(presetMap)
   loadPresets(audioContext, fontPlayer, presetNames)
