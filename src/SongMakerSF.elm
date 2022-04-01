@@ -960,10 +960,12 @@ percussionPresetAndPitch : Percussion -> Int -> PresetAndPitch
 percussionPresetAndPitch percussion y =
     case ( percussion, y ) of
         ( Electronic, 0 ) ->
-            snareDrum2
+            --snareDrum2
+            highWoodBlock
 
         ( Electronic, 1 ) ->
-            bassDrum1
+            --bassDrum1
+            lowWoodBlock
 
         _ ->
             Debug.todo (Debug.toString ( percussion, y ))
