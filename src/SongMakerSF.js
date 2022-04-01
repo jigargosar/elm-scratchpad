@@ -28,19 +28,24 @@ function MakePlayer() {
   }, scheduleDelay / 2)
 
   return {
-    async scheduleNote({ preset, atAudioTime, pitch, duration }) {
+    async scheduleNote({
+      preset: presetName,
+      atAudioTime: atAudioTimeInMilli,
+      pitch: midiPitch,
+      duration: durationInMilli,
+    }) {
       await audioContext.resume()
-      const presetVar = window[presetMap[preset]]
+      const presetVar = window[presetMap[presetName]]
       if (!presetVar) {
-        throw new Error("Invalid preset name: " + preset)
+        throw new Error("Invalid preset name: " + presetName)
       }
       fontPlayer.queueWaveTable(
         audioContext,
         audioContext.destination,
         presetVar,
-        atAudioTime / 1000,
-        NoteParser.midi(pitch),
-        duration / 1000,
+        atAudioTimeInMilli / 1000,
+        NoteParser.midi(midiPitch),
+        durationInMilli / 1000,
         0.5,
         [],
       )
