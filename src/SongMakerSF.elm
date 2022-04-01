@@ -828,31 +828,25 @@ stepDurationInMilli model =
 
 
 instrumentNoteAtIndex : AudioTimeAndDuration -> DataModel -> Int -> Note
-instrumentNoteAtIndex audioTimeAndDuration dataModel index =
-    let
-        pitches =
-            instrumentPitches dataModel.settings
-    in
-    instrumentNoteAtIndexHelp pitches audioTimeAndDuration dataModel.instrument index
+instrumentNoteAtIndex audioTimeAndDuration dataModel =
+    instrumentNoteAtIndexHelp
+        audioTimeAndDuration
+        dataModel.instrument
+        (instrumentPitches dataModel.settings)
 
 
 instrumentNotesAtIndices : AudioTimeAndDuration -> DataModel -> List Int -> List Note
-instrumentNotesAtIndices audioTimeAndDuration dataModel indices =
-    let
-        pitches =
-            instrumentPitches dataModel.settings
-    in
-    indices
-        |> List.map
-            (instrumentNoteAtIndexHelp
-                pitches
-                audioTimeAndDuration
-                dataModel.instrument
-            )
+instrumentNotesAtIndices audioTimeAndDuration dataModel =
+    List.map
+        (instrumentNoteAtIndexHelp
+            audioTimeAndDuration
+            dataModel.instrument
+            (instrumentPitches dataModel.settings)
+        )
 
 
-instrumentNoteAtIndexHelp : List Int -> AudioTimeAndDuration -> Instrument -> Int -> Note
-instrumentNoteAtIndexHelp pitches audioTimeAndDuration instrument index =
+instrumentNoteAtIndexHelp : AudioTimeAndDuration -> Instrument -> List Int -> Int -> Note
+instrumentNoteAtIndexHelp audioTimeAndDuration instrument pitches index =
     instrumentPitchAtIndex pitches index
         |> initInstrumentNote audioTimeAndDuration (instrumentToPresetName instrument)
 
