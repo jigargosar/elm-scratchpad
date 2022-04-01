@@ -936,8 +936,8 @@ instrumentToPresetName instrument =
 
 
 percussionNotesAtIndices : AudioTimeAndDuration -> DataModel -> List Int -> List Note
-percussionNotesAtIndices audioTimeAndDuration dataModel indices =
-    indices |> List.map (percussionNoteAtIndex audioTimeAndDuration dataModel)
+percussionNotesAtIndices audioTimeAndDuration dataModel =
+    List.map (percussionNoteAtIndex audioTimeAndDuration dataModel)
 
 
 percussionNoteAtIndex : AudioTimeAndDuration -> DataModel -> Int -> Note
