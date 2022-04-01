@@ -19,6 +19,18 @@ function MakePlayer() {
   const presetNames = Object.values(presetMap)
   loadPresets(audioContext, fontPlayer, presetNames)
 
+  function presetFromName(presetName) {
+    const presetVarName = presetMap[presetName]
+    if (presetVarName == null) {
+      throw new Error("Unknown preset name: " + presetName)
+    }
+    const preset = window[presetVarName]
+    if (preset == null) {
+      throw new Error(`Unable to load preset: ${presetName}: ${presetVarName}`)
+    }
+    return preset
+  }
+
   const scheduleDelay = 100
 
   setInterval(function () {
@@ -35,7 +47,7 @@ function MakePlayer() {
       duration: durationInMilli,
     }) {
       await audioContext.resume()
-      const preset = window[presetMap[presetName]]
+      const preset = presetFromName(presetName)
       if (!preset) {
         throw new Error("Invalid preset name: " + presetName)
       }
