@@ -20,6 +20,8 @@ function MakePlayer() {
     lowWoodBlock: "_drum_77_0_Chaos_sf2_file",
     // highWoodBlock: "_drum_76_0_JCLive_sf2_file",
     // lowWoodBlock: "_drum_77_0_JCLive_sf2_file",
+    openHighConga: "_drum_63_0_Chaos_sf2_file",
+    lowConga: "_drum_64_0_Chaos_sf2_file",
   }
   const presetNames = Object.values(presetMap)
   loadPresets(audioContext, fontPlayer, presetNames)

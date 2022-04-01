@@ -960,11 +960,27 @@ percussionPresetAndPitch : Percussion -> Int -> PresetAndPitch
 percussionPresetAndPitch percussion y =
     case ( percussion, y ) of
         ( Electronic, 0 ) ->
-            --snareDrum2
-            highWoodBlock
+            snareDrum2
 
         ( Electronic, 1 ) ->
-            --bassDrum1
+            bassDrum1
+
+        ( Blocks, 0 ) ->
+            highWoodBlock
+
+        ( Blocks, 1 ) ->
+            lowWoodBlock
+
+        ( Conga, 0 ) ->
+            openHighConga
+
+        ( Conga, 1 ) ->
+            lowConga
+
+        ( _, 0 ) ->
+            highWoodBlock
+
+        ( _, 1 ) ->
             lowWoodBlock
 
         _ ->
@@ -1000,6 +1016,16 @@ highWoodBlock =
 lowWoodBlock : PresetAndPitch
 lowWoodBlock =
     newPresetAndPitch "lowWoodBlock" 77
+
+
+openHighConga : PresetAndPitch
+openHighConga =
+    newPresetAndPitch "openHighConga" 63
+
+
+lowConga : PresetAndPitch
+lowConga =
+    newPresetAndPitch "lowConga" 64
 
 
 noteColor : MusicScale -> Int2 -> String
