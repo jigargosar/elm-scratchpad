@@ -799,7 +799,7 @@ paintedPositionsEncoder =
 type alias Note =
     { preset : String
     , atAudioTime : Float
-    , pitch : String
+    , pitch : Int
     , duration : Float
     }
 
@@ -917,7 +917,7 @@ initInstrumentNote : AudioTimeAndDuration -> String -> Int -> Note
 initInstrumentNote { audioTime, duration } preset pitch =
     { preset = preset
     , atAudioTime = audioTime
-    , pitch = fromInt pitch
+    , pitch = pitch
     , duration = duration
     }
 
@@ -951,7 +951,7 @@ initPercussionNote : AudioTimeAndDuration -> PresetAndPitch -> Note
 initPercussionNote { audioTime, duration } { preset, pitch } =
     { preset = preset
     , atAudioTime = audioTime
-    , pitch = fromInt pitch
+    , pitch = pitch
     , duration = duration
     }
 
