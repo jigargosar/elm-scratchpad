@@ -833,7 +833,7 @@ instrumentNoteAtIndex audioTimeAndDuration dataModel index =
         pitches =
             instrumentPitches dataModel.settings
     in
-    instrumentNoteAtIndexHelp pitches audioTimeAndDuration dataModel index
+    instrumentNoteAtIndexHelp pitches audioTimeAndDuration dataModel.instrument index
 
 
 instrumentNotesAtIndices : AudioTimeAndDuration -> DataModel -> List Int -> List Note
@@ -843,13 +843,18 @@ instrumentNotesAtIndices audioTimeAndDuration dataModel indices =
             instrumentPitches dataModel.settings
     in
     indices
-        |> List.map (instrumentNoteAtIndexHelp pitches audioTimeAndDuration dataModel)
+        |> List.map
+            (instrumentNoteAtIndexHelp
+                pitches
+                audioTimeAndDuration
+                dataModel.instrument
+            )
 
 
-instrumentNoteAtIndexHelp : List Int -> AudioTimeAndDuration -> DataModel -> Int -> Note
-instrumentNoteAtIndexHelp pitches audioTimeAndDuration dataModel index =
+instrumentNoteAtIndexHelp : List Int -> AudioTimeAndDuration -> Instrument -> Int -> Note
+instrumentNoteAtIndexHelp pitches audioTimeAndDuration instrument index =
     instrumentPitchAtIndex pitches index
-        |> initInstrumentNote audioTimeAndDuration dataModel.instrument
+        |> initInstrumentNote audioTimeAndDuration instrument
 
 
 instrumentPitchAtIndex : List Int -> Int -> Int
