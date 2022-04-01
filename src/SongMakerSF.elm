@@ -951,7 +951,7 @@ initPercussionNote : AudioTimeAndDuration -> PresetAndPitch -> Note
 initPercussionNote { audioTime, duration } { preset, pitch } =
     { preset = preset
     , atAudioTime = audioTime
-    , pitch = pitch
+    , pitch = fromInt pitch
     , duration = duration
     }
 
@@ -963,7 +963,7 @@ percussionPresetAndPitch percussion y =
             snareDrum2
 
         ( Electronic, 1 ) ->
-            baseDrum2
+            bassDrum1
 
         _ ->
             Debug.todo (Debug.toString ( percussion, y ))
@@ -971,23 +971,23 @@ percussionPresetAndPitch percussion y =
 
 type alias PresetAndPitch =
     { preset : String
-    , pitch : String
+    , pitch : Int
     }
 
 
-newPresetAndPitch : String -> String -> PresetAndPitch
+newPresetAndPitch : String -> Int -> PresetAndPitch
 newPresetAndPitch preset pitch =
     { preset = preset, pitch = pitch }
 
 
 snareDrum2 : PresetAndPitch
 snareDrum2 =
-    newPresetAndPitch "snareDrum2" "40"
+    newPresetAndPitch "snareDrum2" 40
 
 
-baseDrum2 : PresetAndPitch
-baseDrum2 =
-    newPresetAndPitch "baseDrum2" "40"
+bassDrum1 : PresetAndPitch
+bassDrum1 =
+    newPresetAndPitch "bassDrum1" 36
 
 
 noteColor : MusicScale -> Int2 -> String

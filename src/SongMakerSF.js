@@ -31,6 +31,9 @@ function MakePlayer() {
     async scheduleNote({ preset, atAudioTime, pitch, duration }) {
       await audioContext.resume()
       const presetVar = window[presetMap[preset]]
+      if (!presetVar) {
+        throw new Error("Invalid preset name: " + preset)
+      }
       fontPlayer.queueWaveTable(
         audioContext,
         audioContext.destination,
