@@ -942,13 +942,13 @@ percussionNotesAtIndices audioTimeAndDuration dataModel =
 
 percussionNoteAtIndex : AudioTimeAndDuration -> DataModel -> Int -> Note
 percussionNoteAtIndex audioTimeAndDuration dataModel y =
-    initPercussionNote
+    initNote
         audioTimeAndDuration
         (percussionPresetAndPitch dataModel.percussion y)
 
 
-initPercussionNote : AudioTimeAndDuration -> PresetAndPitch -> Note
-initPercussionNote { audioTime, duration } { preset, pitch } =
+initNote : AudioTimeAndDuration -> PresetAndPitch -> Note
+initNote { audioTime, duration } { preset, pitch } =
     { preset = preset
     , atAudioTime = audioTime
     , pitch = pitch
