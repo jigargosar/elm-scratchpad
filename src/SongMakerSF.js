@@ -46,11 +46,11 @@ function MakePlayer() {
       pitch: midiPitch,
       duration: durationInMilli,
     }) {
-      await audioContext.resume()
       const preset = presetFromName(presetName)
       if (!preset) {
         throw new Error("Invalid preset name: " + presetName)
       }
+      await audioContext.resume()
       fontPlayer.queueWaveTable(
         audioContext,
         audioContext.destination,
