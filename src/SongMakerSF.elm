@@ -959,20 +959,20 @@ initNote { audioTime, duration } { preset, pitch } =
 percussionPresetAndPitch : Percussion -> Int -> PresetAndPitch
 percussionPresetAndPitch percussion y =
     case ( percussion, y ) of
-        --( Electronic, 0 ) -> snareDrum2
-        --( Electronic, 1 ) -> bassDrum1
         ( Electronic, 0 ) ->
             snareDrum2
 
         ( Electronic, 1 ) ->
-            bassDrum1
+            bassDrum2
 
         ( Kit, 0 ) ->
             snareDrum1
 
         ( Kit, 1 ) ->
-            bassDrum2
+            bassDrum1
 
+        --( Electronic, 0 ) -> snareDrum2
+        --( Electronic, 1 ) -> bassDrum1
         ( Blocks, 0 ) ->
             highWoodBlock
 
