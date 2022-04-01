@@ -13,8 +13,9 @@ function MakePlayer() {
   const presetMap = {
     piano: "_tone_0000_SBLive_sf2",
     strings: "_tone_0450_Chaos_sf2_file", //
-    // bassDrum2: "_drum_35_0_Chaos_sf2_file",
+    bassDrum2: "_drum_35_0_Chaos_sf2_file",
     bassDrum1: "_drum_36_0_Chaos_sf2_file",
+    snareDrum1: "_drum_38_0_Chaos_sf2_file",
     snareDrum2: "_drum_40_0_Chaos_sf2_file",
     highWoodBlock: "_drum_76_0_Chaos_sf2_file",
     lowWoodBlock: "_drum_77_0_Chaos_sf2_file",
