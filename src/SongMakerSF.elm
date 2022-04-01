@@ -804,6 +804,17 @@ type alias Note =
     }
 
 
+type alias AudioTimeAndDuration =
+    { audioTime : Float
+    , duration : Float
+    }
+
+
+initAudioTimeAndDuration : Float -> DataModel -> AudioTimeAndDuration
+initAudioTimeAndDuration audioTime dataModel =
+    { audioTime = audioTime, duration = stepDurationInMilli dataModel }
+
+
 stepDurationInMilli : DataModel -> Float
 stepDurationInMilli model =
     let
@@ -816,29 +827,29 @@ stepDurationInMilli model =
     duration
 
 
-instrumentNoteAtIndex : Float -> DataModel -> Int -> Note
-instrumentNoteAtIndex atAudioTime dataModel index =
+instrumentNoteAtIndex : AudioTimeAndDuration -> DataModel -> Int -> Note
+instrumentNoteAtIndex audioTimeAndDuration dataModel index =
     let
         pitches =
             instrumentPitches dataModel.settings
     in
-    instrumentNoteAtIndexHelp pitches atAudioTime dataModel index
+    instrumentNoteAtIndexHelp pitches audioTimeAndDuration dataModel index
 
 
-instrumentNotesAtIndices : Float -> DataModel -> List Int -> List Note
-instrumentNotesAtIndices atAudioTime dataModel indices =
+instrumentNotesAtIndices : AudioTimeAndDuration -> DataModel -> List Int -> List Note
+instrumentNotesAtIndices audioTimeAndDuration dataModel indices =
     let
         pitches =
             instrumentPitches dataModel.settings
     in
     indices
-        |> List.map (instrumentNoteAtIndexHelp pitches atAudioTime dataModel)
+        |> List.map (instrumentNoteAtIndexHelp pitches audioTimeAndDuration dataModel)
 
 
-instrumentNoteAtIndexHelp : List Int -> Float -> DataModel -> Int -> Note
-instrumentNoteAtIndexHelp pitches audioTime dataModel index =
+instrumentNoteAtIndexHelp : List Int -> AudioTimeAndDuration -> DataModel -> Int -> Note
+instrumentNoteAtIndexHelp pitches audioTimeAndDuration dataModel index =
     instrumentPitchAtIndex pitches index
-        |> initInstrumentNote dataModel.instrument audioTime (stepDurationInMilli dataModel)
+        |> initInstrumentNote audioTimeAndDuration dataModel.instrument
 
 
 instrumentPitchAtIndex : List Int -> Int -> Int
@@ -903,8 +914,8 @@ centralOctaveNumber centralOctave octaveRange =
             octaveToInt centralOctave - 1
 
 
-initInstrumentNote : Instrument -> Float -> Float -> Int -> Note
-initInstrumentNote instrument audioTime duration pitch =
+initInstrumentNote : AudioTimeAndDuration -> Instrument -> Int -> Note
+initInstrumentNote { audioTime, duration } instrument pitch =
     { preset = instrumentToPresetName instrument
     , atAudioTime = audioTime
     , pitch = fromInt pitch
@@ -925,25 +936,20 @@ instrumentToPresetName instrument =
             "strings"
 
 
-percussionNotesAtIndices : Float -> DataModel -> List Int -> List Note
-percussionNotesAtIndices atAudioTime dataModel indices =
-    indices |> List.map (percussionNoteAtIndex atAudioTime dataModel)
+percussionNotesAtIndices : AudioTimeAndDuration -> DataModel -> List Int -> List Note
+percussionNotesAtIndices audioTimeAndDuration dataModel indices =
+    indices |> List.map (percussionNoteAtIndex audioTimeAndDuration dataModel)
 
 
-percussionNoteAtIndex : Float -> DataModel -> Int -> Note
-percussionNoteAtIndex audioTime dataModel y =
-    let
-        duration =
-            stepDurationInMilli dataModel
-    in
+percussionNoteAtIndex : AudioTimeAndDuration -> DataModel -> Int -> Note
+percussionNoteAtIndex audioTimeAndDuration dataModel y =
     initPercussionNote
-        audioTime
-        duration
+        audioTimeAndDuration
         (percussionPresetAndPitch dataModel.percussion y)
 
 
-initPercussionNote : Float -> Float -> PresetAndPitch -> Note
-initPercussionNote audioTime duration { preset, pitch } =
+initPercussionNote : AudioTimeAndDuration -> PresetAndPitch -> Note
+initPercussionNote { audioTime, duration } { preset, pitch } =
     { preset = preset
     , atAudioTime = audioTime
     , pitch = pitch
@@ -1061,12 +1067,16 @@ playNoteAtGPCmd model gridType ( _, y ) =
 
 noteAtIndex : GridType -> Float -> DataModel -> Int -> Note
 noteAtIndex gridType atAudioTime dataModel index =
+    let
+        audioTimeAndDuration =
+            initAudioTimeAndDuration atAudioTime dataModel
+    in
     case gridType of
         InstrumentGrid ->
-            instrumentNoteAtIndex atAudioTime dataModel index
+            instrumentNoteAtIndex audioTimeAndDuration dataModel index
 
         PercussionGrid ->
-            percussionNoteAtIndex atAudioTime dataModel index
+            percussionNoteAtIndex audioTimeAndDuration dataModel index
 
 
 focusOrIgnoreCmd : String -> Cmd Msg
@@ -1084,17 +1094,22 @@ scheduleNotesAtCurrentStepEffect atAudioTime model =
 
 notesAtStep : Int -> Float -> DataModel -> List Note
 notesAtStep stepIndex atAudioTime dataModel =
-    gridNotesAtStep InstrumentGrid stepIndex atAudioTime dataModel
-        ++ gridNotesAtStep PercussionGrid stepIndex atAudioTime dataModel
+    let
+        audioTimeAndDuration : AudioTimeAndDuration
+        audioTimeAndDuration =
+            initAudioTimeAndDuration atAudioTime dataModel
+    in
+    gridNotesAtStep InstrumentGrid stepIndex audioTimeAndDuration dataModel
+        ++ gridNotesAtStep PercussionGrid stepIndex audioTimeAndDuration dataModel
 
 
-gridNotesAtStep : GridType -> Int -> Float -> DataModel -> List Note
-gridNotesAtStep gridType stepIndex atAudioTime dataModel =
+gridNotesAtStep : GridType -> Int -> AudioTimeAndDuration -> DataModel -> List Note
+gridNotesAtStep gridType stepIndex audioTimeAndDuration dataModel =
     paintedPositionsToIndicesAtStep gridType dataModel stepIndex
-        |> notesAtIndices gridType atAudioTime dataModel
+        |> notesAtIndices gridType audioTimeAndDuration dataModel
 
 
-notesAtIndices : GridType -> Float -> DataModel -> List Int -> List Note
+notesAtIndices : GridType -> AudioTimeAndDuration -> DataModel -> List Int -> List Note
 notesAtIndices gridType =
     case gridType of
         InstrumentGrid ->
