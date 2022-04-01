@@ -35,14 +35,14 @@ function MakePlayer() {
       duration: durationInMilli,
     }) {
       await audioContext.resume()
-      const presetVar = window[presetMap[presetName]]
-      if (!presetVar) {
+      const preset = window[presetMap[presetName]]
+      if (!preset) {
         throw new Error("Invalid preset name: " + presetName)
       }
       fontPlayer.queueWaveTable(
         audioContext,
         audioContext.destination,
-        presetVar,
+        preset,
         atAudioTimeInMilli / 1000,
         NoteParser.midi(midiPitch),
         durationInMilli / 1000,
