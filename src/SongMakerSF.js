@@ -45,7 +45,7 @@ function MakePlayer() {
         preset,
         atAudioTimeInMilli / 1000,
         // NoteParser.midi(midiPitch),
-        parseInt(midiPitch),
+        midiPitch,
         durationInMilli / 1000,
         0.5,
         [],
