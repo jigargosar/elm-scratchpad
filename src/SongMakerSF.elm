@@ -931,15 +931,23 @@ percussionNotesAtIndices atAudioTime dataModel indices =
 
 
 percussionNoteAtIndex : Float -> DataModel -> Int -> Note
-percussionNoteAtIndex audioTime model y =
+percussionNoteAtIndex audioTime dataModel y =
     let
-        { preset, pitch } =
-            percussionPresetAndPitch model.percussion y
+        duration =
+            stepDurationInMilli dataModel
     in
+    initPercussionNote
+        audioTime
+        duration
+        (percussionPresetAndPitch dataModel.percussion y)
+
+
+initPercussionNote : Float -> Float -> PresetAndPitch -> Note
+initPercussionNote audioTime duration { preset, pitch } =
     { preset = preset
     , atAudioTime = audioTime
     , pitch = pitch
-    , duration = stepDurationInMilli model
+    , duration = duration
     }
 
 
