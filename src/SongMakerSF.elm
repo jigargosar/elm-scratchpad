@@ -959,11 +959,19 @@ initNote { audioTime, duration } { preset, pitch } =
 percussionPresetAndPitch : Percussion -> Int -> PresetAndPitch
 percussionPresetAndPitch percussion y =
     case ( percussion, y ) of
+        --( Electronic, 0 ) -> snareDrum2
+        --( Electronic, 1 ) -> bassDrum1
         ( Electronic, 0 ) ->
             snareDrum2
 
         ( Electronic, 1 ) ->
             bassDrum1
+
+        ( Kit, 0 ) ->
+            snareDrum1
+
+        ( Kit, 1 ) ->
+            bassDrum2
 
         ( Blocks, 0 ) ->
             highWoodBlock
@@ -976,12 +984,6 @@ percussionPresetAndPitch percussion y =
 
         ( Conga, 1 ) ->
             lowConga
-
-        ( _, 0 ) ->
-            highWoodBlock
-
-        ( _, 1 ) ->
-            lowWoodBlock
 
         _ ->
             Debug.todo (Debug.toString ( percussion, y ))
@@ -1003,9 +1005,19 @@ snareDrum2 =
     newPresetAndPitch "snareDrum2" 40
 
 
+snareDrum1 : PresetAndPitch
+snareDrum1 =
+    newPresetAndPitch "snareDrum1" 38
+
+
 bassDrum1 : PresetAndPitch
 bassDrum1 =
     newPresetAndPitch "bassDrum1" 36
+
+
+bassDrum2 : PresetAndPitch
+bassDrum2 =
+    newPresetAndPitch "bassDrum2" 35
 
 
 highWoodBlock : PresetAndPitch
