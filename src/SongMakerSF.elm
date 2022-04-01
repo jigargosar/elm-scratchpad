@@ -990,6 +990,16 @@ bassDrum1 =
     newPresetAndPitch "bassDrum1" 36
 
 
+highWoodBlock : PresetAndPitch
+highWoodBlock =
+    newPresetAndPitch "highWoodBlock" 76
+
+
+lowWoodBlock : PresetAndPitch
+lowWoodBlock =
+    newPresetAndPitch "lowWoodBlock" 77
+
+
 noteColor : MusicScale -> Int2 -> String
 noteColor musicScale ( _, y ) =
     let
