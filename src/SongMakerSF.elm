@@ -933,37 +933,48 @@ percussionNotesAtIndices atAudioTime dataModel indices =
 percussionNoteAtIndex : Float -> DataModel -> Int -> Note
 percussionNoteAtIndex audioTime model y =
     let
-        ( presetName, pitch ) =
-            if y == 0 then
-                case model.percussion of
-                    Electronic ->
-                        ( "snareDrum2", "40" )
-
-                    Blocks ->
-                        ( "snareDrum2", "40" )
-
-                    _ ->
-                        ( "snareDrum2", "40" )
-
-            else if y == 1 then
-                case model.percussion of
-                    Electronic ->
-                        ( "bassDrum1", "36" )
-
-                    Blocks ->
-                        ( "bassDrum1", "36" )
-
-                    _ ->
-                        ( "bassDrum1", "36" )
-
-            else
-                Debug.todo (Debug.toString y)
+        { preset, pitch } =
+            percussionPresetAndPitch model.percussion y
     in
-    { preset = presetName
+    { preset = preset
     , atAudioTime = audioTime
     , pitch = pitch
     , duration = stepDurationInMilli model
     }
+
+
+percussionPresetAndPitch : Percussion -> Int -> PresetAndPitch
+percussionPresetAndPitch percussion y =
+    case ( percussion, y ) of
+        ( Electronic, 0 ) ->
+            snareDrum2
+
+        ( Electronic, 1 ) ->
+            baseDrum2
+
+        _ ->
+            Debug.todo (Debug.toString ( percussion, y ))
+
+
+type alias PresetAndPitch =
+    { preset : String
+    , pitch : String
+    }
+
+
+newPresetAndPitch : String -> String -> PresetAndPitch
+newPresetAndPitch preset pitch =
+    { preset = preset, pitch = pitch }
+
+
+snareDrum2 : PresetAndPitch
+snareDrum2 =
+    newPresetAndPitch "snareDrum2" "40"
+
+
+baseDrum2 : PresetAndPitch
+baseDrum2 =
+    newPresetAndPitch "baseDrum2" "40"
 
 
 noteColor : MusicScale -> Int2 -> String
