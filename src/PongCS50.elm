@@ -7,6 +7,19 @@ import Utils exposing (..)
 {-
    THIS LINE IS FOR FIXING INDENTATION ISSUE WITH ELM-FORMAT. DETAILS?
     # Specs:
+    * Clone: https://www.youtube.com/watch?v=GfwpRU0cT10&list=PLhQjrBD2T383Vx9-4vJYFsJbvZ_D17Qzh&index=2
+    # Why?
+    * create a video/text tutorial series.
+    * code kata
+    * make a complete game
+
+    # Next up
+    * rectangle update
+
+    # Later
+    * retro font update
+
+
 
 
 -}
