@@ -63,4 +63,33 @@ viewDocument : Model -> Document Msg
 viewDocument _ =
     Document "PongCS50"
         [ basicStylesNode
+        , view
+        ]
+
+
+sceneWidth =
+    300
+
+
+sceneHeight =
+    sceneWidth / sceneAspectRatio
+
+
+
+--sceneHeight = 200
+--sceneAspectRatio = sceneWidth / sceneHeight
+
+
+sceneAspectRatio =
+    16 / 9
+
+
+ballSide =
+    sceneWidth / 20
+
+
+view : Html Msg
+view =
+    basicSvg [ viewBoxC sceneWidth sceneHeight ]
+        [ square ballSide [ fill wWhite, transforms [] ]
         ]
