@@ -85,7 +85,7 @@ sceneAspectRatio =
 
 
 ballSide =
-    sceneWidth / 20
+    sceneWidth / 50
 
 
 paddleWidth =
@@ -93,11 +93,11 @@ paddleWidth =
 
 
 paddleHeight =
-    sceneHeight / 5
+    sceneHeight / 6
 
 
 paddleMargin =
-    ballSide
+    ballSide * 2
 
 
 leftPaddleX =
