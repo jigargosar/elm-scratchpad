@@ -88,8 +88,35 @@ ballSide =
     sceneWidth / 20
 
 
+paddleWidth =
+    ballSide
+
+
+paddleHeight =
+    sceneHeight / 5
+
+
+paddleMargin =
+    ballSide
+
+
+leftPaddleX =
+    paddleMargin - ((sceneWidth - paddleWidth) / 2)
+
+
+rightPaddleX =
+    ((sceneWidth - paddleWidth) / 2) - paddleMargin
+
+
 view : Html Msg
 view =
     basicSvg [ viewBoxC sceneWidth sceneHeight, sMaxHeight "100vh" ]
         [ square ballSide [ fill wWhite, transforms [] ]
+        , viewPaddle leftPaddleX
+        , viewPaddle rightPaddleX
         ]
+
+
+viewPaddle x =
+    rect paddleWidth paddleHeight <|
+        [ fill wWhite, transforms [ translateF2 ( x, 0 ) ] ]
