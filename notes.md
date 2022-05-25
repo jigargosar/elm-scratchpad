@@ -1,7 +1,8 @@
 # Current project
-* pop the lock. https://www.youtube.com/watch?v=eZAJTXmRtDc
+* pong cs50 https://www.youtube.com/watch?v=GfwpRU0cT10&list=PLhQjrBD2T383Vx9-4vJYFsJbvZ_D17Qzh&index=2
 
 # Next
+* pop the lock. https://www.youtube.com/watch?v=eZAJTXmRtDc
 * StickHero with elm-animation toolkit.
 * ableton tone.js sequencer
   * chrome lab song maker.
