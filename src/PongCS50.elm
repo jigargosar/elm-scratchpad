@@ -90,6 +90,6 @@ ballSide =
 
 view : Html Msg
 view =
-    basicSvg [ viewBoxC sceneWidth sceneHeight ]
+    basicSvg [ viewBoxC sceneWidth sceneHeight, sMaxHeight "100vh" ]
         [ square ballSide [ fill wWhite, transforms [] ]
         ]
