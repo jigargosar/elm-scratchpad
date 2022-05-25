@@ -75,11 +75,6 @@ sceneHeight =
     sceneWidth / sceneAspectRatio
 
 
-
---sceneHeight = 200
---sceneAspectRatio = sceneWidth / sceneHeight
-
-
 sceneAspectRatio =
     16 / 9
 
