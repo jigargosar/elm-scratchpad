@@ -75,6 +75,22 @@ sceneHeight =
     sceneWidth / sceneAspectRatio
 
 
+sceneLeft =
+    -(sceneWidth / 2)
+
+
+sceneRight =
+    -sceneLeft
+
+
+sceneTop =
+    -(sceneHeight / 2)
+
+
+sceneBottom =
+    -sceneTop
+
+
 sceneAspectRatio =
     16 / 9
 
@@ -95,12 +111,16 @@ paddleMargin =
     ballSide * 2
 
 
+paddleXOffset =
+    paddleMargin + (paddleWidth / 2)
+
+
 leftPaddleX =
-    paddleMargin - ((sceneWidth - paddleWidth) / 2)
+    sceneLeft + paddleXOffset
 
 
 rightPaddleX =
-    ((sceneWidth - paddleWidth) / 2) - paddleMargin
+    sceneRight - paddleXOffset
 
 
 view : Html Msg
