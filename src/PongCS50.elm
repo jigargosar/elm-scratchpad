@@ -35,12 +35,14 @@ main =
 
 
 type alias Model =
-    {}
+    { leftPaddleCY : Float
+    , rightPaddleCY : Float
+    }
 
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( {}, Cmd.none )
+    ( { leftPaddleCY = 0, rightPaddleCY = 0 }, Cmd.none )
 
 
 type Msg
