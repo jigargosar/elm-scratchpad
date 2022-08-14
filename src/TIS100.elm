@@ -1,4 +1,4 @@
-module BrowserDocumentTemplate exposing (main)
+module TIS100 exposing (main)
 
 import Utils exposing (..)
 
@@ -48,7 +48,7 @@ update msg model =
 
 viewDocument : Model -> Document Msg
 viewDocument _ =
-    Document "App Title"
+    Document "ELM TIS 100 CLONE"
         [ basicStylesNode
         , text "BrowserDocumentTemplate"
         ]

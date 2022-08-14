@@ -3,7 +3,7 @@ module StageJS.BasicGrid exposing (main)
 import Browser.Events
 import Html.Events
 import Json.Decode as JD
-import Random exposing (Seed)
+import Random
 import Random.Extra
 import Utils exposing (..)
 
