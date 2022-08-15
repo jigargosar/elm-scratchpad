@@ -27,14 +27,14 @@ type NECState
     | Read AfterReadMsg SrcPort
     | Read2 Inst1 SrcPort
 
-type Inst1 = Add | Sub | JRO
+type Inst1 = Add | Sub | JRO | Set
 
 type Inst = Mov Src Dst | Inst1 Inst1 Src
-type Src =  SrcNil | SrcNum Num | SrcAcc | SrcPort SrcPort
-type Dst =  DstNil | DstAcc | DstPort DstPort
+type Src = SrcNil | SrcNum Num | SrcAcc | SrcPort SrcPort
+type Dst = DstNil | DstAcc | DstPort DstPort
 
 
-type Msg = AccAdd Num | AccSet Num | NOP | MsgWithNum Inst1 Num
+type Msg = AccSet Num | NOP | MsgWithNum Inst1 Num
 
 
 update: Msg -> {a| pc:PC,acc:Num,bak: Num} -> {a| pc:PC,acc:Num,bak: Num}
