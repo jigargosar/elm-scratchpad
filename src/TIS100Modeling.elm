@@ -27,7 +27,7 @@ type NECState
     | Read AfterReadMsg SrcPort
     | Read1 Inst1 SrcPort
 
-type Inst1 = Add | Sub | JRO | Set
+type Inst1 = Add | Sub | JRO | Set | NOP1
 
 type Inst = Mov Src Dst | Inst1 Inst1 Src
 type Src = SrcNil | SrcNum Num | SrcAcc | SrcPort SrcPort
@@ -45,7 +45,7 @@ currentInst _ _ =
     Inst1 Add SrcAcc
 
 type AfterReadMsg =
-    NOPAfterRead | WriteAfterRead DstPort
+    WriteAfterRead DstPort
 
 type Result e v = Ok v | Err e
 type Maybe a = Just a | Nothing
@@ -88,7 +88,7 @@ step srcPortResolver nec =
                                     {nec| state = Read1 instRS sp}
                 Mov src dst ->
                     case (src,dst) of
-                        (SrcPort sp, DstNil) -> {nec| state = Read NOPAfterRead sp}
+                        (SrcPort sp, DstNil) -> {nec| state = Read1 NOP1 sp}
                         (SrcPort sp, DstAcc) -> {nec| state = Read1 Set sp}
                         (SrcPort sp, DstPort dp) -> {nec| state = Read (WriteAfterRead dp) sp}
                         --
@@ -121,7 +121,6 @@ step srcPortResolver nec =
                     let
                         newNec =
                             case afterReadMsg of
-                                NOPAfterRead -> update NOP nec
                                 WriteAfterRead dp -> {nec| state = Write dp n}
                     in
                         updateLastAnyPort maybeLast newNec
