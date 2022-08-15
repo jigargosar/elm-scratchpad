@@ -1,5 +1,6 @@
 module TIS100Modeling exposing (..)
 
+import Utils exposing (pairTo)
 type Num = Num
 type PC = PC
 type EXE = EXE
@@ -13,6 +14,7 @@ zero = Num
 
 type alias NEC =
     { exe : EXE
+    , idle: Int
     --, sc : SC
     , pc: PC
     , acc : Num
@@ -47,10 +49,8 @@ currentInst _ _ =
 type AfterReadMsg =
     WriteAfterRead DstPort
 
-type Result e v = Ok v | Err e
-type Maybe a = Just a | Nothing
 
-type alias SrcPortResolver = (SrcPort -> Maybe (Num, Maybe LastAnyPort))
+type alias SrcPortResolver = SrcPort -> Maybe (Num, Maybe LastAnyPort)
 
 
 srcToNum: {a| acc: Num} -> Src -> Result SrcPort Num
@@ -69,23 +69,21 @@ updateLastAnyPort maybeLast model =
 
 step: SrcPortResolver -> NEC -> NEC
 step srcPortResolver nec =
+    let
+        resolveSrc : Src -> Result SrcPort (Num, Maybe LastAnyPort)
+        resolveSrc src =
+            case srcToNum nec src of
+                Ok n -> Ok (n, Nothing)
+                Err sp -> srcPortResolver sp |> Result.fromMaybe sp
+    in
     case nec.state of
         Run ->
             case currentInst nec.exe nec.pc of
-                Inst1 instRS src ->
-                    let
-                        updateWithNum n =
-                            update (MsgWithNum instRS n) nec
-                    in
-                    case srcToNum nec src of
-                        Ok n -> updateWithNum n
-                        Err sp ->
-                            case srcPortResolver sp of
-                                Just (n, maybeLast) ->
-                                    updateWithNum n |> updateLastAnyPort maybeLast
-                                Nothing ->
-                                    -- mark current cycle idle.
-                                    {nec| state = Read1 instRS sp}
+                Inst1 inst1 src ->
+                    case resolveSrc src of
+                        Ok (n, maybeLast) ->
+                            update (MsgWithNum inst1 n) nec |> updateLastAnyPort maybeLast
+                        Err sp -> { nec | state = Read1 inst1 sp, idle = nec.idle + 1 }
                 Mov src dst ->
                     case (src,dst) of
                         (SrcPort sp, DstNil) -> {nec| state = Read1 NOP1 sp}
