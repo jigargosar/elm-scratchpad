@@ -1,5 +1,6 @@
 module TIS100 exposing (main)
 
+import Basics
 import Utils exposing (..)
 
 
