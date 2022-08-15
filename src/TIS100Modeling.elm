@@ -27,7 +27,7 @@ type NECState
     = Run
     | Write DstPort Num
     | Read AfterReadMsg SrcPort
-    | Read1 Inst1 SrcPort
+    | Read1 Inst1 Src
 
 type Inst1 = Add | Sub | JRO | Set | NOP1
 
@@ -70,24 +70,26 @@ updateLastAnyPort maybeLast model =
 step: SrcPortResolver -> NEC -> NEC
 step srcPortResolver nec =
     let
-        resolveSrc : Src -> Result SrcPort (Num, Maybe LastAnyPort)
+        resolveSrc : Src -> Maybe (Num, Maybe LastAnyPort)
         resolveSrc src =
             case srcToNum nec src of
-                Ok n -> Ok (n, Nothing)
-                Err sp -> srcPortResolver sp |> Result.fromMaybe sp
+                Ok n -> Just (n, Nothing)
+                Err sp -> srcPortResolver sp
+
+        stepInst1 inst1 src =
+            case resolveSrc src of
+                Just (n, maybeLast) ->
+                    update (MsgWithNum inst1 n) nec |> updateLastAnyPort maybeLast
+                Nothing -> { nec | state = Read1 inst1 src, idle = nec.idle + 1 }
     in
     case nec.state of
         Run ->
             case currentInst nec.exe nec.pc of
-                Inst1 inst1 src ->
-                    case resolveSrc src of
-                        Ok (n, maybeLast) ->
-                            update (MsgWithNum inst1 n) nec |> updateLastAnyPort maybeLast
-                        Err sp -> { nec | state = Read1 inst1 sp, idle = nec.idle + 1 }
+                Inst1 inst1 src -> stepInst1 inst1 src
                 Mov src dst ->
                     case (src,dst) of
-                        (SrcPort sp, DstNil) -> {nec| state = Read1 NOP1 sp}
-                        (SrcPort sp, DstAcc) -> {nec| state = Read1 Set sp}
+                        (SrcPort _, DstNil) -> {nec| state = Read1 NOP1 src}
+                        (SrcPort _, DstAcc) -> {nec| state = Read1 Set src}
                         (SrcPort sp, DstPort dp) -> {nec| state = Read (WriteAfterRead dp) sp}
                         --
                         (SrcNil, DstPort dp) -> {nec| state = Write dp zero}
@@ -103,11 +105,7 @@ step srcPortResolver nec =
                         (SrcAcc, DstAcc) -> update NOP nec
 
 
-        Read1 inst1 sp ->
-            case srcPortResolver sp of
-                Just (n, maybeLast) ->
-                    update (MsgWithNum inst1 n) nec |> updateLastAnyPort maybeLast
-                Nothing -> {nec| state = Read1 inst1 sp, idle = nec.idle + 1}
+        Read1 inst1 src -> stepInst1 inst1 src
 
         Read afterReadMsg sp ->
             case srcPortResolver sp of
