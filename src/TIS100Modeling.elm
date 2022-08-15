@@ -34,7 +34,7 @@ type Src = SrcNil | SrcNum Num | SrcAcc | SrcPort SrcPort
 type Dst = DstNil | DstAcc | DstPort DstPort
 
 
-type Msg = AccSet Num | NOP | MsgWithNum Inst1 Num
+type Msg =  NOP | MsgWithNum Inst1 Num
 
 
 update: Msg -> {a| pc:PC,acc:Num,bak: Num} -> {a| pc:PC,acc:Num,bak: Num}
@@ -45,7 +45,7 @@ currentInst _ _ =
     Inst1 Add SrcAcc
 
 type AfterReadMsg =
-    SetAccAfterRead | NOPAfterRead | WriteAfterRead DstPort
+    NOPAfterRead | WriteAfterRead DstPort
 
 type Result e v = Ok v | Err e
 type Maybe a = Just a | Nothing
@@ -89,7 +89,7 @@ step srcPortResolver nec =
                 Mov src dst ->
                     case (src,dst) of
                         (SrcPort sp, DstNil) -> {nec| state = Read NOPAfterRead sp}
-                        (SrcPort sp, DstAcc) -> {nec| state = Read SetAccAfterRead sp}
+                        (SrcPort sp, DstAcc) -> {nec| state = Read2 Set sp}
                         (SrcPort sp, DstPort dp) -> {nec| state = Read (WriteAfterRead dp) sp}
                         --
                         (SrcNil, DstPort dp) -> {nec| state = Write dp zero}
@@ -100,8 +100,8 @@ step srcPortResolver nec =
                         (SrcNum _, DstNil) -> update NOP nec
                         (SrcAcc, DstNil) -> update NOP nec
                         --
-                        (SrcNil, DstAcc) -> update (AccSet zero) nec
-                        (SrcNum n, DstAcc) -> update (AccSet n) nec
+                        (SrcNil, DstAcc) -> update (MsgWithNum Set zero) nec
+                        (SrcNum n, DstAcc) -> update (MsgWithNum Set n) nec
                         (SrcAcc, DstAcc) -> update NOP nec
 
 
@@ -121,7 +121,6 @@ step srcPortResolver nec =
                     let
                         newNec =
                             case afterReadMsg of
-                                SetAccAfterRead -> update(AccSet n) nec
                                 NOPAfterRead -> update NOP nec
                                 WriteAfterRead dp -> {nec| state = Write dp n}
                     in
