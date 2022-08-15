@@ -103,15 +103,11 @@ step srcPortResolver nec =
                         (SrcAcc, DstAcc) -> update NOP nec
 
 
-        Read1 instRS sp ->
-            let
-                updateWithNum n = update (MsgWithNum instRS n) nec
-            in
+        Read1 inst1 sp ->
             case srcPortResolver sp of
-                Just (n, maybeLast) -> updateWithNum n |> updateLastAnyPort maybeLast
-                Nothing ->
-                    -- mark current cycle idle.
-                   {nec| state = Read1 instRS sp}
+                Just (n, maybeLast) ->
+                    update (MsgWithNum inst1 n) nec |> updateLastAnyPort maybeLast
+                Nothing -> {nec| state = Read1 inst1 sp, idle = nec.idle + 1}
 
         Read afterReadMsg sp ->
             case srcPortResolver sp of
