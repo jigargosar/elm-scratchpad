@@ -25,7 +25,7 @@ type NECState
     = Run
     | Write DstPort Num
     | Read AfterReadMsg SrcPort
-    | Read2 Inst1 SrcPort
+    | Read1 Inst1 SrcPort
 
 type Inst1 = Add | Sub | JRO | Set
 
@@ -85,11 +85,11 @@ step srcPortResolver nec =
                                     updateWithNum n |> updateLastAnyPort maybeLast
                                 Nothing ->
                                     -- mark current cycle idle.
-                                    {nec| state = Read2 instRS sp}
+                                    {nec| state = Read1 instRS sp}
                 Mov src dst ->
                     case (src,dst) of
                         (SrcPort sp, DstNil) -> {nec| state = Read NOPAfterRead sp}
-                        (SrcPort sp, DstAcc) -> {nec| state = Read2 Set sp}
+                        (SrcPort sp, DstAcc) -> {nec| state = Read1 Set sp}
                         (SrcPort sp, DstPort dp) -> {nec| state = Read (WriteAfterRead dp) sp}
                         --
                         (SrcNil, DstPort dp) -> {nec| state = Write dp zero}
@@ -105,7 +105,7 @@ step srcPortResolver nec =
                         (SrcAcc, DstAcc) -> update NOP nec
 
 
-        Read2 instRS sp ->
+        Read1 instRS sp ->
             let
                 updateWithNum n = update (MsgWithNum instRS n) nec
             in
@@ -113,7 +113,7 @@ step srcPortResolver nec =
                 Just (n, maybeLast) -> updateWithNum n |> updateLastAnyPort maybeLast
                 Nothing ->
                     -- mark current cycle idle.
-                   {nec| state = Read2 instRS sp}
+                   {nec| state = Read1 instRS sp}
 
         Read afterReadMsg sp ->
             case srcPortResolver sp of
