@@ -61,8 +61,8 @@ srcToNum {acc} src =
         SrcAcc -> Ok acc
         SrcPort sp -> Err sp
 
-updateLastAnyPort: Maybe LastAnyPort -> {a| last: LastAnyPort} -> {a| last: LastAnyPort}
-updateLastAnyPort maybeLast model =
+updateLast: Maybe LastAnyPort -> {a| last: LastAnyPort} -> {a| last: LastAnyPort}
+updateLast maybeLast model =
     case maybeLast of
         Just last -> {model | last = last}
         Nothing -> model
@@ -79,7 +79,7 @@ step srcPortResolver nec =
         stepInst1 inst1 src =
             case resolveSrc src of
                 Just (n, maybeLast) ->
-                    update (MsgWithNum inst1 n) nec |> updateLastAnyPort maybeLast
+                    update (MsgWithNum inst1 n) nec |> updateLast maybeLast
                 Nothing -> { nec | state = Read1 inst1 src, idle = nec.idle + 1 }
     in
     case nec.state of
@@ -115,7 +115,7 @@ step srcPortResolver nec =
                             case afterReadMsg of
                                 WriteAfterRead dp -> {nec| state = Write dp n}
                     in
-                        updateLastAnyPort maybeLast newNec
+                        updateLast maybeLast newNec
                 Nothing -> nec -- mark this cycle idle.
 
 
