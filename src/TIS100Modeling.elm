@@ -126,3 +126,38 @@ step srcPortResolver nec =
 
 
 
+type alias SrcPortReader =
+    SrcPort -> Maybe (ReadInfo, Context)
+
+type alias ReadInfo =
+   (Num, Maybe LastAnyPort)
+
+
+type NodeSet
+    = NodeSet
+
+type alias Context =
+   { pending: NodeSet
+   , done: Node
+   }
+
+type NodeId = NodeId
+type Node = Node
+
+stepNode: SrcPortReader -> Node -> (Node, Maybe Context)
+stepNode _ _ =
+    Debug.todo "todo"
+
+readForNode: NodeId -> SrcPort -> NodeSet -> Maybe ((Num, PortDir), Node, NodeSet)
+readForNode nodeId srcPort nodeSet =
+    Debug.todo "todo"
+
+
+createSrcPortReader: NodeSet -> NodeId -> SrcPortReader
+createSrcPortReader set nodeId srcPort =
+    Debug.todo "todo"
+
+
+
+
+
