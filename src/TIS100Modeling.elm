@@ -36,7 +36,7 @@ type Src = SrcNil | SrcNum Num | SrcAcc | SrcPort SrcPort
 type Dst = DstNil | DstAcc | DstPort DstPort
 
 
-type Msg =  NOP | MsgWithNum Inst1 Num
+type Msg =  NOP | MsgWithNum Inst1 Num | OnWriteResolved (Maybe LastAnyPort)
 
 
 update: Msg -> {a| pc:PC,acc:Num,bak: Num} -> {a| pc:PC,acc:Num,bak: Num}
@@ -174,6 +174,36 @@ fromSrcToDst nodeId dir =
     oppDir dir |> adjNodeId nodeId
 
 
+readNode: Dir -> Node -> Maybe (Num,Node)
+readNode dir node =
+    case node of
+        EXENode nodeId nec ->
+            case nec.state of
+                Write dstPort num ->
+                    let
+                        ans last =
+                            Just
+                                ( num
+                                , EXENode nodeId (update (OnWriteResolved last) nec)
+                                )
+                    in
+                    case dstPort of
+                        OutPortDir dir2 ->
+                            if dir == dir2 then
+                                ans Nothing
+                            else
+                                Nothing
+
+                        OutPortAny ->
+                            ans (Just (LastAnyPort dir))
+
+                _ -> Nothing
+
+        InputNode nodeId ->
+            Nothing -- call like above
+
+        OutputNode nodeId ->
+            Nothing
 
 
 
