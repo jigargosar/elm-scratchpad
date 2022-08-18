@@ -4,11 +4,11 @@ import Utils exposing (pairTo)
 type Num = Num
 type PC = PC
 type EXE = EXE
-type SrcPort = InPortDir PortDir | InPortAny
-type DstPort = OutPortDir PortDir | OutPortAny
-type PortDir = L|R|U|D
+type SrcPort = InPortDir Dir | InPortAny
+type DstPort = OutPortDir Dir | OutPortAny
+type Dir = L|R|U|D
 
-type LastAnyPort = LastAnyPort PortDir | LastAnyPortNone
+type LastAnyPort = LastAnyPort Dir | LastAnyPortNone
 zero : Num
 zero = Num
 
@@ -133,8 +133,6 @@ type alias ReadInfo =
    (Num, Maybe LastAnyPort)
 
 
-type NodeSet
-    = NodeSet
 
 type alias Context =
    { pending: NodeSet
@@ -142,13 +140,12 @@ type alias Context =
    }
 
 type NodeId = NodeId
-type Node = Node
 
 stepNode: SrcPortReader -> Node -> (Node, Maybe Context)
 stepNode _ _ =
     Debug.todo "todo"
 
-readForNode: NodeId -> SrcPort -> NodeSet -> Maybe ((Num, PortDir), Node, NodeSet)
+readForNode: NodeId -> SrcPort -> NodeSet -> Maybe ((Num, Dir), Node, NodeSet)
 readForNode nodeId srcPort nodeSet =
     Debug.todo "todo"
 
@@ -156,6 +153,25 @@ readForNode nodeId srcPort nodeSet =
 createSrcPortReader: NodeSet -> NodeId -> SrcPortReader
 createSrcPortReader set nodeId srcPort =
     Debug.todo "todo"
+
+
+type NodeSet
+    = List Node
+
+type Node = EXENode NodeId NEC | InputNode NodeId | OutputNode NodeId
+
+adjNodeId: NodeId -> Dir -> NodeId
+adjNodeId  =
+    Debug.todo "todo"
+
+oppDir: Dir -> Dir
+oppDir _ =
+    Debug.todo "todo"
+
+
+fromSrcToDst: NodeId -> Dir -> NodeId
+fromSrcToDst nodeId dir =
+    oppDir dir |> adjNodeId nodeId
 
 
 
