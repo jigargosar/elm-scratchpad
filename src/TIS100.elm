@@ -107,6 +107,19 @@ inputNodeStep node =
             node
 
 
+inputNodeRead : InputNode -> Maybe ( Num, InputNode )
+inputNodeRead node =
+    case node of
+        IN_Idle ->
+            Nothing
+
+        IN_Run _ _ ->
+            Nothing
+
+        IN_Write num nums ->
+            Just ( num, inputNodeInitFromList nums )
+
+
 stepSim : Sim -> Sim
 stepSim sim =
     { sim
