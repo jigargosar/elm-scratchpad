@@ -75,13 +75,38 @@ type Num
 
 
 type Node
-    = InputNodeWrapper InputNode
+    = INW InputNode
+    | ONW OutputNode
 
 
 type InputNode
     = IN_Idle
     | IN_Run Num (List Num)
     | IN_Write Num (List Num)
+
+
+type OutputNode
+    = ON_Idle (List Num)
+    | ON_Run Int (List Num)
+    | ON_Read Int (List Num)
+
+
+outputNodeInit : Int -> OutputNode
+outputNodeInit expected =
+    ON_Run expected []
+
+
+outputNodeStep : OutputNode -> OutputNode
+outputNodeStep node =
+    case node of
+        ON_Idle _ ->
+            node
+
+        ON_Run int nums ->
+            ON_Read int nums
+
+        ON_Read _ _ ->
+            node
 
 
 inputNodeInitFromList : List Num -> InputNode
@@ -131,8 +156,11 @@ stepSim sim =
 stepNode : Node -> Node
 stepNode node =
     case node of
-        InputNodeWrapper inputNode ->
-            InputNodeWrapper (inputNodeStep inputNode)
+        INW inputNode ->
+            INW (inputNodeStep inputNode)
+
+        ONW outputNode ->
+            ONW (outputNodeStep outputNode)
 
 
 type alias Sim =
@@ -147,9 +175,13 @@ initialSim =
         inputNode =
             inputNodeInitFromList [ Num, Num, Num ]
 
+        outputNode : OutputNode
+        outputNode =
+            outputNodeInit 3
+
         nodeList : List Node
         nodeList =
-            [ InputNodeWrapper inputNode ]
+            [ INW inputNode, ONW outputNode ]
     in
     Sim nodeList 0
 
