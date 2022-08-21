@@ -78,31 +78,31 @@ type Node
 
 
 type InputNode
-    = Idle
-    | Run Num (List Num)
-    | Write Num (List Num)
+    = IN_Idle
+    | IN_Run Num (List Num)
+    | IN_Write Num (List Num)
 
 
 inputNodeInitFromList : List Num -> InputNode
 inputNodeInitFromList nums =
     case nums of
         f :: r ->
-            Run f r
+            IN_Run f r
 
         [] ->
-            Idle
+            IN_Idle
 
 
 inputNodeStep : InputNode -> InputNode
 inputNodeStep node =
     case node of
-        Run n ns ->
-            Write n ns
+        IN_Run n ns ->
+            IN_Write n ns
 
-        Write _ _ ->
+        IN_Write _ _ ->
             node
 
-        Idle ->
+        IN_Idle ->
             node
 
 
