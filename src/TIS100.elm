@@ -162,24 +162,47 @@ stepSim sim =
 stepNodeStore : NodeStore -> NodeStore
 stepNodeStore ns =
     let
-        _ =
+        removeInsert ( k, v ) ( p, n ) =
+            ( Dict.remove k p, Dict.insert k v n )
+
+        removeInsertMaybe mb val =
+            Maybe.map (\kv -> removeInsert kv val) mb
+                |> Maybe.withDefault val
+
+        ret =
             Dict.foldl
-                (\k v ( p, c ) ->
+                (\k v (( p, c ) as acc) ->
                     case readNode v of
                         Just _ ->
-                            ( p, c )
+                            acc
 
                         Nothing ->
                             let
-                                nv =
-                                    stepNode (\_ -> Nothing) v
+                                readFn () =
+                                    let
+                                        kPrev : NodeAddr
+                                        kPrev =
+                                            k - 1
+                                    in
+                                    Dict.get kPrev p
+                                        |> Maybe.andThen
+                                            (\n ->
+                                                readNode n
+                                                    |> Maybe.map (mapSecond (pair kPrev))
+                                            )
+
+                                ( nv, mbNKV ) =
+                                    stepNode readFn v
                             in
-                            ( Dict.remove k p, Dict.insert k nv c )
+                            acc
+                                |> removeInsert ( k, nv )
+                                |> removeInsertMaybe mbNKV
                 )
                 ( ns, Dict.empty )
                 ns
+                |> (\( p, c ) -> Dict.union p c)
     in
-    ns
+    ret
 
 
 stepNode : (() -> Maybe ( Num, a )) -> Node -> ( Node, Maybe a )
