@@ -73,8 +73,25 @@ type Num
 
 
 type Node
-    = Node
-    | InputNode (List Num)
+    = InputNode (List Num)
+
+
+nodeState : Node -> NodeState
+nodeState node =
+    case node of
+        InputNode nums ->
+            if List.isEmpty nums then
+                Idle
+
+            else
+                Run
+
+
+type NodeState
+    = Idle
+    | Run
+    | Read
+    | Write
 
 
 stepSim : Sim -> Sim
@@ -98,10 +115,12 @@ type alias Sim =
 
 initialSim =
     let
+        inputNode : Node
         inputNode =
             InputNode [ Num ]
 
+        nodeList : List Node
         nodeList =
-            inputNode :: List.repeat 2 Node
+            [ inputNode ]
     in
     Sim nodeList 0
