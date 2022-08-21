@@ -133,17 +133,22 @@ outputNodeInit expected =
     ON_Run expected []
 
 
-outputNodeStep : OutputNode -> OutputNode
-outputNodeStep node =
+outputNodeStep : (() -> Maybe ( Num, a )) -> OutputNode -> ( OutputNode, Maybe a )
+outputNodeStep readFn node =
     case node of
         ON_Idle _ ->
-            node
+            ( node, Nothing )
 
         ON_Run int nums ->
-            ON_Read int nums
+            case readFn () of
+                Nothing ->
+                    ( ON_Read int nums, Nothing )
+
+                Just ( num, a ) ->
+                    ( ON_Run (int - 1) (num :: nums), Just a )
 
         ON_Read _ _ ->
-            node
+            ( node, Nothing )
 
 
 stepSim : Sim -> Sim
@@ -157,25 +162,6 @@ stepSim sim =
 stepNodeStore : NodeStore -> NodeStore
 stepNodeStore ns =
     let
-        ( writeResolved, others ) =
-            Dict.foldl
-                (\a n ->
-                    case readNode n of
-                        Just x ->
-                            mapFirst (Dict.insert a x)
-
-                        Nothing ->
-                            mapSecond (Dict.insert a n)
-                )
-                ( Dict.empty, Dict.empty )
-                ns
-
-        pendingKeys =
-            Dict.keys ns
-
-        completedStore =
-            Dict.empty
-
         _ =
             Dict.foldl
                 (\k v ( p, c ) ->
@@ -186,7 +172,7 @@ stepNodeStore ns =
                         Nothing ->
                             let
                                 nv =
-                                    stepNode v
+                                    stepNode (\_ -> Nothing) v
                             in
                             ( Dict.remove k p, Dict.insert k nv c )
                 )
@@ -196,14 +182,15 @@ stepNodeStore ns =
     ns
 
 
-stepNode : Node -> Node
-stepNode node =
+stepNode : (() -> Maybe ( Num, a )) -> Node -> ( Node, Maybe a )
+stepNode readFn node =
     case node of
         INW inputNode ->
-            INW (inputNodeStep inputNode)
+            ( INW (inputNodeStep inputNode), Nothing )
 
         ONW outputNode ->
-            ONW (outputNodeStep outputNode)
+            outputNodeStep readFn outputNode
+                |> mapFirst ONW
 
 
 readNode : Node -> Maybe ( Num, Node )
