@@ -3,6 +3,7 @@ module TIS100 exposing (main)
 import Dict exposing (Dict)
 import TIS100.InputNode as InputNode exposing (InputNode)
 import TIS100.Num as Num exposing (Num)
+import TIS100.OutputNode as OutputNode exposing (OutputNode)
 import Utils exposing (..)
 
 
@@ -63,11 +64,11 @@ view =
     let
         sim =
             initialSim
-                |> stepSim
-                |> stepSim
-                |> stepSim
-                |> stepSim
-                |> stepSim
+                --|> stepSim
+                --|> stepSim
+                --|> stepSim
+                --|> stepSim
+                --|> stepSim
                 |> stepSim
                 |> identity
     in
@@ -80,51 +81,6 @@ view =
 type Node
     = INW InputNode
     | ONW OutputNode
-
-
-type OutputNode
-    = ON_Idle (List Num)
-    | ON_Run Int (List Num)
-    | ON_Read Int (List Num)
-
-
-outputNodeInit : Int -> OutputNode
-outputNodeInit expected =
-    if expected <= 0 then
-        ON_Idle []
-
-    else
-        ON_Run expected []
-
-
-outputNodeStep : ReadFn a -> OutputNode -> ( OutputNode, Maybe a )
-outputNodeStep readFn node =
-    let
-        attemptRead pendingReads nums =
-            case readFn () of
-                Nothing ->
-                    ( ON_Read pendingReads nums, Nothing )
-
-                Just ( num, a ) ->
-                    let
-                        fn =
-                            if pendingReads == 1 then
-                                ON_Idle
-
-                            else
-                                ON_Run (pendingReads - 1)
-                    in
-                    ( fn (num :: nums), Just a )
-    in
-    case node of
-        ON_Idle _ ->
-            ( node, Nothing )
-
-        ON_Run pendingReads nums ->
-            attemptRead pendingReads nums
-
-        ON_Read pendingReads nums ->
-            attemptRead pendingReads nums
 
 
 stepSim : Sim -> Sim
@@ -219,7 +175,7 @@ stepNode readFn node =
             ( INW (InputNode.step inputNode), Nothing )
 
         ONW outputNode ->
-            outputNodeStep readFn outputNode
+            OutputNode.step readFn outputNode
                 |> mapFirst ONW
 
 
@@ -257,6 +213,7 @@ type alias Sim =
     }
 
 
+initialSim : Sim
 initialSim =
     let
         inputNode : InputNode
@@ -265,7 +222,7 @@ initialSim =
 
         outputNode : OutputNode
         outputNode =
-            outputNodeInit 3
+            OutputNode.fromExpected 3
 
         nodeList : List Node
         nodeList =
@@ -275,7 +232,7 @@ initialSim =
         nodeStore =
             nodeList |> List.indexedMap pair |> Dict.fromList
     in
-    Sim nodeStore 0
+    { nodeStore = nodeStore, cycle = 0 }
 
 
 viewSim : Sim -> Html Msg
