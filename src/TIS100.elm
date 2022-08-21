@@ -258,6 +258,7 @@ viewSim sim =
     div [ dGrid ] (Dict.toList sim.nodeStore |> List.map viewNode)
 
 
+viewNode : NodeEntry -> Html Msg
 viewNode ( nodeAddr, node ) =
     let
         nodeInfo =
