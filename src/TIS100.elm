@@ -68,8 +68,8 @@ view =
         ]
 
 
-type alias Node =
-    String
+type Node
+    = Node
 
 
 stepSim : Sim -> Sim
@@ -94,6 +94,6 @@ type alias Sim =
 initialSim =
     let
         nodeList =
-            [ "node1", "node2", "node3" ]
+            List.repeat 3 Node
     in
     Sim nodeList 0
