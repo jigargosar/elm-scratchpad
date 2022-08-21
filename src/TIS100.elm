@@ -78,26 +78,32 @@ type Node
 
 
 type InputNode
-    = InputNode NodeState (List Num)
-
-
-inputNodeState : InputNode -> NodeState
-inputNodeState (InputNode st _) =
-    st
-
-
-nodeState : Node -> NodeState
-nodeState node =
-    case node of
-        InputNodeWrapper n ->
-            inputNodeState n
-
-
-type NodeState
     = Idle
-    | Run
-    | Read
-    | Write
+    | Run Num (List Num)
+    | Write Num (List Num)
+
+
+inputNodeInitFromList : List Num -> InputNode
+inputNodeInitFromList nums =
+    case nums of
+        f :: r ->
+            Run f r
+
+        [] ->
+            Idle
+
+
+inputNodeStep : InputNode -> InputNode
+inputNodeStep node =
+    case node of
+        Run n ns ->
+            Write n ns
+
+        Write _ _ ->
+            node
+
+        Idle ->
+            node
 
 
 stepSim : Sim -> Sim
@@ -110,7 +116,9 @@ stepSim sim =
 
 stepNode : Node -> Node
 stepNode node =
-    node
+    case node of
+        InputNodeWrapper inputNode ->
+            InputNodeWrapper (inputNodeStep inputNode)
 
 
 type alias Sim =
@@ -123,7 +131,7 @@ initialSim =
     let
         inputNode : InputNode
         inputNode =
-            InputNode Run [ Num ]
+            inputNodeInitFromList [ Num, Num, Num ]
 
         nodeList : List Node
         nodeList =
@@ -139,7 +147,7 @@ viewSim sim =
 viewNode i node =
     let
         nodeInfo =
-            ( i, node, ( "Mode", nodeState node ) )
+            ( i, node )
     in
     div []
         [ text <| Debug.toString nodeInfo
