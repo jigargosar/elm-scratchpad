@@ -1,6 +1,5 @@
 module TIS100 exposing (main)
 
-import Basics
 import Utils exposing (..)
 
 
@@ -51,5 +50,19 @@ viewDocument : Model -> Document Msg
 viewDocument _ =
     Document "ELM TIS 100 CLONE"
         [ basicStylesNode
-        , text "BrowserDocumentTemplate"
+
+        --, text "BrowserDocumentTemplate"
+        , viewNodeList
         ]
+
+
+viewNodeList =
+    let
+        nodeList =
+            [ "node1", "node2", "node3" ]
+    in
+    div [] (nodeList |> List.map viewNode)
+
+
+viewNode s =
+    div [] [ text s ]
