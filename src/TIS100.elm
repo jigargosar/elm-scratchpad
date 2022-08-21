@@ -63,6 +63,10 @@ view =
             initialSim
                 |> stepSim
                 |> stepSim
+                |> stepSim
+                |> stepSim
+                |> stepSim
+                |> stepSim
                 |> identity
     in
     div []
@@ -135,20 +139,24 @@ outputNodeInit expected =
 
 outputNodeStep : (() -> Maybe ( Num, a )) -> OutputNode -> ( OutputNode, Maybe a )
 outputNodeStep readFn node =
-    case node of
-        ON_Idle _ ->
-            ( node, Nothing )
-
-        ON_Run int nums ->
+    let
+        attemptRead int nums =
             case readFn () of
                 Nothing ->
                     ( ON_Read int nums, Nothing )
 
                 Just ( num, a ) ->
                     ( ON_Run (int - 1) (num :: nums), Just a )
-
-        ON_Read _ _ ->
+    in
+    case node of
+        ON_Idle _ ->
             ( node, Nothing )
+
+        ON_Run int nums ->
+            attemptRead int nums
+
+        ON_Read int nums ->
+            attemptRead int nums
 
 
 stepSim : Sim -> Sim
@@ -178,13 +186,17 @@ stepNodeStore ns =
 
                         Nothing ->
                             let
+                                _ =
+                                    Debug.log "Debug: " p
+
                                 readFn () =
                                     let
                                         kPrev : NodeAddr
                                         kPrev =
-                                            k - 1
+                                            (k - 1)
+                                                |> Debug.log "Debug: "
                                     in
-                                    Dict.get kPrev p
+                                    Dict.get kPrev (Debug.log "Debug: " p)
                                         |> Maybe.andThen
                                             (\n ->
                                                 readNode n
@@ -253,7 +265,7 @@ initialSim =
 
         outputNode : OutputNode
         outputNode =
-            outputNodeInit 3
+            outputNodeInit 1
 
         nodeList : List Node
         nodeList =
