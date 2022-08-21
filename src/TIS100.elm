@@ -74,18 +74,18 @@ type Num
 
 
 type Node
+    = InputNodeWrapper InputNode
+
+
+type InputNode
     = InputNode (List Num)
 
 
 nodeState : Node -> NodeState
 nodeState node =
     case node of
-        InputNode nums ->
-            if List.isEmpty nums then
-                Idle
-
-            else
-                Run
+        InputNodeWrapper _ ->
+            Idle
 
 
 type NodeState
@@ -116,13 +116,13 @@ type alias Sim =
 
 initialSim =
     let
-        inputNode : Node
+        inputNode : InputNode
         inputNode =
             InputNode [ Num ]
 
         nodeList : List Node
         nodeList =
-            [ inputNode ]
+            [ InputNodeWrapper inputNode ]
     in
     Sim nodeList 0
 
