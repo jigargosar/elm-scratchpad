@@ -1,5 +1,6 @@
 module TIS100 exposing (main)
 
+import Dict exposing (Dict)
 import Utils exposing (..)
 
 
@@ -148,9 +149,14 @@ outputNodeStep node =
 stepSim : Sim -> Sim
 stepSim sim =
     { sim
-        | nodes = List.map stepNode sim.nodes
+        | nodeStore = stepNodeStore sim.nodeStore
         , cycle = sim.cycle + 1
     }
+
+
+stepNodeStore : NodeStore -> NodeStore
+stepNodeStore ns =
+    ns
 
 
 stepNode : Node -> Node
@@ -174,8 +180,16 @@ readNode node =
             Nothing
 
 
+type alias NodeAddr =
+    Int
+
+
+type alias NodeStore =
+    Dict NodeAddr Node
+
+
 type alias Sim =
-    { nodes : List Node
+    { nodeStore : NodeStore
     , cycle : Int
     }
 
@@ -193,18 +207,23 @@ initialSim =
         nodeList : List Node
         nodeList =
             [ INW inputNode, ONW outputNode ]
+
+        nodeStore : NodeStore
+        nodeStore =
+            nodeList |> List.indexedMap pair |> Dict.fromList
     in
-    Sim nodeList 0
+    Sim nodeStore 0
 
 
+viewSim : Sim -> Html Msg
 viewSim sim =
-    div [] (List.indexedMap viewNode sim.nodes)
+    div [] (Dict.toList sim.nodeStore |> List.map viewNode)
 
 
-viewNode i node =
+viewNode ( nodeAddr, node ) =
     let
         nodeInfo =
-            ( i, node )
+            ( nodeAddr, node )
     in
     div []
         [ text <| Debug.toString nodeInfo
