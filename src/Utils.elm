@@ -1246,6 +1246,16 @@ dGrid =
     style "display" "grid"
 
 
+gridAreaXY : ( Int, Int ) -> Attribute msg
+gridAreaXY ( c, r ) =
+    style "grid-area" (fromInt (r + 1) ++ "/" ++ fromInt (c + 1))
+
+
+gridArea : String -> Attribute msg
+gridArea =
+    style "grid-area"
+
+
 gridAutoFlowColumn =
     style "grid-auto-flow" "column"
 

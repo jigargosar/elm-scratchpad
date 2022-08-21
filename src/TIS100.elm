@@ -266,8 +266,3 @@ viewNode ( nodeAddr, node ) =
     div [ gridAreaXY nodeAddr ]
         [ text <| Debug.toString nodeInfo
         ]
-
-
-gridAreaXY : ( Int, Int ) -> Attribute msg
-gridAreaXY ( c, r ) =
-    style "grid-area" (fromInt (r + 1) ++ "/" ++ fromInt (c + 1))
