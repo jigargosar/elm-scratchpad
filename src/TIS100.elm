@@ -64,7 +64,8 @@ view =
                 |> stepSim
     in
     div []
-        [ text <| Debug.toString sim
+        [ div [] [ text <| Debug.toString sim ]
+        , viewSim sim
         ]
 
 
@@ -124,3 +125,14 @@ initialSim =
             [ inputNode ]
     in
     Sim nodeList 0
+
+
+viewSim sim =
+    div [] (List.indexedMap viewNode sim.nodes)
+
+
+viewNode i node =
+    div []
+        [ div [] [ text <| Debug.toString ( i, node ) ]
+        , div [] [ text "Mode: ", text <| Debug.toString (nodeState node) ]
+        ]
