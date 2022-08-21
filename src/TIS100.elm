@@ -57,13 +57,32 @@ viewDocument _ =
 
 
 view =
+    let
+        sim =
+            initialSim
+                |> stepSim
+                |> stepSim
+    in
     div []
-        [ text <| Debug.toString initialSim
+        [ text <| Debug.toString sim
         ]
 
 
 type alias Node =
     String
+
+
+stepSim : Sim -> Sim
+stepSim sim =
+    { sim
+        | nodes = List.map stepNode sim.nodes
+        , cycle = sim.cycle + 1
+    }
+
+
+stepNode : Node -> Node
+stepNode node =
+    node
 
 
 type alias Sim =
