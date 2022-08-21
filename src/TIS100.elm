@@ -264,5 +264,6 @@ viewNode ( nodeAddr, node ) =
             ( nodeAddr, node )
     in
     div [ gridAreaXY nodeAddr ]
-        [ text <| Debug.toString nodeInfo
+        [ text (Debug.toString node)
+        , text (Debug.toString nodeInfo) |> always noView
         ]
