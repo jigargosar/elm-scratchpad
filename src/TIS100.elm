@@ -98,7 +98,10 @@ type alias Sim =
 
 initialSim =
     let
+        inputNode =
+            InputNode [ Num ]
+
         nodeList =
-            List.repeat 3 Node
+            inputNode :: List.repeat 2 Node
     in
     Sim nodeList 0
