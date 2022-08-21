@@ -68,8 +68,13 @@ view =
         ]
 
 
+type Num
+    = Num
+
+
 type Node
     = Node
+    | InputNode (List Num)
 
 
 stepSim : Sim -> Sim
