@@ -62,6 +62,7 @@ view =
             initialSim
                 |> stepSim
                 |> stepSim
+                |> identity
     in
     div []
         [ div [] [ text <| Debug.toString sim ]
