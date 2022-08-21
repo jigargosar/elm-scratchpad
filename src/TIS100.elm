@@ -144,23 +144,31 @@ outputNodeInit expected =
 outputNodeStep : (() -> Maybe ( Num, a )) -> OutputNode -> ( OutputNode, Maybe a )
 outputNodeStep readFn node =
     let
-        attemptRead int nums =
+        attemptRead pendingReads nums =
             case readFn () of
                 Nothing ->
-                    ( ON_Read int nums, Nothing )
+                    ( ON_Read pendingReads nums, Nothing )
 
                 Just ( num, a ) ->
-                    ( ON_Run (int - 1) (num :: nums), Just a )
+                    let
+                        fn =
+                            if pendingReads == 1 then
+                                ON_Idle
+
+                            else
+                                ON_Run (pendingReads - 1)
+                    in
+                    ( fn (num :: nums), Just a )
     in
     case node of
         ON_Idle _ ->
             ( node, Nothing )
 
-        ON_Run int nums ->
-            attemptRead int nums
+        ON_Run pendingReads nums ->
+            attemptRead pendingReads nums
 
-        ON_Read int nums ->
-            attemptRead int nums
+        ON_Read pendingReads nums ->
+            attemptRead pendingReads nums
 
 
 stepSim : Sim -> Sim
