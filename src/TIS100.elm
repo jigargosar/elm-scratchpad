@@ -134,7 +134,11 @@ type OutputNode
 
 outputNodeInit : Int -> OutputNode
 outputNodeInit expected =
-    ON_Run expected []
+    if expected <= 0 then
+        ON_Idle []
+
+    else
+        ON_Run expected []
 
 
 outputNodeStep : (() -> Maybe ( Num, a )) -> OutputNode -> ( OutputNode, Maybe a )
