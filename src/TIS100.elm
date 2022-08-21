@@ -1,6 +1,8 @@
 module TIS100 exposing (main)
 
 import Dict exposing (Dict)
+import TIS100.InputNode as InputNode exposing (InputNode)
+import TIS100.Num as Num exposing (Num)
 import Utils exposing (..)
 
 
@@ -75,55 +77,9 @@ view =
         ]
 
 
-type Num
-    = Num
-
-
 type Node
     = INW InputNode
     | ONW OutputNode
-
-
-type InputNode
-    = IN_Idle
-    | IN_Run Num (List Num)
-    | IN_Write Num (List Num)
-
-
-inputNodeInitFromList : List Num -> InputNode
-inputNodeInitFromList nums =
-    case nums of
-        f :: r ->
-            IN_Run f r
-
-        [] ->
-            IN_Idle
-
-
-inputNodeStep : InputNode -> InputNode
-inputNodeStep node =
-    case node of
-        IN_Run n ns ->
-            IN_Write n ns
-
-        IN_Write _ _ ->
-            node
-
-        IN_Idle ->
-            node
-
-
-inputNodeRead : InputNode -> Maybe ( Num, InputNode )
-inputNodeRead node =
-    case node of
-        IN_Idle ->
-            Nothing
-
-        IN_Run _ _ ->
-            Nothing
-
-        IN_Write num nums ->
-            Just ( num, inputNodeInitFromList nums )
 
 
 type OutputNode
@@ -260,7 +216,7 @@ stepNode : ReadFn a -> Node -> ( Node, Maybe a )
 stepNode readFn node =
     case node of
         INW inputNode ->
-            ( INW (inputNodeStep inputNode), Nothing )
+            ( INW (InputNode.step inputNode), Nothing )
 
         ONW outputNode ->
             outputNodeStep readFn outputNode
@@ -271,7 +227,7 @@ readNode : Node -> Maybe ( Num, Node )
 readNode node =
     case node of
         INW inputNode ->
-            inputNodeRead inputNode
+            InputNode.read inputNode
                 |> Maybe.map (mapSecond INW)
 
         ONW _ ->
@@ -305,7 +261,7 @@ initialSim =
     let
         inputNode : InputNode
         inputNode =
-            inputNodeInitFromList [ Num, Num, Num ]
+            InputNode.fromList (List.repeat 3 Num.zero)
 
         outputNode : OutputNode
         outputNode =
