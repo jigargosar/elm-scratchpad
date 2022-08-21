@@ -74,6 +74,7 @@ view =
     in
     div []
         [ div [] [ text <| Debug.toString sim ]
+            |> always noView
         , viewSim sim
         ]
 
