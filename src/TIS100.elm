@@ -60,6 +60,7 @@ viewDocument _ =
         ]
 
 
+view : Html Msg
 view =
     let
         sim =
@@ -79,9 +80,60 @@ view =
         ]
 
 
+type alias NodeAddr =
+    ( Int, Int )
+
+
 type Node
     = InputNode InputNode
     | OutputNode OutputNode
+
+
+type alias NodeStore =
+    Dict NodeAddr Node
+
+
+type alias NodeEntry =
+    ( NodeAddr, Node )
+
+
+type alias Sim =
+    { nodeStore : NodeStore
+    , cycle : Int
+    }
+
+
+initInputNode : Int -> Node
+initInputNode nums =
+    InputNode (InputNode.fromList (List.repeat nums Num.zero))
+
+
+initOutputNode : Int -> Node
+initOutputNode expected =
+    OutputNode (OutputNode.fromExpected expected)
+
+
+initialSim : Sim
+initialSim =
+    let
+        nodeStoreCol1 : NodeStore
+        nodeStoreCol1 =
+            [ initInputNode 3, initOutputNode 3 ]
+                |> List.indexedMap pair
+                |> List.map (mapFirst (pair 0))
+                |> Dict.fromList
+
+        nodeStoreCol2 : NodeStore
+        nodeStoreCol2 =
+            [ initInputNode 1, initOutputNode 3 ]
+                |> List.indexedMap pair
+                |> List.map (mapFirst (pair 1))
+                |> Dict.fromList
+
+        nodeStore =
+            Dict.union nodeStoreCol1 nodeStoreCol2
+    in
+    { nodeStore = nodeStore, cycle = 0 }
 
 
 stepSim : Sim -> Sim
@@ -160,13 +212,13 @@ addrUp ( x, y ) =
 
 
 initReadFn : NodeAddr -> NodeStore -> ReadFn NodeEntry
-initReadFn addr p () =
+initReadFn addr writeBlocked () =
     let
         readFromAddr : NodeAddr
         readFromAddr =
             addrUp addr
     in
-    Dict.get readFromAddr p
+    Dict.get readFromAddr writeBlocked
         |> Maybe.andThen
             (\n ->
                 readNode n
@@ -199,57 +251,6 @@ readNode node =
 isWriteBlocked : Node -> Bool
 isWriteBlocked =
     readNode >> maybeToBool
-
-
-type alias NodeAddr =
-    ( Int, Int )
-
-
-type alias NodeStore =
-    Dict NodeAddr Node
-
-
-type alias NodeEntry =
-    ( NodeAddr, Node )
-
-
-type alias Sim =
-    { nodeStore : NodeStore
-    , cycle : Int
-    }
-
-
-initInputNode : Int -> Node
-initInputNode nums =
-    InputNode (InputNode.fromList (List.repeat nums Num.zero))
-
-
-initOutputNode : Int -> Node
-initOutputNode expected =
-    OutputNode (OutputNode.fromExpected expected)
-
-
-initialSim : Sim
-initialSim =
-    let
-        nodeStoreCol1 : NodeStore
-        nodeStoreCol1 =
-            [ initInputNode 3, initOutputNode 3 ]
-                |> List.indexedMap pair
-                |> List.map (mapFirst (pair 0))
-                |> Dict.fromList
-
-        nodeStoreCol2 : NodeStore
-        nodeStoreCol2 =
-            [ initInputNode 1, initOutputNode 3 ]
-                |> List.indexedMap pair
-                |> List.map (mapFirst (pair 1))
-                |> Dict.fromList
-
-        nodeStore =
-            Dict.union nodeStoreCol1 nodeStoreCol2
-    in
-    { nodeStore = nodeStore, cycle = 0 }
 
 
 viewSim : Sim -> Html Msg
