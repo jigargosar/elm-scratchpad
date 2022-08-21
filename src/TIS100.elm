@@ -156,6 +156,43 @@ stepSim sim =
 
 stepNodeStore : NodeStore -> NodeStore
 stepNodeStore ns =
+    let
+        ( writeResolved, others ) =
+            Dict.foldl
+                (\a n ->
+                    case readNode n of
+                        Just x ->
+                            mapFirst (Dict.insert a x)
+
+                        Nothing ->
+                            mapSecond (Dict.insert a n)
+                )
+                ( Dict.empty, Dict.empty )
+                ns
+
+        pendingKeys =
+            Dict.keys ns
+
+        completedStore =
+            Dict.empty
+
+        _ =
+            Dict.foldl
+                (\k v ( p, c ) ->
+                    case readNode v of
+                        Just _ ->
+                            ( p, c )
+
+                        Nothing ->
+                            let
+                                nv =
+                                    stepNode v
+                            in
+                            ( Dict.remove k p, Dict.insert k nv c )
+                )
+                ( ns, Dict.empty )
+                ns
+    in
     ns
 
 
@@ -186,6 +223,10 @@ type alias NodeAddr =
 
 type alias NodeStore =
     Dict NodeAddr Node
+
+
+type alias NodeEntry =
+    ( NodeAddr, Node )
 
 
 type alias Sim =
