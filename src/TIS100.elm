@@ -191,24 +191,20 @@ stepNodeStore ns =
 
         ret =
             Dict.foldl
-                (\k v (( p, c ) as acc) ->
+                (\k v (( p, _ ) as acc) ->
                     case readNode v of
                         Just _ ->
                             acc
 
                         Nothing ->
                             let
-                                _ =
-                                    Debug.log "Debug: " p
-
                                 readFn () =
                                     let
                                         kPrev : NodeAddr
                                         kPrev =
-                                            (k - 1)
-                                                |> Debug.log "Debug: "
+                                            k - 1
                                     in
-                                    Dict.get kPrev (Debug.log "Debug: " p)
+                                    Dict.get kPrev p
                                         |> Maybe.andThen
                                             (\n ->
                                                 readNode n
