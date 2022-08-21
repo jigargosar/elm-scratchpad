@@ -78,14 +78,19 @@ type Node
 
 
 type InputNode
-    = InputNode (List Num)
+    = InputNode NodeState (List Num)
+
+
+inputNodeState : InputNode -> NodeState
+inputNodeState (InputNode st _) =
+    st
 
 
 nodeState : Node -> NodeState
 nodeState node =
     case node of
-        InputNodeWrapper _ ->
-            Idle
+        InputNodeWrapper n ->
+            inputNodeState n
 
 
 type NodeState
@@ -118,7 +123,7 @@ initialSim =
     let
         inputNode : InputNode
         inputNode =
-            InputNode [ Num ]
+            InputNode Run [ Num ]
 
         nodeList : List Node
         nodeList =
