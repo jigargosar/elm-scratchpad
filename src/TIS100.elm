@@ -141,7 +141,7 @@ outputNodeInit expected =
         ON_Run expected []
 
 
-outputNodeStep : (() -> Maybe ( Num, a )) -> OutputNode -> ( OutputNode, Maybe a )
+outputNodeStep : ReadFn a -> OutputNode -> ( OutputNode, Maybe a )
 outputNodeStep readFn node =
     let
         attemptRead pendingReads nums =
@@ -174,28 +174,76 @@ outputNodeStep readFn node =
 stepSim : Sim -> Sim
 stepSim sim =
     { sim
-        | nodeStore = stepNodeStore sim.nodeStore
+        | nodeStore = stepSimNodeStore sim.nodeStore
         , cycle = sim.cycle + 1
     }
 
 
+stepSimNodeStore : NodeStore -> NodeStore
+stepSimNodeStore ns =
+    let
+        toNodeStore : SimAcc -> NodeStore
+        toNodeStore { writeBlocked, completed } =
+            Dict.union writeBlocked completed
+    in
+    let
+        reducer : NodeAddr -> Node -> SimAcc -> SimAcc
+        reducer na n acc =
+            stepNode (initReadFn na acc.writeBlocked) n
+                |> updateAcc acc na
+
+        updateAcc acc na ( n, mbEntry ) =
+            { acc | completed = acc.completed |> Dict.insert na n }
+                |> updateAccWithMaybeWriteBlockedEntry mbEntry
+
+        updateAccWithMaybeWriteBlockedEntry mbEntry acc =
+            case mbEntry of
+                Just ( na, a ) ->
+                    { acc
+                        | writeBlocked = acc.writeBlocked |> Dict.remove na
+                        , completed = acc.completed |> Dict.insert na a
+                    }
+
+                Nothing ->
+                    acc
+    in
+    let
+        ( writeBlocked, pending ) =
+            Dict.partition (\_ -> isWriteBlocked) ns
+
+        acc : SimAcc
+        acc =
+            { writeBlocked = writeBlocked
+            , completed = Dict.empty
+            }
+    in
+    Dict.foldl reducer acc pending
+        |> toNodeStore
+
+
 type alias SimAcc =
     { writeBlocked : NodeStore
-    , pending : NodeStore
     , completed : NodeStore
     }
 
 
-initSimAcc : NodeStore -> SimAcc
-initSimAcc ns =
+type alias ReadFn a =
+    () -> Maybe ( Num, a )
+
+
+initReadFn : NodeAddr -> NodeStore -> ReadFn NodeEntry
+initReadFn k p () =
     let
-        ( writeBlocked, pending ) =
-            Dict.partition (\_ -> isWriteBlocked) ns
+        kPrev : NodeAddr
+        kPrev =
+            k - 1
     in
-    { writeBlocked = writeBlocked
-    , pending = pending
-    , completed = Dict.empty
-    }
+    Dict.get kPrev p
+        |> Maybe.andThen
+            (\n ->
+                readNode n
+                    |> Maybe.map (mapSecond (pair kPrev))
+            )
 
 
 stepNodeStore : NodeStore -> NodeStore
@@ -244,7 +292,7 @@ stepNodeStore ns =
     ret
 
 
-stepNode : (() -> Maybe ( Num, a )) -> Node -> ( Node, Maybe a )
+stepNode : ReadFn a -> Node -> ( Node, Maybe a )
 stepNode readFn node =
     case node of
         INW inputNode ->
@@ -297,7 +345,7 @@ initialSim =
 
         outputNode : OutputNode
         outputNode =
-            outputNodeInit 1
+            outputNodeInit 3
 
         nodeList : List Node
         nodeList =
