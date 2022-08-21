@@ -79,8 +79,8 @@ view =
 
 
 type Node
-    = INW InputNode
-    | ONW OutputNode
+    = InputNode InputNode
+    | OutputNode OutputNode
 
 
 stepSim : Sim -> Sim
@@ -171,22 +171,22 @@ initReadFn k p () =
 stepNode : ReadFn a -> Node -> ( Node, Maybe a )
 stepNode readFn node =
     case node of
-        INW inputNode ->
-            ( INW (InputNode.step inputNode), Nothing )
+        InputNode inputNode ->
+            ( InputNode (InputNode.step inputNode), Nothing )
 
-        ONW outputNode ->
+        OutputNode outputNode ->
             OutputNode.step readFn outputNode
-                |> mapFirst ONW
+                |> mapFirst OutputNode
 
 
 readNode : Node -> Maybe ( Num, Node )
 readNode node =
     case node of
-        INW inputNode ->
+        InputNode inputNode ->
             InputNode.read inputNode
-                |> Maybe.map (mapSecond INW)
+                |> Maybe.map (mapSecond InputNode)
 
-        ONW _ ->
+        OutputNode _ ->
             Nothing
 
 
@@ -226,7 +226,7 @@ initialSim =
 
         nodeList : List Node
         nodeList =
-            [ INW inputNode, ONW outputNode ]
+            [ InputNode inputNode, OutputNode outputNode ]
 
         nodeStore : NodeStore
         nodeStore =
