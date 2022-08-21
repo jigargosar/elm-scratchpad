@@ -179,6 +179,25 @@ stepSim sim =
     }
 
 
+type alias SimAcc =
+    { writeBlocked : NodeStore
+    , pending : NodeStore
+    , completed : NodeStore
+    }
+
+
+initSimAcc : NodeStore -> SimAcc
+initSimAcc ns =
+    let
+        ( writeBlocked, pending ) =
+            Dict.partition (\_ -> isWriteBlocked) ns
+    in
+    { writeBlocked = writeBlocked
+    , pending = pending
+    , completed = Dict.empty
+    }
+
+
 stepNodeStore : NodeStore -> NodeStore
 stepNodeStore ns =
     let
@@ -245,6 +264,11 @@ readNode node =
 
         ONW _ ->
             Nothing
+
+
+isWriteBlocked : Node -> Bool
+isWriteBlocked =
+    readNode >> maybeToBool
 
 
 type alias NodeAddr =
