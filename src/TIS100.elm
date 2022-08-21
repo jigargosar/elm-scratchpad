@@ -153,18 +153,23 @@ type alias ReadFn a =
     () -> Maybe ( Num, a )
 
 
+addrUp : NodeAddr -> NodeAddr
+addrUp ( x, y ) =
+    ( x, y - 1 )
+
+
 initReadFn : NodeAddr -> NodeStore -> ReadFn NodeEntry
-initReadFn k p () =
+initReadFn addr p () =
     let
-        kPrev : NodeAddr
-        kPrev =
-            k - 1
+        readFromAddr : NodeAddr
+        readFromAddr =
+            addrUp addr
     in
-    Dict.get kPrev p
+    Dict.get readFromAddr p
         |> Maybe.andThen
             (\n ->
                 readNode n
-                    |> Maybe.map (mapSecond (pair kPrev))
+                    |> Maybe.map (mapSecond (pair readFromAddr))
             )
 
 
@@ -196,7 +201,7 @@ isWriteBlocked =
 
 
 type alias NodeAddr =
-    Int
+    ( Int, Int )
 
 
 type alias NodeStore =
@@ -230,7 +235,10 @@ initialSim =
 
         nodeStore : NodeStore
         nodeStore =
-            nodeList |> List.indexedMap pair |> Dict.fromList
+            nodeList
+                |> List.indexedMap pair
+                |> List.map (mapFirst (pair 0))
+                |> Dict.fromList
     in
     { nodeStore = nodeStore, cycle = 0 }
 
