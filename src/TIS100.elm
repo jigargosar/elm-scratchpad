@@ -64,11 +64,11 @@ view =
     let
         sim =
             initialSim
-                --|> stepSim
-                --|> stepSim
-                --|> stepSim
-                --|> stepSim
-                --|> stepSim
+                |> stepSim
+                |> stepSim
+                |> stepSim
+                |> stepSim
+                |> stepSim
                 |> stepSim
                 |> identity
     in
@@ -218,27 +218,35 @@ type alias Sim =
     }
 
 
+initInputNode : Int -> Node
+initInputNode nums =
+    InputNode (InputNode.fromList (List.repeat nums Num.zero))
+
+
+initOutputNode : Int -> Node
+initOutputNode expected =
+    OutputNode (OutputNode.fromExpected expected)
+
+
 initialSim : Sim
 initialSim =
     let
-        inputNode : InputNode
-        inputNode =
-            InputNode.fromList (List.repeat 3 Num.zero)
-
-        outputNode : OutputNode
-        outputNode =
-            OutputNode.fromExpected 3
-
-        nodeList : List Node
-        nodeList =
-            [ InputNode inputNode, OutputNode outputNode ]
-
-        nodeStore : NodeStore
-        nodeStore =
-            nodeList
+        nodeStoreCol1 : NodeStore
+        nodeStoreCol1 =
+            [ initInputNode 3, initOutputNode 3 ]
                 |> List.indexedMap pair
                 |> List.map (mapFirst (pair 0))
                 |> Dict.fromList
+
+        nodeStoreCol2 : NodeStore
+        nodeStoreCol2 =
+            [ initInputNode 1, initOutputNode 3 ]
+                |> List.indexedMap pair
+                |> List.map (mapFirst (pair 1))
+                |> Dict.fromList
+
+        nodeStore =
+            Dict.union nodeStoreCol1 nodeStoreCol2
     in
     { nodeStore = nodeStore, cycle = 0 }
 
