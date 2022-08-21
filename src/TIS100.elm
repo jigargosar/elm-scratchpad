@@ -255,7 +255,7 @@ isWriteBlocked =
 
 viewSim : Sim -> Html Msg
 viewSim sim =
-    div [] (Dict.toList sim.nodeStore |> List.map viewNode)
+    div [ dGrid ] (Dict.toList sim.nodeStore |> List.map viewNode)
 
 
 viewNode ( nodeAddr, node ) =
@@ -263,6 +263,11 @@ viewNode ( nodeAddr, node ) =
         nodeInfo =
             ( nodeAddr, node )
     in
-    div []
+    div [ gridAreaXY nodeAddr ]
         [ text <| Debug.toString nodeInfo
         ]
+
+
+gridAreaXY : ( Int, Int ) -> Attribute msg
+gridAreaXY ( c, r ) =
+    style "grid-area" (fromInt (r + 1) ++ "/" ++ fromInt (c + 1))
