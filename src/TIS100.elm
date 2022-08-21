@@ -85,30 +85,6 @@ type InputNode
     | IN_Write Num (List Num)
 
 
-type OutputNode
-    = ON_Idle (List Num)
-    | ON_Run Int (List Num)
-    | ON_Read Int (List Num)
-
-
-outputNodeInit : Int -> OutputNode
-outputNodeInit expected =
-    ON_Run expected []
-
-
-outputNodeStep : OutputNode -> OutputNode
-outputNodeStep node =
-    case node of
-        ON_Idle _ ->
-            node
-
-        ON_Run int nums ->
-            ON_Read int nums
-
-        ON_Read _ _ ->
-            node
-
-
 inputNodeInitFromList : List Num -> InputNode
 inputNodeInitFromList nums =
     case nums of
@@ -145,6 +121,30 @@ inputNodeRead node =
             Just ( num, inputNodeInitFromList nums )
 
 
+type OutputNode
+    = ON_Idle (List Num)
+    | ON_Run Int (List Num)
+    | ON_Read Int (List Num)
+
+
+outputNodeInit : Int -> OutputNode
+outputNodeInit expected =
+    ON_Run expected []
+
+
+outputNodeStep : OutputNode -> OutputNode
+outputNodeStep node =
+    case node of
+        ON_Idle _ ->
+            node
+
+        ON_Run int nums ->
+            ON_Read int nums
+
+        ON_Read _ _ ->
+            node
+
+
 stepSim : Sim -> Sim
 stepSim sim =
     { sim
@@ -161,6 +161,17 @@ stepNode node =
 
         ONW outputNode ->
             ONW (outputNodeStep outputNode)
+
+
+readNode : Node -> Maybe ( Num, Node )
+readNode node =
+    case node of
+        INW inputNode ->
+            inputNodeRead inputNode
+                |> Maybe.map (mapSecond INW)
+
+        ONW _ ->
+            Nothing
 
 
 type alias Sim =
