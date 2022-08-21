@@ -174,57 +174,67 @@ outputNodeStep readFn node =
 stepSim : Sim -> Sim
 stepSim sim =
     { sim
-        | nodeStore = stepSimNodeStore sim.nodeStore
+        | nodeStore = stepSimHelp sim.nodeStore
         , cycle = sim.cycle + 1
     }
 
 
-stepSimNodeStore : NodeStore -> NodeStore
-stepSimNodeStore ns =
+stepSimHelp : NodeStore -> NodeStore
+stepSimHelp ns =
     let
         toNodeStore : SimAcc -> NodeStore
         toNodeStore { writeBlocked, completed } =
             Dict.union writeBlocked completed
     in
     let
-        reducer : NodeAddr -> Node -> SimAcc -> SimAcc
-        reducer na n acc =
-            stepNode (initReadFn na acc.writeBlocked) n
-                |> updateAcc acc na
-
-        updateAcc acc na ( n, mbEntry ) =
-            { acc | completed = acc.completed |> Dict.insert na n }
-                |> updateAccWithMaybeWriteBlockedEntry mbEntry
-
-        updateAccWithMaybeWriteBlockedEntry mbEntry acc =
-            case mbEntry of
-                Just ( na, a ) ->
-                    { acc
-                        | writeBlocked = acc.writeBlocked |> Dict.remove na
-                        , completed = acc.completed |> Dict.insert na a
-                    }
-
-                Nothing ->
-                    acc
-    in
-    let
         ( writeBlocked, pending ) =
             Dict.partition (\_ -> isWriteBlocked) ns
 
-        acc : SimAcc
-        acc =
+        initialAcc : SimAcc
+        initialAcc =
             { writeBlocked = writeBlocked
             , completed = Dict.empty
             }
+
+        stepper addr node acc =
+            let
+                readFn =
+                    initReadFn addr acc.writeBlocked
+            in
+            updateSimAcc addr (stepNode readFn node) acc
     in
-    Dict.foldl reducer acc pending
-        |> toNodeStore
+    Dict.foldl stepper initialAcc pending |> toNodeStore
 
 
 type alias SimAcc =
     { writeBlocked : NodeStore
     , completed : NodeStore
     }
+
+
+updateSimAcc : NodeAddr -> ( Node, Maybe NodeEntry ) -> SimAcc -> SimAcc
+updateSimAcc addr ( node, mbEntry ) acc =
+    acc
+        |> simAccAdd ( addr, node )
+        |> simAccAddMaybe mbEntry
+
+
+simAccAdd : NodeEntry -> SimAcc -> SimAcc
+simAccAdd ( na, n ) acc =
+    { acc
+        | writeBlocked = acc.writeBlocked |> Dict.remove na
+        , completed = acc.completed |> Dict.insert na n
+    }
+
+
+simAccAddMaybe : Maybe NodeEntry -> SimAcc -> SimAcc
+simAccAddMaybe mbEntry acc =
+    case mbEntry of
+        Just entry ->
+            simAccAdd entry acc
+
+        Nothing ->
+            acc
 
 
 type alias ReadFn a =
@@ -244,52 +254,6 @@ initReadFn k p () =
                 readNode n
                     |> Maybe.map (mapSecond (pair kPrev))
             )
-
-
-stepNodeStore : NodeStore -> NodeStore
-stepNodeStore ns =
-    let
-        removeInsert ( k, v ) ( p, n ) =
-            ( Dict.remove k p, Dict.insert k v n )
-
-        removeInsertMaybe mb val =
-            Maybe.map (\kv -> removeInsert kv val) mb
-                |> Maybe.withDefault val
-
-        ret =
-            Dict.foldl
-                (\k v (( p, _ ) as acc) ->
-                    case readNode v of
-                        Just _ ->
-                            acc
-
-                        Nothing ->
-                            let
-                                readFn () =
-                                    let
-                                        kPrev : NodeAddr
-                                        kPrev =
-                                            k - 1
-                                    in
-                                    Dict.get kPrev p
-                                        |> Maybe.andThen
-                                            (\n ->
-                                                readNode n
-                                                    |> Maybe.map (mapSecond (pair kPrev))
-                                            )
-
-                                ( nv, mbNKV ) =
-                                    stepNode readFn v
-                            in
-                            acc
-                                |> removeInsert ( k, nv )
-                                |> removeInsertMaybe mbNKV
-                )
-                ( ns, Dict.empty )
-                ns
-                |> (\( p, c ) -> Dict.union p c)
-    in
-    ret
 
 
 stepNode : ReadFn a -> Node -> ( Node, Maybe a )
