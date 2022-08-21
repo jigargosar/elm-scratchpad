@@ -52,17 +52,29 @@ viewDocument _ =
         [ basicStylesNode
 
         --, text "BrowserDocumentTemplate"
-        , viewNodeList
+        , view
         ]
 
 
-viewNodeList =
+view =
+    div []
+        [ text <| Debug.toString initialSim
+        ]
+
+
+type alias Node =
+    String
+
+
+type alias Sim =
+    { nodes : List Node
+    , cycle : Int
+    }
+
+
+initialSim =
     let
         nodeList =
             [ "node1", "node2", "node3" ]
     in
-    div [] (nodeList |> List.map viewNode)
-
-
-viewNode s =
-    div [] [ text s ]
+    Sim nodeList 0
