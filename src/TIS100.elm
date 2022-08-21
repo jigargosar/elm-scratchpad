@@ -132,7 +132,10 @@ viewSim sim =
 
 
 viewNode i node =
+    let
+        nodeInfo =
+            ( i, node, ( "Mode", nodeState node ) )
+    in
     div []
-        [ div [] [ text <| Debug.toString ( i, node ) ]
-        , div [] [ text "Mode: ", text <| Debug.toString (nodeState node) ]
+        [ text <| Debug.toString nodeInfo
         ]
