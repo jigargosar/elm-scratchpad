@@ -116,22 +116,22 @@ initOutputNode expected =
 initialSim : Sim
 initialSim =
     let
-        nodeStoreCol1 : NodeStore
-        nodeStoreCol1 =
+        col1 : NodeStore
+        col1 =
             [ initInputNode 3, initOutputNode 3 ]
                 |> List.indexedMap pair
                 |> List.map (mapFirst (pair 0))
                 |> Dict.fromList
 
-        nodeStoreCol2 : NodeStore
-        nodeStoreCol2 =
+        col2 : NodeStore
+        col2 =
             [ initInputNode 1, initOutputNode 3 ]
                 |> List.indexedMap pair
                 |> List.map (mapFirst (pair 1))
                 |> Dict.fromList
 
         nodeStore =
-            Dict.union nodeStoreCol1 nodeStoreCol2
+            Dict.union col1 col2
     in
     { nodeStore = nodeStore, cycle = 0 }
 
