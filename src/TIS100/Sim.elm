@@ -132,16 +132,9 @@ resolveReadBlocked num node acc =
     Debug.todo "todo"
 
 
-stepReadBlocked : Node -> Acc -> Acc
-stepReadBlocked node acc =
-    case getReadQuery node of
-        Just na ->
-            readFromAndResolveWriteBlocked na acc
-                |> Maybe.map (\( num, acc2 ) -> resolveReadBlocked num node acc2)
-                |> Maybe.withDefault acc
-
-        Nothing ->
-            acc
+resolveIO : Acc -> Acc
+resolveIO acc =
+    Debug.todo "todo"
 
 
 completeAllBlocked : Acc -> NodeStore
@@ -152,8 +145,8 @@ completeAllBlocked acc =
 stepNodes : NodeStore -> NodeStore
 stepNodes ns =
     let
-        stepperPass1 : Node -> Acc -> Acc
-        stepperPass1 node =
+        stepperPass1 : NodeAddr -> Node -> Acc -> Acc
+        stepperPass1 na node =
             case nodeState node of
                 WriteBlocked ->
                     addToWriteBlocked node
@@ -167,7 +160,9 @@ stepNodes ns =
                 ReadyToRun ->
                     handleReadBlockedOrMarkCompleted (runNode node)
     in
-    Debug.todo "todo"
+    Dict.foldl stepperPass1 (Acc Dict.empty Dict.empty) ns
+        |> resolveIO
+        |> completeAllBlocked
 
 
 stepHelp : NodeStore -> NodeStore
