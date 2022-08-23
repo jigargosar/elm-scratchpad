@@ -109,6 +109,7 @@ classifyNodes ns =
 resolveAllRunnable : Acc -> Acc
 resolveAllRunnable initialAcc =
     let
+        resolveRunnable : NodeAddr -> Node -> Acc -> Acc
         resolveRunnable na n acc =
             Debug.todo "todo"
     in
