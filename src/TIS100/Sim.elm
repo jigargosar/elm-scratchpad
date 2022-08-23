@@ -77,6 +77,14 @@ step sim =
     }
 
 
+stepNodes : NodeStore -> NodeStore
+stepNodes ns =
+    classifyNodes ns
+        |> resolveRunnable
+        |> resolveAllReadBlocked
+        |> resolveAllWriteBlocked
+
+
 nodeState : Node -> NodeState
 nodeState node =
     case node of
@@ -88,36 +96,23 @@ nodeState node =
 
 
 addToWriteBlocked : NodeAddr -> Node -> Acc -> Acc
-addToWriteBlocked node acc =
-    Debug.todo "todo"
+addToWriteBlocked na n acc =
+    { acc | writeBlocked = Dict.insert na n acc.writeBlocked }
 
 
 addToCompleted : NodeAddr -> Node -> Acc -> Acc
-addToCompleted node acc =
-    Debug.todo "todo"
+addToCompleted na n acc =
+    { acc | completed = Dict.insert na n acc.completed }
 
 
-addToReadBlocked =
-    Debug.todo "todo"
+addToReadBlocked : NodeAddr -> Node -> Acc -> Acc
+addToReadBlocked na n acc =
+    { acc | readBlocked = Dict.insert na n acc.readBlocked }
 
 
-addToRunnable =
-    Debug.todo "todo"
-
-
-getReadQuery : Node -> Maybe NodeAddr
-getReadQuery node =
-    Debug.todo "todo"
-
-
-readFromAndResolveWriteBlocked : NodeAddr -> Acc -> Maybe ( Num, Acc )
-readFromAndResolveWriteBlocked nodeAddr acc =
-    Debug.todo "todo"
-
-
-resolveReadBlocked : Num -> Node -> Acc -> Acc
-resolveReadBlocked num node acc =
-    Debug.todo "todo"
+addToRunnable : NodeAddr -> Node -> Acc -> Acc
+addToRunnable na n acc =
+    { acc | readyToRun = Dict.insert na n acc.readyToRun }
 
 
 resolveAllReadBlocked : Acc -> Acc
@@ -156,14 +151,6 @@ classifyNodes ns =
     Dict.foldl classifyNode emptyAcc ns
 
 
-stepNodes : NodeStore -> NodeStore
-stepNodes ns =
-    classifyNodes ns
-        |> resolveRunnable
-        |> resolveAllReadBlocked
-        |> resolveAllWriteBlocked
-
-
 stepHelp : NodeStore -> NodeStore
 stepHelp ns =
     let
@@ -177,9 +164,7 @@ stepHelp ns =
 
         initialAcc : Acc
         initialAcc =
-            { writeBlocked = writeBlocked
-            , completed = Dict.empty
-            }
+            { emptyAcc | writeBlocked = writeBlocked }
 
         stepper addr node acc =
             let
@@ -193,13 +178,15 @@ stepHelp ns =
 
 type alias Acc =
     { writeBlocked : NodeStore
+    , readBlocked : NodeStore
+    , readyToRun : NodeStore
     , completed : NodeStore
     }
 
 
 emptyAcc : Acc
 emptyAcc =
-    Acc Dict.empty Dict.empty
+    Acc Dict.empty Dict.empty Dict.empty Dict.empty
 
 
 accUpdate : NodeAddr -> ( Node, Maybe NodeEntry ) -> Acc -> Acc
