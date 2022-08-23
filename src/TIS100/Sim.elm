@@ -164,14 +164,14 @@ resolveAllWriteBlocked acc =
     Debug.todo "todo"
 
 
-nodeState : Node -> NodeState
+nodeState : Node -> NodeState Node
 nodeState node =
     case node of
         InputNode inputNode ->
-            InputNode.state inputNode
+            InputNode.state inputNode |> NS.map InputNode
 
         OutputNode outputNode ->
-            OutputNode.state outputNode
+            OutputNode.state outputNode |> NS.map OutputNode
 
 
 isReadBlocked : Node -> Bool

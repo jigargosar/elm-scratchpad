@@ -27,7 +27,7 @@ fromList nums =
             Done
 
 
-state : InputNode -> NodeState
+state : InputNode -> NodeState InputNode
 state node =
     case node of
         Done ->
