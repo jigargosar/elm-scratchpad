@@ -145,8 +145,8 @@ resolveRunnable addr node =
 resolveAfterRun : Addr -> Node -> Acc -> Acc
 resolveAfterRun addr node =
     case nodeState node of
-        State.Read fn ->
-            addToReadBlocked addr ( node, fn )
+        State.Read resolver ->
+            addToReadBlocked addr ( node, resolver )
 
         _ ->
             addToCompleted addr node
