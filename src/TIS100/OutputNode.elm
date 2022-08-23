@@ -1,9 +1,11 @@
 module TIS100.OutputNode exposing
     ( OutputNode
     , fromExpected
+    , state
     , step
     )
 
+import TIS100.NodeState as NS exposing (NodeState)
 import TIS100.Num exposing (Num)
 
 
@@ -24,6 +26,19 @@ fromExpected expected =
 
 type alias ReadFn a =
     () -> Maybe ( Num, a )
+
+
+state : OutputNode -> NodeState
+state node =
+    case node of
+        Done _ ->
+            NS.Done
+
+        Running _ _ ->
+            NS.ReadyToRun
+
+        ReadBlocked _ _ ->
+            NS.ReadBlocked
 
 
 step : ReadFn a -> OutputNode -> ( OutputNode, Maybe a )

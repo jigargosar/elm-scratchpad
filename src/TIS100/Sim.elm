@@ -7,6 +7,7 @@ module TIS100.Sim exposing
 
 import Dict exposing (Dict)
 import TIS100.InputNode as InputNode exposing (InputNode)
+import TIS100.NodeState as NS exposing (NodeState)
 import TIS100.Num as Num exposing (Num)
 import TIS100.OutputNode as OutputNode exposing (OutputNode)
 import Utils exposing (..)
@@ -76,16 +77,14 @@ step sim =
     }
 
 
-type NodeState
-    = WriteBlocked
-    | Idle
-    | ReadBlocked
-    | ReadyToRun
-
-
 nodeState : Node -> NodeState
 nodeState node =
-    Debug.todo "todo"
+    case node of
+        InputNode inputNode ->
+            InputNode.state inputNode
+
+        OutputNode outputNode ->
+            OutputNode.state outputNode
 
 
 addToWriteBlocked : NodeAddr -> Node -> Acc -> Acc
@@ -103,11 +102,6 @@ addToReadBlocked =
 
 
 addToRunnable =
-    Debug.todo "todo"
-
-
-runNode : Node -> Node
-runNode node =
     Debug.todo "todo"
 
 
@@ -147,16 +141,16 @@ classifyNodes ns =
         classifyNode : NodeAddr -> Node -> Acc -> Acc
         classifyNode na node =
             case nodeState node of
-                WriteBlocked ->
+                NS.WriteBlocked ->
                     addToWriteBlocked na node
 
-                Idle ->
+                NS.Done ->
                     addToCompleted na node
 
-                ReadBlocked ->
+                NS.ReadBlocked ->
                     addToReadBlocked na node
 
-                ReadyToRun ->
+                NS.ReadyToRun ->
                     addToRunnable na node
     in
     Dict.foldl classifyNode emptyAcc ns
@@ -249,6 +243,11 @@ initReadFn addr writeBlocked () =
             (\( na, n ) ->
                 readNode n |> Maybe.map (mapSecond (pair na))
             )
+
+
+runNode : Node -> Node
+runNode node =
+    Debug.todo "todo"
 
 
 stepNode : ReadFn a -> Node -> ( Node, Maybe a )
