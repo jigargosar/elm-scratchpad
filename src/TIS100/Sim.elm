@@ -141,8 +141,8 @@ resolveAllWriteBlocked acc =
     Debug.todo "todo"
 
 
-stepNodes : NodeStore -> NodeStore
-stepNodes ns =
+classifyNodes : NodeStore -> Acc
+classifyNodes ns =
     let
         classifyNode : NodeAddr -> Node -> Acc -> Acc
         classifyNode na node =
@@ -159,7 +159,12 @@ stepNodes ns =
                 ReadyToRun ->
                     addToRunnable na node
     in
-    Dict.foldl classifyNode (Acc Dict.empty Dict.empty) ns
+    Dict.foldl classifyNode emptyAcc ns
+
+
+stepNodes : NodeStore -> NodeStore
+stepNodes ns =
+    classifyNodes ns
         |> resolveRunnable
         |> resolveAllReadBlocked
         |> resolveAllWriteBlocked
@@ -196,6 +201,11 @@ type alias Acc =
     { writeBlocked : NodeStore
     , completed : NodeStore
     }
+
+
+emptyAcc : Acc
+emptyAcc =
+    Acc Dict.empty Dict.empty
 
 
 accUpdate : NodeAddr -> ( Node, Maybe NodeEntry ) -> Acc -> Acc
