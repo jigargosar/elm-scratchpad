@@ -7,13 +7,13 @@ module TIS100.Sim exposing
 
 import Dict exposing (Dict)
 import TIS100.InputNode as InputNode exposing (InputNode)
-import TIS100.NodeState as NS exposing (NodeState)
+import TIS100.NodeState as State exposing (NodeState)
 import TIS100.Num as Num exposing (Num)
 import TIS100.OutputNode as OutputNode exposing (OutputNode)
 import Utils exposing (..)
 
 
-type alias NodeAddr =
+type alias Addr =
     ( Int, Int )
 
 
@@ -22,12 +22,12 @@ type Node
     | OutputNode OutputNode
 
 
-type alias NodeStore =
-    Dict NodeAddr Node
+type alias Store =
+    Dict Addr Node
 
 
 type alias ReadBlockedStore =
-    Dict NodeAddr ReadBlockedNode
+    Dict Addr ReadBlockedNode
 
 
 type alias ReadBlockedNode =
@@ -39,15 +39,15 @@ type alias WriteBlockedNode =
 
 
 type alias WriteBlockedStore =
-    Dict NodeAddr WriteBlockedNode
+    Dict Addr WriteBlockedNode
 
 
 type alias NodeEntry =
-    ( NodeAddr, Node )
+    ( Addr, Node )
 
 
 type alias Sim =
-    { nodeStore : NodeStore
+    { nodeStore : Store
     , cycle : Int
     }
 
@@ -65,14 +65,14 @@ initOutputNode expected =
 init : Sim
 init =
     let
-        col1 : NodeStore
+        col1 : Store
         col1 =
             [ initInputNode 3, initOutputNode 3 ]
                 |> List.indexedMap pair
                 |> List.map (mapFirst (pair 0))
                 |> Dict.fromList
 
-        col2 : NodeStore
+        col2 : Store
         col2 =
             [ initInputNode 1, initOutputNode 3 ]
                 |> List.indexedMap pair
@@ -93,7 +93,7 @@ step sim =
     }
 
 
-stepNodes : NodeStore -> NodeStore
+stepNodes : Store -> Store
 stepNodes ns =
     classifyAllNodes ns
         |> resolveAllRunnable
@@ -101,24 +101,24 @@ stepNodes ns =
         |> resolveAllWriteBlocked
 
 
-classifyAllNodes : NodeStore -> Acc
+classifyAllNodes : Store -> Acc
 classifyAllNodes ns =
     Dict.foldl classifyNode emptyAcc ns
 
 
-classifyNode : NodeAddr -> Node -> Acc -> Acc
+classifyNode : Addr -> Node -> Acc -> Acc
 classifyNode na node =
     case nodeState node of
-        NS.Write num fn ->
+        State.Write num fn ->
             addToWriteBlocked na ( node, num, fn )
 
-        NS.Done ->
+        State.Done ->
             addToCompleted na node
 
-        NS.Read fn ->
+        State.Read fn ->
             addToReadBlocked na ( node, fn )
 
-        NS.Run ->
+        State.Run ->
             addToRunnable na node
 
 
@@ -126,10 +126,10 @@ nodeState : Node -> NodeState Node
 nodeState node =
     case node of
         InputNode inputNode ->
-            InputNode.state inputNode |> NS.map InputNode
+            InputNode.state inputNode |> State.map InputNode
 
         OutputNode outputNode ->
-            OutputNode.state outputNode |> NS.map OutputNode
+            OutputNode.state outputNode |> State.map OutputNode
 
 
 resolveAllRunnable : Acc -> Acc
@@ -137,15 +137,15 @@ resolveAllRunnable acc =
     Dict.foldl resolveRunnable { acc | readyToRun = Dict.empty } acc.readyToRun
 
 
-resolveRunnable : NodeAddr -> Node -> Acc -> Acc
+resolveRunnable : Addr -> Node -> Acc -> Acc
 resolveRunnable addr node =
     resolveAfterRun addr (runNode node)
 
 
-resolveAfterRun : NodeAddr -> Node -> Acc -> Acc
+resolveAfterRun : Addr -> Node -> Acc -> Acc
 resolveAfterRun addr node =
     case nodeState node of
-        NS.Read fn ->
+        State.Read fn ->
             addToReadBlocked addr ( node, fn )
 
         _ ->
@@ -168,7 +168,7 @@ resolveAllReadBlocked acc =
 
 
 resolveReadBlocked :
-    NodeAddr
+    Addr
     -> ReadBlockedNode
     -> WriteBlockedAcc a
     -> WriteBlockedAcc a
@@ -181,13 +181,13 @@ resolveReadBlocked na ( n, resolver ) acc =
             addToCompleted na n acc
 
 
-addrUp : NodeAddr -> NodeAddr
+addrUp : Addr -> Addr
 addrUp ( x, y ) =
     ( x, y - 1 )
 
 
 resolveWriteBlocked :
-    NodeAddr
+    Addr
     -> WriteBlockedAcc a
     -> Maybe ( Num, WriteBlockedAcc a )
 resolveWriteBlocked na acc =
@@ -206,16 +206,16 @@ resolveWriteBlocked na acc =
             Nothing
 
 
-resolveAllWriteBlocked : WriteBlockedAcc a -> NodeStore
+resolveAllWriteBlocked : WriteBlockedAcc a -> Store
 resolveAllWriteBlocked acc =
     Dict.foldl (\na ( n, _, _ ) -> Dict.insert na n) acc.completed acc.writeBlocked
 
 
 type alias Acc =
-    { readyToRun : NodeStore
+    { readyToRun : Store
     , readBlocked : ReadBlockedStore
     , writeBlocked : WriteBlockedStore
-    , completed : NodeStore
+    , completed : Store
     }
 
 
@@ -223,14 +223,14 @@ type alias BlockedAcc a =
     { a
         | readBlocked : ReadBlockedStore
         , writeBlocked : WriteBlockedStore
-        , completed : NodeStore
+        , completed : Store
     }
 
 
 type alias WriteBlockedAcc a =
     { a
         | writeBlocked : WriteBlockedStore
-        , completed : NodeStore
+        , completed : Store
     }
 
 
@@ -240,7 +240,7 @@ emptyAcc =
 
 
 addToWriteBlocked :
-    NodeAddr
+    Addr
     -> WriteBlockedNode
     -> { a | writeBlocked : WriteBlockedStore }
     -> { a | writeBlocked : WriteBlockedStore }
@@ -249,16 +249,16 @@ addToWriteBlocked na n acc =
 
 
 addToCompleted :
-    NodeAddr
+    Addr
     -> Node
-    -> { a | completed : NodeStore }
-    -> { a | completed : NodeStore }
+    -> { a | completed : Store }
+    -> { a | completed : Store }
 addToCompleted na n acc =
     { acc | completed = Dict.insert na n acc.completed }
 
 
 addToReadBlocked :
-    NodeAddr
+    Addr
     -> ReadBlockedNode
     -> { a | readBlocked : ReadBlockedStore }
     -> { a | readBlocked : ReadBlockedStore }
@@ -267,10 +267,10 @@ addToReadBlocked na n acc =
 
 
 addToRunnable :
-    NodeAddr
+    Addr
     -> Node
-    -> { a | readyToRun : NodeStore }
-    -> { a | readyToRun : NodeStore }
+    -> { a | readyToRun : Store }
+    -> { a | readyToRun : Store }
 addToRunnable na n acc =
     { acc | readyToRun = Dict.insert na n acc.readyToRun }
 
