@@ -225,7 +225,11 @@ addToReadBlocked na n acc =
     { acc | readBlocked = Dict.insert na n acc.readBlocked }
 
 
-addToRunnable : NodeAddr -> Node -> Acc -> Acc
+addToRunnable :
+    NodeAddr
+    -> Node
+    -> { a | readyToRun : NodeStore }
+    -> { a | readyToRun : NodeStore }
 addToRunnable na n acc =
     { acc | readyToRun = Dict.insert na n acc.readyToRun }
 
