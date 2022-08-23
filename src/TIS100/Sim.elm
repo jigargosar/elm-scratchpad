@@ -80,7 +80,7 @@ step sim =
 stepNodes : NodeStore -> NodeStore
 stepNodes ns =
     classifyNodes ns
-        |> resolveRunnable
+        |> resolveAllRunnable
         |> resolveAllReadBlocked
         |> resolveAllWriteBlocked
 
@@ -106,9 +106,13 @@ classifyNodes ns =
     Dict.foldl classifyNode emptyAcc ns
 
 
-resolveRunnable : Acc -> Acc
-resolveRunnable acc =
-    Debug.todo "todo"
+resolveAllRunnable : Acc -> Acc
+resolveAllRunnable initialAcc =
+    let
+        resolveRunnable na n acc =
+            Debug.todo "todo"
+    in
+    Dict.foldl resolveRunnable initialAcc initialAcc.readyToRun
 
 
 nodeState : Node -> NodeState
