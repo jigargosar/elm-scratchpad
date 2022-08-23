@@ -79,8 +79,8 @@ step sim =
 stepHelp : NodeStore -> NodeStore
 stepHelp ns =
     let
-        toNodeStore : SimAcc -> NodeStore
-        toNodeStore { writeBlocked, completed } =
+        completeWriteBlocked : SimAcc -> NodeStore
+        completeWriteBlocked { writeBlocked, completed } =
             Dict.union writeBlocked completed
     in
     let
@@ -100,7 +100,7 @@ stepHelp ns =
             in
             updateAcc addr (stepNode readFn node) acc
     in
-    Dict.foldl stepper initialAcc pending |> toNodeStore
+    Dict.foldl stepper initialAcc pending |> completeWriteBlocked
 
 
 type alias SimAcc =
