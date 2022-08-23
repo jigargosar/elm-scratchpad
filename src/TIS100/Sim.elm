@@ -79,7 +79,7 @@ step sim =
 stepHelp : NodeStore -> NodeStore
 stepHelp ns =
     let
-        completeWriteBlocked : SimAcc -> NodeStore
+        completeWriteBlocked : Acc -> NodeStore
         completeWriteBlocked { writeBlocked, completed } =
             Dict.union writeBlocked completed
     in
@@ -87,7 +87,7 @@ stepHelp ns =
         ( writeBlocked, pending ) =
             Dict.partition (\_ -> isWriteBlocked) ns
 
-        initialAcc : SimAcc
+        initialAcc : Acc
         initialAcc =
             { writeBlocked = writeBlocked
             , completed = Dict.empty
@@ -103,20 +103,20 @@ stepHelp ns =
     Dict.foldl stepper initialAcc pending |> completeWriteBlocked
 
 
-type alias SimAcc =
+type alias Acc =
     { writeBlocked : NodeStore
     , completed : NodeStore
     }
 
 
-updateAcc : NodeAddr -> ( Node, Maybe NodeEntry ) -> SimAcc -> SimAcc
+updateAcc : NodeAddr -> ( Node, Maybe NodeEntry ) -> Acc -> Acc
 updateAcc addr ( node, mbEntry ) acc =
     acc
         |> accAdd ( addr, node )
         |> accAddMaybe mbEntry
 
 
-accAdd : NodeEntry -> SimAcc -> SimAcc
+accAdd : NodeEntry -> Acc -> Acc
 accAdd ( na, n ) acc =
     { acc
         | writeBlocked = acc.writeBlocked |> Dict.remove na
@@ -124,7 +124,7 @@ accAdd ( na, n ) acc =
     }
 
 
-accAddMaybe : Maybe NodeEntry -> SimAcc -> SimAcc
+accAddMaybe : Maybe NodeEntry -> Acc -> Acc
 accAddMaybe mbEntry acc =
     case mbEntry of
         Just entry ->
