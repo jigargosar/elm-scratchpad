@@ -39,8 +39,16 @@ state node =
         Running _ _ ->
             NS.ReadyToRun
 
-        ReadBlocked _ _ ->
-            NS.ReadBlocked
+        ReadBlocked pendingReads nums ->
+            let
+                fn =
+                    if pendingReads == 1 then
+                        Done
+
+                    else
+                        Running (pendingReads - 1)
+            in
+            (\num -> fn (num :: nums)) |> NS.ReadBlocked
 
 
 run : OutputNode -> OutputNode

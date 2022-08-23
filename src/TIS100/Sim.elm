@@ -97,7 +97,7 @@ classifyNodes ns =
                 NS.Done ->
                     addToCompleted na node
 
-                NS.ReadBlocked ->
+                NS.ReadBlocked _ ->
                     addToReadBlocked na node
 
                 NS.ReadyToRun ->
@@ -117,11 +117,12 @@ resolveRunnable na n =
         newNode =
             runNode n
     in
-    if isReadBlocked newNode then
-        addToReadBlocked na newNode
+    case nodeState newNode of
+        NS.ReadBlocked _ ->
+            addToReadBlocked na newNode
 
-    else
-        addToCompleted na newNode
+        _ ->
+            addToCompleted na newNode
 
 
 runNode : Node -> Node
@@ -172,11 +173,6 @@ nodeState node =
 
         OutputNode outputNode ->
             OutputNode.state outputNode |> NS.map OutputNode
-
-
-isReadBlocked : Node -> Bool
-isReadBlocked node =
-    nodeState node == NS.ReadBlocked
 
 
 addToWriteBlocked : NodeAddr -> Node -> Acc -> Acc

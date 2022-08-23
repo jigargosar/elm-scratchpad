@@ -1,15 +1,17 @@
 module TIS100.NodeState exposing (..)
 
+import TIS100.Num exposing (Num)
+
 
 type NodeState a
     = WriteBlocked
     | Done
-    | ReadBlocked
+    | ReadBlocked (Num -> a)
     | ReadyToRun
 
 
 map : (a -> b) -> NodeState a -> NodeState b
-map _ ns =
+map fn ns =
     case ns of
         WriteBlocked ->
             WriteBlocked
@@ -17,8 +19,8 @@ map _ ns =
         Done ->
             Done
 
-        ReadBlocked ->
-            ReadBlocked
+        ReadBlocked resolver ->
+            ReadBlocked (\num -> resolver num |> fn)
 
         ReadyToRun ->
             ReadyToRun
