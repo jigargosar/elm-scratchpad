@@ -4,10 +4,10 @@ import TIS100.Num exposing (Num)
 
 
 type NodeState a
-    = Write Num (() -> a)
-    | Done
+    = Run
     | Read (Num -> a)
-    | Run
+    | Write Num (() -> a)
+    | Done
 
 
 map : (a -> b) -> NodeState a -> NodeState b
