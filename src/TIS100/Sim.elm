@@ -101,19 +101,19 @@ stepNodes ns =
 
 
 stepNode : Addr -> Node -> Acc -> Acc
-stepNode na node =
+stepNode addr node =
     case nodeState node of
         State.Write num fn ->
-            addToWriteBlocked na ( node, num, fn )
+            addToWriteBlocked addr ( node, num, fn )
 
         State.Done ->
-            addToCompleted na node
+            addToCompleted addr node
 
         State.Read fn ->
-            addToReadBlocked na ( node, fn )
+            addToReadBlocked addr ( node, fn )
 
         State.Run ->
-            resolveAfterRun na (runNode node)
+            resolveAfterRun addr (runNode node)
 
 
 nodeState : Node -> NodeState Node
