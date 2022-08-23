@@ -136,6 +136,10 @@ runNode node =
 
 resolveAllReadBlocked : Acc -> Acc
 resolveAllReadBlocked acc =
+    Dict.foldl resolveReadBlocked { acc | readBlocked = Dict.empty } acc.readBlocked
+
+
+resolveReadBlocked =
     Debug.todo "todo"
 
 
