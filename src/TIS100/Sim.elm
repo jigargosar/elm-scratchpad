@@ -106,16 +106,6 @@ classifyNodes ns =
     Dict.foldl classifyNode emptyAcc ns
 
 
-runNode : Node -> Node
-runNode node =
-    case node of
-        InputNode inputNode ->
-            InputNode (InputNode.run inputNode)
-
-        OutputNode outputNode ->
-            OutputNode (OutputNode.run outputNode)
-
-
 resolveAllRunnable : Acc -> Acc
 resolveAllRunnable acc =
     Dict.foldl resolveRunnable { acc | readyToRun = Dict.empty } acc.readyToRun
@@ -132,6 +122,26 @@ resolveRunnable na n =
 
     else
         addToCompleted na newNode
+
+
+runNode : Node -> Node
+runNode node =
+    case node of
+        InputNode inputNode ->
+            InputNode (InputNode.run inputNode)
+
+        OutputNode outputNode ->
+            OutputNode (OutputNode.run outputNode)
+
+
+resolveAllReadBlocked : Acc -> Acc
+resolveAllReadBlocked acc =
+    Debug.todo "todo"
+
+
+resolveAllWriteBlocked : Acc -> NodeStore
+resolveAllWriteBlocked acc =
+    Debug.todo "todo"
 
 
 nodeState : Node -> NodeState
@@ -167,16 +177,6 @@ addToReadBlocked na n acc =
 addToRunnable : NodeAddr -> Node -> Acc -> Acc
 addToRunnable na n acc =
     { acc | readyToRun = Dict.insert na n acc.readyToRun }
-
-
-resolveAllReadBlocked : Acc -> Acc
-resolveAllReadBlocked acc =
-    Debug.todo "todo"
-
-
-resolveAllWriteBlocked : Acc -> NodeStore
-resolveAllWriteBlocked acc =
-    Debug.todo "todo"
 
 
 stepHelp : NodeStore -> NodeStore
