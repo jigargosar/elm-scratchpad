@@ -244,15 +244,6 @@ addToReadBlocked na n acc =
     { acc | readBlocked = Dict.insert na n acc.readBlocked }
 
 
-addToRunnable :
-    Addr
-    -> Node
-    -> { a | readyToRun : Store }
-    -> { a | readyToRun : Store }
-addToRunnable na n acc =
-    { acc | readyToRun = Dict.insert na n acc.readyToRun }
-
-
 view : Sim -> Html msg
 view sim =
     div [ dGrid ] (Dict.toList sim.store |> List.map viewNode)
