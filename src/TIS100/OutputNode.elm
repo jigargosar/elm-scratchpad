@@ -1,6 +1,7 @@
 module TIS100.OutputNode exposing
     ( OutputNode
     , fromExpected
+    , run
     , state
     , step
     )
@@ -39,6 +40,19 @@ state node =
 
         ReadBlocked _ _ ->
             NS.ReadBlocked
+
+
+run : OutputNode -> OutputNode
+run node =
+    case node of
+        Done _ ->
+            node
+
+        Running pendingReads nums ->
+            ReadBlocked pendingReads nums
+
+        ReadBlocked _ _ ->
+            node
 
 
 step : ReadFn a -> OutputNode -> ( OutputNode, Maybe a )

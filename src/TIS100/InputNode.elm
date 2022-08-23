@@ -2,6 +2,7 @@ module TIS100.InputNode exposing
     ( InputNode
     , fromList
     , read
+    , run
     , state
     , step
     )
@@ -37,6 +38,19 @@ state node =
 
         WriteBlocked _ _ ->
             NS.WriteBlocked
+
+
+run : InputNode -> InputNode
+run node =
+    case node of
+        Running n ns ->
+            WriteBlocked n ns
+
+        WriteBlocked _ _ ->
+            node
+
+        Done ->
+            node
 
 
 step : InputNode -> InputNode

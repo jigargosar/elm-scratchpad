@@ -106,14 +106,32 @@ classifyNodes ns =
     Dict.foldl classifyNode emptyAcc ns
 
 
+runNode : Node -> Node
+runNode node =
+    case node of
+        InputNode inputNode ->
+            InputNode (InputNode.run inputNode)
+
+        OutputNode outputNode ->
+            OutputNode (OutputNode.run outputNode)
+
+
 resolveAllRunnable : Acc -> Acc
-resolveAllRunnable initialAcc =
+resolveAllRunnable acc =
+    Dict.foldl resolveRunnable { acc | readyToRun = Dict.empty } acc.readyToRun
+
+
+resolveRunnable : NodeAddr -> Node -> Acc -> Acc
+resolveRunnable na n =
     let
-        resolveRunnable : NodeAddr -> Node -> Acc -> Acc
-        resolveRunnable na n acc =
-            Debug.todo "todo"
+        newNode =
+            runNode n
     in
-    Dict.foldl resolveRunnable initialAcc initialAcc.readyToRun
+    if isReadBlocked newNode then
+        addToReadBlocked na newNode
+
+    else
+        addToCompleted na newNode
 
 
 nodeState : Node -> NodeState
@@ -124,6 +142,11 @@ nodeState node =
 
         OutputNode outputNode ->
             OutputNode.state outputNode
+
+
+isReadBlocked : Node -> Bool
+isReadBlocked node =
+    nodeState node == NS.ReadBlocked
 
 
 addToWriteBlocked : NodeAddr -> Node -> Acc -> Acc
@@ -235,11 +258,6 @@ initReadFn addr writeBlocked () =
             (\( na, n ) ->
                 readNode n |> Maybe.map (mapSecond (pair na))
             )
-
-
-runNode : Node -> Node
-runNode node =
-    Debug.todo "todo"
 
 
 stepNode : ReadFn a -> Node -> ( Node, Maybe a )
