@@ -98,7 +98,7 @@ stepHelp ns =
                 readFn =
                     initReadFn addr acc.writeBlocked
             in
-            updateAcc addr (stepNode readFn node) acc
+            accUpdate addr (stepNode readFn node) acc
     in
     Dict.foldl stepper initialAcc pending |> completeWriteBlocked
 
@@ -109,8 +109,8 @@ type alias Acc =
     }
 
 
-updateAcc : NodeAddr -> ( Node, Maybe NodeEntry ) -> Acc -> Acc
-updateAcc addr ( node, mbEntry ) acc =
+accUpdate : NodeAddr -> ( Node, Maybe NodeEntry ) -> Acc -> Acc
+accUpdate addr ( node, mbEntry ) acc =
     acc
         |> accAdd ( addr, node )
         |> accAddMaybe mbEntry
