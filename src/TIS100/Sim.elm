@@ -76,6 +76,100 @@ step sim =
     }
 
 
+type NodeState
+    = WriteBlocked
+    | Idle
+    | ReadBlocked
+    | ReadyToRun
+
+
+nodeState : Node -> NodeState
+nodeState node =
+    Debug.todo "todo"
+
+
+addToWriteBlocked : Node -> Acc -> Acc
+addToWriteBlocked node acc =
+    Debug.todo "todo"
+
+
+addToCompleted : Node -> Acc -> Acc
+addToCompleted node acc =
+    Debug.todo "todo"
+
+
+addToReadBlocked =
+    Debug.todo "todo"
+
+
+handleReadBlockedOrMarkCompleted : Node -> Acc -> Acc
+handleReadBlockedOrMarkCompleted node =
+    case nodeState node of
+        ReadBlocked ->
+            addToReadBlocked node
+
+        _ ->
+            addToCompleted node
+
+
+runNode : Node -> Node
+runNode node =
+    Debug.todo "todo"
+
+
+getReadQuery : Node -> Maybe NodeAddr
+getReadQuery node =
+    Debug.todo "todo"
+
+
+readFromAndResolveWriteBlocked : NodeAddr -> Acc -> Maybe ( Num, Acc )
+readFromAndResolveWriteBlocked nodeAddr acc =
+    Debug.todo "todo"
+
+
+resolveReadBlocked : Num -> Node -> Acc -> Acc
+resolveReadBlocked num node acc =
+    Debug.todo "todo"
+
+
+stepReadBlocked : Node -> Acc -> Acc
+stepReadBlocked node acc =
+    case getReadQuery node of
+        Just na ->
+            readFromAndResolveWriteBlocked na acc
+                |> Maybe.map (\( num, acc2 ) -> resolveReadBlocked num node acc2)
+                |> Maybe.withDefault acc
+
+        Nothing ->
+            acc
+
+
+completeAllBlocked : Acc -> NodeStore
+completeAllBlocked acc =
+    Debug.todo "todo"
+
+
+stepNodes : NodeStore -> NodeStore
+stepNodes ns =
+    let
+        stepperPass1 : Node -> Acc -> Acc
+        stepperPass1 node =
+            case nodeState node of
+                WriteBlocked ->
+                    addToWriteBlocked node
+
+                Idle ->
+                    addToCompleted node
+
+                ReadBlocked ->
+                    addToReadBlocked node
+
+                ReadyToRun ->
+                    handleReadBlockedOrMarkCompleted (runNode node)
+    in
+    Debug.todo "todo"
+
+
 stepHelp : NodeStore -> NodeStore
 stepHelp ns =
     let
