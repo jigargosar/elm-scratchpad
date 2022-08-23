@@ -88,12 +88,12 @@ nodeState node =
     Debug.todo "todo"
 
 
-addToWriteBlocked : Node -> Acc -> Acc
+addToWriteBlocked : NodeAddr -> Node -> Acc -> Acc
 addToWriteBlocked node acc =
     Debug.todo "todo"
 
 
-addToCompleted : Node -> Acc -> Acc
+addToCompleted : NodeAddr -> Node -> Acc -> Acc
 addToCompleted node acc =
     Debug.todo "todo"
 
@@ -104,16 +104,6 @@ addToReadBlocked =
 
 addToRunnable =
     Debug.todo "todo"
-
-
-handleReadBlockedOrMarkCompleted : Node -> Acc -> Acc
-handleReadBlockedOrMarkCompleted node =
-    case nodeState node of
-        ReadBlocked ->
-            addToReadBlocked node
-
-        _ ->
-            addToCompleted node
 
 
 runNode : Node -> Node
@@ -158,16 +148,16 @@ stepNodes ns =
         classifyNode na node =
             case nodeState node of
                 WriteBlocked ->
-                    addToWriteBlocked node
+                    addToWriteBlocked na node
 
                 Idle ->
-                    addToCompleted node
+                    addToCompleted na node
 
                 ReadBlocked ->
-                    addToReadBlocked node
+                    addToReadBlocked na node
 
                 ReadyToRun ->
-                    addToRunnable node
+                    addToRunnable na node
     in
     Dict.foldl classifyNode (Acc Dict.empty Dict.empty) ns
         |> resolveRunnable
