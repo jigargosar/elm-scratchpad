@@ -47,7 +47,7 @@ type alias NodeEntry =
 
 
 type alias Sim =
-    { nodeStore : Store
+    { store : Store
     , cycle : Int
     }
 
@@ -82,13 +82,13 @@ init =
         nodeStore =
             Dict.union col1 col2
     in
-    { nodeStore = nodeStore, cycle = 0 }
+    { store = nodeStore, cycle = 0 }
 
 
 step : Sim -> Sim
 step sim =
     { sim
-        | nodeStore = stepNodes sim.nodeStore
+        | store = stepNodes sim.store
         , cycle = sim.cycle + 1
     }
 
@@ -277,7 +277,7 @@ addToRunnable na n acc =
 
 view : Sim -> Html msg
 view sim =
-    div [ dGrid ] (Dict.toList sim.nodeStore |> List.map viewNode)
+    div [ dGrid ] (Dict.toList sim.store |> List.map viewNode)
 
 
 viewNode : NodeEntry -> Html msg
