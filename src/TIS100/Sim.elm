@@ -208,7 +208,11 @@ addToCompleted na n acc =
     { acc | completed = Dict.insert na n acc.completed }
 
 
-addToReadBlocked : NodeAddr -> ReadBlockedNode -> Acc -> Acc
+addToReadBlocked :
+    NodeAddr
+    -> ReadBlockedNode
+    -> { a | readBlocked : ReadBlockedStore }
+    -> { a | readBlocked : ReadBlockedStore }
 addToReadBlocked na n acc =
     { acc | readBlocked = Dict.insert na n acc.readBlocked }
 
