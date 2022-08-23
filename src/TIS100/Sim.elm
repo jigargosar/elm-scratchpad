@@ -157,7 +157,7 @@ resolveReadBlocked :
     -> WriteBlockedAcc a
     -> WriteBlockedAcc a
 resolveReadBlocked addr ( node, readResolver ) acc =
-    case resolveWriteBlocked (addrUp addr) acc of
+    case readFromAddrAndUnblock (addrUp addr) acc of
         Just ( num, acc2 ) ->
             addToCompleted addr (readResolver num) acc2
 
@@ -170,11 +170,11 @@ addrUp ( x, y ) =
     ( x, y - 1 )
 
 
-resolveWriteBlocked :
+readFromAddrAndUnblock :
     Addr
     -> WriteBlockedAcc a
     -> Maybe ( Num, WriteBlockedAcc a )
-resolveWriteBlocked addr acc =
+readFromAddrAndUnblock addr acc =
     case Dict.get addr acc.writeBlocked of
         Just ( _, num, resolver ) ->
             Just
