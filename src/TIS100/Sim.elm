@@ -151,7 +151,7 @@ runNode node =
             OutputNode (OutputNode.run outputNode)
 
 
-resolveAllReadBlocked : ReadBlockedAcc a -> ReadBlockedAcc a
+resolveAllReadBlocked : BlockedAcc a -> BlockedAcc a
 resolveAllReadBlocked acc =
     Dict.foldl resolveReadBlocked { acc | readBlocked = Dict.empty } acc.readBlocked
 
@@ -218,7 +218,7 @@ type alias Acc =
     }
 
 
-type alias ReadBlockedAcc a =
+type alias BlockedAcc a =
     { a
         | writeBlocked : WriteBlockedStore
         , readBlocked : ReadBlockedStore
