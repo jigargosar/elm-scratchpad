@@ -1,9 +1,5 @@
 module TIS100 exposing (main)
 
-import Dict exposing (Dict)
-import TIS100.InputNode as InputNode exposing (InputNode)
-import TIS100.Num as Num exposing (Num)
-import TIS100.OutputNode as OutputNode exposing (OutputNode)
 import TIS100.Sim as Sim
 import Utils exposing (..)
 
