@@ -211,7 +211,10 @@ type alias WriteBlockedAcc a =
 
 emptyAcc : Acc
 emptyAcc =
-    Acc Dict.empty Dict.empty Dict.empty
+    { readBlocked = Dict.empty
+    , writeBlocked = Dict.empty
+    , completed = Dict.empty
+    }
 
 
 addToWriteBlocked :
