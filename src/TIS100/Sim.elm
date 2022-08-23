@@ -136,8 +136,8 @@ resolveReadBlocked num node acc =
     Debug.todo "todo"
 
 
-resolveIO : Acc -> Acc
-resolveIO acc =
+resolveIOBlocked : Acc -> Acc
+resolveIOBlocked acc =
     Debug.todo "todo"
 
 
@@ -171,7 +171,7 @@ stepNodes ns =
     in
     Dict.foldl classifyNode (Acc Dict.empty Dict.empty) ns
         |> resolveRunnable
-        |> resolveIO
+        |> resolveIOBlocked
         |> completeAllBlocked
 
 
