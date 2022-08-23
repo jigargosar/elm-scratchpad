@@ -137,12 +137,12 @@ resolveAllRunnable acc =
     Dict.foldl resolveRunnable { acc | readyToRun = Dict.empty } acc.readyToRun
 
 
-resolveRunnable : Addr -> Node -> Acc -> Acc
+resolveRunnable : Addr -> Node -> BlockedAcc a -> BlockedAcc a
 resolveRunnable addr node =
     resolveAfterRun addr (runNode node)
 
 
-resolveAfterRun : Addr -> Node -> Acc -> Acc
+resolveAfterRun : Addr -> Node -> BlockedAcc a -> BlockedAcc a
 resolveAfterRun addr node =
     case nodeState node of
         State.Read resolver ->
