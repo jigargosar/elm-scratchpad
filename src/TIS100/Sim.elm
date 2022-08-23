@@ -34,12 +34,12 @@ type alias ReadBlockedNode =
     ( Node, Num -> Node )
 
 
-type alias WriteBlockedNode =
-    ( Node, Num, () -> Node )
-
-
 type alias WriteBlockedStore =
     Dict Addr WriteBlockedNode
+
+
+type alias WriteBlockedNode =
+    ( Node, Num, () -> Node )
 
 
 type alias NodeEntry =
