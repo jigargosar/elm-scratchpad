@@ -102,6 +102,10 @@ addToReadBlocked =
     Debug.todo "todo"
 
 
+addToRunnable =
+    Debug.todo "todo"
+
+
 handleReadBlockedOrMarkCompleted : Node -> Acc -> Acc
 handleReadBlockedOrMarkCompleted node =
     case nodeState node of
@@ -137,6 +141,11 @@ resolveIO acc =
     Debug.todo "todo"
 
 
+resolveRunnable : Acc -> Acc
+resolveRunnable acc =
+    Debug.todo "todo"
+
+
 completeAllBlocked : Acc -> NodeStore
 completeAllBlocked acc =
     Debug.todo "todo"
@@ -145,8 +154,8 @@ completeAllBlocked acc =
 stepNodes : NodeStore -> NodeStore
 stepNodes ns =
     let
-        stepperPass1 : NodeAddr -> Node -> Acc -> Acc
-        stepperPass1 na node =
+        classifyNode : NodeAddr -> Node -> Acc -> Acc
+        classifyNode na node =
             case nodeState node of
                 WriteBlocked ->
                     addToWriteBlocked node
@@ -158,9 +167,10 @@ stepNodes ns =
                     addToReadBlocked node
 
                 ReadyToRun ->
-                    handleReadBlockedOrMarkCompleted (runNode node)
+                    addToRunnable node
     in
-    Dict.foldl stepperPass1 (Acc Dict.empty Dict.empty) ns
+    Dict.foldl classifyNode (Acc Dict.empty Dict.empty) ns
+        |> resolveRunnable
         |> resolveIO
         |> completeAllBlocked
 
