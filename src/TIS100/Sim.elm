@@ -140,7 +140,22 @@ resolveAllReadBlocked acc =
 
 
 resolveReadBlocked : NodeAddr -> Node -> Acc -> Acc
-resolveReadBlocked =
+resolveReadBlocked na n acc =
+    case resolveWriteBlocked (addrUp na) acc of
+        Just ( num, acc2 ) ->
+            addToCompleted na (writeToNode num n) acc2
+
+        Nothing ->
+            addToCompleted na n acc
+
+
+writeToNode : Num -> Node -> Node
+writeToNode num node =
+    Debug.todo "todo"
+
+
+resolveWriteBlocked : NodeAddr -> Acc -> Maybe ( Num, Acc )
+resolveWriteBlocked na acc =
     Debug.todo "todo"
 
 
