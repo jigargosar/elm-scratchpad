@@ -122,23 +122,34 @@ classifyNode na node =
             addToRunnable na node
 
 
+nodeState : Node -> NodeState Node
+nodeState node =
+    case node of
+        InputNode inputNode ->
+            InputNode.state inputNode |> NS.map InputNode
+
+        OutputNode outputNode ->
+            OutputNode.state outputNode |> NS.map OutputNode
+
+
 resolveAllRunnable : Acc -> Acc
 resolveAllRunnable acc =
     Dict.foldl resolveRunnable { acc | readyToRun = Dict.empty } acc.readyToRun
 
 
 resolveRunnable : NodeAddr -> Node -> Acc -> Acc
-resolveRunnable na n =
-    let
-        newNode =
-            runNode n
-    in
-    case nodeState newNode of
+resolveRunnable addr node =
+    resolveAfterRun addr (runNode node)
+
+
+resolveAfterRun : NodeAddr -> Node -> Acc -> Acc
+resolveAfterRun addr node =
+    case nodeState node of
         NS.Read fn ->
-            addToReadBlocked na ( newNode, fn )
+            addToReadBlocked addr ( node, fn )
 
         _ ->
-            addToCompleted na newNode
+            addToCompleted addr node
 
 
 runNode : Node -> Node
@@ -198,16 +209,6 @@ resolveWriteBlocked na acc =
 resolveAllWriteBlocked : WriteBlockedAcc a -> NodeStore
 resolveAllWriteBlocked acc =
     Dict.foldl (\na ( n, _, _ ) -> Dict.insert na n) acc.completed acc.writeBlocked
-
-
-nodeState : Node -> NodeState Node
-nodeState node =
-    case node of
-        InputNode inputNode ->
-            InputNode.state inputNode |> NS.map InputNode
-
-        OutputNode outputNode ->
-            OutputNode.state outputNode |> NS.map OutputNode
 
 
 type alias Acc =
