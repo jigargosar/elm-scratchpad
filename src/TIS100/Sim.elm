@@ -95,19 +95,13 @@ step sim =
 
 stepNodes : Store -> Store
 stepNodes ns =
-    classifyAllNodes ns
-        |> resolveAllRunnable
+    Dict.foldl stepNode emptyAcc ns
         |> resolveAllReadBlocked
         |> resolveAllWriteBlocked
 
 
-classifyAllNodes : Store -> Acc
-classifyAllNodes ns =
-    Dict.foldl classifyNode emptyAcc ns
-
-
-classifyNode : Addr -> Node -> Acc -> Acc
-classifyNode na node =
+stepNode : Addr -> Node -> Acc -> Acc
+stepNode na node =
     case nodeState node of
         State.Write num fn ->
             addToWriteBlocked na ( node, num, fn )
@@ -119,7 +113,7 @@ classifyNode na node =
             addToReadBlocked na ( node, fn )
 
         State.Run ->
-            addToRunnable na node
+            resolveAfterRun na (runNode node)
 
 
 nodeState : Node -> NodeState Node
@@ -132,17 +126,7 @@ nodeState node =
             OutputNode.state outputNode |> State.map OutputNode
 
 
-resolveAllRunnable : Acc -> Acc
-resolveAllRunnable acc =
-    Dict.foldl resolveRunnable { acc | readyToRun = Dict.empty } acc.readyToRun
-
-
-resolveRunnable : Addr -> Node -> BlockedAcc a -> BlockedAcc a
-resolveRunnable addr node =
-    resolveAfterRun addr (runNode node)
-
-
-resolveAfterRun : Addr -> Node -> BlockedAcc a -> BlockedAcc a
+resolveAfterRun : Addr -> Node -> Acc -> Acc
 resolveAfterRun addr node =
     case nodeState node of
         State.Read resolver ->
@@ -162,7 +146,7 @@ runNode node =
             OutputNode (OutputNode.run outputNode)
 
 
-resolveAllReadBlocked : BlockedAcc a -> BlockedAcc a
+resolveAllReadBlocked : Acc -> Acc
 resolveAllReadBlocked acc =
     Dict.foldl resolveReadBlocked { acc | readBlocked = Dict.empty } acc.readBlocked
 
@@ -212,18 +196,9 @@ resolveAllWriteBlocked acc =
 
 
 type alias Acc =
-    { readyToRun : Store
-    , readBlocked : ReadBlockedStore
+    { readBlocked : ReadBlockedStore
     , writeBlocked : WriteBlockedStore
     , completed : Store
-    }
-
-
-type alias BlockedAcc a =
-    { a
-        | readBlocked : ReadBlockedStore
-        , writeBlocked : WriteBlockedStore
-        , completed : Store
     }
 
 
@@ -236,7 +211,7 @@ type alias WriteBlockedAcc a =
 
 emptyAcc : Acc
 emptyAcc =
-    Acc Dict.empty Dict.empty Dict.empty Dict.empty
+    Acc Dict.empty Dict.empty Dict.empty
 
 
 addToWriteBlocked :
