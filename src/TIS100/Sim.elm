@@ -85,6 +85,32 @@ stepNodes ns =
         |> resolveAllWriteBlocked
 
 
+classifyNodes : NodeStore -> Acc
+classifyNodes ns =
+    let
+        classifyNode : NodeAddr -> Node -> Acc -> Acc
+        classifyNode na node =
+            case nodeState node of
+                NS.WriteBlocked ->
+                    addToWriteBlocked na node
+
+                NS.Done ->
+                    addToCompleted na node
+
+                NS.ReadBlocked ->
+                    addToReadBlocked na node
+
+                NS.ReadyToRun ->
+                    addToRunnable na node
+    in
+    Dict.foldl classifyNode emptyAcc ns
+
+
+resolveRunnable : Acc -> Acc
+resolveRunnable acc =
+    Debug.todo "todo"
+
+
 nodeState : Node -> NodeState
 nodeState node =
     case node of
@@ -120,35 +146,9 @@ resolveAllReadBlocked acc =
     Debug.todo "todo"
 
 
-resolveRunnable : Acc -> Acc
-resolveRunnable acc =
-    Debug.todo "todo"
-
-
 resolveAllWriteBlocked : Acc -> NodeStore
 resolveAllWriteBlocked acc =
     Debug.todo "todo"
-
-
-classifyNodes : NodeStore -> Acc
-classifyNodes ns =
-    let
-        classifyNode : NodeAddr -> Node -> Acc -> Acc
-        classifyNode na node =
-            case nodeState node of
-                NS.WriteBlocked ->
-                    addToWriteBlocked na node
-
-                NS.Done ->
-                    addToCompleted na node
-
-                NS.ReadBlocked ->
-                    addToReadBlocked na node
-
-                NS.ReadyToRun ->
-                    addToRunnable na node
-    in
-    Dict.foldl classifyNode emptyAcc ns
 
 
 stepHelp : NodeStore -> NodeStore
