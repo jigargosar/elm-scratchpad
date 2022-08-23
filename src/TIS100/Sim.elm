@@ -166,6 +166,11 @@ resolveReadBlocked na ( n, resolver ) acc =
             addToCompleted na n acc
 
 
+addrUp : NodeAddr -> NodeAddr
+addrUp ( x, y ) =
+    ( x, y - 1 )
+
+
 resolveWriteBlocked : NodeAddr -> Acc -> Maybe ( Num, Acc )
 resolveWriteBlocked na acc =
     case Dict.get na acc.writeBlocked of
@@ -196,6 +201,19 @@ nodeState node =
 
         OutputNode outputNode ->
             OutputNode.state outputNode |> NS.map OutputNode
+
+
+type alias Acc =
+    { writeBlocked : WriteBlockedStore
+    , readBlocked : ReadBlockedStore
+    , readyToRun : NodeStore
+    , completed : NodeStore
+    }
+
+
+emptyAcc : Acc
+emptyAcc =
+    Acc Dict.empty Dict.empty Dict.empty Dict.empty
 
 
 addToWriteBlocked :
@@ -232,28 +250,6 @@ addToRunnable :
     -> { a | readyToRun : NodeStore }
 addToRunnable na n acc =
     { acc | readyToRun = Dict.insert na n acc.readyToRun }
-
-
-type alias Acc =
-    { writeBlocked : WriteBlockedStore
-    , readBlocked : ReadBlockedStore
-    , readyToRun : NodeStore
-    , completed : NodeStore
-    }
-
-
-emptyAcc : Acc
-emptyAcc =
-    Acc Dict.empty Dict.empty Dict.empty Dict.empty
-
-
-type alias ReadFn a =
-    () -> Maybe ( Num, a )
-
-
-addrUp : NodeAddr -> NodeAddr
-addrUp ( x, y ) =
-    ( x, y - 1 )
 
 
 view : Sim -> Html msg
