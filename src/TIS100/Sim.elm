@@ -198,12 +198,20 @@ nodeState node =
             OutputNode.state outputNode |> NS.map OutputNode
 
 
-addToWriteBlocked : NodeAddr -> WriteBlockedNode -> Acc -> Acc
+addToWriteBlocked :
+    NodeAddr
+    -> WriteBlockedNode
+    -> { a | writeBlocked : WriteBlockedStore }
+    -> { a | writeBlocked : WriteBlockedStore }
 addToWriteBlocked na n acc =
     { acc | writeBlocked = Dict.insert na n acc.writeBlocked }
 
 
-addToCompleted : NodeAddr -> Node -> Acc -> Acc
+addToCompleted :
+    NodeAddr
+    -> Node
+    -> { a | completed : NodeStore }
+    -> { a | completed : NodeStore }
 addToCompleted na n acc =
     { acc | completed = Dict.insert na n acc.completed }
 
