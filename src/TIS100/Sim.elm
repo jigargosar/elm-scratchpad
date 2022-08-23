@@ -156,7 +156,11 @@ resolveAllReadBlocked acc =
     Dict.foldl resolveReadBlocked { acc | readBlocked = Dict.empty } acc.readBlocked
 
 
-resolveReadBlocked : NodeAddr -> ReadBlockedNode -> Acc -> Acc
+resolveReadBlocked :
+    NodeAddr
+    -> ReadBlockedNode
+    -> WriteBlockedAcc a
+    -> WriteBlockedAcc a
 resolveReadBlocked na ( n, resolver ) acc =
     case resolveWriteBlocked (addrUp na) acc of
         Just ( num, acc2 ) ->
@@ -171,7 +175,10 @@ addrUp ( x, y ) =
     ( x, y - 1 )
 
 
-resolveWriteBlocked : NodeAddr -> Acc -> Maybe ( Num, Acc )
+resolveWriteBlocked :
+    NodeAddr
+    -> WriteBlockedAcc a
+    -> Maybe ( Num, WriteBlockedAcc a )
 resolveWriteBlocked na acc =
     case Dict.get na acc.writeBlocked of
         Just ( _, num, resolver ) ->
@@ -213,6 +220,13 @@ type alias Acc =
     , readBlocked : ReadBlockedStore
     , readyToRun : NodeStore
     , completed : NodeStore
+    }
+
+
+type alias WriteBlockedAcc a =
+    { a
+        | writeBlocked : WriteBlockedStore
+        , completed : NodeStore
     }
 
 
