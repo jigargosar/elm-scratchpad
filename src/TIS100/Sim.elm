@@ -172,10 +172,10 @@ resolveReadBlocked :
     -> ReadBlockedNode
     -> WriteBlockedAcc a
     -> WriteBlockedAcc a
-resolveReadBlocked addr ( node, resolver ) acc =
+resolveReadBlocked addr ( node, readResolver ) acc =
     case resolveWriteBlocked (addrUp addr) acc of
         Just ( num, acc2 ) ->
-            addToCompleted addr (resolver num) acc2
+            addToCompleted addr (readResolver num) acc2
 
         Nothing ->
             addToCompleted addr node acc
