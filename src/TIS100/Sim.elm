@@ -109,16 +109,16 @@ classifyAllNodes ns =
 classifyNode : NodeAddr -> Node -> Acc -> Acc
 classifyNode na node =
     case nodeState node of
-        NS.WriteBlocked num fn ->
+        NS.Write num fn ->
             addToWriteBlocked na ( node, num, fn )
 
         NS.Done ->
             addToCompleted na node
 
-        NS.ReadBlocked fn ->
+        NS.Read fn ->
             addToReadBlocked na ( node, fn )
 
-        NS.ReadyToRun ->
+        NS.Run ->
             addToRunnable na node
 
 
@@ -134,7 +134,7 @@ resolveRunnable na n =
             runNode n
     in
     case nodeState newNode of
-        NS.ReadBlocked fn ->
+        NS.Read fn ->
             addToReadBlocked na ( newNode, fn )
 
         _ ->

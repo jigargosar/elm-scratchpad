@@ -4,23 +4,23 @@ import TIS100.Num exposing (Num)
 
 
 type NodeState a
-    = WriteBlocked Num (() -> a)
+    = Write Num (() -> a)
     | Done
-    | ReadBlocked (Num -> a)
-    | ReadyToRun
+    | Read (Num -> a)
+    | Run
 
 
 map : (a -> b) -> NodeState a -> NodeState b
 map mapper ns =
     case ns of
-        WriteBlocked num resolver ->
-            WriteBlocked num (\() -> resolver () |> mapper)
+        Write num resolver ->
+            Write num (\() -> resolver () |> mapper)
 
         Done ->
             Done
 
-        ReadBlocked resolver ->
-            ReadBlocked (\num -> resolver num |> mapper)
+        Read resolver ->
+            Read (\num -> resolver num |> mapper)
 
-        ReadyToRun ->
-            ReadyToRun
+        Run ->
+            Run

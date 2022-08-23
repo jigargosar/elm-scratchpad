@@ -32,10 +32,10 @@ state node =
             NS.Done
 
         Running _ _ ->
-            NS.ReadyToRun
+            NS.Run
 
         WriteBlocked num nums ->
-            NS.WriteBlocked num (\() -> fromList nums)
+            NS.Write num (\() -> fromList nums)
 
 
 run : InputNode -> InputNode
