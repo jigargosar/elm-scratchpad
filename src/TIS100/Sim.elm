@@ -188,7 +188,12 @@ resolveWriteBlocked na acc =
             Nothing
 
 
-resolveAllWriteBlocked : Acc -> NodeStore
+resolveAllWriteBlocked :
+    { a
+        | completed : NodeStore
+        , writeBlocked : WriteBlockedStore
+    }
+    -> NodeStore
 resolveAllWriteBlocked acc =
     Dict.foldl (\na ( n, _, _ ) -> Dict.insert na n) acc.completed acc.writeBlocked
 
