@@ -3,8 +3,6 @@ module TIS100.OutputNode exposing
     , fromExpected
     , run
     , state
-    , step
-    , write
     )
 
 import TIS100.NodeState as NS exposing (NodeState)
@@ -62,51 +60,3 @@ run node =
 
         ReadBlocked _ _ ->
             node
-
-
-write : Num -> OutputNode -> OutputNode
-write num node =
-    case node of
-        ReadBlocked pendingReads nums ->
-            let
-                fn =
-                    if pendingReads == 1 then
-                        Done
-
-                    else
-                        Running (pendingReads - 1)
-            in
-            fn (num :: nums)
-
-        _ ->
-            node
-
-
-step : ReadFn a -> OutputNode -> ( OutputNode, Maybe a )
-step readFn node =
-    let
-        attemptRead pendingReads nums =
-            case readFn () of
-                Nothing ->
-                    ( ReadBlocked pendingReads nums, Nothing )
-
-                Just ( num, a ) ->
-                    let
-                        fn =
-                            if pendingReads == 1 then
-                                Done
-
-                            else
-                                Running (pendingReads - 1)
-                    in
-                    ( fn (num :: nums), Just a )
-    in
-    case node of
-        Done _ ->
-            ( node, Nothing )
-
-        Running pendingReads nums ->
-            attemptRead pendingReads nums
-
-        ReadBlocked pendingReads nums ->
-            attemptRead pendingReads nums

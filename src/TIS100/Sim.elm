@@ -27,7 +27,19 @@ type alias NodeStore =
 
 
 type alias ReadBlockedStore =
-    Dict NodeAddr ( Node, Num -> Node )
+    Dict NodeAddr ReadBlockedNode
+
+
+type alias ReadBlockedNode =
+    ( Node, Num -> Node )
+
+
+type alias WriteBlockedNode =
+    ( Node, Num, () -> Node )
+
+
+type alias WriteBlockedStore =
+    Dict NodeAddr WriteBlockedNode
 
 
 type alias NodeEntry =
@@ -76,7 +88,7 @@ init =
 step : Sim -> Sim
 step sim =
     { sim
-        | nodeStore = stepHelp sim.nodeStore
+        | nodeStore = stepNodes sim.nodeStore
         , cycle = sim.cycle + 1
     }
 
@@ -95,8 +107,8 @@ classifyNodes ns =
         classifyNode : NodeAddr -> Node -> Acc -> Acc
         classifyNode na node =
             case nodeState node of
-                NS.WriteBlocked ->
-                    addToWriteBlocked na node
+                NS.WriteBlocked num fn ->
+                    addToWriteBlocked na ( node, num, fn )
 
                 NS.Done ->
                     addToCompleted na node
@@ -144,11 +156,11 @@ resolveAllReadBlocked acc =
     Dict.foldl resolveReadBlocked { acc | readBlocked = Dict.empty } acc.readBlocked
 
 
-resolveReadBlocked : NodeAddr -> ( Node, Num -> Node ) -> Acc -> Acc
-resolveReadBlocked na ( n, fn ) acc =
+resolveReadBlocked : NodeAddr -> ReadBlockedNode -> Acc -> Acc
+resolveReadBlocked na ( n, resolver ) acc =
     case resolveWriteBlocked (addrUp na) acc of
         Just ( num, acc2 ) ->
-            addToCompleted na (fn num) acc2
+            addToCompleted na (resolver num) acc2
 
         Nothing ->
             addToCompleted na n acc
@@ -156,12 +168,24 @@ resolveReadBlocked na ( n, fn ) acc =
 
 resolveWriteBlocked : NodeAddr -> Acc -> Maybe ( Num, Acc )
 resolveWriteBlocked na acc =
-    Debug.todo "todo"
+    case Dict.get na acc.writeBlocked of
+        Just ( _, num, resolver ) ->
+            Just
+                ( num
+                , addToCompleted na
+                    (resolver ())
+                    { acc
+                        | writeBlocked = Dict.remove na acc.writeBlocked
+                    }
+                )
+
+        Nothing ->
+            Nothing
 
 
 resolveAllWriteBlocked : Acc -> NodeStore
 resolveAllWriteBlocked acc =
-    Debug.todo "todo"
+    Dict.foldl (\na ( n, _, _ ) -> Dict.insert na n) acc.completed acc.writeBlocked
 
 
 nodeState : Node -> NodeState Node
@@ -174,7 +198,7 @@ nodeState node =
             OutputNode.state outputNode |> NS.map OutputNode
 
 
-addToWriteBlocked : NodeAddr -> Node -> Acc -> Acc
+addToWriteBlocked : NodeAddr -> WriteBlockedNode -> Acc -> Acc
 addToWriteBlocked na n acc =
     { acc | writeBlocked = Dict.insert na n acc.writeBlocked }
 
@@ -184,7 +208,7 @@ addToCompleted na n acc =
     { acc | completed = Dict.insert na n acc.completed }
 
 
-addToReadBlocked : NodeAddr -> ( Node, Num -> Node ) -> Acc -> Acc
+addToReadBlocked : NodeAddr -> ReadBlockedNode -> Acc -> Acc
 addToReadBlocked na n acc =
     { acc | readBlocked = Dict.insert na n acc.readBlocked }
 
@@ -194,33 +218,8 @@ addToRunnable na n acc =
     { acc | readyToRun = Dict.insert na n acc.readyToRun }
 
 
-stepHelp : NodeStore -> NodeStore
-stepHelp ns =
-    let
-        completeWriteBlocked : Acc -> NodeStore
-        completeWriteBlocked { writeBlocked, completed } =
-            Dict.union writeBlocked completed
-    in
-    let
-        ( writeBlocked, pending ) =
-            Dict.partition (\_ -> isWriteBlocked) ns
-
-        initialAcc : Acc
-        initialAcc =
-            { emptyAcc | writeBlocked = writeBlocked }
-
-        stepper addr node acc =
-            let
-                readFn =
-                    initReadFn addr acc.writeBlocked
-            in
-            accUpdate addr (stepNode readFn node) acc
-    in
-    Dict.foldl stepper initialAcc pending |> completeWriteBlocked
-
-
 type alias Acc =
-    { writeBlocked : NodeStore
+    { writeBlocked : WriteBlockedStore
     , readBlocked : ReadBlockedStore
     , readyToRun : NodeStore
     , completed : NodeStore
@@ -232,31 +231,6 @@ emptyAcc =
     Acc Dict.empty Dict.empty Dict.empty Dict.empty
 
 
-accUpdate : NodeAddr -> ( Node, Maybe NodeEntry ) -> Acc -> Acc
-accUpdate addr ( node, mbEntry ) acc =
-    acc
-        |> accAdd ( addr, node )
-        |> accAddMaybe mbEntry
-
-
-accAdd : NodeEntry -> Acc -> Acc
-accAdd ( na, n ) acc =
-    { acc
-        | writeBlocked = acc.writeBlocked |> Dict.remove na
-        , completed = acc.completed |> Dict.insert na n
-    }
-
-
-accAddMaybe : Maybe NodeEntry -> Acc -> Acc
-accAddMaybe mbEntry acc =
-    case mbEntry of
-        Just entry ->
-            accAdd entry acc
-
-        Nothing ->
-            acc
-
-
 type alias ReadFn a =
     () -> Maybe ( Num, a )
 
@@ -264,42 +238,6 @@ type alias ReadFn a =
 addrUp : NodeAddr -> NodeAddr
 addrUp ( x, y ) =
     ( x, y - 1 )
-
-
-initReadFn : NodeAddr -> NodeStore -> ReadFn NodeEntry
-initReadFn addr writeBlocked () =
-    getEntry (addrUp addr) writeBlocked
-        |> Maybe.andThen
-            (\( na, n ) ->
-                readNode n |> Maybe.map (mapSecond (pair na))
-            )
-
-
-stepNode : ReadFn a -> Node -> ( Node, Maybe a )
-stepNode readFn node =
-    case node of
-        InputNode inputNode ->
-            ( InputNode (InputNode.step inputNode), Nothing )
-
-        OutputNode outputNode ->
-            OutputNode.step readFn outputNode
-                |> mapFirst OutputNode
-
-
-readNode : Node -> Maybe ( Num, Node )
-readNode node =
-    case node of
-        InputNode inputNode ->
-            InputNode.read inputNode
-                |> Maybe.map (mapSecond InputNode)
-
-        OutputNode _ ->
-            Nothing
-
-
-isWriteBlocked : Node -> Bool
-isWriteBlocked =
-    readNode >> maybeToBool
 
 
 view : Sim -> Html msg

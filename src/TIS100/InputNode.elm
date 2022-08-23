@@ -1,10 +1,8 @@
 module TIS100.InputNode exposing
     ( InputNode
     , fromList
-    , read
     , run
     , state
-    , step
     )
 
 import TIS100.NodeState as NS exposing (NodeState)
@@ -36,8 +34,8 @@ state node =
         Running _ _ ->
             NS.ReadyToRun
 
-        WriteBlocked _ _ ->
-            NS.WriteBlocked
+        WriteBlocked num nums ->
+            NS.WriteBlocked num (\() -> fromList nums)
 
 
 run : InputNode -> InputNode
@@ -51,29 +49,3 @@ run node =
 
         Done ->
             node
-
-
-step : InputNode -> InputNode
-step node =
-    case node of
-        Running n ns ->
-            WriteBlocked n ns
-
-        WriteBlocked _ _ ->
-            node
-
-        Done ->
-            node
-
-
-read : InputNode -> Maybe ( Num, InputNode )
-read node =
-    case node of
-        Done ->
-            Nothing
-
-        Running _ _ ->
-            Nothing
-
-        WriteBlocked num nums ->
-            Just ( num, fromList nums )
