@@ -95,31 +95,31 @@ step sim =
 
 stepNodes : NodeStore -> NodeStore
 stepNodes ns =
-    classifyNodes ns
+    classifyAllNodes ns
         |> resolveAllRunnable
         |> resolveAllReadBlocked
         |> resolveAllWriteBlocked
 
 
-classifyNodes : NodeStore -> Acc
-classifyNodes ns =
-    let
-        classifyNode : NodeAddr -> Node -> Acc -> Acc
-        classifyNode na node =
-            case nodeState node of
-                NS.WriteBlocked num fn ->
-                    addToWriteBlocked na ( node, num, fn )
-
-                NS.Done ->
-                    addToCompleted na node
-
-                NS.ReadBlocked fn ->
-                    addToReadBlocked na ( node, fn )
-
-                NS.ReadyToRun ->
-                    addToRunnable na node
-    in
+classifyAllNodes : NodeStore -> Acc
+classifyAllNodes ns =
     Dict.foldl classifyNode emptyAcc ns
+
+
+classifyNode : NodeAddr -> Node -> Acc -> Acc
+classifyNode na node =
+    case nodeState node of
+        NS.WriteBlocked num fn ->
+            addToWriteBlocked na ( node, num, fn )
+
+        NS.Done ->
+            addToCompleted na node
+
+        NS.ReadBlocked fn ->
+            addToReadBlocked na ( node, fn )
+
+        NS.ReadyToRun ->
+            addToRunnable na node
 
 
 resolveAllRunnable : Acc -> Acc
