@@ -26,6 +26,10 @@ type alias NodeStore =
     Dict NodeAddr Node
 
 
+type alias ReadBlockedStore =
+    Dict NodeAddr ( Node, Num -> Node )
+
+
 type alias NodeEntry =
     ( NodeAddr, Node )
 
@@ -97,8 +101,8 @@ classifyNodes ns =
                 NS.Done ->
                     addToCompleted na node
 
-                NS.ReadBlocked _ ->
-                    addToReadBlocked na node
+                NS.ReadBlocked fn ->
+                    addToReadBlocked na ( node, fn )
 
                 NS.ReadyToRun ->
                     addToRunnable na node
@@ -118,8 +122,8 @@ resolveRunnable na n =
             runNode n
     in
     case nodeState newNode of
-        NS.ReadBlocked _ ->
-            addToReadBlocked na newNode
+        NS.ReadBlocked fn ->
+            addToReadBlocked na ( newNode, fn )
 
         _ ->
             addToCompleted na newNode
@@ -140,19 +144,14 @@ resolveAllReadBlocked acc =
     Dict.foldl resolveReadBlocked { acc | readBlocked = Dict.empty } acc.readBlocked
 
 
-resolveReadBlocked : NodeAddr -> Node -> Acc -> Acc
-resolveReadBlocked na n acc =
+resolveReadBlocked : NodeAddr -> ( Node, Num -> Node ) -> Acc -> Acc
+resolveReadBlocked na ( n, fn ) acc =
     case resolveWriteBlocked (addrUp na) acc of
         Just ( num, acc2 ) ->
-            addToCompleted na (writeToNode num n) acc2
+            addToCompleted na (fn num) acc2
 
         Nothing ->
             addToCompleted na n acc
-
-
-writeToNode : Num -> Node -> Node
-writeToNode num node =
-    Debug.todo "todo"
 
 
 resolveWriteBlocked : NodeAddr -> Acc -> Maybe ( Num, Acc )
@@ -185,7 +184,7 @@ addToCompleted na n acc =
     { acc | completed = Dict.insert na n acc.completed }
 
 
-addToReadBlocked : NodeAddr -> Node -> Acc -> Acc
+addToReadBlocked : NodeAddr -> ( Node, Num -> Node ) -> Acc -> Acc
 addToReadBlocked na n acc =
     { acc | readBlocked = Dict.insert na n acc.readBlocked }
 
@@ -222,7 +221,7 @@ stepHelp ns =
 
 type alias Acc =
     { writeBlocked : NodeStore
-    , readBlocked : NodeStore
+    , readBlocked : ReadBlockedStore
     , readyToRun : NodeStore
     , completed : NodeStore
     }
