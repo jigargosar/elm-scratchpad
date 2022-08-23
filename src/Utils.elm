@@ -2012,6 +2012,11 @@ getInDict dict key =
     Dict.get key dict
 
 
+getEntry : comparable -> Dict comparable a -> Maybe ( comparable, a )
+getEntry key dict =
+    Dict.get key dict |> Maybe.map (pair key)
+
+
 
 -- LIST HELPERS
 

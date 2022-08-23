@@ -145,16 +145,10 @@ addrUp ( x, y ) =
 
 initReadFn : NodeAddr -> NodeStore -> ReadFn NodeEntry
 initReadFn addr writeBlocked () =
-    let
-        readFromAddr : NodeAddr
-        readFromAddr =
-            addrUp addr
-    in
-    Dict.get readFromAddr writeBlocked
+    getEntry (addrUp addr) writeBlocked
         |> Maybe.andThen
-            (\n ->
-                readNode n
-                    |> Maybe.map (mapSecond (pair readFromAddr))
+            (\( na, n ) ->
+                readNode n |> Maybe.map (mapSecond (pair na))
             )
 
 
