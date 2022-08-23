@@ -174,15 +174,15 @@ resolveWriteBlocked :
     Addr
     -> WriteBlockedAcc a
     -> Maybe ( Num, WriteBlockedAcc a )
-resolveWriteBlocked na acc =
-    case Dict.get na acc.writeBlocked of
+resolveWriteBlocked addr acc =
+    case Dict.get addr acc.writeBlocked of
         Just ( _, num, resolver ) ->
             Just
                 ( num
-                , addToCompleted na
+                , addToCompleted addr
                     (resolver ())
                     { acc
-                        | writeBlocked = Dict.remove na acc.writeBlocked
+                        | writeBlocked = Dict.remove addr acc.writeBlocked
                     }
                 )
 
