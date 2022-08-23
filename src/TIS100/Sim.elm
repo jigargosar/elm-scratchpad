@@ -151,7 +151,7 @@ runNode node =
             OutputNode (OutputNode.run outputNode)
 
 
-resolveAllReadBlocked : Acc -> Acc
+resolveAllReadBlocked : ReadBlockedAcc a -> ReadBlockedAcc a
 resolveAllReadBlocked acc =
     Dict.foldl resolveReadBlocked { acc | readBlocked = Dict.empty } acc.readBlocked
 
@@ -195,12 +195,7 @@ resolveWriteBlocked na acc =
             Nothing
 
 
-resolveAllWriteBlocked :
-    { a
-        | completed : NodeStore
-        , writeBlocked : WriteBlockedStore
-    }
-    -> NodeStore
+resolveAllWriteBlocked : WriteBlockedAcc a -> NodeStore
 resolveAllWriteBlocked acc =
     Dict.foldl (\na ( n, _, _ ) -> Dict.insert na n) acc.completed acc.writeBlocked
 
@@ -220,6 +215,14 @@ type alias Acc =
     , readBlocked : ReadBlockedStore
     , readyToRun : NodeStore
     , completed : NodeStore
+    }
+
+
+type alias ReadBlockedAcc a =
+    { a
+        | writeBlocked : WriteBlockedStore
+        , readBlocked : ReadBlockedStore
+        , completed : NodeStore
     }
 
 
