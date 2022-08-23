@@ -211,17 +211,17 @@ nodeState node =
 
 
 type alias Acc =
-    { writeBlocked : WriteBlockedStore
+    { readyToRun : NodeStore
     , readBlocked : ReadBlockedStore
-    , readyToRun : NodeStore
+    , writeBlocked : WriteBlockedStore
     , completed : NodeStore
     }
 
 
 type alias BlockedAcc a =
     { a
-        | writeBlocked : WriteBlockedStore
-        , readBlocked : ReadBlockedStore
+        | readBlocked : ReadBlockedStore
+        , writeBlocked : WriteBlockedStore
         , completed : NodeStore
     }
 
