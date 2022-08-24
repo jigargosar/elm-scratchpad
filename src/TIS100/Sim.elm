@@ -258,8 +258,9 @@ view sim =
         [ div [] [ text "Cycle: ", text (fromInt sim.cycle) ]
         , div
             [ dGrid
-            , style "grid-template"
-                "repeat(2, 1fr 2fr) 1fr/repeat(2, 2fr 1fr) 2fr"
+            , style "grid-template-rows"
+                ("repeat(" ++ fromInt (maxY - 1) ++ ", 1fr 2fr) 1fr")
+            , style "grid-template-columns" "repeat(2, 2fr 1fr) 2fr"
             ]
             (Dict.toList sim.store |> List.map viewNode)
         ]
