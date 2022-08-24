@@ -262,16 +262,13 @@ view sim =
 
 
 viewNode : NodeEntry -> Html msg
-viewNode ( addr, node ) =
-    let
-        nodeInfo =
-            ( addr, node )
-    in
-    div [ pa "10px", gridAreaXY addr, HA.title (Debug.toString nodeInfo) ]
+viewNode (( addr, node ) as entry) =
+    div [ pa "10px", gridAreaXY addr, HA.title (Debug.toString entry) ]
         [ noView
-        , text (nodeToString node)
+        , text (nodeToString node) |> always noView
+        , viewNodeHelp entry
         , text (Debug.toString (nodeState node)) |> always noView
-        , text (Debug.toString nodeInfo) |> always noView
+        , text (Debug.toString entry) |> always noView
         ]
 
 
@@ -279,13 +276,29 @@ viewNodeHelp : NodeEntry -> Html msg
 viewNodeHelp ( addr, node ) =
     case node of
         InputNode input ->
-            noView
+            div [] [ text "IN.A" ]
 
         OutputNode output ->
-            noView
+            div [] [ text "OUT.A" ]
 
         ExeNode exe ->
-            noView
+            div [] [ text (nodeBlockMode node) ]
+
+
+nodeBlockMode : Node -> String
+nodeBlockMode node =
+    case nodeState node of
+        State.Run function ->
+            "N/A"
+
+        State.Read function ->
+            "READ"
+
+        State.Write num function ->
+            "WRITE"
+
+        State.Done ->
+            "N/A"
 
 
 nodeToString : Node -> String
