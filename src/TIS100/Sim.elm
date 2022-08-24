@@ -64,19 +64,24 @@ initOutputNode expected =
     OutputNode (OutputNode.fromExpected expected)
 
 
+initExe : Node
+initExe =
+    ExeNode ExeNode.init
+
+
 init : Sim
 init =
     let
         col1 : Store
         col1 =
-            [ initInputNode 3, initOutputNode 3 ]
+            [ initInputNode 3, initExe, initOutputNode 3 ]
                 |> List.indexedMap pair
                 |> List.map (mapFirst (pair 0))
                 |> Dict.fromList
 
         col2 : Store
         col2 =
-            [ initInputNode 1, initOutputNode 3 ]
+            [ initInputNode 1, initExe, initOutputNode 3 ]
                 |> List.indexedMap pair
                 |> List.map (mapFirst (pair 1))
                 |> Dict.fromList

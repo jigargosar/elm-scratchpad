@@ -1,4 +1,4 @@
-module TIS100.ExeNode exposing (ExeNode, state)
+module TIS100.ExeNode exposing (ExeNode, init, state)
 
 import TIS100.NodeState as S
 import TIS100.Num exposing (Num)
