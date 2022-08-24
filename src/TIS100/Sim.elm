@@ -254,7 +254,7 @@ addToReadBlocked na n acc =
 
 view : Sim -> Html msg
 view sim =
-    div [ pa "10px", fontSize "10px" ]
+    div [ pa "10px", fontSize "10px", bold, ffMonospace ]
         [ div [] [ text "Cycle: ", text (fromInt sim.cycle) ]
         , div [ dGrid ]
             (Dict.toList sim.store |> List.map viewNode)
@@ -281,7 +281,7 @@ viewNodeHelp ( addr, node ) =
                     [ div [] [ text "IN.A" ]
                     , div [] [ text "(IDLE 0%)" ]
                     ]
-                , div [ fontSize "2em" ] [ text "⇓" ]
+                , div [ fontSize "2em", fontWeight "100" ] [ text "⇓" ]
                 ]
 
         OutputNode output ->

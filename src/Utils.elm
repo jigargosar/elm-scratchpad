@@ -1127,7 +1127,11 @@ tac =
 
 
 bold =
-    style "font-weight" "bold"
+    fontWeight "bold"
+
+
+fontWeight =
+    style "font-weight"
 
 
 gap =
