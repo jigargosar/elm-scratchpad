@@ -75,21 +75,21 @@ init =
     let
         col1 : Store
         col1 =
-            [ initInputNode "IN.A" 3, initExe, initOutputNode "OUT.A" 3 ]
+            [ initInputNode "IN.A" 3, initExe, initExe, initOutputNode "OUT.A" 3 ]
                 |> List.indexedMap pair
                 |> List.map (mapFirst (pair 0))
                 |> Dict.fromList
 
         col2 : Store
         col2 =
-            [ initInputNode "IN.B" 2, initExe, initOutputNode "OUT.B" 3 ]
+            [ initInputNode "IN.B" 2, initExe, initExe, initOutputNode "OUT.B" 3 ]
                 |> List.indexedMap pair
                 |> List.map (mapFirst (pair 1))
                 |> Dict.fromList
 
         col3 : Store
         col3 =
-            [ initInputNode "IN.C" 3, initExe, initOutputNode "OUT.C" 2 ]
+            [ initInputNode "IN.C" 3, initExe, initExe, initOutputNode "OUT.C" 2 ]
                 |> List.indexedMap pair
                 |> List.map (mapFirst (pair 2))
                 |> Dict.fromList
@@ -256,13 +256,17 @@ view : Sim -> Html msg
 view sim =
     fCol [ h100, pa "10px", fontSize "10px", bold, ffMonospace ]
         [ div [] [ text "Cycle: ", text (fromInt sim.cycle) ]
-        , div [ dGrid, style "grid-template" "repeat(1, 1fr 2fr 1fr)/repeat(2, 2fr 1fr) 2fr" ]
+        , div
+            [ dGrid
+            , style "grid-template"
+                "repeat(2, 1fr 2fr) 1fr/repeat(2, 2fr 1fr) 2fr"
+            ]
             (Dict.toList sim.store |> List.map viewNode)
         ]
 
 
 maxY =
-    2
+    3
 
 
 nodeAddrToGridArea : Addr -> Attribute msg
