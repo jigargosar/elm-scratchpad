@@ -277,7 +277,10 @@ viewNodeHelp ( addr, node ) =
     case node of
         InputNode input ->
             div [ dGrid, gridAutoFlowColumn ]
-                [ div [ tac ]
+                [ div
+                    [ dGrid
+                    , style "justify-items" "center"
+                    ]
                     [ div [] [ text "IN.A" ]
                     , div [] [ text "(IDLE 0%)" ]
                     ]
@@ -285,18 +288,14 @@ viewNodeHelp ( addr, node ) =
                 ]
 
         OutputNode output ->
-            div [ tac, positionRelative ]
-                [ div [] [ text "OUT.A" ]
-                , div
-                    [ positionAbsolute
-                    , w100
-                    , bottom100
-
-                    --, styleLineHeight "0.5"
+            div [ dGrid, gridAutoFlowColumn ]
+                [ div
+                    [ dGrid
+                    , style "justify-items" "center"
                     ]
-                    [ text "⇑" |> always noView
-                    , text "⇓"
+                    [ div [] [ text "OUT.A" ]
                     ]
+                , div [ fontSize "2em", fontWeight "100" ] [ text "⇓" ]
                 ]
 
         ExeNode exe ->
