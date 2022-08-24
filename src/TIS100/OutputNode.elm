@@ -11,7 +11,7 @@ import TIS100.Num exposing (Num)
 
 type OutputNode
     = Done (List Num)
-    | Running Int (List Num)
+    | ReadyToRead Int (List Num)
     | ReadBlocked Int (List Num)
 
 
@@ -21,7 +21,7 @@ fromExpected expected =
         Done []
 
     else
-        Running expected []
+        ReadyToRead expected []
 
 
 type alias ReadFn a =
@@ -34,7 +34,7 @@ state node =
         Done _ ->
             NS.Done
 
-        Running _ _ ->
+        ReadyToRead _ _ ->
             NS.Run
 
         ReadBlocked pendingReads nums ->
@@ -47,7 +47,7 @@ resolveRead pendingReads nums num =
         Done (num :: nums)
 
     else
-        Running (pendingReads - 1) (num :: nums)
+        ReadyToRead (pendingReads - 1) (num :: nums)
 
 
 run : OutputNode -> OutputNode
@@ -56,7 +56,7 @@ run node =
         Done _ ->
             node
 
-        Running pendingReads nums ->
+        ReadyToRead pendingReads nums ->
             ReadBlocked pendingReads nums
 
         ReadBlocked _ _ ->
