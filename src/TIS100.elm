@@ -62,7 +62,7 @@ view =
     let
         sim =
             Sim.init
-                |> applyN 8 Sim.step
+                |> applyN 3 Sim.step
     in
     div []
         [ div [] [ text <| Debug.toString sim ]

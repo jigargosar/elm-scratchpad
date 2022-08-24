@@ -81,13 +81,20 @@ init =
 
         col2 : Store
         col2 =
-            [ initInputNode 1, initExe, initOutputNode 3 ]
+            [ initInputNode 2, initExe, initOutputNode 3 ]
                 |> List.indexedMap pair
                 |> List.map (mapFirst (pair 1))
                 |> Dict.fromList
 
+        col3 : Store
+        col3 =
+            [ initInputNode 3, initExe, initOutputNode 2 ]
+                |> List.indexedMap pair
+                |> List.map (mapFirst (pair 2))
+                |> Dict.fromList
+
         nodeStore =
-            Dict.union col1 col2
+            Dict.union col1 col2 |> Dict.union col3
     in
     { store = nodeStore, cycle = 0 }
 
