@@ -41,8 +41,8 @@ state node =
 run : InputNode -> InputNode
 run node =
     case node of
-        Running n ns ->
-            WriteBlocked n ns
+        Running num nums ->
+            WriteBlocked num nums
 
         WriteBlocked _ _ ->
             node
