@@ -1,8 +1,13 @@
-module TIS100.Num exposing (Num, fromInt, range, zero)
+module TIS100.Num exposing (Num, fromInt, range, toString, zero)
 
 
 type Num
     = Num Int
+
+
+toString : Num -> String
+toString (Num i) =
+    String.fromInt i
 
 
 zero : Num

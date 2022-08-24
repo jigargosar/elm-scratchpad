@@ -1,6 +1,7 @@
 module TIS100.InputNode exposing
     ( InputNode
     , fromList
+    , numForView
     , state
     )
 
@@ -35,3 +36,13 @@ state node =
 
         WriteBlocked num nums ->
             S.Write num (\() -> fromList nums)
+
+
+numForView : InputNode -> Maybe Num
+numForView node =
+    case node of
+        WriteBlocked num _ ->
+            Just num
+
+        _ ->
+            Nothing

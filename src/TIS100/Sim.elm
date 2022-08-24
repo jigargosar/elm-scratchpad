@@ -284,21 +284,30 @@ viewNodeHelp ( addr, node ) =
                     [ div [] [ text title ]
                     , div [] [ text "(IDLE 0%)" ]
                     ]
-                , viewDownArrow
+                , viewDownArrow (InputNode.numForView input)
                 ]
 
         OutputNode title output ->
             gridColumns []
                 [ div [ tac ] [ text title ]
-                , viewDownArrow
+                , viewDownArrow Nothing
                 ]
 
         ExeNode exe ->
             div [ tac ] [ text (nodeBlockMode node) ]
 
 
-viewDownArrow =
-    div [ fontSize "2em", fontWeight "100" ] [ text "⇓" ]
+viewDownArrow : Maybe Num -> Html msg
+viewDownArrow mbNum =
+    fRow []
+        [ div [ fontSize "2em", fontWeight "100" ] [ text "⇓" ]
+        , maybeView viewNum mbNum
+        ]
+
+
+viewNum : Num -> Html msg
+viewNum num =
+    div [] [ text <| Num.toString num ]
 
 
 nodeBlockMode : Node -> String
