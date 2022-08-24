@@ -6,6 +6,7 @@ module TIS100.Sim exposing
     )
 
 import Dict exposing (Dict)
+import Html.Attributes as HA
 import TIS100.ExeNode as ExeNode exposing (ExeNode)
 import TIS100.InputNode as InputNode exposing (InputNode)
 import TIS100.NodeState as State exposing (NodeState)
@@ -253,7 +254,8 @@ addToReadBlocked na n acc =
 
 view : Sim -> Html msg
 view sim =
-    div [ dGrid ] (Dict.toList sim.store |> List.map viewNode)
+    div [ dGrid, gap "20px", pa "20px" ]
+        (Dict.toList sim.store |> List.map viewNode)
 
 
 viewNode : NodeEntry -> Html msg
@@ -262,7 +264,22 @@ viewNode ( nodeAddr, node ) =
         nodeInfo =
             ( nodeAddr, node )
     in
-    div [ gridAreaXY nodeAddr ]
-        [ text (Debug.toString node)
+    div [ gridAreaXY nodeAddr, HA.title (Debug.toString nodeInfo) ]
+        [ noView
+        , text (nodeToString node)
+        , text (Debug.toString (nodeState node)) |> always noView
         , text (Debug.toString nodeInfo) |> always noView
         ]
+
+
+nodeToString : Node -> String
+nodeToString node =
+    case node of
+        InputNode inputNode ->
+            Debug.toString inputNode
+
+        OutputNode outputNode ->
+            Debug.toString outputNode
+
+        ExeNode exeNode ->
+            Debug.toString exeNode
