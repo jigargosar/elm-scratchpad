@@ -7,7 +7,7 @@ type Num
 
 zero : Num
 zero =
-    Num 0
+    fromInt 0
 
 
 fromInt : Int -> Num
