@@ -2,9 +2,9 @@ module TIS100.Num exposing (Num, zero)
 
 
 type Num
-    = Num
+    = Num Int
 
 
 zero : Num
 zero =
-    Num
+    Num 0
