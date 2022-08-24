@@ -20,7 +20,7 @@ type alias Addr =
 
 
 type Node
-    = InputNode InputNode
+    = InputNode String InputNode
     | OutputNode OutputNode
     | ExeNode ExeNode
 
@@ -55,9 +55,9 @@ type alias Sim =
     }
 
 
-initInputNode : Int -> Node
-initInputNode hi =
-    InputNode (InputNode.fromList (Num.range 1 hi))
+initInputNode : String -> Int -> Node
+initInputNode title hi =
+    InputNode title (InputNode.fromList (Num.range 1 hi))
 
 
 initOutputNode : Int -> Node
@@ -75,21 +75,21 @@ init =
     let
         col1 : Store
         col1 =
-            [ initInputNode 3, initExe, initOutputNode 3 ]
+            [ initInputNode "IN.A" 3, initExe, initOutputNode 3 ]
                 |> List.indexedMap pair
                 |> List.map (mapFirst (pair 0))
                 |> Dict.fromList
 
         col2 : Store
         col2 =
-            [ initInputNode 2, initExe, initOutputNode 3 ]
+            [ initInputNode "IN.B" 2, initExe, initOutputNode 3 ]
                 |> List.indexedMap pair
                 |> List.map (mapFirst (pair 1))
                 |> Dict.fromList
 
         col3 : Store
         col3 =
-            [ initInputNode 3, initExe, initOutputNode 2 ]
+            [ initInputNode "IN.C" 3, initExe, initOutputNode 2 ]
                 |> List.indexedMap pair
                 |> List.map (mapFirst (pair 2))
                 |> Dict.fromList
@@ -134,8 +134,8 @@ stepNode addr node =
 nodeState : Node -> NodeState Node
 nodeState node =
     case node of
-        InputNode inputNode ->
-            InputNode.state inputNode |> State.map InputNode
+        InputNode title inputNode ->
+            InputNode.state inputNode |> State.map (InputNode title)
 
         OutputNode outputNode ->
             OutputNode.state outputNode |> State.map OutputNode
@@ -275,31 +275,30 @@ viewNode (( addr, node ) as entry) =
 viewNodeHelp : NodeEntry -> Html msg
 viewNodeHelp ( addr, node ) =
     case node of
-        InputNode input ->
-            div [ dGrid, gridAutoFlowColumn ]
+        InputNode title input ->
+            gridColumns []
                 [ div
                     [ dGrid
-                    , style "justify-items" "center"
+                    , tac
                     ]
-                    [ div [] [ text "IN.A" ]
+                    [ div [] [ text title ]
                     , div [] [ text "(IDLE 0%)" ]
                     ]
-                , div [ fontSize "2em", fontWeight "100" ] [ text "⇓" ]
+                , viewDownArrow
                 ]
 
         OutputNode output ->
-            div [ dGrid, gridAutoFlowColumn ]
-                [ div
-                    [ dGrid
-                    , style "justify-items" "center"
-                    ]
-                    [ div [] [ text "OUT.A" ]
-                    ]
-                , div [ fontSize "2em", fontWeight "100" ] [ text "⇓" ]
+            gridColumns []
+                [ div [ tac ] [ text "OUT.A" ]
+                , viewDownArrow
                 ]
 
         ExeNode exe ->
             div [ tac ] [ text (nodeBlockMode node) ]
+
+
+viewDownArrow =
+    div [ fontSize "2em", fontWeight "100" ] [ text "⇓" ]
 
 
 nodeBlockMode : Node -> String
@@ -321,8 +320,8 @@ nodeBlockMode node =
 nodeToString : Node -> String
 nodeToString node =
     case node of
-        InputNode inputNode ->
-            Debug.toString inputNode
+        InputNode title inputNode ->
+            Debug.toString ( title, inputNode )
 
         OutputNode outputNode ->
             Debug.toString outputNode
