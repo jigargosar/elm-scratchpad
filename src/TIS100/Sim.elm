@@ -285,14 +285,6 @@ nodeAddrToGridArea ( x, y ) =
         )
 
 
-
---viewNode : NodeEntry -> Html msg
---viewNode (( addr, _ ) as entry) =
---    div [ pa "10px", nodeAddrToGridArea addr ]
---        [ viewNodeHelp entry
---        ]
-
-
 viewNode : NodeEntry -> Html msg
 viewNode ( addr, node ) =
     case node of
