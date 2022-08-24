@@ -308,13 +308,13 @@ viewNode ( addr, node ) =
                 , viewDownArrow (InputNode.numForView input)
                 ]
 
-        OutputNode title output ->
+        OutputNode title _ ->
             gridColumns [ pa "10px", nodeAddrToGridArea addr ]
                 [ div [ tac ] [ text title ]
                 , viewDownArrow Nothing
                 ]
 
-        ExeNode exe ->
+        ExeNode _ ->
             div [ pa "10px", nodeAddrToGridArea addr, tac ]
                 [ text (nodeBlockMode node) ]
 
@@ -335,27 +335,14 @@ viewNum num =
 nodeBlockMode : Node -> String
 nodeBlockMode node =
     case nodeState node of
-        State.Run function ->
+        State.Run _ ->
             "N/A"
 
-        State.Read function ->
+        State.Read _ ->
             "READ"
 
-        State.Write num function ->
+        State.Write _ _ ->
             "WRITE"
 
         State.Done ->
             "N/A"
-
-
-nodeToString : Node -> String
-nodeToString node =
-    case node of
-        InputNode title inputNode ->
-            Debug.toString ( title, inputNode )
-
-        OutputNode title outputNode ->
-            Debug.toString ( title, outputNode )
-
-        ExeNode exeNode ->
-            Debug.toString exeNode
