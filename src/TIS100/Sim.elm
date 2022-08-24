@@ -128,7 +128,7 @@ nodeState node =
             OutputNode.state outputNode |> State.map OutputNode
 
         ExeNode exeNode ->
-            ExeNode.state exeNode
+            ExeNode.state exeNode |> State.map ExeNode
 
 
 resolveAfterRun : Addr -> Node -> Acc -> Acc
