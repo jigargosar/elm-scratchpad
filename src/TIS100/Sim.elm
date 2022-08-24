@@ -254,16 +254,35 @@ addToReadBlocked na n acc =
 
 view : Sim -> Html msg
 view sim =
-    div [ pa "10px", fontSize "10px", bold, ffMonospace ]
+    fCol [ h100, pa "10px", fontSize "10px", bold, ffMonospace ]
         [ div [] [ text "Cycle: ", text (fromInt sim.cycle) ]
-        , div [ dGrid ]
+        , div [ dGrid, style "grid-template" "repeat(1, 1fr 2fr 1fr)/repeat(2, 2fr 1fr) 2fr" ]
             (Dict.toList sim.store |> List.map viewNode)
         ]
 
 
+maxY =
+    2
+
+
+nodeAddrToGridArea : Addr -> Attribute msg
+nodeAddrToGridArea ( x, y ) =
+    gridAreaXY
+        ( x * 2
+        , if y == 0 then
+            0
+
+          else if y == maxY then
+            (y * 2) - 2
+
+          else
+            (y * 2) - 1
+        )
+
+
 viewNode : NodeEntry -> Html msg
 viewNode (( addr, node ) as entry) =
-    div [ pa "10px", gridAreaXY addr, HA.title (Debug.toString entry) ]
+    div [ pa "10px", nodeAddrToGridArea addr, HA.title (Debug.toString entry) ]
         [ noView
         , text (nodeToString node) |> always noView
         , viewNodeHelp entry
