@@ -307,7 +307,12 @@ viewNode ( addr, node ) =
                 ]
 
         ExeNode _ ->
-            div [ pa "10px", nodeAddrToGridArea addr, tac ]
+            div
+                [ sOutline "1px solid white"
+                , pa "10px"
+                , nodeAddrToGridArea addr
+                , tac
+                ]
                 [ text (nodeBlockMode node) ]
 
 
