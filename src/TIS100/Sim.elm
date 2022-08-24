@@ -6,6 +6,7 @@ module TIS100.Sim exposing
     )
 
 import Dict exposing (Dict)
+import TIS100.ExeNode as ExeNode exposing (ExeNode)
 import TIS100.InputNode as InputNode exposing (InputNode)
 import TIS100.NodeState as State exposing (NodeState)
 import TIS100.Num as Num exposing (Num)
@@ -20,6 +21,7 @@ type alias Addr =
 type Node
     = InputNode InputNode
     | OutputNode OutputNode
+    | ExeNode ExeNode
 
 
 type alias Store =
@@ -125,6 +127,9 @@ nodeState node =
         OutputNode outputNode ->
             OutputNode.state outputNode |> State.map OutputNode
 
+        ExeNode exeNode ->
+            ExeNode.state exeNode
+
 
 resolveAfterRun : Addr -> Node -> Acc -> Acc
 resolveAfterRun addr node =
@@ -144,6 +149,9 @@ runNode node =
 
         OutputNode outputNode ->
             OutputNode (OutputNode.run outputNode)
+
+        ExeNode exeNode ->
+            ExeNode (ExeNode.run exeNode)
 
 
 resolveAllReadBlocked : Acc -> Acc
