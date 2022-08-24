@@ -1,11 +1,10 @@
 module TIS100.InputNode exposing
     ( InputNode
     , fromList
-    , run
     , state
     )
 
-import TIS100.NodeState as NS exposing (NodeState)
+import TIS100.NodeState as S exposing (NodeState)
 import TIS100.Num exposing (Num)
 
 
@@ -29,20 +28,10 @@ state : InputNode -> NodeState InputNode
 state node =
     case node of
         Done ->
-            NS.Done
+            S.Done
 
-        Running _ _ ->
-            NS.Run
+        Running num nums ->
+            S.Run (\() -> WriteBlocked num nums)
 
         WriteBlocked num nums ->
-            NS.Write num (\() -> fromList nums)
-
-
-run : InputNode -> InputNode
-run node =
-    case node of
-        Running num nums ->
-            WriteBlocked num nums
-
-        _ ->
-            node
+            S.Write num (\() -> fromList nums)

@@ -114,8 +114,8 @@ stepNode addr node =
         State.Read readResolver ->
             addToReadBlocked addr ( node, readResolver )
 
-        State.Run ->
-            resolveAfterRun addr (runNode node)
+        State.Run runResolver ->
+            resolveAfterRun addr (runResolver ())
 
 
 nodeState : Node -> NodeState Node
@@ -139,19 +139,6 @@ resolveAfterRun addr node =
 
         _ ->
             addToCompleted addr node
-
-
-runNode : Node -> Node
-runNode node =
-    case node of
-        InputNode inputNode ->
-            InputNode (InputNode.run inputNode)
-
-        OutputNode outputNode ->
-            OutputNode (OutputNode.run outputNode)
-
-        ExeNode exeNode ->
-            ExeNode (ExeNode.run exeNode)
 
 
 resolveAllReadBlocked : Acc -> Acc

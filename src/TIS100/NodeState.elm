@@ -4,7 +4,7 @@ import TIS100.Num exposing (Num)
 
 
 type NodeState a
-    = Run
+    = Run (() -> a)
     | Read (Num -> a)
     | Write Num (() -> a)
     | Done
@@ -22,5 +22,5 @@ map mapper ns =
         Read resolver ->
             Read (\num -> resolver num |> mapper)
 
-        Run ->
-            Run
+        Run resolver ->
+            Run (\() -> resolver () |> mapper)

@@ -1,7 +1,6 @@
 module TIS100.OutputNode exposing
     ( OutputNode
     , fromExpected
-    , run
     , state
     )
 
@@ -30,8 +29,8 @@ state node =
         Done _ ->
             NS.Done
 
-        ReadyToRun _ _ ->
-            NS.Run
+        ReadyToRun pendingReads nums ->
+            (\() -> ReadBlocked pendingReads nums) |> NS.Run
 
         ReadBlocked pendingReads nums ->
             resolveRead pendingReads nums |> NS.Read
@@ -44,16 +43,3 @@ resolveRead pendingReads nums num =
 
     else
         ReadyToRun (pendingReads - 1) (num :: nums)
-
-
-run : OutputNode -> OutputNode
-run node =
-    case node of
-        Done _ ->
-            node
-
-        ReadyToRun pendingReads nums ->
-            ReadBlocked pendingReads nums
-
-        ReadBlocked _ _ ->
-            node

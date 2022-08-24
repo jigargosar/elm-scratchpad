@@ -1,4 +1,4 @@
-module TIS100.ExeNode exposing (ExeNode, run, state)
+module TIS100.ExeNode exposing (ExeNode, state)
 
 import TIS100.NodeState as S
 import TIS100.Num exposing (Num)
@@ -20,7 +20,7 @@ state : ExeNode -> S.NodeState ExeNode
 state node =
     case node of
         ReadyToRun ->
-            S.Run
+            S.Run (\() -> node)
 
         Done ->
             S.Done
@@ -30,7 +30,3 @@ state node =
 
         WriteBlocked num ->
             S.Write num (\() -> node)
-
-
-run _ =
-    Debug.todo "todo"
