@@ -24,10 +24,6 @@ fromExpected expected =
         ReadyToRun expected []
 
 
-type alias ReadFn a =
-    () -> Maybe ( Num, a )
-
-
 state : OutputNode -> NodeState OutputNode
 state node =
     case node of
