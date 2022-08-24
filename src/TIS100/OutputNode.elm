@@ -4,7 +4,7 @@ module TIS100.OutputNode exposing
     , state
     )
 
-import TIS100.NodeState as NS exposing (NodeState)
+import TIS100.NodeState as S exposing (NodeState)
 import TIS100.Num exposing (Num)
 
 
@@ -27,13 +27,13 @@ state : OutputNode -> NodeState OutputNode
 state node =
     case node of
         Done _ ->
-            NS.Done
+            S.Done
 
         ReadyToRun pendingReads nums ->
-            (\() -> ReadBlocked pendingReads nums) |> NS.Run
+            S.Run (\() -> ReadBlocked pendingReads nums)
 
         ReadBlocked pendingReads nums ->
-            resolveRead pendingReads nums |> NS.Read
+            S.Read (resolveRead pendingReads nums)
 
 
 resolveRead : Int -> List Num -> Num -> OutputNode
