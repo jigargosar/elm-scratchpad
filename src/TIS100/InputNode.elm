@@ -44,8 +44,5 @@ run node =
         Running num nums ->
             WriteBlocked num nums
 
-        WriteBlocked _ _ ->
-            node
-
-        Done ->
+        _ ->
             node
