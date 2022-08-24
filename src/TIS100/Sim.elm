@@ -285,18 +285,19 @@ nodeAddrToGridArea ( x, y ) =
         )
 
 
+
+--viewNode : NodeEntry -> Html msg
+--viewNode (( addr, _ ) as entry) =
+--    div [ pa "10px", nodeAddrToGridArea addr ]
+--        [ viewNodeHelp entry
+--        ]
+
+
 viewNode : NodeEntry -> Html msg
-viewNode (( addr, _ ) as entry) =
-    div [ pa "10px", nodeAddrToGridArea addr ]
-        [ viewNodeHelp entry
-        ]
-
-
-viewNodeHelp : NodeEntry -> Html msg
-viewNodeHelp ( addr, node ) =
+viewNode ( addr, node ) =
     case node of
         InputNode title input ->
-            gridColumns []
+            gridColumns [ pa "10px", nodeAddrToGridArea addr ]
                 [ div
                     [ dGrid
                     , tac
@@ -308,13 +309,14 @@ viewNodeHelp ( addr, node ) =
                 ]
 
         OutputNode title output ->
-            gridColumns []
+            gridColumns [ pa "10px", nodeAddrToGridArea addr ]
                 [ div [ tac ] [ text title ]
                 , viewDownArrow Nothing
                 ]
 
         ExeNode exe ->
-            div [ tac ] [ text (nodeBlockMode node) ]
+            div [ pa "10px", nodeAddrToGridArea addr, tac ]
+                [ text (nodeBlockMode node) ]
 
 
 viewDownArrow : Maybe Num -> Html msg
