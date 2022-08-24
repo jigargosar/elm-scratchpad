@@ -313,7 +313,7 @@ viewNode ( addr, node ) =
                 , nodeAddrToGridArea addr
                 , tac
                 ]
-                [ text (nodeBlockMode node) ]
+                [ text "MODE:", text (nodeBlockMode node) ]
 
 
 viewDownArrow : Maybe Num -> Html msg
