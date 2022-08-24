@@ -262,17 +262,30 @@ view sim =
 
 
 viewNode : NodeEntry -> Html msg
-viewNode ( nodeAddr, node ) =
+viewNode ( addr, node ) =
     let
         nodeInfo =
-            ( nodeAddr, node )
+            ( addr, node )
     in
-    div [ pa "10px", gridAreaXY nodeAddr, HA.title (Debug.toString nodeInfo) ]
+    div [ pa "10px", gridAreaXY addr, HA.title (Debug.toString nodeInfo) ]
         [ noView
         , text (nodeToString node)
         , text (Debug.toString (nodeState node)) |> always noView
         , text (Debug.toString nodeInfo) |> always noView
         ]
+
+
+viewNodeHelp : NodeEntry -> Html msg
+viewNodeHelp ( addr, node ) =
+    case node of
+        InputNode input ->
+            noView
+
+        OutputNode output ->
+            noView
+
+        ExeNode exe ->
+            noView
 
 
 nodeToString : Node -> String
