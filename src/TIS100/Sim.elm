@@ -56,8 +56,8 @@ type alias Sim =
 
 
 initInputNode : Int -> Node
-initInputNode nums =
-    InputNode (InputNode.fromList (List.repeat nums Num.zero))
+initInputNode hi =
+    InputNode (InputNode.fromList (Num.range 1 hi))
 
 
 initOutputNode : Int -> Node

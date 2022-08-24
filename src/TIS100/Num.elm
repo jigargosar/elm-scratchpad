@@ -1,4 +1,4 @@
-module TIS100.Num exposing (Num, zero)
+module TIS100.Num exposing (Num, range, zero)
 
 
 type Num
@@ -8,3 +8,8 @@ type Num
 zero : Num
 zero =
     Num 0
+
+
+range : Int -> Int -> List Num
+range lo hi =
+    List.range lo hi |> List.map Num
