@@ -254,7 +254,7 @@ addToReadBlocked na n acc =
 
 view : Sim -> Html msg
 view sim =
-    div [ dGrid, gap "20px", pa "20px" ]
+    div [ dGrid, pa "10px" ]
         (Dict.toList sim.store |> List.map viewNode)
 
 
@@ -264,7 +264,7 @@ viewNode ( nodeAddr, node ) =
         nodeInfo =
             ( nodeAddr, node )
     in
-    div [ gridAreaXY nodeAddr, HA.title (Debug.toString nodeInfo) ]
+    div [ pa "10px", gridAreaXY nodeAddr, HA.title (Debug.toString nodeInfo) ]
         [ noView
         , text (nodeToString node)
         , text (Debug.toString (nodeState node)) |> always noView
