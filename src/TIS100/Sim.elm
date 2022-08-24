@@ -21,7 +21,7 @@ type alias Addr =
 
 type Node
     = InputNode String InputNode
-    | OutputNode OutputNode
+    | OutputNode String OutputNode
     | ExeNode ExeNode
 
 
@@ -60,9 +60,9 @@ initInputNode title hi =
     InputNode title (InputNode.fromList (Num.range 1 hi))
 
 
-initOutputNode : Int -> Node
-initOutputNode expected =
-    OutputNode (OutputNode.fromExpected expected)
+initOutputNode : String -> Int -> Node
+initOutputNode title expected =
+    OutputNode title (OutputNode.fromExpected expected)
 
 
 initExe : Node
@@ -75,21 +75,21 @@ init =
     let
         col1 : Store
         col1 =
-            [ initInputNode "IN.A" 3, initExe, initOutputNode 3 ]
+            [ initInputNode "IN.A" 3, initExe, initOutputNode "OUT.A" 3 ]
                 |> List.indexedMap pair
                 |> List.map (mapFirst (pair 0))
                 |> Dict.fromList
 
         col2 : Store
         col2 =
-            [ initInputNode "IN.B" 2, initExe, initOutputNode 3 ]
+            [ initInputNode "IN.B" 2, initExe, initOutputNode "OUT.B" 3 ]
                 |> List.indexedMap pair
                 |> List.map (mapFirst (pair 1))
                 |> Dict.fromList
 
         col3 : Store
         col3 =
-            [ initInputNode "IN.C" 3, initExe, initOutputNode 2 ]
+            [ initInputNode "IN.C" 3, initExe, initOutputNode "OUT.C" 2 ]
                 |> List.indexedMap pair
                 |> List.map (mapFirst (pair 2))
                 |> Dict.fromList
@@ -137,8 +137,8 @@ nodeState node =
         InputNode title inputNode ->
             InputNode.state inputNode |> State.map (InputNode title)
 
-        OutputNode outputNode ->
-            OutputNode.state outputNode |> State.map OutputNode
+        OutputNode title outputNode ->
+            OutputNode.state outputNode |> State.map (OutputNode title)
 
         ExeNode exeNode ->
             ExeNode.state exeNode |> State.map ExeNode
@@ -287,9 +287,9 @@ viewNodeHelp ( addr, node ) =
                 , viewDownArrow
                 ]
 
-        OutputNode output ->
+        OutputNode title output ->
             gridColumns []
-                [ div [ tac ] [ text "OUT.A" ]
+                [ div [ tac ] [ text title ]
                 , viewDownArrow
                 ]
 
@@ -323,8 +323,8 @@ nodeToString node =
         InputNode title inputNode ->
             Debug.toString ( title, inputNode )
 
-        OutputNode outputNode ->
-            Debug.toString outputNode
+        OutputNode title outputNode ->
+            Debug.toString ( title, outputNode )
 
         ExeNode exeNode ->
             Debug.toString exeNode
