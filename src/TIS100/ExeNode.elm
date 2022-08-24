@@ -20,7 +20,7 @@ state : ExeNode -> S.NodeState ExeNode
 state node =
     case node of
         ReadyToRun ->
-            S.Run (\() -> node)
+            S.Run (\() -> ReadBlocked)
 
         Done ->
             S.Done
