@@ -286,13 +286,9 @@ nodeAddrToGridArea ( x, y ) =
 
 
 viewNode : NodeEntry -> Html msg
-viewNode (( addr, node ) as entry) =
-    div [ pa "10px", nodeAddrToGridArea addr, HA.title (Debug.toString entry) ]
-        [ noView
-        , text (nodeToString node) |> always noView
-        , viewNodeHelp entry
-        , text (Debug.toString (nodeState node)) |> always noView
-        , text (Debug.toString entry) |> always noView
+viewNode (( addr, _ ) as entry) =
+    div [ pa "10px", nodeAddrToGridArea addr ]
+        [ viewNodeHelp entry
         ]
 
 
