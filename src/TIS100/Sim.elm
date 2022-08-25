@@ -182,18 +182,20 @@ addPotentialRead addr dir ports =
             addPotentialWrite writeAddr (State.oppositeDir dir) ports
 
 
+addPotentialPort : Addr -> Dir -> Ports -> PortKey -> Ports
+addPotentialPort addr dir ((Ports dict) as ports) portKey =
+    if Dict.member portKey dict then
+        ports
+
+    else
+        Ports (Dict.insert portKey (Port addr dir Empty) dict)
+
+
 addPotentialWrite : Addr -> Dir -> Ports -> Ports
-addPotentialWrite addr dir ((Ports dict) as ports) =
-    case toPortKey addr dir of
-        Nothing ->
-            ports
-
-        Just key ->
-            if Dict.member key dict then
-                ports
-
-            else
-                Ports (Dict.insert key (Port addr dir Empty) dict)
+addPotentialWrite addr dir ports =
+    toPortKey addr dir
+        |> Maybe.map (addPotentialPort addr dir ports)
+        |> Maybe.withDefault ports
 
 
 writeToPort : Addr -> Dir -> Num -> Ports -> Ports
