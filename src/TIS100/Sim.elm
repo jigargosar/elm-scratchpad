@@ -8,7 +8,7 @@ module TIS100.Sim exposing
 import Dict exposing (Dict)
 import TIS100.ExeNode as ExeNode exposing (ExeNode)
 import TIS100.InputNode as InputNode exposing (InputNode)
-import TIS100.NodeState as State exposing (NodeState)
+import TIS100.NodeState as State exposing (Dir(..), NodeState)
 import TIS100.Num as Num exposing (Num)
 import TIS100.OutputNode as OutputNode exposing (OutputNode)
 import Utils exposing (..)
@@ -16,6 +16,15 @@ import Utils exposing (..)
 
 type alias Addr =
     ( Int, Int )
+
+
+parseAddr : Addr -> Maybe Addr
+parseAddr addr =
+    if mapBoth (clamp 0 maxX) (clamp 0 maxY) addr == addr then
+        Just addr
+
+    else
+        Nothing
 
 
 type Node
@@ -109,12 +118,53 @@ type PortValue
     | Query
 
 
-type Dir
-    = Down
+type alias PortKey =
+    ( Addr, Addr )
+
+
+type Ports
+    = Ports (Dict PortKey Port)
+
+
+emptyPorts : Ports
+emptyPorts =
+    Ports Dict.empty
+
+
+addPort : Addr -> Dir -> Ports -> Ports
+addPort addr dir ((Ports dict) as ports) =
+    case toPortKey addr dir of
+        Nothing ->
+            ports
+
+        Just key ->
+            if Dict.member key dict then
+                ports
+
+            else
+                Ports (Dict.insert key (Port addr dir Empty) dict)
+
+
+toPortKey : Addr -> Dir -> Maybe PortKey
+toPortKey addr dir =
+    moveAddrBy dir addr
+        |> Maybe.map (pair addr)
+
+
+moveAddrBy : Dir -> Addr -> Maybe Addr
+moveAddrBy dir addr =
+    case dir of
+        State.Down ->
+            moveInDir4 Utils.Down addr |> parseAddr
+
+
+portsToList : Ports -> List Port
+portsToList (Ports dict) =
+    Dict.values dict
 
 
 viewPort : Port -> Html msg
-viewPort (Port addr Down mbNum) =
+viewPort (Port addr State.Down mbNum) =
     div
         [ gridAreaFromPortDown addr
         , displayGrid
@@ -316,15 +366,10 @@ viewGrid sim =
 
 viewPorts : Sim -> List (Html msg)
 viewPorts sim =
-    getPorts sim |> List.map viewPort
+    foldlEntries getNodePorts emptyPorts sim.store |> portsToList |> List.map viewPort
 
 
-getPorts : Sim -> List Port
-getPorts sim =
-    foldlEntries (getNodePorts >> List.append) [] sim.store
-
-
-getNodePorts : NodeEntry -> List Port
+getNodePorts : NodeEntry -> Ports -> Ports
 getNodePorts ( addr, node ) =
     --case node of
     --    InputNode _ input ->
@@ -336,16 +381,16 @@ getNodePorts ( addr, node ) =
     --    ExeNode _ ->
     case nodeState node of
         State.Run _ ->
-            []
+            identity
 
         State.Read _ ->
-            []
+            identity
 
-        State.Write num _ _ ->
-            [ Port addr Down (Num num) ]
+        State.Write _ _ _ ->
+            addPort addr State.Down
 
         State.Done ->
-            []
+            identity
 
 
 viewNodes : Sim -> List (Html msg)
