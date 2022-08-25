@@ -201,8 +201,8 @@ addPotentialPorts ( addr, node ) =
         ExeNode _ ->
             addPotentialWrite addr Down
                 >> addPotentialRead addr Up
+                -->> addPotentialRead addr Down
                 >> addPotentialWrite addr Up
-                >> addPotentialRead addr Down
 
 
 addPotentialRead : Addr -> Dir4 -> Ports -> Ports
@@ -278,7 +278,7 @@ viewPort : Port -> Html msg
 viewPort (Port (PortId addr dir _) portValue) =
     case dir of
         Up ->
-            noView
+            viewUpPortValue addr portValue
 
         Down ->
             viewDownPortValue addr portValue
@@ -318,6 +318,47 @@ viewDownPortValue addr portValue =
 
 gridAreaForDownPort : Addr -> Attribute msg
 gridAreaForDownPort ( x, y ) =
+    gridAreaXY
+        ( x * 2
+        , if y == 0 then
+            0
+
+          else if y == maxY then
+            (y * 2) - 2
+
+          else
+            y * 2
+        )
+
+
+viewUpPortValue : Addr -> PortValue -> Html msg
+viewUpPortValue addr portValue =
+    div
+        [ gridAreaForUpPort addr
+        , displayGrid
+        , gridTemplateColumns "1fr 1fr"
+        , pointerEvents "all"
+        ]
+        [ div [ dGrid, placeContentCenter ]
+            [ fRow []
+                [ div [ fontSize "2em", fontWeight "100" ] [ text "A" ]
+                , case portValue of
+                    Empty ->
+                        noView
+
+                    Num num ->
+                        div [] [ text <| Num.toString num ]
+
+                    Queried ->
+                        div [] [ text "?" ]
+                ]
+            ]
+        , div [] []
+        ]
+
+
+gridAreaForUpPort : Addr -> Attribute msg
+gridAreaForUpPort ( x, y ) =
     gridAreaXY
         ( x * 2
         , if y == 0 then
@@ -571,38 +612,6 @@ viewNode ( addr, node ) =
                 , tac
                 ]
                 [ text "MODE:", text (nodeBlockMode node) ]
-
-
-viewDownArrow : PortValue -> Html msg
-viewDownArrow portValue =
-    fRow []
-        [ div [ fontSize "2em", fontWeight "100" ] [ text "⇓" ]
-        , case portValue of
-            Empty ->
-                noView
-
-            Num num ->
-                div [] [ text <| Num.toString num ]
-
-            Queried ->
-                div [] [ text "?" ]
-        ]
-
-
-viewUpArrow : PortValue -> Html msg
-viewUpArrow portValue =
-    fRow []
-        [ div [ fontSize "2em", fontWeight "100" ] [ text "A" ]
-        , case portValue of
-            Empty ->
-                noView
-
-            Num num ->
-                div [] [ text <| Num.toString num ]
-
-            Queried ->
-                div [] [ text "?" ]
-        ]
 
 
 nodeBlockMode : Node -> String
