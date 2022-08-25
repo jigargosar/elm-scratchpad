@@ -301,8 +301,7 @@ viewPort (Port (PortId ( x, y ) dir _) portValue) =
 viewDownPortValue : List (Attribute msg) -> PortValue -> Html msg
 viewDownPortValue attrs portValue =
     verticalPortsContainer attrs
-        [ div [] []
-        , div [ dGrid, placeContentCenter ]
+        [ div [ dGrid, placeContentCenter, gridAreaXY ( 1, 0 ) ]
             [ fRow []
                 [ div [ fontSize "2em", fontWeight "100" ] [ text "⇓" ]
                 , case portValue of
@@ -322,7 +321,7 @@ viewDownPortValue attrs portValue =
 viewUpPortValue : List (Attribute msg) -> PortValue -> Html msg
 viewUpPortValue attrs portValue =
     verticalPortsContainer attrs
-        [ div [ dGrid, placeContentCenter ]
+        [ div [ dGrid, placeContentCenter, gridAreaXY ( 0, 0 ) ]
             [ fRow []
                 [ div [ fontSize "2em", fontWeight "100" ] [ text "A" ]
                 , case portValue of
@@ -336,7 +335,6 @@ viewUpPortValue attrs portValue =
                         div [] [ text "?" ]
                 ]
             ]
-        , div [] []
         ]
 
 
