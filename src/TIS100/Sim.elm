@@ -294,12 +294,12 @@ view : Sim -> Html msg
 view sim =
     fCol [ h100, pa "10px", fontSize "10px", bold, ffMonospace ]
         [ div [] [ text "Cycle: ", text (fromInt sim.cycle) ]
-        , viewSimGrid sim
+        , viewGrid sim
         ]
 
 
-viewSimGrid : Sim -> Html msg
-viewSimGrid sim =
+viewGrid : Sim -> Html msg
+viewGrid sim =
     div
         [ displayGrid
         , gridTemplateRows
