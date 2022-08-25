@@ -298,6 +298,7 @@ view sim =
         ]
 
 
+viewSimGrid : Sim -> Html msg
 viewSimGrid sim =
     div
         [ displayGrid
@@ -308,11 +309,13 @@ viewSimGrid sim =
         (viewNodes sim ++ viewPorts sim)
 
 
+viewPorts : Sim -> List (Html msg)
 viewPorts _ =
     [ viewPort (PortEmptyDown ( 0, 0 ))
     ]
 
 
+viewNodes : Sim -> List (Html msg)
 viewNodes sim =
     Dict.toList sim.store |> List.map viewNode
 
