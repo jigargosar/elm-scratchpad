@@ -110,6 +110,7 @@ viewPort (PortDown addr mbNum) =
         [ gridAreaFromPortDown addr
         , displayGrid
         , gridTemplateColumns "1fr 1fr"
+        , noPointerEvents
         ]
         [ div [] []
         , div [ dGrid, style "place-content" "center" ]
@@ -371,19 +372,14 @@ viewNode ( addr, node ) =
         InputNode title input ->
             div
                 [ nodeAddrToGridArea addr
-
-                --, pa "10px"
                 , dGrid
                 , gridTemplateColumns "1fr 1fr"
                 , placeItemsCenter
                 ]
-                [ div
-                    [ tac
-                    ]
+                [ div [ tac ]
                     [ div [] [ text title ]
                     , div [] [ text "(IDLE 0%)" ]
                     ]
-                , viewDownArrow (InputNode.numForView input)
                 ]
 
         OutputNode title _ ->
