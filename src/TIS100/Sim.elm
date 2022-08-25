@@ -149,7 +149,7 @@ emptyPorts =
 
 getPortList : Sim -> List Port
 getPortList sim =
-    foldlEntries addNodesPotentialPorts emptyPorts sim.store
+    foldlEntries addPotentialPorts emptyPorts sim.store
         |> updatePortValues sim
         |> portsToList
 
@@ -189,8 +189,8 @@ isOutputNode node =
             False
 
 
-addNodesPotentialPorts : NodeEntry -> Ports -> Ports
-addNodesPotentialPorts ( addr, node ) =
+addPotentialPorts : NodeEntry -> Ports -> Ports
+addPotentialPorts ( addr, node ) =
     case node of
         InputNode _ _ ->
             addPotentialWrite addr Down
