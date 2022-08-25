@@ -289,7 +289,7 @@ viewPort (Port (PortId ( x, y ) dir _) portValue) =
                 noView
 
             else
-                viewDownPortValue ( x * 2, y * 2 ) portValue
+                viewDownPortValue [ gridAreaXY ( x * 2, y * 2 ) ] portValue
 
         Left ->
             noView
@@ -298,14 +298,15 @@ viewPort (Port (PortId ( x, y ) dir _) portValue) =
             noView
 
 
-viewDownPortValue : Addr -> PortValue -> Html msg
-viewDownPortValue addr portValue =
+viewDownPortValue : List (Attribute msg) -> PortValue -> Html msg
+viewDownPortValue attrs portValue =
     div
-        [ gridAreaXY addr
-        , displayGrid
-        , gridTemplateColumns "1fr 1fr"
-        , pointerEvents "all"
-        ]
+        (attrs
+            ++ [ displayGrid
+               , gridTemplateColumns "1fr 1fr"
+               , pointerEvents "all"
+               ]
+        )
         [ div [] []
         , div [ dGrid, placeContentCenter ]
             [ fRow []
@@ -324,6 +325,7 @@ viewDownPortValue addr portValue =
         ]
 
 
+viewUpPortValue : List (Attribute msg) -> PortValue -> Html msg
 viewUpPortValue attrs portValue =
     div
         (attrs
@@ -348,23 +350,6 @@ viewUpPortValue attrs portValue =
             ]
         , div [] []
         ]
-
-
-gridAreaForUpPort : Addr -> Attribute msg
-gridAreaForUpPort ( x, y ) =
-    gridAreaXY
-        ( x * 2
-        , if y == 0 then
-            --0
-            Debug.todo "todo"
-
-          else if y == maxY then
-            (y * 2) - 2
-            --Debug.todo "todo"
-
-          else
-            (y * 2) - 2
-        )
 
 
 step : Sim -> Sim
