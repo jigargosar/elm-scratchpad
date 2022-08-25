@@ -50,7 +50,7 @@ type alias WriteBlockedStore =
 
 
 type alias WriteBlockedNode =
-    ( Node, ( Num, S.Dir ), () -> Node )
+    { node : Node, num : Num, dir : S.Dir, cont : () -> Node }
 
 
 type alias NodeEntry =
@@ -330,8 +330,8 @@ stepNodes ns =
 stepNode : Addr -> Node -> Acc -> Acc
 stepNode addr node =
     case nodeState node of
-        S.Write num dir writeResolver ->
-            addToWriteBlocked addr ( node, ( num, dir ), writeResolver )
+        S.Write num dir cont ->
+            addToWriteBlocked addr (WriteBlockedNode node num dir cont)
 
         S.Done ->
             addToCompleted addr node
@@ -394,11 +394,11 @@ readAndUnblock readerAddr readDir acc =
     moveAddrBy readDir readerAddr
         |> Maybe.andThen (getEntryIn acc.writeBlocked)
         |> maybeFilter
-            (\( _, ( _, ( _, writeDir ), _ ) ) ->
-                readDir == S.oppositeDir writeDir
+            (\( _, { dir } ) ->
+                readDir == S.oppositeDir dir
             )
         |> Maybe.map
-            (\( writerAddr, ( _, ( num, _ ), cont ) ) ->
+            (\( writerAddr, { num, cont } ) ->
                 ( num
                 , addToCompleted writerAddr
                     (cont ())
@@ -411,7 +411,7 @@ readAndUnblock readerAddr readDir acc =
 
 resolveAllWriteBlocked : WriteBlockedAcc a -> Store
 resolveAllWriteBlocked acc =
-    Dict.foldl (\na ( n, _, _ ) -> Dict.insert na n) acc.completed acc.writeBlocked
+    Dict.foldl (\addr { node } -> Dict.insert addr node) acc.completed acc.writeBlocked
 
 
 type alias Acc =
