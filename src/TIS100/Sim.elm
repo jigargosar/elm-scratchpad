@@ -383,9 +383,13 @@ viewNode ( addr, node ) =
                 ]
 
         OutputNode title _ ->
-            gridColumns [ pa "10px", nodeAddrToGridArea addr ]
+            div
+                [ nodeAddrToGridArea addr
+                , dGrid
+                , gridTemplateColumns "1fr 1fr"
+                , placeItemsCenter
+                ]
                 [ div [ tac ] [ text title ]
-                , viewDownArrow Nothing
                 ]
 
         ExeNode _ ->
