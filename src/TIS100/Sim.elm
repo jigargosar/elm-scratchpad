@@ -100,7 +100,7 @@ init =
 
 
 type Port
-    = Port Addr Dir (Maybe Num)
+    = Port Addr Dir PortValue
 
 
 type PortValue
@@ -342,7 +342,7 @@ getNodePorts ( addr, node ) =
             []
 
         State.Write num _ _ ->
-            [ Port addr Down (Just num) ]
+            [ Port addr Down (Num num) ]
 
         State.Done ->
             []
@@ -418,17 +418,20 @@ viewNode ( addr, node ) =
                 [ text "MODE:", text (nodeBlockMode node) ]
 
 
-viewDownArrow : Maybe Num -> Html msg
+viewDownArrow : PortValue -> Html msg
 viewDownArrow mbNum =
     fRow []
         [ div [ fontSize "2em", fontWeight "100" ] [ text "⇓" ]
-        , maybeView viewNum mbNum
+        , case mbNum of
+            Empty ->
+                noView
+
+            Num num ->
+                div [] [ text <| Num.toString num ]
+
+            Query ->
+                div [] [ text "?" ]
         ]
-
-
-viewNum : Num -> Html msg
-viewNum num =
-    div [] [ text <| Num.toString num ]
 
 
 nodeBlockMode : Node -> String
