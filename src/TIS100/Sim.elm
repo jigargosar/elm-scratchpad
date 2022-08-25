@@ -282,7 +282,7 @@ viewPort (Port (PortId ( x, y ) dir _) portValue) =
                 noView
 
             else
-                viewUpPortValue ( x * 2, (y * 2) - 2 ) portValue
+                viewUpPortValue [ gridAreaXY ( x * 2, (y * 2) - 2 ) ] portValue
 
         Down ->
             if y < 0 || y >= maxY then
@@ -324,14 +324,14 @@ viewDownPortValue addr portValue =
         ]
 
 
-viewUpPortValue : Addr -> PortValue -> Html msg
-viewUpPortValue addr portValue =
+viewUpPortValue attrs portValue =
     div
-        [ gridAreaXY addr
-        , displayGrid
-        , gridTemplateColumns "1fr 1fr"
-        , pointerEvents "all"
-        ]
+        (attrs
+            ++ [ displayGrid
+               , gridTemplateColumns "1fr 1fr"
+               , pointerEvents "all"
+               ]
+        )
         [ div [ dGrid, placeContentCenter ]
             [ fRow []
                 [ div [ fontSize "2em", fontWeight "100" ] [ text "A" ]
