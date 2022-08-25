@@ -369,7 +369,7 @@ nodeAddrToGridArea ( x, y ) =
 viewNode : NodeEntry -> Html msg
 viewNode ( addr, node ) =
     case node of
-        InputNode title input ->
+        InputNode title _ ->
             div
                 [ nodeAddrToGridArea addr
                 , dGrid
@@ -396,6 +396,8 @@ viewNode ( addr, node ) =
             div
                 [ sOutline "1px solid white"
                 , pa "10px"
+                , sMinWidth "18ch"
+                , sMinHeight "18ch"
                 , nodeAddrToGridArea addr
                 , tac
                 ]
