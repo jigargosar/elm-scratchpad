@@ -140,7 +140,12 @@ getPortList sim =
 
 updatePortValues : Sim -> Ports -> Ports
 updatePortValues sim ports =
-    foldlEntries addNodesPotentialPorts ports sim.store
+    foldlEntries updatePortValuesFromNode ports sim.store
+
+
+updatePortValuesFromNode : NodeEntry -> Ports -> Ports
+updatePortValuesFromNode ( addr, node ) =
+    Debug.todo "todo"
 
 
 addNodesPotentialPorts : NodeEntry -> Ports -> Ports
