@@ -114,11 +114,10 @@ viewPort (PortEmptyDown addr) =
     div
         [ gridAreaFromPortDown addr
         , dGrid
-
-        --, gridTemplateColumns "1fr 1fr"
-        , gridAutoColumns "1fr"
+        , gridTemplateColumns "1fr 1fr"
         ]
-        [ div [ gridAreaXY ( 1, 0 ), dGrid, style "place-content" "center" ]
+        [ div [] []
+        , div [ dGrid, style "place-content" "center" ]
             [ viewDownArrow (Just Num.zero)
             ]
         ]
