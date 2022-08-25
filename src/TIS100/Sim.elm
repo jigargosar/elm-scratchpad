@@ -131,9 +131,16 @@ emptyPorts =
     Ports Dict.empty
 
 
-potentialPorts : Sim -> Ports
-potentialPorts sim =
+getPortList : Sim -> List Port
+getPortList sim =
     foldlEntries addNodesPotentialPorts emptyPorts sim.store
+        |> updatePortValues sim
+        |> portsToList
+
+
+updatePortValues : Sim -> Ports -> Ports
+updatePortValues sim ports =
+    foldlEntries addNodesPotentialPorts ports sim.store
 
 
 addNodesPotentialPorts : NodeEntry -> Ports -> Ports
@@ -403,18 +410,12 @@ viewGrid sim =
 
 viewPorts : Sim -> List (Html msg)
 viewPorts sim =
-    potentialPorts sim
-        |> portsToList
-        |> List.map viewPort
+    getPortList sim |> List.map viewPort
 
 
 viewNodes : Sim -> List (Html msg)
 viewNodes sim =
     Dict.toList sim.store |> List.map viewNode
-
-
-
---noinspection ElmUnusedSymbol
 
 
 maxX =
