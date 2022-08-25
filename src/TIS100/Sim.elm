@@ -166,13 +166,27 @@ updatePortValuesFromNode ( addr, node ) =
             identity
 
         State.Read _ ->
-            queryPort addr State.Up
+            if isOutputNode node then
+                identity
+
+            else
+                queryPort addr State.Up
 
         State.Write num dir _ ->
             writeToPort addr dir num
 
         State.Done ->
             identity
+
+
+isOutputNode : Node -> Bool
+isOutputNode node =
+    case node of
+        OutputNode _ _ ->
+            True
+
+        _ ->
+            False
 
 
 addNodesPotentialPorts : NodeEntry -> Ports -> Ports
