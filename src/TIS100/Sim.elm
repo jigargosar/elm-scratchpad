@@ -145,7 +145,18 @@ updatePortValues sim ports =
 
 updatePortValuesFromNode : NodeEntry -> Ports -> Ports
 updatePortValuesFromNode ( addr, node ) =
-    Debug.todo "todo"
+    case nodeState node of
+        State.Run _ ->
+            identity
+
+        State.Read _ ->
+            identity
+
+        State.Write num dir _ ->
+            writeToPort addr dir num
+
+        State.Done ->
+            identity
 
 
 addNodesPotentialPorts : NodeEntry -> Ports -> Ports
@@ -183,6 +194,21 @@ addPotentialWrite addr dir ((Ports dict) as ports) =
 
             else
                 Ports (Dict.insert key (Port addr dir Empty) dict)
+
+
+writeToPort : Addr -> Dir -> Num -> Ports -> Ports
+writeToPort addr dir num ((Ports dict) as ports) =
+    case toPortKey addr dir of
+        Nothing ->
+            ports
+
+        Just key ->
+            case Dict.get key dict of
+                Nothing ->
+                    ports
+
+                Just _ ->
+                    Ports (Dict.insert key (Port addr dir (Num num)) dict)
 
 
 toPortKey : Addr -> Dir -> Maybe PortKey
