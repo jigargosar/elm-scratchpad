@@ -1174,6 +1174,10 @@ placeContentCenter =
     style "place-content" "center"
 
 
+placeItemsCenter =
+    style "place-items" "center"
+
+
 contentCenter =
     style "justify-content" "center"
 

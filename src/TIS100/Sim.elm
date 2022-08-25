@@ -369,10 +369,16 @@ viewNode : NodeEntry -> Html msg
 viewNode ( addr, node ) =
     case node of
         InputNode title input ->
-            gridColumns [ pa "10px", nodeAddrToGridArea addr ]
+            div
+                [ nodeAddrToGridArea addr
+
+                --, pa "10px"
+                , dGrid
+                , gridTemplateColumns "1fr 1fr"
+                , placeItemsCenter
+                ]
                 [ div
-                    [ dGrid
-                    , tac
+                    [ tac
                     ]
                     [ div [] [ text title ]
                     , div [] [ text "(IDLE 0%)" ]
