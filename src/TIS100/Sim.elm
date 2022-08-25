@@ -394,13 +394,14 @@ readAndUnblock readerAddr readDir acc =
     moveAddrBy readDir readerAddr
         |> Maybe.andThen (getEntryIn acc.writeBlocked)
         |> maybeFilter
-            (\( _, { dir } ) ->
-                readDir == S.oppositeDir dir
+            (\( _, writeBlockedNode ) ->
+                readDir == S.oppositeDir writeBlockedNode.dir
             )
         |> Maybe.map
             (\( writerAddr, { num, cont } ) ->
                 ( num
-                , addToCompleted writerAddr
+                , addToCompleted
+                    writerAddr
                     (cont ())
                     { acc
                         | writeBlocked = Dict.remove writerAddr acc.writeBlocked
