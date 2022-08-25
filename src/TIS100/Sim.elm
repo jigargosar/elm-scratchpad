@@ -366,31 +366,22 @@ viewGrid sim =
 
 viewPorts : Sim -> List (Html msg)
 viewPorts sim =
-    foldlEntries getNodePorts emptyPorts sim.store |> portsToList |> List.map viewPort
+    foldlEntries getNodePorts emptyPorts sim.store
+        |> portsToList
+        |> List.map viewPort
 
 
 getNodePorts : NodeEntry -> Ports -> Ports
 getNodePorts ( addr, node ) =
-    --case node of
-    --    InputNode _ input ->
-    --        [ Port addr Down (InputNode.numForView input) ]
-    --
-    --    OutputNode _ _ ->
-    --        [ Port addr Down Nothing ]
-    --
-    --    ExeNode _ ->
-    case nodeState node of
-        State.Run _ ->
-            identity
-
-        State.Read _ ->
-            identity
-
-        State.Write _ _ _ ->
+    case node of
+        InputNode _ _ ->
             addPort addr State.Down
 
-        State.Done ->
-            identity
+        OutputNode _ _ ->
+            addPort addr State.Down
+
+        ExeNode _ ->
+            addPort addr State.Down
 
 
 viewNodes : Sim -> List (Html msg)
