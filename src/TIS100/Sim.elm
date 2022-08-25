@@ -298,6 +298,32 @@ viewPort (Port (PortId addr dir _) portValue) =
         )
 
 
+viewDownPortValue : Addr -> PortValue -> Html msg
+viewDownPortValue addr portValue =
+    div
+        [ gridAreaFromPortDown addr
+        , displayGrid
+        , gridTemplateColumns "1fr 1fr"
+        , pointerEvents "all"
+        ]
+        [ div [ dGrid, placeContentCenter ]
+            [ fRow []
+                [ div [ fontSize "2em", fontWeight "100" ] [ text "⇓" ]
+                , case portValue of
+                    Empty ->
+                        noView
+
+                    Num num ->
+                        div [] [ text <| Num.toString num ]
+
+                    Queried ->
+                        div [] [ text "?" ]
+                ]
+            ]
+        , div [] []
+        ]
+
+
 gridAreaFromPortDown : Addr -> Attribute msg
 gridAreaFromPortDown ( x, y ) =
     gridAreaXY
