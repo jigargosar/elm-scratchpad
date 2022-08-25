@@ -328,16 +328,6 @@ getNodePorts ( addr, node ) =
             []
 
 
-foldlEntries : (( k, v ) -> a -> a) -> a -> Dict k v -> a
-foldlEntries fn =
-    Dict.foldl (\k v -> fn ( k, v ))
-
-
-foldlValues : (v -> a -> a) -> a -> Dict k v -> a
-foldlValues fn =
-    Dict.foldl (always fn)
-
-
 viewNodes : Sim -> List (Html msg)
 viewNodes sim =
     Dict.toList sim.store |> List.map viewNode

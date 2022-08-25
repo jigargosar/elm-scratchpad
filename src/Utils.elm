@@ -2043,6 +2043,16 @@ getEntry key dict =
     Dict.get key dict |> Maybe.map (pair key)
 
 
+foldlEntries : (( k, v ) -> a -> a) -> a -> Dict k v -> a
+foldlEntries fn =
+    Dict.foldl (\k v -> fn ( k, v ))
+
+
+foldlValues : (v -> a -> a) -> a -> Dict k v -> a
+foldlValues fn =
+    Dict.foldl (always fn)
+
+
 
 -- LIST HELPERS
 
