@@ -193,14 +193,14 @@ addPotentialPort addr dir ((Ports dict) as ports) portKey =
 
 addPotentialWrite : Addr -> Dir -> Ports -> Ports
 addPotentialWrite addr dir ports =
-    toPortKey addr dir
+    portKeyFromWrite addr dir
         |> Maybe.map (addPotentialPort addr dir ports)
         |> Maybe.withDefault ports
 
 
 writeToPort : Addr -> Dir -> Num -> Ports -> Ports
 writeToPort addr dir num ((Ports dict) as ports) =
-    case toPortKey addr dir of
+    case portKeyFromWrite addr dir of
         Nothing ->
             ports
 
@@ -213,8 +213,8 @@ writeToPort addr dir num ((Ports dict) as ports) =
                     Ports (Dict.insert key (Port addr dir (Num num)) dict)
 
 
-toPortKey : Addr -> Dir -> Maybe PortKey
-toPortKey addr dir =
+portKeyFromWrite : Addr -> Dir -> Maybe PortKey
+portKeyFromWrite addr dir =
     moveAddrBy dir addr |> Maybe.map (pair addr)
 
 
