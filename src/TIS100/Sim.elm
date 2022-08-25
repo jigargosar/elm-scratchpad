@@ -376,7 +376,7 @@ viewNode ( addr, node ) =
                 , gridTemplateColumns "1fr 1fr"
                 , placeItemsCenter
                 ]
-                [ div [ tac ]
+                [ div [ tac, fg (grayN 0.7) ]
                     [ div [] [ text title ]
                     , div [] [ text "(IDLE 0%)" ]
                     ]
@@ -389,7 +389,7 @@ viewNode ( addr, node ) =
                 , gridTemplateColumns "1fr 1fr"
                 , placeItemsCenter
                 ]
-                [ div [ tac ] [ text title ]
+                [ div [ tac, fg (grayN 0.7) ] [ text title ]
                 ]
 
         ExeNode _ ->
