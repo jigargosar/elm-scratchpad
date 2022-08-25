@@ -409,20 +409,6 @@ readAndUnblock readerAddr readDir acc =
             )
 
 
-getWriteBlockedEntryFromReaderAddrAndDir :
-    Addr
-    -> S.Dir
-    -> Acc
-    -> Maybe ( Addr, WriteBlockedNode )
-getWriteBlockedEntryFromReaderAddrAndDir readerAddr readDir acc =
-    case moveAddrBy readDir readerAddr of
-        Nothing ->
-            Nothing
-
-        Just writerAddr ->
-            getEntry writerAddr acc.writeBlocked
-
-
 resolveAllWriteBlocked : WriteBlockedAcc a -> Store
 resolveAllWriteBlocked acc =
     Dict.foldl (\na ( n, _, _ ) -> Dict.insert na n) acc.completed acc.writeBlocked
