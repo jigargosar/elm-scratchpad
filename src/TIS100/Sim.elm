@@ -143,10 +143,10 @@ addNodesPotentialPorts ( addr, node ) =
             addPotentialWrite addr State.Down
 
         OutputNode _ _ ->
-            addPotentialWrite addr State.Down
+            addPotentialRead addr State.Up
 
         ExeNode _ ->
-            addPotentialWrite addr State.Down
+            addPotentialWrite addr State.Down >> addPotentialRead addr State.Up
 
 
 addPotentialRead : Addr -> Dir -> Ports -> Ports
