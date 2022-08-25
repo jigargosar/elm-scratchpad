@@ -1112,6 +1112,10 @@ autofocus =
     HA.autofocus
 
 
+allPointerEvents =
+    pointerEvents "all"
+
+
 noPointerEvents =
     pointerEvents "none"
 
