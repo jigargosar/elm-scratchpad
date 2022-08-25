@@ -112,8 +112,8 @@ initPort from =
 viewPort : Port -> Html msg
 viewPort (PortEmptyDown addr) =
     div [ dGrid, style "grid-template-cols" "1fr 1fr", gridAreaFromPortDown addr ]
-        [ div [ gridAreaXY ( 1, 0 ) ]
-            [ viewDownArrow Nothing
+        [ div [ gridAreaXY ( 1, 0 ), dGrid, style "place-content" "center" ]
+            [ viewDownArrow (Just Num.zero)
             ]
         ]
 
@@ -295,7 +295,10 @@ view sim =
                 ("repeat(" ++ fromInt (maxY - 1) ++ ", 1fr 2fr) 1fr")
             , style "grid-template-columns" "repeat(2, 2fr 1fr) 2fr"
             ]
-            (Dict.toList sim.store |> List.map viewNode)
+            ((Dict.toList sim.store |> List.map viewNode)
+                ++ [ viewPort (PortEmptyDown ( 0, 0 ))
+                   ]
+            )
         ]
 
 
