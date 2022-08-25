@@ -199,7 +199,10 @@ addPotentialPorts ( addr, node ) =
             addPotentialRead addr Up
 
         ExeNode _ ->
-            addPotentialWrite addr Down >> addPotentialRead addr Up
+            addPotentialWrite addr Down
+                >> addPotentialRead addr Up
+                >> addPotentialWrite addr Up
+                >> addPotentialRead addr Down
 
 
 addPotentialRead : Addr -> Dir4 -> Ports -> Ports
