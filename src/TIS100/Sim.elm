@@ -113,7 +113,7 @@ viewPort : Port -> Html msg
 viewPort (PortEmptyDown addr) =
     div
         [ gridAreaFromPortDown addr
-        , dGrid
+        , displayGrid
         , gridTemplateColumns "1fr 1fr"
         ]
         [ div [] []
