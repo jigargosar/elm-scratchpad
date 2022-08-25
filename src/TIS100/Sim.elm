@@ -232,6 +232,21 @@ writeToPort addr dir num ((Ports dict) as ports) =
                     Ports (Dict.insert key (Port portId (Num num)) dict)
 
 
+queryPort : Addr -> Dir -> Ports -> Ports
+queryPort addr dir ((Ports dict) as ports) =
+    case portIdForReading addr dir of
+        Nothing ->
+            ports
+
+        Just ((PortId _ _ key) as portId) ->
+            case Dict.get key dict of
+                Just (Port _ Empty) ->
+                    Ports (Dict.insert key (Port portId Queried) dict)
+
+                _ ->
+                    ports
+
+
 moveAddrBy : Dir -> Addr -> Maybe Addr
 moveAddrBy dir addr =
     case dir of
