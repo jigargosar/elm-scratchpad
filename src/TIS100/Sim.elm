@@ -101,16 +101,11 @@ init =
 
 
 type Port
-    = PortEmptyDown Addr
-
-
-initPort : Addr -> Port
-initPort from =
-    PortEmptyDown from
+    = PortDown Addr (Maybe Num)
 
 
 viewPort : Port -> Html msg
-viewPort (PortEmptyDown addr) =
+viewPort (PortDown addr mbNum) =
     div
         [ gridAreaFromPortDown addr
         , displayGrid
@@ -118,7 +113,7 @@ viewPort (PortEmptyDown addr) =
         ]
         [ div [] []
         , div [ dGrid, style "place-content" "center" ]
-            [ viewDownArrow (Just Num.zero)
+            [ viewDownArrow mbNum
             ]
         ]
 
@@ -310,9 +305,36 @@ viewGrid sim =
 
 
 viewPorts : Sim -> List (Html msg)
-viewPorts _ =
-    [ viewPort (PortEmptyDown ( 0, 0 ))
-    ]
+viewPorts sim =
+    getPorts sim |> List.map viewPort
+
+
+getPorts : Sim -> List Port
+getPorts sim =
+    foldlEntries (getNodePorts >> List.append) [] sim.store
+
+
+getNodePorts : NodeEntry -> List Port
+getNodePorts ( addr, node ) =
+    case node of
+        InputNode _ input ->
+            [ PortDown addr (InputNode.numForView input) ]
+
+        OutputNode _ _ ->
+            [ PortDown addr Nothing ]
+
+        ExeNode _ ->
+            []
+
+
+foldlEntries : (( k, v ) -> a -> a) -> a -> Dict k v -> a
+foldlEntries fn =
+    Dict.foldl (\k v -> fn ( k, v ))
+
+
+foldlValues : (v -> a -> a) -> a -> Dict k v -> a
+foldlValues fn =
+    Dict.foldl (always fn)
 
 
 viewNodes : Sim -> List (Html msg)
