@@ -215,8 +215,7 @@ writeToPort addr dir num ((Ports dict) as ports) =
 
 toPortKey : Addr -> Dir -> Maybe PortKey
 toPortKey addr dir =
-    moveAddrBy dir addr
-        |> Maybe.map (pair addr)
+    moveAddrBy dir addr |> Maybe.map (pair addr)
 
 
 moveAddrBy : Dir -> Addr -> Maybe Addr
