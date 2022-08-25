@@ -5,7 +5,7 @@ module TIS100.InputNode exposing
     , state
     )
 
-import TIS100.NodeState as S exposing (NodeState)
+import TIS100.NodeState as S exposing (Dir(..), NodeState)
 import TIS100.Num exposing (Num)
 
 
@@ -35,7 +35,7 @@ state node =
             S.Run (\() -> WriteBlocked num nums)
 
         WriteBlocked num nums ->
-            S.Write num (\() -> fromList nums)
+            S.Write num Down (\() -> fromList nums)
 
 
 numForView : InputNode -> Maybe Num

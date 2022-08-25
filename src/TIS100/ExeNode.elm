@@ -1,6 +1,6 @@
 module TIS100.ExeNode exposing (ExeNode, init, state)
 
-import TIS100.NodeState as S
+import TIS100.NodeState as S exposing (Dir(..))
 import TIS100.Num exposing (Num)
 
 
@@ -29,4 +29,4 @@ state node =
             S.Read WriteBlocked
 
         WriteBlocked num ->
-            S.Write num (\() -> ReadyToRun)
+            S.Write num Down (\() -> ReadyToRun)

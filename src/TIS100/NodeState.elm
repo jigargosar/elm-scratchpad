@@ -3,18 +3,22 @@ module TIS100.NodeState exposing (..)
 import TIS100.Num exposing (Num)
 
 
+type Dir
+    = Down
+
+
 type NodeState a
     = Run (() -> a)
     | Read (Num -> a)
-    | Write Num (() -> a)
+    | Write Num Dir (() -> a)
     | Done
 
 
 map : (a -> b) -> NodeState a -> NodeState b
 map mapper ns =
     case ns of
-        Write num resolver ->
-            Write num (\() -> resolver () |> mapper)
+        Write num dir cont ->
+            Write num dir (\() -> cont () |> mapper)
 
         Done ->
             Done

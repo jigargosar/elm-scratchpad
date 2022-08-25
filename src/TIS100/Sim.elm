@@ -6,7 +6,6 @@ module TIS100.Sim exposing
     )
 
 import Dict exposing (Dict)
-import Html.Attributes as HA
 import TIS100.ExeNode as ExeNode exposing (ExeNode)
 import TIS100.InputNode as InputNode exposing (InputNode)
 import TIS100.NodeState as State exposing (NodeState)
@@ -104,6 +103,12 @@ type Port
     = Port Addr Dir (Maybe Num)
 
 
+type PortValue
+    = Empty
+    | Num Num
+    | Query
+
+
 type Dir
     = Down
 
@@ -156,7 +161,7 @@ stepNodes ns =
 stepNode : Addr -> Node -> Acc -> Acc
 stepNode addr node =
     case nodeState node of
-        State.Write num writeResolver ->
+        State.Write num _ writeResolver ->
             addToWriteBlocked addr ( node, num, writeResolver )
 
         State.Done ->
@@ -321,20 +326,35 @@ getPorts sim =
 
 getNodePorts : NodeEntry -> List Port
 getNodePorts ( addr, node ) =
-    case node of
-        InputNode _ input ->
-            [ Port addr Down (InputNode.numForView input) ]
+    --case node of
+    --    InputNode _ input ->
+    --        [ Port addr Down (InputNode.numForView input) ]
+    --
+    --    OutputNode _ _ ->
+    --        [ Port addr Down Nothing ]
+    --
+    --    ExeNode _ ->
+    case nodeState node of
+        State.Run _ ->
+            []
 
-        OutputNode _ _ ->
-            [ Port addr Down Nothing ]
+        State.Read _ ->
+            []
 
-        ExeNode _ ->
+        State.Write num _ _ ->
+            [ Port addr Down (Just num) ]
+
+        State.Done ->
             []
 
 
 viewNodes : Sim -> List (Html msg)
 viewNodes sim =
     Dict.toList sim.store |> List.map viewNode
+
+
+
+--noinspection ElmUnusedSymbol
 
 
 maxX =
@@ -415,13 +435,13 @@ nodeBlockMode : Node -> String
 nodeBlockMode node =
     case nodeState node of
         State.Run _ ->
-            "N/A"
+            "RUN"
 
         State.Read _ ->
             "READ"
 
-        State.Write _ _ ->
+        State.Write _ _ _ ->
             "WRITE"
 
         State.Done ->
-            "N/A"
+            "IDLE"
