@@ -4,8 +4,9 @@ module TIS100.OutputNode exposing
     , state
     )
 
-import TIS100.NodeState as S exposing (NodeState)
+import TIS100.NodeState as S
 import TIS100.Num exposing (Num)
+import Utils exposing (Dir4(..))
 
 
 type OutputNode
@@ -23,7 +24,7 @@ fromExpected expected =
         ReadyToRun expected []
 
 
-state : OutputNode -> NodeState OutputNode
+state : OutputNode -> S.NodeState OutputNode
 state node =
     case node of
         Done _ ->
@@ -33,7 +34,7 @@ state node =
             S.Run (\() -> ReadBlocked pendingReads nums)
 
         ReadBlocked pendingReads nums ->
-            S.Read S.Up (resolveRead pendingReads nums)
+            S.Read Up (resolveRead pendingReads nums)
 
 
 resolveRead : Int -> List Num -> Num -> OutputNode

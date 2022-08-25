@@ -1,27 +1,13 @@
 module TIS100.NodeState exposing (..)
 
 import TIS100.Num exposing (Num)
-
-
-type Dir
-    = Down
-    | Up
-
-
-oppositeDir : Dir -> Dir
-oppositeDir dir =
-    case dir of
-        Down ->
-            Up
-
-        Up ->
-            Down
+import Utils exposing (Dir4)
 
 
 type NodeState a
     = Run (() -> a)
-    | Read Dir (Num -> a)
-    | Write Num Dir (() -> a)
+    | Read Dir4 (Num -> a)
+    | Write Num Dir4 (() -> a)
     | Done
 
 

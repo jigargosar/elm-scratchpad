@@ -8,7 +8,7 @@ module TIS100.Sim exposing
 import Dict exposing (Dict)
 import TIS100.ExeNode as ExeNode exposing (ExeNode)
 import TIS100.InputNode as InputNode exposing (InputNode)
-import TIS100.NodeState as S exposing (Dir(..), NodeState)
+import TIS100.NodeState as S exposing (NodeState)
 import TIS100.Num as Num exposing (Num)
 import TIS100.OutputNode as OutputNode exposing (OutputNode)
 import Utils exposing (..)
@@ -42,7 +42,7 @@ type alias ReadBlockedStore =
 
 
 type alias ReadBlockedNode =
-    ( Node, S.Dir, Num -> Node )
+    ( Node, Dir4, Num -> Node )
 
 
 type alias WriteBlockedStore =
@@ -50,7 +50,7 @@ type alias WriteBlockedStore =
 
 
 type alias WriteBlockedNode =
-    { node : Node, num : Num, dir : S.Dir, cont : () -> Node }
+    { node : Node, num : Num, dir : Dir4, cont : () -> Node }
 
 
 type alias NodeEntry =
@@ -119,19 +119,19 @@ type PortValue
 
 
 type PortId
-    = PortId Addr Dir PortKey
+    = PortId Addr Dir4 PortKey
 
 
-portIdForWriting : Addr -> Dir -> Maybe PortId
+portIdForWriting : Addr -> Dir4 -> Maybe PortId
 portIdForWriting addr dir =
     moveAddrBy dir addr |> Maybe.map (pair addr >> PortId addr dir)
 
 
-portIdForReading : Addr -> Dir -> Maybe PortId
+portIdForReading : Addr -> Dir4 -> Maybe PortId
 portIdForReading addr dir =
     moveAddrBy dir addr
         |> Maybe.map
-            (\oppAddr -> PortId oppAddr (S.oppositeDir dir) ( oppAddr, addr ))
+            (\oppAddr -> PortId oppAddr (oppositeDir4 dir) ( oppAddr, addr ))
 
 
 type alias PortKey =
@@ -193,16 +193,16 @@ addNodesPotentialPorts : NodeEntry -> Ports -> Ports
 addNodesPotentialPorts ( addr, node ) =
     case node of
         InputNode _ _ ->
-            addPotentialWrite addr S.Down
+            addPotentialWrite addr Down
 
         OutputNode _ _ ->
-            addPotentialRead addr S.Up
+            addPotentialRead addr Up
 
         ExeNode _ ->
-            addPotentialWrite addr S.Down >> addPotentialRead addr S.Up
+            addPotentialWrite addr Down >> addPotentialRead addr Up
 
 
-addPotentialRead : Addr -> Dir -> Ports -> Ports
+addPotentialRead : Addr -> Dir4 -> Ports -> Ports
 addPotentialRead addr dir ports =
     case portIdForReading addr dir of
         Nothing ->
@@ -212,7 +212,7 @@ addPotentialRead addr dir ports =
             addPotentialPort pid ports
 
 
-addPotentialWrite : Addr -> Dir -> Ports -> Ports
+addPotentialWrite : Addr -> Dir4 -> Ports -> Ports
 addPotentialWrite addr dir ports =
     case portIdForWriting addr dir of
         Nothing ->
@@ -231,7 +231,7 @@ addPotentialPort ((PortId _ _ portKey) as portId) ((Ports dict) as ports) =
         Ports (Dict.insert portKey (Port portId Empty) dict)
 
 
-writeToPort : Addr -> Dir -> Num -> Ports -> Ports
+writeToPort : Addr -> Dir4 -> Num -> Ports -> Ports
 writeToPort addr dir num ((Ports dict) as ports) =
     case portIdForWriting addr dir of
         Nothing ->
@@ -246,7 +246,7 @@ writeToPort addr dir num ((Ports dict) as ports) =
                     Ports (Dict.insert key (Port portId (Num num)) dict)
 
 
-queryPort : Addr -> Dir -> Ports -> Ports
+queryPort : Addr -> Dir4 -> Ports -> Ports
 queryPort addr dir ((Ports dict) as ports) =
     case portIdForReading addr dir of
         Nothing ->
@@ -261,14 +261,9 @@ queryPort addr dir ((Ports dict) as ports) =
                     ports
 
 
-moveAddrBy : Dir -> Addr -> Maybe Addr
+moveAddrBy : Dir4 -> Addr -> Maybe Addr
 moveAddrBy dir addr =
-    case dir of
-        S.Down ->
-            moveInDir4 Utils.Down addr |> parseAddr
-
-        S.Up ->
-            moveInDir4 Utils.Up addr |> parseAddr
+    moveInDir4 dir addr |> parseAddr
 
 
 portsToList : Ports -> List Port
@@ -285,15 +280,21 @@ viewPort (Port (PortId addr dir _) portValue) =
         , pointerEvents "all"
         ]
         (case dir of
-            S.Up ->
+            Up ->
                 [ div [ dGrid, placeContentCenter ] [ viewUpArrow portValue ]
                 , div [] []
                 ]
 
-            S.Down ->
+            Down ->
                 [ div [] []
                 , div [ dGrid, placeContentCenter ] [ viewDownArrow portValue ]
                 ]
+
+            Left ->
+                []
+
+            Right ->
+                []
         )
 
 
@@ -387,7 +388,7 @@ resolveReadBlocked addr ( node, dir, cont ) acc =
 
 readAndUnblock :
     Addr
-    -> S.Dir
+    -> Dir4
     -> WriteBlockedAcc a
     -> Maybe ( Num, WriteBlockedAcc a )
 readAndUnblock readerAddr readDir acc =
@@ -395,7 +396,7 @@ readAndUnblock readerAddr readDir acc =
         |> Maybe.andThen (getEntryIn acc.writeBlocked)
         |> maybeFilter
             (\( _, writeBlockedNode ) ->
-                readDir == S.oppositeDir writeBlockedNode.dir
+                readDir == oppositeDir4 writeBlockedNode.dir
             )
         |> Maybe.map
             (\( writerAddr, { num, cont } ) ->

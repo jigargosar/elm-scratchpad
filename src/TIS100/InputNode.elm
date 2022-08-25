@@ -1,12 +1,12 @@
 module TIS100.InputNode exposing
     ( InputNode
     , fromList
-    , numForView
     , state
     )
 
-import TIS100.NodeState as S exposing (Dir(..), NodeState)
+import TIS100.NodeState as S
 import TIS100.Num exposing (Num)
+import Utils exposing (Dir4(..))
 
 
 type InputNode
@@ -25,7 +25,7 @@ fromList nums =
             Done
 
 
-state : InputNode -> NodeState InputNode
+state : InputNode -> S.NodeState InputNode
 state node =
     case node of
         Done ->
@@ -36,13 +36,3 @@ state node =
 
         WriteBlocked num nums ->
             S.Write num Down (\() -> fromList nums)
-
-
-numForView : InputNode -> Maybe Num
-numForView node =
-    case node of
-        WriteBlocked num _ ->
-            Just num
-
-        _ ->
-            Nothing
