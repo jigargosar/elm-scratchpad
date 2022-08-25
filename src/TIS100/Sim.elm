@@ -266,6 +266,10 @@ view sim =
         ]
 
 
+maxX =
+    3
+
+
 maxY =
     3
 
