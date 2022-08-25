@@ -100,6 +100,15 @@ init =
     { store = nodeStore, cycle = 0 }
 
 
+type Port
+    = PortEmptyDown Addr
+
+
+initPort : Addr -> Port
+initPort from =
+    PortEmptyDown from
+
+
 step : Sim -> Sim
 step sim =
     { sim
