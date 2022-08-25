@@ -101,11 +101,15 @@ init =
 
 
 type Port
-    = PortDown Addr (Maybe Num)
+    = Port Addr Dir (Maybe Num)
+
+
+type Dir
+    = Down
 
 
 viewPort : Port -> Html msg
-viewPort (PortDown addr mbNum) =
+viewPort (Port addr Down mbNum) =
     div
         [ gridAreaFromPortDown addr
         , displayGrid
@@ -319,10 +323,10 @@ getNodePorts : NodeEntry -> List Port
 getNodePorts ( addr, node ) =
     case node of
         InputNode _ input ->
-            [ PortDown addr (InputNode.numForView input) ]
+            [ Port addr Down (InputNode.numForView input) ]
 
         OutputNode _ _ ->
-            [ PortDown addr Nothing ]
+            [ Port addr Down Nothing ]
 
         ExeNode _ ->
             []
