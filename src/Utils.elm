@@ -1657,55 +1657,6 @@ toFloat2 =
     mapEach toFloat
 
 
-{-| Only when `from` is member and `to` is not member.
--}
-moveValueFromKeyToKey : comparable -> comparable -> Dict comparable v -> Dict comparable v
-moveValueFromKeyToKey from to dict =
-    case ( Dict.get from dict, Dict.get to dict ) of
-        ( Just value, Nothing ) ->
-            dict
-                |> Dict.remove from
-                |> Dict.insert to value
-
-        _ ->
-            dict
-
-
-mapValueAndSwapWithKey : (v -> comparable) -> Dict k v -> Dict comparable k
-mapValueAndSwapWithKey fn =
-    Dict.foldl (\k v -> Dict.insert (fn v) k) Dict.empty
-
-
-filterKey : (comparable -> Bool) -> Dict comparable b -> Dict comparable b
-filterKey fn =
-    Dict.filter (\k _ -> fn k)
-
-
-rejectKey : (comparable -> Bool) -> Dict comparable b -> Dict comparable b
-rejectKey fn =
-    filterKey (fn >> not)
-
-
-filterValue : (b -> Bool) -> Dict comparable b -> Dict comparable b
-filterValue fn =
-    Dict.filter (\_ v -> fn v)
-
-
-partitionKey : (comparable -> Bool) -> Dict comparable b -> ( Dict comparable b, Dict comparable b )
-partitionKey fn d =
-    ( filterKey fn d, rejectKey fn d )
-
-
-renameKey : (a -> comparable) -> Dict a v -> Dict comparable v
-renameKey fn =
-    Dict.toList >> List.map (Tuple.mapFirst fn) >> Dict.fromList
-
-
-dictGet2 : comparable -> comparable -> Dict comparable v -> Maybe ( v, v )
-dictGet2 a b dict =
-    Maybe.map2 Tuple.pair (Dict.get a dict) (Dict.get b dict)
-
-
 withRollback : (a -> Maybe a) -> a -> a
 withRollback fn x =
     case fn x of
@@ -2031,6 +1982,55 @@ mapDocument tagger { title, body } =
 
 
 -- DICT HELPERS
+
+
+{-| Only when `from` is member and `to` is not member.
+-}
+moveValueFromKeyToKey : comparable -> comparable -> Dict comparable v -> Dict comparable v
+moveValueFromKeyToKey from to dict =
+    case ( Dict.get from dict, Dict.get to dict ) of
+        ( Just value, Nothing ) ->
+            dict
+                |> Dict.remove from
+                |> Dict.insert to value
+
+        _ ->
+            dict
+
+
+mapValueAndSwapWithKey : (v -> comparable) -> Dict k v -> Dict comparable k
+mapValueAndSwapWithKey fn =
+    Dict.foldl (\k v -> Dict.insert (fn v) k) Dict.empty
+
+
+filterKey : (comparable -> Bool) -> Dict comparable b -> Dict comparable b
+filterKey fn =
+    Dict.filter (\k _ -> fn k)
+
+
+rejectKey : (comparable -> Bool) -> Dict comparable b -> Dict comparable b
+rejectKey fn =
+    filterKey (fn >> not)
+
+
+filterValue : (b -> Bool) -> Dict comparable b -> Dict comparable b
+filterValue fn =
+    Dict.filter (\_ v -> fn v)
+
+
+partitionKey : (comparable -> Bool) -> Dict comparable b -> ( Dict comparable b, Dict comparable b )
+partitionKey fn d =
+    ( filterKey fn d, rejectKey fn d )
+
+
+renameKey : (a -> comparable) -> Dict a v -> Dict comparable v
+renameKey fn =
+    Dict.toList >> List.map (Tuple.mapFirst fn) >> Dict.fromList
+
+
+dictGet2 : comparable -> comparable -> Dict comparable v -> Maybe ( v, v )
+dictGet2 a b dict =
+    Maybe.map2 Tuple.pair (Dict.get a dict) (Dict.get b dict)
 
 
 getInDict : Dict comparable v -> comparable -> Maybe v
