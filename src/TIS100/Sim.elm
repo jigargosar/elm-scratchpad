@@ -131,6 +131,11 @@ emptyPorts =
     Ports Dict.empty
 
 
+potentialPorts : Sim -> Ports
+potentialPorts sim =
+    foldlEntries getNodePorts emptyPorts sim.store
+
+
 addPort : Addr -> Dir -> Ports -> Ports
 addPort addr dir ((Ports dict) as ports) =
     case toPortKey addr dir of
@@ -366,7 +371,7 @@ viewGrid sim =
 
 viewPorts : Sim -> List (Html msg)
 viewPorts sim =
-    foldlEntries getNodePorts emptyPorts sim.store
+    potentialPorts sim
         |> portsToList
         |> List.map viewPort
 
