@@ -201,8 +201,8 @@ addPotentialPorts ( addr, node ) =
         ExeNode _ ->
             addPotentialWrite addr Down
                 >> addPotentialRead addr Up
-                -->> addPotentialWrite addr Up
                 >> addPotentialRead addr Down
+                >> addPotentialWrite addr Up
 
 
 addPotentialRead : Addr -> Dir4 -> Ports -> Ports
@@ -275,13 +275,21 @@ portsToList (Ports dict) =
 
 
 viewPort : Port -> Html msg
-viewPort (Port (PortId addr dir _) portValue) =
+viewPort (Port (PortId (( x, y ) as addr) dir _) portValue) =
     case dir of
         Up ->
-            viewUpPortValue addr portValue
+            if y <= 1 || y >= maxY then
+                noView
+
+            else
+                viewUpPortValue ( x * 2, (y * 2) - 2 ) portValue
 
         Down ->
-            viewDownPortValue addr portValue
+            if y < 0 || y >= maxY then
+                noView
+
+            else
+                viewDownPortValue ( x * 2, y * 2 ) portValue
 
         Left ->
             noView
@@ -293,7 +301,7 @@ viewPort (Port (PortId addr dir _) portValue) =
 viewDownPortValue : Addr -> PortValue -> Html msg
 viewDownPortValue addr portValue =
     div
-        [ gridAreaForDownPort addr
+        [ gridAreaXY addr
         , displayGrid
         , gridTemplateColumns "1fr 1fr"
         , pointerEvents "all"
@@ -316,25 +324,10 @@ viewDownPortValue addr portValue =
         ]
 
 
-gridAreaForDownPort : Addr -> Attribute msg
-gridAreaForDownPort ( x, y ) =
-    gridAreaXY
-        ( x * 2
-        , if y == 0 then
-            0
-
-          else if y == maxY then
-            (y * 2) - 2
-
-          else
-            y * 2
-        )
-
-
 viewUpPortValue : Addr -> PortValue -> Html msg
 viewUpPortValue addr portValue =
     div
-        [ gridAreaForUpPort addr
+        [ gridAreaXY addr
         , displayGrid
         , gridTemplateColumns "1fr 1fr"
         , pointerEvents "all"
