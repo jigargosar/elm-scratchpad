@@ -42,7 +42,7 @@ type alias ReadBlockedStore =
 
 
 type alias ReadBlockedNode =
-    ( Node, Num -> Node )
+    ( Node, S.Dir, Num -> Node )
 
 
 type alias WriteBlockedStore =
@@ -50,7 +50,7 @@ type alias WriteBlockedStore =
 
 
 type alias WriteBlockedNode =
-    ( Node, Num, () -> Node )
+    ( Node, ( Num, S.Dir ), () -> Node )
 
 
 type alias NodeEntry =
@@ -331,13 +331,13 @@ stepNode : Addr -> Node -> Acc -> Acc
 stepNode addr node =
     case nodeState node of
         S.Write num dir writeResolver ->
-            addToWriteBlocked addr ( node, num, writeResolver )
+            addToWriteBlocked addr ( node, ( num, dir ), writeResolver )
 
         S.Done ->
             addToCompleted addr node
 
         S.Read dir readResolver ->
-            addToReadBlocked addr ( node, readResolver )
+            addToReadBlocked addr ( node, dir, readResolver )
 
         S.Run runResolver ->
             resolveAfterRun addr (runResolver ())
@@ -360,7 +360,7 @@ resolveAfterRun : Addr -> Node -> Acc -> Acc
 resolveAfterRun addr node =
     case nodeState node of
         S.Read dir cont ->
-            addToReadBlocked addr ( node, cont )
+            addToReadBlocked addr ( node, dir, cont )
 
         _ ->
             addToCompleted addr node
@@ -376,38 +376,51 @@ resolveReadBlocked :
     -> ReadBlockedNode
     -> WriteBlockedAcc a
     -> WriteBlockedAcc a
-resolveReadBlocked addr ( node, readResolver ) acc =
-    case readFromAddrAndUnblock (addrUp addr) acc of
+resolveReadBlocked addr ( node, dir, cont ) acc =
+    case readAndUnblock addr dir acc of
         Just ( num, acc2 ) ->
-            addToCompleted addr (readResolver num) acc2
+            addToCompleted addr (cont num) acc2
 
         Nothing ->
             addToCompleted addr node acc
 
 
-addrUp : Addr -> Addr
-addrUp ( x, y ) =
-    ( x, y - 1 )
-
-
-readFromAddrAndUnblock :
+readAndUnblock :
     Addr
+    -> S.Dir
     -> WriteBlockedAcc a
     -> Maybe ( Num, WriteBlockedAcc a )
-readFromAddrAndUnblock addr acc =
-    case Dict.get addr acc.writeBlocked of
-        Just ( _, num, resolver ) ->
-            Just
+readAndUnblock readerAddr readDir acc =
+    moveAddrBy readDir readerAddr
+        |> Maybe.andThen (getEntryIn acc.writeBlocked)
+        |> maybeFilter
+            (\( _, ( _, ( _, writeDir ), _ ) ) ->
+                readDir == S.oppositeDir writeDir
+            )
+        |> Maybe.map
+            (\( writerAddr, ( _, ( num, _ ), cont ) ) ->
                 ( num
-                , addToCompleted addr
-                    (resolver ())
+                , addToCompleted writerAddr
+                    (cont ())
                     { acc
-                        | writeBlocked = Dict.remove addr acc.writeBlocked
+                        | writeBlocked = Dict.remove writerAddr acc.writeBlocked
                     }
                 )
+            )
 
+
+getWriteBlockedEntryFromReaderAddrAndDir :
+    Addr
+    -> S.Dir
+    -> Acc
+    -> Maybe ( Addr, WriteBlockedNode )
+getWriteBlockedEntryFromReaderAddrAndDir readerAddr readDir acc =
+    case moveAddrBy readDir readerAddr of
         Nothing ->
             Nothing
+
+        Just writerAddr ->
+            getEntry writerAddr acc.writeBlocked
 
 
 resolveAllWriteBlocked : WriteBlockedAcc a -> Store

@@ -2047,6 +2047,11 @@ getEntry key dict =
     Dict.get key dict |> Maybe.map (pair key)
 
 
+getEntryIn : Dict comparable a -> comparable -> Maybe ( comparable, a )
+getEntryIn dict key =
+    getEntry key dict
+
+
 foldlEntries : (( k, v ) -> a -> a) -> a -> Dict k v -> a
 foldlEntries fn =
     Dict.foldl (\k v -> fn ( k, v ))
