@@ -275,7 +275,7 @@ portsToList (Ports dict) =
 
 
 viewPort : Port -> Html msg
-viewPort (Port (PortId (( x, y ) as addr) dir _) portValue) =
+viewPort (Port (PortId ( x, y ) dir _) portValue) =
     case dir of
         Up ->
             if y <= 1 || y >= maxY then
