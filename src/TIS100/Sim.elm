@@ -300,13 +300,7 @@ viewPort (Port (PortId ( x, y ) dir _) portValue) =
 
 viewDownPortValue : List (Attribute msg) -> PortValue -> Html msg
 viewDownPortValue attrs portValue =
-    div
-        (attrs
-            ++ [ displayGrid
-               , gridTemplateColumns "1fr 1fr"
-               , pointerEvents "all"
-               ]
-        )
+    verticalPortsContainer attrs
         [ div [] []
         , div [ dGrid, placeContentCenter ]
             [ fRow []
@@ -327,13 +321,7 @@ viewDownPortValue attrs portValue =
 
 viewUpPortValue : List (Attribute msg) -> PortValue -> Html msg
 viewUpPortValue attrs portValue =
-    div
-        (attrs
-            ++ [ displayGrid
-               , gridTemplateColumns "1fr 1fr"
-               , pointerEvents "all"
-               ]
-        )
+    verticalPortsContainer attrs
         [ div [ dGrid, placeContentCenter ]
             [ fRow []
                 [ div [ fontSize "2em", fontWeight "100" ] [ text "A" ]
@@ -350,6 +338,17 @@ viewUpPortValue attrs portValue =
             ]
         , div [] []
         ]
+
+
+verticalPortsContainer : List (Attribute msg) -> List (Html msg) -> Html msg
+verticalPortsContainer attrs =
+    div
+        (attrs
+            ++ [ displayGrid
+               , gridTemplateColumns "1fr 1fr"
+               , pointerEvents "all"
+               ]
+        )
 
 
 step : Sim -> Sim
