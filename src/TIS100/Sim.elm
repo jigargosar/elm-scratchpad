@@ -201,8 +201,8 @@ addPotentialPorts ( addr, node ) =
         ExeNode _ ->
             addPotentialWrite addr Down
                 >> addPotentialRead addr Up
-                -->> addPotentialRead addr Down
-                >> addPotentialWrite addr Up
+                -->> addPotentialWrite addr Up
+                >> addPotentialRead addr Down
 
 
 addPotentialRead : Addr -> Dir4 -> Ports -> Ports
@@ -362,13 +362,15 @@ gridAreaForUpPort ( x, y ) =
     gridAreaXY
         ( x * 2
         , if y == 0 then
-            0
+            --0
+            Debug.todo "todo"
 
           else if y == maxY then
             (y * 2) - 2
+            --Debug.todo "todo"
 
           else
-            y * 2
+            (y * 2) - 2
         )
 
 
