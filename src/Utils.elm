@@ -1113,15 +1113,19 @@ autofocus =
 
 
 noPointerEvents =
-    style "pointer-events" "none"
+    pointerEvents "none"
 
 
 pointerEventsFromBool bool =
     if bool then
-        style "pointer-events" "auto"
+        pointerEvents "auto"
 
     else
-        style "pointer-events" "none"
+        pointerEvents "none"
+
+
+pointerEvents =
+    style "pointer-events"
 
 
 tac =

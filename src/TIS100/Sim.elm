@@ -110,7 +110,7 @@ viewPort (PortDown addr mbNum) =
         [ gridAreaFromPortDown addr
         , displayGrid
         , gridTemplateColumns "1fr 1fr"
-        , noPointerEvents
+        , pointerEvents "all"
         ]
         [ div [] []
         , div [ dGrid, style "place-content" "center" ]
