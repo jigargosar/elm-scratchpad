@@ -133,11 +133,34 @@ emptyPorts =
 
 potentialPorts : Sim -> Ports
 potentialPorts sim =
-    foldlEntries getNodePorts emptyPorts sim.store
+    foldlEntries addNodesPotentialPorts emptyPorts sim.store
 
 
-addPort : Addr -> Dir -> Ports -> Ports
-addPort addr dir ((Ports dict) as ports) =
+addNodesPotentialPorts : NodeEntry -> Ports -> Ports
+addNodesPotentialPorts ( addr, node ) =
+    case node of
+        InputNode _ _ ->
+            addPotentialWrite addr State.Down
+
+        OutputNode _ _ ->
+            addPotentialWrite addr State.Down
+
+        ExeNode _ ->
+            addPotentialWrite addr State.Down
+
+
+addPotentialRead : Addr -> Dir -> Ports -> Ports
+addPotentialRead addr dir ports =
+    case moveAddrBy dir addr of
+        Nothing ->
+            ports
+
+        Just writeAddr ->
+            addPotentialWrite writeAddr (State.oppositeDir dir) ports
+
+
+addPotentialWrite : Addr -> Dir -> Ports -> Ports
+addPotentialWrite addr dir ((Ports dict) as ports) =
     case toPortKey addr dir of
         Nothing ->
             ports
@@ -162,6 +185,9 @@ moveAddrBy dir addr =
         State.Down ->
             moveInDir4 Utils.Down addr |> parseAddr
 
+        State.Up ->
+            moveInDir4 Utils.Up addr |> parseAddr
+
 
 portsToList : Ports -> List Port
 portsToList (Ports dict) =
@@ -169,18 +195,24 @@ portsToList (Ports dict) =
 
 
 viewPort : Port -> Html msg
-viewPort (Port addr State.Down mbNum) =
+viewPort (Port addr dir portValue) =
     div
         [ gridAreaFromPortDown addr
         , displayGrid
         , gridTemplateColumns "1fr 1fr"
         , pointerEvents "all"
         ]
-        [ div [] []
-        , div [ dGrid, style "place-content" "center" ]
-            [ viewDownArrow mbNum
-            ]
-        ]
+        (case dir of
+            State.Up ->
+                [ div [ dGrid, placeContentCenter ] [ viewUpArrow portValue ]
+                , div [] []
+                ]
+
+            State.Down ->
+                [ div [] []
+                , div [ dGrid, placeContentCenter ] [ viewDownArrow portValue ]
+                ]
+        )
 
 
 gridAreaFromPortDown : Addr -> Attribute msg
@@ -376,19 +408,6 @@ viewPorts sim =
         |> List.map viewPort
 
 
-getNodePorts : NodeEntry -> Ports -> Ports
-getNodePorts ( addr, node ) =
-    case node of
-        InputNode _ _ ->
-            addPort addr State.Down
-
-        OutputNode _ _ ->
-            addPort addr State.Down
-
-        ExeNode _ ->
-            addPort addr State.Down
-
-
 viewNodes : Sim -> List (Html msg)
 viewNodes sim =
     Dict.toList sim.store |> List.map viewNode
@@ -460,10 +479,26 @@ viewNode ( addr, node ) =
 
 
 viewDownArrow : PortValue -> Html msg
-viewDownArrow mbNum =
+viewDownArrow portValue =
     fRow []
         [ div [ fontSize "2em", fontWeight "100" ] [ text "⇓" ]
-        , case mbNum of
+        , case portValue of
+            Empty ->
+                noView
+
+            Num num ->
+                div [] [ text <| Num.toString num ]
+
+            Query ->
+                div [] [ text "?" ]
+        ]
+
+
+viewUpArrow : PortValue -> Html msg
+viewUpArrow portValue =
+    fRow []
+        [ div [ fontSize "2em", fontWeight "100" ] [ text "A" ]
+        , case portValue of
             Empty ->
                 noView
 

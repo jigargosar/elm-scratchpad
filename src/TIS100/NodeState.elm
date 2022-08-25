@@ -5,6 +5,17 @@ import TIS100.Num exposing (Num)
 
 type Dir
     = Down
+    | Up
+
+
+oppositeDir : Dir -> Dir
+oppositeDir dir =
+    case dir of
+        Down ->
+            Up
+
+        Up ->
+            Down
 
 
 type NodeState a
