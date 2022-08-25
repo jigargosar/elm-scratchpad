@@ -115,7 +115,7 @@ type Port
 type PortValue
     = Empty
     | Num Num
-    | Query
+    | Queried
 
 
 type alias PortKey =
@@ -495,7 +495,7 @@ viewDownArrow portValue =
             Num num ->
                 div [] [ text <| Num.toString num ]
 
-            Query ->
+            Queried ->
                 div [] [ text "?" ]
         ]
 
@@ -511,7 +511,7 @@ viewUpArrow portValue =
             Num num ->
                 div [] [ text <| Num.toString num ]
 
-            Query ->
+            Queried ->
                 div [] [ text "?" ]
         ]
 
