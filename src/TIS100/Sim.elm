@@ -109,6 +109,30 @@ initPort from =
     PortEmptyDown from
 
 
+viewPort : Port -> Html msg
+viewPort (PortEmptyDown addr) =
+    div [ dGrid, style "grid-template-cols" "1fr 1fr", gridAreaFromPortDown addr ]
+        [ div [ gridAreaXY ( 1, 0 ) ]
+            [ viewDownArrow Nothing
+            ]
+        ]
+
+
+gridAreaFromPortDown : Addr -> Attribute msg
+gridAreaFromPortDown ( x, y ) =
+    gridAreaXY
+        ( x * 2
+        , if y == 0 then
+            0
+
+          else if y == maxY then
+            (y * 2) - 2
+
+          else
+            y * 2
+        )
+
+
 step : Sim -> Sim
 step sim =
     { sim
