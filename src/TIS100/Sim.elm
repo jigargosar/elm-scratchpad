@@ -290,7 +290,7 @@ viewPort (Port (PortId addr dir _) portValue) =
 viewDownPortValue : Addr -> PortValue -> Html msg
 viewDownPortValue addr portValue =
     div
-        [ gridAreaFromPortDown addr
+        [ gridAreaForDownPort addr
         , displayGrid
         , gridTemplateColumns "1fr 1fr"
         , pointerEvents "all"
@@ -313,8 +313,8 @@ viewDownPortValue addr portValue =
         ]
 
 
-gridAreaFromPortDown : Addr -> Attribute msg
-gridAreaFromPortDown ( x, y ) =
+gridAreaForDownPort : Addr -> Attribute msg
+gridAreaForDownPort ( x, y ) =
     gridAreaXY
         ( x * 2
         , if y == 0 then
