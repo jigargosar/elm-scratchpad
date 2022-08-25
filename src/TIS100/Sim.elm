@@ -109,13 +109,29 @@ init =
 
 
 type Port
-    = Port Addr Dir PortValue
+    = Port PortId PortValue
 
 
 type PortValue
     = Empty
     | Num Num
     | Queried
+
+
+type PortId
+    = PortId Addr Dir PortKey
+
+
+portIdForWriting : Addr -> Dir -> Maybe PortId
+portIdForWriting addr dir =
+    moveAddrBy dir addr |> Maybe.map (pair addr >> PortId addr dir)
+
+
+portIdForReading : Addr -> Dir -> Maybe PortId
+portIdForReading addr dir =
+    moveAddrBy dir addr
+        |> Maybe.map
+            (\oppAddr -> PortId oppAddr (State.oppositeDir dir) ( oppAddr, addr ))
 
 
 type alias PortKey =
@@ -174,48 +190,46 @@ addNodesPotentialPorts ( addr, node ) =
 
 addPotentialRead : Addr -> Dir -> Ports -> Ports
 addPotentialRead addr dir ports =
-    case moveAddrBy dir addr of
+    case portIdForReading addr dir of
         Nothing ->
             ports
 
-        Just writeAddr ->
-            addPotentialWrite writeAddr (State.oppositeDir dir) ports
-
-
-addPotentialPort : Addr -> Dir -> Ports -> PortKey -> Ports
-addPotentialPort addr dir ((Ports dict) as ports) portKey =
-    if Dict.member portKey dict then
-        ports
-
-    else
-        Ports (Dict.insert portKey (Port addr dir Empty) dict)
+        Just pid ->
+            addPotentialPort pid ports
 
 
 addPotentialWrite : Addr -> Dir -> Ports -> Ports
 addPotentialWrite addr dir ports =
-    portKeyFromWrite addr dir
-        |> Maybe.map (addPotentialPort addr dir ports)
-        |> Maybe.withDefault ports
+    case portIdForWriting addr dir of
+        Nothing ->
+            ports
+
+        Just pid ->
+            addPotentialPort pid ports
+
+
+addPotentialPort : PortId -> Ports -> Ports
+addPotentialPort ((PortId _ _ portKey) as portId) ((Ports dict) as ports) =
+    if Dict.member portKey dict then
+        ports
+
+    else
+        Ports (Dict.insert portKey (Port portId Empty) dict)
 
 
 writeToPort : Addr -> Dir -> Num -> Ports -> Ports
 writeToPort addr dir num ((Ports dict) as ports) =
-    case portKeyFromWrite addr dir of
+    case portIdForWriting addr dir of
         Nothing ->
             ports
 
-        Just key ->
+        Just ((PortId _ _ key) as portId) ->
             case Dict.get key dict of
                 Nothing ->
                     ports
 
                 Just _ ->
-                    Ports (Dict.insert key (Port addr dir (Num num)) dict)
-
-
-portKeyFromWrite : Addr -> Dir -> Maybe PortKey
-portKeyFromWrite addr dir =
-    moveAddrBy dir addr |> Maybe.map (pair addr)
+                    Ports (Dict.insert key (Port portId (Num num)) dict)
 
 
 moveAddrBy : Dir -> Addr -> Maybe Addr
@@ -234,7 +248,7 @@ portsToList (Ports dict) =
 
 
 viewPort : Port -> Html msg
-viewPort (Port addr dir portValue) =
+viewPort (Port (PortId addr dir _) portValue) =
     div
         [ gridAreaFromPortDown addr
         , displayGrid
