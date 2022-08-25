@@ -273,29 +273,18 @@ portsToList (Ports dict) =
 
 viewPort : Port -> Html msg
 viewPort (Port (PortId addr dir _) portValue) =
-    div
-        [ gridAreaFromPortDown addr
-        , displayGrid
-        , gridTemplateColumns "1fr 1fr"
-        , pointerEvents "all"
-        ]
-        (case dir of
-            Up ->
-                [ div [ dGrid, placeContentCenter ] [ viewUpArrow portValue ]
-                , div [] []
-                ]
+    case dir of
+        Up ->
+            noView
 
-            Down ->
-                [ div [] []
-                , div [ dGrid, placeContentCenter ] [ viewDownArrow portValue ]
-                ]
+        Down ->
+            viewDownPortValue addr portValue
 
-            Left ->
-                []
+        Left ->
+            noView
 
-            Right ->
-                []
-        )
+        Right ->
+            noView
 
 
 viewDownPortValue : Addr -> PortValue -> Html msg
@@ -306,7 +295,8 @@ viewDownPortValue addr portValue =
         , gridTemplateColumns "1fr 1fr"
         , pointerEvents "all"
         ]
-        [ div [ dGrid, placeContentCenter ]
+        [ div [] []
+        , div [ dGrid, placeContentCenter ]
             [ fRow []
                 [ div [ fontSize "2em", fontWeight "100" ] [ text "⇓" ]
                 , case portValue of
@@ -320,7 +310,6 @@ viewDownPortValue addr portValue =
                         div [] [ text "?" ]
                 ]
             ]
-        , div [] []
         ]
 
 
