@@ -1255,6 +1255,22 @@ gridAreaXY ( c, r ) =
     style "grid-area" (fromInt (r + 1) ++ "/" ++ fromInt (c + 1))
 
 
+gridTemplate =
+    style "grid-template"
+
+
+gridTemplateRows =
+    style "grid-template-rows"
+
+
+gridTemplateColumns =
+    style "grid-template-columns"
+
+
+gridAutoColumns =
+    style "grid-auto-columns"
+
+
 gridArea : String -> Attribute msg
 gridArea =
     style "grid-area"
