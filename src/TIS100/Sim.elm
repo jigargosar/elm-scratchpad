@@ -294,17 +294,27 @@ view : Sim -> Html msg
 view sim =
     fCol [ h100, pa "10px", fontSize "10px", bold, ffMonospace ]
         [ div [] [ text "Cycle: ", text (fromInt sim.cycle) ]
-        , div
-            [ dGrid
-            , gridTemplateRows
-                ("repeat(" ++ fromInt (maxY - 1) ++ ", 1fr 2fr) 1fr")
-            , gridTemplateColumns "repeat(2, 2fr 1fr) 2fr"
-            ]
-            ((Dict.toList sim.store |> List.map viewNode)
-                ++ [ viewPort (PortEmptyDown ( 0, 0 ))
-                   ]
-            )
+        , viewSimGrid sim
         ]
+
+
+viewSimGrid sim =
+    div
+        [ displayGrid
+        , gridTemplateRows
+            ("repeat(" ++ fromInt (maxY - 1) ++ ", 1fr 2fr) 1fr")
+        , gridTemplateColumns "repeat(2, 2fr 1fr) 2fr"
+        ]
+        (viewNodes sim ++ viewPorts sim)
+
+
+viewPorts _ =
+    [ viewPort (PortEmptyDown ( 0, 0 ))
+    ]
+
+
+viewNodes sim =
+    Dict.toList sim.store |> List.map viewNode
 
 
 maxX =
