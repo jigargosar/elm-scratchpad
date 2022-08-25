@@ -20,7 +20,7 @@ oppositeDir dir =
 
 type NodeState a
     = Run (() -> a)
-    | Read (Num -> a)
+    | Read Dir (Num -> a)
     | Write Num Dir (() -> a)
     | Done
 
@@ -34,8 +34,8 @@ map mapper ns =
         Done ->
             Done
 
-        Read resolver ->
-            Read (\num -> resolver num |> mapper)
+        Read dir cont ->
+            Read dir (\num -> cont num |> mapper)
 
-        Run resolver ->
-            Run (\() -> resolver () |> mapper)
+        Run cont ->
+            Run (\() -> cont () |> mapper)

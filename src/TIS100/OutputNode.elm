@@ -33,7 +33,7 @@ state node =
             S.Run (\() -> ReadBlocked pendingReads nums)
 
         ReadBlocked pendingReads nums ->
-            S.Read (resolveRead pendingReads nums)
+            S.Read S.Up (resolveRead pendingReads nums)
 
 
 resolveRead : Int -> List Num -> Num -> OutputNode

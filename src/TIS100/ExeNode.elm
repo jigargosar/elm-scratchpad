@@ -26,7 +26,7 @@ state node =
             S.Done
 
         ReadBlocked ->
-            S.Read WriteBlocked
+            S.Read S.Up WriteBlocked
 
         WriteBlocked num ->
             S.Write num Down (\() -> ReadyToRun)

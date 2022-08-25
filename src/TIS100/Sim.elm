@@ -8,7 +8,7 @@ module TIS100.Sim exposing
 import Dict exposing (Dict)
 import TIS100.ExeNode as ExeNode exposing (ExeNode)
 import TIS100.InputNode as InputNode exposing (InputNode)
-import TIS100.NodeState as State exposing (Dir(..), NodeState)
+import TIS100.NodeState as S exposing (Dir(..), NodeState)
 import TIS100.Num as Num exposing (Num)
 import TIS100.OutputNode as OutputNode exposing (OutputNode)
 import Utils exposing (..)
@@ -131,7 +131,7 @@ portIdForReading : Addr -> Dir -> Maybe PortId
 portIdForReading addr dir =
     moveAddrBy dir addr
         |> Maybe.map
-            (\oppAddr -> PortId oppAddr (State.oppositeDir dir) ( oppAddr, addr ))
+            (\oppAddr -> PortId oppAddr (S.oppositeDir dir) ( oppAddr, addr ))
 
 
 type alias PortKey =
@@ -162,20 +162,20 @@ updatePortValues sim ports =
 updatePortValuesFromNode : NodeEntry -> Ports -> Ports
 updatePortValuesFromNode ( addr, node ) =
     case nodeState node of
-        State.Run _ ->
+        S.Run _ ->
             identity
 
-        State.Read _ ->
+        S.Read dir _ ->
             if isOutputNode node then
                 identity
 
             else
-                queryPort addr State.Up
+                queryPort addr dir
 
-        State.Write num dir _ ->
+        S.Write num dir _ ->
             writeToPort addr dir num
 
-        State.Done ->
+        S.Done ->
             identity
 
 
@@ -193,13 +193,13 @@ addNodesPotentialPorts : NodeEntry -> Ports -> Ports
 addNodesPotentialPorts ( addr, node ) =
     case node of
         InputNode _ _ ->
-            addPotentialWrite addr State.Down
+            addPotentialWrite addr S.Down
 
         OutputNode _ _ ->
-            addPotentialRead addr State.Up
+            addPotentialRead addr S.Up
 
         ExeNode _ ->
-            addPotentialWrite addr State.Down >> addPotentialRead addr State.Up
+            addPotentialWrite addr S.Down >> addPotentialRead addr S.Up
 
 
 addPotentialRead : Addr -> Dir -> Ports -> Ports
@@ -264,10 +264,10 @@ queryPort addr dir ((Ports dict) as ports) =
 moveAddrBy : Dir -> Addr -> Maybe Addr
 moveAddrBy dir addr =
     case dir of
-        State.Down ->
+        S.Down ->
             moveInDir4 Utils.Down addr |> parseAddr
 
-        State.Up ->
+        S.Up ->
             moveInDir4 Utils.Up addr |> parseAddr
 
 
@@ -285,12 +285,12 @@ viewPort (Port (PortId addr dir _) portValue) =
         , pointerEvents "all"
         ]
         (case dir of
-            State.Up ->
+            S.Up ->
                 [ div [ dGrid, placeContentCenter ] [ viewUpArrow portValue ]
                 , div [] []
                 ]
 
-            State.Down ->
+            S.Down ->
                 [ div [] []
                 , div [ dGrid, placeContentCenter ] [ viewDownArrow portValue ]
                 ]
@@ -330,16 +330,16 @@ stepNodes ns =
 stepNode : Addr -> Node -> Acc -> Acc
 stepNode addr node =
     case nodeState node of
-        State.Write num _ writeResolver ->
+        S.Write num dir writeResolver ->
             addToWriteBlocked addr ( node, num, writeResolver )
 
-        State.Done ->
+        S.Done ->
             addToCompleted addr node
 
-        State.Read readResolver ->
+        S.Read dir readResolver ->
             addToReadBlocked addr ( node, readResolver )
 
-        State.Run runResolver ->
+        S.Run runResolver ->
             resolveAfterRun addr (runResolver ())
 
 
@@ -347,20 +347,20 @@ nodeState : Node -> NodeState Node
 nodeState node =
     case node of
         InputNode title inputNode ->
-            InputNode.state inputNode |> State.map (InputNode title)
+            InputNode.state inputNode |> S.map (InputNode title)
 
         OutputNode title outputNode ->
-            OutputNode.state outputNode |> State.map (OutputNode title)
+            OutputNode.state outputNode |> S.map (OutputNode title)
 
         ExeNode exeNode ->
-            ExeNode.state exeNode |> State.map ExeNode
+            ExeNode.state exeNode |> S.map ExeNode
 
 
 resolveAfterRun : Addr -> Node -> Acc -> Acc
 resolveAfterRun addr node =
     case nodeState node of
-        State.Read resolver ->
-            addToReadBlocked addr ( node, resolver )
+        S.Read dir cont ->
+            addToReadBlocked addr ( node, cont )
 
         _ ->
             addToCompleted addr node
@@ -589,14 +589,14 @@ viewUpArrow portValue =
 nodeBlockMode : Node -> String
 nodeBlockMode node =
     case nodeState node of
-        State.Run _ ->
+        S.Run _ ->
             "RUN"
 
-        State.Read _ ->
+        S.Read _ _ ->
             "READ"
 
-        State.Write _ _ _ ->
+        S.Write _ _ _ ->
             "WRITE"
 
-        State.Done ->
+        S.Done ->
             "IDLE"
