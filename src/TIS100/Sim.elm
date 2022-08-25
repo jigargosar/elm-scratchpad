@@ -166,7 +166,7 @@ updatePortValuesFromNode ( addr, node ) =
             identity
 
         State.Read _ ->
-            identity
+            queryPort addr State.Up
 
         State.Write num dir _ ->
             writeToPort addr dir num
