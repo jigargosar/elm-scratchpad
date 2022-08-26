@@ -163,11 +163,10 @@ portIdFromIOIntent_ addr ioIntent =
 
 
 mapPortValueWithId_ : PortId -> (PortValue -> PortValue) -> Ports -> Ports
-mapPortValueWithId_ portId fn (Ports dict) =
+mapPortValueWithId_ portId fn dict =
     Dict.update (portKeyFromId_ portId)
         (Maybe.map (\(Port id v) -> Port id (fn v)))
         dict
-        |> Ports
 
 
 updatePortValueFromIoIntent :
@@ -189,33 +188,25 @@ type alias PortKey =
     ( Addr, Addr )
 
 
-type Ports
-    = Ports (Dict PortKey Port)
+type alias Ports =
+    Dict PortKey Port
 
 
 getPortList : Sim -> List Port
 getPortList sim =
-    foldlEntries
-        (\( addr, node ) dict ->
-            nodeIoIntents node
-                |> List.filterMap (portIdFromIOIntent_ addr)
-                |> List.foldl (\id -> Dict.insert (portKeyFromId_ id) (Port id Empty)) dict
-        )
-        Dict.empty
-        sim.store
-        |> Ports
-        |> updatePortValues sim
-        |> portsToList
-
-
-portsToList : Ports -> List Port
-portsToList (Ports dict) =
-    Dict.values dict
-
-
-updatePortValues : Sim -> Ports -> Ports
-updatePortValues sim ports =
-    foldlEntries updatePortValuesFromNode ports sim.store
+    let
+        portsDict =
+            foldlEntries
+                (\( addr, node ) dict ->
+                    nodeIoIntents node
+                        |> List.filterMap (portIdFromIOIntent_ addr)
+                        |> List.foldl (\id -> Dict.insert (portKeyFromId_ id) (Port id Empty)) dict
+                )
+                Dict.empty
+                sim.store
+    in
+    foldlEntries updatePortValuesFromNode portsDict sim.store
+        |> Dict.values
 
 
 updatePortValuesFromNode : NodeEntry -> Ports -> Ports
