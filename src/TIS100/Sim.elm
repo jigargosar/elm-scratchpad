@@ -157,8 +157,8 @@ initWritePortId (( fx, fy ) as from) dir =
         Just <| PortId from dir ( from, to )
 
 
-portKeyFromId_ : PortId -> PortKey
-portKeyFromId_ (PortId _ _ key) =
+portKeyFromId : PortId -> PortKey
+portKeyFromId (PortId _ _ key) =
     key
 
 
@@ -174,8 +174,20 @@ mapPortValue addr iOIntent fn ports =
             ports
 
         Just portId ->
-            Dict.update (portKeyFromId_ portId)
+            Dict.update (portKeyFromId portId)
                 (Maybe.map (\(Port id v) -> Port id (fn v)))
+                ports
+
+
+ensurePotentialPort : Addr -> IOIntent -> Ports -> Ports
+ensurePotentialPort addr iOIntent ports =
+    case initPortId addr iOIntent of
+        Nothing ->
+            ports
+
+        Just portId ->
+            Dict.update (portKeyFromId portId)
+                (replaceNothingWith (Port portId Empty))
                 ports
 
 
@@ -206,7 +218,7 @@ addPotentialPortsFromNodeIoIntents ( addr, node ) dict =
         |> List.filterMap (initPortId addr)
         |> List.foldl
             (\id ->
-                Dict.insert (portKeyFromId_ id) (Port id Empty)
+                Dict.insert (portKeyFromId id) (Port id Empty)
             )
             dict
 

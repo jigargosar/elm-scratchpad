@@ -2223,6 +2223,16 @@ orElseLazy fn mb =
             mb
 
 
+replaceNothingWith : a -> Maybe a -> Maybe a
+replaceNothingWith a maybe =
+    case maybe of
+        Nothing ->
+            Just a
+
+        _ ->
+            maybe
+
+
 maybeFilter : (a -> Bool) -> Maybe a -> Maybe a
 maybeFilter pred =
     Maybe.andThen
