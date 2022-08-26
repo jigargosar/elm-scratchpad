@@ -229,11 +229,11 @@ addPotentialPorts ( addr, node ) =
             addPotentialIO addr (Read Up)
 
         ExeNode exe ->
-            addPotentialIOList addr (ExeNode.ioIntents exe)
+            addIOIntents addr (ExeNode.ioIntents exe)
 
 
-addPotentialIOList : Addr -> List IOIntent -> Ports -> Ports
-addPotentialIOList addr potentialIOList ports =
+addIOIntents : Addr -> List IOIntent -> Ports -> Ports
+addIOIntents addr potentialIOList ports =
     List.foldl (addPotentialIO addr) ports potentialIOList
 
 
