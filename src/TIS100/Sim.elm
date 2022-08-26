@@ -118,8 +118,8 @@ type PortValue
     | Queried
 
 
-viewPortValue : PortValue -> Html msg
-viewPortValue =
+viewPortValueText : PortValue -> Html msg
+viewPortValueText =
     let
         toString portValue =
             case portValue of
@@ -318,16 +318,15 @@ viewPort (Port (PortId ( x, y ) dir _) portValue) =
 viewDownPortValue : List (Attribute msg) -> PortValue -> Html msg
 viewDownPortValue attrs portValue =
     verticalPortsContainer attrs
-        [ div
-            [ dGrid
-            , placeContentCenter
+        [ gridColumns
+            [ placeItemsCenter
+
+            --, placeContentCenter
             , gridAreaXY ( 1, 0 )
             , allPointerEvents
             ]
-            [ fRow []
-                [ viewArrow Down
-                , div [] [ viewPortValue portValue ]
-                ]
+            [ viewArrow Down
+            , div [] [ viewPortValueText portValue ]
             ]
         ]
 
@@ -347,8 +346,8 @@ viewUpPortValue attrs portValue =
             , allPointerEvents
             ]
             [ fRow []
-                [ viewArrow Up
-                , div [] [ viewPortValue portValue ]
+                [ viewPortValueText portValue
+                , viewArrow Up
                 ]
             ]
         ]
