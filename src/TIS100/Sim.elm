@@ -210,6 +210,21 @@ getPortList sim =
         |> portsToList
 
 
+addIOIntentsOfNode : NodeEntry -> Ports -> Ports
+addIOIntentsOfNode ( addr, node ) ports =
+    List.foldl (addPortFromIOIntent addr) ports (nodeIoIntents node)
+
+
+addPortFromIOIntent : Addr -> IOIntent -> Ports -> Ports
+addPortFromIOIntent addr ioIntent ports =
+    case portIdFromIOIntent_ addr ioIntent of
+        Nothing ->
+            ports
+
+        Just pid ->
+            insertPort_ (Port pid Empty) ports
+
+
 portsToList : Ports -> List Port
 portsToList (Ports dict) =
     Dict.values dict
@@ -250,32 +265,17 @@ isOutputNode node =
             False
 
 
-addIOIntentsOfNode : NodeEntry -> Ports -> Ports
-addIOIntentsOfNode ( addr, node ) =
+nodeIoIntents : Node -> List IOIntent
+nodeIoIntents node =
     case node of
         InputNode _ _ ->
-            addPortFromIOIntent addr (Write Down)
+            [ Write Down ]
 
         OutputNode _ _ ->
-            addPortFromIOIntent addr (Read Up)
+            [ Read Up ]
 
         ExeNode exe ->
-            addPortFromIOIntents addr (ExeNode.ioIntents exe)
-
-
-addPortFromIOIntents : Addr -> List IOIntent -> Ports -> Ports
-addPortFromIOIntents addr ioIntents ports =
-    List.foldl (addPortFromIOIntent addr) ports ioIntents
-
-
-addPortFromIOIntent : Addr -> IOIntent -> Ports -> Ports
-addPortFromIOIntent addr potentialIO ports =
-    case portIdFromIOIntent_ addr potentialIO of
-        Nothing ->
-            ports
-
-        Just pid ->
-            insertPort_ (Port pid Empty) ports
+            ExeNode.ioIntents exe
 
 
 writePort : Addr -> Dir4 -> Num -> Ports -> Ports
