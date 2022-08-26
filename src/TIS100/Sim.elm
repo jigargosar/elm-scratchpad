@@ -204,7 +204,7 @@ getPortList sim =
     let
         emptyPorts =
             foldlEntries
-                addPotentialPortsFromNodeIoIntents
+                addPotentialPortsFromNodeIOIntents
                 Dict.empty
                 sim.store
     in
@@ -212,15 +212,9 @@ getPortList sim =
         |> Dict.values
 
 
-addPotentialPortsFromNodeIoIntents : NodeEntry -> Ports -> Ports
-addPotentialPortsFromNodeIoIntents ( addr, node ) dict =
-    nodeIoIntents node
-        |> List.filterMap (initPortId addr)
-        |> List.foldl
-            (\id ->
-                Dict.insert (portKeyFromId id) (Port id Empty)
-            )
-            dict
+addPotentialPortsFromNodeIOIntents : NodeEntry -> Ports -> Ports
+addPotentialPortsFromNodeIOIntents ( addr, node ) dict =
+    nodeIoIntents node |> List.foldl (ensurePotentialPort addr) dict
 
 
 updatePortValuesFromNodeState : NodeEntry -> Ports -> Ports
