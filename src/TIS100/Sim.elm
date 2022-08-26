@@ -560,11 +560,11 @@ viewNode ( addr, node ) =
                 , nodeAddrToGridArea addr
                 , tac
                 ]
-                [ text "MODE:", text (nodeBlockMode node) ]
+                [ text "MODE:", text (nodeModeAsString node) ]
 
 
-nodeBlockMode : Node -> String
-nodeBlockMode node =
+nodeModeAsString : Node -> String
+nodeModeAsString node =
     case nodeState node of
         S.ReadyToRun _ ->
             "RUN"
