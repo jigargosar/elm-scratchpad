@@ -162,11 +162,6 @@ portIdFromIOIntent_ addr ioIntent =
             initPortId addr dir
 
 
-insertPort_ : Port -> Ports -> Ports
-insertPort_ ((Port id _) as port_) (Ports dict) =
-    Dict.insert (portKeyFromId_ id) port_ dict |> Ports
-
-
 mapPortValueWithId_ : PortId -> (PortValue -> PortValue) -> Ports -> Ports
 mapPortValueWithId_ portId fn (Ports dict) =
     Dict.update (portKeyFromId_ portId)
@@ -198,31 +193,19 @@ type Ports
     = Ports (Dict PortKey Port)
 
 
-emptyPorts : Ports
-emptyPorts =
-    Ports Dict.empty
-
-
 getPortList : Sim -> List Port
 getPortList sim =
-    foldlEntries addIOIntentsOfNode emptyPorts sim.store
+    foldlEntries
+        (\( addr, node ) dict ->
+            nodeIoIntents node
+                |> List.filterMap (portIdFromIOIntent_ addr)
+                |> List.foldl (\id -> Dict.insert (portKeyFromId_ id) (Port id Empty)) dict
+        )
+        Dict.empty
+        sim.store
+        |> Ports
         |> updatePortValues sim
         |> portsToList
-
-
-addIOIntentsOfNode : NodeEntry -> Ports -> Ports
-addIOIntentsOfNode ( addr, node ) ports =
-    List.foldl (addPortFromIOIntent addr) ports (nodeIoIntents node)
-
-
-addPortFromIOIntent : Addr -> IOIntent -> Ports -> Ports
-addPortFromIOIntent addr ioIntent ports =
-    case portIdFromIOIntent_ addr ioIntent of
-        Nothing ->
-            ports
-
-        Just pid ->
-            insertPort_ (Port pid Empty) ports
 
 
 portsToList : Ports -> List Port
