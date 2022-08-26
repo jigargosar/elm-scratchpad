@@ -162,17 +162,32 @@ portKeyFromId (PortId _ _ key) =
     key
 
 
+updatePortsDict :
+    Addr
+    -> IOIntent
+    -> (PortId -> PortValue -> PortValue)
+    -> Ports
+    -> Ports
+updatePortsDict addr iOIntent fn ports =
+    case initPortId addr iOIntent of
+        Nothing ->
+            ports
 
---updatePortsDict : Addr -> IOIntent -> (Maybe Port -> Maybe Port) -> Ports -> Ports
---updatePortsDict addr iOIntent fn ports =
---    case initPortId addr iOIntent of
---        Nothing ->
---            ports
---
---        Just portId ->
---            Dict.update (portKeyFromId portId)
---                fn
---                ports
+        Just portId ->
+            Dict.update (portKeyFromId portId)
+                (\mbPort ->
+                    let
+                        newPortValue =
+                            case mbPort of
+                                Nothing ->
+                                    fn portId Empty
+
+                                Just (Port _ portValue) ->
+                                    fn portId portValue
+                    in
+                    Just (Port portId newPortValue)
+                )
+                ports
 
 
 mapPortValue :
