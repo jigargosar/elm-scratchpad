@@ -215,7 +215,7 @@ emptyPorts =
 
 getPortList : Sim -> List Port
 getPortList sim =
-    foldlEntries addPotentialPorts emptyPorts sim.store
+    foldlEntries addIOIntentsOfNode emptyPorts sim.store
         |> updatePortValues sim
         |> portsToList
 
@@ -255,26 +255,26 @@ isOutputNode node =
             False
 
 
-addPotentialPorts : NodeEntry -> Ports -> Ports
-addPotentialPorts ( addr, node ) =
+addIOIntentsOfNode : NodeEntry -> Ports -> Ports
+addIOIntentsOfNode ( addr, node ) =
     case node of
         InputNode _ _ ->
-            addIOIntent addr (Write Down)
+            addPortFromIOIntent addr (Write Down)
 
         OutputNode _ _ ->
-            addIOIntent addr (Read Up)
+            addPortFromIOIntent addr (Read Up)
 
         ExeNode exe ->
-            addIOIntents addr (ExeNode.ioIntents exe)
+            addPortFromIOIntents addr (ExeNode.ioIntents exe)
 
 
-addIOIntents : Addr -> List IOIntent -> Ports -> Ports
-addIOIntents addr ioIntents ports =
-    List.foldl (addIOIntent addr) ports ioIntents
+addPortFromIOIntents : Addr -> List IOIntent -> Ports -> Ports
+addPortFromIOIntents addr ioIntents ports =
+    List.foldl (addPortFromIOIntent addr) ports ioIntents
 
 
-addIOIntent : Addr -> IOIntent -> Ports -> Ports
-addIOIntent addr potentialIO ports =
+addPortFromIOIntent : Addr -> IOIntent -> Ports -> Ports
+addPortFromIOIntent addr potentialIO ports =
     case portIdFromIOIntent_ addr potentialIO of
         Nothing ->
             ports
