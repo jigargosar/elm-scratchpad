@@ -223,16 +223,18 @@ addPotentialPorts : NodeEntry -> Ports -> Ports
 addPotentialPorts ( addr, node ) =
     case node of
         InputNode _ _ ->
-            addPotentialWrite addr Down
+            addPotentialIO addr (MayWrite Down)
 
         OutputNode _ _ ->
-            addPotentialRead addr Up
+            addPotentialIO addr (MayRead Up)
 
-        ExeNode _ ->
-            addPotentialWrite addr Down
-                >> addPotentialRead addr Up
-                >> addPotentialRead addr Down
-                >> addPotentialWrite addr Up
+        ExeNode exe ->
+            addPotentialIOList addr (ExeNode.potentialIO exe)
+
+
+addPotentialIOList : Addr -> List PotentialIO -> Ports -> Ports
+addPotentialIOList addr potentialIOList ports =
+    List.foldl (addPotentialIO addr) ports potentialIOList
 
 
 addPotentialIO : Addr -> PotentialIO -> Ports -> Ports
@@ -243,16 +245,6 @@ addPotentialIO addr potentialIO ports =
 
         Just pid ->
             addPotentialPort pid ports
-
-
-addPotentialRead : Addr -> Dir4 -> Ports -> Ports
-addPotentialRead addr dir =
-    addPotentialIO addr (MayRead dir)
-
-
-addPotentialWrite : Addr -> Dir4 -> Ports -> Ports
-addPotentialWrite addr dir =
-    addPotentialIO addr (MayWrite dir)
 
 
 addPotentialPort : PortId -> Ports -> Ports
