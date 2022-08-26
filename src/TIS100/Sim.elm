@@ -208,15 +208,8 @@ mapPortValue addr iOIntent fn ports =
 
 
 ensurePotentialPort : Addr -> IOIntent -> Ports -> Ports
-ensurePotentialPort addr iOIntent ports =
-    case initPortId addr iOIntent of
-        Nothing ->
-            ports
-
-        Just portId ->
-            Dict.update (portKeyFromId portId)
-                (replaceNothingWith (Port portId Empty))
-                ports
+ensurePotentialPort addr iOIntent =
+    updatePortsDict addr iOIntent (\_ -> identity)
 
 
 type alias PortKey =
