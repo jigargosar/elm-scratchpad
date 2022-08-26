@@ -195,17 +195,21 @@ type alias Ports =
 getPortList : Sim -> List Port
 getPortList sim =
     let
-        portsDict =
+        emptyPorts =
             foldlEntries
                 (\( addr, node ) dict ->
                     nodeIoIntents node
                         |> List.filterMap (portIdFromIOIntent_ addr)
-                        |> List.foldl (\id -> Dict.insert (portKeyFromId_ id) (Port id Empty)) dict
+                        |> List.foldl
+                            (\id ->
+                                Dict.insert (portKeyFromId_ id) (Port id Empty)
+                            )
+                            dict
                 )
                 Dict.empty
                 sim.store
     in
-    foldlEntries updatePortValuesFromNode portsDict sim.store
+    foldlEntries updatePortValuesFromNode emptyPorts sim.store
         |> Dict.values
 
 
