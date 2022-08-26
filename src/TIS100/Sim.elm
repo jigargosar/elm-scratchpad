@@ -177,15 +177,20 @@ insertPort_ port_ (Ports dict) =
     Dict.insert (portKeyFromPort_ port_) port_ dict |> Ports
 
 
-updatePortWithNum_ : PortId -> Num -> Ports -> Ports
-updatePortWithNum_ portId num ((Ports dict) as ports) =
-    case portById_ portId ports of
-        Just _ ->
-            Dict.insert (portKeyFromId_ portId) (Port portId (Num num)) dict
-                |> Ports
+updatePortWithId_ : PortId -> (Maybe Port -> Maybe Port) -> Ports -> Ports
+updatePortWithId_ portId fn (Ports dict) =
+    Dict.update (portKeyFromId_ portId)
+        fn
+        dict
+        |> Ports
 
-        Nothing ->
-            ports
+
+updatePortWithNum_ : PortId -> Num -> Ports -> Ports
+updatePortWithNum_ portId num (Ports dict) =
+    Dict.update (portKeyFromId_ portId)
+        (Maybe.map (\_ -> Port portId (Num num)))
+        dict
+        |> Ports
 
 
 
