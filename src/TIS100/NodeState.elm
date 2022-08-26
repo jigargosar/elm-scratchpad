@@ -12,16 +12,16 @@ type NodeState a
 
 
 map : (a -> b) -> NodeState a -> NodeState b
-map converter ns =
+map fn ns =
     case ns of
         WriteBlocked num dir cont ->
-            WriteBlocked num dir (\() -> cont () |> converter)
+            WriteBlocked num dir (cont >> fn)
 
         Done ->
             Done
 
         ReadBlocked dir cont ->
-            ReadBlocked dir (cont >> converter)
+            ReadBlocked dir (cont >> fn)
 
         ReadyToRun cont ->
-            ReadyToRun (cont >> converter)
+            ReadyToRun (cont >> fn)
