@@ -165,7 +165,7 @@ portKeyFromId (PortId _ _ key) =
 updatePortsDict :
     Addr
     -> IOIntent
-    -> (PortId -> PortValue -> PortValue)
+    -> (PortValue -> PortValue)
     -> Ports
     -> Ports
 updatePortsDict addr iOIntent fn ports =
@@ -180,10 +180,10 @@ updatePortsDict addr iOIntent fn ports =
                         newPortValue =
                             case mbPort of
                                 Nothing ->
-                                    fn portId Empty
+                                    fn Empty
 
                                 Just (Port _ portValue) ->
-                                    fn portId portValue
+                                    fn portValue
                     in
                     Just (Port portId newPortValue)
                 )
@@ -235,7 +235,7 @@ addPotentialPortsFromNodeIOIntents ( addr, node ) dict =
 
 ensurePotentialPort : Addr -> IOIntent -> Ports -> Ports
 ensurePotentialPort addr iOIntent =
-    updatePortsDict addr iOIntent (\_ -> identity)
+    updatePortsDict addr iOIntent identity
 
 
 updatePortValuesFromNodeState : NodeEntry -> Ports -> Ports
@@ -249,8 +249,7 @@ updatePortValuesFromNodeState ( addr, node ) =
                 identity
 
             else
-                mapPortValue
-                    addr
+                updatePortsDict addr
                     (Read dir)
                     (\portVal ->
                         case portVal of
@@ -262,9 +261,7 @@ updatePortValuesFromNodeState ( addr, node ) =
                     )
 
         S.WriteBlocked num dir _ ->
-            mapPortValue addr
-                (Write dir)
-                (\_ -> Num num)
+            updatePortsDict addr (Write dir) (always (Num num))
 
         S.Done ->
             identity
