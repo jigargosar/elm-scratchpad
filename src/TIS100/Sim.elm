@@ -118,6 +118,23 @@ type PortValue
     | Queried
 
 
+viewPortValue : PortValue -> Html msg
+viewPortValue =
+    let
+        toString portValue =
+            case portValue of
+                Empty ->
+                    ""
+
+                Num num ->
+                    Num.toString num
+
+                Queried ->
+                    "?"
+    in
+    toString >> text
+
+
 type PortId
     = PortId Addr Dir4 PortKey
 
@@ -308,19 +325,16 @@ viewDownPortValue attrs portValue =
             , allPointerEvents
             ]
             [ fRow []
-                [ div [ fontSize "2em", fontWeight "100" ] [ text (arrowDefault Down) ]
-                , case portValue of
-                    Empty ->
-                        noView
-
-                    Num num ->
-                        div [] [ text <| Num.toString num ]
-
-                    Queried ->
-                        div [] [ text "?" ]
+                [ viewArrow Down
+                , div [] [ viewPortValue portValue ]
                 ]
             ]
         ]
+
+
+viewArrow : Dir4 -> Html msg
+viewArrow dir4 =
+    span [ fontSize "2em", fontWeight "100" ] [ text (arrowDefault dir4) ]
 
 
 viewUpPortValue : List (Attribute msg) -> PortValue -> Html msg
@@ -333,16 +347,8 @@ viewUpPortValue attrs portValue =
             , allPointerEvents
             ]
             [ fRow []
-                [ div [ fontSize "2em", fontWeight "100" ] [ text (arrowDefault Up) ]
-                , case portValue of
-                    Empty ->
-                        noView
-
-                    Num num ->
-                        div [] [ text <| Num.toString num ]
-
-                    Queried ->
-                        div [] [ text "?" ]
+                [ viewArrow Up
+                , div [] [ viewPortValue portValue ]
                 ]
             ]
         ]
