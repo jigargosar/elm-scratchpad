@@ -4,5 +4,5 @@ import Utils exposing (Dir4)
 
 
 type IOIntent
-    = MayRead Dir4
-    | MayWrite Dir4
+    = Read Dir4
+    | Write Dir4

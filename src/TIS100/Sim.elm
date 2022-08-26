@@ -143,12 +143,12 @@ type PortId
 portIdFromPotentialIO : Addr -> IOIntent -> Maybe PortId
 portIdFromPotentialIO addr potentialIO =
     case potentialIO of
-        MayRead dir ->
+        Read dir ->
             moveAddrBy dir addr
                 |> Maybe.map
                     (\oppAddr -> PortId oppAddr (oppositeDir4 dir) ( oppAddr, addr ))
 
-        MayWrite dir ->
+        Write dir ->
             moveAddrBy dir addr |> Maybe.map (pair addr >> PortId addr dir)
 
 
@@ -223,10 +223,10 @@ addPotentialPorts : NodeEntry -> Ports -> Ports
 addPotentialPorts ( addr, node ) =
     case node of
         InputNode _ _ ->
-            addPotentialIO addr (MayWrite Down)
+            addPotentialIO addr (Write Down)
 
         OutputNode _ _ ->
-            addPotentialIO addr (MayRead Up)
+            addPotentialIO addr (Read Up)
 
         ExeNode exe ->
             addPotentialIOList addr (ExeNode.potentialIO exe)

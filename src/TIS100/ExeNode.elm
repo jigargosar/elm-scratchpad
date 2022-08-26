@@ -36,4 +36,4 @@ state node =
 
 potentialIO : ExeNode -> List IOIntent
 potentialIO _ =
-    [ MayRead Up, MayRead Down, MayWrite Up, MayWrite Down ]
+    [ Read Up, Read Down, Write Up, Write Down ]
