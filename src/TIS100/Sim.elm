@@ -301,21 +301,13 @@ portsToList (Ports dict) =
 
 
 viewPort : Port -> Html msg
-viewPort (Port (PortId (( _, y ) as addr) dir _) portValue) =
+viewPort (Port (PortId addr dir _) portValue) =
     case dir of
         Up ->
-            if y <= 1 || y >= maxY then
-                noView
-
-            else
-                viewUpPortValue addr portValue
+            viewUpPortValue addr portValue
 
         Down ->
-            if y < 0 || y >= maxY then
-                noView
-
-            else
-                viewDownPortValue addr portValue
+            viewDownPortValue addr portValue
 
         Left ->
             noView
