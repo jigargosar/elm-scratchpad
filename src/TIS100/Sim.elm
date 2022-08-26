@@ -358,7 +358,7 @@ verticalPortsContainer attrs =
     div
         (attrs
             ++ [ displayGrid
-               , gridTemplateColumns "1fr 1fr"
+               , gridCols 2
                , noPointerEvents
                ]
         )
