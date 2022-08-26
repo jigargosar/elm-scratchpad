@@ -195,10 +195,10 @@ updatePortValuesFromNode ( addr, node ) =
                 identity
 
             else
-                queryPortFrom addr dir
+                queryPort addr dir
 
         S.WriteBlocked num dir _ ->
-            writePortFrom addr dir num
+            writePort addr dir num
 
         S.Done ->
             identity
@@ -251,8 +251,8 @@ addPotentialPort ((PortId _ _ portKey) as portId) ((Ports dict) as ports) =
         Ports (Dict.insert portKey (Port portId Empty) dict)
 
 
-writePortFrom : Addr -> Dir4 -> Num -> Ports -> Ports
-writePortFrom addr dir num ((Ports dict) as ports) =
+writePort : Addr -> Dir4 -> Num -> Ports -> Ports
+writePort addr dir num ((Ports dict) as ports) =
     case portIdFromIOIntent addr (Write dir) of
         Nothing ->
             ports
@@ -266,8 +266,8 @@ writePortFrom addr dir num ((Ports dict) as ports) =
                     Ports (Dict.insert key (Port portId (Num num)) dict)
 
 
-queryPortFrom : Addr -> Dir4 -> Ports -> Ports
-queryPortFrom addr dir ((Ports dict) as ports) =
+queryPort : Addr -> Dir4 -> Ports -> Ports
+queryPort addr dir ((Ports dict) as ports) =
     case portIdFromIOIntent addr (Read dir) of
         Nothing ->
             ports
