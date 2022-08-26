@@ -150,6 +150,11 @@ portKeyFromId_ (PortId _ _ key) =
     key
 
 
+portKeyFromPort_ : Port -> PortKey
+portKeyFromPort_ =
+    idFromPort >> portKeyFromId_
+
+
 portIdFromIOIntent_ : Addr -> IOIntent -> Maybe PortId
 portIdFromIOIntent_ addr ioIntent =
     case ioIntent of
@@ -169,7 +174,7 @@ portById_ portId (Ports dict) =
 
 insertPort_ : Port -> Ports -> Ports
 insertPort_ port_ (Ports dict) =
-    Dict.insert (portKeyFromId_ (idFromPort port_)) port_ dict |> Ports
+    Dict.insert (portKeyFromPort_ port_) port_ dict |> Ports
 
 
 updatePortWithNum_ : PortId -> Num -> Ports -> Ports
