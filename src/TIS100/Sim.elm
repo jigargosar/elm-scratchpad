@@ -617,9 +617,17 @@ nodeBlockMode node =
             "IDLE"
 
 
+arrowChar : Dir4 -> String
+arrowChar dir4 =
+    case dir4 of
+        Up ->
+            "⇧"
 
---noinspection ElmUnusedSymbol
+        Down ->
+            "⇩"
 
+        Left ->
+            "⇦"
 
-arrowChars =
-    [ "⇦", "⇧", "⇨", "⇩" ]
+        Right ->
+            "⇨"
