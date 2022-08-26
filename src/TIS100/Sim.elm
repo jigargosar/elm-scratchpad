@@ -318,15 +318,15 @@ viewPort (Port (PortId ( x, y ) dir _) portValue) =
 viewDownPortValue : List (Attribute msg) -> PortValue -> Html msg
 viewDownPortValue attrs portValue =
     verticalPortsContainer attrs
-        [ gridColumns
-            [ placeItemsCenter
-
-            --, placeContentCenter
-            , gridAreaXY ( 1, 0 )
+        [ fRow
+            [ gridAreaXY ( 1, 0 )
             , allPointerEvents
+            , itemsCenter
+            , pl "1ch"
+            , gap "1ch"
             ]
             [ viewArrow Down
-            , div [] [ viewPortValueText portValue ]
+            , viewPortValueText portValue
             ]
         ]
 
@@ -339,16 +339,16 @@ viewArrow dir4 =
 viewUpPortValue : List (Attribute msg) -> PortValue -> Html msg
 viewUpPortValue attrs portValue =
     verticalPortsContainer attrs
-        [ div
-            [ dGrid
-            , placeContentCenter
-            , gridAreaXY ( 0, 0 )
+        [ fRow
+            [ gridAreaXY ( 0, 0 )
             , allPointerEvents
+            , itemsCenter
+            , justifyContent "end"
+            , pr "1ch"
+            , gap "1ch"
             ]
-            [ fRow []
-                [ viewPortValueText portValue
-                , viewArrow Up
-                ]
+            [ viewPortValueText portValue
+            , viewArrow Up
             ]
         ]
 

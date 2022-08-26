@@ -1189,7 +1189,11 @@ placeItemsCenter =
 
 
 contentCenter =
-    style "justify-content" "center"
+    justifyContent "center"
+
+
+justifyContent =
+    style "justify-content"
 
 
 itemsCenter =
@@ -1202,6 +1206,10 @@ pa =
 
 pl =
     style "padding-left"
+
+
+pr =
+    style "padding-right"
 
 
 pb =
@@ -1394,12 +1402,12 @@ fCol aa =
     div (dFlex :: fDCol :: aa)
 
 
-gridColumns aa =
-    div (dGrid :: gridAutoFlowColumn :: aa)
+gridCols i =
+    gridTemplateColumns ("repeat(" ++ fromInt i ++ ", minmax(0,1fr) )")
 
 
-gridRows aa =
-    div (dGrid :: gridAutoFlowRow :: aa)
+gridRows i =
+    gridTemplateRows ("repeat(" ++ fromInt i ++ ", minmax(0,1fr) )")
 
 
 circle : Float -> List (Attribute msg) -> Svg msg
