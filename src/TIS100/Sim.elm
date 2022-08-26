@@ -110,8 +110,8 @@ type PortValue
     | Queried
 
 
-mapPortValueToQueried : PortValue -> PortValue
-mapPortValueToQueried portValue =
+updatePortValueOnQuery : PortValue -> PortValue
+updatePortValueOnQuery portValue =
     case portValue of
         Empty ->
             Queried
@@ -243,7 +243,7 @@ updatePortValuesFromNodeState ( addr, node ) =
                 identity
 
             S.ReadBlocked dir _ ->
-                updatePortsDict addr (Read dir) mapPortValueToQueried
+                updatePortsDict addr (Read dir) updatePortValueOnQuery
 
             S.WriteBlocked num dir _ ->
                 updatePortsDict addr (Write dir) (always (Num num))
