@@ -292,7 +292,7 @@ portsToList (Ports dict) =
 
 
 viewPort : Port -> Html msg
-viewPort (Port (PortId ( x, y ) dir _) portValue) =
+viewPort (Port (PortId (( x, y ) as addr) dir _) portValue) =
     case dir of
         Up ->
             if y <= 1 || y >= maxY then
@@ -306,7 +306,7 @@ viewPort (Port (PortId ( x, y ) dir _) portValue) =
                 noView
 
             else
-                viewDownPortValue [ gridAreaXY ( x * 2, y * 2 ) ] portValue
+                viewDownPortValue addr portValue
 
         Left ->
             noView
@@ -315,10 +315,10 @@ viewPort (Port (PortId ( x, y ) dir _) portValue) =
             noView
 
 
-viewDownPortValue : List (Attribute msg) -> PortValue -> Html msg
-viewDownPortValue attrs portValue =
+viewDownPortValue : Addr -> PortValue -> Html msg
+viewDownPortValue ( x, y ) portValue =
     gtCols 2
-        (noPointerEvents :: attrs)
+        [ noPointerEvents, gridAreaXY ( x * 2, y * 2 ) ]
         [ fRow
             [ gridAreaXY ( 1, 0 )
             , allPointerEvents
