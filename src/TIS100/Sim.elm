@@ -210,6 +210,11 @@ getPortList sim =
         |> portsToList
 
 
+portsToList : Ports -> List Port
+portsToList (Ports dict) =
+    Dict.values dict
+
+
 updatePortValues : Sim -> Ports -> Ports
 updatePortValues sim ports =
     foldlEntries updatePortValuesFromNode ports sim.store
@@ -293,11 +298,6 @@ queryPort addr dir =
                 _ ->
                     portVal
         )
-
-
-portsToList : Ports -> List Port
-portsToList (Ports dict) =
-    Dict.values dict
 
 
 viewPort : Port -> Html msg
