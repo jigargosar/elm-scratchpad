@@ -19,15 +19,6 @@ type alias Addr =
     ( Int, Int )
 
 
-parseAddr : Addr -> Maybe Addr
-parseAddr addr =
-    if mapBoth (clamp 0 maxX) (clamp 0 maxY) addr == addr then
-        Just addr
-
-    else
-        Nothing
-
-
 type Node
     = InputNode String InputNode
     | OutputNode String OutputNode
@@ -302,11 +293,6 @@ queryPort addr dir =
                 _ ->
                     portVal
         )
-
-
-moveAddrBy : Dir4 -> Addr -> Maybe Addr
-moveAddrBy dir addr =
-    moveInDir4 dir addr |> parseAddr
 
 
 portsToList : Ports -> List Port
