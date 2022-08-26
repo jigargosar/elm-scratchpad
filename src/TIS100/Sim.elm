@@ -167,11 +167,6 @@ portIdFromIOIntent_ addr ioIntent =
             moveAddrBy dir addr |> Maybe.map (pair addr >> PortId addr dir)
 
 
-portById_ : PortId -> Ports -> Maybe Port
-portById_ portId (Ports dict) =
-    Dict.get (portKeyFromId_ portId) dict
-
-
 insertPort_ : Port -> Ports -> Ports
 insertPort_ port_ (Ports dict) =
     Dict.insert (portKeyFromPort_ port_) port_ dict |> Ports
