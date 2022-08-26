@@ -213,16 +213,30 @@ getPortList sim =
     let
         emptyPorts =
             foldlEntries
-                addPotentialPortsFromNodeIOIntents
+                ensurePortsFromNodeIOIntents
                 Dict.empty
                 sim.store
+
+        updateValuesExceptLastRow entry =
+            if isLastRowEntry entry then
+                identity
+
+            else
+                updatePortValuesFromNodeState entry
     in
-    foldlEntries updatePortValuesFromNodeState emptyPorts sim.store
+    foldlEntries updateValuesExceptLastRow
+        emptyPorts
+        sim.store
         |> Dict.values
 
 
-addPotentialPortsFromNodeIOIntents : NodeEntry -> Ports -> Ports
-addPotentialPortsFromNodeIOIntents ( addr, node ) dict =
+isLastRowEntry : NodeEntry -> Bool
+isLastRowEntry ( addr, _ ) =
+    second addr == maxY
+
+
+ensurePortsFromNodeIOIntents : NodeEntry -> Ports -> Ports
+ensurePortsFromNodeIOIntents ( addr, node ) dict =
     nodeIoIntents node
         |> List.foldl
             (\ioIntent -> updatePortsDict addr ioIntent identity)
@@ -236,27 +250,13 @@ updatePortValuesFromNodeState ( addr, node ) =
             identity
 
         S.ReadBlocked dir _ ->
-            if isOutputNode node then
-                identity
-
-            else
-                updatePortsDict addr (Read dir) mapPortValueToQueried
+            updatePortsDict addr (Read dir) mapPortValueToQueried
 
         S.WriteBlocked num dir _ ->
             updatePortsDict addr (Write dir) (always (Num num))
 
         S.Done ->
             identity
-
-
-isOutputNode : Node -> Bool
-isOutputNode node =
-    case node of
-        OutputNode _ _ ->
-            True
-
-        _ ->
-            False
 
 
 nodeIoIntents : Node -> List IOIntent
