@@ -209,12 +209,12 @@ getPortList sim =
                 Dict.empty
                 sim.store
     in
-    foldlEntries updatePortValuesFromNode emptyPorts sim.store
+    foldlEntries updatePortValue emptyPorts sim.store
         |> Dict.values
 
 
-updatePortValuesFromNode : NodeEntry -> Ports -> Ports
-updatePortValuesFromNode ( addr, node ) =
+updatePortValue : NodeEntry -> Ports -> Ports
+updatePortValue ( addr, node ) =
     case nodeState node of
         S.ReadyToRun _ ->
             identity
