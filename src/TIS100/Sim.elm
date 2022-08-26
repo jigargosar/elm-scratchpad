@@ -240,9 +240,7 @@ updatePortValuesFromNodeState ( addr, node ) =
                 identity
 
             else
-                updatePortsDict addr
-                    (Read dir)
-                    mapPortValueToQueried
+                updatePortsDict addr (Read dir) mapPortValueToQueried
 
         S.WriteBlocked num dir _ ->
             updatePortsDict addr (Write dir) (always (Num num))
