@@ -177,18 +177,10 @@ insertPort_ port_ (Ports dict) =
     Dict.insert (portKeyFromPort_ port_) port_ dict |> Ports
 
 
-updatePortWithId_ : PortId -> (Maybe Port -> Maybe Port) -> Ports -> Ports
+updatePortWithId_ : PortId -> (Port -> Port) -> Ports -> Ports
 updatePortWithId_ portId fn (Ports dict) =
     Dict.update (portKeyFromId_ portId)
-        fn
-        dict
-        |> Ports
-
-
-updatePortWithNum_ : PortId -> Num -> Ports -> Ports
-updatePortWithNum_ portId num (Ports dict) =
-    Dict.update (portKeyFromId_ portId)
-        (Maybe.map (\_ -> Port portId (Num num)))
+        (Maybe.map fn)
         dict
         |> Ports
 
@@ -297,22 +289,28 @@ writePort addr dir num ports =
             ports
 
         Just portId ->
-            updatePortWithNum_ portId num ports
+            updatePortWithId_ portId
+                (\_ -> Port portId (Num num))
+                ports
 
 
 queryPort : Addr -> Dir4 -> Ports -> Ports
-queryPort addr dir ((Ports dict) as ports) =
+queryPort addr dir ports =
     case portIdFromIOIntent_ addr (Read dir) of
         Nothing ->
             ports
 
-        Just ((PortId _ _ key) as portId) ->
-            case Dict.get key dict of
-                Just (Port _ Empty) ->
-                    Ports (Dict.insert key (Port portId Queried) dict)
+        Just portId ->
+            updatePortWithId_ portId
+                (\port_ ->
+                    case port_ of
+                        Port _ Empty ->
+                            Port portId Queried
 
-                _ ->
-                    ports
+                        _ ->
+                            port_
+                )
+                ports
 
 
 moveAddrBy : Dir4 -> Addr -> Maybe Addr
