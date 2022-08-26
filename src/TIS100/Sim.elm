@@ -152,13 +152,6 @@ portIdFromIOIntent addr ioIntent =
             moveAddrBy dir addr |> Maybe.map (pair addr >> PortId addr dir)
 
 
-portIdForReading : Addr -> Dir4 -> Maybe PortId
-portIdForReading addr dir =
-    moveAddrBy dir addr
-        |> Maybe.map
-            (\oppAddr -> PortId oppAddr (oppositeDir4 dir) ( oppAddr, addr ))
-
-
 type alias PortKey =
     ( Addr, Addr )
 
