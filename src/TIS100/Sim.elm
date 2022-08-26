@@ -615,3 +615,11 @@ nodeBlockMode node =
 
         S.Done ->
             "IDLE"
+
+
+
+--noinspection ElmUnusedSymbol
+
+
+arrowChars =
+    [ "⇦", "⇧", "⇨", "⇩" ]
