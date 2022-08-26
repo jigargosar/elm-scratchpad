@@ -457,8 +457,8 @@ readAndUnblock :
     -> WriteBlockedAcc a
     -> Maybe ( Num, WriteBlockedAcc a )
 readAndUnblock readerAddr readDir acc =
-    moveAddrBy readDir readerAddr
-        |> Maybe.andThen (getEntryIn acc.writeBlocked)
+    moveInDir4 readDir readerAddr
+        |> getEntryIn acc.writeBlocked
         |> maybeFilter
             (\( _, writeBlockedNode ) ->
                 readDir == oppositeDir4 writeBlockedNode.dir
