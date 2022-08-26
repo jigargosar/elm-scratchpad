@@ -355,11 +355,6 @@ viewArrow dir4 =
     span [ fontSize "2em", fontWeight "100" ] [ text (arrowDefault dir4) ]
 
 
-verticalPortsContainer : List (Attribute msg) -> List (Html msg) -> Html msg
-verticalPortsContainer attrs =
-    gtCols 2 (noPointerEvents :: attrs)
-
-
 step : Sim -> Sim
 step sim =
     { sim
