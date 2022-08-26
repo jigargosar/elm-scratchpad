@@ -140,9 +140,9 @@ type PortId
     = PortId Addr Dir4 PortKey
 
 
-portIdFromPotentialIO : Addr -> IOIntent -> Maybe PortId
-portIdFromPotentialIO addr potentialIO =
-    case potentialIO of
+portIdFromIOIntent : Addr -> IOIntent -> Maybe PortId
+portIdFromIOIntent addr ioIntent =
+    case ioIntent of
         Read dir ->
             moveAddrBy dir addr
                 |> Maybe.map
@@ -150,11 +150,6 @@ portIdFromPotentialIO addr potentialIO =
 
         Write dir ->
             moveAddrBy dir addr |> Maybe.map (pair addr >> PortId addr dir)
-
-
-portIdForWriting : Addr -> Dir4 -> Maybe PortId
-portIdForWriting addr dir =
-    moveAddrBy dir addr |> Maybe.map (pair addr >> PortId addr dir)
 
 
 portIdForReading : Addr -> Dir4 -> Maybe PortId
@@ -200,10 +195,10 @@ updatePortValuesFromNode ( addr, node ) =
                 identity
 
             else
-                queryPort addr dir
+                queryPortFrom addr dir
 
         S.WriteBlocked num dir _ ->
-            writeToPort addr dir num
+            writePortFrom addr dir num
 
         S.Done ->
             identity
@@ -239,7 +234,7 @@ addIOIntents addr ioIntents ports =
 
 addIOIntent : Addr -> IOIntent -> Ports -> Ports
 addIOIntent addr potentialIO ports =
-    case portIdFromPotentialIO addr potentialIO of
+    case portIdFromIOIntent addr potentialIO of
         Nothing ->
             ports
 
@@ -256,9 +251,9 @@ addPotentialPort ((PortId _ _ portKey) as portId) ((Ports dict) as ports) =
         Ports (Dict.insert portKey (Port portId Empty) dict)
 
 
-writeToPort : Addr -> Dir4 -> Num -> Ports -> Ports
-writeToPort addr dir num ((Ports dict) as ports) =
-    case portIdForWriting addr dir of
+writePortFrom : Addr -> Dir4 -> Num -> Ports -> Ports
+writePortFrom addr dir num ((Ports dict) as ports) =
+    case portIdFromIOIntent addr (Write dir) of
         Nothing ->
             ports
 
@@ -271,9 +266,9 @@ writeToPort addr dir num ((Ports dict) as ports) =
                     Ports (Dict.insert key (Port portId (Num num)) dict)
 
 
-queryPort : Addr -> Dir4 -> Ports -> Ports
-queryPort addr dir ((Ports dict) as ports) =
-    case portIdForReading addr dir of
+queryPortFrom : Addr -> Dir4 -> Ports -> Ports
+queryPortFrom addr dir ((Ports dict) as ports) =
+    case portIdFromIOIntent addr (Read dir) of
         Nothing ->
             ports
 
