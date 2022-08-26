@@ -11,6 +11,7 @@ import TIS100.InputNode as InputNode exposing (InputNode)
 import TIS100.NodeState as S exposing (NodeState)
 import TIS100.Num as Num exposing (Num)
 import TIS100.OutputNode as OutputNode exposing (OutputNode)
+import TIS100.PotentialIO exposing (PotentialIO(..))
 import Utils exposing (..)
 
 
@@ -139,6 +140,18 @@ type PortId
     = PortId Addr Dir4 PortKey
 
 
+portIdFromPotentialIO : Addr -> PotentialIO -> Maybe PortId
+portIdFromPotentialIO addr potentialIO =
+    case potentialIO of
+        MayRead dir ->
+            moveAddrBy dir addr
+                |> Maybe.map
+                    (\oppAddr -> PortId oppAddr (oppositeDir4 dir) ( oppAddr, addr ))
+
+        MayWrite dir ->
+            moveAddrBy dir addr |> Maybe.map (pair addr >> PortId addr dir)
+
+
 portIdForWriting : Addr -> Dir4 -> Maybe PortId
 portIdForWriting addr dir =
     moveAddrBy dir addr |> Maybe.map (pair addr >> PortId addr dir)
@@ -222,24 +235,24 @@ addPotentialPorts ( addr, node ) =
                 >> addPotentialWrite addr Up
 
 
-addPotentialRead : Addr -> Dir4 -> Ports -> Ports
-addPotentialRead addr dir ports =
-    case portIdForReading addr dir of
+addPotentialIO : Addr -> PotentialIO -> Ports -> Ports
+addPotentialIO addr potentialIO ports =
+    case portIdFromPotentialIO addr potentialIO of
         Nothing ->
             ports
 
         Just pid ->
             addPotentialPort pid ports
+
+
+addPotentialRead : Addr -> Dir4 -> Ports -> Ports
+addPotentialRead addr dir =
+    addPotentialIO addr (MayRead dir)
 
 
 addPotentialWrite : Addr -> Dir4 -> Ports -> Ports
-addPotentialWrite addr dir ports =
-    case portIdForWriting addr dir of
-        Nothing ->
-            ports
-
-        Just pid ->
-            addPotentialPort pid ports
+addPotentialWrite addr dir =
+    addPotentialIO addr (MayWrite dir)
 
 
 addPotentialPort : PortId -> Ports -> Ports
