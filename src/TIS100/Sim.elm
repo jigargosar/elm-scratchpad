@@ -150,11 +150,6 @@ portKeyFromId_ (PortId _ _ key) =
     key
 
 
-portKeyFromPort_ : Port -> PortKey
-portKeyFromPort_ =
-    idFromPort >> portKeyFromId_
-
-
 portIdFromIOIntent_ : Addr -> IOIntent -> Maybe PortId
 portIdFromIOIntent_ addr ioIntent =
     case ioIntent of
@@ -168,12 +163,12 @@ portIdFromIOIntent_ addr ioIntent =
 
 
 insertPort_ : Port -> Ports -> Ports
-insertPort_ port_ (Ports dict) =
-    Dict.insert (portKeyFromPort_ port_) port_ dict |> Ports
+insertPort_ ((Port id _) as port_) (Ports dict) =
+    Dict.insert (portKeyFromId_ id) port_ dict |> Ports
 
 
-updatePortWithId_ : PortId -> (PortValue -> PortValue) -> Ports -> Ports
-updatePortWithId_ portId fn (Ports dict) =
+mapPortValueWithId_ : PortId -> (PortValue -> PortValue) -> Ports -> Ports
+mapPortValueWithId_ portId fn (Ports dict) =
     Dict.update (portKeyFromId_ portId)
         (Maybe.map (\(Port id v) -> Port id (fn v)))
         dict
@@ -190,7 +185,7 @@ updatePortValueFromIoIntent addr iOIntent fn ports =
     portIdFromIOIntent_ addr iOIntent
         |> Maybe.map
             (\portId ->
-                updatePortWithId_ portId fn ports
+                mapPortValueWithId_ portId fn ports
             )
         |> Maybe.withDefault ports
 
