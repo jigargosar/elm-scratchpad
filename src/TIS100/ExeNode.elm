@@ -22,16 +22,16 @@ state : ExeNode -> S.NodeState ExeNode
 state node =
     case node of
         ReadyToRun ->
-            S.Run (\() -> ReadBlocked)
+            S.ReadyToRun (\() -> ReadBlocked)
 
         Done ->
             S.Done
 
         ReadBlocked ->
-            S.Read Up WriteBlocked
+            S.ReadBlocked Up WriteBlocked
 
         WriteBlocked num ->
-            S.Write num Down (\() -> ReadyToRun)
+            S.WriteBlocked num Down (\() -> ReadyToRun)
 
 
 potentialIO : ExeNode -> List PotentialIO

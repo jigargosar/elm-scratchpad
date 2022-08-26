@@ -192,17 +192,17 @@ updatePortValues sim ports =
 updatePortValuesFromNode : NodeEntry -> Ports -> Ports
 updatePortValuesFromNode ( addr, node ) =
     case nodeState node of
-        S.Run _ ->
+        S.ReadyToRun _ ->
             identity
 
-        S.Read dir _ ->
+        S.ReadBlocked dir _ ->
             if isOutputNode node then
                 identity
 
             else
                 queryPort addr dir
 
-        S.Write num dir _ ->
+        S.WriteBlocked num dir _ ->
             writeToPort addr dir num
 
         S.Done ->
@@ -378,16 +378,16 @@ stepNodes ns =
 stepNode : Addr -> Node -> Acc -> Acc
 stepNode addr node =
     case nodeState node of
-        S.Write num dir cont ->
+        S.WriteBlocked num dir cont ->
             addToWriteBlocked addr (WriteBlockedNode node num dir cont)
 
         S.Done ->
             addToCompleted addr node
 
-        S.Read dir readResolver ->
+        S.ReadBlocked dir readResolver ->
             addToReadBlocked addr ( node, dir, readResolver )
 
-        S.Run runResolver ->
+        S.ReadyToRun runResolver ->
             resolveAfterRun addr (runResolver ())
 
 
@@ -407,7 +407,7 @@ nodeState node =
 resolveAfterRun : Addr -> Node -> Acc -> Acc
 resolveAfterRun addr node =
     case nodeState node of
-        S.Read dir cont ->
+        S.ReadBlocked dir cont ->
             addToReadBlocked addr ( node, dir, cont )
 
         _ ->
@@ -605,13 +605,13 @@ viewNode ( addr, node ) =
 nodeBlockMode : Node -> String
 nodeBlockMode node =
     case nodeState node of
-        S.Run _ ->
+        S.ReadyToRun _ ->
             "RUN"
 
-        S.Read _ _ ->
+        S.ReadBlocked _ _ ->
             "READ"
 
-        S.Write _ _ _ ->
+        S.WriteBlocked _ _ _ ->
             "WRITE"
 
         S.Done ->

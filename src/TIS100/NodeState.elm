@@ -5,23 +5,23 @@ import Utils exposing (Dir4)
 
 
 type NodeState a
-    = Run (() -> a)
-    | Read Dir4 (Num -> a)
-    | Write Num Dir4 (() -> a)
+    = ReadyToRun (() -> a)
+    | ReadBlocked Dir4 (Num -> a)
+    | WriteBlocked Num Dir4 (() -> a)
     | Done
 
 
 map : (a -> b) -> NodeState a -> NodeState b
 map mapper ns =
     case ns of
-        Write num dir cont ->
-            Write num dir (\() -> cont () |> mapper)
+        WriteBlocked num dir cont ->
+            WriteBlocked num dir (\() -> cont () |> mapper)
 
         Done ->
             Done
 
-        Read dir cont ->
-            Read dir (\num -> cont num |> mapper)
+        ReadBlocked dir cont ->
+            ReadBlocked dir (\num -> cont num |> mapper)
 
-        Run cont ->
-            Run (\() -> cont () |> mapper)
+        ReadyToRun cont ->
+            ReadyToRun (\() -> cont () |> mapper)

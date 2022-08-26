@@ -32,7 +32,7 @@ state node =
             S.Done
 
         Running num nums ->
-            S.Run (\() -> WriteBlocked num nums)
+            S.ReadyToRun (\() -> WriteBlocked num nums)
 
         WriteBlocked num nums ->
-            S.Write num Down (\() -> fromList nums)
+            S.WriteBlocked num Down (\() -> fromList nums)
