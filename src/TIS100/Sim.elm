@@ -219,10 +219,22 @@ updatePortValuesFromNode ( addr, node ) =
                 identity
 
             else
-                queryPort addr dir
+                mapPortValue
+                    addr
+                    (Read dir)
+                    (\portVal ->
+                        case portVal of
+                            Empty ->
+                                Queried
+
+                            _ ->
+                                portVal
+                    )
 
         S.WriteBlocked num dir _ ->
-            writePort addr dir num
+            mapPortValue addr
+                (Write dir)
+                (\_ -> Num num)
 
         S.Done ->
             identity
@@ -249,28 +261,6 @@ nodeIoIntents node =
 
         ExeNode exe ->
             ExeNode.ioIntents exe
-
-
-writePort : Addr -> Dir4 -> Num -> Ports -> Ports
-writePort addr dir num =
-    mapPortValue addr
-        (Write dir)
-        (\_ -> Num num)
-
-
-queryPort : Addr -> Dir4 -> Ports -> Ports
-queryPort addr dir =
-    mapPortValue
-        addr
-        (Read dir)
-        (\portVal ->
-            case portVal of
-                Empty ->
-                    Queried
-
-                _ ->
-                    portVal
-        )
 
 
 viewPort : Port -> Html msg
