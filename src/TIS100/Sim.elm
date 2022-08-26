@@ -177,10 +177,10 @@ insertPort_ port_ (Ports dict) =
     Dict.insert (portKeyFromPort_ port_) port_ dict |> Ports
 
 
-updatePortWithId_ : PortId -> (Port -> Port) -> Ports -> Ports
+updatePortWithId_ : PortId -> (PortValue -> PortValue) -> Ports -> Ports
 updatePortWithId_ portId fn (Ports dict) =
     Dict.update (portKeyFromId_ portId)
-        (Maybe.map fn)
+        (Maybe.map (\(Port id v) -> Port id (fn v)))
         dict
         |> Ports
 
@@ -188,7 +188,7 @@ updatePortWithId_ portId fn (Ports dict) =
 updatePortValueFromIoIntent :
     Addr
     -> IOIntent
-    -> (Port -> Port)
+    -> (PortValue -> PortValue)
     -> Ports
     -> Ports
 updatePortValueFromIoIntent addr iOIntent fn ports =
@@ -198,11 +198,6 @@ updatePortValueFromIoIntent addr iOIntent fn ports =
                 updatePortWithId_ portId fn ports
             )
         |> Maybe.withDefault ports
-
-
-
---updatePortAsQueried: PortId -> Ports -> Ports
---updatePortAsQueried portId ports =
 
 
 type alias PortKey =
@@ -298,28 +293,24 @@ addPotentialPort ((PortId _ _ portKey) as portId) ((Ports dict) as ports) =
 
 
 writePort : Addr -> Dir4 -> Num -> Ports -> Ports
-writePort addr dir num ports =
-    case portIdFromIOIntent_ addr (Write dir) of
-        Nothing ->
-            ports
-
-        Just portId ->
-            updatePortWithId_ portId
-                (\_ -> Port portId (Num num))
-                ports
+writePort addr dir num =
+    updatePortValueFromIoIntent addr
+        (Write dir)
+        (\_ -> Num num)
 
 
 queryPort : Addr -> Dir4 -> Ports -> Ports
 queryPort addr dir =
-    updatePortValueFromIoIntent addr
+    updatePortValueFromIoIntent
+        addr
         (Read dir)
-        (\port_ ->
-            case port_ of
-                Port portId Empty ->
-                    Port portId Queried
+        (\portVal ->
+            case portVal of
+                Empty ->
+                    Queried
 
                 _ ->
-                    port_
+                    portVal
         )
 
 
