@@ -146,14 +146,19 @@ type PortId
 
 
 initPortId : Addr -> Dir4 -> Maybe PortId
-initPortId addr dir =
-    Maybe.map2 pair
-        (addr |> parseAddr)
-        (moveInDir4 dir addr |> parseAddr)
-        |> Maybe.andThen
-            (\( from, to ) ->
-                Just <| PortId from dir ( from, to )
-            )
+initPortId (( fx, fy ) as from) dir =
+    let
+        (( tx, ty ) as to) =
+            moveInDir4 dir from
+    in
+    if
+        (fx < 0 || fx > maxX || fy < 0 || fy >= maxY)
+            || (tx < 0 || tx > maxX || ty <= 0 || ty > maxY)
+    then
+        Nothing
+
+    else
+        Just <| PortId from dir ( from, to )
 
 
 portKeyFromId_ : PortId -> PortKey
