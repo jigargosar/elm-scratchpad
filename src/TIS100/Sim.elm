@@ -207,11 +207,6 @@ mapPortValue addr iOIntent fn ports =
                 ports
 
 
-ensurePotentialPort : Addr -> IOIntent -> Ports -> Ports
-ensurePotentialPort addr iOIntent =
-    updatePortsDict addr iOIntent (\_ -> identity)
-
-
 type alias PortKey =
     ( Addr, Addr )
 
@@ -236,6 +231,11 @@ getPortList sim =
 addPotentialPortsFromNodeIOIntents : NodeEntry -> Ports -> Ports
 addPotentialPortsFromNodeIOIntents ( addr, node ) dict =
     nodeIoIntents node |> List.foldl (ensurePotentialPort addr) dict
+
+
+ensurePotentialPort : Addr -> IOIntent -> Ports -> Ports
+ensurePotentialPort addr iOIntent =
+    updatePortsDict addr iOIntent (\_ -> identity)
 
 
 updatePortValuesFromNodeState : NodeEntry -> Ports -> Ports
