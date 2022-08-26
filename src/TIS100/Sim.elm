@@ -113,6 +113,11 @@ type Port
     = Port PortId PortValue
 
 
+idFromPort : Port -> PortId
+idFromPort (Port id _) =
+    id
+
+
 type PortValue
     = Empty
     | Num Num
@@ -140,8 +145,13 @@ type PortId
     = PortId Addr Dir4 PortKey
 
 
-portIdFromIOIntent : Addr -> IOIntent -> Maybe PortId
-portIdFromIOIntent addr ioIntent =
+portKeyFromId_ : PortId -> PortKey
+portKeyFromId_ (PortId _ _ key) =
+    key
+
+
+portIdFromIOIntent_ : Addr -> IOIntent -> Maybe PortId
+portIdFromIOIntent_ addr ioIntent =
     case ioIntent of
         Read dir ->
             moveAddrBy dir addr
@@ -150,6 +160,32 @@ portIdFromIOIntent addr ioIntent =
 
         Write dir ->
             moveAddrBy dir addr |> Maybe.map (pair addr >> PortId addr dir)
+
+
+portById_ : PortId -> Ports -> Maybe Port
+portById_ portId (Ports dict) =
+    Dict.get (portKeyFromId_ portId) dict
+
+
+insertPort_ : Port -> Ports -> Ports
+insertPort_ port_ (Ports dict) =
+    Dict.insert (portKeyFromId_ (idFromPort port_)) port_ dict |> Ports
+
+
+updatePortWithNum_ : PortId -> Num -> Ports -> Ports
+updatePortWithNum_ portId num ((Ports dict) as ports) =
+    case portById_ portId ports of
+        Just _ ->
+            Dict.insert (portKeyFromId_ portId) (Port portId (Num num)) dict
+                |> Ports
+
+        Nothing ->
+            ports
+
+
+
+--updatePortAsQueried: PortId -> Ports -> Ports
+--updatePortAsQueried portId ports =
 
 
 type alias PortKey =
@@ -227,7 +263,7 @@ addIOIntents addr ioIntents ports =
 
 addIOIntent : Addr -> IOIntent -> Ports -> Ports
 addIOIntent addr potentialIO ports =
-    case portIdFromIOIntent addr potentialIO of
+    case portIdFromIOIntent_ addr potentialIO of
         Nothing ->
             ports
 
@@ -245,23 +281,18 @@ addPotentialPort ((PortId _ _ portKey) as portId) ((Ports dict) as ports) =
 
 
 writePort : Addr -> Dir4 -> Num -> Ports -> Ports
-writePort addr dir num ((Ports dict) as ports) =
-    case portIdFromIOIntent addr (Write dir) of
+writePort addr dir num ports =
+    case portIdFromIOIntent_ addr (Write dir) of
         Nothing ->
             ports
 
-        Just ((PortId _ _ key) as portId) ->
-            case Dict.get key dict of
-                Nothing ->
-                    ports
-
-                Just _ ->
-                    Ports (Dict.insert key (Port portId (Num num)) dict)
+        Just portId ->
+            updatePortWithNum_ portId num ports
 
 
 queryPort : Addr -> Dir4 -> Ports -> Ports
 queryPort addr dir ((Ports dict) as ports) =
-    case portIdFromIOIntent addr (Read dir) of
+    case portIdFromIOIntent_ addr (Read dir) of
         Nothing ->
             ports
 
