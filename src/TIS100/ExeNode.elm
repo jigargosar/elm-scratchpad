@@ -1,4 +1,4 @@
-module TIS100.ExeNode exposing (ExeNode, init, potentialIO, state)
+module TIS100.ExeNode exposing (ExeNode, init, ioIntents, state)
 
 import TIS100.IOIntent exposing (IOIntent(..))
 import TIS100.NodeState as S
@@ -34,6 +34,6 @@ state node =
             S.WriteBlocked num Down (\() -> ReadyToRun)
 
 
-potentialIO : ExeNode -> List IOIntent
-potentialIO _ =
+ioIntents : ExeNode -> List IOIntent
+ioIntents _ =
     [ Read Up, Read Down, Write Up, Write Down ]
