@@ -1402,10 +1402,17 @@ fCol aa =
     div (dFlex :: fDCol :: aa)
 
 
+gtCols : Int -> List (Attribute msg) -> List (Html msg) -> Html msg
+gtCols i aa =
+    div (displayGrid :: gridCols i :: aa)
+
+
+gridCols : Int -> Attribute msg
 gridCols i =
     gridTemplateColumns ("repeat(" ++ fromInt i ++ ", minmax(0,1fr) )")
 
 
+gridRows : Int -> Attribute msg
 gridRows i =
     gridTemplateRows ("repeat(" ++ fromInt i ++ ", minmax(0,1fr) )")
 

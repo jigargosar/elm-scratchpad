@@ -317,7 +317,8 @@ viewPort (Port (PortId ( x, y ) dir _) portValue) =
 
 viewDownPortValue : List (Attribute msg) -> PortValue -> Html msg
 viewDownPortValue attrs portValue =
-    verticalPortsContainer attrs
+    gtCols 2
+        (noPointerEvents :: attrs)
         [ fRow
             [ gridAreaXY ( 1, 0 )
             , allPointerEvents
@@ -331,14 +332,10 @@ viewDownPortValue attrs portValue =
         ]
 
 
-viewArrow : Dir4 -> Html msg
-viewArrow dir4 =
-    span [ fontSize "2em", fontWeight "100" ] [ text (arrowDefault dir4) ]
-
-
 viewUpPortValue : List (Attribute msg) -> PortValue -> Html msg
 viewUpPortValue attrs portValue =
-    verticalPortsContainer attrs
+    gtCols 2
+        (noPointerEvents :: attrs)
         [ fRow
             [ gridAreaXY ( 0, 0 )
             , allPointerEvents
@@ -353,15 +350,14 @@ viewUpPortValue attrs portValue =
         ]
 
 
+viewArrow : Dir4 -> Html msg
+viewArrow dir4 =
+    span [ fontSize "2em", fontWeight "100" ] [ text (arrowDefault dir4) ]
+
+
 verticalPortsContainer : List (Attribute msg) -> List (Html msg) -> Html msg
 verticalPortsContainer attrs =
-    div
-        (attrs
-            ++ [ displayGrid
-               , gridCols 2
-               , noPointerEvents
-               ]
-        )
+    gtCols 2 (noPointerEvents :: attrs)
 
 
 step : Sim -> Sim
