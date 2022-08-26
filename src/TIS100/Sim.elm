@@ -110,6 +110,16 @@ type PortValue
     | Queried
 
 
+mapPortValueToQueried : PortValue -> PortValue
+mapPortValueToQueried portValue =
+    case portValue of
+        Empty ->
+            Queried
+
+        _ ->
+            portValue
+
+
 viewPortValueText : PortValue -> Html msg
 viewPortValueText =
     let
@@ -232,14 +242,7 @@ updatePortValuesFromNodeState ( addr, node ) =
             else
                 updatePortsDict addr
                     (Read dir)
-                    (\portVal ->
-                        case portVal of
-                            Empty ->
-                                Queried
-
-                            _ ->
-                                portVal
-                    )
+                    mapPortValueToQueried
 
         S.WriteBlocked num dir _ ->
             updatePortsDict addr (Write dir) (always (Num num))
