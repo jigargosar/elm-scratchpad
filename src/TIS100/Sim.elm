@@ -185,6 +185,21 @@ updatePortWithId_ portId fn (Ports dict) =
         |> Ports
 
 
+updatePortValueFromIoIntent :
+    Addr
+    -> IOIntent
+    -> (Port -> Port)
+    -> Ports
+    -> Ports
+updatePortValueFromIoIntent addr iOIntent fn ports =
+    portIdFromIOIntent_ addr iOIntent
+        |> Maybe.map
+            (\portId ->
+                updatePortWithId_ portId fn ports
+            )
+        |> Maybe.withDefault ports
+
+
 
 --updatePortAsQueried: PortId -> Ports -> Ports
 --updatePortAsQueried portId ports =
@@ -295,22 +310,17 @@ writePort addr dir num ports =
 
 
 queryPort : Addr -> Dir4 -> Ports -> Ports
-queryPort addr dir ports =
-    case portIdFromIOIntent_ addr (Read dir) of
-        Nothing ->
-            ports
+queryPort addr dir =
+    updatePortValueFromIoIntent addr
+        (Read dir)
+        (\port_ ->
+            case port_ of
+                Port portId Empty ->
+                    Port portId Queried
 
-        Just portId ->
-            updatePortWithId_ portId
-                (\port_ ->
-                    case port_ of
-                        Port _ Empty ->
-                            Port portId Queried
-
-                        _ ->
-                            port_
-                )
-                ports
+                _ ->
+                    port_
+        )
 
 
 moveAddrBy : Dir4 -> Addr -> Maybe Addr
