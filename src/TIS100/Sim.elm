@@ -308,7 +308,7 @@ viewDownPortValue attrs portValue =
             , allPointerEvents
             ]
             [ fRow []
-                [ div [ fontSize "2em", fontWeight "100" ] [ text "⇓" ]
+                [ div [ fontSize "2em", fontWeight "100" ] [ text (arrowChar Down) ]
                 , case portValue of
                     Empty ->
                         noView
@@ -333,7 +333,7 @@ viewUpPortValue attrs portValue =
             , allPointerEvents
             ]
             [ fRow []
-                [ div [ fontSize "2em", fontWeight "100" ] [ text "A" ]
+                [ div [ fontSize "2em", fontWeight "100" ] [ text (arrowChar Up) ]
                 , case portValue of
                     Empty ->
                         noView
