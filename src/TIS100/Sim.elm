@@ -280,16 +280,7 @@ addPortFromIOIntent addr potentialIO ports =
             ports
 
         Just pid ->
-            addPotentialPort pid ports
-
-
-addPotentialPort : PortId -> Ports -> Ports
-addPotentialPort ((PortId _ _ portKey) as portId) ((Ports dict) as ports) =
-    if Dict.member portKey dict then
-        ports
-
-    else
-        Ports (Dict.insert portKey (Port portId Empty) dict)
+            insertPort_ (Port pid Empty) ports
 
 
 writePort : Addr -> Dir4 -> Num -> Ports -> Ports
