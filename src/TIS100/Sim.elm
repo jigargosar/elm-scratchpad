@@ -210,29 +210,17 @@ type alias Ports =
 
 getPortList : Sim -> List Port
 getPortList sim =
-    let
-        emptyPorts =
-            foldlEntries
-                ensurePortsFromNodeIOIntents
-                Dict.empty
-                sim.store
-
-        updateValuesExceptLastRow entry =
-            if isLastRowEntry entry then
-                identity
-
-            else
-                updatePortValuesFromNodeState entry
-    in
-    foldlEntries updateValuesExceptLastRow
-        emptyPorts
+    foldlEntries addPortsFromNodeEntry
+        Dict.empty
         sim.store
         |> Dict.values
 
 
-isLastRowEntry : NodeEntry -> Bool
-isLastRowEntry ( addr, _ ) =
-    second addr == maxY
+addPortsFromNodeEntry : NodeEntry -> Ports -> Ports
+addPortsFromNodeEntry entry ports =
+    ports
+        |> ensurePortsFromNodeIOIntents entry
+        |> updatePortValuesFromNodeState entry
 
 
 ensurePortsFromNodeIOIntents : NodeEntry -> Ports -> Ports
@@ -245,18 +233,23 @@ ensurePortsFromNodeIOIntents ( addr, node ) dict =
 
 updatePortValuesFromNodeState : NodeEntry -> Ports -> Ports
 updatePortValuesFromNodeState ( addr, node ) =
-    case nodeState node of
-        S.ReadyToRun _ ->
-            identity
+    if second addr == maxY then
+        -- ignore updating read query for output node
+        identity
 
-        S.ReadBlocked dir _ ->
-            updatePortsDict addr (Read dir) mapPortValueToQueried
+    else
+        case nodeState node of
+            S.ReadyToRun _ ->
+                identity
 
-        S.WriteBlocked num dir _ ->
-            updatePortsDict addr (Write dir) (always (Num num))
+            S.ReadBlocked dir _ ->
+                updatePortsDict addr (Read dir) mapPortValueToQueried
 
-        S.Done ->
-            identity
+            S.WriteBlocked num dir _ ->
+                updatePortsDict addr (Write dir) (always (Num num))
+
+            S.Done ->
+                identity
 
 
 nodeIoIntents : Node -> List IOIntent
