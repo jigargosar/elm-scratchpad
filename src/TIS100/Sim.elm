@@ -208,8 +208,8 @@ type alias Ports =
     Dict PortKey Port
 
 
-getPortList : Sim -> List Port
-getPortList sim =
+toPorts : Sim -> List Port
+toPorts sim =
     foldlEntries addPortsFromNodeEntry
         Dict.empty
         sim.store
@@ -494,7 +494,7 @@ viewGrid sim =
 
 viewPorts : Sim -> List (Html msg)
 viewPorts sim =
-    getPortList sim |> List.map viewPort
+    toPorts sim |> List.map viewPort
 
 
 viewNodes : Sim -> List (Html msg)
