@@ -113,11 +113,6 @@ type Port
     = Port PortId PortValue
 
 
-idFromPort : Port -> PortId
-idFromPort (Port id _) =
-    id
-
-
 type PortValue
     = Empty
     | Num Num
@@ -170,12 +165,10 @@ portIdFromIOIntent_ : Addr -> IOIntent -> Maybe PortId
 portIdFromIOIntent_ addr ioIntent =
     case ioIntent of
         Read dir ->
-            moveAddrBy dir addr
-                |> Maybe.map
-                    (\oppAddr -> PortId oppAddr (oppositeDir4 dir) ( oppAddr, addr ))
+            initPortId (moveInDir4 dir addr) (oppositeDir4 dir)
 
         Write dir ->
-            moveAddrBy dir addr |> Maybe.map (pair addr >> PortId addr dir)
+            initPortId addr dir
 
 
 insertPort_ : Port -> Ports -> Ports
