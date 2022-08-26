@@ -12,8 +12,8 @@ type NodeState a
 
 
 map : (a -> b) -> NodeState a -> NodeState b
-map fn ns =
-    case ns of
+map fn nodeState =
+    case nodeState of
         WriteBlocked num dir cont ->
             WriteBlocked num dir (cont >> fn)
 
