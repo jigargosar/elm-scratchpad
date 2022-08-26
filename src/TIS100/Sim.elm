@@ -308,7 +308,7 @@ viewDownPortValue attrs portValue =
             , allPointerEvents
             ]
             [ fRow []
-                [ div [ fontSize "2em", fontWeight "100" ] [ text (arrowChar Down) ]
+                [ div [ fontSize "2em", fontWeight "100" ] [ text (arrowDefault Down) ]
                 , case portValue of
                     Empty ->
                         noView
@@ -333,7 +333,7 @@ viewUpPortValue attrs portValue =
             , allPointerEvents
             ]
             [ fRow []
-                [ div [ fontSize "2em", fontWeight "100" ] [ text (arrowChar Up) ]
+                [ div [ fontSize "2em", fontWeight "100" ] [ text (arrowDefault Up) ]
                 , case portValue of
                     Empty ->
                         noView
@@ -617,8 +617,26 @@ nodeBlockMode node =
             "IDLE"
 
 
-arrowChar : Dir4 -> String
-arrowChar dir4 =
+type ArrowType
+    = Filled
+    | Outline
+
+
+defaultArrowType =
+    Filled
+
+
+arrowDefault =
+    case defaultArrowType of
+        Filled ->
+            arrowFilled
+
+        Outline ->
+            arrowOutline
+
+
+arrowOutline : Dir4 -> String
+arrowOutline dir4 =
     case dir4 of
         Up ->
             "⇧"
@@ -627,7 +645,23 @@ arrowChar dir4 =
             "⇩"
 
         Left ->
-            "⇦"
+            "⇦ "
 
         Right ->
             "⇨"
+
+
+arrowFilled : Dir4 -> String
+arrowFilled dir4 =
+    case dir4 of
+        Up ->
+            "⬆"
+
+        Down ->
+            "⬇"
+
+        Left ->
+            "⬅"
+
+        Right ->
+            "➡"
