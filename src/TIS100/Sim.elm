@@ -131,23 +131,8 @@ type PortId
     = PortId Addr Dir4 PortKey
 
 
-initPortId : Addr -> IOIntent -> Maybe PortId
-initPortId addr ioIntent =
-    case ioIntent of
-        Read dir ->
-            initWritePortId (moveInDir4 dir addr) (oppositeDir4 dir)
-
-        Write dir ->
-            initWritePortId addr dir
-
-
-initWritePortId : Addr -> Dir4 -> Maybe PortId
-initWritePortId from dir =
-    initWritePortKey from dir |> Maybe.map (PortId from dir)
-
-
-initWritePortKey : Addr -> Dir4 -> Maybe PortKey
-initWritePortKey (( fx, fy ) as from) dir =
+initPortId : Addr -> Dir4 -> Maybe PortId
+initPortId (( fx, fy ) as from) dir =
     let
         (( tx, ty ) as to) =
             moveInDir4 dir from
@@ -159,7 +144,7 @@ initWritePortKey (( fx, fy ) as from) dir =
         Nothing
 
     else
-        Just ( from, to )
+        Just <| PortId from dir ( from, to )
 
 
 portKeyFromId_ : PortId -> PortKey
@@ -167,21 +152,36 @@ portKeyFromId_ (PortId _ _ key) =
     key
 
 
-mapPortValue :
+portIdFromIOIntent_ : Addr -> IOIntent -> Maybe PortId
+portIdFromIOIntent_ addr ioIntent =
+    case ioIntent of
+        Read dir ->
+            initPortId (moveInDir4 dir addr) (oppositeDir4 dir)
+
+        Write dir ->
+            initPortId addr dir
+
+
+mapPortValueWithId_ : PortId -> (PortValue -> PortValue) -> Ports -> Ports
+mapPortValueWithId_ portId fn dict =
+    Dict.update (portKeyFromId_ portId)
+        (Maybe.map (\(Port id v) -> Port id (fn v)))
+        dict
+
+
+updatePortValueFromIoIntent :
     Addr
     -> IOIntent
     -> (PortValue -> PortValue)
     -> Ports
     -> Ports
-mapPortValue addr iOIntent fn ports =
-    case initPortId addr iOIntent of
-        Nothing ->
-            ports
-
-        Just id ->
-            Dict.update (portKeyFromId_ id)
-                (Maybe.map (\(Port _ v) -> Port id (fn v)))
-                ports
+updatePortValueFromIoIntent addr iOIntent fn ports =
+    portIdFromIOIntent_ addr iOIntent
+        |> Maybe.map
+            (\portId ->
+                mapPortValueWithId_ portId fn ports
+            )
+        |> Maybe.withDefault ports
 
 
 type alias PortKey =
@@ -199,7 +199,7 @@ getPortList sim =
             foldlEntries
                 (\( addr, node ) dict ->
                     nodeIoIntents node
-                        |> List.filterMap (initPortId addr)
+                        |> List.filterMap (portIdFromIOIntent_ addr)
                         |> List.foldl
                             (\id ->
                                 Dict.insert (portKeyFromId_ id) (Port id Empty)
@@ -209,12 +209,12 @@ getPortList sim =
                 Dict.empty
                 sim.store
     in
-    foldlEntries updatePortFromNode emptyPorts sim.store
+    foldlEntries updatePortValuesFromNode emptyPorts sim.store
         |> Dict.values
 
 
-updatePortFromNode : NodeEntry -> Ports -> Ports
-updatePortFromNode ( addr, node ) =
+updatePortValuesFromNode : NodeEntry -> Ports -> Ports
+updatePortValuesFromNode ( addr, node ) =
     case nodeState node of
         S.ReadyToRun _ ->
             identity
@@ -258,14 +258,14 @@ nodeIoIntents node =
 
 writePort : Addr -> Dir4 -> Num -> Ports -> Ports
 writePort addr dir num =
-    mapPortValue addr
+    updatePortValueFromIoIntent addr
         (Write dir)
         (\_ -> Num num)
 
 
 queryPort : Addr -> Dir4 -> Ports -> Ports
 queryPort addr dir =
-    mapPortValue
+    updatePortValueFromIoIntent
         addr
         (Read dir)
         (\portVal ->
