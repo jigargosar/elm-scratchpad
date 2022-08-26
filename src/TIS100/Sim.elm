@@ -223,22 +223,22 @@ addPotentialPorts : NodeEntry -> Ports -> Ports
 addPotentialPorts ( addr, node ) =
     case node of
         InputNode _ _ ->
-            addPotentialIO addr (Write Down)
+            addIOIntent addr (Write Down)
 
         OutputNode _ _ ->
-            addPotentialIO addr (Read Up)
+            addIOIntent addr (Read Up)
 
         ExeNode exe ->
             addIOIntents addr (ExeNode.ioIntents exe)
 
 
 addIOIntents : Addr -> List IOIntent -> Ports -> Ports
-addIOIntents addr potentialIOList ports =
-    List.foldl (addPotentialIO addr) ports potentialIOList
+addIOIntents addr ioIntents ports =
+    List.foldl (addIOIntent addr) ports ioIntents
 
 
-addPotentialIO : Addr -> IOIntent -> Ports -> Ports
-addPotentialIO addr potentialIO ports =
+addIOIntent : Addr -> IOIntent -> Ports -> Ports
+addIOIntent addr potentialIO ports =
     case portIdFromPotentialIO addr potentialIO of
         Nothing ->
             ports
