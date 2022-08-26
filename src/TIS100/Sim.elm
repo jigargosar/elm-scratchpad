@@ -147,9 +147,13 @@ type PortId
 
 initPortId : Addr -> Dir4 -> Maybe PortId
 initPortId addr dir =
-    Maybe.map2 (\from to -> PortId from dir ( from, to ))
+    Maybe.map2 pair
         (addr |> parseAddr)
         (moveInDir4 dir addr |> parseAddr)
+        |> Maybe.andThen
+            (\( from, to ) ->
+                Just <| PortId from dir ( from, to )
+            )
 
 
 portKeyFromId_ : PortId -> PortKey
