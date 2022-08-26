@@ -145,6 +145,13 @@ type PortId
     = PortId Addr Dir4 PortKey
 
 
+initPortId : Addr -> Dir4 -> Maybe PortId
+initPortId addr dir =
+    Maybe.map2 (\from to -> PortId from dir ( from, to ))
+        (addr |> parseAddr)
+        (moveInDir4 dir addr |> parseAddr)
+
+
 portKeyFromId_ : PortId -> PortKey
 portKeyFromId_ (PortId _ _ key) =
     key
