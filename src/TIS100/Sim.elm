@@ -190,23 +190,6 @@ updatePortsDict addr iOIntent fn ports =
                 ports
 
 
-mapPortValue :
-    Addr
-    -> IOIntent
-    -> (PortValue -> PortValue)
-    -> Ports
-    -> Ports
-mapPortValue addr iOIntent fn ports =
-    case initPortId addr iOIntent of
-        Nothing ->
-            ports
-
-        Just portId ->
-            Dict.update (portKeyFromId portId)
-                (Maybe.map (\(Port id v) -> Port id (fn v)))
-                ports
-
-
 type alias PortKey =
     ( Addr, Addr )
 
@@ -230,12 +213,10 @@ getPortList sim =
 
 addPotentialPortsFromNodeIOIntents : NodeEntry -> Ports -> Ports
 addPotentialPortsFromNodeIOIntents ( addr, node ) dict =
-    nodeIoIntents node |> List.foldl (ensurePotentialPort addr) dict
-
-
-ensurePotentialPort : Addr -> IOIntent -> Ports -> Ports
-ensurePotentialPort addr iOIntent =
-    updatePortsDict addr iOIntent identity
+    nodeIoIntents node
+        |> List.foldl
+            (\ioIntent -> updatePortsDict addr ioIntent identity)
+            dict
 
 
 updatePortValuesFromNodeState : NodeEntry -> Ports -> Ports
