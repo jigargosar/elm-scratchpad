@@ -7,11 +7,11 @@ module TIS100.Sim exposing
 
 import Dict exposing (Dict)
 import TIS100.ExeNode as ExeNode exposing (ExeNode)
+import TIS100.IOIntent exposing (IOIntent(..))
 import TIS100.InputNode as InputNode exposing (InputNode)
 import TIS100.NodeState as S exposing (NodeState)
 import TIS100.Num as Num exposing (Num)
 import TIS100.OutputNode as OutputNode exposing (OutputNode)
-import TIS100.PotentialIO exposing (PotentialIO(..))
 import Utils exposing (..)
 
 
@@ -140,7 +140,7 @@ type PortId
     = PortId Addr Dir4 PortKey
 
 
-portIdFromPotentialIO : Addr -> PotentialIO -> Maybe PortId
+portIdFromPotentialIO : Addr -> IOIntent -> Maybe PortId
 portIdFromPotentialIO addr potentialIO =
     case potentialIO of
         MayRead dir ->
@@ -232,12 +232,12 @@ addPotentialPorts ( addr, node ) =
             addPotentialIOList addr (ExeNode.potentialIO exe)
 
 
-addPotentialIOList : Addr -> List PotentialIO -> Ports -> Ports
+addPotentialIOList : Addr -> List IOIntent -> Ports -> Ports
 addPotentialIOList addr potentialIOList ports =
     List.foldl (addPotentialIO addr) ports potentialIOList
 
 
-addPotentialIO : Addr -> PotentialIO -> Ports -> Ports
+addPotentialIO : Addr -> IOIntent -> Ports -> Ports
 addPotentialIO addr potentialIO ports =
     case portIdFromPotentialIO addr potentialIO of
         Nothing ->
