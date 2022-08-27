@@ -633,9 +633,9 @@ viewNode ( addr, node ) =
 
         ExeNode _ ->
             div
-                [ sOutline "1px solid white"
+                [ nodeAddrToGridArea addr
+                , sOutline "1px solid white"
                 , pa "1ch"
-                , nodeAddrToGridArea addr
                 , tac
                 ]
                 [ text "MODE:", text (nodeModeAsString node) ]
