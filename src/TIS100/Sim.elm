@@ -219,12 +219,12 @@ toPorts sim =
 addPortsFromNodeEntry : NodeEntry -> Ports -> Ports
 addPortsFromNodeEntry entry ports =
     ports
-        |> ensurePortsFromNodeIOIntents entry
+        |> addPortsFromNodeIOIntents entry
         |> updatePortValuesFromNodeState entry
 
 
-ensurePortsFromNodeIOIntents : NodeEntry -> Ports -> Ports
-ensurePortsFromNodeIOIntents ( addr, node ) dict =
+addPortsFromNodeIOIntents : NodeEntry -> Ports -> Ports
+addPortsFromNodeIOIntents ( addr, node ) dict =
     nodeIoIntents node
         |> List.foldl
             (\ioIntent -> updatePortsDict addr ioIntent identity)
