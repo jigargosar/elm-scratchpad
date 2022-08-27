@@ -1,4 +1,4 @@
-module TIS100.ExeNode exposing (ExeNode, initEmpty, initMovUpDown, initNop, ioIntents, state)
+module TIS100.ExeNode exposing (ExeNode, initEmpty, initMovUpDown, ioIntents, state)
 
 import TIS100.IOIntent exposing (IOIntent(..))
 import TIS100.NodeState as S
@@ -7,12 +7,12 @@ import Utils exposing (Dir4(..))
 
 
 type ExeNode
-    = ExeNode Inst State
+    = Runnable Inst State
+    | NotRunnable
 
 
 type State
-    = Done
-    | ReadyToRun
+    = ReadyToRun
     | ReadBlocked Dir4 Dir4
     | WriteBlocked Dir4 Num
 
@@ -24,33 +24,30 @@ type Inst
 
 initMovUpDown : ExeNode
 initMovUpDown =
-    ExeNode (Mov Up Down) ReadyToRun
-
-
-initNop : ExeNode
-initNop =
-    ExeNode Nop ReadyToRun
+    Runnable (Mov Up Down) ReadyToRun
 
 
 initEmpty : ExeNode
 initEmpty =
-    ExeNode Nop Done
+    NotRunnable
 
 
 state : ExeNode -> S.NodeState ExeNode
-state (ExeNode inst state_) =
-    case state_ of
-        ReadyToRun ->
-            S.ReadyToRun (\() -> ExeNode inst (run inst))
-
-        Done ->
+state exe =
+    case exe of
+        NotRunnable ->
             S.Done
 
-        ReadBlocked f t ->
-            S.ReadBlocked f (WriteBlocked t >> ExeNode inst)
+        Runnable inst state_ ->
+            case state_ of
+                ReadyToRun ->
+                    S.ReadyToRun (\() -> Runnable inst (run inst))
 
-        WriteBlocked t num ->
-            S.WriteBlocked num t (\() -> ExeNode inst ReadyToRun)
+                ReadBlocked f t ->
+                    S.ReadBlocked f (WriteBlocked t >> Runnable inst)
+
+                WriteBlocked t num ->
+                    S.WriteBlocked num t (\() -> Runnable inst ReadyToRun)
 
 
 run : Inst -> State
@@ -64,14 +61,15 @@ run inst =
 
 
 ioIntents : ExeNode -> List IOIntent
-ioIntents (ExeNode inst st) =
-    if st == Done then
-        []
+ioIntents exe =
+    case exe of
+        NotRunnable ->
+            []
 
-    else
-        case inst of
-            Mov f t ->
-                [ Read f, Write t ]
+        Runnable inst state_ ->
+            case inst of
+                Mov f t ->
+                    [ Read f, Write t ]
 
-            Nop ->
-                []
+                Nop ->
+                    []

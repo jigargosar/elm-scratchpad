@@ -144,18 +144,18 @@ sampleSim =
             [ ( 0, "OUT.A", OutputNode.fromExpected 3 ) ]
 
         esEmpty =
-            [ ( ( 0, 1 ), ExeNode.initNop )
-            , ( ( 0, 2 ), ExeNode.initNop )
-            , ( ( 0, 3 ), ExeNode.initNop )
-            , ( ( 1, 1 ), ExeNode.initNop )
-            , ( ( 1, 2 ), ExeNode.initNop )
-            , ( ( 1, 3 ), ExeNode.initNop )
-            , ( ( 2, 1 ), ExeNode.initNop )
-            , ( ( 2, 2 ), ExeNode.initNop )
-            , ( ( 2, 3 ), ExeNode.initNop )
-            , ( ( 3, 1 ), ExeNode.initNop )
-            , ( ( 3, 2 ), ExeNode.initNop )
-            , ( ( 3, 3 ), ExeNode.initNop )
+            [ ( ( 0, 1 ), ExeNode.initEmpty )
+            , ( ( 0, 2 ), ExeNode.initEmpty )
+            , ( ( 0, 3 ), ExeNode.initEmpty )
+            , ( ( 1, 1 ), ExeNode.initEmpty )
+            , ( ( 1, 2 ), ExeNode.initEmpty )
+            , ( ( 1, 3 ), ExeNode.initEmpty )
+            , ( ( 2, 1 ), ExeNode.initEmpty )
+            , ( ( 2, 2 ), ExeNode.initEmpty )
+            , ( ( 2, 3 ), ExeNode.initEmpty )
+            , ( ( 3, 1 ), ExeNode.initEmpty )
+            , ( ( 3, 2 ), ExeNode.initEmpty )
+            , ( ( 3, 3 ), ExeNode.initEmpty )
             ]
 
         es =
