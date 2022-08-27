@@ -340,7 +340,7 @@ stepNode : Addr -> Node -> Acc -> Acc
 stepNode addr node =
     case nodeState node of
         S.WriteBlocked num dir cont ->
-            addToWriteBlocked addr (WriteBlockedNode node num dir cont)
+            addToWriteBlocked addr node num dir cont
 
         S.Done ->
             addToCompleted addr node
@@ -369,7 +369,7 @@ resolveAfterRun : Addr -> Node -> Acc -> Acc
 resolveAfterRun addr node =
     case nodeState node of
         S.ReadBlocked dir cont ->
-            addToReadBlocked addr ( node, dir, cont )
+            addToReadBlocked addr node dir cont
 
         _ ->
             addToCompleted addr node
@@ -448,11 +448,18 @@ emptyAcc =
 
 addToWriteBlocked :
     Addr
-    -> WriteBlockedNode
+    -> Node
+    -> Num
+    -> Dir4
+    -> (() -> Node)
     -> { a | writeBlocked : WriteBlockedStore }
     -> { a | writeBlocked : WriteBlockedStore }
-addToWriteBlocked na n acc =
-    { acc | writeBlocked = Dict.insert na n acc.writeBlocked }
+addToWriteBlocked addr node num dir cont acc =
+    let
+        wbn =
+            WriteBlockedNode node num dir cont
+    in
+    { acc | writeBlocked = Dict.insert addr wbn acc.writeBlocked }
 
 
 addToCompleted :
