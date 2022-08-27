@@ -137,75 +137,30 @@ withExecutables list store =
 sampleSim : Sim
 sampleSim =
     let
-        col1 : Store
-        col1 =
-            [ initInputNode "IN.A" 3, initExe, initExe, initOutputNode "OUT.A" 3 ]
-                |> List.indexedMap pair
-                |> List.map (mapFirst (pair 0))
-                |> Dict.fromList
-
-        col2 : Store
-        col2 =
-            [ initInputNode "IN.B" 2, initExe, initExe, initOutputNode "OUT.B" 3 ]
-                |> List.indexedMap pair
-                |> List.map (mapFirst (pair 1))
-                |> Dict.fromList
-
-        col3 : Store
-        col3 =
-            [ initInputNode "IN.C" 3, initExe, initExe, initOutputNode "OUT.C" 2 ]
-                |> List.indexedMap pair
-                |> List.map (mapFirst (pair 2))
-                |> Dict.fromList
-
-        nodeStore =
-            Dict.union col1 col2 |> Dict.union col3
-
         is =
             [ ( 0, "IN.A", InputNode.fromList (Num.range 1 3) ) ]
 
         os =
             [ ( 0, "OUT.A", OutputNode.fromExpected 3 ) ]
 
-        esEmpty =
-            [ ( ( 0, 1 ), ExeNode.empty )
-            , ( ( 0, 2 ), ExeNode.empty )
-            , ( ( 0, 3 ), ExeNode.empty )
-            , ( ( 1, 1 ), ExeNode.empty )
-            , ( ( 1, 2 ), ExeNode.empty )
-            , ( ( 1, 3 ), ExeNode.empty )
-            , ( ( 2, 1 ), ExeNode.empty )
-            , ( ( 2, 2 ), ExeNode.empty )
-            , ( ( 2, 3 ), ExeNode.empty )
-            , ( ( 3, 1 ), ExeNode.empty )
-            , ( ( 3, 2 ), ExeNode.empty )
-            , ( ( 3, 3 ), ExeNode.empty )
-            ]
-
         es =
-            esEmpty
-                ++ [ ( ( 0, 1 ), ExeNode.initMovUpDown )
-                   , ( ( 0, 2 ), ExeNode.initMovUpDown )
-                   , ( ( 0, 3 ), ExeNode.initMovUpDown )
-                   , ( ( 1, 1 ), ExeNode.initMovUpDown )
+            [ ( ( 0, 1 ), ExeNode.initMovUpDown )
+            , ( ( 0, 2 ), ExeNode.initMovUpDown )
+            , ( ( 0, 3 ), ExeNode.initMovUpDown )
+            , ( ( 1, 1 ), ExeNode.initMovUpDown )
 
-                   --   , ( ( 1, 2 ), ExeNode.initMovUpDown )
-                   , ( ( 1, 3 ), ExeNode.initMovUpDown )
+            --   , ( ( 1, 2 ), ExeNode.initMovUpDown )
+            , ( ( 1, 3 ), ExeNode.initMovUpDown )
 
-                   --   , ( ( 2, 1 ), ExeNode.initMovUpDown )
-                   --   , ( ( 2, 2 ), ExeNode.initMovUpDown )
-                   --   , ( ( 2, 3 ), ExeNode.initMovUpDown )
-                   --   , ( ( 3, 1 ), ExeNode.initMovUpDown )
-                   --   , ( ( 3, 2 ), ExeNode.initMovUpDown )
-                   --   , ( ( 3, 3 ), ExeNode.initMovUpDown )
-                   ]
-
-        sim : Sim
-        sim =
-            init is os es
+            --   , ( ( 2, 1 ), ExeNode.initMovUpDown )
+            --   , ( ( 2, 2 ), ExeNode.initMovUpDown )
+            --   , ( ( 2, 3 ), ExeNode.initMovUpDown )
+            --   , ( ( 3, 1 ), ExeNode.initMovUpDown )
+            --   , ( ( 3, 2 ), ExeNode.initMovUpDown )
+            --   , ( ( 3, 3 ), ExeNode.initMovUpDown )
+            ]
     in
-    { store = nodeStore, cycle = 0 }
-        |> always sim
+    init is os es
 
 
 type Port
