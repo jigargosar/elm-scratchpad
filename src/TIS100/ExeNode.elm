@@ -24,7 +24,12 @@ type Inst
 
 initMovUpDown : ExeNode
 initMovUpDown =
-    Runnable (Mov Up Down) ReadyToRun
+    initMov Up Down
+
+
+initMov : Dir4 -> Dir4 -> ExeNode
+initMov f t =
+    Runnable (Mov f t) ReadyToRun
 
 
 empty : ExeNode
