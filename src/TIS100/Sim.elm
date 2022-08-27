@@ -149,12 +149,12 @@ samplePuzzle : Puzzle
 samplePuzzle =
     { title = "Differential Converter"
     , description =
-        [ "Read values from in.a and in.b"
-        , "write in.a - in.b to out.p"
-        , "write in.b - in.a to out.n"
+        [ "READ VALUES FROM IN.A AND IN.B"
+        , "WRITE IN.A - IN.B TO OUT.P"
+        , "WRITE IN.B - IN.A TO OUT.N"
         ]
     , inputs = [ ( 0, "IN.A", Num.range 1 3 ) ]
-    , outputs = [ ( 0, "OUT.A", Num.range 1 3 ) ]
+    , outputs = [ ( 0, "OUT.P", Num.range 1 3 ) ]
     }
 
 
