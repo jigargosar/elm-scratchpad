@@ -549,9 +549,9 @@ viewGrid sim =
     div
         [ displayGrid
         , gridTemplateRows
-            ("repeat(" ++ fromInt (maxY - 1) ++ ", 1fr 3fr) 1fr")
+            ("repeat(" ++ fromInt (maxY - 1) ++ ", 1fr 5fr) 1fr")
         , gridTemplateColumns
-            ("repeat(" ++ fromInt (maxX - 1) ++ ", 3fr 1fr) 3fr")
+            ("repeat(" ++ fromInt (maxX - 1) ++ ", 5fr 1fr) 5fr")
         ]
         (viewNodes sim ++ viewPorts sim)
 
@@ -621,6 +621,7 @@ viewNode ( addr, node ) =
                 , pa "10px"
                 , sMinWidth "18ch"
                 , sMinHeight "18ch"
+                , style "aspect-ratio" "1"
                 , nodeAddrToGridArea addr
                 , tac
                 ]
