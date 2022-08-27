@@ -136,8 +136,25 @@ sampleSim =
 
         nodeStore =
             Dict.union col1 col2 |> Dict.union col3
+
+        is =
+            [ ( 0, "IN.A", InputNode.fromList (Num.range 1 3) ) ]
+
+        os =
+            [ ( 0, "OUT.A", OutputNode.fromExpected 3 ) ]
+
+        es =
+            [ ( ( 0, 1 ), ExeNode.init )
+            , ( ( 0, 2 ), ExeNode.init )
+            , ( ( 0, 3 ), ExeNode.init )
+            ]
+
+        sim : Sim
+        sim =
+            init is os es
     in
     { store = nodeStore, cycle = 0 }
+        |> always sim
 
 
 type Port
@@ -554,7 +571,7 @@ maxX =
 
 
 maxY =
-    3
+    4
 
 
 nodeAddrToGridArea : Addr -> Attribute msg
