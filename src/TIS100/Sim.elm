@@ -125,6 +125,13 @@ type alias Puzzle =
     }
 
 
+samplePuzzle : Puzzle
+samplePuzzle =
+    { inputs = [ ( 0, "IN.A", Num.range 1 3 ) ]
+    , outputs = [ ( 0, "OUT.A", Num.range 1 3 ) ]
+    }
+
+
 sampleSim : Sim
 sampleSim =
     let
