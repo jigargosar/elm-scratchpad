@@ -1,6 +1,6 @@
 module TIS100.Sim exposing
     ( Sim
-    , init
+    , sampleSim
     , step
     , view
     )
@@ -70,8 +70,39 @@ initExe =
     ExeNode ExeNode.init
 
 
-init : Sim
-init =
+init :
+    List ( Int, String, InputNode )
+    -> List ( Int, String, OutputNode )
+    -> List ( Addr, ExeNode )
+    -> Sim
+init is os es =
+    let
+        store =
+            Dict.empty
+                |> withInputs is
+                |> withOutputs os
+                |> withExecutables es
+    in
+    { store = store, cycle = 0 }
+
+
+withInputs : List ( Int, String, InputNode ) -> Store -> Store
+withInputs list store =
+    Debug.todo "todo"
+
+
+withOutputs : List ( Int, String, OutputNode ) -> Store -> Store
+withOutputs list store =
+    Debug.todo "todo"
+
+
+withExecutables : List ( Addr, ExeNode ) -> Store -> Store
+withExecutables list store =
+    Debug.todo "todo"
+
+
+sampleSim : Sim
+sampleSim =
     let
         col1 : Store
         col1 =

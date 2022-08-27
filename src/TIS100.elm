@@ -61,7 +61,7 @@ view : Html Msg
 view =
     let
         sim =
-            Sim.init
+            Sim.sampleSim
                 |> applyN 2 Sim.step
     in
     div []
