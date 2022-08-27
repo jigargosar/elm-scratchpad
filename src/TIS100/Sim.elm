@@ -345,11 +345,11 @@ stepNode addr node =
         S.Done ->
             addToCompleted addr node
 
-        S.ReadBlocked dir readResolver ->
-            addToReadBlocked addr ( node, dir, readResolver )
+        S.ReadBlocked dir cont ->
+            addToReadBlocked addr ( node, dir, cont )
 
-        S.ReadyToRun runResolver ->
-            resolveAfterRun addr (runResolver ())
+        S.ReadyToRun cont ->
+            resolveAfterRun addr (cont ())
 
 
 nodeState : Node -> NodeState Node
