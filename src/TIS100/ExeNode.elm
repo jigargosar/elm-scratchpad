@@ -59,5 +59,10 @@ run inst =
 
 
 ioIntents : ExeNode -> List IOIntent
-ioIntents _ =
-    [ Read Up, Read Down, Write Up, Write Down ]
+ioIntents (ExeNode inst _) =
+    case inst of
+        Mov f t ->
+            [ Read f, Write t ]
+
+        Nop ->
+            []
