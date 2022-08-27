@@ -153,8 +153,14 @@ samplePuzzle =
         , "WRITE IN.A - IN.B TO OUT.P"
         , "WRITE IN.B - IN.A TO OUT.N"
         ]
-    , inputs = [ ( 0, "IN.A", Num.range 1 3 ) ]
-    , outputs = [ ( 0, "OUT.P", Num.range 1 3 ) ]
+    , inputs =
+        [ ( 0, "IN.A", Num.range 1 3 )
+        , ( 1, "IN.B", Num.range 1 3 )
+        ]
+    , outputs =
+        [ ( 0, "OUT.P", Num.range 1 3 )
+        , ( 1, "OUT.N", Num.range 1 3 )
+        ]
     }
 
 
