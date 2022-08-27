@@ -67,7 +67,7 @@ initOutputNode title expected =
 
 initExe : Node
 initExe =
-    ExeNode ExeNode.init
+    ExeNode ExeNode.initMovUpDown
 
 
 init :
@@ -144,18 +144,18 @@ sampleSim =
             [ ( 0, "OUT.A", OutputNode.fromExpected 3 ) ]
 
         es =
-            [ ( ( 0, 1 ), ExeNode.init )
-            , ( ( 0, 2 ), ExeNode.init )
-            , ( ( 0, 3 ), ExeNode.init )
-            , ( ( 1, 1 ), ExeNode.init )
-            , ( ( 1, 2 ), ExeNode.init )
-            , ( ( 1, 3 ), ExeNode.init )
-            , ( ( 2, 1 ), ExeNode.init )
-            , ( ( 2, 2 ), ExeNode.init )
-            , ( ( 2, 3 ), ExeNode.init )
-            , ( ( 3, 1 ), ExeNode.init )
-            , ( ( 3, 2 ), ExeNode.init )
-            , ( ( 3, 3 ), ExeNode.init )
+            [ ( ( 0, 1 ), ExeNode.initMovUpDown )
+            , ( ( 0, 2 ), ExeNode.initMovUpDown )
+            , ( ( 0, 3 ), ExeNode.initMovUpDown )
+            , ( ( 1, 1 ), ExeNode.initMovUpDown )
+            , ( ( 1, 2 ), ExeNode.initMovUpDown )
+            , ( ( 1, 3 ), ExeNode.initMovUpDown )
+            , ( ( 2, 1 ), ExeNode.initMovUpDown )
+            , ( ( 2, 2 ), ExeNode.initMovUpDown )
+            , ( ( 2, 3 ), ExeNode.initMovUpDown )
+            , ( ( 3, 1 ), ExeNode.initMovUpDown )
+            , ( ( 3, 2 ), ExeNode.initMovUpDown )
+            , ( ( 3, 3 ), ExeNode.initMovUpDown )
             ]
 
         sim : Sim
