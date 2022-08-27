@@ -567,11 +567,12 @@ view : Sim -> Html msg
 view sim =
     fCol
         [ h100
-        , fontSize "10px"
+        , fontSize "12px"
         , pa "2ch"
         , bold
         , ffMonospace
         , gap "2ch"
+        , ttu
         ]
         [ div [] [ text "Cycle: ", text (fromInt sim.cycle) ]
         , viewGrid sim
