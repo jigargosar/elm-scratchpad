@@ -143,20 +143,38 @@ sampleSim =
         os =
             [ ( 0, "OUT.A", OutputNode.fromExpected 3 ) ]
 
-        es =
-            [ ( ( 0, 1 ), ExeNode.initMovUpDown )
-            , ( ( 0, 2 ), ExeNode.initMovUpDown )
-            , ( ( 0, 3 ), ExeNode.initMovUpDown )
-            , ( ( 1, 1 ), ExeNode.initMovUpDown )
-            , ( ( 1, 2 ), ExeNode.initMovUpDown )
-            , ( ( 1, 3 ), ExeNode.initMovUpDown )
-            , ( ( 2, 1 ), ExeNode.initMovUpDown )
-            , ( ( 2, 2 ), ExeNode.initMovUpDown )
-            , ( ( 2, 3 ), ExeNode.initMovUpDown )
-            , ( ( 3, 1 ), ExeNode.initMovUpDown )
-            , ( ( 3, 2 ), ExeNode.initMovUpDown )
-            , ( ( 3, 3 ), ExeNode.initMovUpDown )
+        esEmpty =
+            [ ( ( 0, 1 ), ExeNode.initEmpty )
+            , ( ( 0, 2 ), ExeNode.initEmpty )
+            , ( ( 0, 3 ), ExeNode.initEmpty )
+            , ( ( 1, 1 ), ExeNode.initEmpty )
+            , ( ( 1, 2 ), ExeNode.initEmpty )
+            , ( ( 1, 3 ), ExeNode.initEmpty )
+            , ( ( 2, 1 ), ExeNode.initEmpty )
+            , ( ( 2, 2 ), ExeNode.initEmpty )
+            , ( ( 2, 3 ), ExeNode.initEmpty )
+            , ( ( 3, 1 ), ExeNode.initEmpty )
+            , ( ( 3, 2 ), ExeNode.initEmpty )
+            , ( ( 3, 3 ), ExeNode.initEmpty )
             ]
+
+        es =
+            esEmpty
+                ++ [ ( ( 0, 1 ), ExeNode.initMovUpDown )
+                   , ( ( 0, 2 ), ExeNode.initMovUpDown )
+                   , ( ( 0, 3 ), ExeNode.initMovUpDown )
+                   , ( ( 1, 1 ), ExeNode.initMovUpDown )
+
+                   --   , ( ( 1, 2 ), ExeNode.initMovUpDown )
+                   , ( ( 1, 3 ), ExeNode.initMovUpDown )
+
+                   --   , ( ( 2, 1 ), ExeNode.initMovUpDown )
+                   --   , ( ( 2, 2 ), ExeNode.initMovUpDown )
+                   --   , ( ( 2, 3 ), ExeNode.initMovUpDown )
+                   --   , ( ( 3, 1 ), ExeNode.initMovUpDown )
+                   --   , ( ( 3, 2 ), ExeNode.initMovUpDown )
+                   --   , ( ( 3, 3 ), ExeNode.initMovUpDown )
+                   ]
 
         sim : Sim
         sim =
