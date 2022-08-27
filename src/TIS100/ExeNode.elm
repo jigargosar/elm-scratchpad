@@ -1,4 +1,4 @@
-module TIS100.ExeNode exposing (ExeNode, initMovUpDown, initNop, ioIntents, state)
+module TIS100.ExeNode exposing (ExeNode, initEmpty, initMovUpDown, initNop, ioIntents, state)
 
 import TIS100.IOIntent exposing (IOIntent(..))
 import TIS100.NodeState as S
@@ -32,6 +32,11 @@ initNop =
     ExeNode Nop ReadyToRun
 
 
+initEmpty : ExeNode
+initEmpty =
+    ExeNode Nop Done
+
+
 state : ExeNode -> S.NodeState ExeNode
 state (ExeNode inst state_) =
     case state_ of
@@ -59,10 +64,14 @@ run inst =
 
 
 ioIntents : ExeNode -> List IOIntent
-ioIntents (ExeNode inst _) =
-    case inst of
-        Mov f t ->
-            [ Read f, Write t ]
+ioIntents (ExeNode inst st) =
+    if st == Done then
+        []
 
-        Nop ->
-            []
+    else
+        case inst of
+            Mov f t ->
+                [ Read f, Write t ]
+
+            Nop ->
+                []
