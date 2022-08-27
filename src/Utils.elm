@@ -1407,6 +1407,11 @@ gtCols i aa =
     div (displayGrid :: gridCols i :: aa)
 
 
+gtRows : Int -> List (Attribute msg) -> List (Html msg) -> Html msg
+gtRows i aa =
+    div (displayGrid :: gridRows i :: aa)
+
+
 gridCols : Int -> Attribute msg
 gridCols i =
     gridTemplateColumns ("repeat(" ++ fromInt i ++ ", minmax(0,1fr) )")

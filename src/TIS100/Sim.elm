@@ -668,11 +668,22 @@ viewNode ( addr, node ) =
                 , pa "1ch"
                 ]
                 [ div [ sWidth "20ch" ] [ text (ExeNode.toSource exe) ]
-                , div []
-                    [ div [ fg gray ] [ text "MODE" ]
-                    , div [] [ text (nodeModeAsString node) ]
+                , gtRows 5
+                    [ gap "1ch" ]
+                    [ viewExeRightBox "ACC" "0"
+                    , viewExeRightBox "BAK" "<0>"
+                    , viewExeRightBox "LAST" "N/A"
+                    , viewExeRightBox "MODE" (nodeModeAsString node)
+                    , viewExeRightBox "IDLE" "0%"
                     ]
                 ]
+
+
+viewExeRightBox a b =
+    div [ tac ]
+        [ div [ fg gray ] [ text a ]
+        , div [] [ text b ]
+        ]
 
 
 gray =
