@@ -50,7 +50,8 @@ type alias NodeEntry =
 
 
 type alias Sim =
-    { store : Store
+    { puzzle : Puzzle
+    , store : Store
     , cycle : Int
     }
 
@@ -81,7 +82,7 @@ init puzzle es =
                 |> withOutputs puzzle.outputs
                 |> withExecutables es
     in
-    { store = store, cycle = 0 }
+    { puzzle = puzzle, store = store, cycle = 0 }
 
 
 exeAddresses : List Addr
