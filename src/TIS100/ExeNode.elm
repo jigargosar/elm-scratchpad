@@ -1,4 +1,4 @@
-module TIS100.ExeNode exposing (ExeNode, initEmpty, initMovUpDown, ioIntents, state)
+module TIS100.ExeNode exposing (ExeNode, initEmpty, initMovUpDown, ioIntents, state, toSource)
 
 import TIS100.IOIntent exposing (IOIntent(..))
 import TIS100.NodeState as S
@@ -66,10 +66,20 @@ ioIntents exe =
         NotRunnable ->
             []
 
-        Runnable inst state_ ->
+        Runnable inst _ ->
             case inst of
                 Mov f t ->
                     [ Read f, Write t ]
 
                 Nop ->
                     []
+
+
+toSource : ExeNode -> String
+toSource exe =
+    case exe of
+        NotRunnable ->
+            ""
+
+        Runnable i _ ->
+            Debug.toString i

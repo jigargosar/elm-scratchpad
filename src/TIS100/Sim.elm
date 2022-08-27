@@ -661,15 +661,17 @@ viewNode ( addr, node ) =
                 [ div [ tac, fg gray ] [ text title ]
                 ]
 
-        ExeNode _ ->
-            div
+        ExeNode exe ->
+            fRow
                 [ nodeAddrToGridArea addr
                 , sOutline ("1px solid " ++ gray)
                 , pa "1ch"
-                , tac
                 ]
-                [ div [ fg gray ] [ text "MODE" ]
-                , div [] [ text (nodeModeAsString node) ]
+                [ div [ sWidth "20ch" ] [ text (ExeNode.toSource exe) ]
+                , div []
+                    [ div [ fg gray ] [ text "MODE" ]
+                    , div [] [ text (nodeModeAsString node) ]
+                    ]
                 ]
 
 
