@@ -7,6 +7,10 @@ import Utils exposing (Dir4(..))
 
 
 type ExeNode
+    = ExeNode Inst State
+
+
+type State
     = Done
     | ReadyToRun
     | ReadBlocked
@@ -20,28 +24,28 @@ type Inst
 
 initMovUpDown : ExeNode
 initMovUpDown =
-    ReadyToRun
+    ExeNode (Mov Up Down) ReadyToRun
 
 
 initEmpty : ExeNode
 initEmpty =
-    Debug.todo "todo"
+    ExeNode Nop ReadyToRun
 
 
 state : ExeNode -> S.NodeState ExeNode
-state node =
-    case node of
+state (ExeNode inst state_) =
+    case state_ of
         ReadyToRun ->
-            S.ReadyToRun (\() -> ReadBlocked)
+            S.ReadyToRun (\() -> ExeNode inst ReadBlocked)
 
         Done ->
             S.Done
 
         ReadBlocked ->
-            S.ReadBlocked Up WriteBlocked
+            S.ReadBlocked Up (WriteBlocked >> ExeNode inst)
 
         WriteBlocked num ->
-            S.WriteBlocked num Down (\() -> ReadyToRun)
+            S.WriteBlocked num Down (\() -> ExeNode inst ReadyToRun)
 
 
 ioIntents : ExeNode -> List IOIntent
