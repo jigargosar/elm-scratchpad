@@ -552,6 +552,7 @@ viewGrid sim =
             ("repeat(" ++ fromInt (maxY - 1) ++ ", 1fr 5fr) 1fr")
         , gridTemplateColumns
             ("repeat(" ++ fromInt (maxX - 1) ++ ", 5fr 1fr) 5fr")
+        , sMaxHeight "100vh"
         ]
         (viewNodes sim ++ viewPorts sim)
 
@@ -621,7 +622,8 @@ viewNode ( addr, node ) =
                 , pa "10px"
                 , sMinWidth "18ch"
                 , sMinHeight "18ch"
-                , style "aspect-ratio" "1"
+
+                --, style "aspect-ratio" "1"
                 , nodeAddrToGridArea addr
                 , tac
                 ]
