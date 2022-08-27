@@ -609,10 +609,8 @@ viewNode : NodeEntry -> Html msg
 viewNode ( addr, node ) =
     case node of
         InputNode title _ ->
-            div
+            gtCols 2
                 [ nodeAddrToGridArea addr
-                , dGrid
-                , gridTemplateColumns "1fr 1fr"
                 , placeItemsCenter
                 ]
                 [ div [ tac, fg (grayN 0.7) ]
@@ -622,10 +620,8 @@ viewNode ( addr, node ) =
                 ]
 
         OutputNode title _ ->
-            div
+            gtCols 2
                 [ nodeAddrToGridArea addr
-                , dGrid
-                , gridTemplateColumns "1fr 1fr"
                 , placeItemsCenter
                 ]
                 [ div [ tac, fg (grayN 0.7) ] [ text title ]
