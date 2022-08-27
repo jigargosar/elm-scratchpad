@@ -55,21 +55,6 @@ type alias Sim =
     }
 
 
-initInputNode : String -> Int -> Node
-initInputNode title hi =
-    InputNode title (InputNode.fromList (Num.range 1 hi))
-
-
-initOutputNode : String -> Int -> Node
-initOutputNode title expected =
-    OutputNode title (OutputNode.fromExpected expected)
-
-
-initExe : Node
-initExe =
-    ExeNode ExeNode.initMovUpDown
-
-
 init :
     List ( Int, String, InputNode )
     -> List ( Int, String, OutputNode )
