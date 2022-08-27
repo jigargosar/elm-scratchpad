@@ -538,7 +538,14 @@ addToReadBlocked addr node dir cont acc =
 
 view : Sim -> Html msg
 view sim =
-    fCol [ h100, pa "10px", fontSize "10px", bold, ffMonospace ]
+    fCol
+        [ h100
+        , pa "10px"
+        , fontSize "10px"
+        , bold
+        , ffMonospace
+        , gap "2ch"
+        ]
         [ div [] [ text "Cycle: ", text (fromInt sim.cycle) ]
         , viewGrid sim
         ]
