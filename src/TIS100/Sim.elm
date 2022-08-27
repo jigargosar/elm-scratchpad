@@ -546,12 +546,27 @@ view sim =
 
 viewGrid : Sim -> Html msg
 viewGrid sim =
+    let
+        gapSize =
+            "1fr"
+
+        nodeSize =
+            "5fr"
+
+        repeatRows =
+            fromInt (maxY - 1)
+
+        repeatCols =
+            fromInt (maxX - 1)
+    in
     div
         [ displayGrid
-        , gridTemplateRows
-            ("repeat(" ++ fromInt (maxY - 1) ++ ", 1fr 5fr) 1fr")
-        , gridTemplateColumns
-            ("repeat(" ++ fromInt (maxX - 1) ++ ", 5fr 1fr) 5fr")
+        , [ "repeat(", repeatRows, ",", gapSize, nodeSize, ")", gapSize ]
+            |> String.join " "
+            |> gridTemplateRows
+        , [ "repeat(", repeatCols, ",", nodeSize, gapSize, ")", nodeSize ]
+            |> String.join " "
+            |> gridTemplateColumns
         , sMaxHeight "100vh"
         ]
         (viewNodes sim ++ viewPorts sim)
