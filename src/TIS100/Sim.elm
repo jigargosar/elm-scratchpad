@@ -167,12 +167,6 @@ samplePuzzle =
 sampleSim : Sim
 sampleSim =
     let
-        is =
-            [ ( 0, "IN.A", InputNode.fromList (Num.range 1 3) ) ]
-
-        os =
-            [ ( 0, "OUT.A", OutputNode.fromExpected 3 ) ]
-
         es =
             [ ( ( 0, 1 ), ExeNode.initMovUpDown )
             , ( ( 0, 2 ), ExeNode.initMovUpDown )
