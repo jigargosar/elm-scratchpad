@@ -613,7 +613,7 @@ viewNode ( addr, node ) =
                 [ nodeAddrToGridArea addr
                 , placeItemsCenter
                 ]
-                [ div [ tac, fg (grayN 0.7) ]
+                [ div [ tac, fg gray ]
                     [ div [] [ text title ]
                     , div [] [ text "(IDLE 0%)" ]
                     ]
@@ -624,19 +624,23 @@ viewNode ( addr, node ) =
                 [ nodeAddrToGridArea addr
                 , placeItemsCenter
                 ]
-                [ div [ tac, fg (grayN 0.7) ] [ text title ]
+                [ div [ tac, fg gray ] [ text title ]
                 ]
 
         ExeNode _ ->
             div
                 [ nodeAddrToGridArea addr
-                , sOutline ("1px solid " ++ grayN 0.7)
+                , sOutline ("1px solid " ++ gray)
                 , pa "1ch"
                 , tac
                 ]
-                [ div [ fg <| grayN 0.7 ] [ text "MODE" ]
+                [ div [ fg gray ] [ text "MODE" ]
                 , div [] [ text (nodeModeAsString node) ]
                 ]
+
+
+gray =
+    grayN 0.7
 
 
 nodeModeAsString : Node -> String
