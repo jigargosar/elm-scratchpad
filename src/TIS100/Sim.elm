@@ -55,17 +55,30 @@ type alias Sim =
     }
 
 
-init :
-    List ( Int, String, InputNode )
-    -> List ( Int, String, OutputNode )
-    -> List ( Addr, ExeNode )
-    -> Sim
-init is os es =
+
+--init :
+--    List ( Int, String, InputNode )
+--    -> List ( Int, String, OutputNode )
+--    -> List ( Addr, ExeNode )
+--    -> Sim
+--init is os es =
+--    let
+--        store =
+--            initialStore
+--                |> withInputs is
+--                |> withOutputs os
+--                |> withExecutables es
+--    in
+--    { store = store, cycle = 0 }
+
+
+init : Puzzle -> List ( Addr, ExeNode ) -> Sim
+init puzzle es =
     let
         store =
             initialStore
-                |> withInputs is
-                |> withOutputs os
+                |> withInputs puzzle.inputs
+                |> withOutputs puzzle.outputs
                 |> withExecutables es
     in
     { store = store, cycle = 0 }
@@ -95,18 +108,23 @@ initialStore =
         |> Dict.fromList
 
 
-withInputs : List ( Int, String, InputNode ) -> Store -> Store
+withInputs : List ( Int, String, List Num ) -> Store -> Store
 withInputs list store =
     List.foldl
-        (\( x, title, input ) -> Dict.insert ( x, 0 ) (InputNode title input))
+        (\( x, title, nums ) ->
+            Dict.insert ( x, 0 ) (InputNode title (InputNode.fromList nums))
+        )
         store
         list
 
 
-withOutputs : List ( Int, String, OutputNode ) -> Store -> Store
+withOutputs : List ( Int, String, List Num ) -> Store -> Store
 withOutputs list store =
     List.foldl
-        (\( x, title, out ) -> Dict.insert ( x, maxY ) (OutputNode title out))
+        (\( x, title, out ) ->
+            Dict.insert ( x, maxY )
+                (OutputNode title (OutputNode.fromExpected (List.length out)))
+        )
         store
         list
 
@@ -159,7 +177,7 @@ sampleSim =
             --   , ( ( 3, 3 ), ExeNode.initMovUpDown )
             ]
     in
-    init is os es
+    init samplePuzzle es
 
 
 type Port
