@@ -77,6 +77,21 @@ init :
     -> Sim
 init is os es =
     let
+        esEmpty =
+            [ ( ( 0, 1 ), ExeNode.initEmpty )
+            , ( ( 0, 2 ), ExeNode.initEmpty )
+            , ( ( 0, 3 ), ExeNode.initEmpty )
+            , ( ( 1, 1 ), ExeNode.initEmpty )
+            , ( ( 1, 2 ), ExeNode.initEmpty )
+            , ( ( 1, 3 ), ExeNode.initEmpty )
+            , ( ( 2, 1 ), ExeNode.initEmpty )
+            , ( ( 2, 2 ), ExeNode.initEmpty )
+            , ( ( 2, 3 ), ExeNode.initEmpty )
+            , ( ( 3, 1 ), ExeNode.initEmpty )
+            , ( ( 3, 2 ), ExeNode.initEmpty )
+            , ( ( 3, 3 ), ExeNode.initEmpty )
+            ]
+
         store =
             Dict.empty
                 |> withInputs is
