@@ -548,10 +548,10 @@ viewGrid : Sim -> Html msg
 viewGrid sim =
     let
         gapSize =
-            "1fr"
+            "5ch"
 
         nodeSize =
-            "5fr"
+            "24ch"
 
         repeatRows =
             fromInt (maxY - 1)
@@ -635,10 +635,6 @@ viewNode ( addr, node ) =
             div
                 [ sOutline "1px solid white"
                 , pa "10px"
-                , sMinWidth "18ch"
-                , sMinHeight "18ch"
-
-                --, style "aspect-ratio" "1"
                 , nodeAddrToGridArea addr
                 , tac
                 ]
