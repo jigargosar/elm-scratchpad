@@ -88,17 +88,26 @@ init is os es =
 
 withInputs : List ( Int, String, InputNode ) -> Store -> Store
 withInputs list store =
-    Debug.todo "todo"
+    List.foldl
+        (\( x, title, input ) -> Dict.insert ( x, 0 ) (InputNode title input))
+        store
+        list
 
 
 withOutputs : List ( Int, String, OutputNode ) -> Store -> Store
 withOutputs list store =
-    Debug.todo "todo"
+    List.foldl
+        (\( x, title, out ) -> Dict.insert ( x, maxY ) (OutputNode title out))
+        store
+        list
 
 
 withExecutables : List ( Addr, ExeNode ) -> Store -> Store
 withExecutables list store =
-    Debug.todo "todo"
+    List.foldl
+        (\( addr, exe ) -> Dict.insert addr (ExeNode exe))
+        store
+        list
 
 
 sampleSim : Sim
