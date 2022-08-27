@@ -119,6 +119,12 @@ withExecutables list store =
         list
 
 
+type alias Puzzle =
+    { inputs : List ( Int, String, List Num )
+    , outputs : List ( Int, String, List Num )
+    }
+
+
 sampleSim : Sim
 sampleSim =
     let
