@@ -630,11 +630,13 @@ viewNode ( addr, node ) =
         ExeNode _ ->
             div
                 [ nodeAddrToGridArea addr
-                , sOutline "1px solid white"
+                , sOutline ("1px solid " ++ grayN 0.7)
                 , pa "1ch"
                 , tac
                 ]
-                [ text "MODE:", text (nodeModeAsString node) ]
+                [ div [ fg <| grayN 0.7 ] [ text "MODE" ]
+                , div [] [ text (nodeModeAsString node) ]
+                ]
 
 
 nodeModeAsString : Node -> String
