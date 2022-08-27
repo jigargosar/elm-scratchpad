@@ -493,7 +493,8 @@ viewGrid sim =
         [ displayGrid
         , gridTemplateRows
             ("repeat(" ++ fromInt (maxY - 1) ++ ", 1fr 2fr) 1fr")
-        , gridTemplateColumns "repeat(2, 2fr 1fr) 2fr"
+        , gridTemplateColumns
+            ("repeat(" ++ fromInt (maxX - 1) ++ ", 2fr 1fr) 2fr")
         ]
         (viewNodes sim ++ viewPorts sim)
 
@@ -509,7 +510,7 @@ viewNodes sim =
 
 
 maxX =
-    3
+    4
 
 
 maxY =
