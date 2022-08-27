@@ -662,14 +662,15 @@ viewNode ( addr, node ) =
                 ]
 
         ExeNode exe ->
-            fRow
+            div
                 [ nodeAddrToGridArea addr
                 , sOutline ("1px solid " ++ gray)
-                , pa "1ch"
+                , dGrid
+                , gridAutoFlowColumn
                 ]
-                [ div [ sWidth "20ch" ] [ text (ExeNode.toSource exe) ]
+                [ div [ sWidth "18ch", pa "1ch" ] [ text (ExeNode.toSource exe) ]
                 , gtRows 5
-                    [ gap "1ch" ]
+                    []
                     [ viewExeRightBox "ACC" "0"
                     , viewExeRightBox "BAK" "<0>"
                     , viewExeRightBox "LAST" "N/A"
@@ -680,7 +681,7 @@ viewNode ( addr, node ) =
 
 
 viewExeRightBox a b =
-    div [ tac ]
+    div [ dGrid, tac, placeContentCenter, sOutline ("1px solid " ++ gray) ]
         [ div [ fg gray ] [ text a ]
         , div [] [ text b ]
         ]
