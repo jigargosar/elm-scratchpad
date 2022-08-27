@@ -376,7 +376,7 @@ viewDownPortValue ( x, y ) portValue =
             , pl "1ch"
             , gap "1ch"
             ]
-            [ viewArrow Down
+            [ viewArrow Down portValue
             , viewPortValueText portValue
             ]
         ]
@@ -395,14 +395,23 @@ viewUpPortValue ( x, y ) portValue =
             , gap "1ch"
             ]
             [ viewPortValueText portValue
-            , viewArrow Up
+            , viewArrow Up portValue
             ]
         ]
 
 
-viewArrow : Dir4 -> Html msg
-viewArrow dir4 =
-    span [ fontSize "2em", fontWeight "100" ] [ text (arrowDefault dir4) ]
+viewArrow : Dir4 -> PortValue -> Html msg
+viewArrow dir4 pv =
+    let
+        color =
+            case pv of
+                Empty ->
+                    darkGray
+
+                _ ->
+                    "inherit"
+    in
+    span [ fg color, fontSize "2em", fontWeight "100" ] [ text (arrowDefault dir4) ]
 
 
 step : Sim -> Sim
@@ -648,7 +657,7 @@ viewNode ( addr, node ) =
                 [ nodeAddrToGridArea addr
                 , placeItemsCenter
                 ]
-                [ div [ tac, fg gray ]
+                [ div [ tac, fg lightGray ]
                     [ div [] [ text title ]
                     , div [] [ text "(IDLE 0%)" ]
                     ]
@@ -659,13 +668,13 @@ viewNode ( addr, node ) =
                 [ nodeAddrToGridArea addr
                 , placeItemsCenter
                 ]
-                [ div [ tac, fg gray ] [ text title ]
+                [ div [ tac, fg lightGray ] [ text title ]
                 ]
 
         ExeNode exe ->
             div
                 [ nodeAddrToGridArea addr
-                , sOutline ("1px solid " ++ gray)
+                , sOutline ("1px solid " ++ lightGray)
                 , dGrid
                 , gridAutoFlowColumn
                 ]
@@ -682,13 +691,17 @@ viewNode ( addr, node ) =
 
 
 viewExeRightBox a b =
-    div [ dGrid, tac, placeContentCenter, sOutline ("1px solid " ++ gray) ]
-        [ div [ fg gray ] [ text a ]
+    div [ dGrid, tac, placeContentCenter, sOutline ("1px solid " ++ lightGray) ]
+        [ div [ fg lightGray ] [ text a ]
         , div [] [ text b ]
         ]
 
 
-gray =
+darkGray =
+    grayN 0.5
+
+
+lightGray =
     grayN 0.7
 
 
