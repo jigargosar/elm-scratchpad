@@ -540,8 +540,8 @@ view : Sim -> Html msg
 view sim =
     fCol
         [ h100
-        , pa "10px"
         , fontSize "10px"
+        , pa "2ch"
         , bold
         , ffMonospace
         , gap "2ch"
