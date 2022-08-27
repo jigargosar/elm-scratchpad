@@ -138,14 +138,22 @@ withExecutables list store =
 
 
 type alias Puzzle =
-    { inputs : List ( Int, String, List Num )
+    { title : String
+    , description : List String
+    , inputs : List ( Int, String, List Num )
     , outputs : List ( Int, String, List Num )
     }
 
 
 samplePuzzle : Puzzle
 samplePuzzle =
-    { inputs = [ ( 0, "IN.A", Num.range 1 3 ) ]
+    { title = "Differential Converter"
+    , description =
+        [ "Read values from in.a and in.b"
+        , "write in.a - in.b to out.p"
+        , "write in.b - in.a to out.n"
+        ]
+    , inputs = [ ( 0, "IN.A", Num.range 1 3 ) ]
     , outputs = [ ( 0, "OUT.A", Num.range 1 3 ) ]
     }
 
