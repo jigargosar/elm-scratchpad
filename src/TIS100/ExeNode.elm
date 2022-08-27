@@ -13,8 +13,8 @@ type ExeNode
 type State
     = Done
     | ReadyToRun
-    | ReadBlocked
-    | WriteBlocked Num
+    | ReadBlocked Dir4 Dir4
+    | WriteBlocked Dir4 Num
 
 
 type Inst
@@ -36,16 +36,26 @@ state : ExeNode -> S.NodeState ExeNode
 state (ExeNode inst state_) =
     case state_ of
         ReadyToRun ->
-            S.ReadyToRun (\() -> ExeNode inst ReadBlocked)
+            S.ReadyToRun (\() -> ExeNode inst (run inst))
 
         Done ->
             S.Done
 
-        ReadBlocked ->
-            S.ReadBlocked Up (WriteBlocked >> ExeNode inst)
+        ReadBlocked f t ->
+            S.ReadBlocked f (WriteBlocked t >> ExeNode inst)
 
-        WriteBlocked num ->
-            S.WriteBlocked num Down (\() -> ExeNode inst ReadyToRun)
+        WriteBlocked t num ->
+            S.WriteBlocked num t (\() -> ExeNode inst ReadyToRun)
+
+
+run : Inst -> State
+run inst =
+    case inst of
+        Mov f t ->
+            ReadBlocked f t
+
+        Nop ->
+            ReadyToRun
 
 
 ioIntents : ExeNode -> List IOIntent
