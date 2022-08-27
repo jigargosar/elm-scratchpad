@@ -324,16 +324,12 @@ viewArrow dir4 =
 step : Sim -> Sim
 step sim =
     { sim
-        | store = stepNodes sim.store
+        | store =
+            Dict.foldl stepNode emptyAcc sim.store
+                |> resolveAllReadBlocked
+                |> resolveAllWriteBlocked
         , cycle = sim.cycle + 1
     }
-
-
-stepNodes : Store -> Store
-stepNodes ns =
-    Dict.foldl stepNode emptyAcc ns
-        |> resolveAllReadBlocked
-        |> resolveAllWriteBlocked
 
 
 stepNode : Addr -> Node -> Acc -> Acc
