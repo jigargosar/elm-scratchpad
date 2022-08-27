@@ -395,22 +395,17 @@ readAndUnblock :
     -> Dir4
     -> WriteBlockedAcc a
     -> Maybe ( Num, WriteBlockedAcc a )
-readAndUnblock readerAddr readDir acc =
-    moveInDir4 readDir readerAddr
+readAndUnblock rAddr rDir acc =
+    moveInDir4 rDir rAddr
         |> getEntryIn acc.writeBlocked
         |> maybeFilter
-            (\( _, writeBlockedNode ) ->
-                readDir == oppositeDir4 writeBlockedNode.dir
+            (\( _, wbNode ) ->
+                rDir == oppositeDir4 wbNode.dir
             )
         |> Maybe.map
-            (\( writerAddr, { num, cont } ) ->
-                ( num
-                , addToCompleted
-                    writerAddr
-                    (cont ())
-                    { acc
-                        | writeBlocked = Dict.remove writerAddr acc.writeBlocked
-                    }
+            (\( wAddr, wbNode ) ->
+                ( wbNode.num
+                , completeWriteBlocked wAddr (wbNode.cont ()) acc
                 )
             )
 
@@ -465,6 +460,12 @@ addToCompleted :
     -> { a | completed : Store }
 addToCompleted na n acc =
     { acc | completed = Dict.insert na n acc.completed }
+
+
+completeWriteBlocked : Addr -> Node -> WriteBlockedAcc a -> WriteBlockedAcc a
+completeWriteBlocked addr node acc =
+    { acc | writeBlocked = Dict.remove addr acc.writeBlocked }
+        |> addToCompleted addr node
 
 
 addToReadBlocked :
