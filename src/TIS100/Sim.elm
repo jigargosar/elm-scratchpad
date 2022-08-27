@@ -147,6 +147,15 @@ sampleSim =
             [ ( ( 0, 1 ), ExeNode.init )
             , ( ( 0, 2 ), ExeNode.init )
             , ( ( 0, 3 ), ExeNode.init )
+            , ( ( 1, 1 ), ExeNode.init )
+            , ( ( 1, 2 ), ExeNode.init )
+            , ( ( 1, 3 ), ExeNode.init )
+            , ( ( 2, 1 ), ExeNode.init )
+            , ( ( 2, 2 ), ExeNode.init )
+            , ( ( 2, 3 ), ExeNode.init )
+            , ( ( 3, 1 ), ExeNode.init )
+            , ( ( 3, 2 ), ExeNode.init )
+            , ( ( 3, 3 ), ExeNode.init )
             ]
 
         sim : Sim
