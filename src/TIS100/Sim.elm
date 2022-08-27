@@ -549,9 +549,9 @@ viewGrid sim =
     div
         [ displayGrid
         , gridTemplateRows
-            ("repeat(" ++ fromInt (maxY - 1) ++ ", 1fr 2fr) 1fr")
+            ("repeat(" ++ fromInt (maxY - 1) ++ ", 1fr 3fr) 1fr")
         , gridTemplateColumns
-            ("repeat(" ++ fromInt (maxX - 1) ++ ", 2fr 1fr) 2fr")
+            ("repeat(" ++ fromInt (maxX - 1) ++ ", 3fr 1fr) 3fr")
         ]
         (viewNodes sim ++ viewPorts sim)
 
