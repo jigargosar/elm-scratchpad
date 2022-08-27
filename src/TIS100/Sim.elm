@@ -352,6 +352,16 @@ stepNode addr node =
             resolveAfterRun addr (cont ())
 
 
+resolveAfterRun : Addr -> Node -> Acc -> Acc
+resolveAfterRun addr node =
+    case nodeState node of
+        S.ReadBlocked dir cont ->
+            addToReadBlocked addr node dir cont
+
+        _ ->
+            addToCompleted addr node
+
+
 nodeState : Node -> NodeState Node
 nodeState node =
     case node of
@@ -363,16 +373,6 @@ nodeState node =
 
         ExeNode exeNode ->
             ExeNode.state exeNode |> S.map ExeNode
-
-
-resolveAfterRun : Addr -> Node -> Acc -> Acc
-resolveAfterRun addr node =
-    case nodeState node of
-        S.ReadBlocked dir cont ->
-            addToReadBlocked addr node dir cont
-
-        _ ->
-            addToCompleted addr node
 
 
 resolveAllReadBlocked : Acc -> Acc
