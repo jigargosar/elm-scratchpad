@@ -346,7 +346,7 @@ stepNode addr node =
             addToCompleted addr node
 
         S.ReadBlocked dir cont ->
-            addToReadBlocked addr ( node, dir, cont )
+            addToReadBlocked addr node dir cont
 
         S.ReadyToRun cont ->
             resolveAfterRun addr (cont ())
@@ -466,11 +466,13 @@ addToCompleted na n acc =
 
 addToReadBlocked :
     Addr
-    -> ReadBlockedNode
+    -> Node
+    -> Dir4
+    -> (Num -> Node)
     -> { a | readBlocked : ReadBlockedStore }
     -> { a | readBlocked : ReadBlockedStore }
-addToReadBlocked na n acc =
-    { acc | readBlocked = Dict.insert na n acc.readBlocked }
+addToReadBlocked addr node dir cont acc =
+    { acc | readBlocked = Dict.insert addr ( node, dir, cont ) acc.readBlocked }
 
 
 view : Sim -> Html msg
