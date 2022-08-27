@@ -1,4 +1,4 @@
-module TIS100.ExeNode exposing (ExeNode, empty, initMovUpDown, ioIntents, state, toSource)
+module TIS100.ExeNode exposing (ExeNode, empty, initMov, initMovUpDown, ioIntents, state, toSource)
 
 import TIS100.IOIntent exposing (IOIntent(..))
 import TIS100.NodeState as S
