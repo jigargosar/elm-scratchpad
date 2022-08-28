@@ -221,22 +221,6 @@ type alias Store =
     Dict Addr Node
 
 
-type alias ReadBlockedStore =
-    Dict Addr ReadBlockedNode
-
-
-type alias ReadBlockedNode =
-    ( Node, Dir4, Num -> Node )
-
-
-type alias WriteBlockedStore =
-    Dict Addr WriteBlockedNode
-
-
-type alias WriteBlockedNode =
-    { node : Node, num : Num, dir : Dir4, cont : () -> Node }
-
-
 
 -- SIM
 
@@ -443,6 +427,22 @@ type alias WriteBlockedAcc a =
         | writeBlocked : WriteBlockedStore
         , completed : Store
     }
+
+
+type alias ReadBlockedStore =
+    Dict Addr ReadBlockedNode
+
+
+type alias ReadBlockedNode =
+    ( Node, Dir4, Num -> Node )
+
+
+type alias WriteBlockedStore =
+    Dict Addr WriteBlockedNode
+
+
+type alias WriteBlockedNode =
+    { node : Node, num : Num, dir : Dir4, cont : () -> Node }
 
 
 emptyAcc : Acc
