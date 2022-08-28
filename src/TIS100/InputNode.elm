@@ -2,6 +2,7 @@ module TIS100.InputNode exposing
     ( InputNode
     , fromList
     , state
+    , toSelectionList
     )
 
 import Pivot exposing (Pivot)

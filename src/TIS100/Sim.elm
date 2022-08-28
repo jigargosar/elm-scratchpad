@@ -12,6 +12,7 @@ import TIS100.InputNode as InputNode exposing (InputNode)
 import TIS100.NodeState as S exposing (NodeState)
 import TIS100.Num as Num exposing (Num)
 import TIS100.OutputNode as OutputNode exposing (OutputNode)
+import TIS100.SelectionList as SelectionList exposing (SelectionList)
 import Utils exposing (..)
 
 
@@ -621,23 +622,43 @@ viewSideBar sim =
         ]
 
 
-type SelectionList
-    = SelectionList
+type alias InputVM =
+    ( String, SelectionList Num )
 
 
-getInputs : Sim -> List ( String, SelectionList )
-getInputs sim =
-    Debug.todo "todo"
+inputVMS : Sim -> List InputVM
+inputVMS sim =
+    let
+        addInput node ls =
+            case node of
+                InputNode title inputNode ->
+                    ( title, InputNode.toSelectionList inputNode )
+                        :: ls
+
+                _ ->
+                    ls
+    in
+    foldlValues addInput [] sim.store
 
 
 viewIOColumns : Sim -> Html msg
 viewIOColumns sim =
     fRow [ tac ]
-        (sim.puzzle.inputs |> List.map viewInputColumn)
+        (inputVMS sim |> List.map viewInputColumn)
 
 
-viewInputColumn : ( x, String, List Num ) -> Html msg
-viewInputColumn ( _, title, nums ) =
+viewInputColumn : InputVM -> Html msg
+viewInputColumn ( title, selection ) =
+    let
+        numViewList =
+            SelectionList.mapToList viewSelectedNum viewNum selection
+
+        viewSelectedNum n =
+            div [ fg white, bgc wBlack ] [ text (Num.toString n) ]
+
+        viewNum n =
+            div [] [ text (Num.toString n) ]
+    in
     fCol [ gap "0.5ch" ]
         [ div [] [ text title ]
         , div
@@ -648,9 +669,8 @@ viewInputColumn ( _, title, nums ) =
             ]
             (times 39
                 (\i ->
-                    div []
-                        [ text (listGetAt i nums |> viewNumOrNBSP)
-                        ]
+                    listGetAt i numViewList
+                        |> Maybe.withDefault (div [] [ text nbsp ])
                 )
             )
         ]
