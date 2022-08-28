@@ -259,7 +259,7 @@ simIOIntentsAndNodeState sim =
 toPorts : Sim -> List Port
 toPorts sim =
     simIOIntentsAndNodeState sim
-        |> portsFromIOIntentsAndNodeStates
+        |> initPorts
 
 
 
@@ -568,41 +568,42 @@ type alias Ports =
     Dict PortKey Port
 
 
-portsFromIOIntentsAndNodeStates : Dict Addr ( List IOIntent, NodeState a ) -> List Port
-portsFromIOIntentsAndNodeStates dict =
+initPorts : Dict Addr ( List IOIntent, NodeState a ) -> List Port
+initPorts dict =
+    Dict.toList dict
+        |> List.concatMap initPortsHelp
+        |> mergePorts
+
+
+initPortsHelp : ( Addr, ( List IOIntent, NodeState a ) ) -> List Port
+initPortsHelp ( addr, ( ioIntents, nState ) ) =
     let
-        mapper ( addr, ( ioIntents, nState ) ) =
-            let
-                ioFromNodeState : List ( IOIntent, PortValue )
-                ioFromNodeState =
-                    if second addr == maxY then
-                        -- ignore updating read query for output node
+        ioFromNodeState : List ( IOIntent, PortValue )
+        ioFromNodeState =
+            if second addr == maxY then
+                -- ignore updating read query for output node
+                []
+
+            else
+                case nState of
+                    S.ReadyToRun _ ->
                         []
 
-                    else
-                        case nState of
-                            S.ReadyToRun _ ->
-                                []
+                    S.ReadBlocked dir _ ->
+                        [ ( Read dir, Queried ) ]
 
-                            S.ReadBlocked dir _ ->
-                                [ ( Read dir, Queried ) ]
+                    S.WriteBlocked num dir _ ->
+                        [ ( Write dir, Num num ) ]
 
-                            S.WriteBlocked num dir _ ->
-                                [ ( Write dir, Num num ) ]
+                    S.Done ->
+                        []
 
-                            S.Done ->
-                                []
-
-                ioFromIntents =
-                    ioIntents |> List.map (pairTo Empty)
-            in
-            ioFromNodeState
-                ++ ioFromIntents
-                |> List.filterMap (initPort addr)
+        ioFromIntents =
+            ioIntents |> List.map (pairTo Empty)
     in
-    Dict.toList dict
-        |> List.concatMap mapper
-        |> mergePorts
+    ioFromNodeState
+        ++ ioFromIntents
+        |> List.filterMap (initPort addr)
 
 
 mergePorts : List Port -> List Port
