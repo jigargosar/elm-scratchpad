@@ -8,8 +8,8 @@ type SelectionList a
     | Selected (Pivot a)
 
 
-mapToList : (a -> b) -> (a -> b) -> SelectionList a -> List b
-mapToList sfn fn sList =
+view : (a -> b) -> (a -> b) -> SelectionList a -> List b
+view sfn fn sList =
     case sList of
         None ls ->
             List.map fn ls

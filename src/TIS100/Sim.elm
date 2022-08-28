@@ -643,16 +643,7 @@ type alias OutputVM =
 
 viewInputColumns : Sim -> List (Html msg)
 viewInputColumns sim =
-    let
-        addInputVM node ls =
-            case node of
-                InputNode title inputNode ->
-                    viewInputColumn title (InputNode.toSelectionList inputNode) :: ls
-
-                _ ->
-                    ls
-    in
-    foldrValues addInputVM [] sim.store
+    mapInputNodeList viewInputColumn sim
 
 
 outputVMS : Sim -> List OutputVM
@@ -684,11 +675,13 @@ viewIOColumns sim =
         )
 
 
-viewInputColumn : String -> SelectionList Num -> Html msg
-viewInputColumn title selection =
+viewInputColumn : String -> InputNode -> Html msg
+viewInputColumn title inputNode =
     let
         numViewList =
-            SelectionList.mapToList viewSelectedNum viewNum selection
+            SelectionList.view viewSelectedNum
+                viewNum
+                (InputNode.toSelectionList inputNode)
     in
     fCol [ gap "0.5ch" ]
         [ div [] [ text title ]
@@ -711,7 +704,7 @@ viewOutputColumn : OutputVM -> Html msg
 viewOutputColumn ( title, expectedSelection, actual ) =
     let
         expectedViewsList =
-            SelectionList.mapToList viewSelectedNum viewNum expectedSelection
+            SelectionList.view viewSelectedNum viewNum expectedSelection
 
         actualViewsList =
             List.map viewNum actual
