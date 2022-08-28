@@ -609,10 +609,6 @@ view sim =
         ]
 
 
-lightOutline =
-    sOutline ("1px solid " ++ lightGray)
-
-
 viewSideBar : Sim -> Html msg
 viewSideBar sim =
     fCol [ sWidth "40ch", gap "2ch", fg lightGray ]
@@ -820,16 +816,17 @@ viewNode ( addr, node ) =
                 [ div [ sWidth "18ch", pa "1ch" ] [ text (ExeNode.toSource exe) ]
                 , gtRows 5
                     []
-                    [ viewExeRightBox "ACC" "0"
-                    , viewExeRightBox "BAK" "<0>"
-                    , viewExeRightBox "LAST" "N/A"
-                    , viewExeRightBox "MODE" (nodeModeAsString node)
-                    , viewExeRightBox "IDLE" "0%"
+                    [ viewExeBox "ACC" "0"
+                    , viewExeBox "BAK" "<0>"
+                    , viewExeBox "LAST" "N/A"
+                    , viewExeBox "MODE" (nodeModeAsString node)
+                    , viewExeBox "IDLE" "0%"
                     ]
                 ]
 
 
-viewExeRightBox a b =
+viewExeBox : String -> String -> Html msg
+viewExeBox a b =
     div [ dGrid, tac, placeContentCenter, sOutline ("1px solid " ++ lightGray) ]
         [ div [ fg lightGray ] [ text a ]
         , div [] [ text b ]
@@ -842,6 +839,10 @@ darkGray =
 
 lightGray =
     grayN 0.7
+
+
+lightOutline =
+    sOutline ("1px solid " ++ lightGray)
 
 
 nodeModeAsString : Node -> String
