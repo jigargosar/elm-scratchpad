@@ -638,7 +638,7 @@ inputVMS sim =
                 _ ->
                     ls
     in
-    foldlValues addInputVM [] sim.store
+    foldrValues addInputVM [] sim.store
 
 
 viewIOColumns : Sim -> Html msg

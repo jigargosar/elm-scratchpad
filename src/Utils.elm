@@ -2086,6 +2086,11 @@ foldlValues fn =
     Dict.foldl (always fn)
 
 
+foldrValues : (v -> b -> b) -> b -> Dict a v -> b
+foldrValues fn =
+    Dict.foldr (always fn)
+
+
 
 -- LIST HELPERS
 
