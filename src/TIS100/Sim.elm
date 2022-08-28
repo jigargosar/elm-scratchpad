@@ -83,6 +83,14 @@ type alias Addr =
     ( Int, Int )
 
 
+maxX =
+    4
+
+
+maxY =
+    4
+
+
 
 -- NODE
 
@@ -654,14 +662,6 @@ viewGrid sim =
 viewNodes : Sim -> List (Html msg)
 viewNodes sim =
     Dict.toList sim.store |> List.map viewNode
-
-
-maxX =
-    4
-
-
-maxY =
-    4
 
 
 
