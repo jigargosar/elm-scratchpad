@@ -346,6 +346,75 @@ initPort addr ( iOIntent, portValue ) =
         |> Maybe.map (\id -> Port id portValue)
 
 
+viewPort : Port -> Html msg
+viewPort (Port (PortId addr dir _) portValue) =
+    case dir of
+        Up ->
+            viewUpPortValue addr portValue
+
+        Down ->
+            viewDownPortValue addr portValue
+
+        Left ->
+            noView
+
+        Right ->
+            noView
+
+
+viewDownPortValue : Addr -> PortValue -> Html msg
+viewDownPortValue ( x, y ) portValue =
+    gtCols 2
+        [ gridAreaXY ( x * 2, y * 2 ), noPointerEvents ]
+        [ fRow
+            [ gridAreaXY ( 1, 0 )
+            , allPointerEvents
+            , itemsCenter
+            , pl "1ch"
+            , gap "1ch"
+            ]
+            [ viewArrow Down portValue
+            , viewPortValueText portValue
+            ]
+        ]
+
+
+viewUpPortValue : Addr -> PortValue -> Html msg
+viewUpPortValue ( x, y ) portValue =
+    gtCols 2
+        [ gridAreaXY ( x * 2, (y * 2) - 2 ), noPointerEvents ]
+        [ fRow
+            [ gridAreaXY ( 0, 0 )
+            , allPointerEvents
+            , itemsCenter
+            , justifyContent "end"
+            , pr "1ch"
+            , gap "1ch"
+            ]
+            [ viewPortValueText portValue
+            , viewArrow Up portValue
+            ]
+        ]
+
+
+viewArrow : Dir4 -> PortValue -> Html msg
+viewArrow dir4 pv =
+    let
+        color =
+            case pv of
+                Empty ->
+                    darkGray
+
+                _ ->
+                    "inherit"
+    in
+    span [ fg color, fontSize "2em", fontWeight "100" ] [ text (arrowDefault dir4) ]
+
+
+
+-- PORTS
+
+
 type alias Ports =
     Dict PortKey Port
 
@@ -418,71 +487,6 @@ mergePorts =
                 )
     in
     List.foldl merge Dict.empty >> Dict.values
-
-
-viewPort : Port -> Html msg
-viewPort (Port (PortId addr dir _) portValue) =
-    case dir of
-        Up ->
-            viewUpPortValue addr portValue
-
-        Down ->
-            viewDownPortValue addr portValue
-
-        Left ->
-            noView
-
-        Right ->
-            noView
-
-
-viewDownPortValue : Addr -> PortValue -> Html msg
-viewDownPortValue ( x, y ) portValue =
-    gtCols 2
-        [ gridAreaXY ( x * 2, y * 2 ), noPointerEvents ]
-        [ fRow
-            [ gridAreaXY ( 1, 0 )
-            , allPointerEvents
-            , itemsCenter
-            , pl "1ch"
-            , gap "1ch"
-            ]
-            [ viewArrow Down portValue
-            , viewPortValueText portValue
-            ]
-        ]
-
-
-viewUpPortValue : Addr -> PortValue -> Html msg
-viewUpPortValue ( x, y ) portValue =
-    gtCols 2
-        [ gridAreaXY ( x * 2, (y * 2) - 2 ), noPointerEvents ]
-        [ fRow
-            [ gridAreaXY ( 0, 0 )
-            , allPointerEvents
-            , itemsCenter
-            , justifyContent "end"
-            , pr "1ch"
-            , gap "1ch"
-            ]
-            [ viewPortValueText portValue
-            , viewArrow Up portValue
-            ]
-        ]
-
-
-viewArrow : Dir4 -> PortValue -> Html msg
-viewArrow dir4 pv =
-    let
-        color =
-            case pv of
-                Empty ->
-                    darkGray
-
-                _ ->
-                    "inherit"
-    in
-    span [ fg color, fontSize "2em", fontWeight "100" ] [ text (arrowDefault dir4) ]
 
 
 step : Sim -> Sim
