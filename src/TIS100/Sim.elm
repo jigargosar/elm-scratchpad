@@ -633,10 +633,6 @@ viewSideBar sim =
         ]
 
 
-type alias OutputVM =
-    ( String, SelectionList Num, List Num )
-
-
 viewIOColumns : Sim -> Html msg
 viewIOColumns sim =
     fRow [ tac, gap "2ch" ]
