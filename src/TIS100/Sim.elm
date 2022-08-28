@@ -244,11 +244,6 @@ type alias PortKey =
     ( Addr, Addr )
 
 
-portKeyFromId : PortId -> PortKey
-portKeyFromId (PortId _ _ key) =
-    key
-
-
 type PortId
     = PortId Addr Dir4 PortKey
 
@@ -277,6 +272,11 @@ initWritePortId (( fx, fy ) as from) dir =
 
     else
         Just <| PortId from dir ( from, to )
+
+
+portKeyFromId : PortId -> PortKey
+portKeyFromId (PortId _ _ key) =
+    key
 
 
 
