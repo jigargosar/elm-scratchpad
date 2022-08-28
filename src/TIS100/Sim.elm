@@ -119,6 +119,86 @@ nodeState node =
             ExeNode.state exeNode |> S.map ExeNode
 
 
+viewNode : NodeEntry -> Html msg
+viewNode ( addr, node ) =
+    case node of
+        InputNode title _ ->
+            gtCols 2
+                [ nodeAddrToGridArea addr
+                , placeItemsCenter
+                ]
+                [ div [ tac, fg lightGray ]
+                    [ div [] [ text title ]
+                    , div [] [ text "(IDLE 0%)" ]
+                    ]
+                ]
+
+        OutputNode title _ _ ->
+            gtCols 2
+                [ nodeAddrToGridArea addr
+                , placeItemsCenter
+                ]
+                [ div [ tac, fg lightGray ] [ text title ]
+                ]
+
+        ExeNode exe ->
+            div
+                [ nodeAddrToGridArea addr
+                , lightOutline
+                , dGrid
+                , gridAutoFlowColumn
+                ]
+                [ div [ sWidth "18ch", pa "1ch" ] [ text (ExeNode.toSource exe) ]
+                , gtRows 5
+                    []
+                    [ viewExeBox "ACC" "0"
+                    , viewExeBox "BAK" "<0>"
+                    , viewExeBox "LAST" "N/A"
+                    , viewExeBox "MODE" (nodeModeAsString node)
+                    , viewExeBox "IDLE" "0%"
+                    ]
+                ]
+
+
+viewExeBox : String -> String -> Html msg
+viewExeBox a b =
+    div [ dGrid, tac, placeContentCenter, sOutline ("1px solid " ++ lightGray) ]
+        [ div [ fg lightGray ] [ text a ]
+        , div [] [ text b ]
+        ]
+
+
+nodeModeAsString : Node -> String
+nodeModeAsString node =
+    case nodeState node of
+        S.ReadyToRun _ ->
+            "RUN"
+
+        S.ReadBlocked _ _ ->
+            "READ"
+
+        S.WriteBlocked _ _ _ ->
+            "WRITE"
+
+        S.Done ->
+            "IDLE"
+
+
+nodeAddrToGridArea : Addr -> Attribute msg
+nodeAddrToGridArea ( x, y ) =
+    gridAreaXY
+        ( x * 2
+        , if y == 0 then
+            0
+
+          else if y == maxY then
+            (y * 2) - 2
+
+          else
+            (y * 2) - 1
+        )
+
+
 
 -- STORE
 
@@ -582,86 +662,6 @@ maxX =
 
 maxY =
     4
-
-
-nodeAddrToGridArea : Addr -> Attribute msg
-nodeAddrToGridArea ( x, y ) =
-    gridAreaXY
-        ( x * 2
-        , if y == 0 then
-            0
-
-          else if y == maxY then
-            (y * 2) - 2
-
-          else
-            (y * 2) - 1
-        )
-
-
-viewNode : NodeEntry -> Html msg
-viewNode ( addr, node ) =
-    case node of
-        InputNode title _ ->
-            gtCols 2
-                [ nodeAddrToGridArea addr
-                , placeItemsCenter
-                ]
-                [ div [ tac, fg lightGray ]
-                    [ div [] [ text title ]
-                    , div [] [ text "(IDLE 0%)" ]
-                    ]
-                ]
-
-        OutputNode title _ _ ->
-            gtCols 2
-                [ nodeAddrToGridArea addr
-                , placeItemsCenter
-                ]
-                [ div [ tac, fg lightGray ] [ text title ]
-                ]
-
-        ExeNode exe ->
-            div
-                [ nodeAddrToGridArea addr
-                , lightOutline
-                , dGrid
-                , gridAutoFlowColumn
-                ]
-                [ div [ sWidth "18ch", pa "1ch" ] [ text (ExeNode.toSource exe) ]
-                , gtRows 5
-                    []
-                    [ viewExeBox "ACC" "0"
-                    , viewExeBox "BAK" "<0>"
-                    , viewExeBox "LAST" "N/A"
-                    , viewExeBox "MODE" (nodeModeAsString node)
-                    , viewExeBox "IDLE" "0%"
-                    ]
-                ]
-
-
-viewExeBox : String -> String -> Html msg
-viewExeBox a b =
-    div [ dGrid, tac, placeContentCenter, sOutline ("1px solid " ++ lightGray) ]
-        [ div [ fg lightGray ] [ text a ]
-        , div [] [ text b ]
-        ]
-
-
-nodeModeAsString : Node -> String
-nodeModeAsString node =
-    case nodeState node of
-        S.ReadyToRun _ ->
-            "RUN"
-
-        S.ReadBlocked _ _ ->
-            "READ"
-
-        S.WriteBlocked _ _ _ ->
-            "WRITE"
-
-        S.Done ->
-            "IDLE"
 
 
 
