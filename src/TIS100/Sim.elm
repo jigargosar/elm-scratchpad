@@ -634,6 +634,31 @@ viewIOColumns =
                 ]
                 (times 39 (\i -> div [] [ text (fromInt i) ]))
             ]
+        , viewInputColumn "in.b" []
+        ]
+
+
+viewInputColumn : String -> List Num -> Html msg
+viewInputColumn title nums =
+    fCol [ gap "0.5ch" ]
+        [ div [] [ text title ]
+        , div
+            [ lightOutline
+            , sWidth "4ch"
+            , pa "0.5ch 0"
+            , styleLineHeight "0.8"
+            ]
+            (times 39
+                (\i ->
+                    div []
+                        [ text
+                            (listGetAt i nums
+                                |> Maybe.map Num.toString
+                                |> Maybe.withDefault "\u{00A0}"
+                            )
+                        ]
+                )
+            )
         ]
 
 
