@@ -590,18 +590,23 @@ view sim =
         ]
         [ div [] [ text "Cycle: ", text (fromInt sim.cycle) ]
         , fRow [ gap "2ch" ]
-            [ fCol [ sWidth "40ch", gap "1ch" ]
-                [ div [ ttu ] [ text "Title" ]
-                , fCol
-                    [ sHeight "8em"
-                    , sOutline ("1px solid " ++ lightGray)
-                    , pa "0 1ch"
-                    , placeContentCenter
-                    ]
-                    (List.repeat 6 (div [] [ text "> desc" ]))
-                ]
+            [ viewSideBar
             , viewGrid sim
             ]
+        ]
+
+
+viewSideBar : Html msg
+viewSideBar =
+    fCol [ sWidth "40ch", gap "1ch" ]
+        [ div [ ttu ] [ text "Title" ]
+        , fCol
+            [ sHeight "8em"
+            , sOutline ("1px solid " ++ lightGray)
+            , pa "0 1ch"
+            , placeContentCenter
+            ]
+            (List.repeat 6 (div [] [ text "> desc" ]))
         ]
 
 
