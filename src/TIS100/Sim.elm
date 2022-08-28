@@ -453,6 +453,17 @@ emptyAcc =
     }
 
 
+addToReadBlocked :
+    Addr
+    -> Node
+    -> Dir4
+    -> (Num -> Node)
+    -> { a | readBlocked : ReadBlockedStore }
+    -> { a | readBlocked : ReadBlockedStore }
+addToReadBlocked addr node dir cont acc =
+    { acc | readBlocked = Dict.insert addr ( node, dir, cont ) acc.readBlocked }
+
+
 addToWriteBlocked :
     Addr
     -> Node
@@ -482,17 +493,6 @@ completeWriteBlocked : Addr -> Node -> WriteBlockedAcc a -> WriteBlockedAcc a
 completeWriteBlocked addr node acc =
     { acc | writeBlocked = Dict.remove addr acc.writeBlocked }
         |> addToCompleted addr node
-
-
-addToReadBlocked :
-    Addr
-    -> Node
-    -> Dir4
-    -> (Num -> Node)
-    -> { a | readBlocked : ReadBlockedStore }
-    -> { a | readBlocked : ReadBlockedStore }
-addToReadBlocked addr node dir cont acc =
-    { acc | readBlocked = Dict.insert addr ( node, dir, cont ) acc.readBlocked }
 
 
 
