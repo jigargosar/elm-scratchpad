@@ -582,7 +582,7 @@ view sim =
     fCol
         [ h100
         , fontSize "12px"
-        , styleLineHeight "1"
+        , styleLineHeight "0.9"
         , pa "2ch"
         , bold
         , ffMonospace
@@ -603,19 +603,25 @@ lightOutline =
 
 viewSideBar : Html msg
 viewSideBar =
-    fCol [ sWidth "40ch", gap "1ch" ]
-        [ div [ tac ] [ text "-- Title --" ]
-        , fCol
-            [ sHeight "8em"
-            , lightOutline
-            , pa "0 1ch"
-            , placeContentCenter
+    fCol [ sWidth "40ch", gap "2ch", fg lightGray ]
+        [ div []
+            [ div
+                [ tac
+                , styleLineHeight "2"
+                ]
+                [ text "-- Title --" ]
+            , fCol
+                [ styleLineHeight "0.9"
+                , lightOutline
+                , pa "0.5ch"
+                , placeContentCenter
+                ]
+                (List.repeat 6 (div [] [ text "> desc" ]))
             ]
-            (List.repeat 6 (div [] [ text "> desc" ]))
-        , fRow []
-            [ fCol [ tac ]
+        , fRow [ tac ]
+            [ fCol [ gap "1ch" ]
                 [ div [] [ text "in.a" ]
-                , div [ lightOutline ]
+                , div [ lightOutline, sWidth "4ch" ]
                     (times 39 (\i -> div [] [ text (fromInt (i + 1)) ]))
                 ]
             ]
