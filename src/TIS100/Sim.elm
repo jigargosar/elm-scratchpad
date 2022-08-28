@@ -221,6 +221,30 @@ type alias Store =
     Dict Addr Node
 
 
+initialStore : Store
+initialStore =
+    exeAddresses
+        |> List.map (pairTo (ExeNode ExeNode.empty))
+        |> Dict.fromList
+
+
+exeAddresses : List Addr
+exeAddresses =
+    [ ( 0, 1 )
+    , ( 0, 2 )
+    , ( 0, 3 )
+    , ( 1, 1 )
+    , ( 1, 2 )
+    , ( 1, 3 )
+    , ( 2, 1 )
+    , ( 2, 2 )
+    , ( 2, 3 )
+    , ( 3, 1 )
+    , ( 3, 2 )
+    , ( 3, 3 )
+    ]
+
+
 
 -- SIM
 
@@ -242,30 +266,6 @@ init puzzle es =
                 |> withExecutables es
     in
     { puzzle = puzzle, store = store, cycle = 0 }
-
-
-exeAddresses : List Addr
-exeAddresses =
-    [ ( 0, 1 )
-    , ( 0, 2 )
-    , ( 0, 3 )
-    , ( 1, 1 )
-    , ( 1, 2 )
-    , ( 1, 3 )
-    , ( 2, 1 )
-    , ( 2, 2 )
-    , ( 2, 3 )
-    , ( 3, 1 )
-    , ( 3, 2 )
-    , ( 3, 3 )
-    ]
-
-
-initialStore : Store
-initialStore =
-    exeAddresses
-        |> List.map (pairTo (ExeNode ExeNode.empty))
-        |> Dict.fromList
 
 
 withInputs : List ( Int, String, List Num ) -> Store -> Store
