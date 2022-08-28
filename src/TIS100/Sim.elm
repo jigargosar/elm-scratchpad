@@ -589,7 +589,10 @@ view sim =
         , ttu
         ]
         [ div [] [ text "Cycle: ", text (fromInt sim.cycle) ]
-        , viewGrid sim
+        , fRow []
+            [ div [] [ text "Sidebar" ]
+            , viewGrid sim
+            ]
         ]
 
 
