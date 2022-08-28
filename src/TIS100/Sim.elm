@@ -629,7 +629,7 @@ type alias InputVM =
 inputVMS : Sim -> List InputVM
 inputVMS sim =
     let
-        addInput node ls =
+        addInputVM node ls =
             case node of
                 InputNode title inputNode ->
                     ( title, InputNode.toSelectionList inputNode )
@@ -638,7 +638,7 @@ inputVMS sim =
                 _ ->
                     ls
     in
-    foldlValues addInput [] sim.store
+    foldlValues addInputVM [] sim.store
 
 
 viewIOColumns : Sim -> Html msg
