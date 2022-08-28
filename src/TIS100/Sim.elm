@@ -57,23 +57,6 @@ type alias Sim =
     }
 
 
-
---init :
---    List ( Int, String, InputNode )
---    -> List ( Int, String, OutputNode )
---    -> List ( Addr, ExeNode )
---    -> Sim
---init is os es =
---    let
---        store =
---            initialStore
---                |> withInputs is
---                |> withOutputs os
---                |> withExecutables es
---    in
---    { store = store, cycle = 0 }
-
-
 init : Puzzle -> List ( Addr, ExeNode ) -> Sim
 init puzzle es =
     let
@@ -137,6 +120,34 @@ withExecutables list store =
         (\( addr, exe ) -> Dict.insert addr (ExeNode exe))
         store
         list
+
+
+mapInputNodeList : (String -> InputNode -> a) -> Sim -> List a
+mapInputNodeList fn sim =
+    let
+        mapper node =
+            case node of
+                InputNode a b ->
+                    Just <| fn a b
+
+                _ ->
+                    Nothing
+    in
+    Dict.values sim.store |> List.filterMap mapper
+
+
+mapOutputNodeList : (String -> List Num -> OutputNode -> a) -> Sim -> List a
+mapOutputNodeList fn sim =
+    let
+        mapper node =
+            case node of
+                OutputNode a b c ->
+                    Just <| fn a b c
+
+                _ ->
+                    Nothing
+    in
+    Dict.values sim.store |> List.filterMap mapper
 
 
 type alias Puzzle =
@@ -628,34 +639,6 @@ type alias InputVM =
 
 type alias OutputVM =
     ( String, SelectionList Num, List Num )
-
-
-mapInputNodeList : (String -> InputNode -> a) -> Sim -> List a
-mapInputNodeList fn sim =
-    let
-        mapper node =
-            case node of
-                InputNode a b ->
-                    Just <| fn a b
-
-                _ ->
-                    Nothing
-    in
-    Dict.values sim.store |> List.filterMap mapper
-
-
-mapOutputNodeList : (String -> List Num -> OutputNode -> a) -> Sim -> List a
-mapOutputNodeList fn sim =
-    let
-        mapper node =
-            case node of
-                OutputNode a b c ->
-                    Just <| fn a b c
-
-                _ ->
-                    Nothing
-    in
-    Dict.values sim.store |> List.filterMap mapper
 
 
 viewInputColumns : Sim -> List (Html msg)
