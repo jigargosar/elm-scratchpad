@@ -83,10 +83,12 @@ type alias Addr =
     ( Int, Int )
 
 
+maxX : Int
 maxX =
     4
 
 
+maxY : Int
 maxY =
     4
 
