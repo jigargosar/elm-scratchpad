@@ -621,6 +621,15 @@ viewSideBar sim =
         ]
 
 
+type SelectionList
+    = SelectionList
+
+
+getInputs : Sim -> List ( String, SelectionList )
+getInputs sim =
+    Debug.todo "todo"
+
+
 viewIOColumns : Sim -> Html msg
 viewIOColumns sim =
     fRow [ tac ]
