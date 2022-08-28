@@ -263,6 +263,155 @@ toPorts sim =
 
 
 
+-- SIM UPDATE
+
+
+step : Sim -> Sim
+step sim =
+    { sim
+        | store =
+            Dict.foldl stepNode emptyAcc sim.store
+                |> resolveAllReadBlocked
+                |> resolveAllWriteBlocked
+        , cycle = sim.cycle + 1
+    }
+
+
+stepNode : Addr -> Node -> Acc -> Acc
+stepNode addr node =
+    case nodeState node of
+        S.WriteBlocked num dir cont ->
+            addToWriteBlocked addr node num dir cont
+
+        S.Done ->
+            addToCompleted addr node
+
+        S.ReadBlocked dir cont ->
+            addToReadBlocked addr node dir cont
+
+        S.ReadyToRun cont ->
+            resolveAfterRun addr (cont ())
+
+
+resolveAfterRun : Addr -> Node -> Acc -> Acc
+resolveAfterRun addr node =
+    case nodeState node of
+        S.ReadBlocked dir cont ->
+            addToReadBlocked addr node dir cont
+
+        _ ->
+            addToCompleted addr node
+
+
+resolveAllReadBlocked : Acc -> Acc
+resolveAllReadBlocked acc =
+    Dict.foldl resolveReadBlocked { acc | readBlocked = Dict.empty } acc.readBlocked
+
+
+resolveReadBlocked :
+    Addr
+    -> ReadBlockedNode
+    -> WriteBlockedAcc a
+    -> WriteBlockedAcc a
+resolveReadBlocked addr ( node, dir, cont ) acc =
+    case readAndUnblock addr dir acc of
+        Just ( num, acc2 ) ->
+            addToCompleted addr (cont num) acc2
+
+        Nothing ->
+            addToCompleted addr node acc
+
+
+readAndUnblock :
+    Addr
+    -> Dir4
+    -> WriteBlockedAcc a
+    -> Maybe ( Num, WriteBlockedAcc a )
+readAndUnblock rAddr rDir acc =
+    moveInDir4 rDir rAddr
+        |> getEntryIn acc.writeBlocked
+        |> maybeFilter
+            (\( _, wbNode ) ->
+                rDir == oppositeDir4 wbNode.dir
+            )
+        |> Maybe.map
+            (\( wAddr, wbNode ) ->
+                ( wbNode.num
+                , completeWriteBlocked wAddr (wbNode.cont ()) acc
+                )
+            )
+
+
+resolveAllWriteBlocked : WriteBlockedAcc a -> Store
+resolveAllWriteBlocked acc =
+    Dict.foldl (\addr { node } -> Dict.insert addr node) acc.completed acc.writeBlocked
+
+
+type alias Acc =
+    { readBlocked : ReadBlockedStore
+    , writeBlocked : WriteBlockedStore
+    , completed : Store
+    }
+
+
+type alias WriteBlockedAcc a =
+    { a
+        | writeBlocked : WriteBlockedStore
+        , completed : Store
+    }
+
+
+emptyAcc : Acc
+emptyAcc =
+    { readBlocked = Dict.empty
+    , writeBlocked = Dict.empty
+    , completed = Dict.empty
+    }
+
+
+addToWriteBlocked :
+    Addr
+    -> Node
+    -> Num
+    -> Dir4
+    -> (() -> Node)
+    -> { a | writeBlocked : WriteBlockedStore }
+    -> { a | writeBlocked : WriteBlockedStore }
+addToWriteBlocked addr node num dir cont acc =
+    let
+        wbn =
+            WriteBlockedNode node num dir cont
+    in
+    { acc | writeBlocked = Dict.insert addr wbn acc.writeBlocked }
+
+
+addToCompleted :
+    Addr
+    -> Node
+    -> { a | completed : Store }
+    -> { a | completed : Store }
+addToCompleted na n acc =
+    { acc | completed = Dict.insert na n acc.completed }
+
+
+completeWriteBlocked : Addr -> Node -> WriteBlockedAcc a -> WriteBlockedAcc a
+completeWriteBlocked addr node acc =
+    { acc | writeBlocked = Dict.remove addr acc.writeBlocked }
+        |> addToCompleted addr node
+
+
+addToReadBlocked :
+    Addr
+    -> Node
+    -> Dir4
+    -> (Num -> Node)
+    -> { a | readBlocked : ReadBlockedStore }
+    -> { a | readBlocked : ReadBlockedStore }
+addToReadBlocked addr node dir cont acc =
+    { acc | readBlocked = Dict.insert addr ( node, dir, cont ) acc.readBlocked }
+
+
+
 -- PORT ID
 
 
@@ -487,151 +636,6 @@ mergePorts =
                 )
     in
     List.foldl merge Dict.empty >> Dict.values
-
-
-step : Sim -> Sim
-step sim =
-    { sim
-        | store =
-            Dict.foldl stepNode emptyAcc sim.store
-                |> resolveAllReadBlocked
-                |> resolveAllWriteBlocked
-        , cycle = sim.cycle + 1
-    }
-
-
-stepNode : Addr -> Node -> Acc -> Acc
-stepNode addr node =
-    case nodeState node of
-        S.WriteBlocked num dir cont ->
-            addToWriteBlocked addr node num dir cont
-
-        S.Done ->
-            addToCompleted addr node
-
-        S.ReadBlocked dir cont ->
-            addToReadBlocked addr node dir cont
-
-        S.ReadyToRun cont ->
-            resolveAfterRun addr (cont ())
-
-
-resolveAfterRun : Addr -> Node -> Acc -> Acc
-resolveAfterRun addr node =
-    case nodeState node of
-        S.ReadBlocked dir cont ->
-            addToReadBlocked addr node dir cont
-
-        _ ->
-            addToCompleted addr node
-
-
-resolveAllReadBlocked : Acc -> Acc
-resolveAllReadBlocked acc =
-    Dict.foldl resolveReadBlocked { acc | readBlocked = Dict.empty } acc.readBlocked
-
-
-resolveReadBlocked :
-    Addr
-    -> ReadBlockedNode
-    -> WriteBlockedAcc a
-    -> WriteBlockedAcc a
-resolveReadBlocked addr ( node, dir, cont ) acc =
-    case readAndUnblock addr dir acc of
-        Just ( num, acc2 ) ->
-            addToCompleted addr (cont num) acc2
-
-        Nothing ->
-            addToCompleted addr node acc
-
-
-readAndUnblock :
-    Addr
-    -> Dir4
-    -> WriteBlockedAcc a
-    -> Maybe ( Num, WriteBlockedAcc a )
-readAndUnblock rAddr rDir acc =
-    moveInDir4 rDir rAddr
-        |> getEntryIn acc.writeBlocked
-        |> maybeFilter
-            (\( _, wbNode ) ->
-                rDir == oppositeDir4 wbNode.dir
-            )
-        |> Maybe.map
-            (\( wAddr, wbNode ) ->
-                ( wbNode.num
-                , completeWriteBlocked wAddr (wbNode.cont ()) acc
-                )
-            )
-
-
-resolveAllWriteBlocked : WriteBlockedAcc a -> Store
-resolveAllWriteBlocked acc =
-    Dict.foldl (\addr { node } -> Dict.insert addr node) acc.completed acc.writeBlocked
-
-
-type alias Acc =
-    { readBlocked : ReadBlockedStore
-    , writeBlocked : WriteBlockedStore
-    , completed : Store
-    }
-
-
-type alias WriteBlockedAcc a =
-    { a
-        | writeBlocked : WriteBlockedStore
-        , completed : Store
-    }
-
-
-emptyAcc : Acc
-emptyAcc =
-    { readBlocked = Dict.empty
-    , writeBlocked = Dict.empty
-    , completed = Dict.empty
-    }
-
-
-addToWriteBlocked :
-    Addr
-    -> Node
-    -> Num
-    -> Dir4
-    -> (() -> Node)
-    -> { a | writeBlocked : WriteBlockedStore }
-    -> { a | writeBlocked : WriteBlockedStore }
-addToWriteBlocked addr node num dir cont acc =
-    let
-        wbn =
-            WriteBlockedNode node num dir cont
-    in
-    { acc | writeBlocked = Dict.insert addr wbn acc.writeBlocked }
-
-
-addToCompleted :
-    Addr
-    -> Node
-    -> { a | completed : Store }
-    -> { a | completed : Store }
-addToCompleted na n acc =
-    { acc | completed = Dict.insert na n acc.completed }
-
-
-completeWriteBlocked : Addr -> Node -> WriteBlockedAcc a -> WriteBlockedAcc a
-completeWriteBlocked addr node acc =
-    { acc | writeBlocked = Dict.remove addr acc.writeBlocked }
-        |> addToCompleted addr node
-
-
-addToReadBlocked :
-    Addr
-    -> Node
-    -> Dir4
-    -> (Num -> Node)
-    -> { a | readBlocked : ReadBlockedStore }
-    -> { a | readBlocked : ReadBlockedStore }
-addToReadBlocked addr node dir cont acc =
-    { acc | readBlocked = Dict.insert addr ( node, dir, cont ) acc.readBlocked }
 
 
 view : Sim -> Html msg
