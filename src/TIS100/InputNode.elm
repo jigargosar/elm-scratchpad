@@ -4,35 +4,46 @@ module TIS100.InputNode exposing
     , state
     )
 
+import Pivot exposing (Pivot)
 import TIS100.NodeState as S
 import TIS100.Num exposing (Num)
 import Utils exposing (Dir4(..))
 
 
 type InputNode
-    = Done
-    | Running Num (List Num)
-    | WriteBlocked Num (List Num)
+    = Done (List Num)
+    | Running (Pivot Num)
+    | WriteBlocked (Pivot Num)
 
 
 fromList : List Num -> InputNode
 fromList nums =
-    case nums of
-        f :: r ->
-            Running f r
+    case Pivot.fromList nums of
+        Just p ->
+            Running p
 
-        [] ->
-            Done
+        Nothing ->
+            Done []
+
+
+afterWrite : Pivot Num -> InputNode
+afterWrite oldP =
+    case Pivot.goR oldP of
+        Just newP ->
+            Running newP
+
+        Nothing ->
+            Done (Pivot.toList oldP)
 
 
 state : InputNode -> S.NodeState InputNode
 state node =
     case node of
-        Done ->
+        Done _ ->
             S.Done
 
-        Running num nums ->
-            S.ReadyToRun (\() -> WriteBlocked num nums)
+        Running p ->
+            S.ReadyToRun (\() -> WriteBlocked p)
 
-        WriteBlocked num nums ->
-            S.WriteBlocked num Down (\() -> fromList nums)
+        WriteBlocked p ->
+            S.WriteBlocked (Pivot.getC p) Down (\() -> afterWrite p)
