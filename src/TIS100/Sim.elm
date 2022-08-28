@@ -225,6 +225,10 @@ mapOutputNodeList fn sim =
     Dict.values sim.store |> List.filterMap mapper
 
 
+
+-- PORTS
+
+
 type Port
     = Port PortId PortValue
 
@@ -331,6 +335,47 @@ type alias PortKey =
 
 type alias Ports =
     Dict PortKey Port
+
+
+portsFromIOIntentsAndNodeStates : List ( Addr, List IOIntent, NodeState a ) -> List Port
+portsFromIOIntentsAndNodeStates list =
+    let
+        mapper ( addr, ioIntents, nState ) =
+            let
+                ioFromNodeState : List ( IOIntent, PortValue )
+                ioFromNodeState =
+                    if second addr == maxY then
+                        -- ignore updating read query for output node
+                        []
+
+                    else
+                        case nState of
+                            S.ReadyToRun _ ->
+                                []
+
+                            S.ReadBlocked dir _ ->
+                                [ ( Read dir, Queried ) ]
+
+                            S.WriteBlocked num dir _ ->
+                                [ ( Write dir, Num num ) ]
+
+                            S.Done ->
+                                []
+
+                ioFromIntents =
+                    ioIntents |> List.map (pairTo Empty)
+            in
+            ioFromNodeState
+                ++ ioFromIntents
+                |> List.filterMap (initPort addr)
+    in
+    List.concatMap mapper list
+
+
+initPort : Addr -> ( IOIntent, PortValue ) -> Maybe Port
+initPort addr ( iOIntent, portValue ) =
+    initPortId addr iOIntent
+        |> Maybe.map (\id -> Port id portValue)
 
 
 toPorts : Sim -> List Port
