@@ -680,16 +680,6 @@ nbsp =
     "\u{00A0}"
 
 
-viewNumOrNBSP : Maybe Num -> String
-viewNumOrNBSP mb =
-    case mb of
-        Nothing ->
-            nbsp
-
-        Just n ->
-            Num.toString n
-
-
 viewGrid : Sim -> Html msg
 viewGrid sim =
     let
