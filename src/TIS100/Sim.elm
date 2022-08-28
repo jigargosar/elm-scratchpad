@@ -230,6 +230,12 @@ simIOIntentsAndNodeState sim =
     Dict.map (\_ node -> ( nodeIoIntents node, nodeState node )) sim.store
 
 
+toPorts : Sim -> List Port
+toPorts sim =
+    simIOIntentsAndNodeState sim
+        |> portsFromIOIntentsAndNodeStates
+
+
 
 -- PORTS
 
@@ -242,16 +248,6 @@ type PortValue
     = Empty
     | Num Num
     | Queried
-
-
-updatePortValueOnQuery : PortValue -> PortValue
-updatePortValueOnQuery portValue =
-    case portValue of
-        Empty ->
-            Queried
-
-        _ ->
-            portValue
 
 
 viewPortValueText : PortValue -> Html msg
@@ -304,34 +300,6 @@ initWritePortId (( fx, fy ) as from) dir =
 portKeyFromId : PortId -> PortKey
 portKeyFromId (PortId _ _ key) =
     key
-
-
-updatePortsDict :
-    Addr
-    -> IOIntent
-    -> (PortValue -> PortValue)
-    -> Ports
-    -> Ports
-updatePortsDict addr iOIntent fn ports =
-    case initPortId addr iOIntent of
-        Nothing ->
-            ports
-
-        Just portId ->
-            Dict.update (portKeyFromId portId)
-                (\mbPort ->
-                    let
-                        newPortValue =
-                            case mbPort of
-                                Nothing ->
-                                    fn Empty
-
-                                Just (Port _ portValue) ->
-                                    fn portValue
-                    in
-                    Just (Port portId newPortValue)
-                )
-                ports
 
 
 type alias PortKey =
@@ -416,50 +384,6 @@ initPort : Addr -> ( IOIntent, PortValue ) -> Maybe Port
 initPort addr ( iOIntent, portValue ) =
     initPortId addr iOIntent
         |> Maybe.map (\id -> Port id portValue)
-
-
-toPorts : Sim -> List Port
-toPorts sim =
-    foldlEntries addPortsFromNodeEntry
-        Dict.empty
-        sim.store
-        |> Dict.values
-
-
-addPortsFromNodeEntry : NodeEntry -> Ports -> Ports
-addPortsFromNodeEntry entry ports =
-    ports
-        |> addPortsFromNodeIOIntents entry
-        |> updatePortValuesFromNodeState entry
-
-
-addPortsFromNodeIOIntents : NodeEntry -> Ports -> Ports
-addPortsFromNodeIOIntents ( addr, node ) dict =
-    nodeIoIntents node
-        |> List.foldl
-            (\ioIntent -> updatePortsDict addr ioIntent identity)
-            dict
-
-
-updatePortValuesFromNodeState : NodeEntry -> Ports -> Ports
-updatePortValuesFromNodeState ( addr, node ) =
-    if second addr == maxY then
-        -- ignore updating read query for output node
-        identity
-
-    else
-        case nodeState node of
-            S.ReadyToRun _ ->
-                identity
-
-            S.ReadBlocked dir _ ->
-                updatePortsDict addr (Read dir) updatePortValueOnQuery
-
-            S.WriteBlocked num dir _ ->
-                updatePortsDict addr (Write dir) (always (Num num))
-
-            S.Done ->
-                identity
 
 
 nodeIoIntents : Node -> List IOIntent
