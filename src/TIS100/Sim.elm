@@ -210,7 +210,7 @@ nodeAddrToGridArea ( x, y ) =
 
 
 
--- STORE
+-- SIM
 
 
 type alias NodeEntry =
@@ -219,6 +219,25 @@ type alias NodeEntry =
 
 type alias Store =
     Dict Addr Node
+
+
+type alias Sim =
+    { puzzle : Puzzle
+    , store : Store
+    , cycle : Int
+    }
+
+
+init : Puzzle -> List ( Addr, ExeNode ) -> Sim
+init puzzle es =
+    let
+        store =
+            initialStore
+                |> withInputs puzzle.inputs
+                |> withOutputs puzzle.outputs
+                |> withExecutables es
+    in
+    { puzzle = puzzle, store = store, cycle = 0 }
 
 
 initialStore : Store
@@ -243,29 +262,6 @@ exeAddresses =
     , ( 3, 2 )
     , ( 3, 3 )
     ]
-
-
-
--- SIM
-
-
-type alias Sim =
-    { puzzle : Puzzle
-    , store : Store
-    , cycle : Int
-    }
-
-
-init : Puzzle -> List ( Addr, ExeNode ) -> Sim
-init puzzle es =
-    let
-        store =
-            initialStore
-                |> withInputs puzzle.inputs
-                |> withOutputs puzzle.outputs
-                |> withExecutables es
-    in
-    { puzzle = puzzle, store = store, cycle = 0 }
 
 
 withInputs : List ( Int, String, List Num ) -> Store -> Store
