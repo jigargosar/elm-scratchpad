@@ -630,13 +630,27 @@ type alias OutputVM =
     ( String, SelectionList Num, List Num )
 
 
-inputNodesToListBy : (String -> InputNode -> a) -> Sim -> List a
-inputNodesToListBy fn sim =
+mapInputNodeList : (String -> InputNode -> a) -> Sim -> List a
+mapInputNodeList fn sim =
     let
         mapper node =
             case node of
-                InputNode title inputNode ->
-                    Just <| fn title inputNode
+                InputNode a b ->
+                    Just <| fn a b
+
+                _ ->
+                    Nothing
+    in
+    Dict.values sim.store |> List.filterMap mapper
+
+
+mapOutputNodeList : (String -> List Num -> OutputNode -> a) -> Sim -> List a
+mapOutputNodeList fn sim =
+    let
+        mapper node =
+            case node of
+                OutputNode a b c ->
+                    Just <| fn a b c
 
                 _ ->
                     Nothing
