@@ -225,8 +225,8 @@ mapOutputNodeList fn sim =
     Dict.values sim.store |> List.filterMap mapper
 
 
-ioIntentsAndNodeStateOfGrid : Sim -> Dict Addr ( List IOIntent, NodeState Node )
-ioIntentsAndNodeStateOfGrid sim =
+simIOIntentsAndNodeState : Sim -> Dict Addr ( List IOIntent, NodeState Node )
+simIOIntentsAndNodeState sim =
     Dict.map (\_ node -> ( nodeIoIntents node, nodeState node )) sim.store
 
 
