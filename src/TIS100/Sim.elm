@@ -22,7 +22,7 @@ type alias Addr =
 
 type Node
     = InputNode String InputNode
-    | OutputNode String OutputNode
+    | OutputNode String (List Num) OutputNode
     | ExeNode ExeNode
 
 
@@ -125,7 +125,7 @@ withOutputs list store =
     List.foldl
         (\( x, title, out ) ->
             Dict.insert ( x, maxY )
-                (OutputNode title (OutputNode.fromExpected (List.length out)))
+                (OutputNode title out (OutputNode.fromExpected (List.length out)))
         )
         store
         list
@@ -348,7 +348,7 @@ nodeIoIntents node =
         InputNode _ _ ->
             [ Write Down ]
 
-        OutputNode _ _ ->
+        OutputNode _ _ _ ->
             [ Read Up ]
 
         ExeNode exe ->
@@ -463,8 +463,8 @@ nodeState node =
         InputNode title inputNode ->
             InputNode.state inputNode |> S.map (InputNode title)
 
-        OutputNode title outputNode ->
-            OutputNode.state outputNode |> S.map (OutputNode title)
+        OutputNode title expected outputNode ->
+            OutputNode.state outputNode |> S.map (OutputNode title expected)
 
         ExeNode exeNode ->
             ExeNode.state exeNode |> S.map ExeNode
@@ -636,8 +636,7 @@ inputVMS sim =
         addInputVM node ls =
             case node of
                 InputNode title inputNode ->
-                    ( title, InputNode.toSelectionList inputNode )
-                        :: ls
+                    ( title, InputNode.toSelectionList inputNode ) :: ls
 
                 _ ->
                     ls
@@ -650,9 +649,15 @@ outputVMS sim =
     let
         addOutputVM node ls =
             case node of
-                OutputNode title outputNode ->
-                    ( title, SelectionList.None [], OutputNode.getNumsRead outputNode )
-                        :: ls
+                OutputNode title expected outputNode ->
+                    let
+                        actual =
+                            OutputNode.getNumsRead outputNode
+
+                        selectionList =
+                            SelectionList.fromIndex (List.length actual) expected
+                    in
+                    ( title, selectionList, actual ) :: ls
 
                 _ ->
                     ls
@@ -663,7 +668,9 @@ outputVMS sim =
 viewIOColumns : Sim -> Html msg
 viewIOColumns sim =
     fRow [ tac, gap "1ch" ]
-        (inputVMS sim |> List.map viewInputColumn)
+        ((inputVMS sim |> List.map viewInputColumn)
+            ++ (outputVMS sim |> List.map viewOutputColumn)
+        )
 
 
 viewInputColumn : InputVM -> Html msg
@@ -671,12 +678,6 @@ viewInputColumn ( title, selection ) =
     let
         numViewList =
             SelectionList.mapToList viewSelectedNum viewNum selection
-
-        viewSelectedNum n =
-            div [ fg wBlack, bgc white ] [ text (Num.toString n) ]
-
-        viewNum n =
-            div [] [ text (Num.toString n) ]
     in
     fCol [ gap "0.5ch" ]
         [ div [] [ text title ]
@@ -693,6 +694,54 @@ viewInputColumn ( title, selection ) =
                 )
             )
         ]
+
+
+viewOutputColumn : OutputVM -> Html msg
+viewOutputColumn ( title, expectedSelection, actual ) =
+    let
+        expectedViewsList =
+            SelectionList.mapToList viewSelectedNum viewNum expectedSelection
+
+        actualViewsList =
+            List.map viewNum actual
+    in
+    fCol [ gap "0.5ch" ]
+        [ div [] [ text title ]
+        , fRow []
+            [ div
+                [ lightOutline
+                , sWidth "4ch"
+                , pa "0.5ch 0"
+                , styleLineHeight "0.8"
+                ]
+                (times 39
+                    (\i ->
+                        listGetAt i expectedViewsList
+                            |> Maybe.withDefault (div [] [ text nbsp ])
+                    )
+                )
+            , div
+                [ lightOutline
+                , sWidth "4ch"
+                , pa "0.5ch 0"
+                , styleLineHeight "0.8"
+                ]
+                (times 39
+                    (\i ->
+                        listGetAt i actualViewsList
+                            |> Maybe.withDefault (div [] [ text nbsp ])
+                    )
+                )
+            ]
+        ]
+
+
+viewSelectedNum n =
+    div [ fg wBlack, bgc white ] [ text (Num.toString n) ]
+
+
+viewNum n =
+    div [] [ text (Num.toString n) ]
 
 
 nbsp =
@@ -774,7 +823,7 @@ viewNode ( addr, node ) =
                     ]
                 ]
 
-        OutputNode title _ ->
+        OutputNode title _ _ ->
             gtCols 2
                 [ nodeAddrToGridArea addr
                 , placeItemsCenter

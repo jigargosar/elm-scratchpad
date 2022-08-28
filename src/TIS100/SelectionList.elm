@@ -17,3 +17,13 @@ mapToList sfn fn sList =
         Selected pivot ->
             Pivot.mapCS sfn fn pivot
                 |> Pivot.toList
+
+
+fromIndex : Int -> List a -> SelectionList a
+fromIndex idx ls =
+    case Pivot.fromList ls |> Maybe.andThen (Pivot.goBy idx) of
+        Just p ->
+            Selected p
+
+        Nothing ->
+            None ls
