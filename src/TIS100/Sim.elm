@@ -225,6 +225,11 @@ mapOutputNodeList fn sim =
     Dict.values sim.store |> List.filterMap mapper
 
 
+ioIntentsAndNodeStateOfGrid : Sim -> Dict Addr ( List IOIntent, NodeState Node )
+ioIntentsAndNodeStateOfGrid sim =
+    Dict.map (\_ node -> ( nodeIoIntents node, nodeState node )) sim.store
+
+
 
 -- PORTS
 
@@ -337,10 +342,10 @@ type alias Ports =
     Dict PortKey Port
 
 
-portsFromIOIntentsAndNodeStates : List ( Addr, List IOIntent, NodeState a ) -> List Port
-portsFromIOIntentsAndNodeStates list =
+portsFromIOIntentsAndNodeStates : Dict Addr ( List IOIntent, NodeState a ) -> List Port
+portsFromIOIntentsAndNodeStates dict =
     let
-        mapper ( addr, ioIntents, nState ) =
+        mapper ( addr, ( ioIntents, nState ) ) =
             let
                 ioFromNodeState : List ( IOIntent, PortValue )
                 ioFromNodeState =
@@ -369,7 +374,8 @@ portsFromIOIntentsAndNodeStates list =
                 ++ ioFromIntents
                 |> List.filterMap (initPort addr)
     in
-    List.concatMap mapper list
+    Dict.toList dict
+        |> List.concatMap mapper
         |> mergePorts
 
 
