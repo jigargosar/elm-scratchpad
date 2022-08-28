@@ -645,6 +645,21 @@ inputVMS sim =
     foldrValues addInputVM [] sim.store
 
 
+outputVMS : Sim -> List OutputVM
+outputVMS sim =
+    let
+        addOutputVM node ls =
+            case node of
+                OutputNode title outputNode ->
+                    ( title, SelectionList.None [], OutputNode.getNumsRead outputNode )
+                        :: ls
+
+                _ ->
+                    ls
+    in
+    foldrValues addOutputVM [] sim.store
+
+
 viewIOColumns : Sim -> Html msg
 viewIOColumns sim =
     fRow [ tac, gap "1ch" ]

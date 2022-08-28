@@ -1,6 +1,7 @@
 module TIS100.OutputNode exposing
     ( OutputNode
     , fromExpected
+    , getNumsRead
     , state
     )
 
@@ -44,3 +45,16 @@ resolveRead pendingReads nums num =
 
     else
         ReadyToRun (pendingReads - 1) (num :: nums)
+
+
+getNumsRead : OutputNode -> List Num
+getNumsRead node =
+    case node of
+        Done nums ->
+            nums
+
+        ReadyToRun _ nums ->
+            nums
+
+        ReadBlocked _ nums ->
+            nums
