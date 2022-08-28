@@ -156,12 +156,12 @@ samplePuzzle =
         , "WRITE IN.B - IN.A TO OUT.N"
         ]
     , inputs =
-        [ ( 0, "IN.A", Num.range 1 3 )
-        , ( 1, "IN.B", Num.range 1 3 )
+        [ ( 0, "IN.A", Num.range 1 20 )
+        , ( 1, "IN.B", Num.range 1 20 )
         ]
     , outputs =
-        [ ( 0, "OUT.P", Num.range 1 3 )
-        , ( 1, "OUT.N", Num.range 1 3 )
+        [ ( 0, "OUT.P", Num.range 1 20 )
+        , ( 1, "OUT.N", Num.range 1 20 )
         ]
     }
 
@@ -667,7 +667,7 @@ outputVMS sim =
 
 viewIOColumns : Sim -> Html msg
 viewIOColumns sim =
-    fRow [ tac, gap "1ch" ]
+    fRow [ tac, gap "2ch" ]
         ((inputVMS sim |> List.map viewInputColumn)
             ++ (outputVMS sim |> List.map viewOutputColumn)
         )
