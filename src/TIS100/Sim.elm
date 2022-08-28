@@ -611,8 +611,7 @@ viewSideBar =
                 ]
                 [ text "-- Title --" ]
             , fCol
-                [ styleLineHeight "0.9"
-                , lightOutline
+                [ lightOutline
                 , pa "0.5ch"
                 , placeContentCenter
                 ]
@@ -621,7 +620,7 @@ viewSideBar =
         , fRow [ tac ]
             [ fCol [ gap "1ch" ]
                 [ div [] [ text "in.a" ]
-                , div [ lightOutline, sWidth "4ch" ]
+                , div [ lightOutline, sWidth "4ch", styleLineHeight "0.8" ]
                     (times 39 (\i -> div [] [ text (fromInt (i + 1)) ]))
                 ]
             ]
