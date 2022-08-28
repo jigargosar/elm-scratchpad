@@ -591,7 +591,7 @@ view sim =
         ]
         [ div [] [ text "Cycle: ", text (fromInt sim.cycle) ]
         , fRow [ gap "2ch" ]
-            [ viewSideBar
+            [ viewSideBar sim
             , viewGrid sim
             ]
         ]
@@ -601,8 +601,8 @@ lightOutline =
     sOutline ("1px solid " ++ lightGray)
 
 
-viewSideBar : Html msg
-viewSideBar =
+viewSideBar : Sim -> Html msg
+viewSideBar sim =
     fCol [ sWidth "40ch", gap "2ch", fg lightGray ]
         [ div []
             [ div
@@ -617,29 +617,18 @@ viewSideBar =
                 ]
                 (List.repeat 6 (div [] [ text "> desc" ]))
             ]
-        , viewIOColumns
+        , viewIOColumns sim
         ]
 
 
-viewIOColumns : Html msg
-viewIOColumns =
+viewIOColumns : Sim -> Html msg
+viewIOColumns sim =
     fRow [ tac ]
-        [ fCol [ gap "0.5ch" ]
-            [ div [] [ text "in.a" ]
-            , div
-                [ lightOutline
-                , sWidth "4ch"
-                , pa "0.5ch 0"
-                , styleLineHeight "0.8"
-                ]
-                (times 39 (\i -> div [] [ text (fromInt i) ]))
-            ]
-        , viewInputColumn "in.b" []
-        ]
+        (sim.puzzle.inputs |> List.map viewInputColumn)
 
 
-viewInputColumn : String -> List Num -> Html msg
-viewInputColumn title nums =
+viewInputColumn : ( x, String, List Num ) -> Html msg
+viewInputColumn ( _, title, nums ) =
     fCol [ gap "0.5ch" ]
         [ div [] [ text title ]
         , div
