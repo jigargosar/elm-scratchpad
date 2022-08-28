@@ -654,7 +654,7 @@ viewInputColumn ( title, selection ) =
             SelectionList.mapToList viewSelectedNum viewNum selection
 
         viewSelectedNum n =
-            div [ fg white, bgc wBlack ] [ text (Num.toString n) ]
+            div [ fg wBlack, bgc white ] [ text (Num.toString n) ]
 
         viewNum n =
             div [] [ text (Num.toString n) ]
