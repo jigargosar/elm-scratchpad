@@ -648,7 +648,7 @@ viewIOColumns sim =
 viewInputColumn : String -> InputNode -> Html msg
 viewInputColumn title inputNode =
     let
-        numViewList =
+        numViews =
             SelectionList.view viewSelectedNum
                 viewNum
                 (InputNode.toSelectionList inputNode)
@@ -663,7 +663,7 @@ viewInputColumn title inputNode =
             ]
             (times 39
                 (\i ->
-                    listGetAt i numViewList
+                    listGetAt i numViews
                         |> Maybe.withDefault (div [] [ text nbsp ])
                 )
             )
