@@ -670,6 +670,7 @@ viewInputColumn title inputNode =
         ]
 
 
+viewOutputColumn : String -> List Num -> OutputNode -> Html msg
 viewOutputColumn title expected outputNode =
     let
         actual =
@@ -715,14 +716,17 @@ viewOutputColumn title expected outputNode =
         ]
 
 
+viewSelectedNum : Num -> Html msg
 viewSelectedNum n =
     div [ fg wBlack, bgc white ] [ text (Num.toString n) ]
 
 
+viewNum : Num -> Html msg
 viewNum n =
     div [] [ text (Num.toString n) ]
 
 
+nbsp : String
 nbsp =
     "\u{00A0}"
 
