@@ -643,7 +643,7 @@ inputVMS sim =
 
 viewIOColumns : Sim -> Html msg
 viewIOColumns sim =
-    fRow [ tac ]
+    fRow [ tac, gap "1ch" ]
         (inputVMS sim |> List.map viewInputColumn)
 
 
