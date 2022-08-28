@@ -574,6 +574,11 @@ viewArrow dir4 pv =
 -- PORTS
 
 
+viewPorts : Dict Addr ( List IOIntent, NodeState a ) -> List (Html msg)
+viewPorts dict =
+    initPorts dict |> List.map viewPort
+
+
 type alias Ports =
     Dict PortKey Port
 
@@ -793,14 +798,7 @@ viewGrid sim =
             |> gridTemplateColumns
         , sMaxHeight "100vh"
         ]
-        (viewNodes sim ++ viewPorts sim)
-
-
-viewPorts : Sim -> List (Html msg)
-viewPorts sim =
-    simIOIntentsAndNodeState sim
-        |> initPorts
-        |> List.map viewPort
+        (viewNodes sim ++ viewPorts (simIOIntentsAndNodeState sim))
 
 
 viewNodes : Sim -> List (Html msg)
