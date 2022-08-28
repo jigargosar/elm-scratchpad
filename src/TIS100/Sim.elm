@@ -237,34 +237,16 @@ toPorts sim =
 
 
 
--- PORTS
+-- PORT ID
 
 
-type Port
-    = Port PortId PortValue
+type alias PortKey =
+    ( Addr, Addr )
 
 
-type PortValue
-    = Empty
-    | Num Num
-    | Queried
-
-
-viewPortValueText : PortValue -> Html msg
-viewPortValueText =
-    let
-        toString portValue =
-            case portValue of
-                Empty ->
-                    ""
-
-                Num num ->
-                    Num.toString num
-
-                Queried ->
-                    "?"
-    in
-    toString >> text
+portKeyFromId : PortId -> PortKey
+portKeyFromId (PortId _ _ key) =
+    key
 
 
 type PortId
@@ -297,13 +279,35 @@ initWritePortId (( fx, fy ) as from) dir =
         Just <| PortId from dir ( from, to )
 
 
-portKeyFromId : PortId -> PortKey
-portKeyFromId (PortId _ _ key) =
-    key
+
+-- PORT
 
 
-type alias PortKey =
-    ( Addr, Addr )
+type Port
+    = Port PortId PortValue
+
+
+type PortValue
+    = Empty
+    | Num Num
+    | Queried
+
+
+viewPortValueText : PortValue -> Html msg
+viewPortValueText =
+    let
+        toString portValue =
+            case portValue of
+                Empty ->
+                    ""
+
+                Num num ->
+                    Num.toString num
+
+                Queried ->
+                    "?"
+    in
+    toString >> text
 
 
 type alias Ports =
