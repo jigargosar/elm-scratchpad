@@ -256,12 +256,6 @@ simIOIntentsAndNodeState sim =
     Dict.map (\_ node -> ( nodeIoIntents node, nodeState node )) sim.store
 
 
-toPorts : Sim -> List Port
-toPorts sim =
-    simIOIntentsAndNodeState sim
-        |> initPorts
-
-
 
 -- SIM UPDATE
 
@@ -804,7 +798,9 @@ viewGrid sim =
 
 viewPorts : Sim -> List (Html msg)
 viewPorts sim =
-    toPorts sim |> List.map viewPort
+    simIOIntentsAndNodeState sim
+        |> initPorts
+        |> List.map viewPort
 
 
 viewNodes : Sim -> List (Html msg)
