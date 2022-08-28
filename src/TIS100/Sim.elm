@@ -630,13 +630,27 @@ type alias OutputVM =
     ( String, SelectionList Num, List Num )
 
 
-inputVMS : Sim -> List InputVM
-inputVMS sim =
+inputNodesToListBy : (String -> InputNode -> a) -> Sim -> List a
+inputNodesToListBy fn sim =
+    let
+        mapper node =
+            case node of
+                InputNode title inputNode ->
+                    Just <| fn title inputNode
+
+                _ ->
+                    Nothing
+    in
+    Dict.values sim.store |> List.filterMap mapper
+
+
+viewInputColumns : Sim -> List (Html msg)
+viewInputColumns sim =
     let
         addInputVM node ls =
             case node of
                 InputNode title inputNode ->
-                    ( title, InputNode.toSelectionList inputNode ) :: ls
+                    viewInputColumn title (InputNode.toSelectionList inputNode) :: ls
 
                 _ ->
                     ls
@@ -668,13 +682,13 @@ outputVMS sim =
 viewIOColumns : Sim -> Html msg
 viewIOColumns sim =
     fRow [ tac, gap "2ch" ]
-        ((inputVMS sim |> List.map viewInputColumn)
+        (viewInputColumns sim
             ++ (outputVMS sim |> List.map viewOutputColumn)
         )
 
 
-viewInputColumn : InputVM -> Html msg
-viewInputColumn ( title, selection ) =
+viewInputColumn : String -> SelectionList Num -> Html msg
+viewInputColumn title selection =
     let
         numViewList =
             SelectionList.mapToList viewSelectedNum viewNum selection
