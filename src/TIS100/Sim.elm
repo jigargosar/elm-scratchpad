@@ -651,15 +651,25 @@ viewInputColumn title nums =
             (times 39
                 (\i ->
                     div []
-                        [ text
-                            (listGetAt i nums
-                                |> Maybe.map Num.toString
-                                |> Maybe.withDefault "\u{00A0}"
-                            )
+                        [ text (listGetAt i nums |> viewNumOrNBSP)
                         ]
                 )
             )
         ]
+
+
+nbsp =
+    "\u{00A0}"
+
+
+viewNumOrNBSP : Maybe Num -> String
+viewNumOrNBSP mb =
+    case mb of
+        Nothing ->
+            nbsp
+
+        Just n ->
+            Num.toString n
 
 
 viewGrid : Sim -> Html msg
