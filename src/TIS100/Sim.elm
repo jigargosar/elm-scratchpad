@@ -464,6 +464,22 @@ type PortValue
     | Queried
 
 
+mergePortValue : PortValue -> PortValue -> PortValue
+mergePortValue old new =
+    case ( old, new ) of
+        ( Empty, _ ) ->
+            new
+
+        ( _, Empty ) ->
+            old
+
+        ( _, Queried ) ->
+            old
+
+        _ ->
+            new
+
+
 viewPortValueText : PortValue -> Html msg
 viewPortValueText =
     let
@@ -609,21 +625,6 @@ initPortsHelp ( addr, ( ioIntents, nState ) ) =
 mergePorts : List Port -> List Port
 mergePorts =
     let
-        mergePortVal : PortValue -> PortValue -> PortValue
-        mergePortVal old new =
-            case ( old, new ) of
-                ( Empty, _ ) ->
-                    new
-
-                ( _, Empty ) ->
-                    old
-
-                ( _, Queried ) ->
-                    old
-
-                _ ->
-                    new
-
         merge : Port -> Ports -> Ports
         merge ((Port id newVal) as port_) =
             Dict.update (portKeyFromId id)
@@ -633,7 +634,7 @@ mergePorts =
                             Just port_
 
                         Just (Port _ oldVal) ->
-                            Just (Port id (mergePortVal oldVal newVal))
+                            Just (Port id (mergePortValue oldVal newVal))
                 )
     in
     List.foldl merge Dict.empty >> Dict.values
