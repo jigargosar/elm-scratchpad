@@ -93,6 +93,32 @@ type Node
     | ExeNode ExeNode
 
 
+nodeIoIntents : Node -> List IOIntent
+nodeIoIntents node =
+    case node of
+        InputNode _ _ ->
+            [ Write Down ]
+
+        OutputNode _ _ _ ->
+            [ Read Up ]
+
+        ExeNode exe ->
+            ExeNode.ioIntents exe
+
+
+nodeState : Node -> NodeState Node
+nodeState node =
+    case node of
+        InputNode title inputNode ->
+            InputNode.state inputNode |> S.map (InputNode title)
+
+        OutputNode title expected outputNode ->
+            OutputNode.state outputNode |> S.map (OutputNode title expected)
+
+        ExeNode exeNode ->
+            ExeNode.state exeNode |> S.map ExeNode
+
+
 
 -- STORE
 
@@ -280,11 +306,7 @@ portKeyFromId (PortId _ _ key) =
 
 
 
--- PORT
-
-
-type Port
-    = Port PortId PortValue
+-- PORT VALUE
 
 
 type PortValue
@@ -308,6 +330,20 @@ viewPortValueText =
                     "?"
     in
     toString >> text
+
+
+
+-- PORT
+
+
+type Port
+    = Port PortId PortValue
+
+
+initPort : Addr -> ( IOIntent, PortValue ) -> Maybe Port
+initPort addr ( iOIntent, portValue ) =
+    initPortId addr iOIntent
+        |> Maybe.map (\id -> Port id portValue)
 
 
 type alias Ports =
@@ -382,25 +418,6 @@ mergePorts =
                 )
     in
     List.foldl merge Dict.empty >> Dict.values
-
-
-initPort : Addr -> ( IOIntent, PortValue ) -> Maybe Port
-initPort addr ( iOIntent, portValue ) =
-    initPortId addr iOIntent
-        |> Maybe.map (\id -> Port id portValue)
-
-
-nodeIoIntents : Node -> List IOIntent
-nodeIoIntents node =
-    case node of
-        InputNode _ _ ->
-            [ Write Down ]
-
-        OutputNode _ _ _ ->
-            [ Read Up ]
-
-        ExeNode exe ->
-            ExeNode.ioIntents exe
 
 
 viewPort : Port -> Html msg
@@ -503,19 +520,6 @@ resolveAfterRun addr node =
 
         _ ->
             addToCompleted addr node
-
-
-nodeState : Node -> NodeState Node
-nodeState node =
-    case node of
-        InputNode title inputNode ->
-            InputNode.state inputNode |> S.map (InputNode title)
-
-        OutputNode title expected outputNode ->
-            OutputNode.state outputNode |> S.map (OutputNode title expected)
-
-        ExeNode exeNode ->
-            ExeNode.state exeNode |> S.map ExeNode
 
 
 resolveAllReadBlocked : Acc -> Acc
