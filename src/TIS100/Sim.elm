@@ -618,10 +618,15 @@ viewSideBar =
                 (List.repeat 6 (div [] [ text "> desc" ]))
             ]
         , fRow [ tac ]
-            [ fCol [ gap "1ch" ]
+            [ fCol [ gap "0.5ch" ]
                 [ div [] [ text "in.a" ]
-                , div [ lightOutline, sWidth "4ch", styleLineHeight "0.8" ]
-                    (times 39 (\i -> div [] [ text (fromInt (i + 1)) ]))
+                , div
+                    [ lightOutline
+                    , sWidth "4ch"
+                    , pa "0.5ch 0"
+                    , styleLineHeight "0.8"
+                    ]
+                    (times 39 (\i -> div [] [ text (fromInt i) ]))
                 ]
             ]
         ]
