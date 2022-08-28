@@ -16,14 +16,89 @@ import TIS100.SelectionList as SelectionList exposing (SelectionList)
 import Utils exposing (..)
 
 
+
+-- MAIN
+
+
+samplePuzzle : Puzzle
+samplePuzzle =
+    { title = "Differential Converter"
+    , description =
+        [ "READ VALUES FROM IN.A AND IN.B"
+        , "WRITE IN.A - IN.B TO OUT.P"
+        , "WRITE IN.B - IN.A TO OUT.N"
+        ]
+    , inputs =
+        [ ( 0, "IN.A", Num.range 1 20 )
+        , ( 1, "IN.B", Num.range 1 20 )
+        ]
+    , outputs =
+        [ ( 0, "OUT.P", Num.range 1 20 )
+        , ( 1, "OUT.N", Num.range 1 20 )
+        ]
+    }
+
+
+sampleSim : Sim
+sampleSim =
+    let
+        es =
+            [ ( ( 0, 1 ), ExeNode.initMovUpDown )
+            , ( ( 0, 2 ), ExeNode.initMovUpDown )
+            , ( ( 0, 3 ), ExeNode.initMovUpDown )
+            , ( ( 1, 1 ), ExeNode.initMovUpDown )
+
+            --   , ( ( 1, 2 ), ExeNode.initMovUpDown )
+            , ( ( 1, 3 ), ExeNode.initMovUpDown )
+            , ( ( 2, 1 ), ExeNode.initMov Down Up )
+
+            --   , ( ( 2, 2 ), ExeNode.initMovUpDown )
+            , ( ( 2, 3 ), ExeNode.initMov Down Up )
+
+            --   , ( ( 3, 1 ), ExeNode.initMovUpDown )
+            --   , ( ( 3, 2 ), ExeNode.initMovUpDown )
+            --   , ( ( 3, 3 ), ExeNode.initMovUpDown )
+            ]
+    in
+    init samplePuzzle es
+
+
+
+-- PUZZLE
+
+
+type alias Puzzle =
+    { title : String
+    , description : List String
+    , inputs : List ( Int, String, List Num )
+    , outputs : List ( Int, String, List Num )
+    }
+
+
+
+-- ADDR
+
+
 type alias Addr =
     ( Int, Int )
+
+
+
+-- NODE
 
 
 type Node
     = InputNode String InputNode
     | OutputNode String (List Num) OutputNode
     | ExeNode ExeNode
+
+
+
+-- STORE
+
+
+type alias NodeEntry =
+    ( Addr, Node )
 
 
 type alias Store =
@@ -46,8 +121,8 @@ type alias WriteBlockedNode =
     { node : Node, num : Num, dir : Dir4, cont : () -> Node }
 
 
-type alias NodeEntry =
-    ( Addr, Node )
+
+-- SIM
 
 
 type alias Sim =
@@ -148,57 +223,6 @@ mapOutputNodeList fn sim =
                     Nothing
     in
     Dict.values sim.store |> List.filterMap mapper
-
-
-type alias Puzzle =
-    { title : String
-    , description : List String
-    , inputs : List ( Int, String, List Num )
-    , outputs : List ( Int, String, List Num )
-    }
-
-
-samplePuzzle : Puzzle
-samplePuzzle =
-    { title = "Differential Converter"
-    , description =
-        [ "READ VALUES FROM IN.A AND IN.B"
-        , "WRITE IN.A - IN.B TO OUT.P"
-        , "WRITE IN.B - IN.A TO OUT.N"
-        ]
-    , inputs =
-        [ ( 0, "IN.A", Num.range 1 20 )
-        , ( 1, "IN.B", Num.range 1 20 )
-        ]
-    , outputs =
-        [ ( 0, "OUT.P", Num.range 1 20 )
-        , ( 1, "OUT.N", Num.range 1 20 )
-        ]
-    }
-
-
-sampleSim : Sim
-sampleSim =
-    let
-        es =
-            [ ( ( 0, 1 ), ExeNode.initMovUpDown )
-            , ( ( 0, 2 ), ExeNode.initMovUpDown )
-            , ( ( 0, 3 ), ExeNode.initMovUpDown )
-            , ( ( 1, 1 ), ExeNode.initMovUpDown )
-
-            --   , ( ( 1, 2 ), ExeNode.initMovUpDown )
-            , ( ( 1, 3 ), ExeNode.initMovUpDown )
-            , ( ( 2, 1 ), ExeNode.initMov Down Up )
-
-            --   , ( ( 2, 2 ), ExeNode.initMovUpDown )
-            , ( ( 2, 3 ), ExeNode.initMov Down Up )
-
-            --   , ( ( 3, 1 ), ExeNode.initMovUpDown )
-            --   , ( ( 3, 2 ), ExeNode.initMovUpDown )
-            --   , ( ( 3, 3 ), ExeNode.initMovUpDown )
-            ]
-    in
-    init samplePuzzle es
 
 
 type Port
