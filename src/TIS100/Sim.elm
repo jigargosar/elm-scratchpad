@@ -406,237 +406,7 @@ addToReadBlocked addr node dir cont acc =
 
 
 
--- PORT ID
-
-
-type alias PortKey =
-    ( Addr, Addr )
-
-
-type PortId
-    = PortId Addr Dir4 PortKey
-
-
-initPortId : Addr -> IOIntent -> Maybe PortId
-initPortId addr ioIntent =
-    case ioIntent of
-        Read dir ->
-            initWritePortId (moveInDir4 dir addr) (oppositeDir4 dir)
-
-        Write dir ->
-            initWritePortId addr dir
-
-
-initWritePortId : Addr -> Dir4 -> Maybe PortId
-initWritePortId (( fx, fy ) as from) dir =
-    let
-        (( tx, ty ) as to) =
-            moveInDir4 dir from
-    in
-    if
-        (fx < 0 || fx > maxX || fy < 0 || fy >= maxY)
-            || (tx < 0 || tx > maxX || ty <= 0 || ty > maxY)
-    then
-        Nothing
-
-    else
-        Just <| PortId from dir ( from, to )
-
-
-portKeyFromId : PortId -> PortKey
-portKeyFromId (PortId _ _ key) =
-    key
-
-
-
--- PORT VALUE
-
-
-type PortValue
-    = Empty
-    | Num Num
-    | Queried
-
-
-mergePortValue : PortValue -> PortValue -> PortValue
-mergePortValue old new =
-    case ( old, new ) of
-        ( Empty, _ ) ->
-            new
-
-        ( _, Empty ) ->
-            old
-
-        ( _, Queried ) ->
-            old
-
-        _ ->
-            new
-
-
-viewPortValueText : PortValue -> Html msg
-viewPortValueText =
-    let
-        toString portValue =
-            case portValue of
-                Empty ->
-                    ""
-
-                Num num ->
-                    Num.toString num
-
-                Queried ->
-                    "?"
-    in
-    toString >> text
-
-
-
--- PORT
-
-
-type Port
-    = Port PortId PortValue
-
-
-initPort : Addr -> ( IOIntent, PortValue ) -> Maybe Port
-initPort addr ( iOIntent, portValue ) =
-    initPortId addr iOIntent
-        |> Maybe.map (\id -> Port id portValue)
-
-
-viewPort : Port -> Html msg
-viewPort (Port (PortId addr dir _) portValue) =
-    case dir of
-        Up ->
-            viewUpPortValue addr portValue
-
-        Down ->
-            viewDownPortValue addr portValue
-
-        Left ->
-            noView
-
-        Right ->
-            noView
-
-
-viewDownPortValue : Addr -> PortValue -> Html msg
-viewDownPortValue ( x, y ) portValue =
-    gtCols 2
-        [ gridAreaXY ( x * 2, y * 2 ), noPointerEvents ]
-        [ fRow
-            [ gridAreaXY ( 1, 0 )
-            , allPointerEvents
-            , itemsCenter
-            , pl "1ch"
-            , gap "1ch"
-            ]
-            [ viewArrow Down portValue
-            , viewPortValueText portValue
-            ]
-        ]
-
-
-viewUpPortValue : Addr -> PortValue -> Html msg
-viewUpPortValue ( x, y ) portValue =
-    gtCols 2
-        [ gridAreaXY ( x * 2, (y * 2) - 2 ), noPointerEvents ]
-        [ fRow
-            [ gridAreaXY ( 0, 0 )
-            , allPointerEvents
-            , itemsCenter
-            , justifyContent "end"
-            , pr "1ch"
-            , gap "1ch"
-            ]
-            [ viewPortValueText portValue
-            , viewArrow Up portValue
-            ]
-        ]
-
-
-viewArrow : Dir4 -> PortValue -> Html msg
-viewArrow dir4 pv =
-    let
-        color =
-            case pv of
-                Empty ->
-                    darkGray
-
-                _ ->
-                    "inherit"
-    in
-    span [ fg color, fontSize "2em", fontWeight "100" ] [ text (arrowDefault dir4) ]
-
-
-
--- PORTS
-
-
-viewPorts : Dict Addr ( List IOIntent, NodeState a ) -> List (Html msg)
-viewPorts dict =
-    initPorts dict |> List.map viewPort
-
-
-type alias Ports =
-    Dict PortKey Port
-
-
-initPorts : Dict Addr ( List IOIntent, NodeState a ) -> List Port
-initPorts dict =
-    Dict.toList dict
-        |> List.concatMap initPortsHelp
-        |> mergePorts
-
-
-initPortsHelp : ( Addr, ( List IOIntent, NodeState a ) ) -> List Port
-initPortsHelp ( addr, ( ioIntents, nState ) ) =
-    let
-        ioFromNodeState : List ( IOIntent, PortValue )
-        ioFromNodeState =
-            if second addr == maxY then
-                -- ignore updating read query for output node
-                []
-
-            else
-                case nState of
-                    S.ReadyToRun _ ->
-                        []
-
-                    S.ReadBlocked dir _ ->
-                        [ ( Read dir, Queried ) ]
-
-                    S.WriteBlocked num dir _ ->
-                        [ ( Write dir, Num num ) ]
-
-                    S.Done ->
-                        []
-
-        ioFromIntents =
-            ioIntents |> List.map (pairTo Empty)
-    in
-    ioFromNodeState
-        ++ ioFromIntents
-        |> List.filterMap (initPort addr)
-
-
-mergePorts : List Port -> List Port
-mergePorts =
-    let
-        merge : Port -> Ports -> Ports
-        merge ((Port id newVal) as port_) =
-            Dict.update (portKeyFromId id)
-                (\mbOld ->
-                    case mbOld of
-                        Nothing ->
-                            Just port_
-
-                        Just (Port _ oldVal) ->
-                            Just (Port id (mergePortValue oldVal newVal))
-                )
-    in
-    List.foldl merge Dict.empty >> Dict.values
+-- SIM VIEW
 
 
 view : Sim -> Html msg
@@ -878,18 +648,6 @@ viewExeBox a b =
         ]
 
 
-darkGray =
-    grayN 0.5
-
-
-lightGray =
-    grayN 0.7
-
-
-lightOutline =
-    sOutline ("1px solid " ++ lightGray)
-
-
 nodeModeAsString : Node -> String
 nodeModeAsString node =
     case nodeState node of
@@ -904,6 +662,256 @@ nodeModeAsString node =
 
         S.Done ->
             "IDLE"
+
+
+
+-- PORT ID
+
+
+type alias PortKey =
+    ( Addr, Addr )
+
+
+type PortId
+    = PortId Addr Dir4 PortKey
+
+
+initPortId : Addr -> IOIntent -> Maybe PortId
+initPortId addr ioIntent =
+    case ioIntent of
+        Read dir ->
+            initWritePortId (moveInDir4 dir addr) (oppositeDir4 dir)
+
+        Write dir ->
+            initWritePortId addr dir
+
+
+initWritePortId : Addr -> Dir4 -> Maybe PortId
+initWritePortId (( fx, fy ) as from) dir =
+    let
+        (( tx, ty ) as to) =
+            moveInDir4 dir from
+    in
+    if
+        (fx < 0 || fx > maxX || fy < 0 || fy >= maxY)
+            || (tx < 0 || tx > maxX || ty <= 0 || ty > maxY)
+    then
+        Nothing
+
+    else
+        Just <| PortId from dir ( from, to )
+
+
+portKeyFromId : PortId -> PortKey
+portKeyFromId (PortId _ _ key) =
+    key
+
+
+
+-- PORT VALUE
+
+
+type PortValue
+    = Empty
+    | Num Num
+    | Queried
+
+
+mergePortValue : PortValue -> PortValue -> PortValue
+mergePortValue old new =
+    case ( old, new ) of
+        ( Empty, _ ) ->
+            new
+
+        ( _, Empty ) ->
+            old
+
+        ( _, Queried ) ->
+            old
+
+        _ ->
+            new
+
+
+viewPortValueText : PortValue -> Html msg
+viewPortValueText =
+    let
+        toString portValue =
+            case portValue of
+                Empty ->
+                    ""
+
+                Num num ->
+                    Num.toString num
+
+                Queried ->
+                    "?"
+    in
+    toString >> text
+
+
+
+-- PORT
+
+
+type Port
+    = Port PortId PortValue
+
+
+initPort : Addr -> ( IOIntent, PortValue ) -> Maybe Port
+initPort addr ( iOIntent, portValue ) =
+    initPortId addr iOIntent
+        |> Maybe.map (\id -> Port id portValue)
+
+
+viewPort : Port -> Html msg
+viewPort (Port (PortId addr dir _) portValue) =
+    case dir of
+        Up ->
+            viewUpPortValue addr portValue
+
+        Down ->
+            viewDownPortValue addr portValue
+
+        Left ->
+            noView
+
+        Right ->
+            noView
+
+
+viewDownPortValue : Addr -> PortValue -> Html msg
+viewDownPortValue ( x, y ) portValue =
+    gtCols 2
+        [ gridAreaXY ( x * 2, y * 2 ), noPointerEvents ]
+        [ fRow
+            [ gridAreaXY ( 1, 0 )
+            , allPointerEvents
+            , itemsCenter
+            , pl "1ch"
+            , gap "1ch"
+            ]
+            [ viewArrow Down portValue
+            , viewPortValueText portValue
+            ]
+        ]
+
+
+viewUpPortValue : Addr -> PortValue -> Html msg
+viewUpPortValue ( x, y ) portValue =
+    gtCols 2
+        [ gridAreaXY ( x * 2, (y * 2) - 2 ), noPointerEvents ]
+        [ fRow
+            [ gridAreaXY ( 0, 0 )
+            , allPointerEvents
+            , itemsCenter
+            , justifyContent "end"
+            , pr "1ch"
+            , gap "1ch"
+            ]
+            [ viewPortValueText portValue
+            , viewArrow Up portValue
+            ]
+        ]
+
+
+viewArrow : Dir4 -> PortValue -> Html msg
+viewArrow dir4 pv =
+    let
+        color =
+            case pv of
+                Empty ->
+                    darkGray
+
+                _ ->
+                    "inherit"
+    in
+    span [ fg color, fontSize "2em", fontWeight "100" ] [ text (arrowDefault dir4) ]
+
+
+
+-- PORTS
+
+
+viewPorts : Dict Addr ( List IOIntent, NodeState a ) -> List (Html msg)
+viewPorts dict =
+    initPorts dict |> List.map viewPort
+
+
+type alias Ports =
+    Dict PortKey Port
+
+
+initPorts : Dict Addr ( List IOIntent, NodeState a ) -> List Port
+initPorts dict =
+    Dict.toList dict
+        |> List.concatMap initPortsHelp
+        |> mergePorts
+
+
+initPortsHelp : ( Addr, ( List IOIntent, NodeState a ) ) -> List Port
+initPortsHelp ( addr, ( ioIntents, nState ) ) =
+    let
+        ioFromNodeState : List ( IOIntent, PortValue )
+        ioFromNodeState =
+            if second addr == maxY then
+                -- ignore updating read query for output node
+                []
+
+            else
+                case nState of
+                    S.ReadyToRun _ ->
+                        []
+
+                    S.ReadBlocked dir _ ->
+                        [ ( Read dir, Queried ) ]
+
+                    S.WriteBlocked num dir _ ->
+                        [ ( Write dir, Num num ) ]
+
+                    S.Done ->
+                        []
+
+        ioFromIntents =
+            ioIntents |> List.map (pairTo Empty)
+    in
+    ioFromNodeState
+        ++ ioFromIntents
+        |> List.filterMap (initPort addr)
+
+
+mergePorts : List Port -> List Port
+mergePorts =
+    let
+        merge : Port -> Ports -> Ports
+        merge ((Port id newVal) as port_) =
+            Dict.update (portKeyFromId id)
+                (\mbOld ->
+                    case mbOld of
+                        Nothing ->
+                            Just port_
+
+                        Just (Port _ oldVal) ->
+                            Just (Port id (mergePortValue oldVal newVal))
+                )
+    in
+    List.foldl merge Dict.empty >> Dict.values
+
+
+
+-- UI HELPERS
+
+
+darkGray =
+    grayN 0.5
+
+
+lightGray =
+    grayN 0.7
+
+
+lightOutline =
+    sOutline ("1px solid " ++ lightGray)
 
 
 type ArrowType
