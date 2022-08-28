@@ -391,6 +391,7 @@ mergePorts =
                 _ ->
                     new
 
+        merge : Port -> Ports -> Ports
         merge ((Port id newVal) as port_) =
             Dict.update (portKeyFromId id)
                 (\mbOld ->
