@@ -633,45 +633,15 @@ viewSideBar sim =
         ]
 
 
-type alias InputVM =
-    ( String, SelectionList Num )
-
-
 type alias OutputVM =
     ( String, SelectionList Num, List Num )
-
-
-viewInputColumns : Sim -> List (Html msg)
-viewInputColumns sim =
-    mapInputNodeList viewInputColumn sim
-
-
-outputVMS : Sim -> List OutputVM
-outputVMS sim =
-    let
-        addOutputVM node ls =
-            case node of
-                OutputNode title expected outputNode ->
-                    let
-                        actual =
-                            OutputNode.getNumsRead outputNode
-
-                        selectionList =
-                            SelectionList.fromIndex (List.length actual) expected
-                    in
-                    ( title, selectionList, actual ) :: ls
-
-                _ ->
-                    ls
-    in
-    foldrValues addOutputVM [] sim.store
 
 
 viewIOColumns : Sim -> Html msg
 viewIOColumns sim =
     fRow [ tac, gap "2ch" ]
-        (viewInputColumns sim
-            ++ (outputVMS sim |> List.map viewOutputColumn)
+        (mapInputNodeList viewInputColumn sim
+            ++ mapOutputNodeList viewOutputColumn sim
         )
 
 
@@ -700,13 +670,18 @@ viewInputColumn title inputNode =
         ]
 
 
-viewOutputColumn : OutputVM -> Html msg
-viewOutputColumn ( title, expectedSelection, actual ) =
+viewOutputColumn title expected outputNode =
     let
-        expectedViewsList =
+        actual =
+            OutputNode.getNumsRead outputNode
+
+        expectedSelection =
+            SelectionList.fromIndex (List.length actual) expected
+
+        expectedViews =
             SelectionList.view viewSelectedNum viewNum expectedSelection
 
-        actualViewsList =
+        actualViews =
             List.map viewNum actual
     in
     fCol [ gap "0.5ch" ]
@@ -720,7 +695,7 @@ viewOutputColumn ( title, expectedSelection, actual ) =
                 ]
                 (times 39
                     (\i ->
-                        listGetAt i expectedViewsList
+                        listGetAt i expectedViews
                             |> Maybe.withDefault (div [] [ text nbsp ])
                     )
                 )
@@ -732,7 +707,7 @@ viewOutputColumn ( title, expectedSelection, actual ) =
                 ]
                 (times 39
                     (\i ->
-                        listGetAt i actualViewsList
+                        listGetAt i actualViews
                             |> Maybe.withDefault (div [] [ text nbsp ])
                     )
                 )
