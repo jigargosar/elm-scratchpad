@@ -589,8 +589,17 @@ view sim =
         , ttu
         ]
         [ div [] [ text "Cycle: ", text (fromInt sim.cycle) ]
-        , fRow []
-            [ div [] [ text "Sidebar" ]
+        , fRow [ gap "2ch" ]
+            [ fCol [ sWidth "40ch", gap "1ch" ]
+                [ div [ ttu ] [ text "Title" ]
+                , fCol
+                    [ sHeight "8em"
+                    , sOutline ("1px solid " ++ lightGray)
+                    , pa "0 1ch"
+                    , placeContentCenter
+                    ]
+                    (List.repeat 6 (div [] [ text "> desc" ]))
+                ]
             , viewGrid sim
             ]
         ]
