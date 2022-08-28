@@ -626,6 +626,10 @@ type alias InputVM =
     ( String, SelectionList Num )
 
 
+type alias OutputVM =
+    ( String, SelectionList Num, List Num )
+
+
 inputVMS : Sim -> List InputVM
 inputVMS sim =
     let
