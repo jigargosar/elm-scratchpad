@@ -809,7 +809,7 @@ viewNode ( addr, node ) =
         ExeNode exe ->
             div
                 [ nodeAddrToGridArea addr
-                , sOutline ("1px solid " ++ lightGray)
+                , lightOutline
                 , dGrid
                 , gridAutoFlowColumn
                 ]
