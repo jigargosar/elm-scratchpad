@@ -8,7 +8,6 @@ module TIS100.Sim exposing
     )
 
 import Dict exposing (Dict)
-import Set exposing (Set)
 import TIS100.ExeNode as ExeNode exposing (ExeNode)
 import TIS100.IOIntent exposing (IOIntent(..))
 import TIS100.InputNode as InputNode exposing (InputNode)
@@ -106,23 +105,6 @@ editAddressesFromLayout ls =
 
 editAddresses : List Addr
 editAddresses =
-    [ ( 0, 1 )
-    , ( 0, 2 )
-    , ( 0, 3 )
-    , ( 1, 1 )
-    , ( 1, 2 )
-    , ( 1, 3 )
-    , ( 2, 1 )
-    , ( 2, 2 )
-    , ( 2, 3 )
-    , ( 3, 1 )
-    , ( 3, 2 )
-    , ( 3, 3 )
-    ]
-
-
-exeAddresses : List Addr
-exeAddresses =
     [ ( 0, 1 )
     , ( 0, 2 )
     , ( 0, 3 )
@@ -472,9 +454,7 @@ initSim : Puzzle -> EditDict -> Sim
 initSim puzzle es =
     let
         store =
-            exeAddresses
-                |> List.map (pairTo (ExeNode ExeNode.empty))
-                |> Dict.fromList
+            Dict.empty
                 |> withInputs puzzle.inputs
                 |> withOutputs puzzle.outputs
                 |> withExecutables es
