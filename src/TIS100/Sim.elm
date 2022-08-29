@@ -389,21 +389,6 @@ exeMode exe =
             "IDLE"
 
 
-nodeAddrToGridArea : Addr -> Attribute msg
-nodeAddrToGridArea ( x, y ) =
-    gridAreaXY
-        ( x * 2
-        , if y == 0 then
-            0
-
-          else if y == maxY then
-            (y * 2) - 2
-
-          else
-            (y * 2) - 1
-        )
-
-
 
 -- SIM
 
