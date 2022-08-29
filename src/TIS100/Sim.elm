@@ -734,11 +734,11 @@ viewGrid sim =
             |> gridTemplateColumns
         , sMaxHeight "100vh"
         ]
-        (viewNodes sim ++ viewPorts (simIOIntentsAndNodeState sim))
+        (viewSimNodes sim ++ viewPorts (simIOIntentsAndNodeState sim))
 
 
-viewNodes : Sim -> List (Html msg)
-viewNodes sim =
+viewSimNodes : Sim -> List (Html msg)
+viewSimNodes sim =
     Dict.toList sim.store |> List.map viewNode
 
 
