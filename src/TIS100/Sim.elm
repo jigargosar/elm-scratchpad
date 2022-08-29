@@ -14,7 +14,7 @@ import TIS100.InputNode as InputNode exposing (InputNode)
 import TIS100.NodeState as S exposing (NodeState)
 import TIS100.Num as Num exposing (Num)
 import TIS100.OutputNode as OutputNode exposing (OutputNode)
-import TIS100.Puzzle as Puzzle exposing (Puzzle)
+import TIS100.Puzzle as Puzzle exposing (IOConfig, Puzzle)
 import TIS100.SelectionList as SelectionList exposing (SelectionList)
 import Utils exposing (..)
 
@@ -259,12 +259,12 @@ maxY =
 
 
 type Node
-    = InputNode Puzzle.IOConfig InputNode
+    = InputNode IOConfig InputNode
     | OutputNode String (List Num) OutputNode
     | ExeNode ExeNode
 
 
-initInputNode : Puzzle.IOConfig -> Node
+initInputNode : IOConfig -> Node
 initInputNode conf =
     InputNode conf (InputNode.fromList conf.nums)
 
@@ -308,7 +308,7 @@ viewNodeEntry ( ( x, _ ) as addr, node ) =
             viewExeNodeEntry ( addr, exe )
 
 
-viewInputNode : Puzzle.IOConfig -> Html msg
+viewInputNode : IOConfig -> Html msg
 viewInputNode { x, title } =
     gtCols 2
         [ nodeAddrToGridArea ( x, 0 )
@@ -455,7 +455,7 @@ exeAddresses =
     ]
 
 
-withInputs : List Puzzle.IOConfig -> Store -> Store
+withInputs : List IOConfig -> Store -> Store
 withInputs list store =
     List.foldl
         (\conf -> Dict.insert ( conf.x, 0 ) (initInputNode conf))
@@ -463,7 +463,7 @@ withInputs list store =
         list
 
 
-withOutputs : List Puzzle.IOConfig -> Store -> Store
+withOutputs : List IOConfig -> Store -> Store
 withOutputs list store =
     List.foldl
         (\{ x, title, nums } ->
