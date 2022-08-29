@@ -199,7 +199,8 @@ viewGridItems model =
             viewSimGridItems sim
 
         Edit puzzle es ->
-            List.map viewExeNodeEntry es
+            List.map (\( x, title, _ ) -> viewInputNode x title) puzzle.inputs
+                ++ List.map viewExeNodeEntry es
 
 
 
@@ -288,22 +289,22 @@ nodeState node =
 
 
 viewNodeEntry : NodeEntry -> Html msg
-viewNodeEntry ( addr, node ) =
+viewNodeEntry ( ( x, y ) as addr, node ) =
     case node of
         InputNode title _ ->
-            viewInputNode addr title
+            viewInputNode x title
 
         OutputNode title _ _ ->
-            viewOutputNode addr title
+            viewOutputNode x title
 
         ExeNode exe ->
             viewExeNodeEntry ( addr, exe )
 
 
-viewInputNode : Addr -> String -> Html msg
-viewInputNode addr title =
+viewInputNode : Int -> String -> Html msg
+viewInputNode x title =
     gtCols 2
-        [ nodeAddrToGridArea addr
+        [ nodeAddrToGridArea ( x, 0 )
         , placeItemsCenter
         ]
         [ div [ tac, fg lightGray ]
@@ -313,10 +314,10 @@ viewInputNode addr title =
         ]
 
 
-viewOutputNode : Addr -> String -> Html msg
-viewOutputNode addr title =
+viewOutputNode : Int -> String -> Html msg
+viewOutputNode x title =
     gtCols 2
-        [ nodeAddrToGridArea addr
+        [ nodeAddrToGridArea ( x, maxY )
         , placeItemsCenter
         ]
         [ div [ tac, fg lightGray ] [ text title ]
