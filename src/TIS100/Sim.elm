@@ -204,7 +204,7 @@ viewGridItems model =
 
 viewEditNodes : Puzzle -> List ( Addr, ExeNode ) -> List (Html msg)
 viewEditNodes puzzle es =
-    List.map (\( x, title, _ ) -> viewInputNode x title) puzzle.inputs
+    List.concatMap (\( x, title, _ ) -> viewInputNode x title) puzzle.inputs
         ++ List.map (\( x, title, _ ) -> viewOutputNode x title) puzzle.outputs
         ++ List.map viewExeNodeEntry es
 
@@ -298,7 +298,7 @@ viewNodeEntry : NodeEntry -> List (Html msg)
 viewNodeEntry ( ( x, _ ) as addr, node ) =
     case node of
         InputNode title _ ->
-            [ viewInputNode x title ]
+            viewInputNode x title
 
         OutputNode title _ _ ->
             [ viewOutputNode x title ]
@@ -307,10 +307,14 @@ viewNodeEntry ( ( x, _ ) as addr, node ) =
             [ viewExeNodeEntry ( addr, exe ) ]
 
 
-viewInputNode : Int -> String -> Html msg
+viewInputNode : Int -> String -> List (Html msg)
 viewInputNode x title =
-    gtCols 2
-        [ nodeAddrToGridArea ( x, 0 )
+    let
+        addr =
+            ( x, 0 )
+    in
+    [ gtCols 2
+        [ nodeAddrToGridArea addr
         , placeItemsCenter
         ]
         [ div [ tac, fg lightGray ]
@@ -318,6 +322,7 @@ viewInputNode x title =
             , div [] [ text "(IDLE 0%)" ]
             ]
         ]
+    ]
 
 
 viewOutputNode : Int -> String -> Html msg
