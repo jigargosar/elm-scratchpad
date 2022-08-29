@@ -8,9 +8,10 @@ type alias Puzzle =
     , description : List String
     , inputs : List ( Int, String, List Num )
     , outputs : List ( Int, String, List Num )
-    , nodeConfig : NodeConfig
+    , nodeConfig : List NodeType
     }
 
 
-type NodeConfig
-    = NodeConfig
+type NodeType
+    = Executable
+    | Faulty
