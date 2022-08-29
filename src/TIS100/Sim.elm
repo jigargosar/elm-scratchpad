@@ -204,7 +204,7 @@ viewGridItems model =
 
 viewEditNodes : Puzzle -> List ( Addr, ExeNode ) -> List (Html msg)
 viewEditNodes puzzle es =
-    List.concatMap (\( x, title, _ ) -> viewInputNode x title) puzzle.inputs
+    List.map (\( x, title, _ ) -> viewInputNode x title) puzzle.inputs
         ++ List.map (\( x, title, _ ) -> viewOutputNode x title) puzzle.outputs
         ++ List.map viewExeNodeEntry es
 
@@ -294,27 +294,23 @@ nodeState node =
             ExeNode.state exeNode |> S.map ExeNode
 
 
-viewNodeEntry : NodeEntry -> List (Html msg)
-viewNodeEntry ( ( x, _ ) as addr, node ) =
+viewNodeEntry : NodeEntry -> Html msg
+viewNodeEntry ( ( x, y ) as addr, node ) =
     case node of
         InputNode title _ ->
             viewInputNode x title
 
         OutputNode title _ _ ->
-            [ viewOutputNode x title ]
+            viewOutputNode x title
 
         ExeNode exe ->
-            [ viewExeNodeEntry ( addr, exe ) ]
+            viewExeNodeEntry ( addr, exe )
 
 
-viewInputNode : Int -> String -> List (Html msg)
+viewInputNode : Int -> String -> Html msg
 viewInputNode x title =
-    let
-        addr =
-            ( x, 0 )
-    in
-    [ gtCols 2
-        [ nodeAddrToGridArea addr
+    gtCols 2
+        [ nodeAddrToGridArea ( x, 0 )
         , placeItemsCenter
         ]
         [ div [ tac, fg lightGray ]
@@ -322,7 +318,6 @@ viewInputNode x title =
             , div [] [ text "(IDLE 0%)" ]
             ]
         ]
-    ]
 
 
 viewOutputNode : Int -> String -> Html msg
@@ -861,7 +856,7 @@ viewGrid =
 
 viewSimGridItems : Sim -> List (Html msg)
 viewSimGridItems sim =
-    List.concatMap viewNodeEntry (Dict.toList sim.store)
+    List.map viewNodeEntry (Dict.toList sim.store)
         ++ viewPorts (simIOIntentsAndNodeState sim)
 
 
