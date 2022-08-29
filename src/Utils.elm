@@ -2016,6 +2016,11 @@ mapDocument tagger { title, body } =
 -- DICT HELPERS
 
 
+insertEntry : ( comparable, b ) -> Dict comparable b -> Dict comparable b
+insertEntry ( k, v ) =
+    Dict.insert k v
+
+
 {-| Only when `from` is member and `to` is not member.
 -}
 moveValueFromKeyToKey : comparable -> comparable -> Dict comparable v -> Dict comparable v

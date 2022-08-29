@@ -75,8 +75,17 @@ type Model
 
 
 init : Puzzle -> List ( Addr, ExeNode ) -> Model
-init =
-    Edit
+init puzzle es =
+    let
+        exeGrid =
+            exeAddresses
+                |> List.map (pairTo ExeNode.empty)
+                |> Dict.fromList
+
+        mergedES =
+            List.foldl insertEntry exeGrid es |> Dict.toList
+    in
+    Edit puzzle mergedES
 
 
 type Msg
