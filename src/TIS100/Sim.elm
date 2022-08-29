@@ -14,32 +14,13 @@ import TIS100.InputNode as InputNode exposing (InputNode)
 import TIS100.NodeState as S exposing (NodeState)
 import TIS100.Num as Num exposing (Num)
 import TIS100.OutputNode as OutputNode exposing (OutputNode)
+import TIS100.Puzzle as Puzzle exposing (Puzzle)
 import TIS100.SelectionList as SelectionList exposing (SelectionList)
 import Utils exposing (..)
 
 
 
 -- MAIN
-
-
-samplePuzzle : Puzzle
-samplePuzzle =
-    { title = "Differential Converter"
-    , description =
-        [ "READ VALUES FROM IN.A AND IN.B"
-        , "WRITE IN.A - IN.B TO OUT.P"
-        , "WRITE IN.B - IN.A TO OUT.N"
-        ]
-    , inputs =
-        [ ( 0, "IN.A", Num.range 1 20 )
-        , ( 1, "IN.B", Num.range 1 20 )
-        ]
-    , outputs =
-        [ ( 0, "OUT.P", Num.range 1 20 )
-        , ( 1, "OUT.N", Num.range 1 20 )
-        ]
-    , nodeConfig = NodeConfig
-    }
 
 
 sampleModel : Model
@@ -63,7 +44,7 @@ sampleModel =
             --   , ( ( 3, 3 ), ExeNode.initMovUpDown )
             ]
     in
-    init samplePuzzle es
+    init Puzzle.samplePuzzle es
 
 
 
@@ -163,7 +144,7 @@ inputDataList { puzzle, state } =
         Edit ->
             puzzle.inputs
                 |> List.map
-                    (\( _, title, nums ) ->
+                    (\{ title, nums } ->
                         InputData title (SelectionList.None nums)
                     )
 
@@ -184,7 +165,7 @@ outputDataList { puzzle, state } =
         Edit ->
             puzzle.outputs
                 |> List.map
-                    (\( _, title, nums ) ->
+                    (\{ title, nums } ->
                         OutputData title (SelectionList.None nums) []
                     )
 
@@ -226,15 +207,15 @@ viewGridItems { puzzle, initialExecutableNodes, state } =
 
 viewEditNodes : Puzzle -> List ( Addr, ExeNode ) -> List (Html msg)
 viewEditNodes puzzle es =
-    List.map (\( x, title, _ ) -> viewInputNode x title) puzzle.inputs
-        ++ List.map (\( x, title, _ ) -> viewOutputNode x title) puzzle.outputs
+    List.map (\{ x, title } -> viewInputNode x title) puzzle.inputs
+        ++ List.map (\{ x, title } -> viewOutputNode x title) puzzle.outputs
         ++ List.map viewExeNodeEntry es
 
 
 viewEditPorts : Puzzle -> List ( Addr, ExeNode ) -> List (Html msg)
 viewEditPorts puzzle es =
-    List.map (\( x, _, _ ) -> ( ( x, 0 ), [ Write Down ] )) puzzle.inputs
-        ++ List.map (\( x, _, _ ) -> ( ( x, maxY ), [ Read Up ] )) puzzle.outputs
+    List.map (\{ x } -> ( ( x, 0 ), [ Write Down ] )) puzzle.inputs
+        ++ List.map (\{ x } -> ( ( x, maxY ), [ Read Up ] )) puzzle.outputs
         ++ List.map (mapSecond ExeNode.ioIntents) es
         |> List.concatMap (\( addr, ioIntents ) -> initEmptyPorts addr ioIntents)
         |> mergePorts
@@ -253,23 +234,6 @@ viewCycle mbCycle =
                     fromInt c
     in
     div [] [ text "Cycle: ", text cycle ]
-
-
-
--- PUZZLE
-
-
-type alias Puzzle =
-    { title : String
-    , description : List String
-    , inputs : List ( Int, String, List Num )
-    , outputs : List ( Int, String, List Num )
-    , nodeConfig : NodeConfig
-    }
-
-
-type NodeConfig
-    = NodeConfig
 
 
 
@@ -486,22 +450,22 @@ exeAddresses =
     ]
 
 
-withInputs : List ( Int, String, List Num ) -> Store -> Store
+withInputs : List Puzzle.IOData -> Store -> Store
 withInputs list store =
     List.foldl
-        (\( x, title, nums ) ->
+        (\{ x, title, nums } ->
             Dict.insert ( x, 0 ) (InputNode title (InputNode.fromList nums))
         )
         store
         list
 
 
-withOutputs : List ( Int, String, List Num ) -> Store -> Store
+withOutputs : List Puzzle.IOData -> Store -> Store
 withOutputs list store =
     List.foldl
-        (\( x, title, out ) ->
+        (\{ x, title, nums } ->
             Dict.insert ( x, maxY )
-                (OutputNode title out (OutputNode.fromExpected (List.length out)))
+                (OutputNode title nums (OutputNode.fromExpected (List.length nums)))
         )
         store
         list
