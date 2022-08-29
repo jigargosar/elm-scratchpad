@@ -535,10 +535,6 @@ viewButtons =
 
 
 btn1 t =
-    let
-        sizeCh =
-            "8ch"
-    in
     div
         [ lightOutline
         , dGrid
