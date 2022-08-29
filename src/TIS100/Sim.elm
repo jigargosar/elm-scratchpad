@@ -63,6 +63,7 @@ sampleSim =
             ]
     in
     init samplePuzzle es
+        |> applyN 10 step
 
 
 
