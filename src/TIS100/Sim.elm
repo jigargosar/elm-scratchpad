@@ -587,7 +587,7 @@ view sim =
                 , viewIOColumns sim
                 , viewButtons
                 ]
-            , viewGrid sim
+            , viewGrid (viewSimGridItems sim)
             ]
         ]
 
@@ -709,8 +709,8 @@ nbsp =
     "\u{00A0}"
 
 
-viewGrid : Sim -> Html msg
-viewGrid sim =
+viewGrid : List (Html msg) -> Html msg
+viewGrid =
     let
         gapSize =
             "5ch"
@@ -734,7 +734,6 @@ viewGrid sim =
             |> gridTemplateColumns
         , sMaxHeight "100vh"
         ]
-        (viewSimGridItems sim)
 
 
 viewSimGridItems : Sim -> List (Html msg)
