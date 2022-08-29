@@ -337,9 +337,9 @@ viewOutputNode { x, title } =
 
 
 viewExeNodeEntry : ( Addr, ExeNode ) -> Html msg
-viewExeNodeEntry ( addr, exe ) =
+viewExeNodeEntry ( ( x, y ), exe ) =
     div
-        [ nodeAddrToGridArea addr
+        [ gridAreaXY ( x * 2, y * 2 - 1 )
         , lightOutline
         , dGrid
         , gridAutoFlowColumn
