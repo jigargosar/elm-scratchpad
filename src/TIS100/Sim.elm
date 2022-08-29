@@ -418,7 +418,9 @@ initSim : Puzzle -> EditDict -> Sim
 initSim puzzle es =
     let
         store =
-            initialStore
+            exeAddresses
+                |> List.map (pairTo (ExeNode ExeNode.empty))
+                |> Dict.fromList
                 |> withInputs puzzle.inputs
                 |> withOutputs puzzle.outputs
                 |> withExecutables es
@@ -426,13 +428,6 @@ initSim puzzle es =
     { store = store
     , cycle = 0
     }
-
-
-initialStore : Store
-initialStore =
-    exeAddresses
-        |> List.map (pairTo (ExeNode ExeNode.empty))
-        |> Dict.fromList
 
 
 exeAddresses : List Addr
@@ -450,6 +445,11 @@ exeAddresses =
     , ( 3, 2 )
     , ( 3, 3 )
     ]
+
+
+exeAddrFromIndex : Int -> Addr
+exeAddrFromIndex int =
+    Debug.todo "todo"
 
 
 withInputs : List IOConfig -> Store -> Store
