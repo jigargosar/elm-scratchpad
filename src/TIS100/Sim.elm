@@ -200,6 +200,7 @@ viewGridItems model =
 
         Edit puzzle es ->
             viewEditNodes puzzle es
+                ++ viewEditPorts puzzle es
 
 
 viewEditNodes : Puzzle -> List ( Addr, ExeNode ) -> List (Html msg)
@@ -207,6 +208,16 @@ viewEditNodes puzzle es =
     List.map (\( x, title, _ ) -> viewInputNode x title) puzzle.inputs
         ++ List.map (\( x, title, _ ) -> viewOutputNode x title) puzzle.outputs
         ++ List.map viewExeNodeEntry es
+
+
+viewEditPorts : Puzzle -> List ( Addr, ExeNode ) -> List (Html msg)
+viewEditPorts puzzle es =
+    List.map (\( x, _, _ ) -> ( ( x, 0 ), [ Write Down ] )) puzzle.inputs
+        ++ List.map (\( x, _, _ ) -> ( ( x, maxY ), [ Read Up ] )) puzzle.outputs
+        ++ List.map (mapSecond ExeNode.ioIntents) es
+        |> List.concatMap (\( addr, ioIntents ) -> initEmptyPorts addr ioIntents)
+        |> mergePorts
+        |> List.map viewPort
 
 
 
@@ -952,6 +963,12 @@ viewPortValueText =
 
 type Port
     = Port PortId PortValue
+
+
+initEmptyPorts : Addr -> List IOIntent -> List Port
+initEmptyPorts addr iOIntents =
+    List.filterMap (initPortId addr) iOIntents
+        |> List.map (\id -> Port id Empty)
 
 
 initPort : Addr -> ( IOIntent, PortValue ) -> Maybe Port
