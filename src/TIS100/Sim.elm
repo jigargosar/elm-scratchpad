@@ -295,7 +295,7 @@ nodeState node =
 
 
 viewNodeEntry : NodeEntry -> Html msg
-viewNodeEntry ( ( x, y ) as addr, node ) =
+viewNodeEntry ( ( x, _ ) as addr, node ) =
     case node of
         InputNode title _ ->
             viewInputNode x title
