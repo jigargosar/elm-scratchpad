@@ -168,6 +168,7 @@ viewOutputNode addr title =
         ]
 
 
+viewExeNode : Addr -> ExeNode -> Html msg
 viewExeNode addr exe =
     div
         [ nodeAddrToGridArea addr
