@@ -181,7 +181,7 @@ viewExeNode addr exe =
             [ viewExeBox "ACC" "0"
             , viewExeBox "BAK" "<0>"
             , viewExeBox "LAST" "N/A"
-            , viewExeBox "MODE" (exeMode node)
+            , viewExeBox "MODE" (exeMode exe)
             , viewExeBox "IDLE" "0%"
             ]
         ]
