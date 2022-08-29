@@ -544,15 +544,8 @@ btn1 t =
         , dGrid
         , placeContentCenter
         , aspectRatio "1"
-
-        --, sWidth sizeCh
-        --, sHeight sizeCh
         ]
         [ text t ]
-
-
-aspectRatio =
-    style "aspect-ratio"
 
 
 viewTitle =

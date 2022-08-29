@@ -1180,6 +1180,10 @@ sMinWidth =
     style "min-width"
 
 
+aspectRatio =
+    style "aspect-ratio"
+
+
 placeContentCenter =
     style "place-content" "center"
 
