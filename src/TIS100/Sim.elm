@@ -301,7 +301,7 @@ nodeState node =
 
 
 viewNodeEntry : NodeEntry -> Html msg
-viewNodeEntry ( ( x, _ ) as addr, node ) =
+viewNodeEntry ( addr, node ) =
     case node of
         InputNode conf _ ->
             viewInputNode conf
