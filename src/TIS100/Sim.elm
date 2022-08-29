@@ -377,6 +377,10 @@ viewExeBox a b =
 --noinspection SpellCheckingInspection
 
 
+writeModeLabel =
+    "WRTE"
+
+
 exeMode : ExeNode -> String
 exeMode exe =
     case ExeNode.state exe of
@@ -387,7 +391,7 @@ exeMode exe =
             "READ"
 
         S.WriteBlocked _ _ _ ->
-            "WRTE"
+            writeModeLabel
 
         S.Done ->
             "IDLE"
