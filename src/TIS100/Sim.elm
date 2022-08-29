@@ -557,7 +557,7 @@ viewButtons =
 
 
 btn : String -> msg -> Html msg
-btn t m =
+btn txt msg =
     button
         [ lightOutline
         , bgc "inherit"
@@ -568,9 +568,9 @@ btn t m =
         , dGrid
         , placeContentCenter
         , aspectRatio "1"
-        , notifyClick m
+        , notifyClick msg
         ]
-        [ text t ]
+        [ text txt ]
 
 
 viewTitle =
