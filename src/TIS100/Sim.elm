@@ -378,6 +378,7 @@ viewExeBox a b =
 
 
 writeModeLabel =
+    -- spelling needs to be 4ch for alignment
     "WRTE"
 
 
