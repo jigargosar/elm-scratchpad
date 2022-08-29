@@ -1,7 +1,9 @@
 module TIS100.Sim exposing
-    ( Sim
+    ( Msg
+    , Sim
     , sampleSim
     , step
+    , update
     , view
     )
 
@@ -330,6 +332,29 @@ simIOIntentsAndNodeState sim =
 -- SIM UPDATE
 
 
+type Msg
+    = STOP
+    | STEP
+    | RUN
+    | FAST
+
+
+update : Msg -> Sim -> Sim
+update msg sim =
+    case msg of
+        STOP ->
+            sim
+
+        STEP ->
+            sim
+
+        RUN ->
+            sim
+
+        FAST ->
+            sim
+
+
 step : Sim -> Sim
 step sim =
     { sim
@@ -493,9 +518,9 @@ completeWriteBlocked addr node acc =
 
 
 -- SIM VIEW
+--view : Sim -> Html msg
 
 
-view : Sim -> Html msg
 view sim =
     fCol
         [ h100
@@ -519,22 +544,24 @@ view sim =
         ]
 
 
+viewButtons : Html Msg
 viewButtons =
     gtCols 4
         [ gap "2ch" ]
-        [ btn1 "stop"
-        , btn1 "step"
-        , btn1 "run"
-        , btn1 "fast"
+        [ btn1 "stop" STOP
+        , btn1 "step" STEP
+        , btn1 "run" RUN
+        , btn1 "fast" FAST
         ]
 
 
-btn1 t =
+btn1 t m =
     div
         [ lightOutline
         , dGrid
         , placeContentCenter
         , aspectRatio "1"
+        , notifyClick m
         ]
         [ text t ]
 
