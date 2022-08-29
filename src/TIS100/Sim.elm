@@ -187,10 +187,19 @@ view model =
                 , viewIOColumns model
                 , viewButtons
                 ]
-
-            --, viewGrid (viewSimGridItems sim)
+            , viewGrid (viewGridItems model)
             ]
         ]
+
+
+viewGridItems : Model -> List (Html msg)
+viewGridItems model =
+    case model of
+        Paused sim ->
+            viewSimGridItems sim
+
+        Edit puzzle es ->
+            []
 
 
 viewCycle : Maybe Int -> Html msg
