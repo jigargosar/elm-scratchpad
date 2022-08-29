@@ -6,13 +6,13 @@ import TIS100.Num as Num exposing (Num)
 type alias Puzzle =
     { title : String
     , description : List String
-    , inputs : List IOData
-    , outputs : List IOData
+    , inputs : List IOConfig
+    , outputs : List IOConfig
     , layout : List NodeType
     }
 
 
-type alias IOData =
+type alias IOConfig =
     { x : Int
     , title : String
     , nums : List Num

@@ -129,23 +129,23 @@ getCycle model =
             Nothing
 
 
-type alias InputData =
+type alias InputColumnViewModel =
     { title : String
     , nums : SelectionList Num
     }
 
 
-inputDataList : Model -> List InputData
+inputDataList : Model -> List InputColumnViewModel
 inputDataList { puzzle, state } =
     case state of
         Debug sim ->
-            inputDataListFromSim sim
+            inputColumnViewModels sim
 
         Edit ->
             puzzle.inputs
                 |> List.map
                     (\{ title, nums } ->
-                        InputData title (SelectionList.None nums)
+                        InputColumnViewModel title (SelectionList.None nums)
                     )
 
 
@@ -207,7 +207,7 @@ viewGridItems { puzzle, initialExecutableNodes, state } =
 
 viewEditNodes : Puzzle -> List ( Addr, ExeNode ) -> List (Html msg)
 viewEditNodes puzzle es =
-    List.map (\{ x, title } -> viewInputNode x title) puzzle.inputs
+    List.map viewInputNode puzzle.inputs
         ++ List.map (\{ x, title } -> viewOutputNode x title) puzzle.outputs
         ++ List.map viewExeNodeEntry es
 
@@ -259,9 +259,14 @@ maxY =
 
 
 type Node
-    = InputNode String InputNode
+    = InputNode Puzzle.IOConfig InputNode
     | OutputNode String (List Num) OutputNode
     | ExeNode ExeNode
+
+
+initInputNode : Puzzle.IOConfig -> Node
+initInputNode conf =
+    InputNode conf (InputNode.fromList conf.nums)
 
 
 nodeIoIntents : Node -> List IOIntent
@@ -293,8 +298,8 @@ nodeState node =
 viewNodeEntry : NodeEntry -> Html msg
 viewNodeEntry ( ( x, _ ) as addr, node ) =
     case node of
-        InputNode title _ ->
-            viewInputNode x title
+        InputNode conf _ ->
+            viewInputNode conf
 
         OutputNode title _ _ ->
             viewOutputNode x title
@@ -303,8 +308,8 @@ viewNodeEntry ( ( x, _ ) as addr, node ) =
             viewExeNodeEntry ( addr, exe )
 
 
-viewInputNode : Int -> String -> Html msg
-viewInputNode x title =
+viewInputNode : Puzzle.IOConfig -> Html msg
+viewInputNode { x, title } =
     gtCols 2
         [ nodeAddrToGridArea ( x, 0 )
         , placeItemsCenter
@@ -450,17 +455,15 @@ exeAddresses =
     ]
 
 
-withInputs : List Puzzle.IOData -> Store -> Store
+withInputs : List Puzzle.IOConfig -> Store -> Store
 withInputs list store =
     List.foldl
-        (\{ x, title, nums } ->
-            Dict.insert ( x, 0 ) (InputNode title (InputNode.fromList nums))
-        )
+        (\conf -> Dict.insert ( conf.x, 0 ) (initInputNode conf))
         store
         list
 
 
-withOutputs : List Puzzle.IOData -> Store -> Store
+withOutputs : List Puzzle.IOConfig -> Store -> Store
 withOutputs list store =
     List.foldl
         (\{ x, title, nums } ->
@@ -479,13 +482,16 @@ withExecutables list store =
         list
 
 
-inputDataListFromSim : Sim -> List InputData
-inputDataListFromSim sim =
+inputColumnViewModels : Sim -> List InputColumnViewModel
+inputColumnViewModels sim =
     let
         mapper node =
             case node of
-                InputNode title inputNode ->
-                    Just <| InputData title (InputNode.toSelectionList inputNode)
+                InputNode conf inputNode ->
+                    Just
+                        (InputColumnViewModel conf.title
+                            (InputNode.toSelectionList inputNode)
+                        )
 
                 _ ->
                     Nothing
@@ -760,7 +766,7 @@ viewIOColumns model =
         )
 
 
-viewInputColumn : InputData -> Html msg
+viewInputColumn : InputColumnViewModel -> Html msg
 viewInputColumn { title, nums } =
     let
         numViews =
