@@ -49,6 +49,11 @@ resolveRead pendingReads nums num =
 
 getNumsRead : OutputNode -> List Num
 getNumsRead node =
+    getNumsReadHelp node |> List.reverse
+
+
+getNumsReadHelp : OutputNode -> List Num
+getNumsReadHelp node =
     case node of
         Done nums ->
             nums
