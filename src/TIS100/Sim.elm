@@ -97,9 +97,7 @@ editDictFromLayout ls =
         ls
         |> List.filterMap identity
         |> List.foldl Set.remove editAddresses
-        |> Set.toList
-        |> List.map (pairTo ExeNode.empty)
-        |> Dict.fromList
+        |> Set.foldl (\k -> Dict.insert k ExeNode.empty) Dict.empty
 
 
 editAddresses : Set Addr
