@@ -549,14 +549,15 @@ viewButtons : Html Msg
 viewButtons =
     gtCols 4
         [ gap "2ch" ]
-        [ btn1 "stop" STOP
-        , btn1 "step" STEP
-        , btn1 "run" RUN
-        , btn1 "fast" FAST
+        [ btn "stop" STOP
+        , btn "step" STEP
+        , btn "run" RUN
+        , btn "fast" FAST
         ]
 
 
-btn1 t m =
+btn : String -> msg -> Html msg
+btn t m =
     div
         [ lightOutline
         , dGrid
