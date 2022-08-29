@@ -345,6 +345,11 @@ type Msg
     | FAST
 
 
+subscriptions : Sim -> Sub Msg
+subscriptions _ =
+    Sub.none
+
+
 update : Msg -> Sim -> Sim
 update msg sim =
     case msg of
