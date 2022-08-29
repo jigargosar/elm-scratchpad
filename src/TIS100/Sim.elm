@@ -62,7 +62,7 @@ sampleSim =
             --   , ( ( 3, 3 ), ExeNode.initMovUpDown )
             ]
     in
-    init samplePuzzle es
+    initSim samplePuzzle es
         |> applyN 10 step
 
 
@@ -73,7 +73,12 @@ sampleSim =
 type Model
     = Paused Sim
     | Running Sim
-    | Editing Puzzle (List ExeNode)
+    | Editing Puzzle (List ( Addr, ExeNode ))
+
+
+init : Puzzle -> List ( Addr, ExeNode ) -> Model
+init =
+    Editing
 
 
 
@@ -257,8 +262,8 @@ type alias Sim =
     }
 
 
-init : Puzzle -> List ( Addr, ExeNode ) -> Sim
-init puzzle es =
+initSim : Puzzle -> List ( Addr, ExeNode ) -> Sim
+initSim puzzle es =
     let
         store =
             initialStore
@@ -401,7 +406,7 @@ update : Msg -> Sim -> Sim
 update msg sim =
     case msg of
         STOP ->
-            init sim.puzzle sim.initialExecutableNodes
+            initSim sim.puzzle sim.initialExecutableNodes
 
         STEP ->
             sim |> step
