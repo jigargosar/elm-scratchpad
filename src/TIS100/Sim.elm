@@ -566,9 +566,9 @@ completeWriteBlocked addr node acc =
 
 
 -- SIM VIEW
---view : Sim -> Html msg
 
 
+view : Sim -> Html Msg
 view sim =
     fCol
         [ h100
