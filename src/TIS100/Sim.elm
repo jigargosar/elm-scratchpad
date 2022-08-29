@@ -38,6 +38,7 @@ samplePuzzle =
         [ ( 0, "OUT.P", Num.range 1 20 )
         , ( 1, "OUT.N", Num.range 1 20 )
         ]
+    , nodeConfig = NodeConfig
     }
 
 
@@ -263,7 +264,12 @@ type alias Puzzle =
     , description : List String
     , inputs : List ( Int, String, List Num )
     , outputs : List ( Int, String, List Num )
+    , nodeConfig : NodeConfig
     }
+
+
+type NodeConfig
+    = NodeConfig
 
 
 
