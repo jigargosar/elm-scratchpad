@@ -316,7 +316,7 @@ viewNodeEntry ( addr, node ) =
 viewInputNode : IOConfig -> Html msg
 viewInputNode { x, title } =
     gtCols 2
-        [ nodeAddrToGridArea ( x, 0 )
+        [ gridAreaXY ( x * 2, 0 )
         , placeItemsCenter
         ]
         [ div [ tac, fg lightGray ]
