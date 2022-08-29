@@ -294,17 +294,17 @@ nodeState node =
             ExeNode.state exeNode |> S.map ExeNode
 
 
-viewNodeEntry : NodeEntry -> Html msg
+viewNodeEntry : NodeEntry -> List (Html msg)
 viewNodeEntry ( ( x, _ ) as addr, node ) =
     case node of
         InputNode title _ ->
-            viewInputNode x title
+            [ viewInputNode x title ]
 
         OutputNode title _ _ ->
-            viewOutputNode x title
+            [ viewOutputNode x title ]
 
         ExeNode exe ->
-            viewExeNodeEntry ( addr, exe )
+            [ viewExeNodeEntry ( addr, exe ) ]
 
 
 viewInputNode : Int -> String -> Html msg
@@ -856,7 +856,7 @@ viewGrid =
 
 viewSimGridItems : Sim -> List (Html msg)
 viewSimGridItems sim =
-    List.map viewNodeEntry (Dict.toList sim.store)
+    List.concatMap viewNodeEntry (Dict.toList sim.store)
         ++ viewPorts (simIOIntentsAndNodeState sim)
 
 
