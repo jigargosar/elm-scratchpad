@@ -84,6 +84,28 @@ init puzzle es =
     Model puzzle mergedES Edit
 
 
+exeAddresses : List Addr
+exeAddresses =
+    [ ( 0, 1 )
+    , ( 0, 2 )
+    , ( 0, 3 )
+    , ( 1, 1 )
+    , ( 1, 2 )
+    , ( 1, 3 )
+    , ( 2, 1 )
+    , ( 2, 2 )
+    , ( 2, 3 )
+    , ( 3, 1 )
+    , ( 3, 2 )
+    , ( 3, 3 )
+    ]
+
+
+exeAddrFromIndex : Int -> Addr
+exeAddrFromIndex int =
+    Debug.todo "todo"
+
+
 type Msg
     = STOP
     | STEP
@@ -428,28 +450,6 @@ initSim puzzle es =
     { store = store
     , cycle = 0
     }
-
-
-exeAddresses : List Addr
-exeAddresses =
-    [ ( 0, 1 )
-    , ( 0, 2 )
-    , ( 0, 3 )
-    , ( 1, 1 )
-    , ( 1, 2 )
-    , ( 1, 3 )
-    , ( 2, 1 )
-    , ( 2, 2 )
-    , ( 2, 3 )
-    , ( 3, 1 )
-    , ( 3, 2 )
-    , ( 3, 3 )
-    ]
-
-
-exeAddrFromIndex : Int -> Addr
-exeAddrFromIndex int =
-    Debug.todo "todo"
 
 
 withInputs : List IOConfig -> Store -> Store
