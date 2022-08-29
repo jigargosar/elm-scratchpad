@@ -142,22 +142,7 @@ viewNode ( addr, node ) =
             viewOutputNode addr title
 
         ExeNode exe ->
-            div
-                [ nodeAddrToGridArea addr
-                , lightOutline
-                , dGrid
-                , gridAutoFlowColumn
-                ]
-                [ div [ sWidth "18ch", pa "1ch" ] [ text (ExeNode.toSource exe) ]
-                , gtRows 5
-                    []
-                    [ viewExeBox "ACC" "0"
-                    , viewExeBox "BAK" "<0>"
-                    , viewExeBox "LAST" "N/A"
-                    , viewExeBox "MODE" (nodeModeAsString node)
-                    , viewExeBox "IDLE" "0%"
-                    ]
-                ]
+            viewExeNode addr exe
 
 
 viewInputNode : Addr -> String -> Html msg
@@ -183,6 +168,25 @@ viewOutputNode addr title =
         ]
 
 
+viewExeNode addr exe =
+    div
+        [ nodeAddrToGridArea addr
+        , lightOutline
+        , dGrid
+        , gridAutoFlowColumn
+        ]
+        [ div [ sWidth "18ch", pa "1ch" ] [ text (ExeNode.toSource exe) ]
+        , gtRows 5
+            []
+            [ viewExeBox "ACC" "0"
+            , viewExeBox "BAK" "<0>"
+            , viewExeBox "LAST" "N/A"
+            , viewExeBox "MODE" (exeMode node)
+            , viewExeBox "IDLE" "0%"
+            ]
+        ]
+
+
 viewExeBox : String -> String -> Html msg
 viewExeBox a b =
     div [ dGrid, tac, placeContentCenter, sOutline ("1px solid " ++ lightGray) ]
@@ -191,9 +195,9 @@ viewExeBox a b =
         ]
 
 
-nodeModeAsString : Node -> String
-nodeModeAsString node =
-    case nodeState node of
+exeMode : ExeNode -> String
+exeMode exe =
+    case ExeNode.state exe of
         S.ReadyToRun _ ->
             "RUN"
 
