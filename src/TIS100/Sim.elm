@@ -139,12 +139,7 @@ viewNode ( addr, node ) =
             viewInputNode addr title
 
         OutputNode title _ _ ->
-            gtCols 2
-                [ nodeAddrToGridArea addr
-                , placeItemsCenter
-                ]
-                [ div [ tac, fg lightGray ] [ text title ]
-                ]
+            viewOutputNode addr title
 
         ExeNode exe ->
             div
@@ -175,6 +170,16 @@ viewInputNode addr title =
             [ div [] [ text title ]
             , div [] [ text "(IDLE 0%)" ]
             ]
+        ]
+
+
+viewOutputNode : Addr -> String -> Html msg
+viewOutputNode addr title =
+    gtCols 2
+        [ nodeAddrToGridArea addr
+        , placeItemsCenter
+        ]
+        [ div [ tac, fg lightGray ] [ text title ]
         ]
 
 
