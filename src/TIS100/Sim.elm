@@ -69,9 +69,16 @@ sampleModel =
 -- MODEL
 
 
-type Model
-    = Paused Sim
-    | Edit Puzzle (List ( Addr, ExeNode ))
+type alias Model =
+    { puzzle : Puzzle
+    , initialExecutableNodes : List ( Addr, ExeNode )
+    , state : State
+    }
+
+
+type State
+    = Debug Sim
+    | Edit
 
 
 init : Puzzle -> List ( Addr, ExeNode ) -> Model
@@ -85,7 +92,7 @@ init puzzle es =
         mergedES =
             List.foldl insertEntry exeGrid es |> Dict.toList
     in
-    Edit puzzle mergedES
+    Model puzzle mergedES Edit
 
 
 type Msg
@@ -104,20 +111,24 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         STOP ->
-            case model of
-                Paused sim ->
-                    init sim.puzzle sim.initialExecutableNodes
+            case model.state of
+                Debug _ ->
+                    { model | state = Edit }
 
-                Edit _ _ ->
+                Edit ->
                     model
 
         STEP ->
-            case model of
-                Paused sim ->
-                    Paused (step sim)
+            case model.state of
+                Debug sim ->
+                    { model | state = Debug (step sim) }
 
-                Edit puzzle es ->
-                    Paused (initSim puzzle es)
+                Edit ->
+                    { model
+                        | state =
+                            Debug
+                                (initSim model.puzzle model.initialExecutableNodes)
+                    }
 
         RUN ->
             model
@@ -128,11 +139,11 @@ update msg model =
 
 getCycle : Model -> Maybe Int
 getCycle model =
-    case model of
-        Paused sim ->
+    case model.state of
+        Debug sim ->
             Just sim.cycle
 
-        Edit _ _ ->
+        Edit ->
             Nothing
 
 
@@ -143,12 +154,12 @@ type alias InputData =
 
 
 inputDataList : Model -> List InputData
-inputDataList model =
-    case model of
-        Paused sim ->
+inputDataList { puzzle, state } =
+    case state of
+        Debug sim ->
             inputDataListFromSim sim
 
-        Edit puzzle _ ->
+        Edit ->
             puzzle.inputs
                 |> List.map
                     (\( _, title, nums ) ->
@@ -164,12 +175,12 @@ type alias OutputData =
 
 
 outputDataList : Model -> List OutputData
-outputDataList model =
-    case model of
-        Paused sim ->
+outputDataList { puzzle, state } =
+    case state of
+        Debug sim ->
             outputDataListFromSim sim
 
-        Edit puzzle _ ->
+        Edit ->
             puzzle.outputs
                 |> List.map
                     (\( _, title, nums ) ->
@@ -202,14 +213,14 @@ view model =
 
 
 viewGridItems : Model -> List (Html msg)
-viewGridItems model =
-    case model of
-        Paused sim ->
+viewGridItems { puzzle, initialExecutableNodes, state } =
+    case state of
+        Debug sim ->
             viewSimGridItems sim
 
-        Edit puzzle es ->
-            viewEditNodes puzzle es
-                ++ viewEditPorts puzzle es
+        Edit ->
+            viewEditNodes puzzle initialExecutableNodes
+                ++ viewEditPorts puzzle initialExecutableNodes
 
 
 viewEditNodes : Puzzle -> List ( Addr, ExeNode ) -> List (Html msg)
@@ -310,7 +321,7 @@ nodeState node =
 
 
 viewNodeEntry : NodeEntry -> Html msg
-viewNodeEntry ( ( x, y ) as addr, node ) =
+viewNodeEntry ( ( x, _ ) as addr, node ) =
     case node of
         InputNode title _ ->
             viewInputNode x title
