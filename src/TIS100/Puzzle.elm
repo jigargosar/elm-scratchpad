@@ -40,5 +40,10 @@ samplePuzzle =
         [ ( 0, "OUT.P", Num.range 1 20 )
         , ( 1, "OUT.N", Num.range 1 20 )
         ]
-    , layout = List.repeat 12 Executable
+    , layout =
+        [ [ Executable, Executable, Executable, Executable ]
+        , [ Executable, Executable, Executable, Executable ]
+        , [ Executable, Executable, Executable, Executable ]
+        ]
+            |> List.concat
     }
