@@ -349,7 +349,7 @@ update : Msg -> Sim -> Sim
 update msg sim =
     case msg of
         STOP ->
-            sim
+            init sim.puzzle sim.initialExecutableNodes
 
         STEP ->
             sim |> step
