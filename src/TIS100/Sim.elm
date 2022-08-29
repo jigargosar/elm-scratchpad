@@ -53,9 +53,15 @@ sampleModel =
 
 type alias Model =
     { puzzle : Puzzle
-    , initialExecutableNodes : List ( Addr, ExeNode )
+    , editDict : EditDict
+
+    --, initialExecutableNodes : List ( Addr, ExeNode )
     , state : State
     }
+
+
+type alias EditDict =
+    Dict Addr ExeNode
 
 
 type State
@@ -71,8 +77,9 @@ init puzzle es =
                 |> List.map (pairTo ExeNode.empty)
                 |> Dict.fromList
 
+        mergedES : Dict Addr ExeNode
         mergedES =
-            List.foldl insertEntry exeGrid es |> Dict.toList
+            List.foldl insertEntry exeGrid es
     in
     Model puzzle mergedES Edit
 
@@ -106,11 +113,7 @@ update msg model =
                     { model | state = Debug (step sim) }
 
                 Edit ->
-                    { model
-                        | state =
-                            Debug
-                                (initSim model.puzzle model.initialExecutableNodes)
-                    }
+                    { model | state = Debug (initSim model.puzzle model.editDict) }
 
         RUN ->
             model
@@ -195,14 +198,18 @@ view model =
 
 
 viewGridItems : Model -> List (Html msg)
-viewGridItems { puzzle, initialExecutableNodes, state } =
+viewGridItems { puzzle, editDict, state } =
     case state of
         Debug sim ->
             viewSimGridItems sim
 
         Edit ->
-            viewEditNodes puzzle initialExecutableNodes
-                ++ viewEditPorts puzzle initialExecutableNodes
+            let
+                es =
+                    Dict.toList editDict
+            in
+            viewEditNodes puzzle es
+                ++ viewEditPorts puzzle es
 
 
 viewEditNodes : Puzzle -> List ( Addr, ExeNode ) -> List (Html msg)
@@ -407,7 +414,7 @@ type alias Sim =
     }
 
 
-initSim : Puzzle -> List ( Addr, ExeNode ) -> Sim
+initSim : Puzzle -> EditDict -> Sim
 initSim puzzle es =
     let
         store =
@@ -463,12 +470,9 @@ withOutputs list store =
         list
 
 
-withExecutables : List ( Addr, ExeNode ) -> Store -> Store
-withExecutables list store =
-    List.foldl
-        (\( addr, exe ) -> Dict.insert addr (ExeNode exe))
-        store
-        list
+withExecutables : EditDict -> Store -> Store
+withExecutables exeDict =
+    Dict.union (exeDict |> Dict.map (always ExeNode))
 
 
 inputColumnViewModels : Sim -> List InputColumnViewModel
