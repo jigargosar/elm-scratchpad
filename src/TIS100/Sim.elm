@@ -509,18 +509,13 @@ view sim =
         ]
         [ div [] [ text "Cycle: ", text (fromInt sim.cycle) ]
         , fRow [ gap "2ch" ]
-            [ viewSideBar sim
+            [ fCol [ sWidth "40ch", gap "2ch", fg lightGray ]
+                [ div [] [ viewTitle, viewDesc ]
+                , viewIOColumns sim
+                , viewButtons
+                ]
             , viewGrid sim
             ]
-        ]
-
-
-viewSideBar : Sim -> Html msg
-viewSideBar sim =
-    fCol [ sWidth "40ch", gap "2ch", fg lightGray ]
-        [ div [] [ viewTitle, viewDesc ]
-        , viewIOColumns sim
-        , viewButtons
         ]
 
 
