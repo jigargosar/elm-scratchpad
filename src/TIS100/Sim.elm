@@ -525,7 +525,8 @@ viewSideBar sim =
 
 
 viewButtons =
-    fRow [ gap "2ch" ]
+    gtCols 4
+        [ gap "2ch" ]
         [ btn1 "stop"
         , btn1 "step"
         , btn1 "run"
@@ -542,10 +543,16 @@ btn1 t =
         [ lightOutline
         , dGrid
         , placeContentCenter
-        , sWidth sizeCh
-        , sHeight sizeCh
+        , aspectRatio "1"
+
+        --, sWidth sizeCh
+        --, sHeight sizeCh
         ]
         [ text t ]
+
+
+aspectRatio =
+    style "aspect-ratio"
 
 
 viewTitle =
