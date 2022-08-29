@@ -199,7 +199,12 @@ viewGridItems model =
             viewSimGridItems sim
 
         Edit puzzle es ->
-            []
+            List.map viewExeNodeEntry es
+
+
+
+--List.map viewNodeEntry (Dict.toList sim.store)
+--++ viewPorts (simIOIntentsAndNodeState sim)
 
 
 viewCycle : Maybe Int -> Html msg
@@ -292,7 +297,7 @@ viewNodeEntry ( addr, node ) =
             viewOutputNode addr title
 
         ExeNode exe ->
-            viewExeNode addr exe
+            viewExeNodeEntry ( addr, exe )
 
 
 viewInputNode : Addr -> String -> Html msg
@@ -318,8 +323,8 @@ viewOutputNode addr title =
         ]
 
 
-viewExeNode : Addr -> ExeNode -> Html msg
-viewExeNode addr exe =
+viewExeNodeEntry : ( Addr, ExeNode ) -> Html msg
+viewExeNodeEntry ( addr, exe ) =
     div
         [ nodeAddrToGridArea addr
         , lightOutline
