@@ -81,6 +81,34 @@ init =
     Editing
 
 
+type Msg
+    = STOP
+    | STEP
+    | RUN
+    | FAST
+
+
+subscriptions : Sim -> Sub Msg
+subscriptions _ =
+    Sub.none
+
+
+update : Msg -> Sim -> Sim
+update msg sim =
+    case msg of
+        STOP ->
+            initSim sim.puzzle sim.initialExecutableNodes
+
+        STEP ->
+            sim |> step
+
+        RUN ->
+            sim
+
+        FAST ->
+            sim
+
+
 
 -- PUZZLE
 
@@ -388,34 +416,6 @@ simIOIntentsAndNodeState sim =
 
 
 -- SIM UPDATE
-
-
-type Msg
-    = STOP
-    | STEP
-    | RUN
-    | FAST
-
-
-subscriptions : Sim -> Sub Msg
-subscriptions _ =
-    Sub.none
-
-
-update : Msg -> Sim -> Sim
-update msg sim =
-    case msg of
-        STOP ->
-            initSim sim.puzzle sim.initialExecutableNodes
-
-        STEP ->
-            sim |> step
-
-        RUN ->
-            sim
-
-        FAST ->
-            sim
 
 
 step : Sim -> Sim
