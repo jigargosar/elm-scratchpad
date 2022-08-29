@@ -77,7 +77,7 @@ init puzzle es =
                 |> List.map (pairTo ExeNode.empty)
                 |> Dict.fromList
 
-        mergedES : Dict Addr ExeNode
+        mergedES : EditDict
         mergedES =
             List.foldl insertEntry exeGrid es
     in
