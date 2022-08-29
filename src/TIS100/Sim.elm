@@ -301,13 +301,19 @@ withExecutables list store =
         list
 
 
-mapInputNodeList : (String -> InputNode -> a) -> Sim -> List a
-mapInputNodeList fn sim =
+type alias InputData =
+    { title : String
+    , nums : SelectionList Num
+    }
+
+
+mapInputDataList : (InputData -> a) -> Sim -> List a
+mapInputDataList fn sim =
     let
         mapper node =
             case node of
                 InputNode a b ->
-                    Just <| fn a b
+                    Just <| fn (InputData a (InputNode.toSelectionList b))
 
                 _ ->
                     Nothing
@@ -599,18 +605,18 @@ viewDesc =
 viewIOColumns : Sim -> Html msg
 viewIOColumns sim =
     fRow [ tac, gap "2ch" ]
-        (mapInputNodeList viewInputColumn sim
+        (mapInputDataList viewInputColumn sim
             ++ mapOutputNodeList viewOutputColumn sim
         )
 
 
-viewInputColumn : String -> InputNode -> Html msg
-viewInputColumn title inputNode =
+viewInputColumn : InputData -> Html msg
+viewInputColumn { title, nums } =
     let
         numViews =
             SelectionList.view Num.viewSelected
                 Num.view
-                (InputNode.toSelectionList inputNode)
+                nums
     in
     fCol [ gap "0.5ch" ]
         [ div [] [ text title ]
