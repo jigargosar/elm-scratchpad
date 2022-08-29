@@ -321,8 +321,8 @@ mapInputDataList fn sim =
     Dict.values sim.store |> List.filterMap mapper
 
 
-mapOutputNodeList : (String -> List Num -> OutputNode -> a) -> Sim -> List a
-mapOutputNodeList fn sim =
+mapOutputDataList : (String -> List Num -> OutputNode -> a) -> Sim -> List a
+mapOutputDataList fn sim =
     let
         mapper node =
             case node of
@@ -606,7 +606,7 @@ viewIOColumns : Sim -> Html msg
 viewIOColumns sim =
     fRow [ tac, gap "2ch" ]
         (mapInputDataList viewInputColumn sim
-            ++ mapOutputNodeList viewOutputColumn sim
+            ++ mapOutputDataList viewOutputColumn sim
         )
 
 
