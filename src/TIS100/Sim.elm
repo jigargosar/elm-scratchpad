@@ -123,52 +123,80 @@ update msg model =
         FAST ->
             model
 
-getCycle: Model -> Maybe Int
+
+getCycle : Model -> Maybe Int
 getCycle model =
     case model of
-            Paused sim ->
-                Just sim.cycle
+        Paused sim ->
+            Just sim.cycle
 
-            Running sim ->
-                Just sim.cycle
+        Running sim ->
+            Just sim.cycle
 
-            Editing puzzle list ->
-                Nothing
+        Editing puzzle list ->
+            Nothing
+
+
+type alias InputData =
+    { title : String
+    , nums : SelectionList Num
+    }
+
+
+inputDataList : Model -> List InputData
+inputDataList model =
+    case model of
+        Paused sim ->
+            inputDataListFromSim sim
+
+        Running sim ->
+            inputDataListFromSim sim
+
+        Editing puzzle _ ->
+            puzzle.inputs
+                |> List.map
+                    (\( _, title, nums ) ->
+                        InputData title (SelectionList.None nums)
+                    )
+
 
 view : Model -> Html Msg
 view model =
     fCol
-            [ h100
-            , fontSize "12px"
-            , styleLineHeight "0.9"
-            , pa "2ch"
-            , bold
-            , ffMonospace
-            , gap "2ch"
-            , ttu
-            ]
-            [ viewCycle (getCycle model)
-            , fRow [ gap "2ch" ]
-                [ fCol [ sWidth "40ch", gap "2ch", fg lightGray ]
-                    [ div [] [ viewTitle, viewDesc ]
-                    , viewIOColumns sim
-                    , viewButtons
-                    ]
-                , viewGrid (viewSimGridItems sim)
+        [ h100
+        , fontSize "12px"
+        , styleLineHeight "0.9"
+        , pa "2ch"
+        , bold
+        , ffMonospace
+        , gap "2ch"
+        , ttu
+        ]
+        [ viewCycle (getCycle model)
+        , fRow [ gap "2ch" ]
+            [ fCol [ sWidth "40ch", gap "2ch", fg lightGray ]
+                [ div [] [ viewTitle, viewDesc ]
+                , viewIOColumns model
+                , viewButtons
                 ]
-            ]
 
-viewCycle: Maybe Int -> Html msg
+            --, viewGrid (viewSimGridItems sim)
+            ]
+        ]
+
+
+viewCycle : Maybe Int -> Html msg
 viewCycle mbCycle =
     let
         cycle =
             case mbCycle of
-                Nothing -> "NA"
-                Just c - > fromInt c
+                Nothing ->
+                    "NA"
+
+                Just c ->
+                    fromInt c
     in
-
-    div [] [ text "Cycle: ", text (cycle)]
-
+    div [] [ text "Cycle: ", text cycle ]
 
 
 
@@ -421,19 +449,13 @@ withExecutables list store =
         list
 
 
-type alias InputData =
-    { title : String
-    , nums : SelectionList Num
-    }
-
-
-mapInputDataList : (InputData -> a) -> Sim -> List a
-mapInputDataList fn sim =
+inputDataListFromSim : Sim -> List InputData
+inputDataListFromSim sim =
     let
         mapper node =
             case node of
                 InputNode title inputNode ->
-                    Just <| fn (InputData title (InputNode.toSelectionList inputNode))
+                    Just <| InputData title (InputNode.toSelectionList inputNode)
 
                 _ ->
                     Nothing
@@ -448,8 +470,25 @@ type alias OutputData =
     }
 
 
-mapOutputDataList : (OutputData -> a) -> Sim -> List a
-mapOutputDataList fn sim =
+outputDataList : Model -> List OutputData
+outputDataList model =
+    case model of
+        Paused sim ->
+            outputDataListFromSim sim
+
+        Running sim ->
+            outputDataListFromSim sim
+
+        Editing puzzle _ ->
+            puzzle.outputs
+                |> List.map
+                    (\( _, title, nums ) ->
+                        OutputData title (SelectionList.None nums) []
+                    )
+
+
+outputDataListFromSim : Sim -> List OutputData
+outputDataListFromSim sim =
     let
         mapper node =
             case node of
@@ -459,11 +498,10 @@ mapOutputDataList fn sim =
                             OutputNode.getNumsRead outputNode
                     in
                     Just <|
-                        fn <|
-                            OutputData
-                                title
-                                (SelectionList.fromIndex (List.length actual) expected)
-                                actual
+                        OutputData
+                            title
+                            (SelectionList.fromIndex (List.length actual) expected)
+                            actual
 
                 _ ->
                     Nothing
@@ -643,30 +681,28 @@ completeWriteBlocked addr node acc =
 
 
 -- SIM VIEW
-
-
-viewSim : Sim -> Html Msg
-viewSim sim =
-    fCol
-        [ h100
-        , fontSize "12px"
-        , styleLineHeight "0.9"
-        , pa "2ch"
-        , bold
-        , ffMonospace
-        , gap "2ch"
-        , ttu
-        ]
-        [ div [] [ text "Cycle: ", text (fromInt sim.cycle) ]
-        , fRow [ gap "2ch" ]
-            [ fCol [ sWidth "40ch", gap "2ch", fg lightGray ]
-                [ div [] [ viewTitle, viewDesc ]
-                , viewIOColumns sim
-                , viewButtons
-                ]
-            , viewGrid (viewSimGridItems sim)
-            ]
-        ]
+--viewSim : Sim -> Html Msg
+--viewSim sim =
+--    fCol
+--        [ h100
+--        , fontSize "12px"
+--        , styleLineHeight "0.9"
+--        , pa "2ch"
+--        , bold
+--        , ffMonospace
+--        , gap "2ch"
+--        , ttu
+--        ]
+--        [ div [] [ text "Cycle: ", text (fromInt sim.cycle) ]
+--        , fRow [ gap "2ch" ]
+--            [ fCol [ sWidth "40ch", gap "2ch", fg lightGray ]
+--                [ div [] [ viewTitle, viewDesc ]
+--                , viewIOColumns sim
+--                , viewButtons
+--                ]
+--            , viewGrid (viewSimGridItems sim)
+--            ]
+--        ]
 
 
 viewButtons : Html Msg
@@ -710,11 +746,11 @@ viewDesc =
         (List.repeat 6 (div [] [ text "> desc" ]))
 
 
-viewIOColumns : Sim -> Html msg
-viewIOColumns sim =
+viewIOColumns : Model -> Html msg
+viewIOColumns model =
     fRow [ tac, gap "2ch" ]
-        (mapInputDataList viewInputColumn sim
-            ++ mapOutputDataList viewOutputColumn sim
+        (List.map viewInputColumn (inputDataList model)
+            ++ List.map viewOutputColumn (outputDataList model)
         )
 
 
