@@ -558,8 +558,13 @@ viewButtons =
 
 btn : String -> msg -> Html msg
 btn t m =
-    div
+    button
         [ lightOutline
+        , bgc "inherit"
+        , fg "inherit"
+        , style "text-transform" "inherit"
+        , style "font" "inherit"
+        , borderNone
         , dGrid
         , placeContentCenter
         , aspectRatio "1"
