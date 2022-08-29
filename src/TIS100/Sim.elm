@@ -71,13 +71,12 @@ sampleModel =
 
 type Model
     = Paused Sim
-    | Running Sim
-    | Editing Puzzle (List ( Addr, ExeNode ))
+    | Edit Puzzle (List ( Addr, ExeNode ))
 
 
 init : Puzzle -> List ( Addr, ExeNode ) -> Model
 init =
-    Editing
+    Edit
 
 
 type Msg
@@ -100,10 +99,7 @@ update msg model =
                 Paused sim ->
                     init sim.puzzle sim.initialExecutableNodes
 
-                Running sim ->
-                    init sim.puzzle sim.initialExecutableNodes
-
-                Editing _ _ ->
+                Edit _ _ ->
                     model
 
         STEP ->
@@ -111,10 +107,7 @@ update msg model =
                 Paused sim ->
                     Paused (step sim)
 
-                Running sim ->
-                    Paused sim
-
-                Editing puzzle es ->
+                Edit puzzle es ->
                     Paused (initSim puzzle es)
 
         RUN ->
@@ -130,10 +123,7 @@ getCycle model =
         Paused sim ->
             Just sim.cycle
 
-        Running sim ->
-            Just sim.cycle
-
-        Editing puzzle list ->
+        Edit _ _ ->
             Nothing
 
 
@@ -149,10 +139,7 @@ inputDataList model =
         Paused sim ->
             inputDataListFromSim sim
 
-        Running sim ->
-            inputDataListFromSim sim
-
-        Editing puzzle _ ->
+        Edit puzzle _ ->
             puzzle.inputs
                 |> List.map
                     (\( _, title, nums ) ->
@@ -476,10 +463,7 @@ outputDataList model =
         Paused sim ->
             outputDataListFromSim sim
 
-        Running sim ->
-            outputDataListFromSim sim
-
-        Editing puzzle _ ->
+        Edit puzzle _ ->
             puzzle.outputs
                 |> List.map
                     (\( _, title, nums ) ->
