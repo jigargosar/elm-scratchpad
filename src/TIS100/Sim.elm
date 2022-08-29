@@ -1,7 +1,7 @@
 module TIS100.Sim exposing
-    ( Msg
-    , Sim
-    , sampleSim
+    ( Model
+    , Msg
+    , sampleModel
     , step
     , update
     , view
@@ -41,8 +41,8 @@ samplePuzzle =
     }
 
 
-sampleSim : Sim
-sampleSim =
+sampleModel : Model
+sampleModel =
     let
         es =
             [ ( ( 0, 1 ), ExeNode.initMovUpDown )
@@ -62,8 +62,7 @@ sampleSim =
             --   , ( ( 3, 3 ), ExeNode.initMovUpDown )
             ]
     in
-    initSim samplePuzzle es
-        |> applyN 10 step
+    init samplePuzzle es
 
 
 
@@ -93,20 +92,49 @@ subscriptions _ =
     Sub.none
 
 
-update : Msg -> Sim -> Sim
-update msg sim =
+update : Msg -> Model -> Model
+update msg model =
     case msg of
         STOP ->
-            initSim sim.puzzle sim.initialExecutableNodes
+            case model of
+                Paused sim ->
+                    init sim.puzzle sim.initialExecutableNodes
+
+                Running sim ->
+                    init sim.puzzle sim.initialExecutableNodes
+
+                Editing _ _ ->
+                    model
 
         STEP ->
-            sim |> step
+            case model of
+                Paused sim ->
+                    Paused (step sim)
+
+                Running sim ->
+                    Paused sim
+
+                Editing puzzle es ->
+                    Paused (initSim puzzle es)
 
         RUN ->
-            sim
+            model
 
         FAST ->
-            sim
+            model
+
+
+view : Model -> Html Msg
+view model =
+    case model of
+        Paused sim ->
+            viewSim sim
+
+        Running sim ->
+            viewSim sim
+
+        Editing puzzle list ->
+            noView
 
 
 
@@ -583,8 +611,8 @@ completeWriteBlocked addr node acc =
 -- SIM VIEW
 
 
-view : Sim -> Html Msg
-view sim =
+viewSim : Sim -> Html Msg
+viewSim sim =
     fCol
         [ h100
         , fontSize "12px"

@@ -24,12 +24,12 @@ main =
 
 
 type alias Model =
-    { sim : Sim.Sim }
+    { sim : Sim.Model }
 
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { sim = Sim.sampleSim }, Cmd.none )
+    ( { sim = Sim.sampleModel }, Cmd.none )
 
 
 type Msg
@@ -58,7 +58,7 @@ viewDocument model =
         ]
 
 
-view : Sim.Sim -> Html Msg
+view : Sim.Model -> Html Msg
 view sim =
     div []
         [ div [] [ text <| Debug.toString sim ]
