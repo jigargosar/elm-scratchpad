@@ -312,8 +312,8 @@ mapInputDataList fn sim =
     let
         mapper node =
             case node of
-                InputNode a b ->
-                    Just <| fn (InputData a (InputNode.toSelectionList b))
+                InputNode title inputNode ->
+                    Just <| fn (InputData title (InputNode.toSelectionList inputNode))
 
                 _ ->
                     Nothing
@@ -321,13 +321,29 @@ mapInputDataList fn sim =
     Dict.values sim.store |> List.filterMap mapper
 
 
-mapOutputDataList : (String -> List Num -> OutputNode -> a) -> Sim -> List a
+type alias OutputData =
+    { title : String
+    , expected : SelectionList Num
+    , actual : List Num
+    }
+
+
+mapOutputDataList : (OutputData -> a) -> Sim -> List a
 mapOutputDataList fn sim =
     let
         mapper node =
             case node of
-                OutputNode a b c ->
-                    Just <| fn a b c
+                OutputNode title expected outputNode ->
+                    let
+                        actual =
+                            OutputNode.getNumsRead outputNode
+                    in
+                    Just <|
+                        fn <|
+                            OutputData
+                                title
+                                (SelectionList.fromIndex (List.length actual) expected)
+                                actual
 
                 _ ->
                     Nothing
@@ -633,17 +649,11 @@ viewInputColumn { title, nums } =
         ]
 
 
-viewOutputColumn : String -> List Num -> OutputNode -> Html msg
-viewOutputColumn title expected outputNode =
+viewOutputColumn : OutputData -> Html msg
+viewOutputColumn { title, expected, actual } =
     let
-        actual =
-            OutputNode.getNumsRead outputNode
-
-        expectedSelection =
-            SelectionList.fromIndex (List.length actual) expected
-
         expectedViews =
-            Num.viewSelectionList expectedSelection
+            Num.viewSelectionList expected
 
         actualViews =
             List.map Num.view actual
