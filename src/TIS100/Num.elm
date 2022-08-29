@@ -1,5 +1,6 @@
-module TIS100.Num exposing (Num, fromInt, range, toString, view, viewSelected, zero)
+module TIS100.Num exposing (Num, fromInt, range, toString, view, viewSelected, viewSelectionList, zero)
 
+import TIS100.SelectionList as SelectionList exposing (SelectionList)
 import Utils exposing (..)
 
 
@@ -47,3 +48,8 @@ viewSelected n =
 view : Num -> Html msg
 view n =
     div [] [ text (toString n) ]
+
+
+viewSelectionList : SelectionList Num -> List (Html msg)
+viewSelectionList =
+    SelectionList.view viewSelected view

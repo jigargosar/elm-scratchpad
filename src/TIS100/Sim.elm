@@ -614,9 +614,7 @@ viewInputColumn : InputData -> Html msg
 viewInputColumn { title, nums } =
     let
         numViews =
-            SelectionList.view Num.viewSelected
-                Num.view
-                nums
+            Num.viewSelectionList nums
     in
     fCol [ gap "0.5ch" ]
         [ div [] [ text title ]
