@@ -1,4 +1,4 @@
-module TIS100.Num exposing (Num, fromInt, range, toString, view, viewSelected, viewSelectionList, zero)
+module TIS100.Num exposing (Num, fromInt, range, toString, view, viewSelectionList, zero)
 
 import TIS100.SelectionList as SelectionList exposing (SelectionList)
 import Utils exposing (..)

@@ -643,7 +643,7 @@ viewOutputColumn title expected outputNode =
             SelectionList.fromIndex (List.length actual) expected
 
         expectedViews =
-            SelectionList.view Num.viewSelected Num.view expectedSelection
+            Num.viewSelectionList expectedSelection
 
         actualViews =
             List.map Num.view actual
