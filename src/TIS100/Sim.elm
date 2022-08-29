@@ -208,7 +208,7 @@ viewGridItems { puzzle, initialExecutableNodes, state } =
 viewEditNodes : Puzzle -> List ( Addr, ExeNode ) -> List (Html msg)
 viewEditNodes puzzle es =
     List.map viewInputNode puzzle.inputs
-        ++ List.map (\{ x, title } -> viewOutputNode x title) puzzle.outputs
+        ++ List.map viewOutputNode puzzle.outputs
         ++ List.map viewExeNodeEntry es
 
 
@@ -260,7 +260,7 @@ maxY =
 
 type Node
     = InputNode IOConfig InputNode
-    | OutputNode String (List Num) OutputNode
+    | OutputNode IOConfig OutputNode
     | ExeNode ExeNode
 
 
@@ -269,13 +269,18 @@ initInputNode conf =
     InputNode conf (InputNode.fromList conf.nums)
 
 
+initOutputNode : IOConfig -> Node
+initOutputNode conf =
+    OutputNode conf (OutputNode.fromExpected (List.length conf.nums))
+
+
 nodeIoIntents : Node -> List IOIntent
 nodeIoIntents node =
     case node of
         InputNode _ _ ->
             [ Write Down ]
 
-        OutputNode _ _ _ ->
+        OutputNode _ _ ->
             [ Read Up ]
 
         ExeNode exe ->
@@ -288,8 +293,8 @@ nodeState node =
         InputNode title inputNode ->
             InputNode.state inputNode |> S.map (InputNode title)
 
-        OutputNode title expected outputNode ->
-            OutputNode.state outputNode |> S.map (OutputNode title expected)
+        OutputNode conf outputNode ->
+            OutputNode.state outputNode |> S.map (OutputNode conf)
 
         ExeNode exeNode ->
             ExeNode.state exeNode |> S.map ExeNode
@@ -301,8 +306,8 @@ viewNodeEntry ( ( x, _ ) as addr, node ) =
         InputNode conf _ ->
             viewInputNode conf
 
-        OutputNode title _ _ ->
-            viewOutputNode x title
+        OutputNode conf _ ->
+            viewOutputNode conf
 
         ExeNode exe ->
             viewExeNodeEntry ( addr, exe )
@@ -321,8 +326,8 @@ viewInputNode { x, title } =
         ]
 
 
-viewOutputNode : Int -> String -> Html msg
-viewOutputNode x title =
+viewOutputNode : IOConfig -> Html msg
+viewOutputNode { x, title } =
     gtCols 2
         [ nodeAddrToGridArea ( x, maxY )
         , placeItemsCenter
@@ -466,9 +471,8 @@ withInputs list store =
 withOutputs : List IOConfig -> Store -> Store
 withOutputs list store =
     List.foldl
-        (\{ x, title, nums } ->
-            Dict.insert ( x, maxY )
-                (OutputNode title nums (OutputNode.fromExpected (List.length nums)))
+        (\conf ->
+            Dict.insert ( conf.x, maxY ) (initOutputNode conf)
         )
         store
         list
@@ -504,15 +508,15 @@ outputDataListFromSim sim =
     let
         mapper node =
             case node of
-                OutputNode title expected outputNode ->
+                OutputNode conf outputNode ->
                     let
                         actual =
                             OutputNode.getNumsRead outputNode
                     in
                     Just <|
                         OutputData
-                            title
-                            (SelectionList.fromIndex (List.length actual) expected)
+                            conf.title
+                            (SelectionList.fromIndex (List.length actual) conf.nums)
                             actual
 
                 _ ->
