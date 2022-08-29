@@ -147,6 +147,27 @@ inputDataList model =
                     )
 
 
+type alias OutputData =
+    { title : String
+    , expected : SelectionList Num
+    , actual : List Num
+    }
+
+
+outputDataList : Model -> List OutputData
+outputDataList model =
+    case model of
+        Paused sim ->
+            outputDataListFromSim sim
+
+        Edit puzzle _ ->
+            puzzle.outputs
+                |> List.map
+                    (\( _, title, nums ) ->
+                        OutputData title (SelectionList.None nums) []
+                    )
+
+
 view : Model -> Html Msg
 view model =
     fCol
@@ -448,27 +469,6 @@ inputDataListFromSim sim =
                     Nothing
     in
     Dict.values sim.store |> List.filterMap mapper
-
-
-type alias OutputData =
-    { title : String
-    , expected : SelectionList Num
-    , actual : List Num
-    }
-
-
-outputDataList : Model -> List OutputData
-outputDataList model =
-    case model of
-        Paused sim ->
-            outputDataListFromSim sim
-
-        Edit puzzle _ ->
-            puzzle.outputs
-                |> List.map
-                    (\( _, title, nums ) ->
-                        OutputData title (SelectionList.None nums) []
-                    )
 
 
 outputDataListFromSim : Sim -> List OutputData
