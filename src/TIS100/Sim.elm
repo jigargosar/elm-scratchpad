@@ -373,6 +373,10 @@ viewExeBox a b =
         ]
 
 
+
+--noinspection SpellCheckingInspection
+
+
 exeMode : ExeNode -> String
 exeMode exe =
     case ExeNode.state exe of
@@ -383,7 +387,7 @@ exeMode exe =
             "READ"
 
         S.WriteBlocked _ _ _ ->
-            "WRITE"
+            "WRTE"
 
         S.Done ->
             "IDLE"
