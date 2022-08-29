@@ -6,8 +6,8 @@ import TIS100.Num as Num exposing (Num)
 type alias Puzzle =
     { title : String
     , description : List String
-    , inputs : List ( Int, String, List Num )
-    , outputs : List ( Int, String, List Num )
+    , inputs : List IOData
+    , outputs : List IOData
     , layout : List NodeType
     }
 
@@ -33,12 +33,12 @@ samplePuzzle =
         , "WRITE IN.B - IN.A TO OUT.N"
         ]
     , inputs =
-        [ ( 0, "IN.A", Num.range 1 20 )
-        , ( 1, "IN.B", Num.range 1 20 )
+        [ { x = 0, title = "IN.A", nums = Num.range 1 20 }
+        , { x = 1, title = "IN.B", nums = Num.range 1 20 }
         ]
     , outputs =
-        [ ( 0, "OUT.P", Num.range 1 20 )
-        , ( 1, "OUT.N", Num.range 1 20 )
+        [ { x = 0, title = "OUT.P", nums = Num.range 1 20 }
+        , { x = 1, title = "OUT.N", nums = Num.range 1 20 }
         ]
     , layout =
         [ [ Executable, Executable, Executable, Executable ]
