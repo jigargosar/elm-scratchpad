@@ -226,6 +226,7 @@ type alias Store =
 
 type alias Sim =
     { puzzle : Puzzle
+    , initialExecutableNodes : List ( Addr, ExeNode )
     , store : Store
     , cycle : Int
     }
@@ -240,7 +241,11 @@ init puzzle es =
                 |> withOutputs puzzle.outputs
                 |> withExecutables es
     in
-    { puzzle = puzzle, store = store, cycle = 0 }
+    { puzzle = puzzle
+    , initialExecutableNodes = es
+    , store = store
+    , cycle = 0
+    }
 
 
 initialStore : Store
