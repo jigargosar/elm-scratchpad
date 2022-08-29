@@ -220,11 +220,6 @@ viewEditPorts puzzle es =
         |> List.map viewPort
 
 
-
---List.map viewNodeEntry (Dict.toList sim.store)
---++ viewPorts (simIOIntentsAndNodeState sim)
-
-
 viewCycle : Maybe Int -> Html msg
 viewCycle mbCycle =
     let
