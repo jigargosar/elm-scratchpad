@@ -123,18 +123,52 @@ update msg model =
         FAST ->
             model
 
+getCycle: Model -> Maybe Int
+getCycle model =
+    case model of
+            Paused sim ->
+                Just sim.cycle
+
+            Running sim ->
+                Just sim.cycle
+
+            Editing puzzle list ->
+                Nothing
 
 view : Model -> Html Msg
 view model =
-    case model of
-        Paused sim ->
-            viewSim sim
+    fCol
+            [ h100
+            , fontSize "12px"
+            , styleLineHeight "0.9"
+            , pa "2ch"
+            , bold
+            , ffMonospace
+            , gap "2ch"
+            , ttu
+            ]
+            [ viewCycle (getCycle model)
+            , fRow [ gap "2ch" ]
+                [ fCol [ sWidth "40ch", gap "2ch", fg lightGray ]
+                    [ div [] [ viewTitle, viewDesc ]
+                    , viewIOColumns sim
+                    , viewButtons
+                    ]
+                , viewGrid (viewSimGridItems sim)
+                ]
+            ]
 
-        Running sim ->
-            viewSim sim
+viewCycle: Maybe Int -> Html msg
+viewCycle mbCycle =
+    let
+        cycle =
+            case mbCycle of
+                Nothing -> "NA"
+                Just c - > fromInt c
+    in
 
-        Editing puzzle list ->
-            noView
+    div [] [ text "Cycle: ", text (cycle)]
+
 
 
 
