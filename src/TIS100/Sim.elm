@@ -518,21 +518,47 @@ view sim =
 viewSideBar : Sim -> Html msg
 viewSideBar sim =
     fCol [ sWidth "40ch", gap "2ch", fg lightGray ]
-        [ div []
-            [ div
-                [ tac
-                , styleLineHeight "2"
-                ]
-                [ text "-- Title --" ]
-            , fCol
-                [ lightOutline
-                , pa "0.5ch"
-                , placeContentCenter
-                ]
-                (List.repeat 6 (div [] [ text "> desc" ]))
-            ]
+        [ div [] [ viewTitle, viewDesc ]
         , viewIOColumns sim
+        , viewButtons
         ]
+
+
+viewButtons =
+    fRow [ gap "2ch" ]
+        [ btn1 "stop"
+        , btn1 "step"
+        , btn1 "run"
+        , btn1 "fast"
+        ]
+
+
+btn1 t =
+    let
+        sizeCh =
+            "8ch"
+    in
+    div
+        [ lightOutline
+        , dGrid
+        , placeContentCenter
+        , sWidth sizeCh
+        , sHeight sizeCh
+        ]
+        [ text t ]
+
+
+viewTitle =
+    div [ tac, styleLineHeight "2" ] [ text "-- Title --" ]
+
+
+viewDesc =
+    fCol
+        [ lightOutline
+        , pa "0.5ch"
+        , placeContentCenter
+        ]
+        (List.repeat 6 (div [] [ text "> desc" ]))
 
 
 viewIOColumns : Sim -> Html msg
