@@ -346,7 +346,7 @@ update msg sim =
             sim
 
         STEP ->
-            sim
+            sim |> step
 
         RUN ->
             sim
