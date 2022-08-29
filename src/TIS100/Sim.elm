@@ -329,7 +329,7 @@ viewInputNode { x, title } =
 viewOutputNode : IOConfig -> Html msg
 viewOutputNode { x, title } =
     gtCols 2
-        [ nodeAddrToGridArea ( x, maxY )
+        [ gridAreaXY ( x * 2, maxY * 2 - 2 )
         , placeItemsCenter
         ]
         [ div [ tac, fg lightGray ] [ text title ]
