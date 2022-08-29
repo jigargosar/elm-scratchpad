@@ -608,8 +608,8 @@ viewInputColumn : String -> InputNode -> Html msg
 viewInputColumn title inputNode =
     let
         numViews =
-            SelectionList.view viewSelectedNum
-                viewNum
+            SelectionList.view Num.viewSelected
+                Num.view
                 (InputNode.toSelectionList inputNode)
     in
     fCol [ gap "0.5ch" ]
@@ -639,10 +639,10 @@ viewOutputColumn title expected outputNode =
             SelectionList.fromIndex (List.length actual) expected
 
         expectedViews =
-            SelectionList.view viewSelectedNum viewNum expectedSelection
+            SelectionList.view Num.viewSelected Num.view expectedSelection
 
         actualViews =
-            List.map viewNum actual
+            List.map Num.view actual
     in
     fCol [ gap "0.5ch" ]
         [ div [] [ text title ]
@@ -673,16 +673,6 @@ viewOutputColumn title expected outputNode =
                 )
             ]
         ]
-
-
-viewSelectedNum : Num -> Html msg
-viewSelectedNum n =
-    div [ fg wBlack, bgc white ] [ text (Num.toString n) ]
-
-
-viewNum : Num -> Html msg
-viewNum n =
-    div [] [ text (Num.toString n) ]
 
 
 nbsp : String

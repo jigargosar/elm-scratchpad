@@ -1,4 +1,6 @@
-module TIS100.Num exposing (Num, fromInt, range, toString, zero)
+module TIS100.Num exposing (Num, fromInt, range, toString, view, viewSelected, zero)
+
+import Utils exposing (..)
 
 
 type Num
@@ -35,3 +37,13 @@ clamp i =
 range : Int -> Int -> List Num
 range lo hi =
     List.range lo hi |> List.map fromInt
+
+
+viewSelected : Num -> Html msg
+viewSelected n =
+    div [ fg wBlack, bgc white ] [ text (toString n) ]
+
+
+view : Num -> Html msg
+view n =
+    div [] [ text (toString n) ]
