@@ -132,8 +132,8 @@ nodeState node =
             ExeNode.state exeNode |> S.map ExeNode
 
 
-viewNode : NodeEntry -> Html msg
-viewNode ( addr, node ) =
+viewNodeEntry : NodeEntry -> Html msg
+viewNodeEntry ( addr, node ) =
     case node of
         InputNode title _ ->
             viewInputNode addr title
@@ -734,12 +734,13 @@ viewGrid sim =
             |> gridTemplateColumns
         , sMaxHeight "100vh"
         ]
-        (viewSimNodes sim ++ viewPorts (simIOIntentsAndNodeState sim))
+        (viewSimGridItems sim)
 
 
-viewSimNodes : Sim -> List (Html msg)
-viewSimNodes sim =
-    Dict.toList sim.store |> List.map viewNode
+viewSimGridItems : Sim -> List (Html msg)
+viewSimGridItems sim =
+    List.map viewNodeEntry (Dict.toList sim.store)
+        ++ viewPorts (simIOIntentsAndNodeState sim)
 
 
 
