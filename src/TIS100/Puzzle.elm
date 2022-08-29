@@ -12,6 +12,13 @@ type alias Puzzle =
     }
 
 
+type alias IOData =
+    { x : Int
+    , title : String
+    , nums : List Num
+    }
+
+
 type NodeType
     = Executable
     | Faulty
