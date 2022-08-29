@@ -199,8 +199,14 @@ viewGridItems model =
             viewSimGridItems sim
 
         Edit puzzle es ->
-            List.map (\( x, title, _ ) -> viewInputNode x title) puzzle.inputs
-                ++ List.map viewExeNodeEntry es
+            viewEditGridItems puzzle es
+
+
+viewEditGridItems : Puzzle -> List ( Addr, ExeNode ) -> List (Html msg)
+viewEditGridItems puzzle es =
+    List.map (\( x, title, _ ) -> viewInputNode x title) puzzle.inputs
+        ++ List.map (\( x, title, _ ) -> viewOutputNode x title) puzzle.outputs
+        ++ List.map viewExeNodeEntry es
 
 
 
