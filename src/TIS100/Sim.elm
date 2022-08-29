@@ -67,6 +67,16 @@ sampleSim =
 
 
 
+-- MODEL
+
+
+type Model
+    = Paused Sim
+    | Running Sim
+    | Editing Puzzle (List ExeNode)
+
+
+
 -- PUZZLE
 
 
