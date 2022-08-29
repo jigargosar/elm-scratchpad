@@ -136,15 +136,7 @@ viewNode : NodeEntry -> Html msg
 viewNode ( addr, node ) =
     case node of
         InputNode title _ ->
-            gtCols 2
-                [ nodeAddrToGridArea addr
-                , placeItemsCenter
-                ]
-                [ div [ tac, fg lightGray ]
-                    [ div [] [ text title ]
-                    , div [] [ text "(IDLE 0%)" ]
-                    ]
-                ]
+            viewInputNode addr title
 
         OutputNode title _ _ ->
             gtCols 2
@@ -171,6 +163,19 @@ viewNode ( addr, node ) =
                     , viewExeBox "IDLE" "0%"
                     ]
                 ]
+
+
+viewInputNode : Addr -> String -> Html msg
+viewInputNode addr title =
+    gtCols 2
+        [ nodeAddrToGridArea addr
+        , placeItemsCenter
+        ]
+        [ div [ tac, fg lightGray ]
+            [ div [] [ text title ]
+            , div [] [ text "(IDLE 0%)" ]
+            ]
+        ]
 
 
 viewExeBox : String -> String -> Html msg
