@@ -8,6 +8,7 @@ module TIS100.Sim exposing
     )
 
 import Dict exposing (Dict)
+import Set exposing (Set)
 import TIS100.ExeNode as ExeNode exposing (ExeNode)
 import TIS100.IOIntent exposing (IOIntent(..))
 import TIS100.InputNode as InputNode exposing (InputNode)
@@ -72,16 +73,43 @@ type State
 init : Puzzle -> List ( Addr, ExeNode ) -> Model
 init puzzle es =
     let
-        exeGrid =
-            exeAddresses
-                |> List.map (pairTo ExeNode.empty)
-                |> Dict.fromList
+        editDict =
+            editDictFromLayout puzzle.layout
 
-        mergedES : EditDict
-        mergedES =
-            List.foldl insertEntry exeGrid es
+        mergedEditDict : EditDict
+        mergedEditDict =
+            List.foldl replaceEntry editDict es
     in
-    Model puzzle mergedES Edit
+    Model puzzle mergedEditDict Edit
+
+
+editDictFromLayout : List Puzzle.NodeType -> EditDict
+editDictFromLayout ls =
+    List.indexedMap
+        (\i nt ->
+            case nt of
+                Puzzle.Executable ->
+                    Nothing
+
+                Puzzle.Faulty ->
+                    Just (editAddrFromIndex i)
+        )
+        ls
+        |> List.filterMap identity
+        |> List.foldl Set.remove editAddresses
+        |> Set.toList
+        |> List.map (pairTo ExeNode.empty)
+        |> Dict.fromList
+
+
+editAddresses : Set Addr
+editAddresses =
+    Set.fromList exeAddresses
+
+
+editAddrFromIndex : Int -> Addr
+editAddrFromIndex i =
+    ( modBy 4 i, i // 4 + 1 )
 
 
 exeAddresses : List Addr
@@ -99,11 +127,6 @@ exeAddresses =
     , ( 3, 2 )
     , ( 3, 3 )
     ]
-
-
-exeAddrFromIndex : Int -> Addr
-exeAddrFromIndex int =
-    Debug.todo "todo"
 
 
 type Msg

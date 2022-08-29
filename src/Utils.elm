@@ -2021,6 +2021,11 @@ insertEntry ( k, v ) =
     Dict.insert k v
 
 
+replaceEntry : ( comparable, b ) -> Dict comparable b -> Dict comparable b
+replaceEntry ( k, v ) =
+    Dict.update k (Maybe.map (always v))
+
+
 {-| Only when `from` is member and `to` is not member.
 -}
 moveValueFromKeyToKey : comparable -> comparable -> Dict comparable v -> Dict comparable v
