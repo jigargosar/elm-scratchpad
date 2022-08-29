@@ -92,7 +92,7 @@ editDictFromLayout ls =
                     Nothing
 
                 Puzzle.Faulty ->
-                    Just (editAddrFromIndex i)
+                    Just ( modBy 4 i, i // 4 + 1 )
         )
         ls
         |> List.filterMap identity
@@ -105,11 +105,6 @@ editDictFromLayout ls =
 editAddresses : Set Addr
 editAddresses =
     Set.fromList exeAddresses
-
-
-editAddrFromIndex : Int -> Addr
-editAddrFromIndex i =
-    ( modBy 4 i, i // 4 + 1 )
 
 
 exeAddresses : List Addr
