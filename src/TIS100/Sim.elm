@@ -39,8 +39,8 @@ sampleModel =
 
             --   , ( ( 2, 2 ), ExeNode.initMovUpDown )
             , ( ( 2, 3 ), ExeNode.initMov Down Up )
+            , ( ( 3, 1 ), ExeNode.initMov Left Down )
 
-            --   , ( ( 3, 1 ), ExeNode.initMovUpDown )
             --   , ( ( 3, 2 ), ExeNode.initMovUpDown )
             --   , ( ( 3, 3 ), ExeNode.initMovUpDown )
             ]

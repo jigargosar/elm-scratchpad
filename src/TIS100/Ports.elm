@@ -232,12 +232,13 @@ viewPort ( ( x, y ), dir, val ) =
             gtRows 2
                 [ gridAreaXY ( x * 2 - 1, (y * 2) - 1 ), noPointerEvents ]
                 [ fCol
-                    [ gridAreaXY ( 0, 0 )
+                    [ gridAreaXY ( 0, 1 )
                     , allPointerEvents
                     , itemsCenter
-                    , justifyContent "end"
-                    , pb "1ch"
-                    , gap "1ch"
+                    , justifyContent "start"
+                    , pt "0.5ch"
+
+                    --, gap "1ch"
                     ]
                     [ viewValue val
                     , viewArrow Left val
@@ -248,12 +249,13 @@ viewPort ( ( x, y ), dir, val ) =
             gtRows 2
                 [ gridAreaXY ( x * 2 + 1, y * 2 - 1 ), noPointerEvents ]
                 [ fCol
-                    [ gridAreaXY ( 0, 1 )
+                    [ gridAreaXY ( 0, 0 )
                     , allPointerEvents
                     , itemsCenter
-                    , justifyContent "start"
-                    , pt "1ch"
-                    , gap "1ch"
+                    , justifyContent "end"
+                    , pb "0.5ch"
+
+                    --, gap "1ch"
                     ]
                     [ viewValue val
                     , viewArrow Right val
