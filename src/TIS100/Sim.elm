@@ -273,11 +273,7 @@ mapPuzzlePortsToList fn puzzle =
 mapSimPortsToList :
     (Addr -> Dir4 -> PortValue -> a)
     -> Puzzle
-    ->
-        { getIntents : Addr -> List IOIntent
-        , getReadBlocked : Addr -> List Dir4
-        , getWriteBlocked : Addr -> List ( Dir4, Num )
-        }
+    -> Dict Addr ( List IOIntent, NodeState a )
     -> List a
 mapSimPortsToList function puzzle =
     Debug.todo "todo"
@@ -887,7 +883,7 @@ viewGrid =
 viewSimGridItems : Sim -> List (Html msg)
 viewSimGridItems sim =
     List.map viewNodeEntry (Dict.toList sim.store)
-        ++ viewPorts (simIOIntentsAndNodeState sim)
+        ++ viewSimPorts (simIOIntentsAndNodeState sim)
 
 
 
@@ -902,18 +898,18 @@ type PortId
     = PortId Addr Dir4 PortKey
 
 
-initPortId : Addr -> IOIntent -> Maybe PortId
-initPortId addr ioIntent =
+initWritePortId : Addr -> IOIntent -> Maybe PortId
+initWritePortId addr ioIntent =
     case ioIntent of
         Read dir ->
-            initWritePortId (moveInDir4 dir addr) (oppositeDir4 dir)
+            initWritePortIdHelp (moveInDir4 dir addr) (oppositeDir4 dir)
 
         Write dir ->
-            initWritePortId addr dir
+            initWritePortIdHelp addr dir
 
 
-initWritePortId : Addr -> Dir4 -> Maybe PortId
-initWritePortId (( fx, fy ) as from) dir =
+initWritePortIdHelp : Addr -> Dir4 -> Maybe PortId
+initWritePortIdHelp (( fx, fy ) as from) dir =
     let
         (( tx, ty ) as to) =
             moveInDir4 dir from
@@ -986,13 +982,13 @@ type Port
 
 initEmptyPorts : Addr -> List IOIntent -> List Port
 initEmptyPorts addr iOIntents =
-    List.filterMap (initPortId addr) iOIntents
+    List.filterMap (initWritePortId addr) iOIntents
         |> List.map (\id -> Port id Empty)
 
 
-initPort : Addr -> ( IOIntent, PortValue ) -> Maybe Port
-initPort addr ( iOIntent, portValue ) =
-    initPortId addr iOIntent
+initWritePort : Addr -> ( IOIntent, PortValue ) -> Maybe Port
+initWritePort addr ( iOIntent, portValue ) =
+    initWritePortId addr iOIntent
         |> Maybe.map (\id -> Port id portValue)
 
 
@@ -1065,24 +1061,24 @@ viewArrow dir4 pv =
 -- PORTS
 
 
-viewPorts : Dict Addr ( List IOIntent, NodeState a ) -> List (Html msg)
-viewPorts dict =
-    initPorts dict |> List.map viewPort
+viewSimPorts : Dict Addr ( List IOIntent, NodeState a ) -> List (Html msg)
+viewSimPorts dict =
+    initSimPorts dict |> List.map viewPort
 
 
 type alias Ports =
     Dict PortKey Port
 
 
-initPorts : Dict Addr ( List IOIntent, NodeState a ) -> List Port
-initPorts dict =
+initSimPorts : Dict Addr ( List IOIntent, NodeState a ) -> List Port
+initSimPorts dict =
     Dict.toList dict
-        |> List.concatMap initPortsHelp
+        |> List.concatMap initSimPortsHelp
         |> mergePorts
 
 
-initPortsHelp : ( Addr, ( List IOIntent, NodeState a ) ) -> List Port
-initPortsHelp ( addr, ( ioIntents, nState ) ) =
+initSimPortsHelp : ( Addr, ( List IOIntent, NodeState a ) ) -> List Port
+initSimPortsHelp ( addr, ( ioIntents, nState ) ) =
     let
         ioFromNodeState : List ( IOIntent, PortValue )
         ioFromNodeState =
@@ -1109,7 +1105,7 @@ initPortsHelp ( addr, ( ioIntents, nState ) ) =
     in
     ioFromNodeState
         ++ ioFromIntents
-        |> List.filterMap (initPort addr)
+        |> List.filterMap (initWritePort addr)
 
 
 mergePorts : List Port -> List Port
