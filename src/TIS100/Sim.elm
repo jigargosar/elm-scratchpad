@@ -446,9 +446,19 @@ initInputNode conf =
     InputNode conf (InputNode.fromList conf.nums)
 
 
+inputNodeEntry : IOConfig -> ( Addr, Node )
+inputNodeEntry conf =
+    ( ( conf.x, 0 ), initInputNode conf )
+
+
 initOutputNode : IOConfig -> Node
 initOutputNode conf =
     OutputNode conf (OutputNode.fromExpected (List.length conf.nums))
+
+
+outputNodeEntry : IOConfig -> ( Addr, Node )
+outputNodeEntry conf =
+    ( ( conf.x, maxY ), initOutputNode conf )
 
 
 nodeIoIntents : Node -> List IOIntent
@@ -601,40 +611,17 @@ type alias Sim =
 
 
 initSim : Puzzle -> EditDict -> Sim
-initSim puzzle es =
+initSim puzzle editDict =
     let
         store =
-            Dict.empty
-                |> withInputs puzzle.inputs
-                |> withOutputs puzzle.outputs
-                |> withExecutables es
+            List.map inputNodeEntry puzzle.inputs
+                ++ List.map outputNodeEntry puzzle.outputs
+                |> Dict.fromList
+                |> Dict.union (Dict.map (always ExeNode) editDict)
     in
     { store = store
     , cycle = 0
     }
-
-
-withInputs : List IOConfig -> Store -> Store
-withInputs list store =
-    List.foldl
-        (\conf -> Dict.insert ( conf.x, 0 ) (initInputNode conf))
-        store
-        list
-
-
-withOutputs : List IOConfig -> Store -> Store
-withOutputs list store =
-    List.foldl
-        (\conf ->
-            Dict.insert ( conf.x, maxY ) (initOutputNode conf)
-        )
-        store
-        list
-
-
-withExecutables : EditDict -> Store -> Store
-withExecutables exeDict =
-    Dict.union (exeDict |> Dict.map (always ExeNode))
 
 
 inputColumnViewModels : Sim -> List InputColumnViewModel
