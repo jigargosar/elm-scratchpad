@@ -28,21 +28,19 @@ sampleModel : Model
 sampleModel =
     let
         es =
-            [ ( ( 0, 1 ), ExeNode.initMovUpDown )
+            [ --( ( 0, 1 ), ExeNode.initMovUpDown )
+              ( ( 0, 1 ), ExeNode.initMov Right Down )
             , ( ( 0, 2 ), ExeNode.initMovUpDown )
             , ( ( 0, 3 ), ExeNode.initMovUpDown )
             , ( ( 1, 1 ), ExeNode.initMovUpDown )
-
-            --   , ( ( 1, 2 ), ExeNode.initMovUpDown )
+            , ( ( 1, 2 ), ExeNode.empty )
             , ( ( 1, 3 ), ExeNode.initMovUpDown )
             , ( ( 2, 1 ), ExeNode.initMov Down Up )
-
-            --   , ( ( 2, 2 ), ExeNode.initMovUpDown )
+            , ( ( 2, 2 ), ExeNode.empty )
             , ( ( 2, 3 ), ExeNode.initMov Down Up )
             , ( ( 3, 1 ), ExeNode.initMov Left Down )
-
-            --   , ( ( 3, 2 ), ExeNode.initMovUpDown )
-            --   , ( ( 3, 3 ), ExeNode.initMovUpDown )
+            , ( ( 3, 2 ), ExeNode.initMov Up Right )
+            , ( ( 3, 3 ), ExeNode.initMov Left Down )
             ]
     in
     init Puzzle.samplePuzzle es

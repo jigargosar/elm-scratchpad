@@ -237,11 +237,9 @@ viewPort ( ( x, y ), dir, val ) =
                     , itemsCenter
                     , justifyContent "start"
                     , pt "0.5ch"
-
-                    --, gap "1ch"
                     ]
-                    [ viewValue val
-                    , viewArrow Left val
+                    [ viewArrow Left val
+                    , viewValue val
                     ]
                 ]
 
@@ -254,8 +252,6 @@ viewPort ( ( x, y ), dir, val ) =
                     , itemsCenter
                     , justifyContent "end"
                     , pb "0.5ch"
-
-                    --, gap "1ch"
                     ]
                     [ viewValue val
                     , viewArrow Right val
