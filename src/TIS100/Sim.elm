@@ -898,18 +898,18 @@ type PortId
     = PortId Addr Dir4 PortKey
 
 
-initWritePortId : Addr -> IOIntent -> Maybe PortId
-initWritePortId addr ioIntent =
+initPortId : Addr -> IOIntent -> Maybe PortId
+initPortId addr ioIntent =
     case ioIntent of
         Read dir ->
-            initWritePortIdHelp (moveInDir4 dir addr) (oppositeDir4 dir)
+            initPortIdHelp (moveInDir4 dir addr) (oppositeDir4 dir)
 
         Write dir ->
-            initWritePortIdHelp addr dir
+            initPortIdHelp addr dir
 
 
-initWritePortIdHelp : Addr -> Dir4 -> Maybe PortId
-initWritePortIdHelp (( fx, fy ) as from) dir =
+initPortIdHelp : Addr -> Dir4 -> Maybe PortId
+initPortIdHelp (( fx, fy ) as from) dir =
     let
         (( tx, ty ) as to) =
             moveInDir4 dir from
@@ -982,13 +982,13 @@ type Port
 
 initEmptyPorts : Addr -> List IOIntent -> List Port
 initEmptyPorts addr iOIntents =
-    List.filterMap (initWritePortId addr) iOIntents
+    List.filterMap (initPortId addr) iOIntents
         |> List.map (\id -> Port id Empty)
 
 
-initWritePort : Addr -> ( IOIntent, PortValue ) -> Maybe Port
-initWritePort addr ( iOIntent, portValue ) =
-    initWritePortId addr iOIntent
+initPort : Addr -> ( IOIntent, PortValue ) -> Maybe Port
+initPort addr ( iOIntent, portValue ) =
+    initPortId addr iOIntent
         |> Maybe.map (\id -> Port id portValue)
 
 
@@ -1105,7 +1105,7 @@ initSimPortsHelp ( addr, ( ioIntents, nState ) ) =
     in
     ioFromNodeState
         ++ ioFromIntents
-        |> List.filterMap (initWritePort addr)
+        |> List.filterMap (initPort addr)
 
 
 mergePorts : List Port -> List Port
