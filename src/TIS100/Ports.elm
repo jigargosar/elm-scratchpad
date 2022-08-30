@@ -147,7 +147,7 @@ viewDownPortValue ( x, y ) portValue =
             , gap "1ch"
             ]
             [ viewArrow Down portValue
-            , viewPortValueText portValue
+            , viewPortValue portValue
             ]
         ]
 
@@ -164,14 +164,14 @@ viewUpPortValue ( x, y ) portValue =
             , pr "1ch"
             , gap "1ch"
             ]
-            [ viewPortValueText portValue
+            [ viewPortValue portValue
             , viewArrow Up portValue
             ]
         ]
 
 
-viewPortValueText : PortValue -> Html msg
-viewPortValueText =
+viewPortValue : PortValue -> Html msg
+viewPortValue =
     let
         toString portValue =
             case portValue of
