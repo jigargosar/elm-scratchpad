@@ -139,8 +139,7 @@ viewFromIOIntentsAndNodeState :
     -> List ( Addr, List IOIntent )
     -> List (Html msg)
 viewFromIOIntentsAndNodeState puzzle list =
-    fromIOIntents puzzle list
-        |> List.map viewPort
+    fromIOIntents puzzle list |> List.map viewPort
 
 
 viewPort : ( Addr, Dir4, PortValue ) -> Html msg
