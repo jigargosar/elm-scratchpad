@@ -74,7 +74,11 @@ puzzleLayoutIds puzzle =
     let
         layoutDict : Dict Addr Puzzle.NodeType
         layoutDict =
-            Debug.todo "todo"
+            puzzle.layout
+                ++ List.repeat 12 Puzzle.Executable
+                |> List.take 12
+                |> List.indexedMap (\i nt -> ( ( modBy 4 i, i // 4 + 1 ), nt ))
+                |> Dict.fromList
 
         isKeyValid : Key -> Bool
         isKeyValid ( from, to ) =
