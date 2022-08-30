@@ -9,10 +9,6 @@ import TIS100.UI as UI
 import Utils exposing (..)
 
 
-type alias Ports =
-    Dict Key PortValue
-
-
 type alias Addr =
     ( Int, Int )
 
@@ -101,6 +97,21 @@ puzzleLayoutIds puzzle =
     List.concatMap idsFromAddr (Dict.keys layoutDict)
 
 
+type alias Ports =
+    Dict Key ( Addr, Dir4, PortValue )
+
+
+portsFromPuzzle : Puzzle -> Ports
+portsFromPuzzle puzzle =
+    puzzleIOIds puzzle
+        ++ puzzleLayoutIds puzzle
+        |> List.foldl
+            (\( key, addr, dir ) ->
+                Dict.insert key ( addr, dir, Empty )
+            )
+            Dict.empty
+
+
 fromPuzzle : Puzzle -> List ( Addr, Dir4, PortValue )
 fromPuzzle puzzle =
     let
@@ -123,6 +134,10 @@ fromIOIntentsAndNodeState :
     -> Dict Addr ( List IOIntent, NodeState a )
     -> List ( Addr, Dir4, PortValue )
 fromIOIntentsAndNodeState _ _ =
+    let
+        _ =
+            1
+    in
     Debug.todo "todo"
 
 
