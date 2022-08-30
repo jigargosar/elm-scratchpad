@@ -1066,10 +1066,6 @@ viewSimPorts dict =
     initSimPorts dict |> List.map viewPort
 
 
-type alias Ports =
-    Dict PortKey Port
-
-
 initSimPorts : Dict Addr ( List IOIntent, NodeState a ) -> List Port
 initSimPorts dict =
     Dict.toList dict
@@ -1111,7 +1107,7 @@ initSimPortsHelp ( addr, ( ioIntents, nState ) ) =
 mergePorts : List Port -> List Port
 mergePorts =
     let
-        merge : Port -> Ports -> Ports
+        merge : Port -> Dict PortKey Port -> Dict PortKey Port
         merge ((Port id newVal) as port_) =
             Dict.update (portKeyFromId id)
                 (\mbOld ->
