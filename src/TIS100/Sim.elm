@@ -272,6 +272,150 @@ viewCycle mbCycle =
     div [] [ text "Cycle: ", text cycle ]
 
 
+viewButtons : Html Msg
+viewButtons =
+    gtCols 4
+        [ gap "2ch" ]
+        [ btn "stop" STOP
+        , btn "step" STEP
+        , btn "run" RUN
+        , btn "fast" FAST
+        ]
+
+
+btn : String -> msg -> Html msg
+btn txt msg =
+    button
+        [ lightOutline
+        , bgc "inherit"
+        , fg "inherit"
+        , style "text-transform" "inherit"
+        , style "font" "inherit"
+        , borderNone
+        , dGrid
+        , placeContentCenter
+        , aspectRatio "1"
+        , notifyClick msg
+        ]
+        [ text txt ]
+
+
+viewTitle =
+    div [ tac, styleLineHeight "2" ] [ text "-- Title --" ]
+
+
+viewDesc =
+    fCol
+        [ lightOutline
+        , pa "0.5ch"
+        , placeContentCenter
+        ]
+        (List.repeat 6 (div [] [ text "> desc" ]))
+
+
+viewIOColumns : Model -> Html msg
+viewIOColumns model =
+    fRow [ tac, gap "2ch" ]
+        (List.map viewInputColumn (inputColumnViewModel model)
+            ++ List.map viewOutputColumn (outputColumnViewModel model)
+        )
+
+
+viewInputColumn : InputColumnViewModel -> Html msg
+viewInputColumn { title, nums } =
+    let
+        numViews =
+            Num.viewSelectionList nums
+    in
+    fCol [ gap "0.5ch" ]
+        [ div [] [ text title ]
+        , div
+            [ lightOutline
+            , sWidth "4ch"
+            , pa "0.5ch 0"
+            , styleLineHeight "0.8"
+            ]
+            (times 39
+                (\i ->
+                    listGetAt i numViews
+                        |> Maybe.withDefault (div [] [ text nbsp ])
+                )
+            )
+        ]
+
+
+viewOutputColumn : OutputColumnViewModel -> Html msg
+viewOutputColumn { title, expected, actual } =
+    let
+        expectedViews =
+            Num.viewSelectionList expected
+
+        actualViews =
+            List.map Num.view actual
+    in
+    fCol [ gap "0.5ch" ]
+        [ div [] [ text title ]
+        , fRow []
+            [ div
+                [ lightOutline
+                , sWidth "4ch"
+                , pa "0.5ch 0"
+                , styleLineHeight "0.8"
+                ]
+                (times 39
+                    (\i ->
+                        listGetAt i expectedViews
+                            |> Maybe.withDefault (div [] [ text nbsp ])
+                    )
+                )
+            , div
+                [ lightOutline
+                , sWidth "4ch"
+                , pa "0.5ch 0"
+                , styleLineHeight "0.8"
+                ]
+                (times 39
+                    (\i ->
+                        listGetAt i actualViews
+                            |> Maybe.withDefault (div [] [ text nbsp ])
+                    )
+                )
+            ]
+        ]
+
+
+nbsp : String
+nbsp =
+    "\u{00A0}"
+
+
+viewGrid : List (Html msg) -> Html msg
+viewGrid =
+    let
+        gapSize =
+            "5ch"
+
+        nodeSize =
+            "24ch"
+
+        repeatRows =
+            fromInt (maxY - 1)
+
+        repeatCols =
+            fromInt (maxX - 1)
+    in
+    div
+        [ displayGrid
+        , [ "repeat(", repeatRows, ",", gapSize, nodeSize, ")", gapSize ]
+            |> String.join " "
+            |> gridTemplateRows
+        , [ "repeat(", repeatCols, ",", nodeSize, gapSize, ")", nodeSize ]
+            |> String.join " "
+            |> gridTemplateColumns
+        , sMaxHeight "100vh"
+        ]
+
+
 
 -- ADDR
 
@@ -710,176 +854,6 @@ completeWriteBlocked : Addr -> Node -> WriteBlockedAcc a -> WriteBlockedAcc a
 completeWriteBlocked addr node acc =
     { acc | writeBlocked = Dict.remove addr acc.writeBlocked }
         |> addToCompleted addr node
-
-
-
--- SIM VIEW
---viewSim : Sim -> Html Msg
---viewSim sim =
---    fCol
---        [ h100
---        , fontSize "12px"
---        , styleLineHeight "0.9"
---        , pa "2ch"
---        , bold
---        , ffMonospace
---        , gap "2ch"
---        , ttu
---        ]
---        [ div [] [ text "Cycle: ", text (fromInt sim.cycle) ]
---        , fRow [ gap "2ch" ]
---            [ fCol [ sWidth "40ch", gap "2ch", fg lightGray ]
---                [ div [] [ viewTitle, viewDesc ]
---                , viewIOColumns sim
---                , viewButtons
---                ]
---            , viewGrid (viewSimGridItems sim)
---            ]
---        ]
-
-
-viewButtons : Html Msg
-viewButtons =
-    gtCols 4
-        [ gap "2ch" ]
-        [ btn "stop" STOP
-        , btn "step" STEP
-        , btn "run" RUN
-        , btn "fast" FAST
-        ]
-
-
-btn : String -> msg -> Html msg
-btn txt msg =
-    button
-        [ lightOutline
-        , bgc "inherit"
-        , fg "inherit"
-        , style "text-transform" "inherit"
-        , style "font" "inherit"
-        , borderNone
-        , dGrid
-        , placeContentCenter
-        , aspectRatio "1"
-        , notifyClick msg
-        ]
-        [ text txt ]
-
-
-viewTitle =
-    div [ tac, styleLineHeight "2" ] [ text "-- Title --" ]
-
-
-viewDesc =
-    fCol
-        [ lightOutline
-        , pa "0.5ch"
-        , placeContentCenter
-        ]
-        (List.repeat 6 (div [] [ text "> desc" ]))
-
-
-viewIOColumns : Model -> Html msg
-viewIOColumns model =
-    fRow [ tac, gap "2ch" ]
-        (List.map viewInputColumn (inputColumnViewModel model)
-            ++ List.map viewOutputColumn (outputColumnViewModel model)
-        )
-
-
-viewInputColumn : InputColumnViewModel -> Html msg
-viewInputColumn { title, nums } =
-    let
-        numViews =
-            Num.viewSelectionList nums
-    in
-    fCol [ gap "0.5ch" ]
-        [ div [] [ text title ]
-        , div
-            [ lightOutline
-            , sWidth "4ch"
-            , pa "0.5ch 0"
-            , styleLineHeight "0.8"
-            ]
-            (times 39
-                (\i ->
-                    listGetAt i numViews
-                        |> Maybe.withDefault (div [] [ text nbsp ])
-                )
-            )
-        ]
-
-
-viewOutputColumn : OutputColumnViewModel -> Html msg
-viewOutputColumn { title, expected, actual } =
-    let
-        expectedViews =
-            Num.viewSelectionList expected
-
-        actualViews =
-            List.map Num.view actual
-    in
-    fCol [ gap "0.5ch" ]
-        [ div [] [ text title ]
-        , fRow []
-            [ div
-                [ lightOutline
-                , sWidth "4ch"
-                , pa "0.5ch 0"
-                , styleLineHeight "0.8"
-                ]
-                (times 39
-                    (\i ->
-                        listGetAt i expectedViews
-                            |> Maybe.withDefault (div [] [ text nbsp ])
-                    )
-                )
-            , div
-                [ lightOutline
-                , sWidth "4ch"
-                , pa "0.5ch 0"
-                , styleLineHeight "0.8"
-                ]
-                (times 39
-                    (\i ->
-                        listGetAt i actualViews
-                            |> Maybe.withDefault (div [] [ text nbsp ])
-                    )
-                )
-            ]
-        ]
-
-
-nbsp : String
-nbsp =
-    "\u{00A0}"
-
-
-viewGrid : List (Html msg) -> Html msg
-viewGrid =
-    let
-        gapSize =
-            "5ch"
-
-        nodeSize =
-            "24ch"
-
-        repeatRows =
-            fromInt (maxY - 1)
-
-        repeatCols =
-            fromInt (maxX - 1)
-    in
-    div
-        [ displayGrid
-        , [ "repeat(", repeatRows, ",", gapSize, nodeSize, ")", gapSize ]
-            |> String.join " "
-            |> gridTemplateRows
-        , [ "repeat(", repeatCols, ",", nodeSize, gapSize, ")", nodeSize ]
-            |> String.join " "
-            |> gridTemplateColumns
-        , sMaxHeight "100vh"
-        ]
 
 
 
