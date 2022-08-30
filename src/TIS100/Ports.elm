@@ -110,8 +110,8 @@ type alias Port =
     ( Addr, Dir4, PortValue )
 
 
-portsFromPuzzle : Puzzle -> Ports
-portsFromPuzzle puzzle =
+allPortsForPuzzle : Puzzle -> Ports
+allPortsForPuzzle puzzle =
     puzzleIOIds puzzle
         ++ puzzleLayoutIds puzzle
         |> List.foldl
@@ -123,7 +123,7 @@ portsFromPuzzle puzzle =
 
 viewFromPuzzle : Puzzle -> List (Html msg)
 viewFromPuzzle puzzle =
-    portsFromPuzzle puzzle |> Dict.values |> List.map viewPort
+    allPortsForPuzzle puzzle |> Dict.values |> List.map viewPort
 
 
 fromIOIntents :
