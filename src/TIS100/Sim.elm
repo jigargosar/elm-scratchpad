@@ -256,30 +256,6 @@ viewEditNodes puzzle es =
         ++ List.map viewExeNodeEntry es
 
 
-viewEditPorts : Puzzle -> List ( Addr, ExeNode ) -> List (Html msg)
-viewEditPorts puzzle es =
-    List.map (\{ x } -> ( ( x, 0 ), [ Write Down ] )) puzzle.inputs
-        ++ List.map (\{ x } -> ( ( x, maxY ), [ Read Up ] )) puzzle.outputs
-        ++ List.map (mapSecond ExeNode.ioIntents) es
-        |> List.concatMap (\( addr, ioIntents ) -> initEmptyPorts addr ioIntents)
-        |> mergePorts
-        |> List.map viewPort
-
-
-mapPuzzlePortsToList : (Addr -> Dir4 -> a) -> Puzzle -> List a
-mapPuzzlePortsToList fn puzzle =
-    Debug.todo "todo"
-
-
-mapSimPortsToList :
-    (Addr -> Dir4 -> PortValue -> a)
-    -> Puzzle
-    -> Dict Addr ( List IOIntent, NodeState a )
-    -> List a
-mapSimPortsToList function puzzle =
-    Debug.todo "todo"
-
-
 viewCycle : Maybe Int -> Html msg
 viewCycle mbCycle =
     let
@@ -979,12 +955,6 @@ viewPortValueText =
 
 type Port
     = Port PortId PortValue
-
-
-initEmptyPorts : Addr -> List IOIntent -> List Port
-initEmptyPorts addr iOIntents =
-    List.filterMap (initPortId addr) iOIntents
-        |> List.map (\id -> Port id Empty)
 
 
 initPort : Addr -> ( IOIntent, PortValue ) -> Maybe Port
