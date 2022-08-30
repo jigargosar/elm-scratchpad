@@ -1,4 +1,4 @@
-module TIS100.Ports exposing (viewFromPuzzle)
+module TIS100.Ports exposing (viewFromIOIntentsAndNodeState, viewFromPuzzle)
 
 import Dict exposing (Dict)
 import TIS100.IOIntent exposing (IOIntent(..))
@@ -118,9 +118,21 @@ viewFromPuzzle puzzle =
     fromPuzzle puzzle |> List.map viewPort
 
 
-fromIOIntentsAndNodeState : Puzzle -> List ( IOIntent, NodeState a ) -> Ports
+fromIOIntentsAndNodeState :
+    Puzzle
+    -> Dict Addr ( List IOIntent, NodeState a )
+    -> List ( Addr, Dir4, PortValue )
 fromIOIntentsAndNodeState _ _ =
     Debug.todo "todo"
+
+
+viewFromIOIntentsAndNodeState :
+    Puzzle
+    -> Dict Addr ( List IOIntent, NodeState a )
+    -> List (Html msg)
+viewFromIOIntentsAndNodeState puzzle dict =
+    fromIOIntentsAndNodeState puzzle dict
+        |> List.map viewPort
 
 
 viewPort : ( Addr, Dir4, PortValue ) -> Html msg
