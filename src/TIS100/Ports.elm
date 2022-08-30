@@ -51,7 +51,7 @@ toId addr intent =
         Read dir ->
             toIdHelp (moveInDir4 dir addr) (oppositeDir4 dir)
 
-        Write dir ->
+        Write dir _ ->
             toIdHelp addr dir
 
 
@@ -67,7 +67,7 @@ toKey addr dir4 =
 
 puzzleIOIds : Puzzle -> List Id
 puzzleIOIds puzzle =
-    List.map (\{ x } -> toId ( x, 0 ) (Write Down)) puzzle.inputs
+    List.map (\{ x } -> toId ( x, 0 ) (Write Down Nothing)) puzzle.inputs
         ++ List.map (\{ x } -> toId ( x, maxY ) (Read Up)) puzzle.outputs
 
 

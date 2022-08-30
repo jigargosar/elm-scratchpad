@@ -313,7 +313,7 @@ nodeIoIntents : Node -> List IOIntent
 nodeIoIntents node =
     case node of
         InputNode _ _ ->
-            [ Write Down ]
+            [ Write Down Nothing ]
 
         OutputNode _ _ ->
             [ Read Up ]
@@ -882,7 +882,7 @@ initPortId addr ioIntent =
         Read dir ->
             initPortIdHelp (moveInDir4 dir addr) (oppositeDir4 dir)
 
-        Write dir ->
+        Write dir _ ->
             initPortIdHelp addr dir
 
 
@@ -1063,7 +1063,7 @@ initSimPortsHelp ( addr, ( ioIntents, nState ) ) =
                         [ ( Read dir, Queried ) ]
 
                     S.WriteBlocked num dir _ ->
-                        [ ( Write dir, Num num ) ]
+                        [ ( Write dir (Just num), Num num ) ]
 
                     S.Done ->
                         []

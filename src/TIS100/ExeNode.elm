@@ -82,7 +82,7 @@ ioIntents exe =
         Runnable inst _ ->
             case inst of
                 Mov f t ->
-                    [ Read f, Write t ]
+                    [ Read f, Write t Nothing ]
 
                 Nop ->
                     []
