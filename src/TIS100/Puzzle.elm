@@ -1,5 +1,6 @@
 module TIS100.Puzzle exposing (..)
 
+import Dict exposing (Dict)
 import TIS100.Num as Num exposing (Num)
 
 
@@ -47,3 +48,8 @@ samplePuzzle =
         ]
             |> List.concat
     }
+
+
+layout : Puzzle -> List NodeType
+layout puzzle =
+    puzzle.layout ++ List.repeat 12 Executable
