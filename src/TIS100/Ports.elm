@@ -5,6 +5,7 @@ import TIS100.IOIntent exposing (IOIntent(..))
 import TIS100.NodeState exposing (NodeState)
 import TIS100.Num as Num exposing (Num)
 import TIS100.Puzzle as Puzzle exposing (Puzzle)
+import TIS100.UI as UI
 import Utils exposing (..)
 
 
@@ -192,7 +193,7 @@ viewArrow dir4 pv =
         color =
             case pv of
                 Empty ->
-                    darkGray
+                    UI.darkGray
 
                 _ ->
                     "inherit"
@@ -210,23 +211,7 @@ fromIOIntentsAndNodeState _ _ =
 
 
 
--- UI HELPERS
-
-
-darkGray =
-    grayN 0.5
-
-
-lightGray =
-    grayN 0.7
-
-
-
---noinspection ElmUnusedSymbol
-
-
-lightOutline =
-    sOutline ("1px solid " ++ lightGray)
+-- ARROW
 
 
 type ArrowType
