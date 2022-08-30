@@ -239,7 +239,8 @@ viewGridItems : Model -> List (Html msg)
 viewGridItems { puzzle, editDict, state } =
     case state of
         Debug sim ->
-            viewSimGridItems sim
+            List.map viewNodeEntry (Dict.toList sim.store)
+                ++ Port.view puzzle (simIntentsAndActions sim)
 
         Edit ->
             let
@@ -884,12 +885,6 @@ viewGrid =
             |> gridTemplateColumns
         , sMaxHeight "100vh"
         ]
-
-
-viewSimGridItems : Sim -> List (Html msg)
-viewSimGridItems sim =
-    List.map viewNodeEntry (Dict.toList sim.store)
-        ++ viewSimPorts (simIOIntentsAndNodeState sim)
 
 
 

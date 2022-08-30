@@ -174,8 +174,8 @@ viewAllPorts puzzle =
     allPuzzlePorts puzzle |> viewPorts
 
 
-view : Puzzle -> List ( Addr, IOIntent ) -> List ( Addr, IOAction ) -> List (Html msg)
-view puzzle intents actions =
+view : Puzzle -> ( List ( Addr, IOIntent ), List ( Addr, IOAction ) ) -> List (Html msg)
+view puzzle ( intents, actions ) =
     let
         selectedPorts =
             fromIntents intents
