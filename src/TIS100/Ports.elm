@@ -38,6 +38,10 @@ type alias Id =
     ( Key, Addr, Dir4 )
 
 
+
+--noinspection ElmUnusedSymbol
+
+
 type PortValue
     = Empty
     | Num Num
@@ -65,13 +69,13 @@ puzzleIOIds puzzle =
         ++ List.map (\{ x } -> toId ( x, maxY ) (Read Up)) puzzle.outputs
 
 
-puzzleLayoutDict : Puzzle -> Dict Addr Puzzle.NodeType
-puzzleLayoutDict _ =
-    Debug.todo "todo"
-
-
 puzzleLayoutIds : Puzzle -> List Id
-puzzleLayoutIds _ =
+puzzleLayoutIds puzzle =
+    let
+        layoutDict : Dict Addr Puzzle.NodeType
+        layoutDict =
+            Debug.todo "todo"
+    in
     Debug.todo "todo"
 
 
@@ -85,6 +89,10 @@ fromPuzzle puzzle =
                 |> Dict.values
     in
     ids |> List.map (\( _, addr, dir ) -> ( addr, dir, Empty ))
+
+
+
+--noinspection ElmUnusedSymbol
 
 
 fromIOIntentsAndNodeState : Puzzle -> List ( IOIntent, NodeState a ) -> Ports
