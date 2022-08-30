@@ -265,6 +265,20 @@ viewEditPorts puzzle es =
         |> List.map viewPort
 
 
+puzzlePortIds : Puzzle -> List PortId
+puzzlePortIds puzzle =
+    let
+        exeAddrList : List Addr
+        exeAddrList =
+            Debug.todo "todo"
+
+        outAddrList : List Addr
+        outAddrList =
+            Debug.todo "todo"
+    in
+    Debug.todo "todo"
+
+
 viewCycle : Maybe Int -> Html msg
 viewCycle mbCycle =
     let
