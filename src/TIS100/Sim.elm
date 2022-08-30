@@ -273,7 +273,11 @@ mapPuzzlePortsToList fn puzzle =
 mapSimPortsToList :
     (Addr -> Dir4 -> PortValue -> a)
     -> Puzzle
-    -> List ( Addr, IOIntentWithValue )
+    ->
+        { getIntents : Addr -> List IOIntent
+        , getReadBlocked : Addr -> List Dir4
+        , getWriteBlocked : Addr -> List ( Dir4, Num )
+        }
     -> List a
 mapSimPortsToList function puzzle =
     Debug.todo "todo"
