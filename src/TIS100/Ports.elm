@@ -65,13 +65,18 @@ toKeyHelp addr dir4 =
     ( addr, moveInDir4 dir4 addr )
 
 
+puzzleIOKeys : Puzzle -> List Key
+puzzleIOKeys puzzle =
+    List.map (\{ x } -> toKey ( x, 0 ) (Write Down)) puzzle.inputs
+        ++ List.map (\{ x } -> toKey ( x, maxY ) (Read Up)) puzzle.outputs
+
+
 fromPuzzle : Puzzle -> List ( Addr, Dir4, PortValue )
 fromPuzzle puzzle =
     let
         ioKeys : List Key
         ioKeys =
-            List.map (\{ x } -> toKey ( x, 0 ) (Write Down)) puzzle.inputs
-                ++ List.map (\{ x } -> toKey ( x, maxY ) (Read Up)) puzzle.outputs
+            puzzleIOKeys puzzle
     in
     Debug.todo "todo"
 
