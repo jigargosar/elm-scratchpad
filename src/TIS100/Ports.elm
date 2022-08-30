@@ -194,7 +194,7 @@ viewPorts ports =
 
 
 viewPort : ( Addr, Dir4, Value ) -> Html msg
-viewPort ( ( x, y ), dir, portValue ) =
+viewPort ( ( x, y ), dir, val ) =
     case dir of
         Up ->
             gtCols 2
@@ -207,8 +207,8 @@ viewPort ( ( x, y ), dir, portValue ) =
                     , pr "1ch"
                     , gap "1ch"
                     ]
-                    [ viewValue portValue
-                    , viewArrow Up portValue
+                    [ viewValue val
+                    , viewArrow Up val
                     ]
                 ]
 
@@ -222,8 +222,8 @@ viewPort ( ( x, y ), dir, portValue ) =
                     , pl "1ch"
                     , gap "1ch"
                     ]
-                    [ viewArrow Down portValue
-                    , viewValue portValue
+                    [ viewArrow Down val
+                    , viewValue val
                     ]
                 ]
 
