@@ -9,7 +9,7 @@ module TIS100.Sim exposing
 
 import Dict exposing (Dict)
 import TIS100.ExeNode as ExeNode exposing (ExeNode)
-import TIS100.IOIntent exposing (IOAction, IOIntent(..))
+import TIS100.IOIntent exposing (IOAction(..), IOIntent(..))
 import TIS100.InputNode as InputNode exposing (InputNode)
 import TIS100.NodeState as S exposing (NodeState)
 import TIS100.Num as Num exposing (Num)
@@ -322,6 +322,22 @@ nodeIoIntents node =
             ExeNode.ioIntents exe
 
 
+nodeIoActions : Node -> List IOAction
+nodeIoActions node =
+    case nodeState node of
+        S.ReadyToRun _ ->
+            []
+
+        S.ReadBlocked dir4 _ ->
+            [ Reading dir4 ]
+
+        S.WriteBlocked num dir4 _ ->
+            [ Writing dir4 num ]
+
+        S.Done ->
+            []
+
+
 nodeState : Node -> NodeState Node
 nodeState node =
     case node of
@@ -525,7 +541,14 @@ simIOIntentsAndNodeState sim =
 
 simIntentsAndActions : Sim -> ( List ( Addr, IOIntent ), List ( Addr, IOAction ) )
 simIntentsAndActions sim =
-    Debug.todo "todo"
+    Dict.foldl
+        (\addr node ( intents, actions ) ->
+            ( List.map (pair addr) (nodeIoIntents node) ++ intents
+            , List.map (pair addr) (nodeIoActions node) ++ actions
+            )
+        )
+        ( [], [] )
+        sim.store
 
 
 
