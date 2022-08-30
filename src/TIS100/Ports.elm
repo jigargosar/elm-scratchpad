@@ -1,7 +1,7 @@
 module TIS100.Ports exposing (viewAllPorts)
 
 import Dict exposing (Dict)
-import TIS100.IOIntent exposing (IOIntent(..))
+import TIS100.IOIntent exposing (IOAction(..), IOIntent(..))
 import TIS100.NodeState as S exposing (NodeState)
 import TIS100.Num as Num exposing (Num)
 import TIS100.Puzzle as Puzzle exposing (Puzzle)
@@ -51,7 +51,7 @@ toId addr intent =
         Read dir ->
             toIdHelp (moveInDir4 dir addr) (oppositeDir4 dir)
 
-        Write dir _ ->
+        Write dir ->
             toIdHelp addr dir
 
 
@@ -67,7 +67,7 @@ toKey addr dir4 =
 
 puzzleIOIds : Puzzle -> List Id
 puzzleIOIds puzzle =
-    List.map (\{ x } -> toId ( x, 0 ) (Write Down Nothing)) puzzle.inputs
+    List.map (\{ x } -> toId ( x, 0 ) (Write Down)) puzzle.inputs
         ++ List.map (\{ x } -> toId ( x, maxY ) (Read Up)) puzzle.outputs
 
 
@@ -108,6 +108,39 @@ type alias Ports =
 
 type alias Port =
     ( Addr, Dir4, PortValue )
+
+
+addIntent : Addr -> IOIntent -> Ports -> Ports
+addIntent addr iOIntent =
+    let
+        port_ =
+            case iOIntent of
+                Read dir4 ->
+                    ( moveInDir4 dir4 addr, oppositeDir4 dir4, Empty )
+
+                Write dir4 ->
+                    ( addr, dir4, Empty )
+    in
+    addPort port_
+
+
+addAction : Addr -> IOAction -> Ports -> Ports
+addAction addr iOAction =
+    let
+        port_ =
+            case iOAction of
+                Reading dir4 ->
+                    ( moveInDir4 dir4 addr, oppositeDir4 dir4, Queried )
+
+                Writing dir4 num ->
+                    ( addr, dir4, Num num )
+    in
+    addPort port_
+
+
+addPort : Port -> Ports -> Ports
+addPort port_ ports =
+    Debug.todo "todo"
 
 
 allPuzzlePorts : Puzzle -> Ports

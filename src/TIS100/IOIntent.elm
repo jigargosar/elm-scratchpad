@@ -6,4 +6,9 @@ import Utils exposing (Dir4)
 
 type IOIntent
     = Read Dir4
-    | Write Dir4 (Maybe Num)
+    | Write Dir4
+
+
+type IOAction
+    = Reading Dir4
+    | Writing Dir4 Num
