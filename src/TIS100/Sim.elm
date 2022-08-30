@@ -14,7 +14,7 @@ import TIS100.InputNode as InputNode exposing (InputNode)
 import TIS100.NodeState as S exposing (NodeState)
 import TIS100.Num as Num exposing (Num)
 import TIS100.OutputNode as OutputNode exposing (OutputNode)
-import TIS100.Ports as Port
+import TIS100.Ports as Ports
 import TIS100.Puzzle as Puzzle exposing (IOConfig, Puzzle)
 import TIS100.SelectionList as SelectionList exposing (SelectionList)
 import TIS100.UI as UI
@@ -240,7 +240,7 @@ viewGridItems { puzzle, editDict, state } =
     case state of
         Debug sim ->
             List.map viewNodeEntry (Dict.toList sim.store)
-                ++ Port.view puzzle (simIntentsAndActions sim)
+                ++ Ports.view puzzle (simIntentsAndActions sim)
 
         Edit ->
             let
@@ -248,7 +248,7 @@ viewGridItems { puzzle, editDict, state } =
                     Dict.toList editDict
             in
             viewEditNodes puzzle es
-                ++ Port.viewAllPorts puzzle
+                ++ Ports.viewAllPorts puzzle
 
 
 viewEditNodes : Puzzle -> List ( Addr, ExeNode ) -> List (Html msg)
