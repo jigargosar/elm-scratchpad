@@ -118,6 +118,11 @@ viewFromPuzzle puzzle =
     fromPuzzle puzzle |> List.map viewPort
 
 
+fromIOIntentsAndNodeState : Puzzle -> List ( IOIntent, NodeState a ) -> Ports
+fromIOIntentsAndNodeState _ _ =
+    Debug.todo "todo"
+
+
 viewPort : ( Addr, Dir4, PortValue ) -> Html msg
 viewPort ( addr, dir, portValue ) =
     case dir of
@@ -198,15 +203,6 @@ viewArrow dir4 pv =
                     "inherit"
     in
     span [ fg color, fontSize "2em", fontWeight "100" ] [ text (arrowDefault dir4) ]
-
-
-
---noinspection ElmUnusedSymbol
-
-
-fromIOIntentsAndNodeState : Puzzle -> List ( IOIntent, NodeState a ) -> Ports
-fromIOIntentsAndNodeState _ _ =
-    Debug.todo "todo"
 
 
 
