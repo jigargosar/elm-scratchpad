@@ -35,41 +35,35 @@ type alias Key =
     ( Addr, Addr )
 
 
+type alias Id =
+    ( Key, Addr, Dir4 )
+
+
 type PortValue
     = Empty
     | Num Num
     | Queried
 
 
-empty : Ports
-empty =
-    Debug.todo "todo"
-
-
-fromPuzzleIO : Puzzle -> Ports
-fromPuzzleIO puzzle =
-    Debug.todo "todo"
-
-
-toKey : Addr -> IOIntent -> Key
-toKey addr intent =
+toId : Addr -> IOIntent -> Id
+toId addr intent =
     case intent of
         Read dir ->
-            toKeyHelp (moveInDir4 dir addr) (oppositeDir4 dir)
+            toIdHelp (moveInDir4 dir addr) (oppositeDir4 dir)
 
         Write dir ->
-            toKeyHelp addr dir
+            toIdHelp addr dir
 
 
-toKeyHelp : Addr -> Dir4 -> Key
-toKeyHelp addr dir4 =
-    ( addr, moveInDir4 dir4 addr )
+toIdHelp : Addr -> Dir4 -> Id
+toIdHelp addr dir4 =
+    ( ( addr, moveInDir4 dir4 addr ), addr, dir4 )
 
 
-puzzleIOKeys : Puzzle -> List Key
-puzzleIOKeys puzzle =
-    List.map (\{ x } -> toKey ( x, 0 ) (Write Down)) puzzle.inputs
-        ++ List.map (\{ x } -> toKey ( x, maxY ) (Read Up)) puzzle.outputs
+puzzleIOIds : Puzzle -> List Id
+puzzleIOIds puzzle =
+    List.map (\{ x } -> toId ( x, 0 ) (Write Down)) puzzle.inputs
+        ++ List.map (\{ x } -> toId ( x, maxY ) (Read Up)) puzzle.outputs
 
 
 puzzleLayoutDict : Puzzle -> Dict Addr Puzzle.NodeType
@@ -77,34 +71,21 @@ puzzleLayoutDict puzzle =
     Debug.todo "todo"
 
 
-puzzleLayoutKeys : Puzzle -> List Key
-puzzleLayoutKeys puzzle =
-    Debug.todo "todo"
-
-
-emptyPortFromKey : Key -> ( Addr, Dir4, PortValue )
-emptyPortFromKey key =
+puzzleLayoutIds : Puzzle -> List Id
+puzzleLayoutIds puzzle =
     Debug.todo "todo"
 
 
 fromPuzzle : Puzzle -> List ( Addr, Dir4, PortValue )
 fromPuzzle puzzle =
     let
-        ioKeys : List Key
-        ioKeys =
-            puzzleIOKeys puzzle
-
-        layoutKeys : List Key
-        layoutKeys =
-            puzzleLayoutKeys puzzle
-
-        keys =
-            ioKeys
-                ++ layoutKeys
-                |> Set.fromList
-                |> Set.toList
+        ids =
+            puzzleIOIds puzzle
+                ++ puzzleLayoutIds puzzle
+                |> List.foldl (\(( key, _, _ ) as id) -> Dict.insert key id) Dict.empty
+                |> Dict.values
     in
-    keys |> List.map emptyPortFromKey
+    ids |> List.map (\( _, addr, dir ) -> ( addr, dir, Empty ))
 
 
 fromIOIntentsAndNodeState : Puzzle -> List ( IOIntent, NodeState a ) -> Ports
