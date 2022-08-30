@@ -78,7 +78,6 @@ puzzleLayoutIds puzzle =
             puzzle.layout
                 |> List.indexedMap (\i nt -> ( ( modBy 4 i, i // 4 + 1 ), nt ))
                 |> Dict.fromList
-                |> Debug.log "Debug: "
 
         isKeyValid : Key -> Bool
         isKeyValid ( from, to ) =
@@ -99,7 +98,7 @@ puzzleLayoutIds puzzle =
             List.map (toIdHelp addr) [ Up, Down, Left, Right ]
                 |> List.filter (\( key, _, _ ) -> isKeyValid key)
     in
-    List.concatMap idsFromAddr (Debug.log "Debug: " (Dict.keys layoutDict))
+    List.concatMap idsFromAddr (Dict.keys layoutDict)
 
 
 fromPuzzle : Puzzle -> List ( Addr, Dir4, PortValue )
