@@ -1,7 +1,6 @@
 module TIS100.Ports exposing (fromPuzzle)
 
 import Dict exposing (Dict)
-import Set
 import TIS100.IOIntent exposing (IOIntent(..))
 import TIS100.NodeState exposing (NodeState)
 import TIS100.Num exposing (Num)
@@ -67,12 +66,12 @@ puzzleIOIds puzzle =
 
 
 puzzleLayoutDict : Puzzle -> Dict Addr Puzzle.NodeType
-puzzleLayoutDict puzzle =
+puzzleLayoutDict _ =
     Debug.todo "todo"
 
 
 puzzleLayoutIds : Puzzle -> List Id
-puzzleLayoutIds puzzle =
+puzzleLayoutIds _ =
     Debug.todo "todo"
 
 
@@ -89,5 +88,5 @@ fromPuzzle puzzle =
 
 
 fromIOIntentsAndNodeState : Puzzle -> List ( IOIntent, NodeState a ) -> Ports
-fromIOIntentsAndNodeState puzzle list =
+fromIOIntentsAndNodeState _ _ =
     Debug.todo "todo"
