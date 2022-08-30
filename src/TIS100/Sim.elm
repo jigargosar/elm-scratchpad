@@ -9,7 +9,7 @@ module TIS100.Sim exposing
 
 import Dict exposing (Dict)
 import TIS100.ExeNode as ExeNode exposing (ExeNode)
-import TIS100.IOIntent exposing (IOIntent(..))
+import TIS100.IOIntent exposing (IOIntent(..), IOIntentWithValue)
 import TIS100.InputNode as InputNode exposing (InputNode)
 import TIS100.NodeState as S exposing (NodeState)
 import TIS100.Num as Num exposing (Num)
@@ -270,7 +270,11 @@ mapPuzzlePortsToList fn puzzle =
     Debug.todo "todo"
 
 
-mapSimPortsToList : (Addr -> Dir4 -> a) -> Puzzle -> List a
+mapSimPortsToList :
+    (Addr -> Dir4 -> PortValue -> a)
+    -> Puzzle
+    -> List ( Addr, IOIntentWithValue )
+    -> List a
 mapSimPortsToList function puzzle =
     Debug.todo "todo"
 
