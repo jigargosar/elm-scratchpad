@@ -6,7 +6,3 @@ import Utils exposing (Dir4)
 type IOIntent
     = Read Dir4
     | Write Dir4
-
-
-type IOIntentWithValue
-    = IOIntentWithValue

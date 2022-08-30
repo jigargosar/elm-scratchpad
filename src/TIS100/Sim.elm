@@ -9,7 +9,7 @@ module TIS100.Sim exposing
 
 import Dict exposing (Dict)
 import TIS100.ExeNode as ExeNode exposing (ExeNode)
-import TIS100.IOIntent exposing (IOIntent(..), IOIntentWithValue)
+import TIS100.IOIntent exposing (IOIntent(..))
 import TIS100.InputNode as InputNode exposing (InputNode)
 import TIS100.NodeState as S exposing (NodeState)
 import TIS100.Num as Num exposing (Num)
