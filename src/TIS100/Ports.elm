@@ -2,7 +2,6 @@ module TIS100.Ports exposing (viewAllPorts)
 
 import Dict exposing (Dict)
 import TIS100.IOIntent exposing (IOAction(..), IOIntent(..))
-import TIS100.NodeState as S exposing (NodeState)
 import TIS100.Num as Num exposing (Num)
 import TIS100.Puzzle as Puzzle exposing (Puzzle)
 import TIS100.UI as UI
@@ -124,6 +123,59 @@ puzzleLayoutIds puzzle =
     List.concatMap idsFromAddr (Dict.keys layoutDict)
 
 
+puzzleLayoutIOIntents : Puzzle -> List ( Addr, IOIntent )
+puzzleLayoutIOIntents puzzle =
+    let
+        layoutDict : Dict Addr Puzzle.NodeType
+        layoutDict =
+            puzzle.layout
+                |> List.indexedMap (\i nt -> ( ( modBy 4 i, i // 4 + 1 ), nt ))
+                |> Dict.fromList
+
+        isKeyValid : Key -> Bool
+        isKeyValid ( from, to ) =
+            case dictGet2 from to layoutDict of
+                Just ( writer, _ ) ->
+                    case writer of
+                        Puzzle.Executable ->
+                            True
+
+                        Puzzle.Faulty ->
+                            False
+
+                Nothing ->
+                    False
+
+        idsFromAddr : Addr -> List Id
+        idsFromAddr addr =
+            List.map (toIdHelp addr) [ Up, Down, Left, Right ]
+                |> List.filter (\( key, _, _ ) -> isKeyValid key)
+
+        ioIntentsFromAddr : Addr -> List ( Addr, IOIntent )
+        ioIntentsFromAddr addr =
+            [ Up, Down, Left, Right ]
+                |> List.filterMap
+                    (\dir ->
+                        let
+                            to =
+                                moveInDir4 dir addr
+                        in
+                        case dictGet2 addr to layoutDict of
+                            Just ( writer, _ ) ->
+                                case writer of
+                                    Puzzle.Executable ->
+                                        Just ( addr, Write dir )
+
+                                    Puzzle.Faulty ->
+                                        Nothing
+
+                            Nothing ->
+                                Nothing
+                    )
+    in
+    List.concatMap ioIntentsFromAddr (Dict.keys layoutDict)
+
+
 type alias Ports =
     Dict Key Port
 
@@ -132,37 +184,39 @@ type alias Port =
     ( Addr, Dir4, PortValue )
 
 
-addIntent : Addr -> IOIntent -> Ports -> Ports
-addIntent addr iOIntent =
-    let
-        port_ =
-            case iOIntent of
-                Read dir4 ->
-                    ( moveInDir4 dir4 addr, oppositeDir4 dir4, Empty )
 
-                Write dir4 ->
-                    ( addr, dir4, Empty )
-    in
-    addPort port_
-
-
-addAction : Addr -> IOAction -> Ports -> Ports
-addAction addr iOAction =
-    let
-        port_ =
-            case iOAction of
-                Reading dir4 ->
-                    ( moveInDir4 dir4 addr, oppositeDir4 dir4, Queried )
-
-                Writing dir4 num ->
-                    ( addr, dir4, Num num )
-    in
-    addPort port_
-
-
-addPort : Port -> Ports -> Ports
-addPort port_ ports =
-    Debug.todo "todo"
+--addIntent : Addr -> IOIntent -> Ports -> Ports
+--addIntent addr iOIntent =
+--    let
+--        port_ =
+--            case iOIntent of
+--                Read dir4 ->
+--                    ( moveInDir4 dir4 addr, oppositeDir4 dir4, Empty )
+--
+--                Write dir4 ->
+--                    ( addr, dir4, Empty )
+--    in
+--    addPort port_
+--
+--
+--addAction : Addr -> IOAction -> Ports -> Ports
+--addAction addr iOAction =
+--    let
+--        port_ =
+--            case iOAction of
+--                Reading dir4 ->
+--                    ( moveInDir4 dir4 addr, oppositeDir4 dir4, Queried )
+--
+--                Writing dir4 num ->
+--                    ( addr, dir4, Num num )
+--    in
+--    addPort port_
+--
+--
+--addPort : Port -> Ports -> Ports
+--addPort port_ ports =
+--    Debug.todo "todo"
+--
 
 
 allPuzzlePorts : Puzzle -> Ports
@@ -172,6 +226,7 @@ allPuzzlePorts puzzle =
         ioIntents =
             List.map (\{ x } -> ( ( x, 0 ), Write Down )) puzzle.inputs
                 ++ List.map (\{ x } -> ( ( x, maxY ), Read Up )) puzzle.outputs
+                ++ puzzleLayoutIOIntents puzzle
     in
     puzzleIOIds puzzle
         ++ puzzleLayoutIds puzzle
@@ -187,20 +242,22 @@ viewAllPorts puzzle =
     allPuzzlePorts puzzle |> Dict.values |> List.map viewPort
 
 
-fromIOIntents :
-    Puzzle
-    -> List ( Addr, List IOIntent )
-    -> List Port
-fromIOIntents _ _ =
-    Debug.todo "todo"
 
-
-viewFromIOIntentsAndNodeState :
-    Puzzle
-    -> List ( Addr, List IOIntent )
-    -> List (Html msg)
-viewFromIOIntentsAndNodeState puzzle list =
-    fromIOIntents puzzle list |> List.map viewPort
+--fromIOIntents :
+--    Puzzle
+--    -> List ( Addr, List IOIntent )
+--    -> List Port
+--fromIOIntents _ _ =
+--    Debug.todo "todo"
+--
+--
+--viewFromIOIntentsAndNodeState :
+--    Puzzle
+--    -> List ( Addr, List IOIntent )
+--    -> List (Html msg)
+--viewFromIOIntentsAndNodeState puzzle list =
+--    fromIOIntents puzzle list |> List.map viewPort
+--
 
 
 viewPort : ( Addr, Dir4, PortValue ) -> Html msg
