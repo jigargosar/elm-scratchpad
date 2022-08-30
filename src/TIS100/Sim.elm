@@ -174,8 +174,8 @@ type alias InputColumnViewModel =
     }
 
 
-inputDataList : Model -> List InputColumnViewModel
-inputDataList { puzzle, state } =
+inputColumnViewModel : Model -> List InputColumnViewModel
+inputColumnViewModel { puzzle, state } =
     case state of
         Debug sim ->
             inputColumnViewModels sim
@@ -188,15 +188,15 @@ inputDataList { puzzle, state } =
                     )
 
 
-type alias OutputData =
+type alias OutputColumnViewModel =
     { title : String
     , expected : SelectionList Num
     , actual : List Num
     }
 
 
-outputDataList : Model -> List OutputData
-outputDataList { puzzle, state } =
+outputColumnViewModel : Model -> List OutputColumnViewModel
+outputColumnViewModel { puzzle, state } =
     case state of
         Debug sim ->
             outputDataListFromSim sim
@@ -205,7 +205,7 @@ outputDataList { puzzle, state } =
             puzzle.outputs
                 |> List.map
                     (\{ title, nums } ->
-                        OutputData title (SelectionList.None nums) []
+                        OutputColumnViewModel title (SelectionList.None nums) []
                     )
 
 
@@ -504,7 +504,7 @@ inputColumnViewModels sim =
     Dict.values sim.store |> List.filterMap mapper
 
 
-outputDataListFromSim : Sim -> List OutputData
+outputDataListFromSim : Sim -> List OutputColumnViewModel
 outputDataListFromSim sim =
     let
         mapper node =
@@ -515,7 +515,7 @@ outputDataListFromSim sim =
                             OutputNode.getNumsRead outputNode
                     in
                     Just <|
-                        OutputData
+                        OutputColumnViewModel
                             conf.title
                             (SelectionList.fromIndex (List.length actual) conf.nums)
                             actual
@@ -766,8 +766,8 @@ viewDesc =
 viewIOColumns : Model -> Html msg
 viewIOColumns model =
     fRow [ tac, gap "2ch" ]
-        (List.map viewInputColumn (inputDataList model)
-            ++ List.map viewOutputColumn (outputDataList model)
+        (List.map viewInputColumn (inputColumnViewModel model)
+            ++ List.map viewOutputColumn (outputColumnViewModel model)
         )
 
 
@@ -794,7 +794,7 @@ viewInputColumn { title, nums } =
         ]
 
 
-viewOutputColumn : OutputData -> Html msg
+viewOutputColumn : OutputColumnViewModel -> Html msg
 viewOutputColumn { title, expected, actual } =
     let
         expectedViews =
