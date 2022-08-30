@@ -64,65 +64,6 @@ toKey addr dir4 =
     ( addr, moveInDir4 dir4 addr )
 
 
-puzzleIOIds : Puzzle -> List Id
-puzzleIOIds puzzle =
-    List.map (\{ x } -> toId ( x, 0 ) (Write Down)) puzzle.inputs
-        ++ List.map (\{ x } -> toId ( x, maxY ) (Read Up)) puzzle.outputs
-
-
-puzzleLayoutIds : Puzzle -> List Id
-puzzleLayoutIds puzzle =
-    let
-        layoutDict : Dict Addr Puzzle.NodeType
-        layoutDict =
-            puzzle.layout
-                |> List.indexedMap (\i nt -> ( ( modBy 4 i, i // 4 + 1 ), nt ))
-                |> Dict.fromList
-
-        isKeyValid : Key -> Bool
-        isKeyValid ( from, to ) =
-            case dictGet2 from to layoutDict of
-                Just ( writer, _ ) ->
-                    case writer of
-                        Puzzle.Executable ->
-                            True
-
-                        Puzzle.Faulty ->
-                            False
-
-                Nothing ->
-                    False
-
-        idsFromAddr : Addr -> List Id
-        idsFromAddr addr =
-            List.map (toIdHelp addr) [ Up, Down, Left, Right ]
-                |> List.filter (\( key, _, _ ) -> isKeyValid key)
-
-        ioIntentsFromAddr : Addr -> List ( Addr, IOIntent )
-        ioIntentsFromAddr addr =
-            [ Up, Down, Left, Right ]
-                |> List.filterMap
-                    (\dir ->
-                        let
-                            to =
-                                moveInDir4 dir addr
-                        in
-                        case dictGet2 addr to layoutDict of
-                            Just ( writer, _ ) ->
-                                case writer of
-                                    Puzzle.Executable ->
-                                        Just ( addr, Write dir )
-
-                                    Puzzle.Faulty ->
-                                        Nothing
-
-                            Nothing ->
-                                Nothing
-                    )
-    in
-    List.concatMap idsFromAddr (Dict.keys layoutDict)
-
-
 puzzleLayoutIOIntents : Puzzle -> List ( Addr, IOIntent )
 puzzleLayoutIOIntents puzzle =
     let
@@ -235,17 +176,8 @@ allPuzzlePorts puzzle =
             List.map (\{ x } -> ( ( x, 0 ), Write Down )) puzzle.inputs
                 ++ List.map (\{ x } -> ( ( x, maxY ), Read Up )) puzzle.outputs
                 ++ puzzleLayoutIOIntents puzzle
-
-        _ =
-            fromIOIntents ioIntents
     in
-    puzzleIOIds puzzle
-        ++ puzzleLayoutIds puzzle
-        |> List.foldl
-            (\( key, addr, dir ) ->
-                Dict.insert key ( addr, dir, Empty )
-            )
-            Dict.empty
+    fromIOIntents ioIntents
 
 
 viewAllPorts : Puzzle -> List (Html msg)
