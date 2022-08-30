@@ -1,9 +1,7 @@
 module TIS100.Ports exposing (..)
 
 import Dict exposing (Dict)
-import TIS100.IOIntent exposing (IOIntent(..))
 import TIS100.Num exposing (Num)
-import Utils exposing (Dir4, moveInDir4, oppositeDir4)
 
 
 type Ports
