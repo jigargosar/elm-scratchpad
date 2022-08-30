@@ -82,7 +82,7 @@ puzzleLayoutIds puzzle =
 
         isKeyValid : Key -> Bool
         isKeyValid ( from, to ) =
-            case Utils.dictGet2 from to layoutDict of
+            case dictGet2 from to layoutDict of
                 Just ( writer, _ ) ->
                     case writer of
                         Puzzle.Executable ->
@@ -98,6 +98,28 @@ puzzleLayoutIds puzzle =
         idsFromAddr addr =
             List.map (toIdHelp addr) [ Up, Down, Left, Right ]
                 |> List.filter (\( key, _, _ ) -> isKeyValid key)
+
+        ioIntentsFromAddr : Addr -> List ( Addr, IOIntent )
+        ioIntentsFromAddr addr =
+            [ Up, Down, Left, Right ]
+                |> List.filterMap
+                    (\dir ->
+                        let
+                            to =
+                                moveInDir4 dir addr
+                        in
+                        case dictGet2 addr to layoutDict of
+                            Just ( writer, _ ) ->
+                                case writer of
+                                    Puzzle.Executable ->
+                                        Just ( addr, Write dir )
+
+                                    Puzzle.Faulty ->
+                                        Nothing
+
+                            Nothing ->
+                                Nothing
+                    )
     in
     List.concatMap idsFromAddr (Dict.keys layoutDict)
 
@@ -145,6 +167,12 @@ addPort port_ ports =
 
 allPuzzlePorts : Puzzle -> Ports
 allPuzzlePorts puzzle =
+    let
+        ioIntents : List ( Addr, IOIntent )
+        ioIntents =
+            List.map (\{ x } -> ( ( x, 0 ), Write Down )) puzzle.inputs
+                ++ List.map (\{ x } -> ( ( x, maxY ), Read Up )) puzzle.outputs
+    in
     puzzleIOIds puzzle
         ++ puzzleLayoutIds puzzle
         |> List.foldl
