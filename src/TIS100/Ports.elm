@@ -38,10 +38,10 @@ type alias Id =
 --noinspection ElmUnusedSymbol
 
 
-type PortValue
+type Value
     = Empty
     | Num Num
-    | Queried
+    | Query
 
 
 toKey : Addr -> Dir4 -> Key
@@ -88,7 +88,7 @@ type alias Ports =
 
 
 type alias Port =
-    ( Addr, Dir4, PortValue )
+    ( Addr, Dir4, Value )
 
 
 fromIntents : List ( Addr, IOIntent ) -> Ports
@@ -121,7 +121,7 @@ addAction ( addr, iOAction ) =
         port_ =
             case iOAction of
                 Reading dir4 ->
-                    ( moveInDir4 dir4 addr, oppositeDir4 dir4, Queried )
+                    ( moveInDir4 dir4 addr, oppositeDir4 dir4, Query )
 
                 Writing dir4 num ->
                     ( addr, dir4, Num num )
@@ -147,7 +147,7 @@ addPort (( addr, dir, new ) as port_) =
                                 ( _, Empty ) ->
                                     old
 
-                                ( _, Queried ) ->
+                                ( _, Query ) ->
                                     old
 
                                 _ ->
@@ -193,14 +193,39 @@ viewPorts ports =
     ports |> Dict.values |> List.map viewPort
 
 
-viewPort : ( Addr, Dir4, PortValue ) -> Html msg
-viewPort ( addr, dir, portValue ) =
+viewPort : ( Addr, Dir4, Value ) -> Html msg
+viewPort ( ( x, y ), dir, portValue ) =
     case dir of
         Up ->
-            viewUpPortValue addr portValue
+            gtCols 2
+                [ gridAreaXY ( x * 2, (y * 2) - 2 ), noPointerEvents ]
+                [ fRow
+                    [ gridAreaXY ( 0, 0 )
+                    , allPointerEvents
+                    , itemsCenter
+                    , justifyContent "end"
+                    , pr "1ch"
+                    , gap "1ch"
+                    ]
+                    [ viewValue portValue
+                    , viewArrow Up portValue
+                    ]
+                ]
 
         Down ->
-            viewDownPortValue addr portValue
+            gtCols 2
+                [ gridAreaXY ( x * 2, y * 2 ), noPointerEvents ]
+                [ fRow
+                    [ gridAreaXY ( 1, 0 )
+                    , allPointerEvents
+                    , itemsCenter
+                    , pl "1ch"
+                    , gap "1ch"
+                    ]
+                    [ viewArrow Down portValue
+                    , viewValue portValue
+                    ]
+                ]
 
         Left ->
             noView
@@ -209,43 +234,8 @@ viewPort ( addr, dir, portValue ) =
             noView
 
 
-viewDownPortValue : Addr -> PortValue -> Html msg
-viewDownPortValue ( x, y ) portValue =
-    gtCols 2
-        [ gridAreaXY ( x * 2, y * 2 ), noPointerEvents ]
-        [ fRow
-            [ gridAreaXY ( 1, 0 )
-            , allPointerEvents
-            , itemsCenter
-            , pl "1ch"
-            , gap "1ch"
-            ]
-            [ viewArrow Down portValue
-            , viewPortValue portValue
-            ]
-        ]
-
-
-viewUpPortValue : Addr -> PortValue -> Html msg
-viewUpPortValue ( x, y ) portValue =
-    gtCols 2
-        [ gridAreaXY ( x * 2, (y * 2) - 2 ), noPointerEvents ]
-        [ fRow
-            [ gridAreaXY ( 0, 0 )
-            , allPointerEvents
-            , itemsCenter
-            , justifyContent "end"
-            , pr "1ch"
-            , gap "1ch"
-            ]
-            [ viewPortValue portValue
-            , viewArrow Up portValue
-            ]
-        ]
-
-
-viewPortValue : PortValue -> Html msg
-viewPortValue =
+viewValue : Value -> Html msg
+viewValue =
     let
         toString portValue =
             case portValue of
@@ -255,13 +245,13 @@ viewPortValue =
                 Num num ->
                     Num.toString num
 
-                Queried ->
+                Query ->
                     "?"
     in
     toString >> text
 
 
-viewArrow : Dir4 -> PortValue -> Html msg
+viewArrow : Dir4 -> Value -> Html msg
 viewArrow dir4 pv =
     let
         color =
