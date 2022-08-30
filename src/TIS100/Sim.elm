@@ -17,6 +17,7 @@ import TIS100.OutputNode as OutputNode exposing (OutputNode)
 import TIS100.Ports as Port
 import TIS100.Puzzle as Puzzle exposing (IOConfig, Puzzle)
 import TIS100.SelectionList as SelectionList exposing (SelectionList)
+import TIS100.UI as UI
 import Utils exposing (..)
 
 
@@ -1098,15 +1099,19 @@ mergePorts =
 
 
 darkGray =
-    grayN 0.5
+    UI.darkGray
 
 
 lightGray =
-    grayN 0.7
+    UI.lightGray
 
 
 lightOutline =
-    sOutline ("1px solid " ++ lightGray)
+    UI.lightOutline
+
+
+
+-- ARROW
 
 
 type ArrowType
