@@ -1,10 +1,11 @@
 module TIS100.Ports exposing (fromPuzzle)
 
 import Dict exposing (Dict)
+import Set
 import TIS100.IOIntent exposing (IOIntent(..))
 import TIS100.NodeState exposing (NodeState)
 import TIS100.Num exposing (Num)
-import TIS100.Puzzle exposing (Puzzle)
+import TIS100.Puzzle as Puzzle exposing (Puzzle)
 import Utils exposing (Dir4(..), moveInDir4, oppositeDir4)
 
 
@@ -71,14 +72,39 @@ puzzleIOKeys puzzle =
         ++ List.map (\{ x } -> toKey ( x, maxY ) (Read Up)) puzzle.outputs
 
 
+puzzleLayoutDict : Puzzle -> Dict Addr Puzzle.NodeType
+puzzleLayoutDict puzzle =
+    Debug.todo "todo"
+
+
+puzzleLayoutKeys : Puzzle -> List Key
+puzzleLayoutKeys puzzle =
+    Debug.todo "todo"
+
+
+emptyPortFromKey : Key -> ( Addr, Dir4, PortValue )
+emptyPortFromKey key =
+    Debug.todo "todo"
+
+
 fromPuzzle : Puzzle -> List ( Addr, Dir4, PortValue )
 fromPuzzle puzzle =
     let
         ioKeys : List Key
         ioKeys =
             puzzleIOKeys puzzle
+
+        layoutKeys : List Key
+        layoutKeys =
+            puzzleLayoutKeys puzzle
+
+        keys =
+            ioKeys
+                ++ layoutKeys
+                |> Set.fromList
+                |> Set.toList
     in
-    Debug.todo "todo"
+    keys |> List.map emptyPortFromKey
 
 
 fromIOIntentsAndNodeState : Puzzle -> List ( IOIntent, NodeState a ) -> Ports
