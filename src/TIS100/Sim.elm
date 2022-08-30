@@ -247,7 +247,7 @@ viewGridItems { puzzle, editDict, state } =
                     Dict.toList editDict
             in
             viewEditNodes puzzle es
-                ++ Port.viewFromPuzzle puzzle
+                ++ Port.viewAllPorts puzzle
 
 
 viewEditNodes : Puzzle -> List ( Addr, ExeNode ) -> List (Html msg)

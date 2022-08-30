@@ -1,4 +1,4 @@
-module TIS100.Ports exposing (viewFromPuzzle)
+module TIS100.Ports exposing (viewAllPorts)
 
 import Dict exposing (Dict)
 import TIS100.IOIntent exposing (IOIntent(..))
@@ -121,8 +121,8 @@ allPortsForPuzzle puzzle =
             Dict.empty
 
 
-viewFromPuzzle : Puzzle -> List (Html msg)
-viewFromPuzzle puzzle =
+viewAllPorts : Puzzle -> List (Html msg)
+viewAllPorts puzzle =
     allPortsForPuzzle puzzle |> Dict.values |> List.map viewPort
 
 
