@@ -76,9 +76,24 @@ puzzleLayoutIds puzzle =
         layoutDict =
             Debug.todo "todo"
 
+        isKeyValid : Key -> Bool
+        isKeyValid ( from, to ) =
+            case Utils.dictGet2 from to layoutDict of
+                Just ( writer, _ ) ->
+                    case writer of
+                        Puzzle.Executable ->
+                            True
+
+                        Puzzle.Faulty ->
+                            False
+
+                Nothing ->
+                    False
+
         idsFromAddr : Addr -> List Id
         idsFromAddr addr =
-            Debug.todo "todo"
+            List.map (toIdHelp addr) [ Up, Down, Left, Right ]
+                |> List.filter (\( key, _, _ ) -> isKeyValid key)
     in
     List.concatMap idsFromAddr (Dict.keys layoutDict)
 
