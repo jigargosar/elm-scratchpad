@@ -55,8 +55,6 @@ sampleModel =
 type alias Model =
     { puzzle : Puzzle
     , editDict : EditDict
-
-    --, initialExecutableNodes : List ( Addr, ExeNode )
     , state : State
     }
 
