@@ -75,8 +75,12 @@ puzzleLayoutIds puzzle =
         layoutDict : Dict Addr Puzzle.NodeType
         layoutDict =
             Debug.todo "todo"
+
+        idsFromAddr : Addr -> List Id
+        idsFromAddr addr =
+            Debug.todo "todo"
     in
-    Debug.todo "todo"
+    List.concatMap idsFromAddr (Dict.keys layoutDict)
 
 
 fromPuzzle : Puzzle -> List ( Addr, Dir4, PortValue )
