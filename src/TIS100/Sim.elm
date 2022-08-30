@@ -73,7 +73,7 @@ init : Puzzle -> List ( Addr, ExeNode ) -> Model
 init puzzle es =
     let
         editDict =
-            editAddressesFromLayout puzzle.layout
+            editAddrListFromLayout puzzle.layout
                 |> List.foldl Dict.remove initialEditDict
 
         mergedEditDict : EditDict
@@ -88,8 +88,8 @@ initialEditDict =
     List.foldl (\k -> Dict.insert k ExeNode.empty) Dict.empty editAddresses
 
 
-editAddressesFromLayout : List Puzzle.NodeType -> List Addr
-editAddressesFromLayout ls =
+editAddrListFromLayout : List Puzzle.NodeType -> List Addr
+editAddrListFromLayout ls =
     List.indexedMap
         (\i nt ->
             case nt of
