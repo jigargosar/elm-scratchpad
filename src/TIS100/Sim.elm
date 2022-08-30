@@ -2,7 +2,6 @@ module TIS100.Sim exposing
     ( Model
     , Msg
     , sampleModel
-    , step
     , update
     , view
     )
