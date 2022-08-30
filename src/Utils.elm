@@ -1212,6 +1212,10 @@ pl =
     style "padding-left"
 
 
+pt =
+    style "padding-top"
+
+
 pr =
     style "padding-right"
 

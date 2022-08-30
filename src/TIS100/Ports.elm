@@ -219,6 +219,7 @@ viewPort ( ( x, y ), dir, val ) =
                     [ gridAreaXY ( 1, 0 )
                     , allPointerEvents
                     , itemsCenter
+                    , justifyContent "start"
                     , pl "1ch"
                     , gap "1ch"
                     ]
@@ -228,7 +229,20 @@ viewPort ( ( x, y ), dir, val ) =
                 ]
 
         Left ->
-            noView
+            gtRows 2
+                [ gridAreaXY ( x * 2 - 1, (y * 2) - 1 ), noPointerEvents ]
+                [ fCol
+                    [ gridAreaXY ( 0, 0 )
+                    , allPointerEvents
+                    , itemsCenter
+                    , justifyContent "end"
+                    , pb "1ch"
+                    , gap "1ch"
+                    ]
+                    [ viewValue val
+                    , viewArrow Left val
+                    ]
+                ]
 
         Right ->
             noView
