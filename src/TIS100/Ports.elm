@@ -1,8 +1,8 @@
-module TIS100.Ports exposing (viewFromIOIntentsAndNodeState, viewFromPuzzle)
+module TIS100.Ports exposing (viewFromPuzzle)
 
 import Dict exposing (Dict)
 import TIS100.IOIntent exposing (IOIntent(..))
-import TIS100.NodeState exposing (NodeState)
+import TIS100.NodeState as S exposing (NodeState)
 import TIS100.Num as Num exposing (Num)
 import TIS100.Puzzle as Puzzle exposing (Puzzle)
 import TIS100.UI as UI
@@ -57,7 +57,12 @@ toId addr intent =
 
 toIdHelp : Addr -> Dir4 -> Id
 toIdHelp addr dir4 =
-    ( ( addr, moveInDir4 dir4 addr ), addr, dir4 )
+    ( toKey addr dir4, addr, dir4 )
+
+
+toKey : Addr -> Dir4 -> Key
+toKey addr dir4 =
+    ( addr, moveInDir4 dir4 addr )
 
 
 puzzleIOIds : Puzzle -> List Id
@@ -98,7 +103,11 @@ puzzleLayoutIds puzzle =
 
 
 type alias Ports =
-    Dict Key ( Addr, Dir4, PortValue )
+    Dict Key Port
+
+
+type alias Port =
+    ( Addr, Dir4, PortValue )
 
 
 portsFromPuzzle : Puzzle -> Ports
@@ -117,24 +126,20 @@ viewFromPuzzle puzzle =
     portsFromPuzzle puzzle |> Dict.values |> List.map viewPort
 
 
-fromIOIntentsAndNodeState :
+fromIOIntents :
     Puzzle
-    -> Dict Addr ( List IOIntent, NodeState a )
-    -> List ( Addr, Dir4, PortValue )
-fromIOIntentsAndNodeState _ _ =
-    let
-        _ =
-            1
-    in
+    -> List ( Addr, List IOIntent )
+    -> List Port
+fromIOIntents _ _ =
     Debug.todo "todo"
 
 
 viewFromIOIntentsAndNodeState :
     Puzzle
-    -> Dict Addr ( List IOIntent, NodeState a )
+    -> List ( Addr, List IOIntent )
     -> List (Html msg)
-viewFromIOIntentsAndNodeState puzzle dict =
-    fromIOIntentsAndNodeState puzzle dict
+viewFromIOIntentsAndNodeState puzzle list =
+    fromIOIntents puzzle list
         |> List.map viewPort
 
 
