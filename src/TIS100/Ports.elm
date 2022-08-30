@@ -185,24 +185,6 @@ viewAllPorts puzzle =
     allPuzzlePorts puzzle |> Dict.values |> List.map viewPort
 
 
-
---fromIOIntents :
---    Puzzle
---    -> List ( Addr, List IOIntent )
---    -> List Port
---fromIOIntents _ _ =
---    Debug.todo "todo"
---
---
---viewFromIOIntentsAndNodeState :
---    Puzzle
---    -> List ( Addr, List IOIntent )
---    -> List (Html msg)
---viewFromIOIntentsAndNodeState puzzle list =
---    fromIOIntents puzzle list |> List.map viewPort
---
-
-
 viewPort : ( Addr, Dir4, PortValue ) -> Html msg
 viewPort ( addr, dir, portValue ) =
     case dir of
