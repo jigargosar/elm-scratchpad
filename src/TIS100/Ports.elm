@@ -1,4 +1,4 @@
-module TIS100.Ports exposing (viewAllPorts)
+module TIS100.Ports exposing (view, viewAllPorts)
 
 import Dict exposing (Dict)
 import TIS100.IOIntent exposing (IOAction(..), IOIntent(..))
@@ -171,21 +171,26 @@ allPuzzlePorts puzzle =
 
 viewAllPorts : Puzzle -> List (Html msg)
 viewAllPorts puzzle =
-    allPuzzlePorts puzzle |> Dict.values |> List.map viewPort
+    allPuzzlePorts puzzle |> viewPorts
 
 
 view : Puzzle -> List ( Addr, IOIntent ) -> List ( Addr, IOAction ) -> List (Html msg)
 view puzzle intents actions =
     let
-        portsWithValue =
+        selectedPorts =
             fromIntents intents
                 |> Dict.union (fromActions actions)
 
         ports =
             allPuzzlePorts puzzle
-                |> Dict.intersect (fromIntents intents)
+                |> Dict.intersect selectedPorts
     in
-    Debug.todo "todo"
+    viewPorts ports
+
+
+viewPorts : Ports -> List (Html msg)
+viewPorts ports =
+    ports |> Dict.values |> List.map viewPort
 
 
 viewPort : ( Addr, Dir4, PortValue ) -> Html msg
