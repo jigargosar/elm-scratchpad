@@ -112,21 +112,9 @@ portsFromPuzzle puzzle =
             Dict.empty
 
 
-fromPuzzle : Puzzle -> List ( Addr, Dir4, PortValue )
-fromPuzzle puzzle =
-    let
-        ids =
-            puzzleIOIds puzzle
-                ++ puzzleLayoutIds puzzle
-                |> List.foldl (\(( key, _, _ ) as id) -> Dict.insert key id) Dict.empty
-                |> Dict.values
-    in
-    ids |> List.map (\( _, addr, dir ) -> ( addr, dir, Empty ))
-
-
 viewFromPuzzle : Puzzle -> List (Html msg)
 viewFromPuzzle puzzle =
-    fromPuzzle puzzle |> List.map viewPort
+    portsFromPuzzle puzzle |> Dict.values |> List.map viewPort
 
 
 fromIOIntentsAndNodeState :
