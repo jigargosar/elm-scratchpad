@@ -52,4 +52,6 @@ samplePuzzle =
 
 layout : Puzzle -> List NodeType
 layout puzzle =
-    puzzle.layout ++ List.repeat 12 Executable
+    puzzle.layout
+        ++ List.repeat 12 Executable
+        |> List.take 12

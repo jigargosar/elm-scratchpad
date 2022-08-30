@@ -14,6 +14,7 @@ import TIS100.InputNode as InputNode exposing (InputNode)
 import TIS100.NodeState as S exposing (NodeState)
 import TIS100.Num as Num exposing (Num)
 import TIS100.OutputNode as OutputNode exposing (OutputNode)
+import TIS100.Ports as Port
 import TIS100.Puzzle as Puzzle exposing (IOConfig, Puzzle)
 import TIS100.SelectionList as SelectionList exposing (SelectionList)
 import Utils exposing (..)
@@ -245,7 +246,7 @@ viewGridItems { puzzle, editDict, state } =
                     Dict.toList editDict
             in
             viewEditNodes puzzle es
-                ++ viewEditPorts puzzle es
+                ++ Port.viewFromPuzzle puzzle
 
 
 viewEditNodes : Puzzle -> List ( Addr, ExeNode ) -> List (Html msg)

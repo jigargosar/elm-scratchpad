@@ -1,7 +1,6 @@
-module TIS100.Ports exposing (fromPuzzle)
+module TIS100.Ports exposing (viewFromPuzzle)
 
 import Dict exposing (Dict)
-import Html exposing (Html)
 import TIS100.IOIntent exposing (IOIntent(..))
 import TIS100.NodeState exposing (NodeState)
 import TIS100.Num as Num exposing (Num)
@@ -78,6 +77,7 @@ puzzleLayoutIds puzzle =
             Puzzle.layout puzzle
                 |> List.indexedMap (\i nt -> ( ( modBy 4 i, i // 4 + 1 ), nt ))
                 |> Dict.fromList
+                |> Debug.log "Debug: "
 
         isKeyValid : Key -> Bool
         isKeyValid ( from, to ) =
@@ -98,7 +98,7 @@ puzzleLayoutIds puzzle =
             List.map (toIdHelp addr) [ Up, Down, Left, Right ]
                 |> List.filter (\( key, _, _ ) -> isKeyValid key)
     in
-    List.concatMap idsFromAddr (Dict.keys layoutDict)
+    List.concatMap idsFromAddr (Debug.log "Debug: " (Dict.keys layoutDict))
 
 
 fromPuzzle : Puzzle -> List ( Addr, Dir4, PortValue )
@@ -111,6 +111,11 @@ fromPuzzle puzzle =
                 |> Dict.values
     in
     ids |> List.map (\( _, addr, dir ) -> ( addr, dir, Empty ))
+
+
+viewFromPuzzle : Puzzle -> List (Html msg)
+viewFromPuzzle puzzle =
+    fromPuzzle puzzle |> List.map viewPort
 
 
 viewPort : ( Addr, Dir4, PortValue ) -> Html msg
@@ -214,6 +219,10 @@ darkGray =
 
 lightGray =
     grayN 0.7
+
+
+
+--noinspection ElmUnusedSymbol
 
 
 lightOutline =
