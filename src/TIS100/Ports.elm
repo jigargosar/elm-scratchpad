@@ -132,25 +132,6 @@ puzzleLayoutIOIntents puzzle =
                 |> List.indexedMap (\i nt -> ( ( modBy 4 i, i // 4 + 1 ), nt ))
                 |> Dict.fromList
 
-        isKeyValid : Key -> Bool
-        isKeyValid ( from, to ) =
-            case dictGet2 from to layoutDict of
-                Just ( writer, _ ) ->
-                    case writer of
-                        Puzzle.Executable ->
-                            True
-
-                        Puzzle.Faulty ->
-                            False
-
-                Nothing ->
-                    False
-
-        idsFromAddr : Addr -> List Id
-        idsFromAddr addr =
-            List.map (toIdHelp addr) [ Up, Down, Left, Right ]
-                |> List.filter (\( key, _, _ ) -> isKeyValid key)
-
         ioIntentsFromAddr : Addr -> List ( Addr, IOIntent )
         ioIntentsFromAddr addr =
             [ Up, Down, Left, Right ]
@@ -184,21 +165,54 @@ type alias Port =
     ( Addr, Dir4, PortValue )
 
 
+fromIOIntents : List ( Addr, IOIntent ) -> Ports
+fromIOIntents =
+    List.foldl addIntent Dict.empty
 
---addIntent : Addr -> IOIntent -> Ports -> Ports
---addIntent addr iOIntent =
---    let
---        port_ =
---            case iOIntent of
---                Read dir4 ->
---                    ( moveInDir4 dir4 addr, oppositeDir4 dir4, Empty )
---
---                Write dir4 ->
---                    ( addr, dir4, Empty )
---    in
---    addPort port_
---
---
+
+addIntent : ( Addr, IOIntent ) -> Ports -> Ports
+addIntent ( addr, iOIntent ) =
+    let
+        port_ =
+            case iOIntent of
+                Read dir4 ->
+                    ( moveInDir4 dir4 addr, oppositeDir4 dir4, Empty )
+
+                Write dir4 ->
+                    ( addr, dir4, Empty )
+    in
+    addPort port_
+
+
+addPort : Port -> Ports -> Ports
+addPort (( addr, dir, new ) as port_) =
+    Dict.update (toKey addr dir)
+        (\mbPort ->
+            case mbPort of
+                Nothing ->
+                    Just port_
+
+                Just ( _, _, old ) ->
+                    let
+                        val =
+                            case ( old, new ) of
+                                ( Empty, _ ) ->
+                                    new
+
+                                ( _, Empty ) ->
+                                    old
+
+                                ( _, Queried ) ->
+                                    old
+
+                                _ ->
+                                    new
+                    in
+                    Just ( addr, dir, val )
+        )
+
+
+
 --addAction : Addr -> IOAction -> Ports -> Ports
 --addAction addr iOAction =
 --    let
@@ -211,12 +225,6 @@ type alias Port =
 --                    ( addr, dir4, Num num )
 --    in
 --    addPort port_
---
---
---addPort : Port -> Ports -> Ports
---addPort port_ ports =
---    Debug.todo "todo"
---
 
 
 allPuzzlePorts : Puzzle -> Ports
@@ -227,6 +235,9 @@ allPuzzlePorts puzzle =
             List.map (\{ x } -> ( ( x, 0 ), Write Down )) puzzle.inputs
                 ++ List.map (\{ x } -> ( ( x, maxY ), Read Up )) puzzle.outputs
                 ++ puzzleLayoutIOIntents puzzle
+
+        _ =
+            fromIOIntents ioIntents
     in
     puzzleIOIds puzzle
         ++ puzzleLayoutIds puzzle
