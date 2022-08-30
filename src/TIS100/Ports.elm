@@ -1,10 +1,11 @@
-module TIS100.Ports exposing (..)
+module TIS100.Ports exposing (fromPuzzle)
 
 import Dict exposing (Dict)
 import TIS100.IOIntent exposing (IOIntent)
 import TIS100.NodeState exposing (NodeState)
 import TIS100.Num exposing (Num)
 import TIS100.Puzzle exposing (Puzzle)
+import Utils exposing (Dir4)
 
 
 type Ports
@@ -34,7 +35,12 @@ init =
     Debug.todo "todo"
 
 
-fromPuzzle : Puzzle -> Ports
+fromPuzzleIO : Puzzle -> Ports
+fromPuzzleIO puzzle =
+    Debug.todo "todo"
+
+
+fromPuzzle : Puzzle -> List ( Addr, Dir4, PortValue )
 fromPuzzle puzzle =
     Debug.todo "todo"
 
