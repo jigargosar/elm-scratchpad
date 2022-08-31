@@ -244,8 +244,12 @@ viewPort ( ( x, y ), dir, val ) =
                 ]
 
         Right ->
-            gtRows 2
-                [ gridAreaXY ( x * 2 + 1, y * 2 - 1 ), noPointerEvents ]
+            div
+                [ gridAreaXY ( x * 2 + 1, y * 2 - 1 )
+                , displayGrid
+                , gridTemplateRows "1fr 1fr"
+                , noPointerEvents
+                ]
                 [ fCol
                     [ gridAreaXY ( 0, 0 )
                     , allPointerEvents
