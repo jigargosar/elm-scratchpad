@@ -181,18 +181,15 @@ viewPorts ports =
 
 
 viewPort : ( Addr, Dir4, Value ) -> Html msg
-viewPort ( ( x, y ), dir, val ) =
+viewPort ( ( x, y ) as addr, dir, val ) =
     case dir of
         Up ->
-            div
-                [ gridAreaXY ( x, y - 1 )
-                , displayFlex
-                , flexRow
+            viewPortHelp addr
+                [ flexRow
                 , style "justify-content" "end"
                 , pr "0.5ch"
                 , sHeight UI.gapSize
                 , sWidth "50%"
-                , positionRelative
                 , style "bottom" UI.gapSize
                 ]
                 [ viewValue val
@@ -200,15 +197,12 @@ viewPort ( ( x, y ), dir, val ) =
                 ]
 
         Down ->
-            div
-                [ gridAreaXY ( x, y - 1 |> atLeast 0 )
-                , displayFlex
-                , flexRow
+            viewPortHelp addr
+                [ flexRow
                 , style "justify-content" "start"
                 , pl "0.5ch"
                 , sHeight UI.gapSize
                 , sWidth "50%"
-                , positionRelative
                 , if y == 0 then
                     style "bottom" UI.gapSize
 
@@ -221,16 +215,12 @@ viewPort ( ( x, y ), dir, val ) =
                 ]
 
         Right ->
-            div
-                [ gridAreaXY ( x, y - 1 )
-                , displayFlex
-                , flexColumn
-                , itemsCenter
+            viewPortHelp addr
+                [ flexColumn
                 , style "justify-content" "end"
                 , pb "0.5ch"
                 , sHeight "50%"
                 , sWidth UI.gapSize
-                , positionRelative
                 , left100
                 ]
                 [ viewValue val
@@ -238,22 +228,29 @@ viewPort ( ( x, y ), dir, val ) =
                 ]
 
         Left ->
-            div
-                [ gridAreaXY ( x, y - 1 )
-                , displayFlex
-                , flexColumn
-                , itemsCenter
+            viewPortHelp addr
+                [ flexColumn
                 , style "justify-content" "start"
                 , pt "0.5ch"
                 , sHeight "50%"
                 , sWidth UI.gapSize
-                , positionRelative
                 , style "top" "50%"
                 , style "right" UI.gapSize
                 ]
                 [ viewArrow Left val
                 , viewValue val
                 ]
+
+
+viewPortHelp : Addr -> List (Attribute msg) -> List (Html msg) -> Html msg
+viewPortHelp ( x, y ) attrs =
+    div
+        (gridAreaXY ( x, y - 1 |> atLeast 0 )
+            :: displayFlex
+            :: itemsCenter
+            :: positionRelative
+            :: attrs
+        )
 
 
 viewValue : Value -> Html msg
