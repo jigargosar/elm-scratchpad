@@ -25,10 +25,6 @@ type alias Id =
     ( Key, Addr, Dir4 )
 
 
-
---noinspection ElmUnusedSymbol
-
-
 type Value
     = Empty
     | Num Num
@@ -189,7 +185,7 @@ viewPort ( ( x, y ), dir, val ) =
     case dir of
         Up ->
             div
-                [ gridAreaXY ( x, y * 2 - 1 )
+                [ gridAreaXY ( x, y - 1 )
                 , displayFlex
                 , flexRow
                 , style "justify-content" "end"
@@ -204,43 +200,29 @@ viewPort ( ( x, y ), dir, val ) =
                 ]
 
         Down ->
-            if y == 0 then
-                div
-                    [ gridAreaXY ( x, 1 )
-                    , displayFlex
-                    , flexRow
-                    , style "justify-content" "start"
-                    , pl "0.5ch"
-                    , sHeight UI.gapSize
-                    , sWidth "50%"
-                    , positionRelative
-                    , style "bottom" UI.gapSize
-                    , style "left" "50%"
-                    ]
-                    [ viewArrow Down val
-                    , viewValue val
-                    ]
+            div
+                [ gridAreaXY ( x, y - 1 |> atLeast 0 )
+                , displayFlex
+                , flexRow
+                , style "justify-content" "start"
+                , pl "0.5ch"
+                , sHeight UI.gapSize
+                , sWidth "50%"
+                , positionRelative
+                , if y == 0 then
+                    style "bottom" UI.gapSize
 
-            else
-                div
-                    [ gridAreaXY ( x, y * 2 - 1 )
-                    , displayFlex
-                    , flexRow
-                    , style "justify-content" "start"
-                    , pl "0.5ch"
-                    , sHeight UI.gapSize
-                    , sWidth "50%"
-                    , positionRelative
-                    , top100
-                    , style "left" "50%"
-                    ]
-                    [ viewArrow Down val
-                    , viewValue val
-                    ]
+                  else
+                    top100
+                , style "left" "50%"
+                ]
+                [ viewArrow Down val
+                , viewValue val
+                ]
 
         Right ->
             div
-                [ gridAreaXY ( x, y * 2 - 1 )
+                [ gridAreaXY ( x, y - 1 )
                 , displayFlex
                 , flexColumn
                 , itemsCenter
@@ -257,7 +239,7 @@ viewPort ( ( x, y ), dir, val ) =
 
         Left ->
             div
-                [ gridAreaXY ( x, y * 2 - 1 )
+                [ gridAreaXY ( x, y - 1 )
                 , displayFlex
                 , flexColumn
                 , itemsCenter

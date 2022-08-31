@@ -415,14 +415,16 @@ viewGrid =
     in
     div
         [ displayGrid
-        , [ "repeat(", repeatRows, ",", gapSize, nodeSize, ")" ]
+        , List.repeat 3 nodeSize
             |> String.join " "
             |> gridTemplateRows
         , List.repeat 4 nodeSize
             |> String.join " "
             |> gridTemplateColumns
         , sMaxHeight "100vh"
-        , style "grid-column-gap" UI.gapSize
+
+        --, style "grid-column-gap" UI.gapSize
+        , gap UI.gapSize
         ]
 
 
@@ -579,7 +581,7 @@ viewOutputNode { x, title } =
 viewExeNodeEntry : ( Addr, ExeNode ) -> Html msg
 viewExeNodeEntry ( ( x, y ), exe ) =
     div
-        [ gridAreaXY ( x, y * 2 - 1 )
+        [ gridAreaXY ( x, y - 1 )
         , lightOutline
         , dGrid
         , gridAutoFlowColumn
