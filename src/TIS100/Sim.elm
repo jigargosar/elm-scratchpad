@@ -29,10 +29,10 @@ sampleModel =
     let
         es =
             [ --( ( 0, 1 ), ExeNode.initMovUpDown )
-              ( ( 0, 1 ), ExeNode.initMov Right Down )
+              ( ( 0, 1 ), ExeNode.initMov Up Down )
             , ( ( 0, 2 ), ExeNode.initMovUpDown )
             , ( ( 0, 3 ), ExeNode.initMovUpDown )
-            , ( ( 1, 1 ), ExeNode.initMovUpDown )
+            , ( ( 1, 1 ), ExeNode.initMov Right Down )
             , ( ( 1, 2 ), ExeNode.empty )
             , ( ( 1, 3 ), ExeNode.initMovUpDown )
             , ( ( 2, 1 ), ExeNode.initMov Down Up )
