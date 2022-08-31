@@ -1208,6 +1208,10 @@ pa =
     style "padding"
 
 
+paddingXY x y =
+    pa (y ++ " " ++ x)
+
+
 pl =
     style "padding-left"
 

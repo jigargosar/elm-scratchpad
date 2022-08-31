@@ -394,8 +394,7 @@ viewGrid =
     in
     div
         [ displayGrid
-        , pt UI.gapSize
-        , pb UI.gapSize
+        , paddingXY "0" UI.gapSize
         , List.repeat 3 nodeSize
             |> String.join " "
             |> gridTemplateRows
