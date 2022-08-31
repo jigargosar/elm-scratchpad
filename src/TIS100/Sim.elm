@@ -464,18 +464,23 @@ nodeIoIntents node =
 
 nodeIoActions : Node -> List IOAction
 nodeIoActions node =
-    case nodeState node of
-        S.ReadyToRun _ ->
+    case node of
+        OutputNode _ _ ->
             []
 
-        S.ReadBlocked dir4 _ ->
-            [ Reading dir4 ]
+        _ ->
+            case nodeState node of
+                S.ReadyToRun _ ->
+                    []
 
-        S.WriteBlocked num dir4 _ ->
-            [ Writing dir4 num ]
+                S.ReadBlocked dir4 _ ->
+                    [ Reading dir4 ]
 
-        S.Done ->
-            []
+                S.WriteBlocked num dir4 _ ->
+                    [ Writing dir4 num ]
+
+                S.Done ->
+                    []
 
 
 nodeState : Node -> NodeState Node
@@ -668,11 +673,7 @@ simIntentsAndActions sim =
     Dict.foldl
         (\addr node ( intents, actions ) ->
             ( List.map (pair addr) (nodeIoIntents node) ++ intents
-            , if second addr == maxY then
-                actions
-
-              else
-                List.map (pair addr) (nodeIoActions node) ++ actions
+            , List.map (pair addr) (nodeIoActions node) ++ actions
             )
         )
         ( [], [] )
