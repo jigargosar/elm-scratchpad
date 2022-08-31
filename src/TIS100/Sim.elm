@@ -404,14 +404,8 @@ nbsp =
 viewGrid : List (Html msg) -> Html msg
 viewGrid =
     let
-        gapSize =
-            UI.gapSize
-
         nodeSize =
             "24ch"
-
-        repeatRows =
-            fromInt (maxY - 1)
     in
     div
         [ displayGrid
