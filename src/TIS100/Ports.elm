@@ -230,20 +230,20 @@ viewPort ( ( x, y ), dir, val ) =
 
         Left ->
             div
-                [ gridAreaXY ( x * 2 - 1, (y * 2) - 1 )
-                , displayGrid
-                , gridTemplate "1fr 1fr / auto"
-                , noPointerEvents
-                , style "align-items" "start"
-                , gap "1ch"
+                [ gridAreaXY ( x * 2, y * 2 - 1 )
+                , displayFlex
+                , flexColumn
+                , itemsCenter
+                , style "justify-content" "start"
+                , pt "0.5ch"
+                , sHeight "50%"
+                , sWidth UI.gapSize
+                , positionRelative
+                , style "top" "50%"
+                , style "right" UI.gapSize
                 ]
-                [ fCol
-                    [ gridAreaXY ( 0, 1 )
-                    , allPointerEvents
-                    ]
-                    [ viewArrow Left val
-                    , viewValue val
-                    ]
+                [ viewArrow Left val
+                , viewValue val
                 ]
 
         Right ->
