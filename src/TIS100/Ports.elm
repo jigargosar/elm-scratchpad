@@ -229,8 +229,12 @@ viewPort ( ( x, y ), dir, val ) =
                 ]
 
         Left ->
-            gtRows 2
-                [ gridAreaXY ( x * 2 - 1, (y * 2) - 1 ), noPointerEvents ]
+            div
+                [ gridAreaXY ( x * 2 - 1, (y * 2) - 1 )
+                , displayGrid
+                , gridTemplate "1fr 1fr / auto"
+                , noPointerEvents
+                ]
                 [ fCol
                     [ gridAreaXY ( 0, 1 )
                     , allPointerEvents
@@ -248,7 +252,6 @@ viewPort ( ( x, y ), dir, val ) =
                 [ gridAreaXY ( x * 2 + 1, y * 2 - 1 )
                 , displayGrid
                 , gridTemplate "1fr 1fr / auto"
-                , gridTemplateRows "1fr 1fr"
                 , noPointerEvents
                 ]
                 [ fCol
