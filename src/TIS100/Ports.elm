@@ -247,6 +247,7 @@ viewPort ( ( x, y ), dir, val ) =
             div
                 [ gridAreaXY ( x * 2 + 1, y * 2 - 1 )
                 , displayGrid
+                , gridTemplate "1fr 1fr / auto"
                 , gridTemplateRows "1fr 1fr"
                 , noPointerEvents
                 ]
