@@ -28,8 +28,7 @@ sampleModel : Model
 sampleModel =
     let
         es =
-            [ --( ( 0, 1 ), ExeNode.initMovUpDown )
-              ( ( 0, 1 ), ExeNode.initMov Up Down )
+            [ ( ( 0, 1 ), ExeNode.initMov Up Down )
             , ( ( 0, 2 ), ExeNode.initMovUpDown )
             , ( ( 0, 3 ), ExeNode.initMovUpDown )
             , ( ( 1, 1 ), ExeNode.initMov Right Down )
