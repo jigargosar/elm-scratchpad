@@ -415,7 +415,7 @@ viewGrid =
     in
     div
         [ displayGrid
-        , [ "repeat(", repeatRows, ",", gapSize, nodeSize, ")", gapSize ]
+        , [ "repeat(", repeatRows, ",", gapSize, nodeSize, ")" ]
             |> String.join " "
             |> gridTemplateRows
         , List.repeat 4 nodeSize
