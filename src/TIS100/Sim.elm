@@ -404,7 +404,7 @@ viewGrid =
         , [ "repeat(", repeatRows, ",", gapSize, nodeSize, ")", gapSize ]
             |> String.join " "
             |> gridTemplateRows
-        , [ "repeat(", repeatCols, ",", nodeSize, gapSize, ")", nodeSize ]
+        , List.repeat (maxX + 1) nodeSize
             |> String.join " "
             |> gridTemplateColumns
         , sMaxHeight "100vh"
@@ -517,7 +517,7 @@ viewNodeEntry ( addr, node ) =
 viewInputNode : IOConfig -> Html msg
 viewInputNode { x, title } =
     gtCols 2
-        [ gridAreaXY ( x * 2, 0 )
+        [ gridAreaXY ( x, 0 )
         , placeItemsCenter
         ]
         [ div [ tac, fg lightGray ]
@@ -530,7 +530,7 @@ viewInputNode { x, title } =
 viewOutputNode : IOConfig -> Html msg
 viewOutputNode { x, title } =
     gtCols 2
-        [ gridAreaXY ( x * 2, maxY * 2 - 2 )
+        [ gridAreaXY ( x, maxY * 2 - 2 )
         , placeItemsCenter
         ]
         [ div [ tac, fg lightGray ] [ text title ]
@@ -540,7 +540,7 @@ viewOutputNode { x, title } =
 viewExeNodeEntry : ( Addr, ExeNode ) -> Html msg
 viewExeNodeEntry ( ( x, y ), exe ) =
     div
-        [ gridAreaXY ( x * 2, y * 2 - 1 )
+        [ gridAreaXY ( x, y * 2 - 1 )
         , lightOutline
         , dGrid
         , gridAutoFlowColumn

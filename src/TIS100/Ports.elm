@@ -198,7 +198,7 @@ viewPort ( ( x, y ), dir, val ) =
     case dir of
         Up ->
             div
-                [ gridAreaXY ( x * 2, y * 2 - 1 )
+                [ gridAreaXY ( x, y * 2 - 1 )
                 , displayFlex
                 , flexRow
                 , style "justify-content" "end"
@@ -215,7 +215,7 @@ viewPort ( ( x, y ), dir, val ) =
         Down ->
             if y == 0 then
                 div
-                    [ gridAreaXY ( x * 2, 1 )
+                    [ gridAreaXY ( x, 1 )
                     , displayFlex
                     , flexRow
                     , style "justify-content" "start"
@@ -232,7 +232,7 @@ viewPort ( ( x, y ), dir, val ) =
 
             else
                 div
-                    [ gridAreaXY ( x * 2, y * 2 - 1 )
+                    [ gridAreaXY ( x, y * 2 - 1 )
                     , displayFlex
                     , flexRow
                     , style "justify-content" "start"
@@ -249,7 +249,7 @@ viewPort ( ( x, y ), dir, val ) =
 
         Right ->
             div
-                [ gridAreaXY ( x * 2, y * 2 - 1 )
+                [ gridAreaXY ( x, y * 2 - 1 )
                 , displayFlex
                 , flexColumn
                 , itemsCenter
@@ -266,7 +266,7 @@ viewPort ( ( x, y ), dir, val ) =
 
         Left ->
             div
-                [ gridAreaXY ( x * 2, y * 2 - 1 )
+                [ gridAreaXY ( x, y * 2 - 1 )
                 , displayFlex
                 , flexColumn
                 , itemsCenter
