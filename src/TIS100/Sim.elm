@@ -226,14 +226,7 @@ view model =
                 , viewButtons
                 ]
             , fCol []
-                [ div
-                    [ displayGrid
-                    , gridTemplateColumns "repeat(4,1fr)"
-                    , gap UI.gapSize
-                    , sHeight UI.gapSize
-                    ]
-                    (model.puzzle.inputs |> List.map viewInputNode)
-                , viewGrid (viewGridItems model)
+                [ viewGrid (viewGridItems model)
                 , div
                     [ displayGrid
                     , gridTemplateColumns "repeat(4,1fr)"
@@ -263,11 +256,10 @@ viewGridItems { puzzle, editDict, state } =
 
 
 viewEditNodes : Puzzle -> List ( Addr, ExeNode ) -> List (Html msg)
-viewEditNodes _ es =
-    --List.map viewInputNode puzzle.inputs
-    --    ++ List.map viewOutputNode puzzle.outputs
-    --    ++
-    List.map viewExeNodeEntry es
+viewEditNodes puzzle es =
+    List.map viewInputNode puzzle.inputs
+        --    ++ List.map viewOutputNode puzzle.outputs
+        ++ List.map viewExeNodeEntry es
 
 
 viewCycle : Maybe Int -> Html msg
@@ -409,6 +401,7 @@ viewGrid =
     in
     div
         [ displayGrid
+        , pt UI.gapSize
         , List.repeat 3 nodeSize
             |> String.join " "
             |> gridTemplateRows
@@ -416,8 +409,6 @@ viewGrid =
             |> String.join " "
             |> gridTemplateColumns
         , sMaxHeight "100vh"
-
-        --, style "grid-column-gap" UI.gapSize
         , gap UI.gapSize
         ]
 
@@ -510,8 +501,8 @@ nodeState node =
 viewNodeEntry : NodeEntry -> Html msg
 viewNodeEntry ( addr, node ) =
     case node of
-        InputNode _ _ ->
-            noView
+        InputNode conf _ ->
+            viewInputNode conf
 
         OutputNode _ _ ->
             noView
@@ -526,7 +517,10 @@ viewInputNode { x, title } =
         [ displayGrid
         , placeContentCenter
         , sWidth "50%"
+        , sHeight UI.gapSize
         , gridAreaXY ( x, 0 )
+        , positionRelative
+        , style "bottom" UI.gapSize
         ]
         [ div [ tac, fg lightGray ]
             [ div [] [ text title ]
