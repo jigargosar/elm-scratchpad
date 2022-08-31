@@ -12,15 +12,6 @@ type alias Addr =
     ( Int, Int )
 
 
-
---noinspection ElmUnusedSymbol
-
-
-maxX : Int
-maxX =
-    4
-
-
 maxY : Int
 maxY =
     4

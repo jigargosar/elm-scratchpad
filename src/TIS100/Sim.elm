@@ -395,16 +395,13 @@ viewGrid =
 
         repeatRows =
             fromInt (maxY - 1)
-
-        repeatCols =
-            fromInt (maxX - 1)
     in
     div
         [ displayGrid
         , [ "repeat(", repeatRows, ",", gapSize, nodeSize, ")", gapSize ]
             |> String.join " "
             |> gridTemplateRows
-        , List.repeat (maxX + 1) nodeSize
+        , List.repeat 4 nodeSize
             |> String.join " "
             |> gridTemplateColumns
         , sMaxHeight "100vh"
@@ -417,11 +414,6 @@ viewGrid =
 
 type alias Addr =
     ( Int, Int )
-
-
-maxX : Int
-maxX =
-    4
 
 
 maxY : Int
