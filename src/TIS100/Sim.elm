@@ -668,7 +668,11 @@ simIntentsAndActions sim =
     Dict.foldl
         (\addr node ( intents, actions ) ->
             ( List.map (pair addr) (nodeIoIntents node) ++ intents
-            , List.map (pair addr) (nodeIoActions node) ++ actions
+            , if second addr == maxY then
+                actions
+
+              else
+                List.map (pair addr) (nodeIoActions node) ++ actions
             )
         )
         ( [], [] )

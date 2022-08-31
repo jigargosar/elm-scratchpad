@@ -104,16 +104,12 @@ fromActions =
 
 addAction : ( Addr, IOAction ) -> Ports -> Ports
 addAction ( addr, iOAction ) =
-    let
-        port_ =
-            case iOAction of
-                Reading dir4 ->
-                    ( moveInDir4 dir4 addr, oppositeDir4 dir4, Query )
+    case iOAction of
+        Reading dir4 ->
+            addPort ( moveInDir4 dir4 addr, oppositeDir4 dir4, Query )
 
-                Writing dir4 num ->
-                    ( addr, dir4, Num num )
-    in
-    addPort port_
+        Writing dir4 num ->
+            addPort ( addr, dir4, Num num )
 
 
 addPort : Port -> Ports -> Ports
