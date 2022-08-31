@@ -227,13 +227,6 @@ view model =
                 ]
             , fCol []
                 [ viewGrid (viewGridItems model)
-                , div
-                    [ displayGrid
-                    , gridTemplateColumns "repeat(4,1fr)"
-                    , gap UI.gapSize
-                    , sHeight UI.gapSize
-                    ]
-                    (model.puzzle.outputs |> List.map viewOutputNode)
                 ]
             ]
         ]
@@ -258,7 +251,7 @@ viewGridItems { puzzle, editDict, state } =
 viewEditNodes : Puzzle -> List ( Addr, ExeNode ) -> List (Html msg)
 viewEditNodes puzzle es =
     List.map viewInputNode puzzle.inputs
-        --    ++ List.map viewOutputNode puzzle.outputs
+        ++ List.map viewOutputNode puzzle.outputs
         ++ List.map viewExeNodeEntry es
 
 
@@ -401,7 +394,7 @@ viewGrid =
     in
     div
         [ displayGrid
-        , pt UI.gapSize
+        , pa (UI.gapSize ++ " 0")
         , List.repeat 3 nodeSize
             |> String.join " "
             |> gridTemplateRows
@@ -504,8 +497,8 @@ viewNodeEntry ( addr, node ) =
         InputNode conf _ ->
             viewInputNode conf
 
-        OutputNode _ _ ->
-            noView
+        OutputNode conf _ ->
+            viewOutputNode conf
 
         ExeNode exe ->
             viewExeNodeEntry ( addr, exe )
@@ -535,7 +528,10 @@ viewOutputNode { x, title } =
         [ displayGrid
         , placeContentCenter
         , sWidth "50%"
-        , gridAreaXY ( x, 0 )
+        , sHeight UI.gapSize
+        , gridAreaXY ( x, 2 )
+        , positionRelative
+        , top100
         ]
         [ div [ tac, fg lightGray ]
             [ div [] [ text title ]
