@@ -240,7 +240,6 @@ viewPort ( ( x, y ), dir, val ) =
                 [ fCol
                     [ gridAreaXY ( 0, 1 )
                     , allPointerEvents
-                    , itemsCenter
                     ]
                     [ viewArrow Left val
                     , viewValue val
@@ -259,7 +258,6 @@ viewPort ( ( x, y ), dir, val ) =
                 [ fCol
                     [ gridAreaXY ( 0, 0 )
                     , allPointerEvents
-                    , itemsCenter
                     ]
                     [ viewValue val
                     , viewArrow Right val
@@ -281,7 +279,7 @@ viewValue val =
                 Query ->
                     "?"
     in
-    div [] [ text valStr ]
+    div [ tac ] [ text valStr ]
 
 
 viewArrow : Dir4 -> Value -> Html msg
@@ -295,7 +293,13 @@ viewArrow dir4 pv =
                 _ ->
                     "inherit"
     in
-    span [ fg color, fontSize "2em", fontWeight "100" ] [ text (arrowDefault dir4) ]
+    div
+        [ tac
+        , fg color
+        , fontSize "2em"
+        , fontWeight "100"
+        ]
+        [ text (arrowDefault dir4) ]
 
 
 
