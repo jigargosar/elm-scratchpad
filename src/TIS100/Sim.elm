@@ -232,7 +232,7 @@ view model =
                     , gap UI.gapSize
                     , sHeight UI.gapSize
                     ]
-                    (model.puzzle.inputs |> List.map viewInputNode2)
+                    (model.puzzle.inputs |> List.map viewInputNode)
                 , viewGrid (viewGridItems model)
                 , div
                     [ displayGrid
@@ -240,7 +240,7 @@ view model =
                     , gap UI.gapSize
                     , sHeight UI.gapSize
                     ]
-                    (model.puzzle.outputs |> List.map viewOutputNode2)
+                    (model.puzzle.outputs |> List.map viewOutputNode)
                 ]
             ]
         ]
@@ -522,19 +522,6 @@ viewNodeEntry ( addr, node ) =
 
 viewInputNode : IOConfig -> Html msg
 viewInputNode { x, title } =
-    gtCols 2
-        [ gridAreaXY ( x, 0 )
-        , placeItemsCenter
-        ]
-        [ div [ tac, fg lightGray ]
-            [ div [] [ text title ]
-            , div [] [ text "(IDLE 0%)" ]
-            ]
-        ]
-
-
-viewInputNode2 : IOConfig -> Html msg
-viewInputNode2 { x, title } =
     div
         [ displayGrid
         , placeContentCenter
@@ -544,31 +531,21 @@ viewInputNode2 { x, title } =
         [ div [ tac, fg lightGray ]
             [ div [] [ text title ]
             , div [] [ text "(IDLE 0%)" ]
-            ]
-        ]
-
-
-viewOutputNode2 : IOConfig -> Html msg
-viewOutputNode2 { x, title } =
-    div
-        [ displayGrid
-        , placeContentCenter
-        , sWidth "50%"
-        , gridAreaXY ( x, 0 )
-        ]
-        [ div [ tac, fg lightGray ]
-            [ div [] [ text title ]
             ]
         ]
 
 
 viewOutputNode : IOConfig -> Html msg
 viewOutputNode { x, title } =
-    gtCols 2
-        [ gridAreaXY ( x, maxY * 2 - 2 )
-        , placeItemsCenter
+    div
+        [ displayGrid
+        , placeContentCenter
+        , sWidth "50%"
+        , gridAreaXY ( x, 0 )
         ]
-        [ div [ tac, fg lightGray ] [ text title ]
+        [ div [ tac, fg lightGray ]
+            [ div [] [ text title ]
+            ]
         ]
 
 
