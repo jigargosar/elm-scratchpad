@@ -234,13 +234,13 @@ viewPort ( ( x, y ), dir, val ) =
                 , displayGrid
                 , gridTemplate "1fr 1fr / auto"
                 , noPointerEvents
+                , style "align-items" "start"
+                , gap "1ch"
                 ]
                 [ fCol
                     [ gridAreaXY ( 0, 1 )
                     , allPointerEvents
                     , itemsCenter
-                    , justifyContent "start"
-                    , pt "0.5ch"
                     ]
                     [ viewArrow Left val
                     , viewValue val
