@@ -405,6 +405,7 @@ viewGrid =
             |> String.join " "
             |> gridTemplateColumns
         , sMaxHeight "100vh"
+        , style "grid-column-gap" UI.gapSize
         ]
 
 
