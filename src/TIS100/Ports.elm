@@ -177,7 +177,7 @@ viewPorts ports =
 
 
 viewPort : ( Addr, Dir4, Value ) -> Html msg
-viewPort ( ( x, y ) as addr, dir, val ) =
+viewPort ( ( _, y ) as addr, dir, val ) =
     case dir of
         Up ->
             viewPortHelp addr
