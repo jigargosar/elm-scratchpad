@@ -254,12 +254,12 @@ viewPort ( ( x, y ), dir, val ) =
                 , gridTemplate "1fr 1fr / auto"
                 , noPointerEvents
                 , style "align-items" "end"
+                , gap "1ch"
                 ]
                 [ fCol
                     [ gridAreaXY ( 0, 0 )
                     , allPointerEvents
                     , itemsCenter
-                    , pb "0.5ch"
                     ]
                     [ viewValue val
                     , viewArrow Right val
@@ -268,10 +268,10 @@ viewPort ( ( x, y ), dir, val ) =
 
 
 viewValue : Value -> Html msg
-viewValue =
+viewValue val =
     let
-        toString portValue =
-            case portValue of
+        valStr =
+            case val of
                 Empty ->
                     ""
 
@@ -281,7 +281,7 @@ viewValue =
                 Query ->
                     "?"
     in
-    toString >> text
+    div [] [ text valStr ]
 
 
 viewArrow : Dir4 -> Value -> Html msg
