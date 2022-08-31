@@ -225,7 +225,23 @@ view model =
                 , viewIOColumns model
                 , viewButtons
                 ]
-            , viewGrid (viewGridItems model)
+            , fCol []
+                [ div
+                    [ displayGrid
+                    , gridTemplateColumns "repeat(4,1fr)"
+                    , gap UI.gapSize
+                    , sHeight UI.gapSize
+                    ]
+                    (model.puzzle.inputs |> List.map viewInputNode2)
+                , viewGrid (viewGridItems model)
+                , div
+                    [ displayGrid
+                    , gridTemplateColumns "repeat(4,1fr)"
+                    , gap UI.gapSize
+                    , sHeight UI.gapSize
+                    ]
+                    (model.puzzle.outputs |> List.map viewOutputNode2)
+                ]
             ]
         ]
 
@@ -247,10 +263,11 @@ viewGridItems { puzzle, editDict, state } =
 
 
 viewEditNodes : Puzzle -> List ( Addr, ExeNode ) -> List (Html msg)
-viewEditNodes puzzle es =
-    List.map viewInputNode puzzle.inputs
-        ++ List.map viewOutputNode puzzle.outputs
-        ++ List.map viewExeNodeEntry es
+viewEditNodes _ es =
+    --List.map viewInputNode puzzle.inputs
+    --    ++ List.map viewOutputNode puzzle.outputs
+    --    ++
+    List.map viewExeNodeEntry es
 
 
 viewCycle : Maybe Int -> Html msg
@@ -497,11 +514,11 @@ nodeState node =
 viewNodeEntry : NodeEntry -> Html msg
 viewNodeEntry ( addr, node ) =
     case node of
-        InputNode conf _ ->
-            viewInputNode conf
+        InputNode _ _ ->
+            noView
 
-        OutputNode conf _ ->
-            viewOutputNode conf
+        OutputNode _ _ ->
+            noView
 
         ExeNode exe ->
             viewExeNodeEntry ( addr, exe )
@@ -516,6 +533,35 @@ viewInputNode { x, title } =
         [ div [ tac, fg lightGray ]
             [ div [] [ text title ]
             , div [] [ text "(IDLE 0%)" ]
+            ]
+        ]
+
+
+viewInputNode2 : IOConfig -> Html msg
+viewInputNode2 { x, title } =
+    div
+        [ displayGrid
+        , placeContentCenter
+        , sWidth "50%"
+        , gridAreaXY ( x, 0 )
+        ]
+        [ div [ tac, fg lightGray ]
+            [ div [] [ text title ]
+            , div [] [ text "(IDLE 0%)" ]
+            ]
+        ]
+
+
+viewOutputNode2 : IOConfig -> Html msg
+viewOutputNode2 { x, title } =
+    div
+        [ displayGrid
+        , placeContentCenter
+        , sWidth "50%"
+        , gridAreaXY ( x, 0 )
+        ]
+        [ div [ tac, fg lightGray ]
+            [ div [] [ text title ]
             ]
         ]
 
