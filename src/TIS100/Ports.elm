@@ -197,36 +197,55 @@ viewPort : ( Addr, Dir4, Value ) -> Html msg
 viewPort ( ( x, y ), dir, val ) =
     case dir of
         Up ->
-            gtCols 2
-                [ gridAreaXY ( x * 2, (y * 2) - 2 ), noPointerEvents ]
-                [ fRow
-                    [ gridAreaXY ( 0, 0 )
-                    , allPointerEvents
-                    , itemsCenter
-                    , justifyContent "end"
-                    , pr "1ch"
-                    , gap "1ch"
-                    ]
-                    [ viewValue val
-                    , viewArrow Up val
-                    ]
+            div
+                [ gridAreaXY ( x * 2, y * 2 - 1 )
+                , displayFlex
+                , flexRow
+                , style "justify-content" "end"
+                , pr "0.5ch"
+                , sHeight UI.gapSize
+                , sWidth "50%"
+                , positionRelative
+                , style "bottom" UI.gapSize
+                ]
+                [ viewValue val
+                , viewArrow Up val
                 ]
 
         Down ->
-            gtCols 2
-                [ gridAreaXY ( x * 2, y * 2 ), noPointerEvents ]
-                [ fRow
-                    [ gridAreaXY ( 1, 0 )
-                    , allPointerEvents
-                    , itemsCenter
-                    , justifyContent "start"
-                    , pl "1ch"
-                    , gap "1ch"
+            if y == 0 then
+                div
+                    [ gridAreaXY ( x * 2, 1 )
+                    , displayFlex
+                    , flexRow
+                    , style "justify-content" "start"
+                    , pl "0.5ch"
+                    , sHeight UI.gapSize
+                    , sWidth "50%"
+                    , positionRelative
+                    , style "bottom" UI.gapSize
+                    , style "left" "50%"
                     ]
                     [ viewArrow Down val
                     , viewValue val
                     ]
-                ]
+
+            else
+                div
+                    [ gridAreaXY ( x * 2, y * 2 - 1 )
+                    , displayFlex
+                    , flexRow
+                    , style "justify-content" "start"
+                    , pl "0.5ch"
+                    , sHeight UI.gapSize
+                    , sWidth "50%"
+                    , positionRelative
+                    , top100
+                    , style "left" "50%"
+                    ]
+                    [ viewArrow Down val
+                    , viewValue val
+                    ]
 
         Right ->
             div
@@ -278,7 +297,7 @@ viewValue val =
                 Query ->
                     "?"
     in
-    div [ tac ] [ text valStr ]
+    div [ displayGrid, placeContentCenter ] [ text valStr ]
 
 
 viewArrow : Dir4 -> Value -> Html msg
@@ -293,7 +312,8 @@ viewArrow dir4 pv =
                     "inherit"
     in
     div
-        [ tac
+        [ displayGrid
+        , placeContentCenter
         , fg color
         , fontSize "2em"
         , fontWeight "100"
