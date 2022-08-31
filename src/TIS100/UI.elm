@@ -15,3 +15,7 @@ lightGray =
 
 lightOutline =
     sOutline ("1px solid " ++ lightGray)
+
+
+gapSize =
+    "5ch"

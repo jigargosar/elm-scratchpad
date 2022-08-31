@@ -249,19 +249,16 @@ viewPort ( ( x, y ), dir, val ) =
         Right ->
             div
                 [ gridAreaXY ( x * 2 + 1, y * 2 - 1 )
-                , displayGrid
-                , gridTemplate "1fr 1fr / auto"
-                , noPointerEvents
-                , style "align-items" "end"
-                , gap "1ch"
+                , displayFlex
+                , flexColumn
+                , itemsCenter
+                , style "justify-content" "end"
+                , pb "0.5ch"
+                , sHeight "50%"
+                , positionRelative
                 ]
-                [ fCol
-                    [ gridAreaXY ( 0, 0 )
-                    , allPointerEvents
-                    ]
-                    [ viewValue val
-                    , viewArrow Right val
-                    ]
+                [ viewValue val
+                , viewArrow Right val
                 ]
 
 

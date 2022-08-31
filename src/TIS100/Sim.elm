@@ -388,7 +388,7 @@ viewGrid : List (Html msg) -> Html msg
 viewGrid =
     let
         gapSize =
-            "5ch"
+            UI.gapSize
 
         nodeSize =
             "24ch"
