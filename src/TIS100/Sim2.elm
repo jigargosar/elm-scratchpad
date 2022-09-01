@@ -76,7 +76,10 @@ init puzzle es =
             Grid.init puzzle (always ()) (always ()) ExeNode.empty
                 |> Grid.replaceExeEntries es
     in
-    Model puzzle editStore Edit
+    { puzzle = puzzle
+    , editStore = editStore
+    , state = Edit
+    }
 
 
 type Msg
@@ -108,7 +111,7 @@ update msg model =
                     { model | state = Debug (step sim) }
 
                 Edit ->
-                    { model | state = Debug (initSim model.puzzle model.editStore) }
+                    { model | state = Debug (initSim model.editStore) }
 
         RUN ->
             model
@@ -547,8 +550,8 @@ type alias Sim =
     }
 
 
-initSim : Puzzle -> EditStore -> Sim
-initSim _ editStore =
+initSim : EditStore -> Sim
+initSim editStore =
     let
         store : SimStore
         store =
