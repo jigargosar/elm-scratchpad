@@ -127,33 +127,6 @@ getCycle model =
             Nothing
 
 
-type alias InputColumnViewModel =
-    { title : String
-    , nums : SelectionList Num
-    }
-
-
-type alias OutputColumnViewModel =
-    { title : String
-    , expected : SelectionList Num
-    , actual : List Num
-    }
-
-
-outputColumnViewModel : Model -> List OutputColumnViewModel
-outputColumnViewModel { puzzle, state } =
-    case state of
-        Debug sim ->
-            outputDataListFromSim sim
-
-        Edit ->
-            puzzle.outputs
-                |> List.map
-                    (\{ title, nums } ->
-                        OutputColumnViewModel title (SelectionList.None nums) []
-                    )
-
-
 view : Model -> Html Msg
 view model =
     fCol
@@ -315,12 +288,25 @@ viewOutputColumns { editStore, state } =
                 sim.store
 
 
+type alias InputColumnViewModel =
+    { title : String
+    , nums : SelectionList Num
+    }
+
+
 viewInputColumn : InputColumnViewModel -> Html msg
 viewInputColumn { title, nums } =
     fCol [ gap "0.5ch" ]
         [ div [] [ text title ]
         , viewNumColumn (Num.viewSelectionList nums)
         ]
+
+
+type alias OutputColumnViewModel =
+    { title : String
+    , expected : SelectionList Num
+    , actual : List Num
+    }
 
 
 viewOutputColumn : OutputColumnViewModel -> Html msg
@@ -588,28 +574,6 @@ initSim _ editStore =
     { store = store
     , cycle = 0
     }
-
-
-outputDataListFromSim : Sim -> List OutputColumnViewModel
-outputDataListFromSim sim =
-    let
-        mapper node =
-            case node of
-                Out conf outputNode ->
-                    let
-                        actual =
-                            OutputNode.getNumsRead outputNode
-                    in
-                    Just <|
-                        OutputColumnViewModel
-                            conf.title
-                            (SelectionList.fromIndex (List.length actual) conf.nums)
-                            actual
-
-                _ ->
-                    Nothing
-    in
-    Dict.values sim.store |> List.filterMap mapper
 
 
 simIntentsAndActions : Sim -> ( List ( Addr, Intent ), List ( Addr, Action ) )
