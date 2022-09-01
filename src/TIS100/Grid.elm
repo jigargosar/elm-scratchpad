@@ -131,13 +131,13 @@ toList grid =
 
 
 foldl : (Addr -> Node i o e -> a -> a) -> a -> Grid i o e -> a
-foldl fn acc grid =
-    acc
+foldl =
+    Dict.foldl
 
 
 replace : Addr -> Node i o e -> Grid i o e -> Grid i o e
 replace addr node grid =
-    grid
+    U.replaceEntry ( addr, node ) grid
 
 
 replaceExeEntries : List ( Addr, e ) -> Grid i o e -> Grid i o e
