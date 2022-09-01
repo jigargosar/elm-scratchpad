@@ -271,34 +271,24 @@ viewInputColumns : Model -> List (Html msg)
 viewInputColumns { editStore, state } =
     case state of
         Debug sim ->
-            Dict.values sim.store
-                |> List.map
-                    (\node ->
-                        case node of
-                            In conf inputNode ->
-                                viewInputColumn
-                                    { title = conf.title
-                                    , nums = InputNode.toSelectionList inputNode
-                                    }
-
-                            _ ->
-                                noView
-                    )
+            Grid.inputsToList
+                (\_ conf i ->
+                    viewInputColumn
+                        { title = conf.title
+                        , nums = InputNode.toSelectionList i
+                        }
+                )
+                sim.store
 
         Edit ->
-            Dict.values editStore
-                |> List.map
-                    (\node ->
-                        case node of
-                            In conf () ->
-                                viewInputColumn
-                                    { title = conf.title
-                                    , nums = SelectionList.None conf.nums
-                                    }
-
-                            _ ->
-                                noView
-                    )
+            Grid.inputsToList
+                (\_ conf _ ->
+                    viewInputColumn
+                        { title = conf.title
+                        , nums = SelectionList.None conf.nums
+                        }
+                )
+                editStore
 
 
 viewInputColumn : InputColumnViewModel -> Html msg
