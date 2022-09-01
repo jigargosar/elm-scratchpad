@@ -1,4 +1,4 @@
-module TIS100.Grid exposing (..)
+module TIS100.Grid exposing (Grid, Node(..), init)
 
 import Dict exposing (Dict)
 import TIS100.Puzzle as Puzzle exposing (IOConfig, Puzzle)

@@ -410,11 +410,11 @@ type alias Addr =
 -- NODE
 
 
-type alias Node =
+type alias SimNode =
     Grid.Node InputNode OutputNode ExeNode
 
 
-nodeIoIntents : Node -> List Intent
+nodeIoIntents : SimNode -> List Intent
 nodeIoIntents node =
     case node of
         In _ _ ->
@@ -430,7 +430,7 @@ nodeIoIntents node =
             []
 
 
-nodeIoActions : Node -> List Action
+nodeIoActions : SimNode -> List Action
 nodeIoActions node =
     case node of
         Out _ _ ->
@@ -451,7 +451,7 @@ nodeIoActions node =
                     []
 
 
-nodeState : Node -> NodeState Node
+nodeState : SimNode -> NodeState SimNode
 nodeState node =
     case node of
         In conf inputNode ->
@@ -576,7 +576,7 @@ exeMode exe =
 
 
 type alias NodeEntry =
-    ( Addr, Node )
+    ( Addr, SimNode )
 
 
 type alias Store =
@@ -671,7 +671,7 @@ step sim =
     }
 
 
-stepNode : Addr -> Node -> Acc -> Acc
+stepNode : Addr -> SimNode -> Acc -> Acc
 stepNode addr node =
     case nodeState node of
         S.WriteBlocked num dir cont ->
@@ -687,7 +687,7 @@ stepNode addr node =
             resolveAfterRun addr (cont ())
 
 
-resolveAfterRun : Addr -> Node -> Acc -> Acc
+resolveAfterRun : Addr -> SimNode -> Acc -> Acc
 resolveAfterRun addr node =
     case nodeState node of
         S.ReadBlocked dir cont ->
@@ -760,7 +760,7 @@ type alias ReadBlockedStore =
 
 
 type alias ReadBlockedNode =
-    ( Node, Dir4, Num -> Node )
+    ( SimNode, Dir4, Num -> SimNode )
 
 
 type alias WriteBlockedStore =
@@ -768,7 +768,7 @@ type alias WriteBlockedStore =
 
 
 type alias WriteBlockedNode =
-    { node : Node, num : Num, dir : Dir4, cont : () -> Node }
+    { node : SimNode, num : Num, dir : Dir4, cont : () -> SimNode }
 
 
 initAcc : Store -> Acc
@@ -781,9 +781,9 @@ initAcc store =
 
 addToReadBlocked :
     Addr
-    -> Node
+    -> SimNode
     -> Dir4
-    -> (Num -> Node)
+    -> (Num -> SimNode)
     -> { a | readBlocked : ReadBlockedStore }
     -> { a | readBlocked : ReadBlockedStore }
 addToReadBlocked addr node dir cont acc =
@@ -792,10 +792,10 @@ addToReadBlocked addr node dir cont acc =
 
 addToWriteBlocked :
     Addr
-    -> Node
+    -> SimNode
     -> Num
     -> Dir4
-    -> (() -> Node)
+    -> (() -> SimNode)
     -> { a | writeBlocked : WriteBlockedStore }
     -> { a | writeBlocked : WriteBlockedStore }
 addToWriteBlocked addr node num dir cont acc =
@@ -808,14 +808,14 @@ addToWriteBlocked addr node num dir cont acc =
 
 addToCompleted :
     Addr
-    -> Node
+    -> SimNode
     -> { a | completed : Store }
     -> { a | completed : Store }
 addToCompleted na n acc =
     { acc | completed = replaceEntry ( na, n ) acc.completed }
 
 
-completeWriteBlocked : Addr -> Node -> WriteBlockedAcc a -> WriteBlockedAcc a
+completeWriteBlocked : Addr -> SimNode -> WriteBlockedAcc a -> WriteBlockedAcc a
 completeWriteBlocked addr node acc =
     { acc | writeBlocked = Dict.remove addr acc.writeBlocked }
         |> addToCompleted addr node
