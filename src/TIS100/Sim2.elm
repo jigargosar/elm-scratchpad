@@ -214,31 +214,8 @@ viewGrid { puzzle, state, editStore } =
 
             Debug sim ->
                 List.map viewSimNode (Dict.toList sim.store)
-                    ++ viewFaultyNodes puzzle
                     ++ Ports.view puzzle (simIntentsAndActions sim)
         )
-
-
-viewFaultyNodes : Puzzle -> List (Html msg)
-viewFaultyNodes puzzle =
-    puzzle.layout
-        |> Dict.toList
-        |> List.map
-            (\( ( x, y ), nodeKind ) ->
-                case nodeKind of
-                    Puzzle.Faulty ->
-                        div
-                            [ displayGrid
-                            , gridAreaXY ( x, y - 1 )
-                            , placeContentCenter
-                            , sOutline ("1px solid " ++ "red")
-                            , fg "red"
-                            ]
-                            [ text "ERROR" ]
-
-                    Puzzle.Executable ->
-                        noView
-            )
 
 
 viewFaultyNode : Addr -> Html msg
@@ -561,7 +538,7 @@ viewSimNode ( addr, node ) =
             viewExeNodeEntry ( addr, exe )
 
         Fault ->
-            noView
+            viewFaultyNode addr
 
 
 
