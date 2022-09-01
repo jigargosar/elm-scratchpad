@@ -16,20 +16,20 @@ type alias Grid i o e =
 
 replaceExeEntries : List ( Addr, e ) -> Grid i o e -> Grid i o e
 replaceExeEntries list grid =
-    List.foldl
-        (\( addr, e ) ->
-            U.mapKey addr
-                (\n ->
-                    case n of
-                        Exe _ ->
-                            Exe e
+    List.foldl replaceExe grid list
 
-                        _ ->
-                            n
-                )
+
+replaceExe : ( Addr, e ) -> Grid i o e -> Grid i o e
+replaceExe ( addr, e ) =
+    U.mapKey addr
+        (\n ->
+            case n of
+                Exe _ ->
+                    Exe e
+
+                _ ->
+                    n
         )
-        grid
-        list
 
 
 type alias GridRec i o e =
