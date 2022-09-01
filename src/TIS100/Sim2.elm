@@ -133,20 +133,6 @@ type alias InputColumnViewModel =
     }
 
 
-inputColumnViewModel : Model -> List InputColumnViewModel
-inputColumnViewModel { puzzle, state } =
-    case state of
-        Debug sim ->
-            inputColumnViewModels sim
-
-        Edit ->
-            puzzle.inputs
-                |> List.map
-                    (\{ title, nums } ->
-                        InputColumnViewModel title (SelectionList.None nums)
-                    )
-
-
 type alias OutputColumnViewModel =
     { title : String
     , expected : SelectionList Num
@@ -276,9 +262,38 @@ viewDesc =
 viewIOColumns : Model -> Html msg
 viewIOColumns model =
     fRow [ tac, gap "2ch" ]
-        (List.map viewInputColumn (inputColumnViewModel model)
+        (viewInputColumns model
             ++ List.map viewOutputColumn (outputColumnViewModel model)
         )
+
+
+viewInputColumns : Model -> List (Html msg)
+viewInputColumns { puzzle, state } =
+    case state of
+        Debug sim ->
+            Dict.values sim.store
+                |> List.map
+                    (\node ->
+                        case node of
+                            In conf inputNode ->
+                                viewInputColumn
+                                    { title = conf.title
+                                    , nums = InputNode.toSelectionList inputNode
+                                    }
+
+                            _ ->
+                                noView
+                    )
+
+        Edit ->
+            puzzle.inputs
+                |> List.map
+                    (\{ title, nums } ->
+                        viewInputColumn
+                            { title = title
+                            , nums = SelectionList.None nums
+                            }
+                    )
 
 
 viewInputColumn : InputColumnViewModel -> Html msg
@@ -554,23 +569,6 @@ initSim _ editStore =
     { store = store
     , cycle = 0
     }
-
-
-inputColumnViewModels : Sim -> List InputColumnViewModel
-inputColumnViewModels sim =
-    let
-        mapper node =
-            case node of
-                In conf inputNode ->
-                    Just
-                        (InputColumnViewModel conf.title
-                            (InputNode.toSelectionList inputNode)
-                        )
-
-                _ ->
-                    Nothing
-    in
-    Dict.values sim.store |> List.filterMap mapper
 
 
 outputDataListFromSim : Sim -> List OutputColumnViewModel
