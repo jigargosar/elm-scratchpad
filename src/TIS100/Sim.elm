@@ -256,8 +256,8 @@ viewFaultyNodes puzzle =
     puzzle.layout
         |> Dict.toList
         |> List.map
-            (\( ( x, y ), nk ) ->
-                case nk of
+            (\( ( x, y ), nodeKind ) ->
+                case nodeKind of
                     Puzzle.Faulty ->
                         div
                             [ displayGrid
