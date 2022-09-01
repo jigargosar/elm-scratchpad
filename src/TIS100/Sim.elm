@@ -223,9 +223,30 @@ view model =
                 , viewIOColumns model
                 , viewButtons
                 ]
-            , viewGrid (viewGridItems model)
+            , viewGrid model
             ]
         ]
+
+
+viewGrid : Model -> Html msg
+viewGrid model =
+    let
+        nodeSize =
+            "24ch"
+    in
+    div
+        [ displayGrid
+        , paddingXY "0" UI.gapSize
+        , List.repeat 3 nodeSize
+            |> String.join " "
+            |> gridTemplateRows
+        , List.repeat 4 nodeSize
+            |> String.join " "
+            |> gridTemplateColumns
+        , sMaxHeight "100vh"
+        , gap UI.gapSize
+        ]
+        (viewGridItems model)
 
 
 viewGridItems : Model -> List (Html msg)
@@ -374,26 +395,6 @@ viewOutputColumn { title, expected, actual } =
                     )
                 )
             ]
-        ]
-
-
-viewGrid : List (Html msg) -> Html msg
-viewGrid =
-    let
-        nodeSize =
-            "24ch"
-    in
-    div
-        [ displayGrid
-        , paddingXY "0" UI.gapSize
-        , List.repeat 3 nodeSize
-            |> String.join " "
-            |> gridTemplateRows
-        , List.repeat 4 nodeSize
-            |> String.join " "
-            |> gridTemplateColumns
-        , sMaxHeight "100vh"
-        , gap UI.gapSize
         ]
 
 
