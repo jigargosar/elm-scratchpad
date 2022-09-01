@@ -223,9 +223,7 @@ view model =
                 , viewIOColumns model
                 , viewButtons
                 ]
-            , fCol []
-                [ viewGrid (viewGridItems model)
-                ]
+            , viewGrid (viewGridItems model)
             ]
         ]
 
@@ -377,11 +375,6 @@ viewOutputColumn { title, expected, actual } =
                 )
             ]
         ]
-
-
-nbsp : String
-nbsp =
-    "\u{00A0}"
 
 
 viewGrid : List (Html msg) -> Html msg

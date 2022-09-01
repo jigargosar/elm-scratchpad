@@ -1578,6 +1578,11 @@ words str xs =
 
 -- BASICS
 
+nbsp : String
+nbsp =
+    "\u{00A0}"
+
+
 
 fdiv =
     (/)
