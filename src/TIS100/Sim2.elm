@@ -220,10 +220,12 @@ btn txt msg =
         [ text txt ]
 
 
+viewTitle : Html msg
 viewTitle =
     div [ tac, styleLineHeight "2" ] [ text "-- Title --" ]
 
 
+viewDesc : Html msg
 viewDesc =
     fCol
         [ lightOutline
