@@ -168,11 +168,11 @@ viewGrid : Model -> Html msg
 viewGrid { puzzle, state, editStore } =
     div
         [ displayGrid
-        , paddingXY "0" UI.gapSize
         , List.repeat 3 UI.nodeSize |> String.join " " |> gridTemplateRows
         , List.repeat 4 UI.nodeSize |> String.join " " |> gridTemplateColumns
-        , sMaxHeight "100vh"
+        , paddingXY "0" UI.gapSize
         , gap UI.gapSize
+        , sMaxHeight "100vh"
         ]
         (case state of
             Edit ->
