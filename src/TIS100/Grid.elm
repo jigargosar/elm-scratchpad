@@ -4,6 +4,7 @@ module TIS100.Grid exposing
     , Node(..)
     , init
     , inputsToList
+    , outputsToList
     , replaceExeEntries
     )
 
@@ -76,6 +77,20 @@ inputsToList fn grid =
                 case node of
                     In conf i ->
                         Just <| fn addr conf i
+
+                    _ ->
+                        Nothing
+            )
+
+
+outputsToList : (Addr -> IOConfig -> o -> a) -> Grid i o e -> List a
+outputsToList fn grid =
+    Dict.toList grid
+        |> List.filterMap
+            (\( addr, node ) ->
+                case node of
+                    Out conf o ->
+                        Just <| fn addr conf o
 
                     _ ->
                         Nothing

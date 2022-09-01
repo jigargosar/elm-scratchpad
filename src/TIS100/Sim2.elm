@@ -213,7 +213,8 @@ viewLeftBar : Model -> Html Msg
 viewLeftBar model =
     fCol [ sWidth "40ch", gap "2ch", fg lightGray ]
         [ div [] [ viewTitle, viewDesc ]
-        , viewIOColumns model
+        , fRow [ tac, gap "2ch" ]
+            (viewInputColumns model ++ viewOutputColumns model)
         , viewButtons
         ]
 
@@ -259,14 +260,6 @@ viewDesc =
         (List.repeat 6 (div [] [ text "> desc" ]))
 
 
-viewIOColumns : Model -> Html msg
-viewIOColumns model =
-    fRow [ tac, gap "2ch" ]
-        (viewInputColumns model
-            ++ List.map viewOutputColumn (outputColumnViewModel model)
-        )
-
-
 viewInputColumns : Model -> List (Html msg)
 viewInputColumns { editStore, state } =
     case state of
@@ -286,6 +279,37 @@ viewInputColumns { editStore, state } =
                     viewInputColumn
                         { title = conf.title
                         , nums = InputNode.toSelectionList i
+                        }
+                )
+                sim.store
+
+
+viewOutputColumns : Model -> List (Html msg)
+viewOutputColumns { editStore, state } =
+    case state of
+        Edit ->
+            Grid.outputsToList
+                (\_ conf _ ->
+                    viewOutputColumn
+                        { title = conf.title
+                        , expected = SelectionList.None conf.nums
+                        , actual = []
+                        }
+                )
+                editStore
+
+        Debug sim ->
+            Grid.outputsToList
+                (\_ conf o ->
+                    let
+                        actual =
+                            OutputNode.getNumsRead o
+                    in
+                    viewOutputColumn
+                        { title = conf.title
+                        , expected =
+                            SelectionList.fromIndex (List.length actual) conf.nums
+                        , actual = actual
                         }
                 )
                 sim.store
