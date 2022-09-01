@@ -229,7 +229,7 @@ viewGridItems : Model -> List (Html msg)
 viewGridItems { puzzle, editDict, state } =
     case state of
         Debug sim ->
-            List.map viewNodeEntry (Grid.toList sim.store)
+            List.map viewNodeEntry (Dict.toList sim.store)
                 ++ viewFaultyNodes puzzle
                 ++ Ports.view puzzle (simIntentsAndActions sim)
 
@@ -598,7 +598,7 @@ initSim puzzle editDict =
                 (\conf -> InputNode.fromList conf.nums)
                 (\conf -> OutputNode.fromExpected (List.length conf.nums))
                 ExeNode.empty
-                |> Grid.replaceExeEntries (Dict.toList editDict)
+                |> replaceEntries (Dict.toList editDict |> List.map (mapSecond Exe))
     in
     { store = grid
     , cycle = 0
@@ -607,33 +607,46 @@ initSim puzzle editDict =
 
 inputColumnViewModels : Sim -> List InputColumnViewModel
 inputColumnViewModels sim =
-    Grid.inputs sim.store
-        |> List.map
-            (\( conf, inputNode ) ->
-                InputColumnViewModel conf.title
-                    (InputNode.toSelectionList inputNode)
-            )
+    let
+        mapper node =
+            case node of
+                In conf inputNode ->
+                    Just
+                        (InputColumnViewModel conf.title
+                            (InputNode.toSelectionList inputNode)
+                        )
+
+                _ ->
+                    Nothing
+    in
+    Dict.values sim.store |> List.filterMap mapper
 
 
 outputDataListFromSim : Sim -> List OutputColumnViewModel
 outputDataListFromSim sim =
-    Grid.outputs sim.store
-        |> List.map
-            (\( conf, outputNode ) ->
-                let
-                    actual =
-                        OutputNode.getNumsRead outputNode
-                in
-                OutputColumnViewModel
-                    conf.title
-                    (SelectionList.fromIndex (List.length actual) conf.nums)
-                    actual
-            )
+    let
+        mapper node =
+            case node of
+                Out conf outputNode ->
+                    let
+                        actual =
+                            OutputNode.getNumsRead outputNode
+                    in
+                    Just <|
+                        OutputColumnViewModel
+                            conf.title
+                            (SelectionList.fromIndex (List.length actual) conf.nums)
+                            actual
+
+                _ ->
+                    Nothing
+    in
+    Dict.values sim.store |> List.filterMap mapper
 
 
 simIntentsAndActions : Sim -> ( List ( Addr, Intent ), List ( Addr, Action ) )
 simIntentsAndActions sim =
-    Grid.foldl
+    Dict.foldl
         (\addr node ( intents, actions ) ->
             ( List.map (pair addr) (nodeIoIntents node) ++ intents
             , List.map (pair addr) (nodeIoActions node) ++ actions
@@ -651,7 +664,7 @@ step : Sim -> Sim
 step sim =
     { sim
         | store =
-            Grid.foldl stepNode (initAcc sim.store) sim.store
+            Dict.foldl stepNode (initAcc sim.store) sim.store
                 |> resolveAllReadBlocked
                 |> resolveAllWriteBlocked
         , cycle = sim.cycle + 1
@@ -725,7 +738,7 @@ readAndUnblock rAddr rDir acc =
 
 resolveAllWriteBlocked : WriteBlockedAcc a -> Store
 resolveAllWriteBlocked acc =
-    Dict.foldl (\addr { node } -> Grid.replace addr node) acc.completed acc.writeBlocked
+    Dict.foldl (\addr { node } -> replaceEntry ( addr, node )) acc.completed acc.writeBlocked
 
 
 type alias Acc =
@@ -799,7 +812,7 @@ addToCompleted :
     -> { a | completed : Store }
     -> { a | completed : Store }
 addToCompleted na n acc =
-    { acc | completed = Grid.replace na n acc.completed }
+    { acc | completed = replaceEntry ( na, n ) acc.completed }
 
 
 completeWriteBlocked : Addr -> Node -> WriteBlockedAcc a -> WriteBlockedAcc a

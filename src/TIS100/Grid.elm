@@ -37,34 +37,6 @@ init puzzle ifn ofn e =
         |> toDict
 
 
-inputs : Grid i o e -> List ( IOConfig, i )
-inputs grid =
-    Dict.toList grid
-        |> List.filterMap
-            (\( _, n ) ->
-                case n of
-                    In conf i ->
-                        Just ( conf, i )
-
-                    _ ->
-                        Nothing
-            )
-
-
-outputs : Grid i o e -> List ( IOConfig, o )
-outputs grid =
-    Dict.toList grid
-        |> List.filterMap
-            (\( _, n ) ->
-                case n of
-                    Out conf i ->
-                        Just ( conf, i )
-
-                    _ ->
-                        Nothing
-            )
-
-
 type alias Addr =
     ( Int, Int )
 
@@ -100,23 +72,3 @@ toDict grid =
         |> Dict.union outputNodes
         |> Dict.union exeNodes
         |> Dict.union faultyNodes
-
-
-toList : Grid i o e -> List ( Addr, Node i o e )
-toList grid =
-    grid |> Dict.toList
-
-
-foldl : (Addr -> Node i o e -> a -> a) -> a -> Grid i o e -> a
-foldl =
-    Dict.foldl
-
-
-replace : Addr -> Node i o e -> Grid i o e -> Grid i o e
-replace addr node grid =
-    U.replaceEntry ( addr, node ) grid
-
-
-replaceExeEntries : List ( Addr, e ) -> Grid i o e -> Grid i o e
-replaceExeEntries list =
-    U.replaceEntries (List.map (U.mapSecond Exe) list)
