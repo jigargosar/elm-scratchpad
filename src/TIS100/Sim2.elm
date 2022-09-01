@@ -51,39 +51,32 @@ sampleModel =
 
 type alias Model =
     { puzzle : Puzzle
-    , editDict : EditDict
+    , editStore : EditStore
     , state : State
     }
 
 
-type alias EditDict =
-    Dict Addr ExeNode
+type alias EditStore =
+    Grid.Grid () () ExeNode
+
+
+type alias EditNode =
+    Grid.Node () () ExeNode
 
 
 type State
-    = Debug Sim
-    | Edit
+    = Edit
+    | Debug Sim
 
 
 init : Puzzle -> List ( Addr, ExeNode ) -> Model
 init puzzle es =
     let
-        editDict =
-            puzzle.layout
-                |> Dict.toList
-                |> List.filterMap
-                    (\( addr, nodeKind ) ->
-                        case nodeKind of
-                            Puzzle.Executable ->
-                                Just ( addr, ExeNode.empty )
-
-                            Puzzle.Faulty ->
-                                Nothing
-                    )
-                |> Dict.fromList
-                |> replaceEntries es
+        editStore =
+            Grid.init puzzle (always ()) (always ()) ExeNode.empty
+                |> Grid.replaceExeEntries es
     in
-    Model puzzle editDict Edit
+    Model puzzle editStore Edit
 
 
 type Msg
@@ -115,7 +108,7 @@ update msg model =
                     { model | state = Debug (step sim) }
 
                 Edit ->
-                    { model | state = Debug (initSim model.puzzle model.editDict) }
+                    { model | state = Debug (initSim model.puzzle model.editStore) }
 
         RUN ->
             model
@@ -226,7 +219,7 @@ viewGrid model =
 
 
 viewGridItems : Model -> List (Html msg)
-viewGridItems { puzzle, editDict, state } =
+viewGridItems { puzzle, editStore, state } =
     case state of
         Debug sim ->
             List.map viewSimNode (Dict.toList sim.store)
@@ -234,12 +227,13 @@ viewGridItems { puzzle, editDict, state } =
                 ++ Ports.view puzzle (simIntentsAndActions sim)
 
         Edit ->
-            let
-                es =
-                    Dict.toList editDict
-            in
-            viewEditNodes puzzle es
-                ++ viewFaultyNodes puzzle
+            --let
+            --    es =
+            --        Dict.toList editStore
+            --in
+            List.map viewEditNode (Dict.toList editStore)
+                --viewEditNodes puzzle es
+                --    ++ viewFaultyNodes puzzle
                 ++ Ports.viewAllPorts puzzle
 
 
@@ -263,6 +257,34 @@ viewFaultyNodes puzzle =
                     Puzzle.Executable ->
                         noView
             )
+
+
+viewFaultyNode : Addr -> Html msg
+viewFaultyNode ( x, y ) =
+    div
+        [ displayGrid
+        , gridAreaXY ( x, y - 1 )
+        , placeContentCenter
+        , sOutline ("1px solid " ++ "red")
+        , fg "red"
+        ]
+        [ text "ERROR" ]
+
+
+viewEditNode : ( Addr, EditNode ) -> Html msg
+viewEditNode ( addr, node ) =
+    case node of
+        In conf i ->
+            viewInputNode conf
+
+        Out conf o ->
+            viewOutputNode conf
+
+        Exe e ->
+            viewExeNodeEntry ( addr, e )
+
+        Fault ->
+            viewFaultyNode addr
 
 
 viewEditNodes : Puzzle -> List ( Addr, ExeNode ) -> List (Html msg)
@@ -589,18 +611,29 @@ type alias Sim =
     }
 
 
-initSim : Puzzle -> EditDict -> Sim
-initSim puzzle editDict =
+initSim : Puzzle -> EditStore -> Sim
+initSim puzzle editStore =
     let
-        grid : Grid.Grid InputNode OutputNode ExeNode
-        grid =
-            Grid.init puzzle
-                (\conf -> InputNode.fromList conf.nums)
-                (\conf -> OutputNode.fromExpected (List.length conf.nums))
-                ExeNode.empty
-                |> replaceEntries (Dict.toList editDict |> List.map (mapSecond Exe))
+        store : SimStore
+        store =
+            editStore
+                |> Dict.map
+                    (\_ n ->
+                        case n of
+                            In conf _ ->
+                                In conf (InputNode.fromList conf.nums)
+
+                            Out conf _ ->
+                                Out conf (OutputNode.fromExpected (List.length conf.nums))
+
+                            Exe e ->
+                                Exe e
+
+                            Fault ->
+                                Fault
+                    )
     in
-    { store = grid
+    { store = store
     , cycle = 0
     }
 

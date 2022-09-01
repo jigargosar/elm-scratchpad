@@ -2039,6 +2039,11 @@ replaceEntry ( k, v ) =
     Dict.update k (Maybe.map (always v))
 
 
+mapKey : comparable -> (b -> b) -> Dict comparable b -> Dict comparable b
+mapKey k fn =
+    Dict.update k (Maybe.map fn)
+
+
 replaceEntries : List ( comparable, b ) -> Dict comparable b -> Dict comparable b
 replaceEntries entries dict =
     List.foldl replaceEntry dict entries

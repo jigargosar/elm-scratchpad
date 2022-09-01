@@ -1,4 +1,9 @@
-module TIS100.Grid exposing (Grid, Node(..), init)
+module TIS100.Grid exposing
+    ( Grid
+    , Node(..)
+    , init
+    , replaceExeEntries
+    )
 
 import Dict exposing (Dict)
 import TIS100.Puzzle as Puzzle exposing (IOConfig, Puzzle)
@@ -7,6 +12,24 @@ import Utils as U
 
 type alias Grid i o e =
     Dict Addr (Node i o e)
+
+
+replaceExeEntries : List ( Addr, e ) -> Grid i o e -> Grid i o e
+replaceExeEntries list grid =
+    List.foldl
+        (\( addr, e ) ->
+            U.mapKey addr
+                (\n ->
+                    case n of
+                        Exe _ ->
+                            Exe e
+
+                        _ ->
+                            n
+                )
+        )
+        grid
+        list
 
 
 type alias GridRec i o e =
