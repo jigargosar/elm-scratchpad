@@ -21,7 +21,6 @@ type Action
     | Writing Dir4 Num
 
 
-
 type alias Key =
     ( Addr, Addr )
 
@@ -44,12 +43,6 @@ toKey addr dir4 =
 puzzleLayoutIOIntents : Puzzle -> List ( Addr, Intent )
 puzzleLayoutIOIntents puzzle =
     let
-        layoutDict : Dict Addr Puzzle.NodeType
-        layoutDict =
-            puzzle.layout
-                |> List.indexedMap (\i nt -> ( ( modBy 4 i, i // 4 + 1 ), nt ))
-                |> Dict.fromList
-
         ioIntentsFromAddr : Addr -> List ( Addr, Intent )
         ioIntentsFromAddr addr =
             [ Up, Down, Left, Right ]
@@ -59,7 +52,7 @@ puzzleLayoutIOIntents puzzle =
                             to =
                                 moveInDir4 dir addr
                         in
-                        case dictGet2 addr to layoutDict of
+                        case dictGet2 addr to puzzle.layout of
                             Just ( writer, _ ) ->
                                 case writer of
                                     Puzzle.Executable ->
@@ -72,7 +65,7 @@ puzzleLayoutIOIntents puzzle =
                                 Nothing
                     )
     in
-    List.concatMap ioIntentsFromAddr (Dict.keys layoutDict)
+    List.concatMap ioIntentsFromAddr (Dict.keys puzzle.layout)
 
 
 type alias Ports =

@@ -1,6 +1,8 @@
 module TIS100.Puzzle exposing (..)
 
+import Dict exposing (Dict)
 import TIS100.Num as Num exposing (Num)
+import Utils exposing (pair)
 
 
 type alias Puzzle =
@@ -8,8 +10,16 @@ type alias Puzzle =
     , description : List String
     , inputs : List IOConfig
     , outputs : List IOConfig
-    , layout : List NodeType
+    , layout : Layout
     }
+
+
+type alias Addr =
+    ( Int, Int )
+
+
+type alias Layout =
+    Dict Addr NodeType
 
 
 type alias IOConfig =
@@ -49,8 +59,14 @@ samplePuzzle =
     }
 
 
-toLayout : List (List NodeType) -> List NodeType
+toLayout : List (List NodeType) -> Layout
 toLayout lss =
     List.concat lss
         ++ List.repeat 12 Executable
         |> List.take 12
+        |> List.indexedMap pair
+        |> List.filterMap
+            (\( i, nk ) ->
+                Just ( ( modBy 4 i, i // 4 + 1 ), nk )
+            )
+        |> Dict.fromList

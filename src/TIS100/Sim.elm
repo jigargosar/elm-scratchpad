@@ -69,12 +69,12 @@ init puzzle es =
     let
         editDict =
             puzzle.layout
-                |> List.indexedMap pair
+                |> Dict.toList
                 |> List.filterMap
-                    (\( i, nk ) ->
+                    (\( addr, nk ) ->
                         case nk of
                             Puzzle.Executable ->
-                                Just ( addrFromLayoutIndex i, ExeNode.empty )
+                                Just ( addr, ExeNode.empty )
 
                             Puzzle.Faulty ->
                                 Nothing
@@ -246,23 +246,22 @@ viewGridItems { puzzle, editDict, state } =
 --gridAreaFromLayoutIndex : Int -> Attribute msg
 --gridAreaFromLayoutIndex i =
 --    gridAreaXY ( modBy 4 i, i // 4 )
-
-
-addrFromLayoutIndex : Int -> Addr
-addrFromLayoutIndex i =
-    ( modBy 4 i, i // 4 + 1 )
+--addrFromLayoutIndex : Int -> Addr
+--addrFromLayoutIndex i =
+--    ( modBy 4 i, i // 4 + 1 )
 
 
 viewFaultyNodes : Puzzle -> List (Html msg)
 viewFaultyNodes puzzle =
     puzzle.layout
-        |> List.indexedMap
-            (\i nk ->
+        |> Dict.toList
+        |> List.map
+            (\( ( x, y ), nk ) ->
                 case nk of
                     Puzzle.Faulty ->
                         div
                             [ displayGrid
-                            , gridAreaXY ( modBy 4 i, i // 4 )
+                            , gridAreaXY ( x, y - 1 )
                             , placeContentCenter
                             , sOutline ("1px solid " ++ "red")
                             , fg "red"
