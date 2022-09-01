@@ -188,13 +188,18 @@ view model =
         ]
 
 
-viewLeftBar : Model -> Html Msg
-viewLeftBar model =
-    fCol [ sWidth "40ch", gap "2ch", fg lightGray ]
-        [ div [] [ viewTitle, viewDesc ]
-        , viewIOColumns model
-        , viewButtons
-        ]
+viewCycle : Maybe Int -> Html msg
+viewCycle mbCycle =
+    let
+        cycle =
+            case mbCycle of
+                Nothing ->
+                    "NA"
+
+                Just c ->
+                    fromInt c
+    in
+    div [] [ text "Cycle: ", text cycle ]
 
 
 viewGrid : Model -> Html msg
@@ -218,18 +223,13 @@ viewGrid { puzzle, state, editStore } =
         )
 
 
-viewCycle : Maybe Int -> Html msg
-viewCycle mbCycle =
-    let
-        cycle =
-            case mbCycle of
-                Nothing ->
-                    "NA"
-
-                Just c ->
-                    fromInt c
-    in
-    div [] [ text "Cycle: ", text cycle ]
+viewLeftBar : Model -> Html Msg
+viewLeftBar model =
+    fCol [ sWidth "40ch", gap "2ch", fg lightGray ]
+        [ div [] [ viewTitle, viewDesc ]
+        , viewIOColumns model
+        , viewButtons
+        ]
 
 
 viewButtons : Html Msg
