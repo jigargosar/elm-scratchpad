@@ -283,65 +283,35 @@ viewIOColumns model =
 
 viewInputColumn : InputColumnViewModel -> Html msg
 viewInputColumn { title, nums } =
-    let
-        numViews =
-            Num.viewSelectionList nums
-    in
     fCol [ gap "0.5ch" ]
         [ div [] [ text title ]
-        , div
-            [ lightOutline
-            , sWidth "4ch"
-            , pa "0.5ch 0"
-            , styleLineHeight "0.8"
-            ]
-            (times 39
-                (\i ->
-                    listGetAt i numViews
-                        |> Maybe.withDefault (div [] [ text nbsp ])
-                )
-            )
+        , viewNumColumn (Num.viewSelectionList nums)
         ]
 
 
 viewOutputColumn : OutputColumnViewModel -> Html msg
 viewOutputColumn { title, expected, actual } =
-    let
-        expectedViews =
-            Num.viewSelectionList expected
-
-        actualViews =
-            List.map Num.view actual
-    in
     fCol [ gap "0.5ch" ]
         [ div [] [ text title ]
         , fRow []
-            [ div
-                [ lightOutline
-                , sWidth "4ch"
-                , pa "0.5ch 0"
-                , styleLineHeight "0.8"
-                ]
-                (times 39
-                    (\i ->
-                        listGetAt i expectedViews
-                            |> Maybe.withDefault (div [] [ text nbsp ])
-                    )
-                )
-            , div
-                [ lightOutline
-                , sWidth "4ch"
-                , pa "0.5ch 0"
-                , styleLineHeight "0.8"
-                ]
-                (times 39
-                    (\i ->
-                        listGetAt i actualViews
-                            |> Maybe.withDefault (div [] [ text nbsp ])
-                    )
-                )
+            [ viewNumColumn (Num.viewSelectionList expected)
+            , viewNumColumn (List.map Num.view actual)
             ]
         ]
+
+
+viewNumColumn : List (Html msg) -> Html msg
+viewNumColumn numViews =
+    div
+        [ lightOutline
+        , sWidth "4ch"
+        , pa "0.5ch 0"
+        , styleLineHeight "0.8"
+        ]
+        (numViews
+            ++ List.repeat 39 (div [] [ text nbsp ])
+            |> List.take 39
+        )
 
 
 
