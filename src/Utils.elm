@@ -1578,10 +1578,10 @@ words str xs =
 
 -- BASICS
 
+
 nbsp : String
 nbsp =
     "\u{00A0}"
-
 
 
 fdiv =
@@ -2037,6 +2037,11 @@ insertEntry ( k, v ) =
 replaceEntry : ( comparable, b ) -> Dict comparable b -> Dict comparable b
 replaceEntry ( k, v ) =
     Dict.update k (Maybe.map (always v))
+
+
+replaceEntries : List ( comparable, b ) -> Dict comparable b -> Dict comparable b
+replaceEntries entries dict =
+    List.foldl replaceEntry dict entries
 
 
 {-| Only when `from` is member and `to` is not member.

@@ -68,51 +68,21 @@ init : Puzzle -> List ( Addr, ExeNode ) -> Model
 init puzzle es =
     let
         editDict =
-            editAddressesFromLayout puzzle.layout
-                |> List.foldl Dict.remove initialEditDict
+            puzzle.layout
+                |> List.indexedMap pair
+                |> List.filterMap
+                    (\( i, nk ) ->
+                        case nk of
+                            Puzzle.Executable ->
+                                Just ( addrFromLayoutIndex i, ExeNode.empty )
 
-        mergedEditDict : EditDict
-        mergedEditDict =
-            List.foldl replaceEntry editDict es
+                            Puzzle.Faulty ->
+                                Nothing
+                    )
+                |> Dict.fromList
+                |> replaceEntries es
     in
-    Model puzzle mergedEditDict Edit
-
-
-initialEditDict : EditDict
-initialEditDict =
-    List.foldl (\k -> Dict.insert k ExeNode.empty) Dict.empty editAddresses
-
-
-editAddressesFromLayout : List Puzzle.NodeType -> List Addr
-editAddressesFromLayout ls =
-    List.indexedMap
-        (\i nt ->
-            case nt of
-                Puzzle.Executable ->
-                    Nothing
-
-                Puzzle.Faulty ->
-                    Just (addrFromLayoutIndex i)
-        )
-        ls
-        |> List.filterMap identity
-
-
-editAddresses : List Addr
-editAddresses =
-    [ ( 0, 1 )
-    , ( 0, 2 )
-    , ( 0, 3 )
-    , ( 1, 1 )
-    , ( 1, 2 )
-    , ( 1, 3 )
-    , ( 2, 1 )
-    , ( 2, 2 )
-    , ( 2, 3 )
-    , ( 3, 1 )
-    , ( 3, 2 )
-    , ( 3, 3 )
-    ]
+    Model puzzle editDict Edit
 
 
 type Msg
@@ -272,9 +242,10 @@ viewGridItems { puzzle, editDict, state } =
                 ++ Ports.viewAllPorts puzzle
 
 
-gridAreaFromLayoutIndex : Int -> Attribute msg
-gridAreaFromLayoutIndex i =
-    gridAreaXY ( modBy 4 i, i // 4 )
+
+--gridAreaFromLayoutIndex : Int -> Attribute msg
+--gridAreaFromLayoutIndex i =
+--    gridAreaXY ( modBy 4 i, i // 4 )
 
 
 addrFromLayoutIndex : Int -> Addr
