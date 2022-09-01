@@ -1,4 +1,4 @@
-module TIS100.Ports exposing (IOAction(..), IOIntent(..), view, viewAllPorts)
+module TIS100.Ports exposing (Action(..), Intent(..), view, viewAllPorts)
 
 import Dict exposing (Dict)
 import TIS100.Num as Num exposing (Num)
@@ -11,12 +11,12 @@ type alias Addr =
     ( Int, Int )
 
 
-type IOIntent
+type Intent
     = Read Dir4
     | Write Dir4
 
 
-type IOAction
+type Action
     = Reading Dir4
     | Writing Dir4 Num
 
@@ -45,7 +45,7 @@ toKey addr dir4 =
     ( addr, moveInDir4 dir4 addr )
 
 
-puzzleLayoutIOIntents : Puzzle -> List ( Addr, IOIntent )
+puzzleLayoutIOIntents : Puzzle -> List ( Addr, Intent )
 puzzleLayoutIOIntents puzzle =
     let
         layoutDict : Dict Addr Puzzle.NodeType
@@ -54,7 +54,7 @@ puzzleLayoutIOIntents puzzle =
                 |> List.indexedMap (\i nt -> ( ( modBy 4 i, i // 4 + 1 ), nt ))
                 |> Dict.fromList
 
-        ioIntentsFromAddr : Addr -> List ( Addr, IOIntent )
+        ioIntentsFromAddr : Addr -> List ( Addr, Intent )
         ioIntentsFromAddr addr =
             [ Up, Down, Left, Right ]
                 |> List.filterMap
@@ -87,16 +87,16 @@ type alias Port =
     ( Addr, Dir4, Value )
 
 
-fromIntents : List ( Addr, IOIntent ) -> Ports
+fromIntents : List ( Addr, Intent ) -> Ports
 fromIntents =
     List.foldl addIntent Dict.empty
 
 
-addIntent : ( Addr, IOIntent ) -> Ports -> Ports
-addIntent ( addr, iOIntent ) =
+addIntent : ( Addr, Intent ) -> Ports -> Ports
+addIntent ( addr, intent ) =
     let
         port_ =
-            case iOIntent of
+            case intent of
                 Read dir4 ->
                     ( moveInDir4 dir4 addr, oppositeDir4 dir4, Empty )
 
@@ -106,14 +106,14 @@ addIntent ( addr, iOIntent ) =
     addPort port_
 
 
-fromActions : List ( Addr, IOAction ) -> Ports
+fromActions : List ( Addr, Action ) -> Ports
 fromActions =
     List.foldl addAction Dict.empty
 
 
-addAction : ( Addr, IOAction ) -> Ports -> Ports
-addAction ( addr, iOAction ) =
-    case iOAction of
+addAction : ( Addr, Action ) -> Ports -> Ports
+addAction ( addr, action ) =
+    case action of
         Reading dir4 ->
             addPort ( moveInDir4 dir4 addr, oppositeDir4 dir4, Query )
 
@@ -152,7 +152,7 @@ addPort (( addr, dir, new ) as port_) =
 allPuzzlePorts : Puzzle -> Ports
 allPuzzlePorts puzzle =
     let
-        ioIntents : List ( Addr, IOIntent )
+        ioIntents : List ( Addr, Intent )
         ioIntents =
             List.map (\{ x } -> ( ( x, 0 ), Write Down )) puzzle.inputs
                 ++ List.map (\{ x } -> ( ( x, maxY ), Read Up )) puzzle.outputs
@@ -166,7 +166,7 @@ viewAllPorts puzzle =
     allPuzzlePorts puzzle |> viewPorts
 
 
-view : Puzzle -> ( List ( Addr, IOIntent ), List ( Addr, IOAction ) ) -> List (Html msg)
+view : Puzzle -> ( List ( Addr, Intent ), List ( Addr, Action ) ) -> List (Html msg)
 view puzzle ( intents, actions ) =
     let
         selectedPorts =

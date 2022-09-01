@@ -12,7 +12,7 @@ import TIS100.InputNode as InputNode exposing (InputNode)
 import TIS100.NodeState as S exposing (NodeState)
 import TIS100.Num as Num exposing (Num)
 import TIS100.OutputNode as OutputNode exposing (OutputNode)
-import TIS100.Ports as Ports exposing (IOAction(..), IOIntent(..))
+import TIS100.Ports as Ports exposing (Action(..), Intent(..))
 import TIS100.Puzzle as Puzzle exposing (IOConfig, Puzzle)
 import TIS100.SelectionList as SelectionList exposing (SelectionList)
 import TIS100.UI as UI
@@ -447,7 +447,7 @@ outputNodeEntry conf =
     ( ( conf.x, maxY ), initOutputNode conf )
 
 
-nodeIoIntents : Node -> List IOIntent
+nodeIoIntents : Node -> List Intent
 nodeIoIntents node =
     case node of
         InputNode _ _ ->
@@ -457,10 +457,10 @@ nodeIoIntents node =
             [ Read Up ]
 
         ExeNode exe ->
-            ExeNode.ioIntents exe
+            ExeNode.intents exe
 
 
-nodeIoActions : Node -> List IOAction
+nodeIoActions : Node -> List Action
 nodeIoActions node =
     case node of
         OutputNode _ _ ->
@@ -666,7 +666,7 @@ outputDataListFromSim sim =
     Dict.values sim.store |> List.filterMap mapper
 
 
-simIntentsAndActions : Sim -> ( List ( Addr, IOIntent ), List ( Addr, IOAction ) )
+simIntentsAndActions : Sim -> ( List ( Addr, Intent ), List ( Addr, Action ) )
 simIntentsAndActions sim =
     Dict.foldl
         (\addr node ( intents, actions ) ->

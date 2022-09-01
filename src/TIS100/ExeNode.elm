@@ -3,14 +3,14 @@ module TIS100.ExeNode exposing
     , empty
     , initMov
     , initMovUpDown
-    , ioIntents
+    , intents
     , state
     , toSource
     )
 
 import TIS100.NodeState as S
 import TIS100.Num exposing (Num)
-import TIS100.Ports exposing (IOIntent(..))
+import TIS100.Ports exposing (Intent(..))
 import Utils exposing (Dir4(..))
 
 
@@ -73,8 +73,8 @@ run inst =
             ReadyToRun
 
 
-ioIntents : ExeNode -> List IOIntent
-ioIntents exe =
+intents : ExeNode -> List Intent
+intents exe =
     case exe of
         NotRunnable ->
             []
