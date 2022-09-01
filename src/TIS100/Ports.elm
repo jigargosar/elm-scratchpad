@@ -1,7 +1,6 @@
-module TIS100.Ports exposing (view, viewAllPorts)
+module TIS100.Ports exposing (IOAction(..), IOIntent(..), view, viewAllPorts)
 
 import Dict exposing (Dict)
-import TIS100.IOIntent exposing (IOAction(..), IOIntent(..))
 import TIS100.Num as Num exposing (Num)
 import TIS100.Puzzle as Puzzle exposing (Puzzle)
 import TIS100.UI as UI
@@ -10,6 +9,16 @@ import Utils exposing (..)
 
 type alias Addr =
     ( Int, Int )
+
+
+type IOIntent
+    = Read Dir4
+    | Write Dir4
+
+
+type IOAction
+    = Reading Dir4
+    | Writing Dir4 Num
 
 
 maxY : Int

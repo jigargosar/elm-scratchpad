@@ -8,9 +8,9 @@ module TIS100.ExeNode exposing
     , toSource
     )
 
-import TIS100.IOIntent exposing (IOIntent(..))
 import TIS100.NodeState as S
 import TIS100.Num exposing (Num)
+import TIS100.Ports exposing (IOIntent(..))
 import Utils exposing (Dir4(..))
 
 
