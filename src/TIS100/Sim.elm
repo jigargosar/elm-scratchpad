@@ -71,8 +71,8 @@ init puzzle es =
             puzzle.layout
                 |> Dict.toList
                 |> List.filterMap
-                    (\( addr, nk ) ->
-                        case nk of
+                    (\( addr, nodeKind ) ->
+                        case nodeKind of
                             Puzzle.Executable ->
                                 Just ( addr, ExeNode.empty )
 
@@ -240,15 +240,6 @@ viewGridItems { puzzle, editDict, state } =
             viewEditNodes puzzle es
                 ++ viewFaultyNodes puzzle
                 ++ Ports.viewAllPorts puzzle
-
-
-
---gridAreaFromLayoutIndex : Int -> Attribute msg
---gridAreaFromLayoutIndex i =
---    gridAreaXY ( modBy 4 i, i // 4 )
---addrFromLayoutIndex : Int -> Addr
---addrFromLayoutIndex i =
---    ( modBy 4 i, i // 4 + 1 )
 
 
 viewFaultyNodes : Puzzle -> List (Html msg)
