@@ -579,12 +579,12 @@ type alias NodeEntry =
     ( Addr, SimNode )
 
 
-type alias Store =
+type alias SimStore =
     Grid.Grid InputNode OutputNode ExeNode
 
 
 type alias Sim =
-    { store : Store
+    { store : SimStore
     , cycle : Int
     }
 
@@ -736,7 +736,7 @@ readAndUnblock rAddr rDir acc =
             )
 
 
-resolveAllWriteBlocked : WriteBlockedAcc a -> Store
+resolveAllWriteBlocked : WriteBlockedAcc a -> SimStore
 resolveAllWriteBlocked acc =
     Dict.foldl (\addr { node } -> replaceEntry ( addr, node )) acc.completed acc.writeBlocked
 
@@ -744,14 +744,14 @@ resolveAllWriteBlocked acc =
 type alias Acc =
     { readBlocked : ReadBlockedStore
     , writeBlocked : WriteBlockedStore
-    , completed : Store
+    , completed : SimStore
     }
 
 
 type alias WriteBlockedAcc a =
     { a
         | writeBlocked : WriteBlockedStore
-        , completed : Store
+        , completed : SimStore
     }
 
 
@@ -771,7 +771,7 @@ type alias WriteBlockedNode =
     { node : SimNode, num : Num, dir : Dir4, cont : () -> SimNode }
 
 
-initAcc : Store -> Acc
+initAcc : SimStore -> Acc
 initAcc store =
     { readBlocked = Dict.empty
     , writeBlocked = Dict.empty
@@ -809,8 +809,8 @@ addToWriteBlocked addr node num dir cont acc =
 addToCompleted :
     Addr
     -> SimNode
-    -> { a | completed : Store }
-    -> { a | completed : Store }
+    -> { a | completed : SimStore }
+    -> { a | completed : SimStore }
 addToCompleted na n acc =
     { acc | completed = replaceEntry ( na, n ) acc.completed }
 
