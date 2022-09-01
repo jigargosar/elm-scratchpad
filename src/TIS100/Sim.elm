@@ -92,7 +92,7 @@ editAddressesFromLayout ls =
                     Nothing
 
                 Puzzle.Faulty ->
-                    Just ( modBy 4 i, i // 4 + 1 )
+                    Just (addrFromLayoutIndex i)
         )
         ls
         |> List.filterMap identity
@@ -272,6 +272,16 @@ viewGridItems { puzzle, editDict, state } =
                 ++ Ports.viewAllPorts puzzle
 
 
+gridAreaFromLayoutIndex : Int -> Attribute msg
+gridAreaFromLayoutIndex i =
+    gridAreaXY ( modBy 4 i, i // 4 )
+
+
+addrFromLayoutIndex : Int -> Addr
+addrFromLayoutIndex i =
+    ( modBy 4 i, i // 4 + 1 )
+
+
 viewFaultyNodes : Puzzle -> List (Html msg)
 viewFaultyNodes puzzle =
     puzzle.layout
@@ -281,6 +291,7 @@ viewFaultyNodes puzzle =
                     Puzzle.Faulty ->
                         div
                             [ displayGrid
+                            , gridAreaXY ( modBy 4 i, i // 4 )
                             , placeContentCenter
                             , sOutline ("1px solid " ++ "red")
                             , fg "red"
