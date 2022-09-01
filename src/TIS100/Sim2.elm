@@ -268,7 +268,7 @@ viewIOColumns model =
 
 
 viewInputColumns : Model -> List (Html msg)
-viewInputColumns { puzzle, state } =
+viewInputColumns { editStore, state } =
     case state of
         Debug sim ->
             Dict.values sim.store
@@ -286,13 +286,18 @@ viewInputColumns { puzzle, state } =
                     )
 
         Edit ->
-            puzzle.inputs
+            Dict.values editStore
                 |> List.map
-                    (\{ title, nums } ->
-                        viewInputColumn
-                            { title = title
-                            , nums = SelectionList.None nums
-                            }
+                    (\node ->
+                        case node of
+                            In conf () ->
+                                viewInputColumn
+                                    { title = conf.title
+                                    , nums = SelectionList.None conf.nums
+                                    }
+
+                            _ ->
+                                noView
                     )
 
 
