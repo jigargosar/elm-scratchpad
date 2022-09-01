@@ -198,43 +198,25 @@ viewLeftBar model =
 
 
 viewGrid : Model -> Html msg
-viewGrid model =
-    let
-        nodeSize =
-            "24ch"
-    in
+viewGrid { puzzle, state, editStore } =
     div
         [ displayGrid
         , paddingXY "0" UI.gapSize
-        , List.repeat 3 nodeSize
-            |> String.join " "
-            |> gridTemplateRows
-        , List.repeat 4 nodeSize
-            |> String.join " "
-            |> gridTemplateColumns
+        , List.repeat 3 UI.nodeSize |> String.join " " |> gridTemplateRows
+        , List.repeat 4 UI.nodeSize |> String.join " " |> gridTemplateColumns
         , sMaxHeight "100vh"
         , gap UI.gapSize
         ]
-        (viewGridItems model)
+        (case state of
+            Edit ->
+                List.map viewEditNode (Dict.toList editStore)
+                    ++ Ports.viewAllPorts puzzle
 
-
-viewGridItems : Model -> List (Html msg)
-viewGridItems { puzzle, editStore, state } =
-    case state of
-        Debug sim ->
-            List.map viewSimNode (Dict.toList sim.store)
-                ++ viewFaultyNodes puzzle
-                ++ Ports.view puzzle (simIntentsAndActions sim)
-
-        Edit ->
-            --let
-            --    es =
-            --        Dict.toList editStore
-            --in
-            List.map viewEditNode (Dict.toList editStore)
-                --viewEditNodes puzzle es
-                --    ++ viewFaultyNodes puzzle
-                ++ Ports.viewAllPorts puzzle
+            Debug sim ->
+                List.map viewSimNode (Dict.toList sim.store)
+                    ++ viewFaultyNodes puzzle
+                    ++ Ports.view puzzle (simIntentsAndActions sim)
+        )
 
 
 viewFaultyNodes : Puzzle -> List (Html msg)
@@ -274,10 +256,10 @@ viewFaultyNode ( x, y ) =
 viewEditNode : ( Addr, EditNode ) -> Html msg
 viewEditNode ( addr, node ) =
     case node of
-        In conf i ->
+        In conf _ ->
             viewInputNode conf
 
-        Out conf o ->
+        Out conf _ ->
             viewOutputNode conf
 
         Exe e ->
@@ -285,13 +267,6 @@ viewEditNode ( addr, node ) =
 
         Fault ->
             viewFaultyNode addr
-
-
-viewEditNodes : Puzzle -> List ( Addr, ExeNode ) -> List (Html msg)
-viewEditNodes puzzle es =
-    List.map viewInputNode puzzle.inputs
-        ++ List.map viewOutputNode puzzle.outputs
-        ++ List.map viewExeNodeEntry es
 
 
 viewCycle : Maybe Int -> Html msg
@@ -604,7 +579,7 @@ type alias Sim =
 
 
 initSim : Puzzle -> EditStore -> Sim
-initSim puzzle editStore =
+initSim _ editStore =
     let
         store : SimStore
         store =

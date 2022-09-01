@@ -19,3 +19,7 @@ lightOutline =
 
 gapSize =
     "5ch"
+
+
+nodeSize =
+    "24ch"
