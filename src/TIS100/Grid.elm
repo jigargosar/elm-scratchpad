@@ -104,29 +104,6 @@ toDict grid =
 
 toList : Grid i o e -> List ( Addr, Node i o e )
 toList grid =
-    --let
-    --    inputNodes =
-    --        grid.inputs
-    --            |> Dict.map (\_ ( conf, i ) -> In conf i)
-    --
-    --    exeNodes =
-    --        grid.exs
-    --            |> Dict.map (\_ e -> Exe e)
-    --
-    --    faultyNodes =
-    --        grid.faults
-    --            |> List.map (U.pairTo Fault)
-    --
-    --    outputNodes =
-    --        grid.outputs
-    --            |> Dict.map (\_ ( conf, o ) -> Out conf o)
-    --in
-    --(inputNodes
-    --    |> Dict.union outputNodes
-    --    |> Dict.union exeNodes
-    --    |> Dict.toList
-    --)
-    --    ++ faultyNodes
     grid |> Dict.toList
 
 
