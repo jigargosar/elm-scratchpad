@@ -229,7 +229,7 @@ viewGridItems : Model -> List (Html msg)
 viewGridItems { puzzle, editDict, state } =
     case state of
         Debug sim ->
-            List.map viewNodeEntry (Dict.toList sim.store)
+            List.map viewSimNode (Dict.toList sim.store)
                 ++ viewFaultyNodes puzzle
                 ++ Ports.view puzzle (simIntentsAndActions sim)
 
@@ -410,79 +410,6 @@ type alias Addr =
 -- NODE
 
 
-type alias SimNode =
-    Grid.Node InputNode OutputNode ExeNode
-
-
-nodeIoIntents : SimNode -> List Intent
-nodeIoIntents node =
-    case node of
-        In _ _ ->
-            [ Write Down ]
-
-        Out _ _ ->
-            [ Read Up ]
-
-        Exe exe ->
-            ExeNode.intents exe
-
-        Fault ->
-            []
-
-
-nodeIoActions : SimNode -> List Action
-nodeIoActions node =
-    case node of
-        Out _ _ ->
-            []
-
-        _ ->
-            case nodeState node of
-                S.ReadyToRun _ ->
-                    []
-
-                S.ReadBlocked dir4 _ ->
-                    [ Reading dir4 ]
-
-                S.WriteBlocked num dir4 _ ->
-                    [ Writing dir4 num ]
-
-                S.Done ->
-                    []
-
-
-nodeState : SimNode -> NodeState SimNode
-nodeState node =
-    case node of
-        In conf inputNode ->
-            InputNode.state inputNode |> S.map (In conf)
-
-        Out conf outputNode ->
-            OutputNode.state outputNode |> S.map (Out conf)
-
-        Exe exeNode ->
-            ExeNode.state exeNode |> S.map Exe
-
-        Fault ->
-            S.Done
-
-
-viewNodeEntry : NodeEntry -> Html msg
-viewNodeEntry ( addr, node ) =
-    case node of
-        In conf _ ->
-            viewInputNode conf
-
-        Out conf _ ->
-            viewOutputNode conf
-
-        Exe exe ->
-            viewExeNodeEntry ( addr, exe )
-
-        Fault ->
-            noView
-
-
 viewInputNode : IOConfig -> Html msg
 viewInputNode { x, title } =
     div
@@ -572,11 +499,84 @@ exeMode exe =
 
 
 
+-- SIM NODE
+
+
+type alias SimNode =
+    Grid.Node InputNode OutputNode ExeNode
+
+
+simNodeIntents : SimNode -> List Intent
+simNodeIntents node =
+    case node of
+        In _ _ ->
+            [ Write Down ]
+
+        Out _ _ ->
+            [ Read Up ]
+
+        Exe exe ->
+            ExeNode.intents exe
+
+        Fault ->
+            []
+
+
+simNodeActions : SimNode -> List Action
+simNodeActions node =
+    case node of
+        Out _ _ ->
+            []
+
+        _ ->
+            case simNodeState node of
+                S.ReadyToRun _ ->
+                    []
+
+                S.ReadBlocked dir4 _ ->
+                    [ Reading dir4 ]
+
+                S.WriteBlocked num dir4 _ ->
+                    [ Writing dir4 num ]
+
+                S.Done ->
+                    []
+
+
+simNodeState : SimNode -> NodeState SimNode
+simNodeState node =
+    case node of
+        In conf inputNode ->
+            InputNode.state inputNode |> S.map (In conf)
+
+        Out conf outputNode ->
+            OutputNode.state outputNode |> S.map (Out conf)
+
+        Exe exeNode ->
+            ExeNode.state exeNode |> S.map Exe
+
+        Fault ->
+            S.Done
+
+
+viewSimNode : ( Addr, SimNode ) -> Html msg
+viewSimNode ( addr, node ) =
+    case node of
+        In conf _ ->
+            viewInputNode conf
+
+        Out conf _ ->
+            viewOutputNode conf
+
+        Exe exe ->
+            viewExeNodeEntry ( addr, exe )
+
+        Fault ->
+            noView
+
+
+
 -- SIM
-
-
-type alias NodeEntry =
-    ( Addr, SimNode )
 
 
 type alias SimStore =
@@ -648,8 +648,8 @@ simIntentsAndActions : Sim -> ( List ( Addr, Intent ), List ( Addr, Action ) )
 simIntentsAndActions sim =
     Dict.foldl
         (\addr node ( intents, actions ) ->
-            ( List.map (pair addr) (nodeIoIntents node) ++ intents
-            , List.map (pair addr) (nodeIoActions node) ++ actions
+            ( List.map (pair addr) (simNodeIntents node) ++ intents
+            , List.map (pair addr) (simNodeActions node) ++ actions
             )
         )
         ( [], [] )
@@ -673,7 +673,7 @@ step sim =
 
 stepNode : Addr -> SimNode -> Acc -> Acc
 stepNode addr node =
-    case nodeState node of
+    case simNodeState node of
         S.WriteBlocked num dir cont ->
             addToWriteBlocked addr node num dir cont
 
@@ -689,7 +689,7 @@ stepNode addr node =
 
 resolveAfterRun : Addr -> SimNode -> Acc -> Acc
 resolveAfterRun addr node =
-    case nodeState node of
+    case simNodeState node of
         S.ReadBlocked dir cont ->
             addToReadBlocked addr node dir cont
 
