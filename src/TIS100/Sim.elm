@@ -259,6 +259,7 @@ viewGridItems { puzzle, editDict, state } =
     case state of
         Debug sim ->
             List.map viewNodeEntry (Dict.toList sim.store)
+                ++ viewFaultyNodes puzzle
                 ++ Ports.view puzzle (simIntentsAndActions sim)
 
         Edit ->
@@ -267,7 +268,28 @@ viewGridItems { puzzle, editDict, state } =
                     Dict.toList editDict
             in
             viewEditNodes puzzle es
+                ++ viewFaultyNodes puzzle
                 ++ Ports.viewAllPorts puzzle
+
+
+viewFaultyNodes : Puzzle -> List (Html msg)
+viewFaultyNodes puzzle =
+    puzzle.layout
+        |> List.indexedMap
+            (\i nk ->
+                case nk of
+                    Puzzle.Faulty ->
+                        div
+                            [ displayGrid
+                            , placeContentCenter
+                            , sOutline ("1px solid " ++ "red")
+                            , fg "red"
+                            ]
+                            [ text "ERROR" ]
+
+                    Puzzle.Executable ->
+                        noView
+            )
 
 
 viewEditNodes : Puzzle -> List ( Addr, ExeNode ) -> List (Html msg)
