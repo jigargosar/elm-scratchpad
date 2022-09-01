@@ -218,18 +218,6 @@ viewGrid { puzzle, state, editStore } =
         )
 
 
-viewFaultyNode : Addr -> Html msg
-viewFaultyNode ( x, y ) =
-    div
-        [ displayGrid
-        , gridAreaXY ( x, y - 1 )
-        , placeContentCenter
-        , sOutline ("1px solid " ++ "red")
-        , fg "red"
-        ]
-        [ text "ERROR" ]
-
-
 viewEditNode : ( Addr, EditNode ) -> Html msg
 viewEditNode ( addr, node ) =
     case node of
@@ -240,7 +228,7 @@ viewEditNode ( addr, node ) =
             viewOutputNode conf
 
         Exe e ->
-            viewExeNodeEntry ( addr, e )
+            viewExeNode ( addr, e )
 
         Fault ->
             viewFaultyNode addr
@@ -411,8 +399,8 @@ viewOutputNode { x, title } =
         ]
 
 
-viewExeNodeEntry : ( Addr, ExeNode ) -> Html msg
-viewExeNodeEntry ( ( x, y ), exe ) =
+viewExeNode : ( Addr, ExeNode ) -> Html msg
+viewExeNode ( ( x, y ), exe ) =
     div
         [ gridAreaXY ( x, y - 1 )
         , lightOutline
@@ -462,6 +450,18 @@ exeMode exe =
 
         S.Done ->
             "IDLE"
+
+
+viewFaultyNode : Addr -> Html msg
+viewFaultyNode ( x, y ) =
+    div
+        [ displayGrid
+        , gridAreaXY ( x, y - 1 )
+        , placeContentCenter
+        , sOutline ("1px solid " ++ "red")
+        , fg "red"
+        ]
+        [ text "ERROR" ]
 
 
 
@@ -535,7 +535,7 @@ viewSimNode ( addr, node ) =
             viewOutputNode conf
 
         Exe exe ->
-            viewExeNodeEntry ( addr, exe )
+            viewExeNode ( addr, exe )
 
         Fault ->
             viewFaultyNode addr
