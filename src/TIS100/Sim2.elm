@@ -270,16 +270,6 @@ viewIOColumns model =
 viewInputColumns : Model -> List (Html msg)
 viewInputColumns { editStore, state } =
     case state of
-        Debug sim ->
-            Grid.inputsToList
-                (\_ conf i ->
-                    viewInputColumn
-                        { title = conf.title
-                        , nums = InputNode.toSelectionList i
-                        }
-                )
-                sim.store
-
         Edit ->
             Grid.inputsToList
                 (\_ conf _ ->
@@ -289,6 +279,16 @@ viewInputColumns { editStore, state } =
                         }
                 )
                 editStore
+
+        Debug sim ->
+            Grid.inputsToList
+                (\_ conf i ->
+                    viewInputColumn
+                        { title = conf.title
+                        , nums = InputNode.toSelectionList i
+                        }
+                )
+                sim.store
 
 
 viewInputColumn : InputColumnViewModel -> Html msg
