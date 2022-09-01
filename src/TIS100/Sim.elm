@@ -412,11 +412,6 @@ type alias Addr =
     ( Int, Int )
 
 
-maxY : Int
-maxY =
-    4
-
-
 
 -- NODE
 
@@ -444,7 +439,7 @@ initOutputNode conf =
 
 outputNodeEntry : IOConfig -> ( Addr, Node )
 outputNodeEntry conf =
-    ( ( conf.x, maxY ), initOutputNode conf )
+    ( ( conf.x, 4 ), initOutputNode conf )
 
 
 nodeIoIntents : Node -> List Intent

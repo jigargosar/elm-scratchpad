@@ -21,10 +21,6 @@ type Action
     | Writing Dir4 Num
 
 
-maxY : Int
-maxY =
-    4
-
 
 type alias Key =
     ( Addr, Addr )
@@ -155,7 +151,7 @@ allPuzzlePorts puzzle =
         ioIntents : List ( Addr, Intent )
         ioIntents =
             List.map (\{ x } -> ( ( x, 0 ), Write Down )) puzzle.inputs
-                ++ List.map (\{ x } -> ( ( x, maxY ), Read Up )) puzzle.outputs
+                ++ List.map (\{ x } -> ( ( x, 4 ), Read Up )) puzzle.outputs
                 ++ puzzleLayoutIOIntents puzzle
     in
     fromIntents ioIntents
