@@ -42,22 +42,29 @@ type alias GridRec i o e =
 
 init : Puzzle -> (IOConfig -> i) -> (IOConfig -> o) -> e -> Grid i o e
 init puzzle ifn ofn e =
-    { inputs =
-        List.map (\conf -> ( ( conf.x, 0 ), ( conf, ifn conf ) )) puzzle.inputs
-            |> Dict.fromList
-    , outputs =
-        List.map (\conf -> ( ( conf.x, 4 ), ( conf, ofn conf ) )) puzzle.outputs
-            |> Dict.fromList
-    , faults =
-        puzzle.layout
-            |> Dict.filter (\_ nk -> nk == Puzzle.Faulty)
-            |> Dict.keys
-    , exs =
-        puzzle.layout
-            |> Dict.filter (\_ nk -> nk == Puzzle.Executable)
-            |> Dict.map (\_ _ -> e)
-    }
-        |> toDict
+    let
+        inputs =
+            List.map (\conf -> ( ( conf.x, 0 ), In conf (ifn conf) )) puzzle.inputs
+                |> Dict.fromList
+
+        outputs =
+            List.map (\conf -> ( ( conf.x, 4 ), Out conf (ofn conf) )) puzzle.outputs
+                |> Dict.fromList
+
+        faults =
+            puzzle.layout
+                |> Dict.filter (\_ nk -> nk == Puzzle.Faulty)
+                |> Dict.map (\_ _ -> Fault)
+
+        exs =
+            puzzle.layout
+                |> Dict.filter (\_ nk -> nk == Puzzle.Executable)
+                |> Dict.map (\_ _ -> Exe e)
+    in
+    inputs
+        |> Dict.union outputs
+        |> Dict.union faults
+        |> Dict.union exs
 
 
 type alias Addr =
