@@ -218,22 +218,6 @@ viewGrid { puzzle, state, editStore } =
         )
 
 
-viewEditNode : ( Addr, EditNode ) -> Html msg
-viewEditNode ( addr, node ) =
-    case node of
-        In conf _ ->
-            viewInputNode conf
-
-        Out conf _ ->
-            viewOutputNode conf
-
-        Exe e ->
-            viewExeNode ( addr, e )
-
-        Fault ->
-            viewFaultyNode addr
-
-
 viewCycle : Maybe Int -> Html msg
 viewCycle mbCycle =
     let
@@ -462,6 +446,26 @@ viewFaultyNode ( x, y ) =
         , fg "red"
         ]
         [ text "ERROR" ]
+
+
+
+-- EDIT NODE
+
+
+viewEditNode : ( Addr, EditNode ) -> Html msg
+viewEditNode ( addr, node ) =
+    case node of
+        In conf _ ->
+            viewInputNode conf
+
+        Out conf _ ->
+            viewOutputNode conf
+
+        Exe e ->
+            viewExeNode ( addr, e )
+
+        Fault ->
+            viewFaultyNode addr
 
 
 
