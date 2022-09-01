@@ -1,7 +1,8 @@
-module TIS100Modeling exposing (..)
+module TIS100Modeling exposing (never)
 
 import Utils exposing (pairTo)
 type Num = Num
+never = Basics.never
 type PC = PC
 type EXE = EXE
 type SrcPort = InPortDir Dir | InPortAny
