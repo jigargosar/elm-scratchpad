@@ -218,13 +218,18 @@ view model =
         ]
         [ viewCycle (getCycle model)
         , fRow [ gap "2ch" ]
-            [ fCol [ sWidth "40ch", gap "2ch", fg lightGray ]
-                [ div [] [ viewTitle, viewDesc ]
-                , viewIOColumns model
-                , viewButtons
-                ]
+            [ viewLeftBar model
             , viewGrid model
             ]
+        ]
+
+
+viewLeftBar : Model -> Html Msg
+viewLeftBar model =
+    fCol [ sWidth "40ch", gap "2ch", fg lightGray ]
+        [ div [] [ viewTitle, viewDesc ]
+        , viewIOColumns model
+        , viewButtons
         ]
 
 
