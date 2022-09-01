@@ -607,8 +607,7 @@ initSim puzzle editDict =
 
 inputColumnViewModels : Sim -> List InputColumnViewModel
 inputColumnViewModels sim =
-    sim.store.inputs
-        |> Dict.values
+    Grid.inputs sim.store
         |> List.map
             (\( conf, inputNode ) ->
                 InputColumnViewModel conf.title
@@ -618,8 +617,7 @@ inputColumnViewModels sim =
 
 outputDataListFromSim : Sim -> List OutputColumnViewModel
 outputDataListFromSim sim =
-    sim.store.outputs
-        |> Dict.values
+    Grid.outputs sim.store
         |> List.map
             (\( conf, outputNode ) ->
                 let
