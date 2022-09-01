@@ -288,13 +288,11 @@ viewOutputColumns { editStore, state } =
                 sim.store
 
 
-type alias InputColumnViewModel =
+viewInputColumn :
     { title : String
     , nums : SelectionList Num
     }
-
-
-viewInputColumn : InputColumnViewModel -> Html msg
+    -> Html msg
 viewInputColumn { title, nums } =
     fCol [ gap "0.5ch" ]
         [ div [] [ text title ]
@@ -302,14 +300,12 @@ viewInputColumn { title, nums } =
         ]
 
 
-type alias OutputColumnViewModel =
+viewOutputColumn :
     { title : String
     , expected : SelectionList Num
     , actual : List Num
     }
-
-
-viewOutputColumn : OutputColumnViewModel -> Html msg
+    -> Html msg
 viewOutputColumn { title, expected, actual } =
     fCol [ gap "0.5ch" ]
         [ div [] [ text title ]
