@@ -1,4 +1,4 @@
-module TIS100.Sim exposing
+module TIS100.Sim2 exposing
     ( Model
     , Msg
     , sampleModel
@@ -8,6 +8,7 @@ module TIS100.Sim exposing
 
 import Dict exposing (Dict)
 import TIS100.ExeNode as ExeNode exposing (ExeNode)
+import TIS100.Grid as Grid exposing (Node(..))
 import TIS100.InputNode as InputNode exposing (InputNode)
 import TIS100.NodeState as S exposing (NodeState)
 import TIS100.Num as Num exposing (Num)
@@ -228,7 +229,7 @@ viewGridItems : Model -> List (Html msg)
 viewGridItems { puzzle, editDict, state } =
     case state of
         Debug sim ->
-            List.map viewNodeEntry (Dict.toList sim.store)
+            List.map viewNodeEntry (Grid.toList sim.store)
                 ++ viewFaultyNodes puzzle
                 ++ Ports.view puzzle (simIntentsAndActions sim)
 
@@ -409,49 +410,30 @@ type alias Addr =
 -- NODE
 
 
-type Node
-    = InputNode IOConfig InputNode
-    | OutputNode IOConfig OutputNode
-    | ExeNode ExeNode
-
-
-initInputNode : IOConfig -> Node
-initInputNode conf =
-    InputNode conf (InputNode.fromList conf.nums)
-
-
-inputNodeEntry : IOConfig -> ( Addr, Node )
-inputNodeEntry conf =
-    ( ( conf.x, 0 ), initInputNode conf )
-
-
-initOutputNode : IOConfig -> Node
-initOutputNode conf =
-    OutputNode conf (OutputNode.fromExpected (List.length conf.nums))
-
-
-outputNodeEntry : IOConfig -> ( Addr, Node )
-outputNodeEntry conf =
-    ( ( conf.x, 4 ), initOutputNode conf )
+type alias Node =
+    Grid.Node InputNode OutputNode ExeNode
 
 
 nodeIoIntents : Node -> List Intent
 nodeIoIntents node =
     case node of
-        InputNode _ _ ->
+        In _ _ ->
             [ Write Down ]
 
-        OutputNode _ _ ->
+        Out _ _ ->
             [ Read Up ]
 
-        ExeNode exe ->
+        Exe exe ->
             ExeNode.intents exe
+
+        Fault ->
+            []
 
 
 nodeIoActions : Node -> List Action
 nodeIoActions node =
     case node of
-        OutputNode _ _ ->
+        Out _ _ ->
             []
 
         _ ->
@@ -472,27 +454,33 @@ nodeIoActions node =
 nodeState : Node -> NodeState Node
 nodeState node =
     case node of
-        InputNode conf inputNode ->
-            InputNode.state inputNode |> S.map (InputNode conf)
+        In conf inputNode ->
+            InputNode.state inputNode |> S.map (In conf)
 
-        OutputNode conf outputNode ->
-            OutputNode.state outputNode |> S.map (OutputNode conf)
+        Out conf outputNode ->
+            OutputNode.state outputNode |> S.map (Out conf)
 
-        ExeNode exeNode ->
-            ExeNode.state exeNode |> S.map ExeNode
+        Exe exeNode ->
+            ExeNode.state exeNode |> S.map Exe
+
+        Fault ->
+            S.Done
 
 
 viewNodeEntry : NodeEntry -> Html msg
 viewNodeEntry ( addr, node ) =
     case node of
-        InputNode conf _ ->
+        In conf _ ->
             viewInputNode conf
 
-        OutputNode conf _ ->
+        Out conf _ ->
             viewOutputNode conf
 
-        ExeNode exe ->
+        Exe exe ->
             viewExeNodeEntry ( addr, exe )
+
+        Fault ->
+            noView
 
 
 viewInputNode : IOConfig -> Html msg
@@ -592,7 +580,7 @@ type alias NodeEntry =
 
 
 type alias Store =
-    Dict Addr Node
+    Grid.Grid InputNode OutputNode ExeNode
 
 
 type alias Sim =
@@ -604,59 +592,50 @@ type alias Sim =
 initSim : Puzzle -> EditDict -> Sim
 initSim puzzle editDict =
     let
-        store =
-            List.map inputNodeEntry puzzle.inputs
-                ++ List.map outputNodeEntry puzzle.outputs
-                |> Dict.fromList
-                |> Dict.union (Dict.map (always ExeNode) editDict)
+        grid : Grid.Grid InputNode OutputNode ExeNode
+        grid =
+            Grid.init puzzle
+                (\conf -> InputNode.fromList conf.nums)
+                (\conf -> OutputNode.fromExpected (List.length conf.nums))
+                ExeNode.empty
+                |> Grid.replaceExeEntries (Dict.toList editDict)
     in
-    { store = store
+    { store = grid
     , cycle = 0
     }
 
 
 inputColumnViewModels : Sim -> List InputColumnViewModel
 inputColumnViewModels sim =
-    let
-        mapper node =
-            case node of
-                InputNode conf inputNode ->
-                    Just
-                        (InputColumnViewModel conf.title
-                            (InputNode.toSelectionList inputNode)
-                        )
-
-                _ ->
-                    Nothing
-    in
-    Dict.values sim.store |> List.filterMap mapper
+    sim.store.inputs
+        |> Dict.values
+        |> List.map
+            (\( conf, inputNode ) ->
+                InputColumnViewModel conf.title
+                    (InputNode.toSelectionList inputNode)
+            )
 
 
 outputDataListFromSim : Sim -> List OutputColumnViewModel
 outputDataListFromSim sim =
-    let
-        mapper node =
-            case node of
-                OutputNode conf outputNode ->
-                    let
-                        actual =
-                            OutputNode.getNumsRead outputNode
-                    in
-                    Just <|
-                        OutputColumnViewModel
-                            conf.title
-                            (SelectionList.fromIndex (List.length actual) conf.nums)
-                            actual
-
-                _ ->
-                    Nothing
-    in
-    Dict.values sim.store |> List.filterMap mapper
+    sim.store.outputs
+        |> Dict.values
+        |> List.map
+            (\( conf, outputNode ) ->
+                let
+                    actual =
+                        OutputNode.getNumsRead outputNode
+                in
+                OutputColumnViewModel
+                    conf.title
+                    (SelectionList.fromIndex (List.length actual) conf.nums)
+                    actual
+            )
 
 
 simIntentsAndActions : Sim -> ( List ( Addr, Intent ), List ( Addr, Action ) )
 simIntentsAndActions sim =
-    Dict.foldl
+    Grid.foldl
         (\addr node ( intents, actions ) ->
             ( List.map (pair addr) (nodeIoIntents node) ++ intents
             , List.map (pair addr) (nodeIoActions node) ++ actions
@@ -674,7 +653,7 @@ step : Sim -> Sim
 step sim =
     { sim
         | store =
-            Dict.foldl stepNode emptyAcc sim.store
+            Grid.foldl stepNode (initAcc sim.store) sim.store
                 |> resolveAllReadBlocked
                 |> resolveAllWriteBlocked
         , cycle = sim.cycle + 1
@@ -748,7 +727,7 @@ readAndUnblock rAddr rDir acc =
 
 resolveAllWriteBlocked : WriteBlockedAcc a -> Store
 resolveAllWriteBlocked acc =
-    Dict.foldl (\addr { node } -> Dict.insert addr node) acc.completed acc.writeBlocked
+    Dict.foldl (\addr { node } -> Grid.replace addr node) acc.completed acc.writeBlocked
 
 
 type alias Acc =
@@ -781,11 +760,11 @@ type alias WriteBlockedNode =
     { node : Node, num : Num, dir : Dir4, cont : () -> Node }
 
 
-emptyAcc : Acc
-emptyAcc =
+initAcc : Store -> Acc
+initAcc store =
     { readBlocked = Dict.empty
     , writeBlocked = Dict.empty
-    , completed = Dict.empty
+    , completed = store
     }
 
 
@@ -822,7 +801,7 @@ addToCompleted :
     -> { a | completed : Store }
     -> { a | completed : Store }
 addToCompleted na n acc =
-    { acc | completed = Dict.insert na n acc.completed }
+    { acc | completed = Grid.replace na n acc.completed }
 
 
 completeWriteBlocked : Addr -> Node -> WriteBlockedAcc a -> WriteBlockedAcc a

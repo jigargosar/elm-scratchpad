@@ -1,7 +1,7 @@
 module TIS100 exposing (main)
 
 import Html
-import TIS100.Sim as Sim
+import TIS100.Sim2 as Sim
 import Utils exposing (..)
 
 
