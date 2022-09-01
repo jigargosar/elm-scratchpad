@@ -141,5 +141,5 @@ replace addr node grid =
 
 
 replaceExeEntries : List ( Addr, e ) -> Grid i o e -> Grid i o e
-replaceExeEntries list grid =
-    grid
+replaceExeEntries list =
+    U.replaceEntries (List.map (U.mapSecond Exe) list)
