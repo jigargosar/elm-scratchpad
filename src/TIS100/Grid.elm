@@ -1,5 +1,6 @@
 module TIS100.Grid exposing
-    ( Grid
+    ( Addr
+    , Grid
     , Node(..)
     , init
     , replaceExeEntries
