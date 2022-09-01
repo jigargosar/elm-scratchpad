@@ -8,7 +8,7 @@ module TIS100.Sim2 exposing
 
 import Dict exposing (Dict)
 import TIS100.ExeNode as ExeNode exposing (ExeNode)
-import TIS100.Grid as Grid exposing (Node(..))
+import TIS100.Grid as Grid exposing (Addr, Node(..))
 import TIS100.InputNode as InputNode exposing (InputNode)
 import TIS100.NodeState as S exposing (NodeState)
 import TIS100.Num as Num exposing (Num)
@@ -418,14 +418,6 @@ viewOutputColumn { title, expected, actual } =
                 )
             ]
         ]
-
-
-
--- ADDR
-
-
-type alias Addr =
-    ( Int, Int )
 
 
 
