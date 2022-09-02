@@ -435,6 +435,26 @@ viewOutputNode { x, title } =
         ]
 
 
+viewEditor : ( Addr, Editor ) -> Html msg
+viewEditor ( ( x, y ), editor ) =
+    div
+        [ gridAreaXY ( x, y - 1 )
+        , lightOutline
+        , dGrid
+        , gridAutoFlowColumn
+        ]
+        [ div [ sWidth "18ch", pa "1ch" ] [ text (editor |> always "editor") ]
+        , gtRows 5
+            []
+            [ viewExeBox "ACC" "0"
+            , viewExeBox "BAK" "<0>"
+            , viewExeBox "LAST" "N/A"
+            , viewExeBox "MODE" "IDLE"
+            , viewExeBox "IDLE" "0%"
+            ]
+        ]
+
+
 viewExeNode : ( Addr, ExeNode ) -> Html msg
 viewExeNode ( ( x, y ), exe ) =
     div
@@ -514,7 +534,7 @@ viewEditNode ( addr, node ) =
             viewOutputNode conf
 
         Exe e ->
-            viewExeNode ( addr, ExeNode.empty )
+            viewEditor ( addr, e )
 
         Flt ->
             viewFaultyNode addr
