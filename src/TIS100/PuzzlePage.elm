@@ -71,8 +71,8 @@ type alias EditNode =
     Grid.Node () () Editor
 
 
-type Editor
-    = Editor
+type alias Editor =
+    String
 
 
 type State
@@ -88,7 +88,7 @@ init puzzle es =
                 |> Grid.replaceExeEntries es
 
         editorStore =
-            Grid.init puzzle (always ()) (always ()) Editor
+            Grid.init puzzle (always ()) (always ()) "Editor"
     in
     { puzzle = puzzle
     , editorStore = editorStore
@@ -443,7 +443,7 @@ viewEditor ( ( x, y ), editor ) =
         , dGrid
         , gridAutoFlowColumn
         ]
-        [ div [ sWidth "18ch", pa "1ch" ] [ text (editor |> always "editor") ]
+        [ div [ sWidth "18ch", pa "1ch" ] [ text editor ]
         , gtRows 5
             []
             [ viewExeBox "ACC" "0"
