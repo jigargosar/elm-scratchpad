@@ -1,7 +1,7 @@
 module TIS100 exposing (main)
 
 import Html
-import TIS100.PuzzleScreen as PuzzleScreen
+import TIS100.PuzzleScreen as PuzzlePage
 import Utils exposing (..)
 
 
@@ -24,21 +24,21 @@ main =
 
 
 type alias Model =
-    { screen : PuzzleScreen.Model }
+    { page : PuzzlePage.Model }
 
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { screen = PuzzleScreen.sampleModel }, Cmd.none )
+    ( { page = PuzzlePage.sampleModel }, Cmd.none )
 
 
 type Msg
-    = SimMsg PuzzleScreen.Msg
+    = SimMsg PuzzlePage.Msg
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    PuzzleScreen.subscriptions model.screen
+    PuzzlePage.subscriptions model.page
         |> Sub.map SimMsg
 
 
@@ -46,7 +46,7 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         SimMsg sm ->
-            ( { model | screen = PuzzleScreen.update sm model.screen }, Cmd.none )
+            ( { model | page = PuzzlePage.update sm model.page }, Cmd.none )
 
 
 viewDocument : Model -> Document Msg
@@ -55,14 +55,14 @@ viewDocument model =
         [ basicStylesNode
 
         --, text "BrowserDocumentTemplate"
-        , view model.screen
+        , view model.page
         ]
 
 
-view : PuzzleScreen.Model -> Html Msg
+view : PuzzlePage.Model -> Html Msg
 view sim =
     div []
         [ div [] [ text <| Debug.toString sim ]
             |> always noView
-        , PuzzleScreen.view sim |> Html.map SimMsg
+        , PuzzlePage.view sim |> Html.map SimMsg
         ]
