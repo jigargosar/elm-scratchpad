@@ -73,18 +73,22 @@ type State
 
 type Debug
     = Stepping StepMode
-    | Completed Outcome
+    | Completed
+
+
+
+--    | Completed Outcome
+--
+--
+--type Outcome
+--    = Success
+--    | Failure
 
 
 type StepMode
     = Manual
     | Auto
     | AutoFast
-
-
-type Outcome
-    = Success
-    | Failure
 
 
 init : Puzzle -> List ( Addr, ExeNode ) -> Model
@@ -127,7 +131,7 @@ subscriptions model =
                         AutoFast ->
                             Time.every 20 (\_ -> AutoStep)
 
-                Completed _ ->
+                Completed ->
                     Sub.none
 
 
@@ -178,7 +182,7 @@ update msg model =
                 FAST ->
                     { model | state = Debug (Stepping AutoFast) sim }
 
-        Debug (Completed _) _ ->
+        Debug Completed _ ->
             case msg of
                 STOP ->
                     startEditing model
