@@ -117,6 +117,10 @@ subscriptions model =
 
 startDebugging : StepMode -> Model -> Model
 startDebugging stepMode model =
+    let
+        _ =
+            "Need to compile edit nodes so we can init sim"
+    in
     { model | state = Sim_ (initSim stepMode model.editStore) }
 
 
