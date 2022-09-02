@@ -58,16 +58,12 @@ type alias Model =
     }
 
 
-type alias Editor =
-    ExeNode
-
-
 type alias EditStore =
-    Grid.Grid () () Editor
+    Grid.Grid () () ExeNode
 
 
 type alias EditNode =
-    Grid.Node () () Editor
+    Grid.Node () () ExeNode
 
 
 type State
