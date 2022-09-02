@@ -71,17 +71,6 @@ type State
     | Debug Sim
 
 
-type Debug
-    = Stepping StepMode
-    | Completed
-
-
-type StepMode
-    = Manual
-    | Auto
-    | AutoFast
-
-
 init : Puzzle -> List ( Addr, ExeNode ) -> Model
 init puzzle es =
     let
@@ -593,6 +582,17 @@ type alias Sim =
     , debug : Debug
     , cycle : Int
     }
+
+
+type Debug
+    = Stepping StepMode
+    | Completed
+
+
+type StepMode
+    = Manual
+    | Auto
+    | AutoFast
 
 
 initSim : StepMode -> EditStore -> Sim
