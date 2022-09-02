@@ -573,15 +573,15 @@ viewSimNode ( addr, node ) =
 -- SIM
 
 
-type alias SimStore =
-    Grid.Grid InputNode OutputNode ExeNode
-
-
 type alias Sim =
     { store : SimStore
     , debug : SimState
     , cycle : Int
     }
+
+
+type alias SimStore =
+    Grid.Grid InputNode OutputNode ExeNode
 
 
 type SimState
