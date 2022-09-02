@@ -68,7 +68,7 @@ type alias EditNode =
 
 type State
     = Edit
-    | Debug Debug Sim
+    | Debug Sim
 
 
 type Debug
@@ -109,8 +109,8 @@ subscriptions model =
         Edit ->
             Sub.none
 
-        Debug debugModel _ ->
-            case debugModel of
+        Debug sim ->
+            case sim.debug of
                 Stepping debugger ->
                     case debugger of
                         Manual ->
@@ -127,8 +127,8 @@ subscriptions model =
 
 
 startDebugging : StepMode -> Model -> Model
-startDebugging debuggingState model =
-    { model | state = Debug (Stepping debuggingState) (initSim model.editStore) }
+startDebugging stepMode model =
+    { model | state = Debug (initSim stepMode model.editStore) }
 
 
 startEditing : Model -> Model
@@ -156,39 +156,22 @@ update msg model =
                 FAST ->
                     startDebugging AutoFast model
 
-        Debug (Stepping debugger) sim ->
+        Debug sim ->
             case msg of
                 STOP ->
                     startEditing model
 
                 STEP ->
-                    { model | state = Debug (Stepping Manual) (stepSim sim) }
+                    { model | state = Debug (stepSim sim) }
 
                 AutoStep ->
-                    { model | state = Debug (Stepping debugger) (stepSim sim) }
+                    { model | state = Debug (autoStepSim sim) }
 
                 RUN ->
-                    { model | state = Debug (Stepping Auto) sim }
+                    { model | state = Debug (simSetStepMode Auto sim) }
 
                 FAST ->
-                    { model | state = Debug (Stepping AutoFast) sim }
-
-        Debug Completed _ ->
-            case msg of
-                STOP ->
-                    startEditing model
-
-                STEP ->
-                    startDebugging Manual model
-
-                AutoStep ->
-                    model
-
-                RUN ->
-                    startDebugging Auto model
-
-                FAST ->
-                    startDebugging AutoFast model
+                    { model | state = Debug (simSetStepMode AutoFast sim) }
 
 
 view : Model -> Html Msg
@@ -219,7 +202,7 @@ viewCycle model =
                 Edit ->
                     "NA"
 
-                Debug _ sim ->
+                Debug sim ->
                     fromInt sim.cycle
     in
     div [] [ text "Cycle: ", text cycleText ]
@@ -240,7 +223,7 @@ viewGrid { puzzle, state, editStore } =
                 List.map viewEditNode (Dict.toList editStore)
                     ++ Ports.viewAllPorts puzzle
 
-            Debug _ { store } ->
+            Debug { store } ->
                 List.map viewSimNode (Dict.toList store)
                     ++ Ports.view puzzle (simIntentsAndActions store)
         )
@@ -312,7 +295,7 @@ viewInputColumns { editStore, state } =
                 )
                 editStore
 
-        Debug _ { store } ->
+        Debug { store } ->
             Grid.inputsToList
                 (\_ conf i ->
                     viewInputColumn
@@ -337,7 +320,7 @@ viewOutputColumns { editStore, state } =
                 )
                 editStore
 
-        Debug _ { store } ->
+        Debug { store } ->
             Grid.outputsToList
                 (\_ conf o ->
                     let
@@ -607,35 +590,37 @@ type alias SimStore =
 
 type alias Sim =
     { store : SimStore
+    , debug : Debug
     , cycle : Int
     }
 
 
-initSim : EditStore -> Sim
-initSim editStore =
-    let
-        store : SimStore
-        store =
-            editStore
-                |> Dict.map
-                    (\_ n ->
-                        case n of
-                            In conf _ ->
-                                In conf (InputNode.fromList conf.nums)
-
-                            Out conf _ ->
-                                Out conf (OutputNode.fromExpected (List.length conf.nums))
-
-                            Exe e ->
-                                Exe e
-
-                            Fault ->
-                                Fault
-                    )
-    in
-    { store = store
+initSim : StepMode -> EditStore -> Sim
+initSim stepMode editStore =
+    { store = initSimStore editStore
+    , debug = Stepping stepMode
     , cycle = 0
     }
+
+
+initSimStore : EditStore -> SimStore
+initSimStore editStore =
+    editStore
+        |> Dict.map
+            (\_ n ->
+                case n of
+                    In conf _ ->
+                        In conf (InputNode.fromList conf.nums)
+
+                    Out conf _ ->
+                        Out conf (OutputNode.fromExpected (List.length conf.nums))
+
+                    Exe e ->
+                        Exe e
+
+                    Fault ->
+                        Fault
+            )
 
 
 simIntentsAndActions : SimStore -> ( List ( Addr, Intent ), List ( Addr, Action ) )
@@ -654,8 +639,23 @@ simIntentsAndActions simStore =
 -- SIM UPDATE
 
 
+simSetStepMode : StepMode -> Sim -> Sim
+simSetStepMode stepMode sim =
+    case sim.debug of
+        Stepping _ ->
+            { sim | debug = Stepping stepMode }
+
+        Completed ->
+            sim
+
+
 stepSim : Sim -> Sim
 stepSim sim =
+    autoStepSim sim
+
+
+autoStepSim : Sim -> Sim
+autoStepSim sim =
     { sim
         | store =
             Dict.foldl stepNode (initAcc sim.store) sim.store
