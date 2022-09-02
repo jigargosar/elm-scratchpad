@@ -76,15 +76,6 @@ type Debug
     | Completed
 
 
-
---    | Completed Outcome
---
---
---type Outcome
---    = Success
---    | Failure
-
-
 type StepMode
     = Manual
     | Auto
