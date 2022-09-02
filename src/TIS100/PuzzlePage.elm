@@ -151,7 +151,7 @@ update msg model =
                     startEditing model
 
                 STEP ->
-                    { model | state = Debug (stepSim sim) }
+                    { model | state = Debug (manualStepSim sim) }
 
                 AutoStep ->
                     { model | state = Debug (autoStepSim sim) }
@@ -649,8 +649,8 @@ simSetStepMode stepMode sim =
             sim
 
 
-stepSim : Sim -> Sim
-stepSim sim =
+manualStepSim : Sim -> Sim
+manualStepSim sim =
     sim
         |> simSetStepMode Manual
         |> autoStepSim
