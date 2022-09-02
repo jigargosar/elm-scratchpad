@@ -1,4 +1,4 @@
-module TIS100.Sim2 exposing
+module TIS100.PuzzleScreen exposing
     ( Model
     , Msg
     , sampleModel
