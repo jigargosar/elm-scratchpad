@@ -658,10 +658,18 @@ manualStepSim sim =
 
 autoStepSim : Sim -> Sim
 autoStepSim sim =
-    { sim
-        | store = stepSimStore sim.store
-        , cycle = sim.cycle + 1
-    }
+    let
+        newStore =
+            stepSimStore sim.store
+    in
+    if newStore == sim.store then
+        { sim | debug = Completed }
+
+    else
+        { sim
+            | store = newStore
+            , cycle = sim.cycle + 1
+        }
 
 
 stepSimStore : SimStore -> SimStore
