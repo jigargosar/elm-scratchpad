@@ -72,14 +72,14 @@ type State
 
 
 type Debug
-    = InProgress Debugging
+    = Stepping StepStyle
     | Completed Outcome
 
 
-type Debugging
-    = Paused
-    | Running
-    | RunningFast
+type StepStyle
+    = Manual
+    | Auto
+    | AutoFast
 
 
 type Outcome
@@ -116,24 +116,24 @@ subscriptions model =
 
         Debug debugModel _ ->
             case debugModel of
-                InProgress debugger ->
+                Stepping debugger ->
                     case debugger of
-                        Paused ->
+                        Manual ->
                             Sub.none
 
-                        Running ->
+                        Auto ->
                             Time.every 50 (\_ -> AutoStep)
 
-                        RunningFast ->
+                        AutoFast ->
                             Time.every 20 (\_ -> AutoStep)
 
                 Completed _ ->
                     Sub.none
 
 
-startDebugging : Debugging -> Model -> Model
+startDebugging : StepStyle -> Model -> Model
 startDebugging debuggingState model =
-    { model | state = Debug (InProgress debuggingState) (initSim model.editStore) }
+    { model | state = Debug (Stepping debuggingState) (initSim model.editStore) }
 
 
 startEditing : Model -> Model
@@ -150,33 +150,33 @@ update msg model =
                     model
 
                 STEP ->
-                    startDebugging Paused model
+                    startDebugging Manual model
 
                 AutoStep ->
                     model
 
                 RUN ->
-                    startDebugging Running model
+                    startDebugging Auto model
 
                 FAST ->
-                    startDebugging RunningFast model
+                    startDebugging AutoFast model
 
-        Debug (InProgress debugger) sim ->
+        Debug (Stepping debugger) sim ->
             case msg of
                 STOP ->
                     startEditing model
 
                 STEP ->
-                    { model | state = Debug (InProgress Paused) (stepSim sim) }
+                    { model | state = Debug (Stepping Manual) (stepSim sim) }
 
                 AutoStep ->
-                    { model | state = Debug (InProgress debugger) (stepSim sim) }
+                    { model | state = Debug (Stepping debugger) (stepSim sim) }
 
                 RUN ->
-                    { model | state = Debug (InProgress Running) sim }
+                    { model | state = Debug (Stepping Auto) sim }
 
                 FAST ->
-                    { model | state = Debug (InProgress RunningFast) sim }
+                    { model | state = Debug (Stepping AutoFast) sim }
 
         Debug (Completed _) _ ->
             case msg of
@@ -184,16 +184,16 @@ update msg model =
                     startEditing model
 
                 STEP ->
-                    startDebugging Paused model
+                    startDebugging Manual model
 
                 AutoStep ->
                     model
 
                 RUN ->
-                    startDebugging Running model
+                    startDebugging Auto model
 
                 FAST ->
-                    startDebugging RunningFast model
+                    startDebugging AutoFast model
 
 
 getCycle : Model -> Maybe Int
