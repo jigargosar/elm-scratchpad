@@ -659,12 +659,16 @@ manualStepSim sim =
 autoStepSim : Sim -> Sim
 autoStepSim sim =
     { sim
-        | store =
-            Dict.foldl stepNode (initAcc sim.store) sim.store
-                |> resolveAllReadBlocked
-                |> resolveAllWriteBlocked
+        | store = stepSimStore sim.store
         , cycle = sim.cycle + 1
     }
+
+
+stepSimStore : SimStore -> SimStore
+stepSimStore store =
+    Dict.foldl stepNode (initAcc store) store
+        |> resolveAllReadBlocked
+        |> resolveAllWriteBlocked
 
 
 stepNode : Addr -> SimNode -> Acc -> Acc
