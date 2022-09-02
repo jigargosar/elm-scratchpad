@@ -249,19 +249,17 @@ viewPortHelp ( x, y ) attrs =
 
 viewValue : Value -> Html msg
 viewValue val =
-    let
-        valStr =
-            case val of
-                Empty ->
-                    ""
+    div [ displayGrid, placeContentCenter ]
+        [ case val of
+            Empty ->
+                text ""
 
-                Num num ->
-                    Num.toString num
+            Num num ->
+                Num.view num
 
-                Query ->
-                    "?"
-    in
-    div [ displayGrid, placeContentCenter ] [ text valStr ]
+            Query ->
+                text "?"
+        ]
 
 
 viewArrow : Dir4 -> Value -> Html msg
