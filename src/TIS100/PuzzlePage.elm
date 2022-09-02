@@ -68,7 +68,7 @@ type alias EditNode =
 
 type State
     = Edit
-    | Debug Sim
+    | Sim_ Sim
 
 
 init : Puzzle -> List ( Addr, ExeNode ) -> Model
@@ -98,7 +98,7 @@ subscriptions model =
         Edit ->
             Sub.none
 
-        Debug sim ->
+        Sim_ sim ->
             case sim.debug of
                 Stepping debugger ->
                     case debugger of
@@ -117,7 +117,7 @@ subscriptions model =
 
 startDebugging : StepMode -> Model -> Model
 startDebugging stepMode model =
-    { model | state = Debug (initSim stepMode model.editStore) }
+    { model | state = Sim_ (initSim stepMode model.editStore) }
 
 
 startEditing : Model -> Model
@@ -145,22 +145,22 @@ update msg model =
                 FAST ->
                     startDebugging AutoFast model
 
-        Debug sim ->
+        Sim_ sim ->
             case msg of
                 STOP ->
                     startEditing model
 
                 STEP ->
-                    { model | state = Debug (manualStepSim sim) }
+                    { model | state = Sim_ (manualStepSim sim) }
 
                 AutoStep ->
-                    { model | state = Debug (autoStepSim sim) }
+                    { model | state = Sim_ (autoStepSim sim) }
 
                 RUN ->
-                    { model | state = Debug (simSetStepMode Auto sim) }
+                    { model | state = Sim_ (simSetStepMode Auto sim) }
 
                 FAST ->
-                    { model | state = Debug (simSetStepMode AutoFast sim) }
+                    { model | state = Sim_ (simSetStepMode AutoFast sim) }
 
 
 view : Model -> Html Msg
@@ -191,7 +191,7 @@ viewCycle model =
                 Edit ->
                     "NA"
 
-                Debug sim ->
+                Sim_ sim ->
                     fromInt sim.cycle
     in
     div [] [ text "Cycle: ", text cycleText ]
@@ -212,7 +212,7 @@ viewGrid { puzzle, state, editStore } =
                 List.map viewEditNode (Dict.toList editStore)
                     ++ Ports.viewAllPorts puzzle
 
-            Debug { store } ->
+            Sim_ { store } ->
                 List.map viewSimNode (Dict.toList store)
                     ++ Ports.view puzzle (simIntentsAndActions store)
         )
@@ -284,7 +284,7 @@ viewInputColumns { editStore, state } =
                 )
                 editStore
 
-        Debug { store } ->
+        Sim_ { store } ->
             Grid.inputsToList
                 (\_ conf i ->
                     viewInputColumn
@@ -309,7 +309,7 @@ viewOutputColumns { editStore, state } =
                 )
                 editStore
 
-        Debug { store } ->
+        Sim_ { store } ->
             Grid.outputsToList
                 (\_ conf o ->
                     let
