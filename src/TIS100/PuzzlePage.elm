@@ -9,7 +9,7 @@ module TIS100.PuzzlePage exposing
 
 import Dict exposing (Dict)
 import TIS100.ExeNode as ExeNode exposing (ExeNode)
-import TIS100.Grid as Grid exposing (Addr, Node(..))
+import TIS100.Grid as Grid exposing (Addr, Cell(..))
 import TIS100.InputNode as InputNode exposing (InputNode)
 import TIS100.NodeState as S exposing (NodeState)
 import TIS100.Num as Num exposing (Num)
@@ -54,7 +54,7 @@ sampleModel =
 type alias Model =
     { puzzle : Puzzle
     , editStore : EditStore
-    , exeStore : Grid.Grid () () ExeNode
+    , exeStore : ExeStore
     , state : State
     }
 
@@ -68,7 +68,7 @@ type alias EditStore =
 
 
 type alias EditNode =
-    Grid.Node () () Editor
+    Grid.Cell () () Editor
 
 
 type alias Editor =
@@ -546,7 +546,7 @@ viewEditNode ( addr, node ) =
 
 
 type alias SimNode =
-    Grid.Node InputNode OutputNode ExeNode
+    Grid.Cell InputNode OutputNode ExeNode
 
 
 simNodeIntents : SimNode -> List Intent

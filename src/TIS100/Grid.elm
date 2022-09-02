@@ -1,7 +1,7 @@
 module TIS100.Grid exposing
     ( Addr
+    , Cell(..)
     , Grid
-    , Node(..)
     , init
     , inputsToList
     , outputsToList
@@ -14,14 +14,14 @@ import Utils as U
 
 
 type alias Grid i o e =
-    Dict Addr (Node i o e)
+    Dict Addr (Cell i o e)
 
 
 type alias Addr =
     ( Int, Int )
 
 
-type Node i o e
+type Cell i o e
     = In IOConfig i
     | Out IOConfig o
     | Exe e
@@ -73,8 +73,8 @@ inputsToList : (Addr -> IOConfig -> i -> a) -> Grid i o e -> List a
 inputsToList fn grid =
     Dict.toList grid
         |> List.filterMap
-            (\( addr, node ) ->
-                case node of
+            (\( addr, cell ) ->
+                case cell of
                     In conf i ->
                         Just <| fn addr conf i
 
@@ -87,8 +87,8 @@ outputsToList : (Addr -> IOConfig -> o -> a) -> Grid i o e -> List a
 outputsToList fn grid =
     Dict.toList grid
         |> List.filterMap
-            (\( addr, node ) ->
-                case node of
+            (\( addr, cell ) ->
+                case cell of
                     Out conf o ->
                         Just <| fn addr conf o
 
