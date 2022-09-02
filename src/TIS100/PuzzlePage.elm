@@ -88,7 +88,7 @@ init puzzle es =
                 |> Grid.replaceExeEntries es
 
         editStore =
-            Grid.init puzzle (always ()) (always ()) "Editor"
+            Grid.init puzzle (always ()) (always ()) ""
                 |> Grid.replaceExeEntries (List.map (mapSecond ExeNode.toSource) es)
     in
     { puzzle = puzzle
