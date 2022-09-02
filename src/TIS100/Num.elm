@@ -5,7 +5,6 @@ module TIS100.Num exposing
     , view
     , viewError
     , viewSelectionList
-    , zero
     )
 
 import TIS100.SelectionList as SelectionList exposing (SelectionList)
@@ -20,11 +19,6 @@ type Num
 toString : Num -> String
 toString (Num i) =
     String.fromInt i
-
-
-zero : Num
-zero =
-    fromInt 0
 
 
 fromInt : Int -> Num
