@@ -516,7 +516,7 @@ viewEditNode ( addr, node ) =
         Exe e ->
             viewExeNode ( addr, ExeNode.empty )
 
-        Fault ->
+        Flt ->
             viewFaultyNode addr
 
 
@@ -540,7 +540,7 @@ simNodeIntents node =
         Exe exe ->
             ExeNode.intents exe
 
-        Fault ->
+        Flt ->
             []
 
 
@@ -577,7 +577,7 @@ simNodeState node =
         Exe exeNode ->
             ExeNode.state exeNode |> S.map Exe
 
-        Fault ->
+        Flt ->
             S.Done
 
 
@@ -593,7 +593,7 @@ viewSimNode ( addr, node ) =
         Exe exe ->
             viewExeNode ( addr, exe )
 
-        Fault ->
+        Flt ->
             viewFaultyNode addr
 
 
@@ -646,8 +646,8 @@ initSimStore exeStore =
                     Exe e ->
                         Exe e
 
-                    Fault ->
-                        Fault
+                    Flt ->
+                        Flt
             )
 
 

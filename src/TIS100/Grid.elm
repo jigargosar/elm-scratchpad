@@ -25,7 +25,7 @@ type Node i o e
     = In IOConfig i
     | Out IOConfig o
     | Exe e
-    | Fault
+    | Flt
 
 
 init : Puzzle -> (IOConfig -> i) -> (IOConfig -> o) -> e -> Grid i o e
@@ -44,7 +44,7 @@ init puzzle ifn ofn e =
                             Exe e
 
                         Puzzle.Faulty ->
-                            Fault
+                            Flt
                 )
                 puzzle.layout
     in
