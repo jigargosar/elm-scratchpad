@@ -140,60 +140,88 @@ subscriptions model =
                     Sub.none
 
 
+initDebug debuggingState editStore =
+    Debug (Debugging debuggingState (initSim editStore))
+
+
+startDebugging : DebuggingState -> Model -> Model
+startDebugging debuggingState model =
+    { model | state = Debug (Debugging debuggingState (initSim model.editStore)) }
+
+
 update : Msg -> Model -> Model
 update msg model =
-    case msg of
-        STOP ->
-            case model.state of
-                Edit ->
+    case model.state of
+        Edit ->
+            case msg of
+                STOP ->
                     model
 
-                Debug _ ->
-                    { model | state = Edit }
+                STEP ->
+                    startDebugging Paused model
 
-        STEP ->
-            case model.state of
-                Edit ->
-                    { model | state = Debug (Debugging Paused (initSim model.editStore)) }
-
-                Debug (Debugging _ sim) ->
-                    { model | state = Debug (Debugging Paused (stepSim sim)) }
-
-                Debug (Completed _ _) ->
+                AutoStep ->
                     model
 
-        AutoStep ->
-            case model.state of
-                Edit ->
-                    model
+                RUN ->
+                    startDebugging Running model
 
-                Debug (Debugging debugger sim) ->
-                    { model | state = Debug <| Debugging debugger (stepSim sim) }
+                FAST ->
+                    startDebugging RunningFast model
 
-                Debug (Completed _ _) ->
-                    model
+        Debug debugModel ->
+            case msg of
+                STOP ->
+                    case model.state of
+                        Edit ->
+                            model
 
-        RUN ->
-            case model.state of
-                Edit ->
-                    { model | state = Debug <| Debugging Running (initSim model.editStore) }
+                        Debug _ ->
+                            { model | state = Edit }
 
-                Debug (Debugging _ sim) ->
-                    { model | state = Debug <| Debugging Running sim }
+                STEP ->
+                    case model.state of
+                        Edit ->
+                            { model | state = Debug (Debugging Paused (initSim model.editStore)) }
 
-                Debug (Completed _ _) ->
-                    model
+                        Debug (Debugging _ sim) ->
+                            { model | state = Debug (Debugging Paused (stepSim sim)) }
 
-        FAST ->
-            case model.state of
-                Edit ->
-                    { model | state = Debug <| Debugging RunningFast (initSim model.editStore) }
+                        Debug (Completed _ _) ->
+                            model
 
-                Debug (Debugging _ sim) ->
-                    { model | state = Debug <| Debugging RunningFast sim }
+                AutoStep ->
+                    case model.state of
+                        Edit ->
+                            model
 
-                Debug (Completed _ _) ->
-                    model
+                        Debug (Debugging debugger sim) ->
+                            { model | state = Debug <| Debugging debugger (stepSim sim) }
+
+                        Debug (Completed _ _) ->
+                            model
+
+                RUN ->
+                    case model.state of
+                        Edit ->
+                            { model | state = Debug <| Debugging Running (initSim model.editStore) }
+
+                        Debug (Debugging _ sim) ->
+                            { model | state = Debug <| Debugging Running sim }
+
+                        Debug (Completed _ _) ->
+                            model
+
+                FAST ->
+                    case model.state of
+                        Edit ->
+                            { model | state = Debug <| Debugging RunningFast (initSim model.editStore) }
+
+                        Debug (Debugging _ sim) ->
+                            { model | state = Debug <| Debugging RunningFast sim }
+
+                        Debug (Completed _ _) ->
+                            model
 
 
 getCycle : Model -> Maybe Int
