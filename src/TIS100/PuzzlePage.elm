@@ -651,7 +651,9 @@ simSetStepMode stepMode sim =
 
 stepSim : Sim -> Sim
 stepSim sim =
-    autoStepSim sim
+    sim
+        |> simSetStepMode Manual
+        |> autoStepSim
 
 
 autoStepSim : Sim -> Sim
