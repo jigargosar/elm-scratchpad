@@ -23,3 +23,7 @@ gapSize =
 
 nodeSize =
     "24ch"
+
+
+errorRed =
+    "red"

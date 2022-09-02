@@ -1,6 +1,7 @@
-module TIS100.Num exposing (Num, fromInt, range, toString, view, viewSelectionList, zero)
+module TIS100.Num exposing (Num, fromInt, range, toString, view, viewError, viewSelectionList, zero)
 
 import TIS100.SelectionList as SelectionList exposing (SelectionList)
+import TIS100.UI as UI
 import Utils exposing (..)
 
 
@@ -41,8 +42,13 @@ range lo hi =
 
 
 viewSelected : Num -> Html msg
-viewSelected n =
-    div [ fg wBlack, bgc white ] [ text (toString n) ]
+viewSelected num =
+    div [ fg wBlack, bgc white ] [ text (toString num) ]
+
+
+viewError : Num -> Html msg
+viewError num =
+    div [ fg wBlack, bgc UI.errorRed ] [ text (toString num) ]
 
 
 view : Num -> Html msg

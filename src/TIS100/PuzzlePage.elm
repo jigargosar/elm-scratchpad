@@ -349,7 +349,18 @@ viewOutputColumn { title, expected, actual } =
         [ div [] [ text title ]
         , fRow []
             [ viewNumColumn (Num.viewSelectionList expected)
-            , viewNumColumn (List.map Num.view actual)
+            , viewNumColumn
+                (List.map2
+                    (\e a ->
+                        if e == a then
+                            Num.view a
+
+                        else
+                            Num.viewError a
+                    )
+                    (SelectionList.toList expected)
+                    actual
+                )
             ]
         ]
 
