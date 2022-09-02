@@ -68,27 +68,12 @@ type alias EditNode =
 
 type State
     = Edit
-    | Debug DebugModel
+    | Debug DebugModel Sim
 
 
 type DebugModel
-    = InProgress Debugging Sim
-    | Completed DebugOutcome Sim
-
-
-getSim : DebugModel -> Sim
-getSim debugModel =
-    case debugModel of
-        InProgress _ sim ->
-            sim
-
-        Completed _ sim ->
-            sim
-
-
-getSimStore : DebugModel -> SimStore
-getSimStore =
-    getSim >> .store
+    = InProgress Debugging
+    | Completed DebugOutcome
 
 
 type DebugOutcome
@@ -123,9 +108,9 @@ subscriptions model =
         Edit ->
             Sub.none
 
-        Debug debugModel ->
+        Debug debugModel _ ->
             case debugModel of
-                InProgress debugger _ ->
+                InProgress debugger ->
                     case debugger of
                         Paused ->
                             Sub.none
@@ -136,17 +121,13 @@ subscriptions model =
                         RunningFast ->
                             Time.every 20 (\_ -> AutoStep)
 
-                Completed _ _ ->
+                Completed _ ->
                     Sub.none
-
-
-initDebug debuggingState editStore =
-    Debug (InProgress debuggingState (initSim editStore))
 
 
 startDebugging : Debugging -> Model -> Model
 startDebugging debuggingState model =
-    { model | state = Debug (InProgress debuggingState (initSim model.editStore)) }
+    { model | state = Debug (InProgress debuggingState) (initSim model.editStore) }
 
 
 startEditing : Model -> Model
@@ -174,24 +155,24 @@ update msg model =
                 FAST ->
                     startDebugging RunningFast model
 
-        Debug (InProgress debugger sim) ->
+        Debug (InProgress debugger) sim ->
             case msg of
                 STOP ->
                     startEditing model
 
                 STEP ->
-                    { model | state = Debug (InProgress Paused (stepSim sim)) }
+                    { model | state = Debug (InProgress Paused) (stepSim sim) }
 
                 AutoStep ->
-                    { model | state = Debug (InProgress debugger (stepSim sim)) }
+                    { model | state = Debug (InProgress debugger) (stepSim sim) }
 
                 RUN ->
-                    { model | state = Debug (InProgress Running sim) }
+                    { model | state = Debug (InProgress Running) sim }
 
                 FAST ->
-                    { model | state = Debug <| InProgress RunningFast sim }
+                    { model | state = Debug (InProgress RunningFast) sim }
 
-        Debug (Completed _ _) ->
+        Debug (Completed _) _ ->
             case msg of
                 STOP ->
                     startEditing model
@@ -212,13 +193,8 @@ update msg model =
 getCycle : Model -> Maybe Int
 getCycle model =
     case model.state of
-        Debug debugModel ->
-            case debugModel of
-                InProgress _ sim ->
-                    Just sim.cycle
-
-                Completed _ sim ->
-                    Just sim.cycle
+        Debug _ sim ->
+            Just sim.cycle
 
         Edit ->
             Nothing
@@ -273,13 +249,9 @@ viewGrid { puzzle, state, editStore } =
                 List.map viewEditNode (Dict.toList editStore)
                     ++ Ports.viewAllPorts puzzle
 
-            Debug debugModel ->
-                let
-                    simStore =
-                        getSimStore debugModel
-                in
-                List.map viewSimNode (Dict.toList simStore)
-                    ++ Ports.view puzzle (simIntentsAndActions simStore)
+            Debug _ { store } ->
+                List.map viewSimNode (Dict.toList store)
+                    ++ Ports.view puzzle (simIntentsAndActions store)
         )
 
 
@@ -349,7 +321,7 @@ viewInputColumns { editStore, state } =
                 )
                 editStore
 
-        Debug debugModel ->
+        Debug _ { store } ->
             Grid.inputsToList
                 (\_ conf i ->
                     viewInputColumn
@@ -357,7 +329,7 @@ viewInputColumns { editStore, state } =
                         , nums = InputNode.toSelectionList i
                         }
                 )
-                (getSimStore debugModel)
+                store
 
 
 viewOutputColumns : Model -> List (Html msg)
@@ -374,7 +346,7 @@ viewOutputColumns { editStore, state } =
                 )
                 editStore
 
-        Debug debugModel ->
+        Debug _ { store } ->
             Grid.outputsToList
                 (\_ conf o ->
                     let
@@ -388,7 +360,7 @@ viewOutputColumns { editStore, state } =
                         , actual = actual
                         }
                 )
-                (getSimStore debugModel)
+                store
 
 
 viewInputColumn :
