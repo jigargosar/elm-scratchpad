@@ -72,14 +72,14 @@ type State
 
 
 type DebugModel
-    = Debugging DebuggingState Sim
+    = InProgress Debugging Sim
     | Completed DebugOutcome Sim
 
 
 getSim : DebugModel -> Sim
 getSim debugModel =
     case debugModel of
-        Debugging _ sim ->
+        InProgress _ sim ->
             sim
 
         Completed _ sim ->
@@ -125,7 +125,7 @@ subscriptions model =
 
         Debug debugModel ->
             case debugModel of
-                Debugging debugger _ ->
+                InProgress debugger _ ->
                     case debugger of
                         Paused ->
                             Sub.none
@@ -141,12 +141,17 @@ subscriptions model =
 
 
 initDebug debuggingState editStore =
-    Debug (Debugging debuggingState (initSim editStore))
+    Debug (InProgress debuggingState (initSim editStore))
 
 
-startDebugging : DebuggingState -> Model -> Model
+startDebugging : Debugging -> Model -> Model
 startDebugging debuggingState model =
-    { model | state = Debug (Debugging debuggingState (initSim model.editStore)) }
+    { model | state = Debug (InProgress debuggingState (initSim model.editStore)) }
+
+
+startEditing : Model -> Model
+startEditing model =
+    { model | state = Edit }
 
 
 update : Msg -> Model -> Model
@@ -169,59 +174,39 @@ update msg model =
                 FAST ->
                     startDebugging RunningFast model
 
-        Debug debugModel ->
+        Debug (InProgress debugger sim) ->
             case msg of
                 STOP ->
-                    case model.state of
-                        Edit ->
-                            model
-
-                        Debug _ ->
-                            { model | state = Edit }
+                    startEditing model
 
                 STEP ->
-                    case model.state of
-                        Edit ->
-                            { model | state = Debug (Debugging Paused (initSim model.editStore)) }
-
-                        Debug (Debugging _ sim) ->
-                            { model | state = Debug (Debugging Paused (stepSim sim)) }
-
-                        Debug (Completed _ _) ->
-                            model
+                    { model | state = Debug (InProgress Paused (stepSim sim)) }
 
                 AutoStep ->
-                    case model.state of
-                        Edit ->
-                            model
-
-                        Debug (Debugging debugger sim) ->
-                            { model | state = Debug <| Debugging debugger (stepSim sim) }
-
-                        Debug (Completed _ _) ->
-                            model
+                    { model | state = Debug (InProgress debugger (stepSim sim)) }
 
                 RUN ->
-                    case model.state of
-                        Edit ->
-                            { model | state = Debug <| Debugging Running (initSim model.editStore) }
-
-                        Debug (Debugging _ sim) ->
-                            { model | state = Debug <| Debugging Running sim }
-
-                        Debug (Completed _ _) ->
-                            model
+                    { model | state = Debug (InProgress Running sim) }
 
                 FAST ->
-                    case model.state of
-                        Edit ->
-                            { model | state = Debug <| Debugging RunningFast (initSim model.editStore) }
+                    { model | state = Debug <| InProgress RunningFast sim }
 
-                        Debug (Debugging _ sim) ->
-                            { model | state = Debug <| Debugging RunningFast sim }
+        Debug (Completed _ _) ->
+            case msg of
+                STOP ->
+                    startEditing model
 
-                        Debug (Completed _ _) ->
-                            model
+                STEP ->
+                    startDebugging Paused model
+
+                AutoStep ->
+                    model
+
+                RUN ->
+                    startDebugging Running model
+
+                FAST ->
+                    startDebugging RunningFast model
 
 
 getCycle : Model -> Maybe Int
@@ -229,7 +214,7 @@ getCycle model =
     case model.state of
         Debug debugModel ->
             case debugModel of
-                Debugging _ sim ->
+                InProgress _ sim ->
                     Just sim.cycle
 
                 Completed _ sim ->
@@ -657,7 +642,7 @@ type alias SimStore =
     Grid.Grid InputNode OutputNode ExeNode
 
 
-type DebuggingState
+type Debugging
     = Paused
     | Running
     | RunningFast
