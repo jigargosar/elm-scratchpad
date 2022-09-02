@@ -37,8 +37,9 @@ type Msg
 
 
 subscriptions : Model -> Sub Msg
-subscriptions _ =
-    Sub.none
+subscriptions model =
+    Sim.subscriptions model.sim
+        |> Sub.map SimMsg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )

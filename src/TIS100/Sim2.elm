@@ -2,6 +2,7 @@ module TIS100.Sim2 exposing
     ( Model
     , Msg
     , sampleModel
+    , subscriptions
     , update
     , view
     )
@@ -67,7 +68,7 @@ type alias EditNode =
 
 type State
     = Edit
-    | Debug Sim
+    | Debug Debugger Sim
 
 
 init : Puzzle -> List ( Addr, ExeNode ) -> Model
@@ -97,16 +98,16 @@ subscriptions model =
         Edit ->
             Sub.none
 
-        Debug { debugger } ->
+        Debug debugger _ ->
             case debugger of
                 Paused ->
                     Sub.none
 
                 Running ->
-                    Time.every (1 * 1000) (\_ -> AutoStep)
+                    Time.every 50 (\_ -> AutoStep)
 
                 RunningFast ->
-                    Time.every (1 * 1000 * 0.5) (\_ -> AutoStep)
+                    Time.every 20 (\_ -> AutoStep)
 
 
 update : Msg -> Model -> Model
@@ -117,46 +118,46 @@ update msg model =
                 Edit ->
                     model
 
-                Debug _ ->
+                Debug _ _ ->
                     { model | state = Edit }
 
         STEP ->
             case model.state of
                 Edit ->
-                    { model | state = Debug (initSim Paused model.editStore) }
+                    { model | state = Debug Paused (initSim model.editStore) }
 
-                Debug sim ->
-                    { model | state = Debug (manualStep sim) }
+                Debug _ sim ->
+                    { model | state = Debug Paused (step sim) }
 
         AutoStep ->
             case model.state of
                 Edit ->
                     model
 
-                Debug sim ->
-                    { model | state = Debug (autoStep sim) }
+                Debug debugger sim ->
+                    { model | state = Debug debugger (step sim) }
 
         RUN ->
             case model.state of
                 Edit ->
-                    { model | state = Debug (initSim Running model.editStore) }
+                    { model | state = Debug Running (initSim model.editStore) }
 
-                Debug _ ->
-                    model
+                Debug _ sim ->
+                    { model | state = Debug Running sim }
 
         FAST ->
             case model.state of
                 Edit ->
-                    { model | state = Debug (initSim RunningFast model.editStore) }
+                    { model | state = Debug RunningFast (initSim model.editStore) }
 
-                Debug _ ->
-                    model
+                Debug _ sim ->
+                    { model | state = Debug RunningFast sim }
 
 
 getCycle : Model -> Maybe Int
 getCycle model =
     case model.state of
-        Debug sim ->
+        Debug _ sim ->
             Just sim.cycle
 
         Edit ->
@@ -212,7 +213,7 @@ viewGrid { puzzle, state, editStore } =
                 List.map viewEditNode (Dict.toList editStore)
                     ++ Ports.viewAllPorts puzzle
 
-            Debug sim ->
+            Debug _ sim ->
                 List.map viewSimNode (Dict.toList sim.store)
                     ++ Ports.view puzzle (simIntentsAndActions sim)
         )
@@ -284,7 +285,7 @@ viewInputColumns { editStore, state } =
                 )
                 editStore
 
-        Debug sim ->
+        Debug _ sim ->
             Grid.inputsToList
                 (\_ conf i ->
                     viewInputColumn
@@ -309,7 +310,7 @@ viewOutputColumns { editStore, state } =
                 )
                 editStore
 
-        Debug sim ->
+        Debug _ sim ->
             Grid.outputsToList
                 (\_ conf o ->
                     let
@@ -585,13 +586,12 @@ type Debugger
 
 type alias Sim =
     { store : SimStore
-    , debugger : Debugger
     , cycle : Int
     }
 
 
-initSim : Debugger -> EditStore -> Sim
-initSim debugger editStore =
+initSim : EditStore -> Sim
+initSim editStore =
     let
         store : SimStore
         store =
@@ -613,7 +613,6 @@ initSim debugger editStore =
                     )
     in
     { store = store
-    , debugger = debugger
     , cycle = 0
     }
 
@@ -632,16 +631,6 @@ simIntentsAndActions sim =
 
 
 -- SIM UPDATE
-
-
-manualStep : Sim -> Sim
-manualStep sim =
-    step { sim | debugger = Paused }
-
-
-autoStep : Sim -> Sim
-autoStep sim =
-    step sim
 
 
 step : Sim -> Sim
