@@ -579,12 +579,12 @@ type alias SimStore =
 
 type alias Sim =
     { store : SimStore
-    , debug : Debug
+    , debug : SimState
     , cycle : Int
     }
 
 
-type Debug
+type SimState
     = Stepping StepMode
     | Completed
 
