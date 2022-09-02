@@ -17,6 +17,7 @@ import TIS100.Ports as Ports exposing (Action(..), Intent(..))
 import TIS100.Puzzle as Puzzle exposing (IOConfig, Puzzle)
 import TIS100.SelectionList as SelectionList exposing (SelectionList)
 import TIS100.UI as UI
+import Time
 import Utils exposing (..)
 
 
@@ -87,11 +88,25 @@ type Msg
     | STEP
     | RUN
     | FAST
+    | AutoStep
 
 
-subscriptions : Sim -> Sub Msg
-subscriptions _ =
-    Sub.none
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    case model.state of
+        Edit ->
+            Sub.none
+
+        Debug { debugger } ->
+            case debugger of
+                Paused ->
+                    Sub.none
+
+                Running ->
+                    Time.every (1 * 1000) (\_ -> AutoStep)
+
+                RunningFast ->
+                    Time.every (1 * 1000 * 0.5) (\_ -> AutoStep)
 
 
 update : Msg -> Model -> Model
@@ -111,7 +126,15 @@ update msg model =
                     { model | state = Debug (initSim Paused model.editStore) }
 
                 Debug sim ->
-                    { model | state = Debug (step sim) }
+                    { model | state = Debug (manualStep sim) }
+
+        AutoStep ->
+            case model.state of
+                Edit ->
+                    model
+
+                Debug sim ->
+                    { model | state = Debug (autoStep sim) }
 
         RUN ->
             case model.state of
@@ -609,6 +632,16 @@ simIntentsAndActions sim =
 
 
 -- SIM UPDATE
+
+
+manualStep : Sim -> Sim
+manualStep sim =
+    step { sim | debugger = Paused }
+
+
+autoStep : Sim -> Sim
+autoStep sim =
+    step sim
 
 
 step : Sim -> Sim
