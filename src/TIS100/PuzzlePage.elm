@@ -218,7 +218,7 @@ view model =
         , gap "2ch"
         , ttu
         ]
-        [ viewCycle (getCycle model)
+        [ viewCycle model
         , fRow [ gap "2ch" ]
             [ viewLeftBar model
             , viewGrid model
@@ -226,18 +226,18 @@ view model =
         ]
 
 
-viewCycle : Maybe Int -> Html msg
-viewCycle mbCycle =
+viewCycle : Model -> Html msg
+viewCycle model =
     let
-        cycle =
-            case mbCycle of
-                Nothing ->
+        cycleText =
+            case model.state of
+                Edit ->
                     "NA"
 
-                Just c ->
-                    fromInt c
+                Debug _ sim ->
+                    fromInt sim.cycle
     in
-    div [] [ text "Cycle: ", text cycle ]
+    div [] [ text "Cycle: ", text cycleText ]
 
 
 viewGrid : Model -> Html msg
