@@ -43,21 +43,21 @@ toString (Num i) =
     String.fromInt i
 
 
-viewSelected : Num -> Html msg
-viewSelected num =
-    div [ fg wBlack, bgc white ] [ text (toString num) ]
-
-
-viewError : Num -> Html msg
-viewError num =
-    div [ fg wBlack, bgc UI.errorRed ] [ text (toString num) ]
-
-
 view : Num -> Html msg
 view n =
     div [] [ text (toString n) ]
 
 
+viewSelected : Num -> Html msg
+viewSelected num =
+    div [ fg wBlack, bgc white ] [ text (toString num) ]
+
+
 viewSelectionList : SelectionList Num -> List (Html msg)
 viewSelectionList =
     SelectionList.view viewSelected view
+
+
+viewError : Num -> Html msg
+viewError num =
+    div [ fg wBlack, bgc UI.errorRed ] [ text (toString num) ]
