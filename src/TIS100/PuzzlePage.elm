@@ -99,7 +99,7 @@ subscriptions model =
             Sub.none
 
         Sim_ sim ->
-            case sim.debug of
+            case sim.state of
                 Stepping debugger ->
                     case debugger of
                         Manual ->
@@ -586,7 +586,7 @@ viewSimNode ( addr, node ) =
 
 type alias Sim =
     { store : SimStore
-    , debug : SimState
+    , state : SimState
     , cycle : Int
     }
 
@@ -609,7 +609,7 @@ type StepMode
 initSim : StepMode -> EditStore -> Sim
 initSim stepMode editStore =
     { store = initSimStore editStore
-    , debug = Stepping stepMode
+    , state = Stepping stepMode
     , cycle = 0
     }
 
@@ -652,9 +652,9 @@ simIntentsAndActions simStore =
 
 simSetStepMode : StepMode -> Sim -> Sim
 simSetStepMode stepMode sim =
-    case sim.debug of
+    case sim.state of
         Stepping _ ->
-            { sim | debug = Stepping stepMode }
+            { sim | state = Stepping stepMode }
 
         Completed ->
             sim
@@ -674,7 +674,7 @@ autoStepSim sim =
             stepSimStore sim.store
     in
     if newStore == sim.store then
-        { sim | debug = Completed }
+        { sim | state = Completed }
 
     else
         { sim
