@@ -16,11 +16,6 @@ type Num
     = Num Int
 
 
-toString : Num -> String
-toString (Num i) =
-    String.fromInt i
-
-
 fromInt : Int -> Num
 fromInt i =
     Num (clamp i)
@@ -41,6 +36,11 @@ clamp i =
 range : Int -> Int -> List Num
 range lo hi =
     List.range lo hi |> List.map fromInt
+
+
+toString : Num -> String
+toString (Num i) =
+    String.fromInt i
 
 
 viewSelected : Num -> Html msg
