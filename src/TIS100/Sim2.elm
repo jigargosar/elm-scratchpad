@@ -68,15 +68,21 @@ type alias EditNode =
 
 type State
     = Edit
-    | Debug DebugModel Sim
+    | Debug Debug Sim
 
 
-type DebugModel
+type Debug
     = InProgress Debugging
-    | Completed DebugOutcome
+    | Completed Outcome
 
 
-type DebugOutcome
+type Debugging
+    = Paused
+    | Running
+    | RunningFast
+
+
+type Outcome
     = Success
     | Failure
 
@@ -612,12 +618,6 @@ viewSimNode ( addr, node ) =
 
 type alias SimStore =
     Grid.Grid InputNode OutputNode ExeNode
-
-
-type Debugging
-    = Paused
-    | Running
-    | RunningFast
 
 
 type alias Sim =
