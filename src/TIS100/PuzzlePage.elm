@@ -53,12 +53,12 @@ sampleModel =
 
 type alias Model =
     { puzzle : Puzzle
-    , editStore : EditStore
+    , exeStore : ExeStore
     , state : State
     }
 
 
-type alias EditStore =
+type alias ExeStore =
     Grid.Grid () () ExeNode
 
 
@@ -74,12 +74,12 @@ type State
 init : Puzzle -> List ( Addr, ExeNode ) -> Model
 init puzzle es =
     let
-        editStore =
+        exeStore =
             Grid.init puzzle (always ()) (always ()) ExeNode.empty
                 |> Grid.replaceExeEntries es
     in
     { puzzle = puzzle
-    , editStore = editStore
+    , exeStore = exeStore
     , state = Edit
     }
 
@@ -121,7 +121,7 @@ startDebugging stepMode model =
         _ =
             "Need to compile edit nodes so we can init sim"
     in
-    { model | state = Sim_ (initSim stepMode model.editStore) }
+    { model | state = Sim_ (initSim stepMode model.exeStore) }
 
 
 startEditing : Model -> Model
@@ -202,7 +202,7 @@ viewCycle model =
 
 
 viewGrid : Model -> Html msg
-viewGrid { puzzle, state, editStore } =
+viewGrid { puzzle, state, exeStore } =
     div
         [ displayGrid
         , List.repeat 3 UI.nodeSize |> String.join " " |> gridTemplateRows
@@ -213,7 +213,7 @@ viewGrid { puzzle, state, editStore } =
         ]
         (case state of
             Edit ->
-                List.map viewEditNode (Dict.toList editStore)
+                List.map viewEditNode (Dict.toList exeStore)
                     ++ Ports.viewAllPorts puzzle
 
             Sim_ { store } ->
@@ -276,7 +276,7 @@ viewDesc =
 
 
 viewInputColumns : Model -> List (Html msg)
-viewInputColumns { editStore, state } =
+viewInputColumns { exeStore, state } =
     case state of
         Edit ->
             Grid.inputsToList
@@ -286,7 +286,7 @@ viewInputColumns { editStore, state } =
                         , nums = SelectionList.None conf.nums
                         }
                 )
-                editStore
+                exeStore
 
         Sim_ { store } ->
             Grid.inputsToList
@@ -300,7 +300,7 @@ viewInputColumns { editStore, state } =
 
 
 viewOutputColumns : Model -> List (Html msg)
-viewOutputColumns { editStore, state } =
+viewOutputColumns { exeStore, state } =
     case state of
         Edit ->
             Grid.outputsToList
@@ -311,7 +311,7 @@ viewOutputColumns { editStore, state } =
                         , actual = []
                         }
                 )
-                editStore
+                exeStore
 
         Sim_ { store } ->
             Grid.outputsToList
@@ -610,17 +610,17 @@ type StepMode
     | AutoFast
 
 
-initSim : StepMode -> EditStore -> Sim
-initSim stepMode editStore =
-    { store = initSimStore editStore
+initSim : StepMode -> ExeStore -> Sim
+initSim stepMode exeStore =
+    { store = initSimStore exeStore
     , state = Stepping stepMode
     , cycle = 0
     }
 
 
-initSimStore : EditStore -> SimStore
-initSimStore editStore =
-    editStore
+initSimStore : ExeStore -> SimStore
+initSimStore exeStore =
+    exeStore
         |> Dict.map
             (\_ n ->
                 case n of
