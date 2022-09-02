@@ -1,7 +1,7 @@
 module TIS100 exposing (main)
 
 import Html
-import TIS100.PuzzleScreen as PuzzlePage
+import TIS100.PuzzlePage as PuzzlePage
 import Utils exposing (..)
 
 

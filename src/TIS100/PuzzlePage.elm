@@ -1,4 +1,4 @@
-module TIS100.PuzzleScreen exposing
+module TIS100.PuzzlePage exposing
     ( Model
     , Msg
     , sampleModel
