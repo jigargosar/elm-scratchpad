@@ -68,7 +68,32 @@ type alias EditNode =
 
 type State
     = Edit
-    | Debug Debugger Sim
+    | Debug DebugModel
+
+
+type DebugModel
+    = Debugging DebuggingState Sim
+    | Completed DebugOutcome Sim
+
+
+getSim : DebugModel -> Sim
+getSim debugModel =
+    case debugModel of
+        Debugging _ sim ->
+            sim
+
+        Completed _ sim ->
+            sim
+
+
+getSimStore : DebugModel -> SimStore
+getSimStore =
+    getSim >> .store
+
+
+type DebugOutcome
+    = Success
+    | Failure
 
 
 init : Puzzle -> List ( Addr, ExeNode ) -> Model
@@ -98,16 +123,21 @@ subscriptions model =
         Edit ->
             Sub.none
 
-        Debug debugger _ ->
-            case debugger of
-                Paused ->
+        Debug debugModel ->
+            case debugModel of
+                Debugging debugger _ ->
+                    case debugger of
+                        Paused ->
+                            Sub.none
+
+                        Running ->
+                            Time.every 50 (\_ -> AutoStep)
+
+                        RunningFast ->
+                            Time.every 20 (\_ -> AutoStep)
+
+                Completed _ _ ->
                     Sub.none
-
-                Running ->
-                    Time.every 50 (\_ -> AutoStep)
-
-                RunningFast ->
-                    Time.every 20 (\_ -> AutoStep)
 
 
 update : Msg -> Model -> Model
@@ -118,47 +148,64 @@ update msg model =
                 Edit ->
                     model
 
-                Debug _ _ ->
+                Debug _ ->
                     { model | state = Edit }
 
         STEP ->
             case model.state of
                 Edit ->
-                    { model | state = Debug Paused (initSim model.editStore) }
+                    { model | state = Debug (Debugging Paused (initSim model.editStore)) }
 
-                Debug _ sim ->
-                    { model | state = Debug Paused (stepSim sim) }
+                Debug (Debugging _ sim) ->
+                    { model | state = Debug (Debugging Paused (stepSim sim)) }
+
+                Debug (Completed _ _) ->
+                    model
 
         AutoStep ->
             case model.state of
                 Edit ->
                     model
 
-                Debug debugger sim ->
-                    { model | state = Debug debugger (stepSim sim) }
+                Debug (Debugging debugger sim) ->
+                    { model | state = Debug <| Debugging debugger (stepSim sim) }
+
+                Debug (Completed _ _) ->
+                    model
 
         RUN ->
             case model.state of
                 Edit ->
-                    { model | state = Debug Running (initSim model.editStore) }
+                    { model | state = Debug <| Debugging Running (initSim model.editStore) }
 
-                Debug _ sim ->
-                    { model | state = Debug Running sim }
+                Debug (Debugging _ sim) ->
+                    { model | state = Debug <| Debugging Running sim }
+
+                Debug (Completed _ _) ->
+                    model
 
         FAST ->
             case model.state of
                 Edit ->
-                    { model | state = Debug RunningFast (initSim model.editStore) }
+                    { model | state = Debug <| Debugging RunningFast (initSim model.editStore) }
 
-                Debug _ sim ->
-                    { model | state = Debug RunningFast sim }
+                Debug (Debugging _ sim) ->
+                    { model | state = Debug <| Debugging RunningFast sim }
+
+                Debug (Completed _ _) ->
+                    model
 
 
 getCycle : Model -> Maybe Int
 getCycle model =
     case model.state of
-        Debug _ sim ->
-            Just sim.cycle
+        Debug debugModel ->
+            case debugModel of
+                Debugging _ sim ->
+                    Just sim.cycle
+
+                Completed _ sim ->
+                    Just sim.cycle
 
         Edit ->
             Nothing
@@ -213,9 +260,13 @@ viewGrid { puzzle, state, editStore } =
                 List.map viewEditNode (Dict.toList editStore)
                     ++ Ports.viewAllPorts puzzle
 
-            Debug _ sim ->
-                List.map viewSimNode (Dict.toList sim.store)
-                    ++ Ports.view puzzle (simIntentsAndActions sim)
+            Debug debugModel ->
+                let
+                    simStore =
+                        getSimStore debugModel
+                in
+                List.map viewSimNode (Dict.toList simStore)
+                    ++ Ports.view puzzle (simIntentsAndActions simStore)
         )
 
 
@@ -285,7 +336,7 @@ viewInputColumns { editStore, state } =
                 )
                 editStore
 
-        Debug _ sim ->
+        Debug debugModel ->
             Grid.inputsToList
                 (\_ conf i ->
                     viewInputColumn
@@ -293,7 +344,7 @@ viewInputColumns { editStore, state } =
                         , nums = InputNode.toSelectionList i
                         }
                 )
-                sim.store
+                (getSimStore debugModel)
 
 
 viewOutputColumns : Model -> List (Html msg)
@@ -310,7 +361,7 @@ viewOutputColumns { editStore, state } =
                 )
                 editStore
 
-        Debug _ sim ->
+        Debug debugModel ->
             Grid.outputsToList
                 (\_ conf o ->
                     let
@@ -324,7 +375,7 @@ viewOutputColumns { editStore, state } =
                         , actual = actual
                         }
                 )
-                sim.store
+                (getSimStore debugModel)
 
 
 viewInputColumn :
@@ -578,7 +629,7 @@ type alias SimStore =
     Grid.Grid InputNode OutputNode ExeNode
 
 
-type Debugger
+type DebuggingState
     = Paused
     | Running
     | RunningFast
@@ -617,8 +668,8 @@ initSim editStore =
     }
 
 
-simIntentsAndActions : Sim -> ( List ( Addr, Intent ), List ( Addr, Action ) )
-simIntentsAndActions sim =
+simIntentsAndActions : SimStore -> ( List ( Addr, Intent ), List ( Addr, Action ) )
+simIntentsAndActions simStore =
     Dict.foldl
         (\addr node ( intents, actions ) ->
             ( List.map (pair addr) (simNodeIntents node) ++ intents
@@ -626,17 +677,15 @@ simIntentsAndActions sim =
             )
         )
         ( [], [] )
-        sim.store
+        simStore
 
 
 
 -- SIM UPDATE
-
-
-type StepResponse
-    = Success Sim
-    | Failed Sim
-    | InProgress Sim
+--type StepResponse
+--    = Success Sim
+--    | Failed Sim
+--    | InProgress Sim
 
 
 stepSim : Sim -> Sim
