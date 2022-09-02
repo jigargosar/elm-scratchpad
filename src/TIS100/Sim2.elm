@@ -99,25 +99,35 @@ update msg model =
     case msg of
         STOP ->
             case model.state of
-                Debug _ ->
-                    { model | state = Edit }
-
                 Edit ->
                     model
 
+                Debug _ ->
+                    { model | state = Edit }
+
         STEP ->
             case model.state of
+                Edit ->
+                    { model | state = Debug (initSim Paused model.editStore) }
+
                 Debug sim ->
                     { model | state = Debug (step sim) }
 
-                Edit ->
-                    { model | state = Debug (initSim model.editStore) }
-
         RUN ->
-            model
+            case model.state of
+                Edit ->
+                    { model | state = Debug (initSim Running model.editStore) }
+
+                Debug _ ->
+                    model
 
         FAST ->
-            model
+            case model.state of
+                Edit ->
+                    { model | state = Debug (initSim RunningFast model.editStore) }
+
+                Debug _ ->
+                    model
 
 
 getCycle : Model -> Maybe Int
@@ -544,14 +554,21 @@ type alias SimStore =
     Grid.Grid InputNode OutputNode ExeNode
 
 
+type Debugger
+    = Paused
+    | Running
+    | RunningFast
+
+
 type alias Sim =
     { store : SimStore
+    , debugger : Debugger
     , cycle : Int
     }
 
 
-initSim : EditStore -> Sim
-initSim editStore =
+initSim : Debugger -> EditStore -> Sim
+initSim debugger editStore =
     let
         store : SimStore
         store =
@@ -573,6 +590,7 @@ initSim editStore =
                     )
     in
     { store = store
+    , debugger = debugger
     , cycle = 0
     }
 
