@@ -53,7 +53,8 @@ sampleModel =
 
 type alias Model =
     { puzzle : Puzzle
-    , exeStore : ExeStore
+    , editorStore : EditStore
+    , exeStore : Grid.Grid () () ExeNode
     , state : State
     }
 
@@ -62,8 +63,16 @@ type alias ExeStore =
     Grid.Grid () () ExeNode
 
 
+type alias EditStore =
+    Grid.Grid () () Editor
+
+
 type alias EditNode =
-    Grid.Node () () ExeNode
+    Grid.Node () () Editor
+
+
+type Editor
+    = Editor
 
 
 type State
@@ -77,8 +86,12 @@ init puzzle es =
         exeStore =
             Grid.init puzzle (always ()) (always ()) ExeNode.empty
                 |> Grid.replaceExeEntries es
+
+        editorStore =
+            Grid.init puzzle (always ()) (always ()) Editor
     in
     { puzzle = puzzle
+    , editorStore = editorStore
     , exeStore = exeStore
     , state = Edit
     }
@@ -202,7 +215,7 @@ viewCycle model =
 
 
 viewGrid : Model -> Html msg
-viewGrid { puzzle, state, exeStore } =
+viewGrid { puzzle, state, exeStore, editorStore } =
     div
         [ displayGrid
         , List.repeat 3 UI.nodeSize |> String.join " " |> gridTemplateRows
@@ -213,7 +226,7 @@ viewGrid { puzzle, state, exeStore } =
         ]
         (case state of
             Edit ->
-                List.map viewEditNode (Dict.toList exeStore)
+                List.map viewEditNode (Dict.toList editorStore)
                     ++ Ports.viewAllPorts puzzle
 
             Sim_ { store } ->
@@ -501,7 +514,7 @@ viewEditNode ( addr, node ) =
             viewOutputNode conf
 
         Exe e ->
-            viewExeNode ( addr, e )
+            viewExeNode ( addr, ExeNode.empty )
 
         Fault ->
             viewFaultyNode addr
