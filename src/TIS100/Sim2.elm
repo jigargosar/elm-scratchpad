@@ -633,6 +633,12 @@ simIntentsAndActions sim =
 -- SIM UPDATE
 
 
+type StepResponse
+    = Success Sim
+    | Failed Sim
+    | InProgress Sim
+
+
 stepSim : Sim -> Sim
 stepSim sim =
     { sim
