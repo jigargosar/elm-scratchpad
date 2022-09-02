@@ -196,16 +196,6 @@ update msg model =
                     startDebugging AutoFast model
 
 
-getCycle : Model -> Maybe Int
-getCycle model =
-    case model.state of
-        Debug _ sim ->
-            Just sim.cycle
-
-        Edit ->
-            Nothing
-
-
 view : Model -> Html Msg
 view model =
     fCol
