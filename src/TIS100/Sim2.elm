@@ -127,7 +127,7 @@ update msg model =
                     { model | state = Debug Paused (initSim model.editStore) }
 
                 Debug _ sim ->
-                    { model | state = Debug Paused (step sim) }
+                    { model | state = Debug Paused (stepSim sim) }
 
         AutoStep ->
             case model.state of
@@ -135,7 +135,7 @@ update msg model =
                     model
 
                 Debug debugger sim ->
-                    { model | state = Debug debugger (step sim) }
+                    { model | state = Debug debugger (stepSim sim) }
 
         RUN ->
             case model.state of
@@ -633,8 +633,8 @@ simIntentsAndActions sim =
 -- SIM UPDATE
 
 
-step : Sim -> Sim
-step sim =
+stepSim : Sim -> Sim
+stepSim sim =
     { sim
         | store =
             Dict.foldl stepNode (initAcc sim.store) sim.store
