@@ -72,11 +72,11 @@ type State
 
 
 type Debug
-    = Stepping StepStyle
+    = Stepping StepMode
     | Completed Outcome
 
 
-type StepStyle
+type StepMode
     = Manual
     | Auto
     | AutoFast
@@ -131,7 +131,7 @@ subscriptions model =
                     Sub.none
 
 
-startDebugging : StepStyle -> Model -> Model
+startDebugging : StepMode -> Model -> Model
 startDebugging debuggingState model =
     { model | state = Debug (Stepping debuggingState) (initSim model.editStore) }
 
