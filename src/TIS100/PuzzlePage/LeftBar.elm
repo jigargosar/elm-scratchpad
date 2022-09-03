@@ -7,8 +7,8 @@ import Utils exposing (..)
 
 
 type alias ViewModel =
-    { inputs : List InputColumn
-    , outputs : List OutputColumn
+    { inputs : List Input
+    , outputs : List Output
     }
 
 
@@ -20,11 +20,11 @@ type alias Config msg =
     }
 
 
-type alias InputColumn =
+type alias Input =
     { title : String, nums : SelectionList Num }
 
 
-type alias OutputColumn =
+type alias Output =
     { title : String
     , expected : SelectionList Num
     , actual : List Num
@@ -86,7 +86,7 @@ viewDesc =
         (List.repeat 6 (div [] [ text "> desc" ]))
 
 
-viewInputColumn : InputColumn -> Html msg
+viewInputColumn : Input -> Html msg
 viewInputColumn { title, nums } =
     fCol [ gap "0.5ch" ]
         [ div [] [ text title ]
@@ -94,7 +94,7 @@ viewInputColumn { title, nums } =
         ]
 
 
-viewOutputColumn : OutputColumn -> Html msg
+viewOutputColumn : Output -> Html msg
 viewOutputColumn { title, expected, actual } =
     fCol [ gap "0.5ch" ]
         [ div [] [ text title ]
