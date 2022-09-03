@@ -249,6 +249,56 @@ viewEditNodes puzzle editors =
         puzzle
 
 
+toLeftBarViewModel : Model -> LeftBarViewModel
+toLeftBarViewModel { puzzle, state } =
+    { inputs =
+        case state of
+            Edit ->
+                List.map
+                    (\conf ->
+                        { title = conf.title
+                        , nums = SelectionList.None conf.nums
+                        }
+                    )
+                    puzzle.inputs
+
+            Sim_ { store } ->
+                Grid.inputsToList
+                    (\_ c i ->
+                        { title = c.title
+                        , nums = InputNode.toSelectionList i
+                        }
+                    )
+                    store
+    , outputs =
+        case state of
+            Edit ->
+                List.map
+                    (\conf ->
+                        { title = conf.title
+                        , expected = SelectionList.None conf.nums
+                        , actual = []
+                        }
+                    )
+                    puzzle.outputs
+
+            Sim_ { store } ->
+                Grid.outputsToList
+                    (\_ c o ->
+                        let
+                            actual =
+                                OutputNode.getNumsRead o
+                        in
+                        { title = c.title
+                        , expected =
+                            SelectionList.fromIndex (List.length actual) c.nums
+                        , actual = actual
+                        }
+                    )
+                    store
+    }
+
+
 viewLeftBar : Model -> Html Msg
 viewLeftBar { puzzle, state } =
     fCol [ sWidth "40ch", gap "2ch", fg lightGray ]
