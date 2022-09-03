@@ -273,29 +273,7 @@ leftBarViewModel { puzzle, state } =
             }
 
         Sim_ sim ->
-            { inputs =
-                Grid.inputsToList
-                    (\_ c i ->
-                        { title = c.title
-                        , nums = InputNode.toSelectionList i
-                        }
-                    )
-                    sim.store
-            , outputs =
-                Grid.outputsToList
-                    (\_ c o ->
-                        let
-                            actual =
-                                OutputNode.getNumsRead o
-                        in
-                        { title = c.title
-                        , expected =
-                            SelectionList.fromIndex (List.length actual) c.nums
-                        , actual = actual
-                        }
-                    )
-                    sim.store
-            }
+            simLeftBarViewModel sim
 
 
 viewLeftBar : LeftBarViewModel -> Html Msg
@@ -667,6 +645,33 @@ simIntentsAndActions simStore =
         )
         ( [], [] )
         simStore
+
+
+simLeftBarViewModel : Sim -> LeftBarViewModel
+simLeftBarViewModel sim =
+    { inputs =
+        Grid.inputsToList
+            (\_ c i ->
+                { title = c.title
+                , nums = InputNode.toSelectionList i
+                }
+            )
+            sim.store
+    , outputs =
+        Grid.outputsToList
+            (\_ c o ->
+                let
+                    actual =
+                        OutputNode.getNumsRead o
+                in
+                { title = c.title
+                , expected =
+                    SelectionList.fromIndex (List.length actual) c.nums
+                , actual = actual
+                }
+            )
+            sim.store
+    }
 
 
 
