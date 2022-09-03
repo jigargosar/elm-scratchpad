@@ -220,18 +220,6 @@ leftBarViewModel { puzzle, state } =
             simLeftBarViewModel sim
 
 
-viewLeftBar : LeftBarViewModel -> Html Msg
-viewLeftBar model =
-    fCol [ sWidth "40ch", gap "2ch", fg lightGray ]
-        [ div [] [ viewTitle, viewDesc ]
-        , fRow [ tac, gap "2ch" ]
-            (List.map viewInputColumn model.inputs
-                ++ List.map viewOutputColumn model.outputs
-            )
-        , viewButtons
-        ]
-
-
 type alias LeftBarViewModel =
     { inputs : List InputColumnViewModel
     , outputs : List OutputColumnViewModel
@@ -247,6 +235,18 @@ type alias OutputColumnViewModel =
     , expected : SelectionList Num
     , actual : List Num
     }
+
+
+viewLeftBar : LeftBarViewModel -> Html Msg
+viewLeftBar model =
+    fCol [ sWidth "40ch", gap "2ch", fg lightGray ]
+        [ div [] [ viewTitle, viewDesc ]
+        , fRow [ tac, gap "2ch" ]
+            (List.map viewInputColumn model.inputs
+                ++ List.map viewOutputColumn model.outputs
+            )
+        , viewButtons
+        ]
 
 
 viewButtons : Html Msg
