@@ -253,8 +253,7 @@ viewLeftBar : Model -> Html Msg
 viewLeftBar model =
     fCol [ sWidth "40ch", gap "2ch", fg lightGray ]
         [ div [] [ viewTitle, viewDesc ]
-        , fRow [ tac, gap "2ch" ]
-            (viewColumns model)
+        , fRow [ tac, gap "2ch" ] (viewColumns model)
         , viewButtons
         ]
 
