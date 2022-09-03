@@ -53,14 +53,10 @@ sampleModel =
 
 type alias Model =
     { puzzle : Puzzle
-    , editors : Dict Addr Editor
+    , editors : Editors
     , exs : List ( Addr, ExeNode )
     , state : State
     }
-
-
-type alias Editor =
-    String
 
 
 type State
@@ -501,6 +497,14 @@ viewFaultyNode ( x, y ) =
 
 
 -- EDIT MODE
+
+
+type alias Editors =
+    Dict Addr Editor
+
+
+type alias Editor =
+    String
 
 
 editLeftBarViewModel : Puzzle -> LeftBarViewModel
