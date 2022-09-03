@@ -7,8 +7,8 @@ import Utils exposing (..)
 
 
 type alias ViewModel msg =
-    { inputs : List InputColumnViewModel
-    , outputs : List OutputColumnViewModel
+    { inputs : List InputColumn
+    , outputs : List OutputColumn
     , events : Events msg
     }
 
@@ -21,26 +21,26 @@ type alias Events msg =
     }
 
 
-type alias InputColumnViewModel =
+type alias InputColumn =
     { title : String, nums : SelectionList Num }
 
 
-type alias OutputColumnViewModel =
+type alias OutputColumn =
     { title : String
     , expected : SelectionList Num
     , actual : List Num
     }
 
 
-view : ViewModel msg -> Html msg
-view model =
+view : Events msg -> ViewModel msg -> Html msg
+view events model =
     fCol [ sWidth "40ch", gap "2ch", fg UI.lightGray ]
         [ div [] [ viewTitle, viewDesc ]
         , fRow [ tac, gap "2ch" ]
             (List.map viewInputColumn model.inputs
                 ++ List.map viewOutputColumn model.outputs
             )
-        , viewButtons model.events
+        , viewButtons events
         ]
 
 
@@ -87,7 +87,7 @@ viewDesc =
         (List.repeat 6 (div [] [ text "> desc" ]))
 
 
-viewInputColumn : InputColumnViewModel -> Html msg
+viewInputColumn : InputColumn -> Html msg
 viewInputColumn { title, nums } =
     fCol [ gap "0.5ch" ]
         [ div [] [ text title ]
@@ -95,7 +95,7 @@ viewInputColumn { title, nums } =
         ]
 
 
-viewOutputColumn : OutputColumnViewModel -> Html msg
+viewOutputColumn : OutputColumn -> Html msg
 viewOutputColumn { title, expected, actual } =
     fCol [ gap "0.5ch" ]
         [ div [] [ text title ]
