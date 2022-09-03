@@ -202,8 +202,7 @@ viewGrid { puzzle, state, editors } =
         ]
         (case state of
             Edit ->
-                viewEditNodes puzzle editors
-                    ++ Ports.viewAllPorts puzzle
+                viewEditModeGridItems puzzle editors
 
             Sim_ { store } ->
                 List.map viewSimNode (Dict.toList store)
@@ -211,27 +210,11 @@ viewGrid { puzzle, state, editors } =
         )
 
 
-viewEditNodes : Puzzle -> Dict Addr Editor -> List (Html msg)
-viewEditNodes puzzle editors =
-    Puzzle.gridToList
-        viewInputNode
-        viewOutputNode
-        (\( addr, nk ) ->
-            case nk of
-                Puzzle.Executable ->
-                    maybeView viewEditor (getEntry addr editors)
-
-                Puzzle.Faulty ->
-                    viewFaultyNode addr
-        )
-        puzzle
-
-
 leftBarViewModel : Model -> LeftBarViewModel
 leftBarViewModel { puzzle, state } =
     case state of
         Edit ->
-            editLeftBarViewModel puzzle
+            editModeLeftBarViewModel puzzle
 
         Sim_ sim ->
             simLeftBarViewModel sim
@@ -512,8 +495,8 @@ initEditors puzzle exs =
     editors
 
 
-editLeftBarViewModel : Puzzle -> LeftBarViewModel
-editLeftBarViewModel puzzle =
+editModeLeftBarViewModel : Puzzle -> LeftBarViewModel
+editModeLeftBarViewModel puzzle =
     { inputs =
         List.map
             (\conf ->
@@ -532,6 +515,28 @@ editLeftBarViewModel puzzle =
             )
             puzzle.outputs
     }
+
+
+viewEditModeGridItems : Puzzle -> Dict Addr Editor -> List (Html msg)
+viewEditModeGridItems puzzle editors =
+    viewEditNodes puzzle editors
+        ++ Ports.viewAllPorts puzzle
+
+
+viewEditNodes : Puzzle -> Dict Addr Editor -> List (Html msg)
+viewEditNodes puzzle editors =
+    Puzzle.gridToList
+        viewInputNode
+        viewOutputNode
+        (\( addr, nk ) ->
+            case nk of
+                Puzzle.Executable ->
+                    maybeView viewEditor (getEntry addr editors)
+
+                Puzzle.Faulty ->
+                    viewFaultyNode addr
+        )
+        puzzle
 
 
 
