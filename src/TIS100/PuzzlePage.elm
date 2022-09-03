@@ -283,23 +283,23 @@ viewColumns { puzzle, state } =
 
         Sim_ { store } ->
             Grid.inputsToList
-                (\_ conf i ->
+                (\_ c i ->
                     viewInputColumn
-                        { title = conf.title
+                        { title = c.title
                         , nums = InputNode.toSelectionList i
                         }
                 )
                 store
                 ++ Grid.outputsToList
-                    (\_ conf o ->
+                    (\_ c o ->
                         let
                             actual =
                                 OutputNode.getNumsRead o
                         in
                         viewOutputColumn
-                            { title = conf.title
+                            { title = c.title
                             , expected =
-                                SelectionList.fromIndex (List.length actual) conf.nums
+                                SelectionList.fromIndex (List.length actual) c.nums
                             , actual = actual
                             }
                     )
