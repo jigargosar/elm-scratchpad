@@ -6,15 +6,18 @@ import TIS100.UI as UI
 import Utils exposing (..)
 
 
-type alias LeftBarViewModel msg =
+type alias ViewModel msg =
     { inputs : List InputColumnViewModel
     , outputs : List OutputColumnViewModel
-    , events :
-        { stop : msg
-        , step : msg
-        , run : msg
-        , fast : msg
-        }
+    , events : Events msg
+    }
+
+
+type alias Events msg =
+    { stop : msg
+    , step : msg
+    , run : msg
+    , fast : msg
     }
 
 
@@ -29,8 +32,8 @@ type alias OutputColumnViewModel =
     }
 
 
-viewLeftBar : LeftBarViewModel msg -> Html msg
-viewLeftBar model =
+view : ViewModel msg -> Html msg
+view model =
     fCol [ sWidth "40ch", gap "2ch", fg UI.lightGray ]
         [ div [] [ viewTitle, viewDesc ]
         , fRow [ tac, gap "2ch" ]

@@ -16,7 +16,7 @@ import TIS100.Num exposing (Num)
 import TIS100.OutputNode as OutputNode exposing (OutputNode)
 import TIS100.Ports as Ports exposing (Action(..), Intent(..))
 import TIS100.Puzzle as Puzzle exposing (IOConfig, Puzzle)
-import TIS100.PuzzlePage.LeftBar as LB exposing (LeftBarViewModel)
+import TIS100.PuzzlePage.LeftBar as LB exposing (ViewModel)
 import TIS100.SelectionList as SelectionList exposing (SelectionList)
 import TIS100.UI as UI
 import Time
@@ -157,7 +157,7 @@ update msg model =
                     { model | state = Sim_ (simSetStepMode AutoFast sim) }
 
 
-leftBarViewModel : Model -> LeftBarViewModel Msg
+leftBarViewModel : Model -> ViewModel Msg
 leftBarViewModel { puzzle, state } =
     case state of
         Edit ->
@@ -181,7 +181,7 @@ view model =
         ]
         [ viewCycle model
         , fRow [ gap "2ch" ]
-            [ LB.viewLeftBar (leftBarViewModel model)
+            [ LB.view (leftBarViewModel model)
             , viewGrid model
             ]
         ]
@@ -379,7 +379,7 @@ initEditors puzzle exs =
     editors
 
 
-editModeLeftBarViewModel : Puzzle -> LeftBarViewModel Msg
+editModeLeftBarViewModel : Puzzle -> ViewModel Msg
 editModeLeftBarViewModel puzzle =
     { inputs =
         List.map
@@ -560,7 +560,7 @@ simIntentsAndActions simStore =
         simStore
 
 
-simLeftBarViewModel : Sim -> LeftBarViewModel Msg
+simLeftBarViewModel : Sim -> ViewModel Msg
 simLeftBarViewModel sim =
     { inputs =
         Grid.inputsToList
