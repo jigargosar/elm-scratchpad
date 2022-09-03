@@ -253,7 +253,8 @@ viewLeftBar : Model -> Html Msg
 viewLeftBar model =
     fCol [ sWidth "40ch", gap "2ch", fg lightGray ]
         [ div [] [ viewTitle, viewDesc ]
-        , fRow [ tac, gap "2ch" ] (viewColumns model)
+        , fRow [ tac, gap "2ch" ]
+            (viewColumns model)
         , viewButtons
         ]
 
@@ -262,47 +263,57 @@ viewColumns : Model -> List (Html msg)
 viewColumns { puzzle, state } =
     case state of
         Edit ->
-            List.map
-                (\conf ->
-                    viewInputColumn
-                        { title = conf.title
-                        , nums = SelectionList.None conf.nums
-                        }
-                )
-                puzzle.inputs
-                ++ List.map
-                    (\conf ->
-                        viewOutputColumn
-                            { title = conf.title
-                            , expected = SelectionList.None conf.nums
-                            , actual = []
-                            }
-                    )
-                    puzzle.outputs
+            viewEditModeColumns puzzle
 
-        Sim_ { store } ->
-            Grid.inputsToList
-                (\_ c i ->
-                    viewInputColumn
-                        { title = c.title
-                        , nums = InputNode.toSelectionList i
-                        }
-                )
-                store
-                ++ Grid.outputsToList
-                    (\_ c o ->
-                        let
-                            actual =
-                                OutputNode.getNumsRead o
-                        in
-                        viewOutputColumn
-                            { title = c.title
-                            , expected =
-                                SelectionList.fromIndex (List.length actual) c.nums
-                            , actual = actual
-                            }
-                    )
-                    store
+        Sim_ sim ->
+            viewSimModeColumns sim
+
+
+viewEditModeColumns : Puzzle -> List (Html msg)
+viewEditModeColumns puzzle =
+    List.map
+        (\conf ->
+            viewInputColumn
+                { title = conf.title
+                , nums = SelectionList.None conf.nums
+                }
+        )
+        puzzle.inputs
+        ++ List.map
+            (\conf ->
+                viewOutputColumn
+                    { title = conf.title
+                    , expected = SelectionList.None conf.nums
+                    , actual = []
+                    }
+            )
+            puzzle.outputs
+
+
+viewSimModeColumns : Sim -> List (Html msg)
+viewSimModeColumns { store } =
+    Grid.inputsToList
+        (\_ c i ->
+            viewInputColumn
+                { title = c.title
+                , nums = InputNode.toSelectionList i
+                }
+        )
+        store
+        ++ Grid.outputsToList
+            (\_ c o ->
+                let
+                    actual =
+                        OutputNode.getNumsRead o
+                in
+                viewOutputColumn
+                    { title = c.title
+                    , expected =
+                        SelectionList.fromIndex (List.length actual) c.nums
+                    , actual = actual
+                    }
+            )
+            store
 
 
 viewButtons : Html Msg
