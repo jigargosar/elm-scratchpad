@@ -156,6 +156,16 @@ update msg model =
                     { model | state = Sim_ (simSetStepMode AutoFast sim) }
 
 
+leftBarViewModel : Model -> LeftBarViewModel
+leftBarViewModel { puzzle, state } =
+    case state of
+        Edit ->
+            editModeLeftBarViewModel puzzle
+
+        Sim_ sim ->
+            simLeftBarViewModel sim
+
+
 view : Model -> Html Msg
 view model =
     fCol
@@ -208,16 +218,6 @@ viewGrid { puzzle, state, editors } =
                 List.map viewSimNode (Dict.toList store)
                     ++ Ports.view puzzle (simIntentsAndActions store)
         )
-
-
-leftBarViewModel : Model -> LeftBarViewModel
-leftBarViewModel { puzzle, state } =
-    case state of
-        Edit ->
-            editModeLeftBarViewModel puzzle
-
-        Sim_ sim ->
-            simLeftBarViewModel sim
 
 
 type alias LeftBarViewModel =
