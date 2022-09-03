@@ -285,16 +285,18 @@ viewEditor ( ( x, y ) as addr, editor ) =
         [ Html.textarea
             [ sWidth "18ch"
             , pa "1ch"
-            , ma ""
-            , borderNone
 
             -- reset
+            , ma ""
+            , borderNone
+            , sOutline "none"
+            , style "resize" "none"
+
+            -- inherit
             , bgc "inherit"
             , fg "inherit"
             , textTransform "inherit"
             , style "font" "inherit"
-            , style "resize" "none"
-            , sOutline "none"
             ]
             [ text editor ]
         , gtRows 5
