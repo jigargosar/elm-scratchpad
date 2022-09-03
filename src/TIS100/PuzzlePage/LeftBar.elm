@@ -12,7 +12,7 @@ type alias ViewModel =
     }
 
 
-type alias Events msg =
+type alias Config msg =
     { stop : msg
     , step : msg
     , run : msg
@@ -31,15 +31,15 @@ type alias OutputColumn =
     }
 
 
-view : Events msg -> ViewModel -> Html msg
-view events model =
+view : Config msg -> ViewModel -> Html msg
+view conf model =
     fCol [ sWidth "40ch", gap "2ch", fg UI.lightGray ]
         [ div [] [ viewTitle, viewDesc ]
         , fRow [ tac, gap "2ch" ]
             (List.map viewInputColumn model.inputs
                 ++ List.map viewOutputColumn model.outputs
             )
-        , viewButtons events
+        , viewButtons conf
         ]
 
 
