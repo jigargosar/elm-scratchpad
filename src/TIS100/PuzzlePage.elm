@@ -67,8 +67,12 @@ type State
 
 init : Puzzle -> List ( Addr, ExeNode ) -> Model
 init puzzle exs =
+    let
+        sourceEntries =
+            List.map (mapSecond ExeNode.toSource) exs
+    in
     { puzzle = puzzle
-    , editors = initEditorsWithSource puzzle (List.map (mapSecond ExeNode.toSource) exs)
+    , editors = initEditorsWithSource puzzle sourceEntries
     , exs = exs
     , state = Edit
     }
