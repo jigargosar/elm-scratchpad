@@ -214,9 +214,8 @@ viewGrid { puzzle, state, editors } =
             Edit ->
                 viewEditModeGridItems puzzle editors
 
-            Sim_ { store } ->
-                List.map viewSimNode (Dict.toList store)
-                    ++ Ports.view puzzle (simIntentsAndActions store)
+            Sim_ sim ->
+                viewSimGridItems puzzle sim
         )
 
 
@@ -695,6 +694,12 @@ simLeftBarViewModel sim =
             )
             sim.store
     }
+
+
+viewSimGridItems : Puzzle -> Sim -> List (Html msg)
+viewSimGridItems puzzle { store } =
+    List.map viewSimNode (Dict.toList store)
+        ++ Ports.view puzzle (simIntentsAndActions store)
 
 
 
