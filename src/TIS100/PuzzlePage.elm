@@ -224,7 +224,8 @@ viewGrid { puzzle, state, editors } =
         ]
         (case state of
             Edit ->
-                viewEditGrid puzzle editors
+                viewEditNodes puzzle editors
+                    ++ Ports.viewAllPorts puzzle
 
             Sim_ { store } ->
                 List.map viewSimNode (Dict.toList store)
@@ -232,24 +233,20 @@ viewGrid { puzzle, state, editors } =
         )
 
 
-viewEditGrid : Puzzle -> Dict Addr Editor -> List (Html msg)
-viewEditGrid puzzle editors =
-    let
-        grid =
-            Puzzle.gridToList
-                viewInputNode
-                viewOutputNode
-                (\( addr, nk ) ->
-                    case nk of
-                        Puzzle.Executable ->
-                            maybeView viewEditor (getEntry addr editors)
+viewEditNodes : Puzzle -> Dict Addr Editor -> List (Html msg)
+viewEditNodes puzzle editors =
+    Puzzle.gridToList
+        viewInputNode
+        viewOutputNode
+        (\( addr, nk ) ->
+            case nk of
+                Puzzle.Executable ->
+                    maybeView viewEditor (getEntry addr editors)
 
-                        Puzzle.Faulty ->
-                            viewFaultyNode addr
-                )
-                puzzle
-    in
-    grid ++ Ports.viewAllPorts puzzle
+                Puzzle.Faulty ->
+                    viewFaultyNode addr
+        )
+        puzzle
 
 
 viewLeftBar : Model -> Html Msg
