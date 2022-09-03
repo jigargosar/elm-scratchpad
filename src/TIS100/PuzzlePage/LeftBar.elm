@@ -31,7 +31,7 @@ type alias OutputColumn =
     }
 
 
-view : Events msg -> ViewModel msg -> Html msg
+view : Events msg -> ViewModel -> Html msg
 view events model =
     fCol [ sWidth "40ch", gap "2ch", fg UI.lightGray ]
         [ div [] [ viewTitle, viewDesc ]
