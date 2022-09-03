@@ -414,12 +414,12 @@ editModeOutputColumns puzzle =
 
 viewEditModeGridItems : Puzzle -> Dict Addr Editor -> List (Html msg)
 viewEditModeGridItems puzzle editors =
-    viewEditModeNodes puzzle editors
+    viewEditModeCells puzzle editors
         ++ Ports.viewAllPorts puzzle
 
 
-viewEditModeNodes : Puzzle -> Dict Addr Editor -> List (Html msg)
-viewEditModeNodes puzzle editors =
+viewEditModeCells : Puzzle -> Dict Addr Editor -> List (Html msg)
+viewEditModeCells puzzle editors =
     Puzzle.gridToList
         viewInputNode
         viewOutputNode
