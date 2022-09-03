@@ -161,7 +161,9 @@ leftBarViewModel : Model -> LB.ViewModel
 leftBarViewModel { puzzle, state } =
     case state of
         Edit ->
-            editModeLeftBarViewModel puzzle
+            { inputs = editModeInputColumns puzzle
+            , outputs = editModeOutputColumns puzzle
+            }
 
         Sim_ sim ->
             simLeftBarViewModel sim
@@ -385,26 +387,27 @@ initEditors puzzle exs =
     editors
 
 
-editModeLeftBarViewModel : Puzzle -> LB.ViewModel
-editModeLeftBarViewModel puzzle =
-    { inputs =
-        List.map
-            (\conf ->
-                { title = conf.title
-                , nums = SelectionList.None conf.nums
-                }
-            )
-            puzzle.inputs
-    , outputs =
-        List.map
-            (\conf ->
-                { title = conf.title
-                , expected = SelectionList.None conf.nums
-                , actual = []
-                }
-            )
-            puzzle.outputs
-    }
+editModeInputColumns : Puzzle -> List LB.Input
+editModeInputColumns puzzle =
+    List.map
+        (\conf ->
+            { title = conf.title
+            , nums = SelectionList.None conf.nums
+            }
+        )
+        puzzle.inputs
+
+
+editModeOutputColumns : Puzzle -> List LB.Output
+editModeOutputColumns puzzle =
+    List.map
+        (\conf ->
+            { title = conf.title
+            , expected = SelectionList.None conf.nums
+            , actual = []
+            }
+        )
+        puzzle.outputs
 
 
 viewEditModeGridItems : Puzzle -> Dict Addr Editor -> List (Html msg)
