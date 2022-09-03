@@ -192,7 +192,7 @@ view model =
         ]
         [ viewCycle model
         , fRow [ gap "2ch" ]
-            [ viewLeftBar model
+            [ viewLeftBar (leftBarViewModel model)
             , viewGrid model
             ]
         ]
@@ -249,8 +249,8 @@ viewEditNodes puzzle editors =
         puzzle
 
 
-toLeftBarViewModel : Model -> LeftBarViewModel
-toLeftBarViewModel { puzzle, state } =
+leftBarViewModel : Model -> LeftBarViewModel
+leftBarViewModel { puzzle, state } =
     { inputs =
         case state of
             Edit ->
@@ -299,17 +299,13 @@ toLeftBarViewModel { puzzle, state } =
     }
 
 
-viewLeftBar : Model -> Html Msg
-viewLeftBar { puzzle, state } =
+viewLeftBar : LeftBarViewModel -> Html Msg
+viewLeftBar model =
     fCol [ sWidth "40ch", gap "2ch", fg lightGray ]
         [ div [] [ viewTitle, viewDesc ]
         , fRow [ tac, gap "2ch" ]
-            (case state of
-                Edit ->
-                    viewIOColumns puzzle
-
-                Sim_ sim ->
-                    viewSimIOColumns sim
+            (List.map viewInputColumn model.inputs
+                ++ List.map viewOutputColumn model.outputs
             )
         , viewButtons
         ]
@@ -330,53 +326,6 @@ type alias OutputColumnViewModel =
     , expected : SelectionList Num
     , actual : List Num
     }
-
-
-viewIOColumns : Puzzle -> List (Html msg)
-viewIOColumns puzzle =
-    List.map
-        (\conf ->
-            viewInputColumn
-                { title = conf.title
-                , nums = SelectionList.None conf.nums
-                }
-        )
-        puzzle.inputs
-        ++ List.map
-            (\conf ->
-                viewOutputColumn
-                    { title = conf.title
-                    , expected = SelectionList.None conf.nums
-                    , actual = []
-                    }
-            )
-            puzzle.outputs
-
-
-viewSimIOColumns : Sim -> List (Html msg)
-viewSimIOColumns { store } =
-    Grid.inputsToList
-        (\_ c i ->
-            viewInputColumn
-                { title = c.title
-                , nums = InputNode.toSelectionList i
-                }
-        )
-        store
-        ++ Grid.outputsToList
-            (\_ c o ->
-                let
-                    actual =
-                        OutputNode.getNumsRead o
-                in
-                viewOutputColumn
-                    { title = c.title
-                    , expected =
-                        SelectionList.fromIndex (List.length actual) c.nums
-                    , actual = actual
-                    }
-            )
-            store
 
 
 viewButtons : Html Msg
