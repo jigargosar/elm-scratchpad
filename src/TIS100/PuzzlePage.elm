@@ -251,9 +251,9 @@ viewEditNodes puzzle editors =
 
 leftBarViewModel : Model -> LeftBarViewModel
 leftBarViewModel { puzzle, state } =
-    { inputs =
-        case state of
-            Edit ->
+    case state of
+        Edit ->
+            { inputs =
                 List.map
                     (\conf ->
                         { title = conf.title
@@ -261,18 +261,7 @@ leftBarViewModel { puzzle, state } =
                         }
                     )
                     puzzle.inputs
-
-            Sim_ { store } ->
-                Grid.inputsToList
-                    (\_ c i ->
-                        { title = c.title
-                        , nums = InputNode.toSelectionList i
-                        }
-                    )
-                    store
-    , outputs =
-        case state of
-            Edit ->
+            , outputs =
                 List.map
                     (\conf ->
                         { title = conf.title
@@ -281,8 +270,18 @@ leftBarViewModel { puzzle, state } =
                         }
                     )
                     puzzle.outputs
+            }
 
-            Sim_ { store } ->
+        Sim_ sim ->
+            { inputs =
+                Grid.inputsToList
+                    (\_ c i ->
+                        { title = c.title
+                        , nums = InputNode.toSelectionList i
+                        }
+                    )
+                    sim.store
+            , outputs =
                 Grid.outputsToList
                     (\_ c o ->
                         let
@@ -295,8 +294,8 @@ leftBarViewModel { puzzle, state } =
                         , actual = actual
                         }
                     )
-                    store
-    }
+                    sim.store
+            }
 
 
 viewLeftBar : LeftBarViewModel -> Html Msg
