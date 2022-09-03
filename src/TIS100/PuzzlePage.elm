@@ -53,7 +53,7 @@ sampleModel =
 
 type alias Model =
     { puzzle : Puzzle
-    , editStore : EditStore
+    , editors : Dict Addr Editor
     , exeStore : ExeStore
     , state : State
     }
@@ -63,12 +63,8 @@ type alias ExeStore =
     Grid.Grid () () ExeNode
 
 
-type alias EditStore =
-    Grid.Grid () () Editor
-
-
-type alias EditNode =
-    Grid.Cell () () Editor
+type alias ExeGridCell =
+    Grid.Cell () () ExeNode
 
 
 type alias Editor =
@@ -87,12 +83,31 @@ init puzzle es =
             Grid.init puzzle (always ()) (always ()) ExeNode.empty
                 |> Grid.replaceExeEntries es
 
-        editStore =
-            Grid.init puzzle (always ()) (always ()) ""
-                |> Grid.replaceExeEntries (List.map (mapSecond ExeNode.toSource) es)
+        editors =
+            Dict.merge
+                (\a n ->
+                    case n of
+                        Puzzle.Executable ->
+                            Dict.insert a ""
+
+                        _ ->
+                            identity
+                )
+                (\a n e ->
+                    case n of
+                        Puzzle.Executable ->
+                            Dict.insert a (ExeNode.toSource e)
+
+                        _ ->
+                            identity
+                )
+                (\_ _ -> identity)
+                puzzle.layout
+                (Dict.fromList es)
+                Dict.empty
     in
     { puzzle = puzzle
-    , editStore = editStore
+    , editors = editors
     , exeStore = exeStore
     , state = Edit
     }
@@ -216,7 +231,7 @@ viewCycle model =
 
 
 viewGrid : Model -> Html msg
-viewGrid { puzzle, state, exeStore, editStore } =
+viewGrid { puzzle, state, exeStore, editors } =
     div
         [ displayGrid
         , List.repeat 3 UI.nodeSize |> String.join " " |> gridTemplateRows
@@ -227,13 +242,35 @@ viewGrid { puzzle, state, exeStore, editStore } =
         ]
         (case state of
             Edit ->
-                List.map viewEditNode (Dict.toList editStore)
-                    ++ Ports.viewAllPorts puzzle
+                viewEditGrid puzzle editors
 
             Sim_ { store } ->
                 List.map viewSimNode (Dict.toList store)
                     ++ Ports.view puzzle (simIntentsAndActions store)
         )
+
+
+viewEditGrid : Puzzle -> Dict Addr Editor -> List (Html msg)
+viewEditGrid puzzle editors =
+    let
+        io =
+            List.map (\c -> viewInputNode c) puzzle.inputs
+                ++ List.map (\c -> viewOutputNode c) puzzle.outputs
+
+        layout =
+            puzzle.layout
+                |> Dict.toList
+                |> List.map
+                    (\( addr, nk ) ->
+                        case nk of
+                            Puzzle.Executable ->
+                                maybeView viewEditor (getEntry addr editors)
+
+                            Puzzle.Faulty ->
+                                viewFaultyNode addr
+                    )
+    in
+    io ++ layout ++ Ports.viewAllPorts puzzle
 
 
 viewLeftBar : Model -> Html Msg
@@ -519,26 +556,6 @@ viewFaultyNode ( x, y ) =
         , fg "red"
         ]
         [ text "ERROR" ]
-
-
-
--- EDIT NODE
-
-
-viewEditNode : ( Addr, EditNode ) -> Html msg
-viewEditNode ( addr, node ) =
-    case node of
-        In conf _ ->
-            viewInputNode conf
-
-        Out conf _ ->
-            viewOutputNode conf
-
-        Exe e ->
-            viewEditor ( addr, e )
-
-        Flt ->
-            viewFaultyNode addr
 
 
 
