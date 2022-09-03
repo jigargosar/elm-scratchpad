@@ -253,24 +253,7 @@ leftBarViewModel : Model -> LeftBarViewModel
 leftBarViewModel { puzzle, state } =
     case state of
         Edit ->
-            { inputs =
-                List.map
-                    (\conf ->
-                        { title = conf.title
-                        , nums = SelectionList.None conf.nums
-                        }
-                    )
-                    puzzle.inputs
-            , outputs =
-                List.map
-                    (\conf ->
-                        { title = conf.title
-                        , expected = SelectionList.None conf.nums
-                        , actual = []
-                        }
-                    )
-                    puzzle.outputs
-            }
+            editLeftBarViewModel puzzle
 
         Sim_ sim ->
             simLeftBarViewModel sim
@@ -514,6 +497,32 @@ viewFaultyNode ( x, y ) =
         , fg "red"
         ]
         [ text "ERROR" ]
+
+
+
+-- EDIT MODE
+
+
+editLeftBarViewModel : Puzzle -> LeftBarViewModel
+editLeftBarViewModel puzzle =
+    { inputs =
+        List.map
+            (\conf ->
+                { title = conf.title
+                , nums = SelectionList.None conf.nums
+                }
+            )
+            puzzle.inputs
+    , outputs =
+        List.map
+            (\conf ->
+                { title = conf.title
+                , expected = SelectionList.None conf.nums
+                , actual = []
+                }
+            )
+            puzzle.outputs
+    }
 
 
 
