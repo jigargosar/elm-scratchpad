@@ -68,7 +68,7 @@ type State
 init : Puzzle -> List ( Addr, ExeNode ) -> Model
 init puzzle exs =
     { puzzle = puzzle
-    , editors = initEditors puzzle exs
+    , editors = initEditorsWithSource puzzle (List.map (mapSecond ExeNode.toSource) exs)
     , exs = exs
     , state = Edit
     }
@@ -366,27 +366,24 @@ type alias Editor =
     String
 
 
-initEditors : Puzzle -> List ( Addr, ExeNode ) -> Dict Addr String
-initEditors puzzle exs =
-    let
-        emptyEditors : Editors
-        emptyEditors =
-            Dict.toList puzzle.layout
-                |> List.filterMap
-                    (\( a, n ) ->
-                        case n of
-                            Puzzle.Executable ->
-                                Just ( a, "" )
+initEditorsWithSource : Puzzle -> List ( Addr, String ) -> Dict Addr String
+initEditorsWithSource puzzle sourceEntries =
+    replaceEntries sourceEntries (initEditors puzzle)
 
-                            _ ->
-                                Nothing
-                    )
-                |> Dict.fromList
 
-        sourceEntries =
-            List.map (mapSecond ExeNode.toSource) exs
-    in
-    replaceEntries sourceEntries emptyEditors
+initEditors : Puzzle -> Editors
+initEditors puzzle =
+    Dict.toList puzzle.layout
+        |> List.filterMap
+            (\( a, n ) ->
+                case n of
+                    Puzzle.Executable ->
+                        Just ( a, "" )
+
+                    _ ->
+                        Nothing
+            )
+        |> Dict.fromList
 
 
 editModeInputColumns : Puzzle -> List LB.Input
