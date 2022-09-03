@@ -235,24 +235,21 @@ viewGrid { puzzle, state, editors } =
 viewEditGrid : Puzzle -> Dict Addr Editor -> List (Html msg)
 viewEditGrid puzzle editors =
     let
-        io =
-            List.map (\c -> viewInputNode c) puzzle.inputs
-                ++ List.map (\c -> viewOutputNode c) puzzle.outputs
+        grid =
+            Puzzle.gridToList
+                viewInputNode
+                viewOutputNode
+                (\( addr, nk ) ->
+                    case nk of
+                        Puzzle.Executable ->
+                            maybeView viewEditor (getEntry addr editors)
 
-        layout =
-            puzzle.layout
-                |> Dict.toList
-                |> List.map
-                    (\( addr, nk ) ->
-                        case nk of
-                            Puzzle.Executable ->
-                                maybeView viewEditor (getEntry addr editors)
-
-                            Puzzle.Faulty ->
-                                viewFaultyNode addr
-                    )
+                        Puzzle.Faulty ->
+                            viewFaultyNode addr
+                )
+                puzzle
     in
-    io ++ layout ++ Ports.viewAllPorts puzzle
+    grid ++ Ports.viewAllPorts puzzle
 
 
 viewLeftBar : Model -> Html Msg

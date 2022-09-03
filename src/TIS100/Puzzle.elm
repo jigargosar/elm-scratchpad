@@ -70,3 +70,22 @@ toLayout lss =
                 Just ( ( modBy 4 i, i // 4 + 1 ), nk )
             )
         |> Dict.fromList
+
+
+gridToList :
+    (IOConfig -> v)
+    -> (IOConfig -> v)
+    -> (( Addr, NodeType ) -> v)
+    -> Puzzle
+    -> List v
+gridToList ifn ofn lfn puzzle =
+    let
+        io =
+            List.map (\c -> ifn c) puzzle.inputs
+                ++ List.map (\c -> ofn c) puzzle.outputs
+
+        layout : List v
+        layout =
+            List.map lfn (Dict.toList puzzle.layout)
+    in
+    io ++ layout
