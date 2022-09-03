@@ -157,7 +157,7 @@ update msg model =
                     { model | state = Sim_ (simSetStepMode AutoFast sim) }
 
 
-leftBarViewModel : Model -> LB.ViewModel Msg
+leftBarViewModel : Model -> LB.ViewModel
 leftBarViewModel { puzzle, state } =
     case state of
         Edit ->
@@ -385,7 +385,7 @@ initEditors puzzle exs =
     editors
 
 
-editModeLeftBarViewModel : Puzzle -> LB.ViewModel Msg
+editModeLeftBarViewModel : Puzzle -> LB.ViewModel
 editModeLeftBarViewModel puzzle =
     { inputs =
         List.map
@@ -404,12 +404,6 @@ editModeLeftBarViewModel puzzle =
                 }
             )
             puzzle.outputs
-    , events =
-        { step = STEP
-        , stop = STOP
-        , run = RUN
-        , fast = FAST
-        }
     }
 
 
@@ -566,7 +560,7 @@ simIntentsAndActions simStore =
         simStore
 
 
-simLeftBarViewModel : Sim -> LB.ViewModel Msg
+simLeftBarViewModel : Sim -> LB.ViewModel
 simLeftBarViewModel sim =
     { inputs =
         Grid.inputsToList
@@ -590,12 +584,6 @@ simLeftBarViewModel sim =
                 }
             )
             sim.store
-    , events =
-        { step = STEP
-        , stop = STOP
-        , run = RUN
-        , fast = FAST
-        }
     }
 
 

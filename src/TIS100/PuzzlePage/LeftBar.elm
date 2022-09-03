@@ -6,10 +6,9 @@ import TIS100.UI as UI
 import Utils exposing (..)
 
 
-type alias ViewModel msg =
+type alias ViewModel =
     { inputs : List InputColumn
     , outputs : List OutputColumn
-    , events : Events msg
     }
 
 
