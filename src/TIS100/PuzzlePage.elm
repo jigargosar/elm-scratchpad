@@ -383,10 +383,10 @@ initEditors puzzle exs =
                     )
                 |> Dict.fromList
 
-        editors =
-            replaceEntries (List.map (mapSecond ExeNode.toSource) exs) emptyEditors
+        sourceEntries =
+            List.map (mapSecond ExeNode.toSource) exs
     in
-    editors
+    replaceEntries sourceEntries emptyEditors
 
 
 editModeInputColumns : Puzzle -> List LB.Input
