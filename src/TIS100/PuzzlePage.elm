@@ -54,17 +54,9 @@ sampleModel =
 type alias Model =
     { puzzle : Puzzle
     , editors : Dict Addr Editor
-    , exeStore : ExeStore
+    , exs : List ( Addr, ExeNode )
     , state : State
     }
-
-
-type alias ExeStore =
-    Grid.Grid () () ExeNode
-
-
-type alias ExeGridCell =
-    Grid.Cell () () ExeNode
 
 
 type alias Editor =
@@ -77,12 +69,8 @@ type State
 
 
 init : Puzzle -> List ( Addr, ExeNode ) -> Model
-init puzzle es =
+init puzzle exs =
     let
-        exeStore =
-            Grid.init puzzle (always ()) (always ()) ExeNode.empty
-                |> Grid.replaceExeEntries es
-
         emptyEditors : Dict Addr String
         emptyEditors =
             Dict.toList puzzle.layout
@@ -98,11 +86,11 @@ init puzzle es =
                 |> Dict.fromList
 
         editors =
-            replaceEntries (List.map (mapSecond ExeNode.toSource) es) emptyEditors
+            replaceEntries (List.map (mapSecond ExeNode.toSource) exs) emptyEditors
     in
     { puzzle = puzzle
     , editors = editors
-    , exeStore = exeStore
+    , exs = exs
     , state = Edit
     }
 
@@ -144,7 +132,7 @@ startDebugging stepMode model =
         _ =
             "Need to compile edit nodes so we can init sim"
     in
-    { model | state = Sim_ (initSim stepMode model.exeStore) }
+    { model | state = Sim_ (initSim model.puzzle model.exs stepMode) }
 
 
 startEditing : Model -> Model
@@ -225,7 +213,7 @@ viewCycle model =
 
 
 viewGrid : Model -> Html msg
-viewGrid { puzzle, state, exeStore, editors } =
+viewGrid { puzzle, state, editors } =
     div
         [ displayGrid
         , List.repeat 3 UI.nodeSize |> String.join " " |> gridTemplateRows
@@ -321,17 +309,17 @@ viewDesc =
 
 
 viewInputColumns : Model -> List (Html msg)
-viewInputColumns { exeStore, state } =
+viewInputColumns { puzzle, state } =
     case state of
         Edit ->
-            Grid.inputsToList
-                (\_ conf _ ->
+            List.map
+                (\conf ->
                     viewInputColumn
                         { title = conf.title
                         , nums = SelectionList.None conf.nums
                         }
                 )
-                exeStore
+                puzzle.inputs
 
         Sim_ { store } ->
             Grid.inputsToList
@@ -345,18 +333,18 @@ viewInputColumns { exeStore, state } =
 
 
 viewOutputColumns : Model -> List (Html msg)
-viewOutputColumns { exeStore, state } =
+viewOutputColumns { puzzle, state } =
     case state of
         Edit ->
-            Grid.outputsToList
-                (\_ conf _ ->
+            List.map
+                (\conf ->
                     viewOutputColumn
                         { title = conf.title
                         , expected = SelectionList.None conf.nums
                         , actual = []
                         }
                 )
-                exeStore
+                puzzle.outputs
 
         Sim_ { store } ->
             Grid.outputsToList
@@ -655,32 +643,20 @@ type StepMode
     | AutoFast
 
 
-initSim : StepMode -> ExeStore -> Sim
-initSim stepMode exeStore =
-    { store = initSimStore exeStore
+initSim : Puzzle -> List ( Addr, ExeNode ) -> StepMode -> Sim
+initSim puzzle exs stepMode =
+    { store = initSimStore puzzle |> Grid.replaceExeEntries exs
     , state = Stepping stepMode
     , cycle = 0
     }
 
 
-initSimStore : ExeStore -> SimStore
-initSimStore exeStore =
-    exeStore
-        |> Dict.map
-            (\_ n ->
-                case n of
-                    In conf _ ->
-                        In conf (InputNode.fromList conf.nums)
-
-                    Out conf _ ->
-                        Out conf (OutputNode.fromExpected (List.length conf.nums))
-
-                    Exe e ->
-                        Exe e
-
-                    Flt ->
-                        Flt
-            )
+initSimStore : Puzzle -> SimStore
+initSimStore puzzle =
+    Grid.init puzzle
+        (\conf -> InputNode.fromList conf.nums)
+        (\conf -> OutputNode.fromExpected (List.length conf.nums))
+        ExeNode.empty
 
 
 simIntentsAndActions : SimStore -> ( List ( Addr, Intent ), List ( Addr, Action ) )
