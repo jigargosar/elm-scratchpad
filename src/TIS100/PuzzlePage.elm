@@ -265,6 +265,23 @@ viewLeftBar { puzzle, state } =
         ]
 
 
+type alias LeftBarViewModel =
+    { inputs : List InputColumnViewModel
+    , outputs : List OutputColumnViewModel
+    }
+
+
+type alias InputColumnViewModel =
+    { title : String, nums : SelectionList Num }
+
+
+type alias OutputColumnViewModel =
+    { title : String
+    , expected : SelectionList Num
+    , actual : List Num
+    }
+
+
 viewIOColumns : Puzzle -> List (Html msg)
 viewIOColumns puzzle =
     List.map
