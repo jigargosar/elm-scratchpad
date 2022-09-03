@@ -8,6 +8,7 @@ module TIS100.PuzzlePage exposing
     )
 
 import Dict exposing (Dict)
+import Html
 import TIS100.ExeNode as ExeNode exposing (ExeNode)
 import TIS100.Grid as Grid exposing (Addr, Cell(..))
 import TIS100.InputNode as InputNode exposing (InputNode)
@@ -274,14 +275,28 @@ viewOutputNode { x, title } =
 
 
 viewEditor : ( Addr, Editor ) -> Html msg
-viewEditor ( ( x, y ), editor ) =
+viewEditor ( ( x, y ) as addr, editor ) =
     div
         [ gridAreaXY ( x, y - 1 )
         , lightOutline
         , dGrid
         , gridAutoFlowColumn
         ]
-        [ div [ sWidth "18ch", pa "1ch" ] [ text editor ]
+        [ Html.textarea
+            [ sWidth "18ch"
+            , pa "1ch"
+            , ma ""
+            , borderNone
+
+            -- reset
+            , bgc "inherit"
+            , fg "inherit"
+            , textTransform "inherit"
+            , style "font" "inherit"
+            , style "resize" "none"
+            , sOutline "none"
+            ]
+            [ text editor ]
         , gtRows 5
             []
             [ viewExeBox "ACC" "0"

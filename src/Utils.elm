@@ -846,7 +846,11 @@ styleNode string =
 
 
 ttu =
-    style "text-transform" "uppercase"
+    textTransform "uppercase"
+
+
+textTransform =
+    style "text-transform"
 
 
 fg =
