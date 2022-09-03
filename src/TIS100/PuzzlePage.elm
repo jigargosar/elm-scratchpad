@@ -371,11 +371,7 @@ viewDesc =
         (List.repeat 6 (div [] [ text "> desc" ]))
 
 
-viewInputColumn :
-    { title : String
-    , nums : SelectionList Num
-    }
-    -> Html msg
+viewInputColumn : InputColumnViewModel -> Html msg
 viewInputColumn { title, nums } =
     fCol [ gap "0.5ch" ]
         [ div [] [ text title ]
@@ -383,12 +379,7 @@ viewInputColumn { title, nums } =
         ]
 
 
-viewOutputColumn :
-    { title : String
-    , expected : SelectionList Num
-    , actual : List Num
-    }
-    -> Html msg
+viewOutputColumn : OutputColumnViewModel -> Html msg
 viewOutputColumn { title, expected, actual } =
     fCol [ gap "0.5ch" ]
         [ div [] [ text title ]
