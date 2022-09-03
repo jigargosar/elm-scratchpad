@@ -8,16 +8,15 @@ module TIS100.PuzzlePage exposing
     )
 
 import Dict exposing (Dict)
-import Html
 import TIS100.ExeNode as ExeNode exposing (ExeNode)
 import TIS100.Grid as Grid exposing (Addr, Cell(..))
 import TIS100.InputNode as InputNode exposing (InputNode)
 import TIS100.NodeState as S exposing (NodeState)
-import TIS100.Num as Num exposing (Num)
+import TIS100.Num exposing (Num)
 import TIS100.OutputNode as OutputNode exposing (OutputNode)
 import TIS100.Ports as Ports exposing (Action(..), Intent(..))
 import TIS100.Puzzle as Puzzle exposing (IOConfig, Puzzle)
-import TIS100.PuzzlePage.LeftBar as LefftBar exposing (LeftBarViewModel)
+import TIS100.PuzzlePage.LeftBar as LB exposing (LeftBarViewModel)
 import TIS100.SelectionList as SelectionList exposing (SelectionList)
 import TIS100.UI as UI
 import Time
@@ -76,8 +75,7 @@ init puzzle exs =
 
 
 type Msg
-    = LeftBarMsg LefftBar.Msg
-    | STOP
+    = STOP
     | STEP
     | RUN
     | FAST
@@ -141,20 +139,6 @@ update msg model =
                 FAST ->
                     startDebugging AutoFast model
 
-                LeftBarMsg lbm ->
-                    case lbm of
-                        LefftBar.STOP ->
-                            model
-
-                        LefftBar.STEP ->
-                            startDebugging Manual model
-
-                        LefftBar.RUN ->
-                            startDebugging Auto model
-
-                        LefftBar.FAST ->
-                            startDebugging AutoFast model
-
         Sim_ sim ->
             case msg of
                 STOP ->
@@ -172,22 +156,8 @@ update msg model =
                 FAST ->
                     { model | state = Sim_ (simSetStepMode AutoFast sim) }
 
-                LeftBarMsg lbm ->
-                    case lbm of
-                        LefftBar.STOP ->
-                            startEditing model
 
-                        LefftBar.STEP ->
-                            { model | state = Sim_ (manualStepSim sim) }
-
-                        LefftBar.RUN ->
-                            { model | state = Sim_ (simSetStepMode Auto sim) }
-
-                        LefftBar.FAST ->
-                            { model | state = Sim_ (simSetStepMode AutoFast sim) }
-
-
-leftBarViewModel : Model -> LeftBarViewModel
+leftBarViewModel : Model -> LeftBarViewModel Msg
 leftBarViewModel { puzzle, state } =
     case state of
         Edit ->
@@ -211,8 +181,7 @@ view model =
         ]
         [ viewCycle model
         , fRow [ gap "2ch" ]
-            [ LefftBar.viewLeftBar (leftBarViewModel model)
-                |> Html.map LeftBarMsg
+            [ LB.viewLeftBar (leftBarViewModel model)
             , viewGrid model
             ]
         ]
@@ -410,7 +379,7 @@ initEditors puzzle exs =
     editors
 
 
-editModeLeftBarViewModel : Puzzle -> LeftBarViewModel
+editModeLeftBarViewModel : Puzzle -> LeftBarViewModel Msg
 editModeLeftBarViewModel puzzle =
     { inputs =
         List.map
@@ -429,6 +398,12 @@ editModeLeftBarViewModel puzzle =
                 }
             )
             puzzle.outputs
+    , events =
+        { step = STEP
+        , stop = STOP
+        , run = RUN
+        , fast = FAST
+        }
     }
 
 
@@ -585,7 +560,7 @@ simIntentsAndActions simStore =
         simStore
 
 
-simLeftBarViewModel : Sim -> LeftBarViewModel
+simLeftBarViewModel : Sim -> LeftBarViewModel Msg
 simLeftBarViewModel sim =
     { inputs =
         Grid.inputsToList
@@ -609,6 +584,12 @@ simLeftBarViewModel sim =
                 }
             )
             sim.store
+    , events =
+        { step = STEP
+        , stop = STOP
+        , run = RUN
+        , fast = FAST
+        }
     }
 
 

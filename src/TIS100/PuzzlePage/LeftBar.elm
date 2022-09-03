@@ -6,9 +6,15 @@ import TIS100.UI as UI
 import Utils exposing (..)
 
 
-type alias LeftBarViewModel =
+type alias LeftBarViewModel msg =
     { inputs : List InputColumnViewModel
     , outputs : List OutputColumnViewModel
+    , events :
+        { stop : msg
+        , step : msg
+        , run : msg
+        , fast : msg
+        }
     }
 
 
@@ -23,14 +29,7 @@ type alias OutputColumnViewModel =
     }
 
 
-type Msg
-    = STOP
-    | STEP
-    | RUN
-    | FAST
-
-
-viewLeftBar : LeftBarViewModel -> Html Msg
+viewLeftBar : LeftBarViewModel msg -> Html msg
 viewLeftBar model =
     fCol [ sWidth "40ch", gap "2ch", fg UI.lightGray ]
         [ div [] [ viewTitle, viewDesc ]
@@ -38,18 +37,18 @@ viewLeftBar model =
             (List.map viewInputColumn model.inputs
                 ++ List.map viewOutputColumn model.outputs
             )
-        , viewButtons
+        , viewButtons model.events
         ]
 
 
-viewButtons : Html Msg
-viewButtons =
+viewButtons : { a | stop : msg, step : msg, run : msg, fast : msg } -> Html msg
+viewButtons { stop, step, run, fast } =
     gtCols 4
         [ gap "2ch" ]
-        [ btn "stop" STOP
-        , btn "step" STEP
-        , btn "run" RUN
-        , btn "fast" FAST
+        [ btn "stop" stop
+        , btn "step" step
+        , btn "run" run
+        , btn "fast" fast
         ]
 
 
