@@ -250,27 +250,23 @@ viewEditNodes puzzle editors =
 
 
 viewLeftBar : Model -> Html Msg
-viewLeftBar model =
+viewLeftBar { puzzle, state } =
     fCol [ sWidth "40ch", gap "2ch", fg lightGray ]
         [ div [] [ viewTitle, viewDesc ]
         , fRow [ tac, gap "2ch" ]
-            (viewColumns model)
+            (case state of
+                Edit ->
+                    viewIOColumns puzzle
+
+                Sim_ sim ->
+                    viewSimIOColumns sim
+            )
         , viewButtons
         ]
 
 
-viewColumns : Model -> List (Html msg)
-viewColumns { puzzle, state } =
-    case state of
-        Edit ->
-            viewEditModeColumns puzzle
-
-        Sim_ sim ->
-            viewSimModeColumns sim
-
-
-viewEditModeColumns : Puzzle -> List (Html msg)
-viewEditModeColumns puzzle =
+viewIOColumns : Puzzle -> List (Html msg)
+viewIOColumns puzzle =
     List.map
         (\conf ->
             viewInputColumn
@@ -290,8 +286,8 @@ viewEditModeColumns puzzle =
             puzzle.outputs
 
 
-viewSimModeColumns : Sim -> List (Html msg)
-viewSimModeColumns { store } =
+viewSimIOColumns : Sim -> List (Html msg)
+viewSimIOColumns { store } =
     Grid.inputsToList
         (\_ c i ->
             viewInputColumn
