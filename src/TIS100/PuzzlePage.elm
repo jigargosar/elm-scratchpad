@@ -254,9 +254,56 @@ viewLeftBar model =
     fCol [ sWidth "40ch", gap "2ch", fg lightGray ]
         [ div [] [ viewTitle, viewDesc ]
         , fRow [ tac, gap "2ch" ]
-            (viewInputColumns model ++ viewOutputColumns model)
+            (viewColumns model)
         , viewButtons
         ]
+
+
+viewColumns : Model -> List (Html msg)
+viewColumns { puzzle, state } =
+    case state of
+        Edit ->
+            List.map
+                (\conf ->
+                    viewInputColumn
+                        { title = conf.title
+                        , nums = SelectionList.None conf.nums
+                        }
+                )
+                puzzle.inputs
+                ++ List.map
+                    (\conf ->
+                        viewOutputColumn
+                            { title = conf.title
+                            , expected = SelectionList.None conf.nums
+                            , actual = []
+                            }
+                    )
+                    puzzle.outputs
+
+        Sim_ { store } ->
+            Grid.inputsToList
+                (\_ conf i ->
+                    viewInputColumn
+                        { title = conf.title
+                        , nums = InputNode.toSelectionList i
+                        }
+                )
+                store
+                ++ Grid.outputsToList
+                    (\_ conf o ->
+                        let
+                            actual =
+                                OutputNode.getNumsRead o
+                        in
+                        viewOutputColumn
+                            { title = conf.title
+                            , expected =
+                                SelectionList.fromIndex (List.length actual) conf.nums
+                            , actual = actual
+                            }
+                    )
+                    store
 
 
 viewButtons : Html Msg
@@ -300,61 +347,6 @@ viewDesc =
         , placeContentCenter
         ]
         (List.repeat 6 (div [] [ text "> desc" ]))
-
-
-viewInputColumns : Model -> List (Html msg)
-viewInputColumns { puzzle, state } =
-    case state of
-        Edit ->
-            List.map
-                (\conf ->
-                    viewInputColumn
-                        { title = conf.title
-                        , nums = SelectionList.None conf.nums
-                        }
-                )
-                puzzle.inputs
-
-        Sim_ { store } ->
-            Grid.inputsToList
-                (\_ conf i ->
-                    viewInputColumn
-                        { title = conf.title
-                        , nums = InputNode.toSelectionList i
-                        }
-                )
-                store
-
-
-viewOutputColumns : Model -> List (Html msg)
-viewOutputColumns { puzzle, state } =
-    case state of
-        Edit ->
-            List.map
-                (\conf ->
-                    viewOutputColumn
-                        { title = conf.title
-                        , expected = SelectionList.None conf.nums
-                        , actual = []
-                        }
-                )
-                puzzle.outputs
-
-        Sim_ { store } ->
-            Grid.outputsToList
-                (\_ conf o ->
-                    let
-                        actual =
-                            OutputNode.getNumsRead o
-                    in
-                    viewOutputColumn
-                        { title = conf.title
-                        , expected =
-                            SelectionList.fromIndex (List.length actual) conf.nums
-                        , actual = actual
-                        }
-                )
-                store
 
 
 viewInputColumn :
