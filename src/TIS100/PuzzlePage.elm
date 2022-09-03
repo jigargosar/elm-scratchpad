@@ -83,28 +83,22 @@ init puzzle es =
             Grid.init puzzle (always ()) (always ()) ExeNode.empty
                 |> Grid.replaceExeEntries es
 
+        emptyEditors : Dict Addr String
+        emptyEditors =
+            Dict.toList puzzle.layout
+                |> List.filterMap
+                    (\( a, n ) ->
+                        case n of
+                            Puzzle.Executable ->
+                                Just ( a, "" )
+
+                            _ ->
+                                Nothing
+                    )
+                |> Dict.fromList
+
         editors =
-            Dict.merge
-                (\a n ->
-                    case n of
-                        Puzzle.Executable ->
-                            Dict.insert a ""
-
-                        _ ->
-                            identity
-                )
-                (\a n e ->
-                    case n of
-                        Puzzle.Executable ->
-                            Dict.insert a (ExeNode.toSource e)
-
-                        _ ->
-                            identity
-                )
-                (\_ _ -> identity)
-                puzzle.layout
-                (Dict.fromList es)
-                Dict.empty
+            replaceEntries (List.map (mapSecond ExeNode.toSource) es) emptyEditors
     in
     { puzzle = puzzle
     , editors = editors
