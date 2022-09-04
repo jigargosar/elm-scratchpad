@@ -57,23 +57,6 @@ type Inst
 
 compile : String -> Maybe ExeNode
 compile srcCode =
-    let
-        toTokens : String -> List String
-        toTokens line =
-            String.split " " line
-                |> U.reject (U.eq "")
-
-        compileLine : String -> Maybe ExeNode
-        compileLine line =
-            case toTokens line of
-                "mov" :: b :: c :: [] ->
-                    Maybe.map2 (initMov srcCode)
-                        (parseDir b)
-                        (parseDst c)
-
-                _ ->
-                    Nothing
-    in
     if U.isBlank srcCode then
         Just empty
 
@@ -81,9 +64,30 @@ compile srcCode =
         srcCode
             |> String.toLower
             |> String.lines
-            |> List.map String.trim
-            |> List.head
-            |> Maybe.andThen compileLine
+            |> List.indexedMap U.pair
+            |> U.reject (U.second >> U.isBlank)
+            |> List.map compileLine
+            |> U.maybeCombine
+            |> Maybe.andThen Pivot.fromList
+            |> Maybe.map (init srcCode)
+
+
+toTokens : String -> List String
+toTokens line =
+    String.split " " line
+        |> U.reject (U.eq "")
+
+
+compileLine : ( Int, String ) -> Maybe Inst
+compileLine ( _, line ) =
+    case toTokens line of
+        "mov" :: b :: c :: [] ->
+            Maybe.map2 Mov
+                (parseDir b)
+                (parseDst c)
+
+        _ ->
+            Nothing
 
 
 parseDst : String -> Maybe Dst
@@ -112,12 +116,8 @@ parseDir string =
             Nothing
 
 
-initMov : String -> Dir4 -> Dst -> ExeNode
-initMov srcCode f t =
-    let
-        prg =
-            Pivot.singleton (Mov f t)
-    in
+init : String -> Prg -> ExeNode
+init srcCode prg =
     Runnable srcCode (intentsFromPrg prg) (ReadyToRun prg)
 
 

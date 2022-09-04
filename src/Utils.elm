@@ -2361,6 +2361,26 @@ maybeOneOf maybes =
             Just a
 
 
+maybeCombine : List (Maybe a) -> Maybe (List a)
+maybeCombine list =
+    maybeCombineHelp list []
+
+
+maybeCombineHelp : List (Maybe a) -> List a -> Maybe (List a)
+maybeCombineHelp list acc =
+    case list of
+        head :: tail ->
+            case head of
+                Just a ->
+                    maybeCombineHelp tail (a :: acc)
+
+                Nothing ->
+                    Nothing
+
+        [] ->
+            Just (List.reverse acc)
+
+
 
 -- Browser Helpers
 
