@@ -63,31 +63,13 @@ compile srcCode =
             String.split " " line
                 |> U.reject (U.eq "")
 
-        dirFromString : String -> Maybe Dir4
-        dirFromString string =
-            case string of
-                "left" ->
-                    Just Left
-
-                "right" ->
-                    Just Right
-
-                "up" ->
-                    Just Up
-
-                "down" ->
-                    Just Down
-
-                _ ->
-                    Nothing
-
         compileLine : String -> Maybe ExeNode
         compileLine line =
             case toTokens line of
                 "mov" :: b :: c :: [] ->
                     Maybe.map2 (initMov srcCode)
-                        (dirFromString b)
-                        (dirFromString c)
+                        (parseDir b)
+                        (parseDir c)
 
                 _ ->
                     Nothing
@@ -102,6 +84,25 @@ compile srcCode =
             |> List.map String.trim
             |> List.head
             |> Maybe.andThen compileLine
+
+
+parseDir : String -> Maybe Dir4
+parseDir string =
+    case string of
+        "left" ->
+            Just Left
+
+        "right" ->
+            Just Right
+
+        "up" ->
+            Just Up
+
+        "down" ->
+            Just Down
+
+        _ ->
+            Nothing
 
 
 initMov : String -> Dir4 -> Dir4 -> ExeNode
