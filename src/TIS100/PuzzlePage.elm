@@ -453,7 +453,7 @@ viewEditModeNodes puzzle editors =
 
 
 type alias Sim =
-    { store : SimStore.SimStore
+    { store : SimStore.Model
     , state : SimState
     , cycle : Int
     }
@@ -521,7 +521,7 @@ viewSimGridItems puzzle { store } =
         ++ Ports.view puzzle (SimStore.portsViewModel store)
 
 
-viewSimNode : ( Addr, SimStore.SimNode ) -> Html msg
+viewSimNode : ( Addr, SimStore.Node ) -> Html msg
 viewSimNode ( addr, node ) =
     case node of
         SimStore.In conf _ ->
