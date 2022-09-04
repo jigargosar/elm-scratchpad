@@ -247,7 +247,7 @@ viewInputNode { x, title } =
         , positionRelative
         , style "bottom" UI.gapSize
         ]
-        [ div [ tac, fg lightGray ]
+        [ div [ tac, fg UI.lightGray ]
             [ div [] [ text title ]
             , div [] [ text "(IDLE 0%)" ]
             ]
@@ -265,7 +265,7 @@ viewOutputNode { x, title } =
         , positionRelative
         , top100
         ]
-        [ div [ tac, fg lightGray ]
+        [ div [ tac, fg UI.lightGray ]
             [ div [] [ text title ]
             ]
         ]
@@ -275,7 +275,7 @@ viewEditor : ( Addr, Editor ) -> Html msg
 viewEditor ( ( x, y ) as addr, editor ) =
     div
         [ gridAreaXY ( x, y - 1 )
-        , lightOutline
+        , UI.lightOutline
         , dGrid
         , gridAutoFlowColumn
         ]
@@ -311,7 +311,7 @@ viewExeNode : ( Addr, ExeNode ) -> Html msg
 viewExeNode ( ( x, y ), exe ) =
     div
         [ gridAreaXY ( x, y - 1 )
-        , lightOutline
+        , UI.lightOutline
         , dGrid
         , gridAutoFlowColumn
         ]
@@ -329,8 +329,8 @@ viewExeNode ( ( x, y ), exe ) =
 
 viewExeBox : String -> String -> Html msg
 viewExeBox a b =
-    div [ dGrid, tac, placeContentCenter, sOutline ("1px solid " ++ lightGray) ]
-        [ div [ fg lightGray ] [ text a ]
+    div [ dGrid, tac, placeContentCenter, sOutline ("1px solid " ++ UI.lightGray) ]
+        [ div [ fg UI.lightGray ] [ text a ]
         , div [] [ text b ]
         ]
 
@@ -450,7 +450,7 @@ viewEditModeNodes puzzle editors =
 
 
 
--- SIM NODE
+-- SIM
 
 
 viewSimNode : ( Addr, SimNode ) -> Html msg
@@ -540,15 +540,3 @@ autoStepSim sim =
             | store = newStore
             , cycle = sim.cycle + 1
         }
-
-
-
--- UI HELPERS
-
-
-lightGray =
-    UI.lightGray
-
-
-lightOutline =
-    UI.lightOutline
