@@ -2,6 +2,7 @@ module TIS100.Puzzle exposing (..)
 
 import Dict exposing (Dict)
 import TIS100.Num as Num exposing (Num)
+import TIS100.UI exposing (Addr)
 import Utils exposing (pair)
 
 
@@ -12,10 +13,6 @@ type alias Puzzle =
     , outputs : List IOConfig
     , layout : Layout
     }
-
-
-type alias Addr =
-    ( Int, Int )
 
 
 type alias Layout =

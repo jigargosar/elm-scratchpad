@@ -12,11 +12,11 @@ import Html
 import TIS100.ExeNode as ExeNode exposing (ExeNode)
 import TIS100.NodeState as S exposing (NodeState)
 import TIS100.Ports as Ports exposing (Action(..), Intent(..))
-import TIS100.Puzzle as Puzzle exposing (Addr, IOConfig, Puzzle)
+import TIS100.Puzzle as Puzzle exposing (IOConfig, Puzzle)
 import TIS100.PuzzlePage.LeftBar as LB
 import TIS100.PuzzlePage.SimStore as SimStore exposing (SimNode(..), SimStore)
 import TIS100.SelectionList as SelectionList exposing (SelectionList)
-import TIS100.UI as UI
+import TIS100.UI as UI exposing (Addr)
 import Time
 import Utils exposing (..)
 
@@ -272,9 +272,9 @@ viewOutputNode { x, title } =
 
 
 viewEditor : ( Addr, Editor ) -> Html msg
-viewEditor ( ( x, y ) as addr, editor ) =
+viewEditor ( addr, editor ) =
     div
-        [ gridAreaXY ( x, y - 1 )
+        [ UI.gridAreaFromAddr addr
         , UI.lightOutline
         , dGrid
         , gridAutoFlowColumn
