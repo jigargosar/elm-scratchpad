@@ -229,7 +229,7 @@ view model =
             , div
                 [ pa "20px"
                 , gap "20px"
-                , dGrid
+                , displayGrid
                 , style "grid-auto-flow" "column"
                 , positionRelative
                 ]

@@ -275,7 +275,7 @@ viewEditor ( addr, editor ) =
     div
         [ Addr.toGridArea addr
         , UI.lightOutline
-        , dGrid
+        , displayGrid
         , gridAutoFlowColumn
         ]
         [ Html.textarea
@@ -283,16 +283,15 @@ viewEditor ( addr, editor ) =
             , pa "1ch"
 
             -- reset
-            , ma ""
             , borderNone
-            , sOutline "none"
-            , style "resize" "none"
+            , outlineNone
+            , resizeNone
 
             -- inherit
-            , bgc "inherit"
-            , fg "inherit"
-            , textTransform "inherit"
-            , style "font" "inherit"
+            , bgcInherit
+            , fgInherit
+            , ttInherit
+            , fontInherit
             ]
             [ text editor ]
         , gtRows 5
@@ -311,7 +310,7 @@ viewExeNode ( addr, exe ) =
     div
         [ Addr.toGridArea addr
         , UI.lightOutline
-        , dGrid
+        , displayGrid
         , gridAutoFlowColumn
         ]
         [ div [ sWidth "18ch", pa "1ch" ] [ text (ExeNode.toSource exe) ]
@@ -328,7 +327,7 @@ viewExeNode ( addr, exe ) =
 
 viewExeBox : String -> String -> Html msg
 viewExeBox a b =
-    div [ dGrid, tac, placeContentCenter, sOutline ("1px solid " ++ UI.lightGray) ]
+    div [ displayGrid, tac, placeContentCenter, sOutline ("1px solid " ++ UI.lightGray) ]
         [ div [ fg UI.lightGray ] [ text a ]
         , div [] [ text b ]
         ]

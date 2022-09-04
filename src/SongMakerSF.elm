@@ -2105,7 +2105,7 @@ viewPercussionGrid settings stepIndex isPlaying percussionPositions =
         viewPercussionTile_ gp =
             viewPercussionTile (isTileAnimated gp) gp
     in
-    div [ dGrid, positionRelative, sHeight "20%" ]
+    div [ displayGrid, positionRelative, sHeight "20%" ]
         [ viewGridBarBackground settings.bars
         , viewGridHighlightedColumnBackground gridWidth stepIndex
         , viewAbsoluteGridLayout gridWidth gridHeight [] <|
@@ -2169,7 +2169,7 @@ viewInstrumentGrid settings stepIndex isPlaying instrumentPositions =
         viewInstrumentTile_ gp =
             viewInstrumentTile (isTileAnimated gp) (noteColor settings.scale gp) gp
     in
-    div [ dGrid, positionRelative, style "flex-grow" "1" ]
+    div [ displayGrid, positionRelative, style "flex-grow" "1" ]
         [ viewGridBarBackground settings.bars
         , viewGridHighlightedColumnBackground gridWidth stepIndex
         , viewAbsoluteGridLayout gridWidth gridHeight [] <|
@@ -2221,7 +2221,7 @@ viewGridHighlightedColumnBackground gridWidth stepIndex =
 
 viewAbsoluteGridLayout : Int -> Int -> List (Attribute msg) -> List (Html msg) -> Html msg
 viewAbsoluteGridLayout w h attrs =
-    div ([ dGrid, styleGridTemplate w h, positionAbsolute, w100, h100 ] ++ attrs)
+    div ([ displayGrid, styleGridTemplate w h, positionAbsolute, w100, h100 ] ++ attrs)
 
 
 viewGridBarBackground : Int -> Html msg
@@ -2233,7 +2233,7 @@ viewGridBarBackground bars =
         h =
             1
     in
-    div [ dGrid, styleGridTemplate w h, positionAbsolute, w100, h100 ]
+    div [ displayGrid, styleGridTemplate w h, positionAbsolute, w100, h100 ]
         ([ div [] [], div [ bgc barBGColor2 ] [] ]
             |> List.repeat (w // 2)
             |> List.concat

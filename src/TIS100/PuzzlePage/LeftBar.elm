@@ -63,7 +63,7 @@ btn txt msg =
         , style "text-transform" "inherit"
         , style "font" "inherit"
         , borderNone
-        , dGrid
+        , displayGrid
         , placeContentCenter
         , aspectRatio "1"
         , notifyClick msg

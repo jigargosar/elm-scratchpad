@@ -755,8 +755,16 @@ sOutline =
     style "outline"
 
 
+outlineNone =
+    sOutline "none"
+
+
 bgc =
     style "background-color"
+
+
+bgcInherit =
+    bgc "inherit"
 
 
 noFill =
@@ -849,12 +857,20 @@ ttu =
     textTransform "uppercase"
 
 
+ttInherit =
+    textTransform "inherit"
+
+
 textTransform =
     style "text-transform"
 
 
 fg =
     style "color"
+
+
+fgInherit =
+    fg "inherit"
 
 
 styleAccentColor =
@@ -946,6 +962,10 @@ overflowVisible =
 
 overflowHidden =
     style "overflow" "hidden"
+
+
+fontInherit =
+    style "font" "inherit"
 
 
 fontSize =
@@ -1236,6 +1256,10 @@ ma =
     style "margin"
 
 
+margin0 =
+    ma "0"
+
+
 transforms =
     String.join " " >> style "transform"
 
@@ -1281,10 +1305,6 @@ dBlock =
 
 
 displayGrid =
-    dGrid
-
-
-dGrid =
     style "display" "grid"
 
 
@@ -2468,6 +2488,10 @@ randomFloatT ( a, b ) =
 
 noAttr =
     style "" ""
+
+
+resizeNone =
+    style "resize" "none"
 
 
 classNames names =

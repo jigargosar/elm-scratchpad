@@ -362,7 +362,7 @@ viewPlayButton playState =
 
 viewGrid : Model -> Html Msg
 viewGrid ({ w, h } as model) =
-    div [ dGrid, positionRelative, style "flex-grow" "1" ]
+    div [ displayGrid, positionRelative, style "flex-grow" "1" ]
         [ viewGridTiles model
         , viewGridLines w h
         ]
@@ -401,7 +401,7 @@ viewGridTiles ({ w, h } as model) =
                 |> List.map (\gp -> viewTile (computeTileColorAtGP model gp) gp)
     in
     div
-        [ dGrid
+        [ displayGrid
         , style "grid-template"
             (("repeat(" ++ fromInt (h + 2) ++ ",1fr)")
                 ++ "/"

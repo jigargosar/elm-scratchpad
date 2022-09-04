@@ -335,7 +335,7 @@ viewLSys_1_2_N ( c, d ) =
 
 viewLSys3 ( c, ( d1, d2, d3 ) ) =
     div
-        [ dGrid
+        [ displayGrid
         , style "grid-auto-flow" "column"
         , style "justify-items" "stretch"
 
