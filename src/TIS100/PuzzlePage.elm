@@ -115,13 +115,9 @@ startDebugging stepMode model =
         _ =
             "Need to compile edit nodes so we can init sim"
 
-        compile : String -> Maybe ExeNode
-        compile srcCode =
-            Debug.todo "todo"
-
         _ =
             model.editors
-                |> Dict.map (\_ -> compile)
+                |> Dict.map (\_ -> ExeNode.compile)
     in
     { model | state = Sim_ (initSim model.puzzle model.exs stepMode) }
 

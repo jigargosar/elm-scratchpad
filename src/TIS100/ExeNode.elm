@@ -1,5 +1,6 @@
 module TIS100.ExeNode exposing
     ( ExeNode
+    , compile
     , empty
     , initMov
     , initMovUpDown
@@ -28,6 +29,11 @@ type State
 type Inst
     = Mov Dir4 Dir4
     | Nop
+
+
+compile : String -> Maybe ExeNode
+compile srcCode =
+    Debug.todo "todo"
 
 
 initMovUpDown : ExeNode
