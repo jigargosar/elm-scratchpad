@@ -14,15 +14,9 @@ import TIS100.Ports exposing (Intent(..))
 import Utils as U exposing (Dir4(..))
 
 
-type alias ExeNode =
-    { srcCode : String
-    , model : Model
-    }
-
-
-type Model
-    = Runnable Inst State
-    | NotRunnable
+type ExeNode
+    = Runnable String Inst State
+    | NotRunnable String
 
 
 type State
@@ -87,34 +81,33 @@ compile srcCode =
 
 initMov : String -> Dir4 -> Dir4 -> ExeNode
 initMov srcCode f t =
-    { srcCode = srcCode, model = Runnable (Mov f t) ReadyToRun }
+    Runnable srcCode (Mov f t) ReadyToRun
 
 
 empty : ExeNode
 empty =
-    { srcCode = "", model = NotRunnable }
+    NotRunnable ""
 
 
 state : ExeNode -> S.NodeState ExeNode
 state exe =
-    case exe.model of
-        NotRunnable ->
+    case exe of
+        NotRunnable _ ->
             S.Done
 
-        Runnable inst state_ ->
+        Runnable srcCode inst state_ ->
             case state_ of
                 ReadyToRun ->
-                    S.ReadyToRun (\() -> ExeNode exe.srcCode <| Runnable inst (run inst))
+                    S.ReadyToRun (\() -> Runnable srcCode inst (run inst))
 
                 ReadBlocked f t ->
                     S.ReadBlocked f
                         (WriteBlocked t
-                            >> Runnable inst
-                            >> ExeNode exe.srcCode
+                            >> Runnable srcCode inst
                         )
 
                 WriteBlocked t num ->
-                    S.WriteBlocked num t (\() -> ExeNode exe.srcCode <| Runnable inst ReadyToRun)
+                    S.WriteBlocked num t (\() -> Runnable srcCode inst ReadyToRun)
 
 
 run : Inst -> State
@@ -129,11 +122,11 @@ run inst =
 
 intents : ExeNode -> List Intent
 intents exe =
-    case exe.model of
-        NotRunnable ->
+    case exe of
+        NotRunnable _ ->
             []
 
-        Runnable inst _ ->
+        Runnable _ inst _ ->
             case inst of
                 Mov f t ->
                     [ Read f, Write t ]
@@ -149,9 +142,9 @@ type ViewModel
 
 viewModel : ExeNode -> ViewModel
 viewModel exe =
-    case exe.model of
-        NotRunnable ->
-            IDLE exe.srcCode
+    case exe of
+        NotRunnable srcCode ->
+            IDLE srcCode
 
-        Runnable _ _ ->
-            RUNNING exe.srcCode 0
+        Runnable srcCode _ _ ->
+            RUNNING srcCode 0
