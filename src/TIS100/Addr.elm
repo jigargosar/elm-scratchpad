@@ -9,7 +9,7 @@ type alias Addr =
 
 toGridArea : Addr -> Attribute msg
 toGridArea ( x, y ) =
-    U.gridAreaXY ( x, y - 1 )
+    U.gridAreaXY ( x, y - 1 |> U.atLeast 0 )
 
 
 inputGridArea : Int -> Attribute msg

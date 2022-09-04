@@ -1,6 +1,7 @@
 module TIS100.Ports exposing (Action(..), Intent(..), view, viewAllPorts)
 
 import Dict exposing (Dict)
+import TIS100.Addr as Addr
 import TIS100.Num as Num exposing (Num)
 import TIS100.Puzzle as Puzzle exposing (Puzzle)
 import TIS100.UI as UI
@@ -237,9 +238,9 @@ viewPort ( ( _, y ) as addr, dir, val ) =
 
 
 viewPortHelp : Addr -> List (Attribute msg) -> List (Html msg) -> Html msg
-viewPortHelp ( x, y ) attrs =
+viewPortHelp addr attrs =
     div
-        (gridAreaXY ( x, y - 1 |> atLeast 0 )
+        (Addr.toGridArea addr
             :: displayFlex
             :: itemsCenter
             :: positionRelative
