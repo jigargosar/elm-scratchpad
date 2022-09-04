@@ -2,7 +2,7 @@ module TIS100.PuzzlePage.SimStore exposing
     ( SimNode(..)
     , SimStore
     , init
-    , intentsAndActions
+    , ioIntentsAndActions
     , leftBarInputs
     , leftBarOutputs
     , step
@@ -14,7 +14,7 @@ import TIS100.InputNode as InputNode exposing (InputNode)
 import TIS100.NodeState as S exposing (NodeState)
 import TIS100.Num exposing (Num)
 import TIS100.OutputNode as OutputNode exposing (OutputNode)
-import TIS100.Ports exposing (Action(..), Intent(..))
+import TIS100.Ports as Ports exposing (Action(..), Intent(..))
 import TIS100.Puzzle as Puzzle exposing (IOConfig, Puzzle)
 import TIS100.PuzzlePage.LeftBar as LB
 import TIS100.SelectionList as SelectionList
@@ -166,15 +166,15 @@ outputsToList fn grid =
             )
 
 
-intentsAndActions : SimStore -> ( List ( Addr, Intent ), List ( Addr, Action ) )
-intentsAndActions simStore =
+ioIntentsAndActions : SimStore -> Ports.IOIntentsAndActions
+ioIntentsAndActions simStore =
     Dict.foldl
-        (\addr node ( intents, actions ) ->
-            ( List.map (U.pair addr) (simNodeIntents node) ++ intents
-            , List.map (U.pair addr) (simNodeActions node) ++ actions
-            )
+        (\addr node { intents, actions } ->
+            { intents = List.map (U.pair addr) (simNodeIntents node) ++ intents
+            , actions = List.map (U.pair addr) (simNodeActions node) ++ actions
+            }
         )
-        ( [], [] )
+        { intents = [], actions = [] }
         simStore
 
 

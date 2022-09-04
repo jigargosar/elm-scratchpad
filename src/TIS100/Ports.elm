@@ -1,4 +1,4 @@
-module TIS100.Ports exposing (Action(..), Intent(..), view, viewAllPorts)
+module TIS100.Ports exposing (Action(..), IOIntentsAndActions, Intent(..), view, viewAllPorts)
 
 import Dict exposing (Dict)
 import TIS100.Addr as Addr exposing (Addr)
@@ -152,8 +152,14 @@ viewAllPorts puzzle =
     allPuzzlePorts puzzle |> viewPorts
 
 
-view : Puzzle -> ( List ( Addr, Intent ), List ( Addr, Action ) ) -> List (Html msg)
-view puzzle ( intents, actions ) =
+type alias IOIntentsAndActions =
+    { intents : List ( Addr, Intent )
+    , actions : List ( Addr, Action )
+    }
+
+
+view : Puzzle -> IOIntentsAndActions -> List (Html msg)
+view puzzle { intents, actions } =
     let
         selectedPorts =
             fromIntents intents

@@ -503,7 +503,7 @@ initSim puzzle exs stepMode =
 viewSimGridItems : Puzzle -> Sim -> List (Html msg)
 viewSimGridItems puzzle { store } =
     List.map viewSimNode (Dict.toList store)
-        ++ Ports.view puzzle (SimStore.intentsAndActions store)
+        ++ Ports.view puzzle (SimStore.ioIntentsAndActions store)
 
 
 
