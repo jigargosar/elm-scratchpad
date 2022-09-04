@@ -320,13 +320,22 @@ viewEditor ( addr, editor ) =
 
 viewExeNode : ( Addr, ExeNode ) -> Html msg
 viewExeNode ( addr, exe ) =
+    let
+        srcView =
+            case ExeNode.viewModel exe of
+                ExeNode.IDLE srcCode ->
+                    viewSrc srcCode Nothing
+
+                ExeNode.RUNNING srcCode lineNo ->
+                    viewSrc srcCode (Just lineNo)
+    in
     div
         [ Addr.toGridArea addr
         , UI.lightOutline
         , displayGrid
         , gridTemplateColumns "18ch auto"
         ]
-        [ div [ pa "1ch" ] [ text (ExeNode.toSource exe) ]
+        [ srcView
         , gtRows 5
             []
             [ viewExeBox "ACC" "0"
@@ -336,6 +345,22 @@ viewExeNode ( addr, exe ) =
             , viewExeBox "IDLE" "0%"
             ]
         ]
+
+
+viewSrc : String -> Maybe Int -> Html.Html msg
+viewSrc srcCode maybeLine =
+    Html.pre [ pa "0.5ch 0" ]
+        (String.lines srcCode
+            |> List.indexedMap
+                (\i l ->
+                    if Just i == maybeLine then
+                        div [ pl "0.5ch", fg black, bgc white ]
+                            [ text (l ++ "\n") ]
+
+                    else
+                        div [ pl "0.5ch" ] [ text (l ++ "\n") ]
+                )
+        )
 
 
 viewExeBox : String -> String -> Html msg

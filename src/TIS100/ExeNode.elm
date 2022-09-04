@@ -1,12 +1,12 @@
 module TIS100.ExeNode exposing
     ( ExeNode
+    , ViewModel(..)
     , compile
     , empty
-    , initMov
-    , initMovUpDown
     , intents
     , state
     , toSource
+    , viewModel
     )
 
 import TIS100.NodeState as S
@@ -80,11 +80,6 @@ compile srcCode =
             |> Maybe.andThen compileLine
 
 
-initMovUpDown : ExeNode
-initMovUpDown =
-    initMov Up Down
-
-
 initMov : Dir4 -> Dir4 -> ExeNode
 initMov f t =
     Runnable (Mov f t) ReadyToRun
@@ -136,6 +131,21 @@ intents exe =
 
                 Nop ->
                     []
+
+
+type ViewModel
+    = IDLE String
+    | RUNNING String Int
+
+
+viewModel : ExeNode -> ViewModel
+viewModel exe =
+    case exe of
+        NotRunnable ->
+            IDLE ""
+
+        Runnable i s ->
+            RUNNING (toSource exe) 0
 
 
 toSource : ExeNode -> String
