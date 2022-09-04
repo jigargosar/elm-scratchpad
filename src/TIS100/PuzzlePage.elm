@@ -111,15 +111,22 @@ subscriptions model =
 
 startDebugging : StepMode -> Model -> Model
 startDebugging stepMode model =
-    let
-        _ =
-            "Need to compile edit nodes so we can init sim"
+    case compile model.editors of
+        Just exs ->
+            { model | state = Sim_ (initSim model.puzzle exs stepMode) }
 
-        _ =
-            model.editors
-                |> Dict.map (\_ -> ExeNode.compile)
-    in
-    { model | state = Sim_ (initSim model.puzzle model.exs stepMode) }
+        Nothing ->
+            model
+
+
+compile : Editors -> Maybe (List ( Addr, ExeNode ))
+compile editors =
+    editors
+        |> Dict.toList
+        |> List.filterMap
+            (\( a, sc ) -> ExeNode.compile sc |> Maybe.map (pair a))
+        |> Just
+        |> maybeFilter (List.length >> eq (Dict.size editors))
 
 
 startEditing : Model -> Model
