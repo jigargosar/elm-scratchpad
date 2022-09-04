@@ -43,10 +43,33 @@ currInst prg =
     Pivot.getC prg |> .inst
 
 
+prgLineNo : Prg -> Int
+prgLineNo prg =
+    Pivot.lengthL prg
+
+
 type State
     = ReadyToRun Prg
     | ReadBlocked Prg Dir4 Dst
     | WriteBlocked Prg Dir4 Num
+
+
+prgFromState : State -> Prg
+prgFromState st =
+    case st of
+        ReadyToRun prg ->
+            prg
+
+        ReadBlocked prg dir4 dst ->
+            prg
+
+        WriteBlocked prg dir4 num ->
+            prg
+
+
+lineNo : State -> Int
+lineNo st =
+    prgLineNo (prgFromState st)
 
 
 type Dst
@@ -222,5 +245,5 @@ viewModel exe =
         NotRunnable srcCode ->
             IDLE srcCode
 
-        Runnable srcCode _ _ ->
-            RUNNING srcCode 0
+        Runnable srcCode _ st ->
+            RUNNING srcCode (lineNo st)
