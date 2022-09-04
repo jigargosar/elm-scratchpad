@@ -49,7 +49,7 @@ samplePuzzle =
         ]
     , layout =
         [ [ Executable, Executable, Executable, Executable ]
-        , [ Executable, Faulty, Faulty, Executable ]
+        , [ Executable, Executable, Faulty, Executable ]
         , [ Executable, Executable, Executable, Executable ]
         ]
             |> toLayout
