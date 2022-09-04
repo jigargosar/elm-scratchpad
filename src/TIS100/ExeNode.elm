@@ -24,14 +24,34 @@ type alias Prg =
     Pivot Inst
 
 
+goNext : Prg -> Prg
+goNext prg =
+    case Pivot.goR prg of
+        Just nPrg ->
+            nPrg
+
+        Nothing ->
+            Pivot.goToStart prg
+
+
+currInst : Prg -> Inst
+currInst prg =
+    Pivot.getC prg
+
+
 type State
     = ReadyToRun Prg
-    | ReadBlocked Prg Dir4 Dir4
+    | ReadBlocked Prg Dir4 Dst
     | WriteBlocked Prg Dir4 Num
 
 
+type Dst
+    = DstPort Dir4
+    | DstNil
+
+
 type Inst
-    = Mov Dir4 Dir4
+    = Mov Dir4 Dst
     | Nop
 
 
@@ -88,7 +108,7 @@ initMov : String -> Dir4 -> Dir4 -> ExeNode
 initMov srcCode f t =
     let
         prg =
-            Pivot.singleton (Mov f t)
+            Pivot.singleton (Mov f (DstPort t))
     in
     Runnable srcCode (intentsFromPrg prg) (ReadyToRun prg)
 
@@ -102,8 +122,15 @@ intentsFromPrg prg =
 intentsFromInst : Inst -> List Intent
 intentsFromInst inst =
     case inst of
-        Mov f t ->
-            [ Read f, Write t ]
+        Mov f dst ->
+            [ Read f ]
+                ++ (case dst of
+                        DstPort t ->
+                            [ Write t ]
+
+                        DstNil ->
+                            []
+                   )
 
         Nop ->
             []
@@ -127,33 +154,33 @@ state exe =
 
                 ReadBlocked prg f t ->
                     S.ReadBlocked f
-                        (WriteBlocked prg t >> Runnable sc nts)
+                        (runAfterRead prg t >> Runnable sc nts)
 
                 WriteBlocked prg t num ->
                     S.WriteBlocked num t <|
                         \() ->
                             Runnable sc nts <|
-                                ReadyToRun (prgNext prg)
-
-
-prgNext : Prg -> Prg
-prgNext prg =
-    case Pivot.goR prg of
-        Just nPrg ->
-            nPrg
-
-        Nothing ->
-            Pivot.goToStart prg
+                                ReadyToRun (goNext prg)
 
 
 run : Prg -> State
 run prg =
-    case Pivot.getC prg of
+    case currInst prg of
         Mov f t ->
             ReadBlocked prg f t
 
         Nop ->
-            ReadyToRun (prgNext prg)
+            ReadyToRun (goNext prg)
+
+
+runAfterRead : Prg -> Dst -> Num -> State
+runAfterRead prg dst num =
+    case dst of
+        DstPort t ->
+            WriteBlocked prg t num
+
+        DstNil ->
+            ReadyToRun (goNext prg)
 
 
 intents : ExeNode -> List Intent
