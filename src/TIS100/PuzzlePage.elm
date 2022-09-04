@@ -292,7 +292,7 @@ viewEditor ( addr, editor ) =
         , gridTemplateColumns "18ch auto"
         ]
         [ Html.textarea
-            [ pa "1ch"
+            [ pa "0.5ch"
 
             -- reset
             , borderNone
