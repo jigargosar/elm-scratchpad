@@ -10,14 +10,11 @@ module TIS100.PuzzlePage exposing
 import Dict exposing (Dict)
 import Html
 import TIS100.ExeNode as ExeNode exposing (ExeNode)
-import TIS100.Grid as Grid exposing (Addr, Cell(..))
-import TIS100.InputNode as InputNode exposing (InputNode)
 import TIS100.NodeState as S exposing (NodeState)
-import TIS100.Num exposing (Num)
-import TIS100.OutputNode as OutputNode exposing (OutputNode)
 import TIS100.Ports as Ports exposing (Action(..), Intent(..))
-import TIS100.Puzzle as Puzzle exposing (IOConfig, Puzzle)
+import TIS100.Puzzle as Puzzle exposing (Addr, IOConfig, Puzzle)
 import TIS100.PuzzlePage.LeftBar as LB
+import TIS100.PuzzlePage.SimStore as SimStore exposing (SimNode(..), SimStore)
 import TIS100.SelectionList as SelectionList exposing (SelectionList)
 import TIS100.UI as UI
 import Time
@@ -171,8 +168,8 @@ leftBarViewModel { puzzle, state } =
             }
 
         Sim_ sim ->
-            { inputs = simInputColumns sim
-            , outputs = simOutputColumns sim
+            { inputs = SimStore.simInputColumns sim.store
+            , outputs = SimStore.simOutputColumns sim.store
             }
 
 
@@ -456,63 +453,6 @@ viewEditModeNodes puzzle editors =
 -- SIM NODE
 
 
-type alias SimNode =
-    Grid.Cell InputNode OutputNode ExeNode
-
-
-simNodeIntents : SimNode -> List Intent
-simNodeIntents node =
-    case node of
-        In _ _ ->
-            [ Write Down ]
-
-        Out _ _ ->
-            [ Read Up ]
-
-        Exe exe ->
-            ExeNode.intents exe
-
-        Flt ->
-            []
-
-
-simNodeActions : SimNode -> List Action
-simNodeActions node =
-    case node of
-        Out _ _ ->
-            []
-
-        _ ->
-            case simNodeState node of
-                S.ReadyToRun _ ->
-                    []
-
-                S.ReadBlocked dir4 _ ->
-                    [ Reading dir4 ]
-
-                S.WriteBlocked num dir4 _ ->
-                    [ Writing dir4 num ]
-
-                S.Done ->
-                    []
-
-
-simNodeState : SimNode -> NodeState SimNode
-simNodeState node =
-    case node of
-        In conf inputNode ->
-            InputNode.state inputNode |> S.map (In conf)
-
-        Out conf outputNode ->
-            OutputNode.state outputNode |> S.map (Out conf)
-
-        Exe exeNode ->
-            ExeNode.state exeNode |> S.map Exe
-
-        Flt ->
-            S.Done
-
-
 viewSimNode : ( Addr, SimNode ) -> Html msg
 viewSimNode ( addr, node ) =
     case node of
@@ -540,10 +480,6 @@ type alias Sim =
     }
 
 
-type alias SimStore =
-    Grid.Grid InputNode OutputNode ExeNode
-
-
 type SimState
     = Stepping StepMode
     | Completed
@@ -557,64 +493,16 @@ type StepMode
 
 initSim : Puzzle -> List ( Addr, ExeNode ) -> StepMode -> Sim
 initSim puzzle exs stepMode =
-    { store = initSimStore puzzle |> Grid.replaceExeEntries exs
+    { store = SimStore.init puzzle exs
     , state = Stepping stepMode
     , cycle = 0
     }
 
 
-initSimStore : Puzzle -> SimStore
-initSimStore puzzle =
-    Grid.init puzzle
-        (\conf -> InputNode.fromList conf.nums)
-        (\conf -> OutputNode.fromExpected (List.length conf.nums))
-        ExeNode.empty
-
-
-simIntentsAndActions : SimStore -> ( List ( Addr, Intent ), List ( Addr, Action ) )
-simIntentsAndActions simStore =
-    Dict.foldl
-        (\addr node ( intents, actions ) ->
-            ( List.map (pair addr) (simNodeIntents node) ++ intents
-            , List.map (pair addr) (simNodeActions node) ++ actions
-            )
-        )
-        ( [], [] )
-        simStore
-
-
-simInputColumns : Sim -> List LB.Input
-simInputColumns sim =
-    Grid.inputsToList
-        (\_ c i ->
-            { title = c.title
-            , nums = InputNode.toSelectionList i
-            }
-        )
-        sim.store
-
-
-simOutputColumns : Sim -> List LB.Output
-simOutputColumns sim =
-    Grid.outputsToList
-        (\_ c o ->
-            let
-                actual =
-                    OutputNode.getNumsRead o
-            in
-            { title = c.title
-            , expected =
-                SelectionList.fromIndex (List.length actual) c.nums
-            , actual = actual
-            }
-        )
-        sim.store
-
-
 viewSimGridItems : Puzzle -> Sim -> List (Html msg)
 viewSimGridItems puzzle { store } =
     List.map viewSimNode (Dict.toList store)
-        ++ Ports.view puzzle (simIntentsAndActions store)
+        ++ Ports.view puzzle (SimStore.simIntentsAndActions store)
 
 
 
@@ -642,7 +530,7 @@ autoStepSim : Sim -> Sim
 autoStepSim sim =
     let
         newStore =
-            stepSimStore sim.store
+            SimStore.stepSimStore sim.store
     in
     if newStore == sim.store then
         { sim | state = Completed }
@@ -652,163 +540,6 @@ autoStepSim sim =
             | store = newStore
             , cycle = sim.cycle + 1
         }
-
-
-stepSimStore : SimStore -> SimStore
-stepSimStore store =
-    Dict.foldl stepNode (initAcc store) store
-        |> resolveAllReadBlocked
-        |> resolveAllWriteBlocked
-
-
-stepNode : Addr -> SimNode -> Acc -> Acc
-stepNode addr node =
-    case simNodeState node of
-        S.WriteBlocked num dir cont ->
-            addToWriteBlocked addr node num dir cont
-
-        S.Done ->
-            addToCompleted addr node
-
-        S.ReadBlocked dir cont ->
-            addToReadBlocked addr node dir cont
-
-        S.ReadyToRun cont ->
-            resolveAfterRun addr (cont ())
-
-
-resolveAfterRun : Addr -> SimNode -> Acc -> Acc
-resolveAfterRun addr node =
-    case simNodeState node of
-        S.ReadBlocked dir cont ->
-            addToReadBlocked addr node dir cont
-
-        _ ->
-            addToCompleted addr node
-
-
-resolveAllReadBlocked : Acc -> Acc
-resolveAllReadBlocked acc =
-    Dict.foldl resolveReadBlocked { acc | readBlocked = Dict.empty } acc.readBlocked
-
-
-resolveReadBlocked :
-    Addr
-    -> ReadBlockedNode
-    -> WriteBlockedAcc a
-    -> WriteBlockedAcc a
-resolveReadBlocked addr ( node, dir, cont ) acc =
-    case readAndUnblock addr dir acc of
-        Just ( num, acc2 ) ->
-            addToCompleted addr (cont num) acc2
-
-        Nothing ->
-            addToCompleted addr node acc
-
-
-readAndUnblock :
-    Addr
-    -> Dir4
-    -> WriteBlockedAcc a
-    -> Maybe ( Num, WriteBlockedAcc a )
-readAndUnblock rAddr rDir acc =
-    moveInDir4 rDir rAddr
-        |> getEntryIn acc.writeBlocked
-        |> maybeFilter
-            (\( _, wbNode ) ->
-                rDir == oppositeDir4 wbNode.dir
-            )
-        |> Maybe.map
-            (\( wAddr, wbNode ) ->
-                ( wbNode.num
-                , completeWriteBlocked wAddr (wbNode.cont ()) acc
-                )
-            )
-
-
-resolveAllWriteBlocked : WriteBlockedAcc a -> SimStore
-resolveAllWriteBlocked acc =
-    Dict.foldl (\addr { node } -> replaceEntry ( addr, node )) acc.completed acc.writeBlocked
-
-
-type alias Acc =
-    { readBlocked : ReadBlockedStore
-    , writeBlocked : WriteBlockedStore
-    , completed : SimStore
-    }
-
-
-type alias WriteBlockedAcc a =
-    { a
-        | writeBlocked : WriteBlockedStore
-        , completed : SimStore
-    }
-
-
-type alias ReadBlockedStore =
-    Dict Addr ReadBlockedNode
-
-
-type alias ReadBlockedNode =
-    ( SimNode, Dir4, Num -> SimNode )
-
-
-type alias WriteBlockedStore =
-    Dict Addr WriteBlockedNode
-
-
-type alias WriteBlockedNode =
-    { node : SimNode, num : Num, dir : Dir4, cont : () -> SimNode }
-
-
-initAcc : SimStore -> Acc
-initAcc store =
-    { readBlocked = Dict.empty
-    , writeBlocked = Dict.empty
-    , completed = store
-    }
-
-
-addToReadBlocked :
-    Addr
-    -> SimNode
-    -> Dir4
-    -> (Num -> SimNode)
-    -> { a | readBlocked : ReadBlockedStore }
-    -> { a | readBlocked : ReadBlockedStore }
-addToReadBlocked addr node dir cont acc =
-    { acc | readBlocked = Dict.insert addr ( node, dir, cont ) acc.readBlocked }
-
-
-addToWriteBlocked :
-    Addr
-    -> SimNode
-    -> Num
-    -> Dir4
-    -> (() -> SimNode)
-    -> { a | writeBlocked : WriteBlockedStore }
-    -> { a | writeBlocked : WriteBlockedStore }
-addToWriteBlocked addr node num dir cont acc =
-    let
-        wbn =
-            WriteBlockedNode node num dir cont
-    in
-    { acc | writeBlocked = Dict.insert addr wbn acc.writeBlocked }
-
-
-addToCompleted :
-    Addr
-    -> SimNode
-    -> { a | completed : SimStore }
-    -> { a | completed : SimStore }
-addToCompleted na n acc =
-    { acc | completed = replaceEntry ( na, n ) acc.completed }
-
-
-completeWriteBlocked : Addr -> SimNode -> WriteBlockedAcc a -> WriteBlockedAcc a
-completeWriteBlocked addr node acc =
-    { acc | writeBlocked = Dict.remove addr acc.writeBlocked }
-        |> addToCompleted addr node
 
 
 
