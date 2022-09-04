@@ -29,19 +29,33 @@ import Utils exposing (..)
 sampleModel : Model
 sampleModel =
     let
+        --exs =
+        --    [ ( ( 0, 1 ), ExeNode.initMov Up Down )
+        --    , ( ( 0, 2 ), ExeNode.initMovUpDown )
+        --    , ( ( 0, 3 ), ExeNode.initMovUpDown )
+        --    , ( ( 1, 1 ), ExeNode.initMov Right Down )
+        --    , ( ( 1, 2 ), ExeNode.empty )
+        --    , ( ( 1, 3 ), ExeNode.initMovUpDown )
+        --    , ( ( 2, 1 ), ExeNode.initMov Down Up )
+        --    , ( ( 2, 2 ), ExeNode.empty )
+        --    , ( ( 2, 3 ), ExeNode.initMov Down Up )
+        --    , ( ( 3, 1 ), ExeNode.initMov Left Down )
+        --    , ( ( 3, 2 ), ExeNode.initMov Up Right )
+        --    , ( ( 3, 3 ), ExeNode.initMov Left Down )
+        --    ]
         es =
-            [ ( ( 0, 1 ), ExeNode.initMov Up Down )
-            , ( ( 0, 2 ), ExeNode.initMovUpDown )
-            , ( ( 0, 3 ), ExeNode.initMovUpDown )
-            , ( ( 1, 1 ), ExeNode.initMov Right Down )
-            , ( ( 1, 2 ), ExeNode.empty )
-            , ( ( 1, 3 ), ExeNode.initMovUpDown )
-            , ( ( 2, 1 ), ExeNode.initMov Down Up )
-            , ( ( 2, 2 ), ExeNode.empty )
-            , ( ( 2, 3 ), ExeNode.initMov Down Up )
-            , ( ( 3, 1 ), ExeNode.initMov Left Down )
-            , ( ( 3, 2 ), ExeNode.initMov Up Right )
-            , ( ( 3, 3 ), ExeNode.initMov Left Down )
+            [ ( ( 0, 1 ), "Mov up down" )
+            , ( ( 0, 2 ), "Mov up down" )
+            , ( ( 0, 3 ), "Mov up down" )
+            , ( ( 1, 1 ), "Mov up down" )
+            , ( ( 1, 2 ), "Mov up down" )
+            , ( ( 1, 3 ), "Mov up down" )
+            , ( ( 2, 1 ), "Mov up down" )
+            , ( ( 2, 2 ), "Mov up down" )
+            , ( ( 2, 3 ), "Mov up down" )
+            , ( ( 3, 1 ), "Mov up down" )
+            , ( ( 3, 2 ), "Mov up down" )
+            , ( ( 3, 3 ), "Mov up down" )
             ]
     in
     init Puzzle.samplePuzzle es
@@ -54,7 +68,6 @@ sampleModel =
 type alias Model =
     { puzzle : Puzzle
     , editors : Editors
-    , exs : List ( Addr, ExeNode )
     , state : State
     }
 
@@ -64,15 +77,10 @@ type State
     | Sim_ Sim
 
 
-init : Puzzle -> List ( Addr, ExeNode ) -> Model
-init puzzle exs =
-    let
-        sourceEntries =
-            List.map (mapSecond ExeNode.toSource) exs
-    in
+init : Puzzle -> List ( Addr, String ) -> Model
+init puzzle editors =
     { puzzle = puzzle
-    , editors = initEditorsWithSource puzzle sourceEntries
-    , exs = exs
+    , editors = initEditorsWithSource puzzle editors
     , state = Edit
     }
 
