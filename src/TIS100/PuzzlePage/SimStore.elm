@@ -2,16 +2,16 @@ module TIS100.PuzzlePage.SimStore exposing
     ( SimNode(..)
     , SimStore
     , init
-    , leftBarInputs
-    , leftBarOutputs
+    , leftBarViewModel
     , portsViewModel
     , step
     )
 
 import Dict exposing (Dict)
+import TIS100.Addr exposing (Addr)
 import TIS100.ExeNode as ExeNode exposing (ExeNode)
 import TIS100.InputNode as InputNode exposing (InputNode)
-import TIS100.NodeState as S exposing (NodeState)
+import TIS100.NodeState as NS exposing (NodeState)
 import TIS100.Num exposing (Num)
 import TIS100.OutputNode as OutputNode exposing (OutputNode)
 import TIS100.Ports as Ports exposing (Action(..), Intent(..))
@@ -23,10 +23,6 @@ import Utils as U exposing (Dir4)
 
 type alias SimStore =
     Dict Addr SimNode
-
-
-type alias Addr =
-    ( Int, Int )
 
 
 type SimNode
@@ -109,16 +105,16 @@ simNodeActions node =
 
         _ ->
             case simNodeState node of
-                S.ReadyToRun _ ->
+                NS.ReadyToRun _ ->
                     []
 
-                S.ReadBlocked dir4 _ ->
+                NS.ReadBlocked dir4 _ ->
                     [ Reading dir4 ]
 
-                S.WriteBlocked num dir4 _ ->
+                NS.WriteBlocked num dir4 _ ->
                     [ Writing dir4 num ]
 
-                S.Done ->
+                NS.Done ->
                     []
 
 
@@ -126,16 +122,16 @@ simNodeState : SimNode -> NodeState SimNode
 simNodeState node =
     case node of
         In conf inputNode ->
-            InputNode.state inputNode |> S.map (In conf)
+            InputNode.state inputNode |> NS.map (In conf)
 
         Out conf outputNode ->
-            OutputNode.state outputNode |> S.map (Out conf)
+            OutputNode.state outputNode |> NS.map (Out conf)
 
         Exe exeNode ->
-            ExeNode.state exeNode |> S.map Exe
+            ExeNode.state exeNode |> NS.map Exe
 
         Flt ->
-            S.Done
+            NS.Done
 
 
 inputsToList : (Addr -> IOConfig -> InputNode -> a) -> SimStore -> List a
@@ -178,6 +174,13 @@ portsViewModel simStore =
         simStore
 
 
+leftBarViewModel : SimStore -> LB.ViewModel
+leftBarViewModel simStore =
+    { inputs = leftBarInputs simStore
+    , outputs = leftBarOutputs simStore
+    }
+
+
 leftBarInputs : SimStore -> List LB.Input
 leftBarInputs simStore =
     inputsToList
@@ -216,23 +219,23 @@ step store =
 stepNode : Addr -> SimNode -> Acc -> Acc
 stepNode addr node =
     case simNodeState node of
-        S.WriteBlocked num dir cont ->
+        NS.WriteBlocked num dir cont ->
             addToWriteBlocked addr node num dir cont
 
-        S.Done ->
+        NS.Done ->
             addToCompleted addr node
 
-        S.ReadBlocked dir cont ->
+        NS.ReadBlocked dir cont ->
             addToReadBlocked addr node dir cont
 
-        S.ReadyToRun cont ->
+        NS.ReadyToRun cont ->
             resolveAfterRun addr (cont ())
 
 
 resolveAfterRun : Addr -> SimNode -> Acc -> Acc
 resolveAfterRun addr node =
     case simNodeState node of
-        S.ReadBlocked dir cont ->
+        NS.ReadBlocked dir cont ->
             addToReadBlocked addr node dir cont
 
         _ ->

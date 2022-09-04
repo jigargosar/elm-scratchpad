@@ -15,7 +15,7 @@ import TIS100.NodeState as S exposing (NodeState)
 import TIS100.Ports as Ports exposing (Action(..), Intent(..))
 import TIS100.Puzzle as Puzzle exposing (IOConfig, Puzzle)
 import TIS100.PuzzlePage.LeftBar as LB
-import TIS100.PuzzlePage.SimStore as SimStore exposing (SimNode(..), SimStore)
+import TIS100.PuzzlePage.SimStore as SimStore
 import TIS100.SelectionList as SelectionList exposing (SelectionList)
 import TIS100.UI as UI
 import Time
@@ -148,16 +148,16 @@ update msg model =
                     startEditing model
 
                 STEP ->
-                    { model | state = Sim_ (manualStepSim sim) }
+                    { model | state = Sim_ (manualStep sim) }
 
                 AutoStep ->
-                    { model | state = Sim_ (autoStepSim sim) }
+                    { model | state = Sim_ (autoStep sim) }
 
                 RUN ->
-                    { model | state = Sim_ (simSetStepMode Auto sim) }
+                    { model | state = Sim_ (setStepMode Auto sim) }
 
                 FAST ->
-                    { model | state = Sim_ (simSetStepMode AutoFast sim) }
+                    { model | state = Sim_ (setStepMode AutoFast sim) }
 
 
 leftBarViewModel : Model -> LB.ViewModel
@@ -169,9 +169,7 @@ leftBarViewModel { puzzle, state } =
             }
 
         Sim_ sim ->
-            { inputs = SimStore.leftBarInputs sim.store
-            , outputs = SimStore.leftBarOutputs sim.store
-            }
+            SimStore.leftBarViewModel sim.store
 
 
 view : Model -> Html Msg
@@ -454,28 +452,8 @@ viewEditModeNodes puzzle editors =
 -- SIM
 
 
-viewSimNode : ( Addr, SimNode ) -> Html msg
-viewSimNode ( addr, node ) =
-    case node of
-        In conf _ ->
-            viewInputNode conf
-
-        Out conf _ ->
-            viewOutputNode conf
-
-        Exe exe ->
-            viewExeNode ( addr, exe )
-
-        Flt ->
-            viewFaultyNode addr
-
-
-
--- SIM
-
-
 type alias Sim =
-    { store : SimStore
+    { store : SimStore.SimStore
     , state : SimState
     , cycle : Int
     }
@@ -500,18 +478,12 @@ initSim puzzle exs stepMode =
     }
 
 
-viewSimGridItems : Puzzle -> Sim -> List (Html msg)
-viewSimGridItems puzzle { store } =
-    List.map viewSimNode (Dict.toList store)
-        ++ Ports.view puzzle (SimStore.portsViewModel store)
-
-
 
 -- SIM UPDATE
 
 
-simSetStepMode : StepMode -> Sim -> Sim
-simSetStepMode stepMode sim =
+setStepMode : StepMode -> Sim -> Sim
+setStepMode stepMode sim =
     case sim.state of
         Stepping _ ->
             { sim | state = Stepping stepMode }
@@ -520,15 +492,15 @@ simSetStepMode stepMode sim =
             sim
 
 
-manualStepSim : Sim -> Sim
-manualStepSim sim =
+manualStep : Sim -> Sim
+manualStep sim =
     sim
-        |> simSetStepMode Manual
-        |> autoStepSim
+        |> setStepMode Manual
+        |> autoStep
 
 
-autoStepSim : Sim -> Sim
-autoStepSim sim =
+autoStep : Sim -> Sim
+autoStep sim =
     let
         newStore =
             SimStore.step sim.store
@@ -541,3 +513,25 @@ autoStepSim sim =
             | store = newStore
             , cycle = sim.cycle + 1
         }
+
+
+viewSimGridItems : Puzzle -> Sim -> List (Html msg)
+viewSimGridItems puzzle { store } =
+    List.map viewSimNode (Dict.toList store)
+        ++ Ports.view puzzle (SimStore.portsViewModel store)
+
+
+viewSimNode : ( Addr, SimStore.SimNode ) -> Html msg
+viewSimNode ( addr, node ) =
+    case node of
+        SimStore.In conf _ ->
+            viewInputNode conf
+
+        SimStore.Out conf _ ->
+            viewOutputNode conf
+
+        SimStore.Exe exe ->
+            viewExeNode ( addr, exe )
+
+        SimStore.Flt ->
+            viewFaultyNode addr
