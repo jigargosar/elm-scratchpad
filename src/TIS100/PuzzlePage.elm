@@ -276,11 +276,10 @@ viewEditor ( addr, editor ) =
         [ Addr.toGridArea addr
         , UI.lightOutline
         , displayGrid
-        , gridAutoFlowColumn
+        , gridTemplateColumns "18ch auto"
         ]
         [ Html.textarea
-            [ sWidth "18ch"
-            , pa "1ch"
+            [ pa "1ch"
 
             -- reset
             , borderNone
@@ -311,9 +310,9 @@ viewExeNode ( addr, exe ) =
         [ Addr.toGridArea addr
         , UI.lightOutline
         , displayGrid
-        , gridAutoFlowColumn
+        , gridTemplateColumns "18ch auto"
         ]
-        [ div [ sWidth "18ch", pa "1ch" ] [ text (ExeNode.toSource exe) ]
+        [ div [ pa "1ch" ] [ text (ExeNode.toSource exe) ]
         , gtRows 5
             []
             [ viewExeBox "ACC" "0"
