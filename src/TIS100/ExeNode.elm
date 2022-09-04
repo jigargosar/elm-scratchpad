@@ -154,7 +154,7 @@ state exe =
 
                 ReadBlocked prg f t ->
                     S.ReadBlocked f
-                        (runAfterRead prg t >> Runnable sc nts)
+                        (writeAfterRead prg t >> Runnable sc nts)
 
                 WriteBlocked prg t num ->
                     S.WriteBlocked num t <|
@@ -173,8 +173,8 @@ run prg =
             ReadyToRun (goNext prg)
 
 
-runAfterRead : Prg -> Dst -> Num -> State
-runAfterRead prg dst num =
+writeAfterRead : Prg -> Dst -> Num -> State
+writeAfterRead prg dst num =
     case dst of
         DstPort t ->
             WriteBlocked prg t num
