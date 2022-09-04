@@ -11,7 +11,7 @@ import Dict exposing (Dict)
 import Html
 import TIS100.Addr as Addr exposing (Addr)
 import TIS100.ExeNode as ExeNode exposing (ExeNode)
-import TIS100.NodeState as S exposing (NodeState)
+import TIS100.NodeState as NS exposing (NodeState)
 import TIS100.Ports as Ports exposing (Action(..), Intent(..))
 import TIS100.Puzzle as Puzzle exposing (IOConfig, Puzzle)
 import TIS100.PuzzlePage.LeftBar as LB
@@ -114,6 +114,14 @@ startDebugging stepMode model =
     let
         _ =
             "Need to compile edit nodes so we can init sim"
+
+        compile : String -> Maybe ExeNode
+        compile srcCode =
+            Debug.todo "todo"
+
+        _ =
+            model.editors
+                |> Dict.map (\_ -> compile)
     in
     { model | state = Sim_ (initSim model.puzzle model.exs stepMode) }
 
@@ -352,16 +360,16 @@ writeModeLabel =
 exeMode : ExeNode -> String
 exeMode exe =
     case ExeNode.state exe of
-        S.ReadyToRun _ ->
+        NS.ReadyToRun _ ->
             "RUN"
 
-        S.ReadBlocked _ _ ->
+        NS.ReadBlocked _ _ ->
             "READ"
 
-        S.WriteBlocked _ _ _ ->
+        NS.WriteBlocked _ _ _ ->
             writeModeLabel
 
-        S.Done ->
+        NS.Done ->
             "IDLE"
 
 
