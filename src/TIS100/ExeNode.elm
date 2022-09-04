@@ -21,11 +21,11 @@ type ExeNode
 
 
 type alias Prg =
-    Pivot PLine
+    Pivot CompiledLine
 
 
-type alias PLine =
-    { no : Int, inst : Inst }
+type alias CompiledLine =
+    { lineNo : Int, inst : Inst }
 
 
 goNext : Prg -> Prg
@@ -43,9 +43,9 @@ currInst prg =
     Pivot.getC prg |> .inst
 
 
-prgLineNo : Prg -> Int
-prgLineNo prg =
-    Pivot.lengthL prg
+currLineNum : Prg -> Int
+currLineNum prg =
+    Pivot.getC prg |> .lineNo
 
 
 type State
@@ -69,7 +69,7 @@ prgFromState st =
 
 lineNo : State -> Int
 lineNo st =
-    prgLineNo (prgFromState st)
+    currLineNum (prgFromState st)
 
 
 type Dst
@@ -105,9 +105,9 @@ toTokens line =
         |> U.reject (U.eq "")
 
 
-compileLine : ( Int, String ) -> Maybe PLine
+compileLine : ( Int, String ) -> Maybe CompiledLine
 compileLine ( no, line ) =
-    parseInst line |> Maybe.map (PLine no)
+    parseInst line |> Maybe.map (CompiledLine no)
 
 
 parseInst : String -> Maybe Inst
