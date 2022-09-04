@@ -2329,6 +2329,7 @@ maybeFromPred pred v =
         Nothing
 
 
+maybeFromBool : Bool -> a -> Maybe a
 maybeFromBool bool v =
     if bool then
         Just v
@@ -2345,6 +2346,19 @@ maybeToBool maybe =
 
         Nothing ->
             False
+
+
+maybeOneOf : List (Maybe a) -> Maybe a
+maybeOneOf maybes =
+    case maybes of
+        [] ->
+            Nothing
+
+        Nothing :: rest ->
+            maybeOneOf rest
+
+        (Just a) :: _ ->
+            Just a
 
 
 

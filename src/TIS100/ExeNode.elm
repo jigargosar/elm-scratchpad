@@ -69,7 +69,7 @@ compile srcCode =
                 "mov" :: b :: c :: [] ->
                     Maybe.map2 (initMov srcCode)
                         (parseDir b)
-                        (parseDir c)
+                        (parseDst c)
 
                 _ ->
                     Nothing
@@ -84,6 +84,13 @@ compile srcCode =
             |> List.map String.trim
             |> List.head
             |> Maybe.andThen compileLine
+
+
+parseDst : String -> Maybe Dst
+parseDst string =
+    U.maybeOneOf
+        [ Maybe.map DstPort (parseDir string)
+        ]
 
 
 parseDir : String -> Maybe Dir4
@@ -105,11 +112,11 @@ parseDir string =
             Nothing
 
 
-initMov : String -> Dir4 -> Dir4 -> ExeNode
+initMov : String -> Dir4 -> Dst -> ExeNode
 initMov srcCode f t =
     let
         prg =
-            Pivot.singleton (Mov f (DstPort t))
+            Pivot.singleton (Mov f t)
     in
     Runnable srcCode (intentsFromPrg prg) (ReadyToRun prg)
 
