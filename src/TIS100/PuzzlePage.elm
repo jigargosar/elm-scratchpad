@@ -478,10 +478,6 @@ initSim puzzle exs stepMode =
     }
 
 
-
--- SIM UPDATE
-
-
 setStepMode : StepMode -> Sim -> Sim
 setStepMode stepMode sim =
     case sim.state of
