@@ -5,7 +5,6 @@ module TIS100.ExeNode exposing
     , empty
     , intents
     , state
-    , toSource
     , viewModel
     )
 
@@ -15,7 +14,13 @@ import TIS100.Ports exposing (Intent(..))
 import Utils as U exposing (Dir4(..))
 
 
-type ExeNode
+type alias ExeNode =
+    { srcCode : String
+    , model : Model
+    }
+
+
+type Model
     = Runnable Inst State
     | NotRunnable
 
@@ -61,7 +66,7 @@ compile srcCode =
         compileLine line =
             case toTokens line of
                 "mov" :: b :: c :: [] ->
-                    Maybe.map2 initMov
+                    Maybe.map2 (initMov srcCode)
                         (dirFromString b)
                         (dirFromString c)
 
@@ -80,32 +85,36 @@ compile srcCode =
             |> Maybe.andThen compileLine
 
 
-initMov : Dir4 -> Dir4 -> ExeNode
-initMov f t =
-    Runnable (Mov f t) ReadyToRun
+initMov : String -> Dir4 -> Dir4 -> ExeNode
+initMov srcCode f t =
+    { srcCode = srcCode, model = Runnable (Mov f t) ReadyToRun }
 
 
 empty : ExeNode
 empty =
-    NotRunnable
+    { srcCode = "", model = NotRunnable }
 
 
 state : ExeNode -> S.NodeState ExeNode
 state exe =
-    case exe of
+    case exe.model of
         NotRunnable ->
             S.Done
 
         Runnable inst state_ ->
             case state_ of
                 ReadyToRun ->
-                    S.ReadyToRun (\() -> Runnable inst (run inst))
+                    S.ReadyToRun (\() -> ExeNode exe.srcCode <| Runnable inst (run inst))
 
                 ReadBlocked f t ->
-                    S.ReadBlocked f (WriteBlocked t >> Runnable inst)
+                    S.ReadBlocked f
+                        (WriteBlocked t
+                            >> Runnable inst
+                            >> ExeNode exe.srcCode
+                        )
 
                 WriteBlocked t num ->
-                    S.WriteBlocked num t (\() -> Runnable inst ReadyToRun)
+                    S.WriteBlocked num t (\() -> ExeNode exe.srcCode <| Runnable inst ReadyToRun)
 
 
 run : Inst -> State
@@ -120,7 +129,7 @@ run inst =
 
 intents : ExeNode -> List Intent
 intents exe =
-    case exe of
+    case exe.model of
         NotRunnable ->
             []
 
@@ -140,19 +149,9 @@ type ViewModel
 
 viewModel : ExeNode -> ViewModel
 viewModel exe =
-    case exe of
+    case exe.model of
         NotRunnable ->
-            IDLE ""
+            IDLE exe.srcCode
 
-        Runnable i s ->
-            RUNNING (toSource exe) 0
-
-
-toSource : ExeNode -> String
-toSource exe =
-    case exe of
-        NotRunnable ->
-            ""
-
-        Runnable i _ ->
-            Debug.toString i
+        Runnable _ _ ->
+            RUNNING exe.srcCode 0
