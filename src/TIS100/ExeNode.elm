@@ -16,7 +16,7 @@ import Utils as U exposing (Dir4(..))
 
 
 type ExeNode
-    = Runnable String (List Intent) Prg State
+    = Runnable String (List Intent) State
     | NotRunnable String
 
 
@@ -25,9 +25,9 @@ type alias Prg =
 
 
 type State
-    = ReadyToRun
-    | ReadBlocked Dir4 Dir4
-    | WriteBlocked Dir4 Num
+    = ReadyToRun Prg
+    | ReadBlocked Prg Dir4 Dir4
+    | WriteBlocked Prg Dir4 Num
 
 
 type Inst
@@ -90,7 +90,7 @@ initMov srcCode f t =
         prg =
             Pivot.singleton (Mov f t)
     in
-    Runnable srcCode (intentsFromPrg prg) prg ReadyToRun
+    Runnable srcCode (intentsFromPrg prg) (ReadyToRun prg)
 
 
 intentsFromPrg : Prg -> List Intent
@@ -120,29 +120,40 @@ state exe =
         NotRunnable _ ->
             S.Done
 
-        Runnable sc nts prg st ->
+        Runnable sc nts st ->
             case st of
-                ReadyToRun ->
-                    S.ReadyToRun (\() -> Runnable sc nts prg (run prg))
+                ReadyToRun prg ->
+                    S.ReadyToRun (\() -> Runnable sc nts (run prg))
 
-                ReadBlocked f t ->
+                ReadBlocked prg f t ->
                     S.ReadBlocked f
-                        (WriteBlocked t
-                            >> Runnable sc nts prg
-                        )
+                        (WriteBlocked prg t >> Runnable sc nts)
 
-                WriteBlocked t num ->
-                    S.WriteBlocked num t (\() -> Runnable sc nts prg ReadyToRun)
+                WriteBlocked prg t num ->
+                    S.WriteBlocked num t <|
+                        \() ->
+                            Runnable sc nts <|
+                                ReadyToRun (prgNext prg)
+
+
+prgNext : Prg -> Prg
+prgNext prg =
+    case Pivot.goR prg of
+        Just nPrg ->
+            nPrg
+
+        Nothing ->
+            Pivot.goToStart prg
 
 
 run : Prg -> State
 run prg =
     case Pivot.getC prg of
         Mov f t ->
-            ReadBlocked f t
+            ReadBlocked prg f t
 
         Nop ->
-            ReadyToRun
+            ReadyToRun (prgNext prg)
 
 
 intents : ExeNode -> List Intent
@@ -151,7 +162,7 @@ intents exe =
         NotRunnable _ ->
             []
 
-        Runnable _ nts _ _ ->
+        Runnable _ nts _ ->
             nts
 
 
@@ -166,5 +177,5 @@ viewModel exe =
         NotRunnable srcCode ->
             IDLE srcCode
 
-        Runnable srcCode _ _ _ ->
+        Runnable srcCode _ _ ->
             RUNNING srcCode 0
