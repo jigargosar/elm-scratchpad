@@ -60,10 +60,10 @@ prgFromState st =
         ReadyToRun prg ->
             prg
 
-        ReadBlocked prg dir4 dst ->
+        ReadBlocked prg _ _ ->
             prg
 
-        WriteBlocked prg dir4 num ->
+        WriteBlocked prg _ _ ->
             prg
 
 
