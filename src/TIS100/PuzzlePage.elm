@@ -174,7 +174,7 @@ update msg model =
                 FAST ->
                     { model | state = Sim_ (setStepMode AutoFast sim) }
 
-                OnEditorInput addr string ->
+                OnEditorInput _ _ ->
                     model
 
 
