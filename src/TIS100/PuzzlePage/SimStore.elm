@@ -2,9 +2,9 @@ module TIS100.PuzzlePage.SimStore exposing
     ( SimNode(..)
     , SimStore
     , init
-    , ioIntentsAndActions
     , leftBarInputs
     , leftBarOutputs
+    , portsViewModel
     , step
     )
 
@@ -166,8 +166,8 @@ outputsToList fn grid =
             )
 
 
-ioIntentsAndActions : SimStore -> Ports.IOIntentsAndActions
-ioIntentsAndActions simStore =
+portsViewModel : SimStore -> Ports.ViewModel
+portsViewModel simStore =
     Dict.foldl
         (\addr node { intents, actions } ->
             { intents = List.map (U.pair addr) (simNodeIntents node) ++ intents
