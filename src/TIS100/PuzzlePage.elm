@@ -29,8 +29,8 @@ import Utils exposing (..)
 sampleModel : Model
 sampleModel =
     let
-        ss : List ( Addr, String )
-        ss =
+        sourceEntries : List ( Addr, String )
+        sourceEntries =
             [ ( ( 0, 1 ), "Mov up down" )
             , ( ( 0, 2 ), "Mov up down" )
             , ( ( 0, 3 ), "Mov up down" )
@@ -45,7 +45,7 @@ sampleModel =
             , ( ( 3, 3 ), "Mov up down" )
             ]
     in
-    init Puzzle.samplePuzzle ss
+    init Puzzle.samplePuzzle sourceEntries
 
 
 
@@ -65,9 +65,9 @@ type State
 
 
 init : Puzzle -> List ( Addr, String ) -> Model
-init puzzle editors =
+init puzzle sourceEntries =
     { puzzle = puzzle
-    , editors = initEditorsWithSource puzzle editors
+    , editors = initEditorsWithSourceEntries puzzle sourceEntries
     , state = Edit
     }
 
@@ -395,8 +395,8 @@ type alias Editor =
     String
 
 
-initEditorsWithSource : Puzzle -> List ( Addr, String ) -> Dict Addr String
-initEditorsWithSource puzzle sourceEntries =
+initEditorsWithSourceEntries : Puzzle -> List ( Addr, String ) -> Dict Addr String
+initEditorsWithSourceEntries puzzle sourceEntries =
     replaceEntries sourceEntries (initEditors puzzle)
 
 
