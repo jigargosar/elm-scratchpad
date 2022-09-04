@@ -201,8 +201,7 @@ leftBarOutputs simStore =
                     OutputNode.getNumsRead o
             in
             { title = c.title
-            , expected =
-                SelectionList.fromIndex (List.length actual) c.nums
+            , expected = SelectionList.fromIndex (List.length actual) c.nums
             , actual = actual
             }
         )
