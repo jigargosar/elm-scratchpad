@@ -168,8 +168,8 @@ leftBarViewModel { puzzle, state } =
             }
 
         Sim_ sim ->
-            { inputs = SimStore.simInputColumns sim.store
-            , outputs = SimStore.simOutputColumns sim.store
+            { inputs = SimStore.leftBarInputs sim.store
+            , outputs = SimStore.leftBarOutputs sim.store
             }
 
 
@@ -502,7 +502,7 @@ initSim puzzle exs stepMode =
 viewSimGridItems : Puzzle -> Sim -> List (Html msg)
 viewSimGridItems puzzle { store } =
     List.map viewSimNode (Dict.toList store)
-        ++ Ports.view puzzle (SimStore.simIntentsAndActions store)
+        ++ Ports.view puzzle (SimStore.intentsAndActions store)
 
 
 
@@ -530,7 +530,7 @@ autoStepSim : Sim -> Sim
 autoStepSim sim =
     let
         newStore =
-            SimStore.stepSimStore sim.store
+            SimStore.step sim.store
     in
     if newStore == sim.store then
         { sim | state = Completed }

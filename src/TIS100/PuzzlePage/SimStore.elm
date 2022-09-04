@@ -2,10 +2,10 @@ module TIS100.PuzzlePage.SimStore exposing
     ( SimNode(..)
     , SimStore
     , init
-    , simInputColumns
-    , simIntentsAndActions
-    , simOutputColumns
-    , stepSimStore
+    , intentsAndActions
+    , leftBarInputs
+    , leftBarOutputs
+    , step
     )
 
 import Dict exposing (Dict)
@@ -166,8 +166,8 @@ outputsToList fn grid =
             )
 
 
-simIntentsAndActions : SimStore -> ( List ( Addr, Intent ), List ( Addr, Action ) )
-simIntentsAndActions simStore =
+intentsAndActions : SimStore -> ( List ( Addr, Intent ), List ( Addr, Action ) )
+intentsAndActions simStore =
     Dict.foldl
         (\addr node ( intents, actions ) ->
             ( List.map (U.pair addr) (simNodeIntents node) ++ intents
@@ -178,8 +178,8 @@ simIntentsAndActions simStore =
         simStore
 
 
-simInputColumns : SimStore -> List LB.Input
-simInputColumns simStore =
+leftBarInputs : SimStore -> List LB.Input
+leftBarInputs simStore =
     inputsToList
         (\_ c i ->
             { title = c.title
@@ -189,8 +189,8 @@ simInputColumns simStore =
         simStore
 
 
-simOutputColumns : SimStore -> List LB.Output
-simOutputColumns simStore =
+leftBarOutputs : SimStore -> List LB.Output
+leftBarOutputs simStore =
     outputsToList
         (\_ c o ->
             let
@@ -206,8 +206,8 @@ simOutputColumns simStore =
         simStore
 
 
-stepSimStore : SimStore -> SimStore
-stepSimStore store =
+step : SimStore -> SimStore
+step store =
     Dict.foldl stepNode (initAcc store) store
         |> resolveAllReadBlocked
         |> resolveAllWriteBlocked
