@@ -91,9 +91,10 @@ compileLine ( _, line ) =
 
 
 parseDst : String -> Maybe Dst
-parseDst string =
+parseDst token =
     U.maybeOneOf
-        [ Maybe.map DstPort (parseDir string)
+        [ Maybe.map DstPort (parseDir token)
+        , U.maybeFromBool (token == "nil") DstNil
         ]
 
 
