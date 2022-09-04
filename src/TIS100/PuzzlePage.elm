@@ -144,7 +144,7 @@ update msg model =
                     startDebugging AutoFast model
 
                 OnEditorInput addr string ->
-                    model
+                    { model | editors = replaceEntry ( addr, string ) model.editors }
 
         Sim_ sim ->
             case msg of
