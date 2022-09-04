@@ -354,7 +354,7 @@ viewSrc srcCode maybeLine =
             |> List.indexedMap
                 (\i l ->
                     if Just i == maybeLine then
-                        div [ pl "0.5ch", fg black, bgc white ]
+                        div [ pl "0.5ch", fg black, bgc UI.lightGray ]
                             [ text (l ++ "\n") ]
 
                     else
