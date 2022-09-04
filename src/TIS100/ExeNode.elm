@@ -12,7 +12,7 @@ module TIS100.ExeNode exposing
 import TIS100.NodeState as S
 import TIS100.Num exposing (Num)
 import TIS100.Ports exposing (Intent(..))
-import Utils exposing (Dir4(..))
+import Utils as U exposing (Dir4(..))
 
 
 type ExeNode
@@ -33,7 +33,51 @@ type Inst
 
 compile : String -> Maybe ExeNode
 compile srcCode =
-    Debug.todo "todo"
+    let
+        toTokens : String -> List String
+        toTokens line =
+            String.split " " line
+                |> U.reject (U.eq "")
+
+        dirFromString : String -> Maybe Dir4
+        dirFromString string =
+            case string of
+                "left" ->
+                    Just Left
+
+                "right" ->
+                    Just Right
+
+                "up" ->
+                    Just Up
+
+                "down" ->
+                    Just Down
+
+                _ ->
+                    Nothing
+
+        compileLine : String -> Maybe ExeNode
+        compileLine line =
+            case toTokens line of
+                "mov" :: b :: c :: [] ->
+                    Maybe.map2 initMov
+                        (dirFromString b)
+                        (dirFromString c)
+
+                _ ->
+                    Nothing
+    in
+    if U.isBlank srcCode then
+        Just empty
+
+    else
+        srcCode
+            |> String.toLower
+            |> String.lines
+            |> List.map String.trim
+            |> List.head
+            |> Maybe.andThen compileLine
 
 
 initMovUpDown : ExeNode

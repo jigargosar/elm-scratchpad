@@ -1603,6 +1603,10 @@ words str xs =
 -- BASICS
 
 
+isBlank =
+    String.trim >> String.isEmpty
+
+
 nbsp : String
 nbsp =
     "\u{00A0}"
