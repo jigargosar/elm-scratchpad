@@ -1,8 +1,8 @@
 module TIS100.Puzzle exposing (..)
 
 import Dict exposing (Dict)
+import TIS100.Addr exposing (Addr)
 import TIS100.Num as Num exposing (Num)
-import TIS100.UI exposing (Addr)
 import Utils exposing (pair)
 
 

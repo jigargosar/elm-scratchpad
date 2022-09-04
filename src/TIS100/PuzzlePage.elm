@@ -9,6 +9,7 @@ module TIS100.PuzzlePage exposing
 
 import Dict exposing (Dict)
 import Html
+import TIS100.Addr as Addr exposing (Addr)
 import TIS100.ExeNode as ExeNode exposing (ExeNode)
 import TIS100.NodeState as S exposing (NodeState)
 import TIS100.Ports as Ports exposing (Action(..), Intent(..))
@@ -16,7 +17,7 @@ import TIS100.Puzzle as Puzzle exposing (IOConfig, Puzzle)
 import TIS100.PuzzlePage.LeftBar as LB
 import TIS100.PuzzlePage.SimStore as SimStore exposing (SimNode(..), SimStore)
 import TIS100.SelectionList as SelectionList exposing (SelectionList)
-import TIS100.UI as UI exposing (Addr)
+import TIS100.UI as UI
 import Time
 import Utils exposing (..)
 
@@ -243,7 +244,7 @@ viewInputNode { x, title } =
         , placeContentCenter
         , sWidth "50%"
         , sHeight UI.gapSize
-        , gridAreaXY ( x, 0 )
+        , Addr.inputGridArea x
         , positionRelative
         , style "bottom" UI.gapSize
         ]
@@ -261,7 +262,7 @@ viewOutputNode { x, title } =
         , placeContentCenter
         , sWidth "50%"
         , sHeight UI.gapSize
-        , gridAreaXY ( x, 2 )
+        , Addr.outputGridArea x
         , positionRelative
         , top100
         ]
@@ -274,7 +275,7 @@ viewOutputNode { x, title } =
 viewEditor : ( Addr, Editor ) -> Html msg
 viewEditor ( addr, editor ) =
     div
-        [ UI.gridAreaFromAddr addr
+        [ Addr.toGridArea addr
         , UI.lightOutline
         , dGrid
         , gridAutoFlowColumn
@@ -308,9 +309,9 @@ viewEditor ( addr, editor ) =
 
 
 viewExeNode : ( Addr, ExeNode ) -> Html msg
-viewExeNode ( ( x, y ), exe ) =
+viewExeNode ( addr, exe ) =
     div
-        [ gridAreaXY ( x, y - 1 )
+        [ Addr.toGridArea addr
         , UI.lightOutline
         , dGrid
         , gridAutoFlowColumn
@@ -361,10 +362,10 @@ exeMode exe =
 
 
 viewFaultyNode : Addr -> Html msg
-viewFaultyNode ( x, y ) =
+viewFaultyNode addr =
     div
         [ displayGrid
-        , gridAreaXY ( x, y - 1 )
+        , Addr.toGridArea addr
         , placeContentCenter
         , sOutline ("1px solid " ++ "red")
         , fg "red"
