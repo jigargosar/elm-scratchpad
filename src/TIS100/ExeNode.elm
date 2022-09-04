@@ -21,7 +21,11 @@ type ExeNode
 
 
 type alias Prg =
-    Pivot Inst
+    Pivot PLine
+
+
+type alias PLine =
+    { no : Int, inst : Inst }
 
 
 goNext : Prg -> Prg
@@ -36,7 +40,7 @@ goNext prg =
 
 currInst : Prg -> Inst
 currInst prg =
-    Pivot.getC prg
+    Pivot.getC prg |> .inst
 
 
 type State
@@ -78,8 +82,13 @@ toTokens line =
         |> U.reject (U.eq "")
 
 
-compileLine : ( Int, String ) -> Maybe Inst
-compileLine ( _, line ) =
+compileLine : ( Int, String ) -> Maybe PLine
+compileLine ( no, line ) =
+    parseInst line |> Maybe.map (PLine no)
+
+
+parseInst : String -> Maybe Inst
+parseInst line =
     case toTokens line of
         "mov" :: b :: c :: [] ->
             Maybe.map2 Mov
@@ -125,7 +134,7 @@ init srcCode prg =
 intentsFromPrg : Prg -> List Intent
 intentsFromPrg prg =
     Pivot.toList prg
-        |> List.concatMap intentsFromInst
+        |> List.concatMap (.inst >> intentsFromInst)
 
 
 intentsFromInst : Inst -> List Intent
