@@ -2427,6 +2427,7 @@ disableContextMenu msg =
         )
 
 
+onInput : (String -> msg) -> Html.Attribute msg
 onInput =
     Html.Events.onInput
 

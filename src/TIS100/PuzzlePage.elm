@@ -83,6 +83,7 @@ type Msg
     | RUN
     | FAST
     | AutoStep
+    | OnEditorInput Addr String
 
 
 subscriptions : Model -> Sub Msg
@@ -142,6 +143,9 @@ update msg model =
                 FAST ->
                     startDebugging AutoFast model
 
+                OnEditorInput addr string ->
+                    model
+
         Sim_ sim ->
             case msg of
                 STOP ->
@@ -158,6 +162,9 @@ update msg model =
 
                 FAST ->
                     { model | state = Sim_ (setStepMode AutoFast sim) }
+
+                OnEditorInput addr string ->
+                    model
 
 
 leftBarViewModel : Model -> LB.ViewModel
@@ -212,7 +219,7 @@ viewCycle model =
     div [] [ text "Cycle: ", text cycleText ]
 
 
-viewGrid : Model -> Html msg
+viewGrid : Model -> Html Msg
 viewGrid { puzzle, state, editors } =
     div
         [ displayGrid
@@ -270,7 +277,7 @@ viewOutputNode { x, title } =
         ]
 
 
-viewEditor : ( Addr, Editor ) -> Html msg
+viewEditor : ( Addr, Editor ) -> Html Msg
 viewEditor ( addr, editor ) =
     div
         [ Addr.toGridArea addr
@@ -291,6 +298,7 @@ viewEditor ( addr, editor ) =
             , fgInherit
             , ttInherit
             , fontInherit
+            , onInput (OnEditorInput addr)
             ]
             [ text editor ]
         , gtRows 5
@@ -424,13 +432,13 @@ editModeOutputColumns puzzle =
         puzzle.outputs
 
 
-viewEditModeGridItems : Puzzle -> Dict Addr Editor -> List (Html msg)
+viewEditModeGridItems : Puzzle -> Dict Addr Editor -> List (Html Msg)
 viewEditModeGridItems puzzle editors =
     viewEditModeNodes puzzle editors
         ++ Ports.viewAllPorts puzzle
 
 
-viewEditModeNodes : Puzzle -> Dict Addr Editor -> List (Html msg)
+viewEditModeNodes : Puzzle -> Dict Addr Editor -> List (Html Msg)
 viewEditModeNodes puzzle editors =
     Puzzle.gridToList
         viewInputNode
