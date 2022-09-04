@@ -8,6 +8,7 @@ module TIS100.ExeNode exposing
     , viewModel
     )
 
+import Pivot exposing (Pivot)
 import TIS100.NodeState as S
 import TIS100.Num exposing (Num)
 import TIS100.Ports exposing (Intent(..))
@@ -15,8 +16,12 @@ import Utils as U exposing (Dir4(..))
 
 
 type ExeNode
-    = Runnable String Inst State
+    = Runnable String (List Intent) Prg State
     | NotRunnable String
+
+
+type alias Prg =
+    Pivot Inst
 
 
 type State
@@ -81,7 +86,27 @@ compile srcCode =
 
 initMov : String -> Dir4 -> Dir4 -> ExeNode
 initMov srcCode f t =
-    Runnable srcCode (Mov f t) ReadyToRun
+    let
+        prg =
+            Pivot.singleton (Mov f t)
+    in
+    Runnable srcCode (intentsFromPrg prg) prg ReadyToRun
+
+
+intentsFromPrg : Prg -> List Intent
+intentsFromPrg prg =
+    Pivot.toList prg
+        |> List.concatMap intentsFromInst
+
+
+intentsFromInst : Inst -> List Intent
+intentsFromInst inst =
+    case inst of
+        Mov f t ->
+            [ Read f, Write t ]
+
+        Nop ->
+            []
 
 
 empty : ExeNode
@@ -95,24 +120,24 @@ state exe =
         NotRunnable _ ->
             S.Done
 
-        Runnable srcCode inst state_ ->
-            case state_ of
+        Runnable sc nts prg st ->
+            case st of
                 ReadyToRun ->
-                    S.ReadyToRun (\() -> Runnable srcCode inst (run inst))
+                    S.ReadyToRun (\() -> Runnable sc nts prg (run prg))
 
                 ReadBlocked f t ->
                     S.ReadBlocked f
                         (WriteBlocked t
-                            >> Runnable srcCode inst
+                            >> Runnable sc nts prg
                         )
 
                 WriteBlocked t num ->
-                    S.WriteBlocked num t (\() -> Runnable srcCode inst ReadyToRun)
+                    S.WriteBlocked num t (\() -> Runnable sc nts prg ReadyToRun)
 
 
-run : Inst -> State
-run inst =
-    case inst of
+run : Prg -> State
+run prg =
+    case Pivot.getC prg of
         Mov f t ->
             ReadBlocked f t
 
@@ -126,13 +151,8 @@ intents exe =
         NotRunnable _ ->
             []
 
-        Runnable _ inst _ ->
-            case inst of
-                Mov f t ->
-                    [ Read f, Write t ]
-
-                Nop ->
-                    []
+        Runnable _ nts _ _ ->
+            nts
 
 
 type ViewModel
@@ -146,5 +166,5 @@ viewModel exe =
         NotRunnable srcCode ->
             IDLE srcCode
 
-        Runnable srcCode _ _ ->
+        Runnable srcCode _ _ _ ->
             RUNNING srcCode 0
