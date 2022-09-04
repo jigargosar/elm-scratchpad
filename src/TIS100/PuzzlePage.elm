@@ -31,7 +31,7 @@ sampleModel =
     let
         sourceEntries : List ( Addr, String )
         sourceEntries =
-            [ ( ( 0, 1 ), "Mov up down\nmov up down" )
+            [ ( ( 0, 1 ), "Mov up down\n\n\nmov up down" )
             , ( ( 0, 2 ), "Mov up down" )
             , ( ( 0, 3 ), "Mov up down" )
             , ( ( 1, 1 ), "Mov up down" )
