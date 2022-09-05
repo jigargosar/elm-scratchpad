@@ -100,8 +100,13 @@ type Dst
     | DstNil
 
 
+type Src
+    = SrcPort Dir4
+    | SrcAcc
+
+
 type Inst
-    = Mov Dir4 Dst
+    = Mov Src Dst
     | Nop
 
 
@@ -138,7 +143,7 @@ parseInst line =
     case toTokens line of
         "mov" :: b :: c :: [] ->
             Maybe.map2 Mov
-                (parseDir b)
+                (parseSrc b)
                 (parseDst c)
 
         _ ->
@@ -151,6 +156,14 @@ parseDst token =
         [ Maybe.map DstPort (parseDir token)
         , U.maybeFromBool (token == "nil") DstNil
         , U.maybeFromBool (token == "acc") DstAcc
+        ]
+
+
+parseSrc : String -> Maybe Src
+parseSrc token =
+    U.maybeOneOf
+        [ Maybe.map SrcPort (parseDir token)
+        , U.maybeFromBool (token == "acc") SrcAcc
         ]
 
 
@@ -187,8 +200,14 @@ intentsFromPrg prg =
 intentsFromInst : Inst -> List Intent
 intentsFromInst inst =
     case inst of
-        Mov f dst ->
-            [ Read f ]
+        Mov src dst ->
+            (case src of
+                SrcPort f ->
+                    [ Read f ]
+
+                SrcAcc ->
+                    []
+            )
                 ++ (case dst of
                         DstPort t ->
                             [ Write t ]
@@ -234,8 +253,13 @@ state exe =
 run : Ctx -> State
 run ctx =
     case currInst ctx of
-        Mov f t ->
-            ReadBlocked ctx f t
+        Mov src dst ->
+            case src of
+                SrcPort f ->
+                    ReadBlocked ctx f dst
+
+                SrcAcc ->
+                    writeAfterRead ctx dst ctx.acc
 
         Nop ->
             ReadyToRun (goNext ctx)
