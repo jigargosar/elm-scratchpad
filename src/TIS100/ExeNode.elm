@@ -56,7 +56,12 @@ goNext ({ prg } as ctx) =
 
 addToAccAndGoNext : Num -> Ctx -> Ctx
 addToAccAndGoNext num ctx =
-    { ctx | acc = Num.add ctx.acc num }
+    { ctx | acc = Num.add ctx.acc num } |> goNext
+
+
+setAccAndGoNext : Num -> Ctx -> Ctx
+setAccAndGoNext num ctx =
+    { ctx | acc = num } |> goNext
 
 
 currInst : Ctx -> Inst
@@ -144,6 +149,7 @@ parseDst token =
     U.maybeOneOf
         [ Maybe.map DstPort (parseDir token)
         , U.maybeFromBool (token == "nil") DstNil
+        , U.maybeFromBool (token == "acc") DstAcc
         ]
 
 
@@ -244,7 +250,7 @@ writeAfterRead ctx dst num =
             ReadyToRun (goNext ctx)
 
         DstAcc ->
-            ReadyToRun (addToAccAndGoNext num ctx)
+            ReadyToRun (setAccAndGoNext num ctx)
 
 
 intents : ExeNode -> List Intent
