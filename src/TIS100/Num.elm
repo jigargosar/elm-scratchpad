@@ -5,6 +5,7 @@ module TIS100.Num exposing
     , view
     , viewError
     , viewSelectionList
+    , zero
     )
 
 import TIS100.SelectionList as SelectionList exposing (SelectionList)
@@ -19,6 +20,11 @@ type Num
 fromInt : Int -> Num
 fromInt i =
     Num (clamp i)
+
+
+zero : Num
+zero =
+    fromInt 0
 
 
 clamp : Int -> Int
