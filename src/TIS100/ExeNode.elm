@@ -55,8 +55,8 @@ goNext ({ prg } as ctx) =
 
 
 addToAccAndGoNext : Num -> Ctx -> Ctx
-addToAccAndGoNext num prg =
-    Debug.todo "todo"
+addToAccAndGoNext num ctx =
+    { ctx | acc = Num.add ctx.acc num }
 
 
 currInst : Ctx -> Inst

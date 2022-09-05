@@ -1,5 +1,6 @@
 module TIS100.Num exposing
     ( Num
+    , add
     , fromInt
     , range
     , view
@@ -25,6 +26,11 @@ fromInt i =
 zero : Num
 zero =
     fromInt 0
+
+
+add : Num -> Num -> Num
+add (Num a) (Num b) =
+    fromInt (a + b)
 
 
 clamp : Int -> Int
