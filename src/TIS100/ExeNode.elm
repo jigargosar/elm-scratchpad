@@ -54,9 +54,10 @@ goNext ({ prg } as ctx) =
             { ctx | prg = Pivot.goToStart prg }
 
 
-addToAccAndGoNext : Num -> Ctx -> Ctx
-addToAccAndGoNext num ctx =
-    { ctx | acc = Num.add ctx.acc num } |> goNext
+
+--addToAccAndGoNext : Num -> Ctx -> Ctx
+--addToAccAndGoNext num ctx =
+--    { ctx | acc = Num.add ctx.acc num } |> goNext
 
 
 setAccAndGoNext : Num -> Ctx -> Ctx
