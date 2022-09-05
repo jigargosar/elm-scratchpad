@@ -103,6 +103,7 @@ type Dst
 type Src
     = SrcPort Dir4
     | SrcAcc
+    | SrcNum Num
 
 
 type Inst
@@ -164,6 +165,7 @@ parseSrc token =
     U.maybeOneOf
         [ Maybe.map SrcPort (parseDir token)
         , U.maybeFromBool (token == "acc") SrcAcc
+        , Maybe.map SrcNum (Num.parse token)
         ]
 
 
@@ -205,17 +207,14 @@ intentsFromInst inst =
                 SrcPort f ->
                     [ Read f ]
 
-                SrcAcc ->
+                _ ->
                     []
             )
                 ++ (case dst of
                         DstPort t ->
                             [ Write t ]
 
-                        DstNil ->
-                            []
-
-                        DstAcc ->
+                        _ ->
                             []
                    )
 
@@ -260,6 +259,9 @@ run ctx =
 
                 SrcAcc ->
                     writeAfterRead ctx dst ctx.acc
+
+                SrcNum num ->
+                    writeAfterRead ctx dst num
 
         Nop ->
             ReadyToRun (goNext ctx)

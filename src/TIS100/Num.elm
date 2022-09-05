@@ -2,6 +2,7 @@ module TIS100.Num exposing
     ( Num
     , add
     , fromInt
+    , parse
     , range
     , toString
     , view
@@ -22,6 +23,11 @@ type Num
 fromInt : Int -> Num
 fromInt i =
     Num (clamp i)
+
+
+parse : String -> Maybe Num
+parse string =
+    String.toInt string |> Maybe.map fromInt
 
 
 zero : Num

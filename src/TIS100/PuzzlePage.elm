@@ -33,7 +33,7 @@ sampleModel =
         sourceEntries : List ( Addr, String )
         sourceEntries =
             [ ( ( 0, 1 ), "mov up acc\n\n\nmov acc down" )
-            , ( ( 0, 2 ), "Mov up down" )
+            , ( ( 0, 2 ), "Mov up down\nmov 1 acc" )
             , ( ( 0, 3 ), "Mov up down" )
             , ( ( 1, 1 ), "Mov up down" )
             , ( ( 1, 2 ), "Mov up down" )
