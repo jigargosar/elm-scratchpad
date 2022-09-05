@@ -143,9 +143,10 @@ parseInst : String -> Maybe Inst
 parseInst line =
     case toTokens line of
         "mov" :: b :: c :: [] ->
-            Maybe.map2 Mov
-                (parseSrc b)
-                (parseDst c)
+            Maybe.map2 Mov (parseSrc b) (parseDst c)
+
+        "nop" :: [] ->
+            Just Nop
 
         _ ->
             Nothing
