@@ -3,6 +3,7 @@ module TIS100.Num exposing
     , add
     , fromInt
     , range
+    , toString
     , view
     , viewError
     , viewSelectionList

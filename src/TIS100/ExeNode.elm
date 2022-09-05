@@ -259,7 +259,7 @@ intents exe =
 
 type ViewModel
     = IDLE String
-    | RUNNING String Int
+    | RUNNING String Int { acc : Num }
 
 
 viewModel : ExeNode -> ViewModel
@@ -269,4 +269,8 @@ viewModel exe =
             IDLE srcCode
 
         Runnable srcCode _ st ->
-            RUNNING srcCode (currLineNum (ctxFromState st))
+            let
+                ctx =
+                    ctxFromState st
+            in
+            RUNNING srcCode (currLineNum ctx) { acc = ctx.acc }

@@ -12,6 +12,7 @@ import Html
 import TIS100.Addr as Addr exposing (Addr)
 import TIS100.ExeNode as ExeNode exposing (ExeNode)
 import TIS100.NodeState as NS exposing (NodeState)
+import TIS100.Num as Num exposing (Num)
 import TIS100.Ports as Ports exposing (Action(..), Intent(..))
 import TIS100.Puzzle as Puzzle exposing (IOConfig, Puzzle)
 import TIS100.PuzzlePage.LeftBar as LB
@@ -321,13 +322,13 @@ viewEditor ( addr, editor ) =
 viewExeNode : ( Addr, ExeNode ) -> Html msg
 viewExeNode ( addr, exe ) =
     let
-        srcView =
+        ( srcView, ctx ) =
             case ExeNode.viewModel exe of
                 ExeNode.IDLE srcCode ->
-                    viewSrc srcCode Nothing
+                    ( viewSrc srcCode Nothing, { acc = Num.zero } )
 
-                ExeNode.RUNNING srcCode lineNo ->
-                    viewSrc srcCode (Just lineNo)
+                ExeNode.RUNNING srcCode lineNo ctx_ ->
+                    ( viewSrc srcCode (Just lineNo), ctx_ )
     in
     div
         [ Addr.toGridArea addr
@@ -336,14 +337,19 @@ viewExeNode ( addr, exe ) =
         , gridTemplateColumns "18ch auto"
         ]
         [ srcView
-        , gtRows 5
-            []
-            [ viewExeBox "ACC" "0"
-            , viewExeBox "BAK" "<0>"
-            , viewExeBox "LAST" "N/A"
-            , viewExeBox "MODE" (exeMode exe)
-            , viewExeBox "IDLE" "0%"
-            ]
+        , viewExeCtx (exeMode exe) ctx
+        ]
+
+
+viewExeCtx : String -> { acc : Num } -> Html msg
+viewExeCtx mode { acc } =
+    gtRows 5
+        []
+        [ viewExeBox "ACC" (Num.toString acc)
+        , viewExeBox "BAK" "<0>"
+        , viewExeBox "LAST" "N/A"
+        , viewExeBox "MODE" mode
+        , viewExeBox "IDLE" "0%"
         ]
 
 
