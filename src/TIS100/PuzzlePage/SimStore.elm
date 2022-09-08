@@ -181,14 +181,20 @@ leftBarViewModel simStore =
 
 
 leftBarInputs : Model -> List LB.Input
-leftBarInputs simStore =
-    inputsToList
-        (\_ c i ->
-            { title = c.title
-            , nums = InputNode.toSelectionList i
-            }
-        )
-        simStore
+leftBarInputs model =
+    Dict.values model
+        |> List.filterMap
+            (\node ->
+                case node of
+                    In c i ->
+                        Just
+                            { title = c.title
+                            , nums = InputNode.toSelectionList i
+                            }
+
+                    _ ->
+                        Nothing
+            )
 
 
 leftBarOutputs : Model -> List LB.Output
