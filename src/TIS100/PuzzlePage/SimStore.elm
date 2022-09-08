@@ -175,20 +175,24 @@ leftBarOutputs model =
         |> List.filterMap
             (\node ->
                 case node of
-                    Out { title, nums } o ->
-                        let
-                            actual =
-                                OutputNode.getNumsRead o
-                        in
-                        { title = title
-                        , expected = SelectionList.fromIndex (List.length actual) nums
-                        , actual = actual
-                        }
-                            |> Just
+                    Out c o ->
+                        Just (toLBOutput c o)
 
                     _ ->
                         Nothing
             )
+
+
+toLBOutput : IOConfig -> OutputNode -> LB.Output
+toLBOutput { title, nums } o =
+    let
+        actual =
+            OutputNode.getNumsRead o
+    in
+    { title = title
+    , expected = SelectionList.fromIndex (List.length actual) nums
+    , actual = actual
+    }
 
 
 step : Model -> Model
