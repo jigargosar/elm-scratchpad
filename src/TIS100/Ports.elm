@@ -80,14 +80,23 @@ fromViewModel puzzle { intents, actions } =
             List.map intentToEntry intents
                 ++ List.map actionToEntry actions
                 |> fromEntries
+    in
+    keepPorts (Puzzle.validWrites puzzle) ports
 
+
+keepPorts : List ( Addr, Dir4 ) -> Ports -> Ports
+keepPorts writeIntents ports =
+    let
         validKeys : Set.Set Key
         validKeys =
-            Puzzle.validWrites puzzle
+            writeIntents
                 |> List.map (\( a, d ) -> toKey a d)
                 |> Set.fromList
+
+        isValid k =
+            Set.member k validKeys
     in
-    Dict.filter (\key _ -> Set.member key validKeys) ports
+    Dict.filter (\k _ -> isValid k) ports
 
 
 intentToEntry : ( Addr, Intent ) -> PortEntry
