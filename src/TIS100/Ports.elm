@@ -110,11 +110,12 @@ addAction ( addr, action ) =
 
 addPort : Addr -> Dir4 -> Value -> Ports -> Ports
 addPort addr dir val =
-    let
-        key =
-            portKey ( addr, dir, val )
-    in
-    Dict.update key (updateMaybePort ( addr, dir, val ))
+    case parsePortEntry addr dir val of
+        Just pe ->
+            addPortEntry pe
+
+        Nothing ->
+            identity
 
 
 parsePortEntry : Addr -> Dir4 -> Value -> Maybe PortEntry
@@ -126,6 +127,12 @@ parsePortEntry addr dir val =
     Just ( key, ( addr, dir, val ) )
 
 
+addPortEntry : PortEntry -> Ports -> Ports
+addPortEntry ( key, prt ) =
+    Dict.update key (updateMaybePort prt)
+
+
+updateMaybePort : Port -> Maybe Port -> Maybe Port
 updateMaybePort (( addr, dir, new ) as port_) mbPort =
     case mbPort of
         Nothing ->
