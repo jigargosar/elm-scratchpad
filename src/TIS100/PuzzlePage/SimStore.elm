@@ -55,7 +55,7 @@ init puzzle exs =
         initExe addr =
             Exe (U.dictGetOr EN.empty addr exs)
     in
-    Puzzle.gridBy
+    Puzzle.toDictBy
         initIn
         initOut
         initLayout

@@ -492,7 +492,7 @@ viewEditModeGridItems puzzle editors =
 
 viewEditModeNodes : Puzzle -> Dict Addr Editor -> List (Html Msg)
 viewEditModeNodes puzzle editors =
-    Puzzle.gridToList
+    Puzzle.toListBy
         viewInputNode
         viewOutputNode
         (\( addr, nk ) ->

@@ -69,13 +69,13 @@ toLayout lss =
         |> Dict.fromList
 
 
-gridToList :
+toListBy :
     (IOConfig -> v)
     -> (IOConfig -> v)
     -> (( Addr, NodeType ) -> v)
     -> Puzzle
     -> List v
-gridToList ifn ofn lfn puzzle =
+toListBy ifn ofn lfn puzzle =
     let
         io =
             List.map (\c -> ifn c) puzzle.inputs
@@ -88,13 +88,13 @@ gridToList ifn ofn lfn puzzle =
     io ++ layout
 
 
-gridBy :
+toDictBy :
     (IOConfig -> v)
     -> (IOConfig -> v)
     -> (Addr -> NodeType -> v)
     -> Puzzle
     -> Dict Addr v
-gridBy ifn ofn lfn puzzle =
+toDictBy ifn ofn lfn puzzle =
     let
         io =
             List.map (\c -> ( inputAddr c, ifn c )) puzzle.inputs
