@@ -56,8 +56,12 @@ fromEntries =
 
 fromPuzzle : Puzzle -> Ports
 fromPuzzle puzzle =
+    let
+        entry ( addr, dir4 ) =
+            toEntry addr dir4 Empty
+    in
     Puzzle.validWrites puzzle
-        |> List.map entryFromWriteIntent
+        |> List.map entry
         |> fromEntries
 
 
@@ -66,11 +70,6 @@ fromViewModel { intents, actions } =
     List.map entryFromIntent intents
         ++ List.map entryFromAction actions
         |> fromEntries
-
-
-entryFromWriteIntent : ( Addr, Dir4 ) -> PortEntry
-entryFromWriteIntent ( addr, dir4 ) =
-    toEntry addr dir4 Empty
 
 
 entryFromIntent : ( Addr, Intent ) -> PortEntry
