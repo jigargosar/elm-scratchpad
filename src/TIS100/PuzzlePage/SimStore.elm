@@ -147,37 +147,22 @@ portsViewModel simStore =
 
 leftBarViewModel : Model -> LB.ViewModel
 leftBarViewModel simStore =
-    { inputs = leftBarInputs simStore
-    , outputs = leftBarOutputs simStore
-    }
-
-
-leftBarInputs : Model -> List LB.Input
-leftBarInputs model =
-    Dict.values model
-        |> List.filterMap
-            (\node ->
-                case node of
+    Dict.values simStore
+        |> List.foldr
+            (\n vm ->
+                case n of
                     In c i ->
-                        Just (toLBInput c i)
+                        { vm | inputs = toLBInput c i :: vm.inputs }
 
-                    _ ->
-                        Nothing
-            )
-
-
-leftBarOutputs : Model -> List LB.Output
-leftBarOutputs model =
-    Dict.values model
-        |> List.filterMap
-            (\node ->
-                case node of
                     Out c o ->
-                        Just (toLBOutput c o)
+                        { vm | outputs = toLBOutput c o :: vm.outputs }
 
                     _ ->
-                        Nothing
+                        vm
             )
+            { inputs = []
+            , outputs = []
+            }
 
 
 toLBOutput : IOConfig -> OutputNode -> LB.Output
