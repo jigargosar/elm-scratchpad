@@ -71,9 +71,9 @@ toLayout lss =
         ++ List.repeat 12 Executable
         |> List.take 12
         |> List.indexedMap pair
-        |> List.filterMap
+        |> List.map
             (\( i, nk ) ->
-                Just ( ( modBy 4 i, i // 4 + 1 ), nk )
+                ( ( modBy 4 i, i // 4 + 1 ), nk )
             )
         |> Dict.fromList
 
