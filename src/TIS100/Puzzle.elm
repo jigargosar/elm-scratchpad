@@ -78,6 +78,11 @@ toLayout lss =
         |> Dict.fromList
 
 
+isLayoutAddress : Addr -> Bool
+isLayoutAddress ( x, y ) =
+    U.isBounded 0 3 x && U.isBounded 1 2 y
+
+
 toListBy :
     (IOConfig -> v)
     -> (IOConfig -> v)
@@ -104,7 +109,7 @@ validWrites puzzle =
         nodeWrites ( addr, nt ) =
             case nt of
                 Executable ->
-                    List.map (pair addr) (validWriteDirs puzzle addr)
+                    List.map (pair addr) (validWriteDirs addr)
 
                 Faulty ->
                     []
@@ -117,11 +122,11 @@ validWrites puzzle =
         |> List.concat
 
 
-validWriteDirs : Puzzle -> Addr -> List Dir4
-validWriteDirs puzzle addr =
+validWriteDirs : Addr -> List Dir4
+validWriteDirs addr =
     let
         isValid dir =
-            Dict.member (U.moveInDir4 dir addr) puzzle.layout
+            isLayoutAddress (U.moveInDir4 dir addr)
     in
     List.filter isValid [ Up, Down, Left, Right ]
 

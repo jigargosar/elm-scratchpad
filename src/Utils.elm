@@ -1687,6 +1687,11 @@ signum x =
             1
 
 
+isBounded : comparable -> comparable -> comparable -> Bool
+isBounded lo hi x =
+    not (x < lo || x > hi)
+
+
 
 -- TUPLE UTILS
 
