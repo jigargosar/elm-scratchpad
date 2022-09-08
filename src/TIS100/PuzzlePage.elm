@@ -107,21 +107,35 @@ subscriptions model =
 startDebugging : StepMode -> Model -> Model
 startDebugging stepMode model =
     case compile model.editors of
-        Just exs ->
+        Ok exs ->
             { model | state = Sim_ (initSim model.puzzle exs stepMode) }
 
-        Nothing ->
+        Err _ ->
             model
 
 
-compile : Editors -> Maybe (List ( Addr, ExeNode ))
+type alias CompiledNodes =
+    Dict Addr ExeNode
+
+
+compile : Editors -> Result String CompiledNodes
 compile editors =
-    editors
-        |> Dict.toList
-        |> List.filterMap
-            (\( a, sc ) -> ExeNode.compile sc |> Maybe.map (pair a))
-        |> Just
-        |> maybeFilter (List.length >> eq (Dict.size editors))
+    compileHelp Dict.empty (Dict.toList editors)
+
+
+compileHelp : CompiledNodes -> List ( Addr, Editor ) -> Result String CompiledNodes
+compileHelp exd ls =
+    case ls of
+        [] ->
+            Ok exd
+
+        ( a, sc ) :: ls_ ->
+            case ExeNode.compile sc of
+                Ok e ->
+                    compileHelp (Dict.insert a e exd) ls_
+
+                Err e ->
+                    Err e
 
 
 startEditing : Model -> Model
@@ -483,7 +497,7 @@ type StepMode
     | AutoFast
 
 
-initSim : Puzzle -> List ( Addr, ExeNode ) -> StepMode -> Sim
+initSim : Puzzle -> CompiledNodes -> StepMode -> Sim
 initSim puzzle exs stepMode =
     { store = SimStore.init puzzle exs
     , state = Stepping stepMode

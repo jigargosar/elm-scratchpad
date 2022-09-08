@@ -111,10 +111,10 @@ type Inst
     | Nop
 
 
-compile : String -> Maybe ExeNode
+compile : String -> Result String ExeNode
 compile srcCode =
     if U.isBlank srcCode then
-        Just empty
+        Ok empty
 
     else
         srcCode
@@ -126,6 +126,7 @@ compile srcCode =
             |> U.maybeCombine
             |> Maybe.andThen prgFromList
             |> Maybe.map (init srcCode)
+            |> Result.fromMaybe "Compilation Failed"
 
 
 toTokens : String -> List String

@@ -31,7 +31,11 @@ type Node
     | Flt
 
 
-init : Puzzle -> List ( Addr, ExeNode ) -> Model
+type alias CompiledNodes =
+    Dict Addr ExeNode
+
+
+init : Puzzle -> CompiledNodes -> Model
 init puzzle exs =
     let
         initIn c =
@@ -49,10 +53,7 @@ init puzzle exs =
                     Flt
 
         initExe addr =
-            Exe (U.dictGetOr EN.empty addr exd)
-
-        exd =
-            Dict.fromList exs
+            Exe (U.dictGetOr EN.empty addr exs)
     in
     Puzzle.gridBy
         initIn
