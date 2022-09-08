@@ -159,10 +159,7 @@ leftBarInputs model =
             (\node ->
                 case node of
                     In c i ->
-                        Just
-                            { title = c.title
-                            , nums = InputNode.toSelectionList i
-                            }
+                        Just (toLBInput c i)
 
                     _ ->
                         Nothing
@@ -184,14 +181,21 @@ leftBarOutputs model =
 
 
 toLBOutput : IOConfig -> OutputNode -> LB.Output
-toLBOutput { title, nums } o =
+toLBOutput c o =
     let
         actual =
             OutputNode.getNumsRead o
     in
-    { title = title
-    , expected = SelectionList.fromIndex (List.length actual) nums
+    { title = c.title
+    , expected = SelectionList.fromIndex (List.length actual) c.nums
     , actual = actual
+    }
+
+
+toLBInput : IOConfig -> InputNode -> LB.Input
+toLBInput c i =
+    { title = c.title
+    , nums = InputNode.toSelectionList i
     }
 
 
