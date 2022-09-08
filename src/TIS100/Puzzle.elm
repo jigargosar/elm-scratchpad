@@ -1,4 +1,12 @@
-module TIS100.Puzzle exposing (..)
+module TIS100.Puzzle exposing
+    ( IOConfig
+    , NodeType(..)
+    , Puzzle
+    , executableAddresses
+    , samplePuzzle
+    , toDictBy
+    , toListBy
+    )
 
 import Dict exposing (Dict)
 import TIS100.Addr exposing (Addr)
@@ -105,6 +113,13 @@ toDictBy ifn ofn lfn puzzle =
             Dict.map lfn puzzle.layout
     in
     Dict.union io layout
+
+
+executableAddresses : Puzzle -> List Addr
+executableAddresses puzzle =
+    puzzle.layout
+        |> Dict.filter (\_ v -> v == Executable)
+        |> Dict.keys
 
 
 inputAddr : IOConfig -> Addr

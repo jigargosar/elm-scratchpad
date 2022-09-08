@@ -448,16 +448,8 @@ initEditorsWithSourceEntries puzzle sourceEntries =
 
 initEditors : Puzzle -> Editors
 initEditors puzzle =
-    Dict.toList puzzle.layout
-        |> List.filterMap
-            (\( a, n ) ->
-                case n of
-                    Puzzle.Executable ->
-                        Just ( a, "" )
-
-                    _ ->
-                        Nothing
-            )
+    Puzzle.executableAddresses puzzle
+        |> List.map (pairTo "")
         |> Dict.fromList
 
 
