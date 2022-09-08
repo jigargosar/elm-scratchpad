@@ -324,10 +324,8 @@ viewEditor ( addr, editor ) =
 viewEditorTextArea : (String -> msg) -> Attribute msg -> String -> Html.Html msg
 viewEditorTextArea onInputMsg outline editor =
     Html.textarea
-        [ noAttr
-
-        -- reset
-        , borderNone
+        [ -- reset
+          borderNone
         , outlineNone
         , resizeNone
 
