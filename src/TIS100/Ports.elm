@@ -40,31 +40,36 @@ type alias PortEntry =
     ( Key, Port )
 
 
+fromEntries : List PortEntry -> Ports
+fromEntries =
+    List.foldl addPortEntry Dict.empty
+
+
 fromPuzzle : Puzzle -> Ports
 fromPuzzle puzzle =
     Puzzle.validWrites puzzle
         |> List.map portEntryFromWriteEntry
-        |> Dict.fromList
+        |> fromEntries
 
 
 fromIntents : List ( Addr, Intent ) -> Ports
 fromIntents =
-    List.foldl addIntent Dict.empty
-
-
-addIntent : ( Addr, Intent ) -> Ports -> Ports
-addIntent ( addr, intent ) =
-    case intent of
-        Read dir4 ->
-            addPort (moveInDir4 dir4 addr) (oppositeDir4 dir4) Empty
-
-        Write dir4 ->
-            addPort addr dir4 Empty
+    List.map portEntryFromIntent >> fromEntries
 
 
 fromActions : List ( Addr, Action ) -> Ports
 fromActions =
-    List.map portEntryFromAction >> Dict.fromList
+    List.map portEntryFromAction >> fromEntries
+
+
+portEntryFromIntent : ( Addr, Intent ) -> PortEntry
+portEntryFromIntent ( addr, intent ) =
+    case intent of
+        Read dir4 ->
+            toPortEntry (moveInDir4 dir4 addr) (oppositeDir4 dir4) Empty
+
+        Write dir4 ->
+            toPortEntry addr dir4 Empty
 
 
 portEntryFromAction : ( Addr, Action ) -> PortEntry
@@ -75,11 +80,6 @@ portEntryFromAction ( addr, action ) =
 
         Writing dir4 num ->
             toPortEntry addr dir4 (Num num)
-
-
-addPort : Addr -> Dir4 -> Value -> Ports -> Ports
-addPort addr dir val =
-    addPortEntry (toPortEntry addr dir val)
 
 
 toPortEntry : Addr -> Dir4 -> Value -> PortEntry
