@@ -80,6 +80,39 @@ replaceExe ( addr, e ) =
         )
 
 
+step : Model -> Model
+step store =
+    SR.step toStepState store
+
+
+toStepState : Node -> SR.NodeState Node
+toStepState node =
+    case node of
+        In conf inputNode ->
+            InputNode.stepState inputNode |> SR.map (In conf)
+
+        Out conf outputNode ->
+            OutputNode.stepState outputNode |> SR.map (Out conf)
+
+        Exe exeNode ->
+            ExeNode.stepState exeNode |> SR.map Exe
+
+        Flt ->
+            SR.Done
+
+
+portsViewModel : Model -> Ports.ViewModel
+portsViewModel simStore =
+    Dict.foldl
+        (\addr node { intents, actions } ->
+            { intents = List.map (U.pair addr) (intentsOf node) ++ intents
+            , actions = List.map (U.pair addr) (actionsOf node) ++ actions
+            }
+        )
+        { intents = [], actions = [] }
+        simStore
+
+
 intentsOf : Node -> List Intent
 intentsOf node =
     case node of
@@ -115,34 +148,6 @@ actionsOf node =
 
                 SR.Done ->
                     []
-
-
-toStepState : Node -> SR.NodeState Node
-toStepState node =
-    case node of
-        In conf inputNode ->
-            InputNode.stepState inputNode |> SR.map (In conf)
-
-        Out conf outputNode ->
-            OutputNode.stepState outputNode |> SR.map (Out conf)
-
-        Exe exeNode ->
-            ExeNode.stepState exeNode |> SR.map Exe
-
-        Flt ->
-            SR.Done
-
-
-portsViewModel : Model -> Ports.ViewModel
-portsViewModel simStore =
-    Dict.foldl
-        (\addr node { intents, actions } ->
-            { intents = List.map (U.pair addr) (intentsOf node) ++ intents
-            , actions = List.map (U.pair addr) (actionsOf node) ++ actions
-            }
-        )
-        { intents = [], actions = [] }
-        simStore
 
 
 leftBarViewModel : Model -> LB.ViewModel
@@ -182,8 +187,3 @@ toLBInput c i =
     { title = c.title
     , nums = InputNode.toSelectionList i
     }
-
-
-step : Model -> Model
-step store =
-    SR.step toStepState store
