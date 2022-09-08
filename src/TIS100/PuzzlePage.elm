@@ -318,28 +318,32 @@ viewEditor ( addr, editor ) =
         , positionRelative
         ]
         [ headerView
-        , Html.textarea
-            [ noAttr
-
-            -- reset
-            , borderNone
-            , outlineNone
-            , resizeNone
-
-            -- inherit
-            , bgcInherit
-            , fgInherit
-            , ttInherit
-            , fontInherit
-            , onInput (OnEditorInput addr)
-
-            -- actual
-            , outline
-            , pa "0.5ch"
-            ]
-            [ text editor ]
+        , viewEditorTextArea (OnEditorInput addr) outline editor
         , viewExeCtx outline { acc = Num.zero, mode = "IDLE" }
         ]
+
+
+viewEditorTextArea onInputMsg outline editor =
+    Html.textarea
+        [ noAttr
+
+        -- reset
+        , borderNone
+        , outlineNone
+        , resizeNone
+
+        -- inherit
+        , bgcInherit
+        , fgInherit
+        , ttInherit
+        , fontInherit
+        , onInput onInputMsg
+
+        -- actual
+        , outline
+        , pa "0.5ch"
+        ]
+        [ text editor ]
 
 
 viewCompilerError : String -> Html msg
