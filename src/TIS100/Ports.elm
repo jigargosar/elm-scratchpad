@@ -1,10 +1,4 @@
-module TIS100.Ports exposing
-    ( Action(..)
-    , Intent(..)
-    , ViewModel
-    , view
-    , viewAllPorts
-    )
+module TIS100.Ports exposing (Action(..), Intent(..), ViewModel, view, viewAllPorts)
 
 import Dict exposing (Dict)
 import TIS100.Addr as Addr exposing (Addr)
@@ -46,56 +40,60 @@ type alias PortEntry =
     ( Key, Port )
 
 
-type alias WriteIntent =
-    ( Addr, Dir4 )
-
-
-fromPuzzle : Puzzle -> Ports
-fromPuzzle puzzle =
-    fromWriteIntents (Puzzle.validWrites puzzle)
-
-
-fromIntents : List ( Addr, Intent ) -> Ports
-fromIntents =
-    let
-        toWriteIntent : ( Addr, Intent ) -> ( Addr, Dir4 )
-        toWriteIntent ( addr, intent ) =
-            case intent of
-                Read dir4 ->
-                    ( moveInDir4 dir4 addr, oppositeDir4 dir4 )
-
-                Write dir4 ->
-                    ( addr, dir4 )
-    in
-    List.map toWriteIntent >> fromWriteIntents
-
-
-fromWriteIntents : List WriteIntent -> Ports
-fromWriteIntents =
-    List.foldl (\( addr, dir ) -> insertEntry (toEntry addr dir Empty)) Dict.empty
-
-
-fromActions : List ( Addr, Action ) -> Ports
-fromActions =
+fromEntries : List PortEntry -> Ports
+fromEntries =
     let
         updatePortEntry : PortEntry -> Ports -> Ports
         updatePortEntry ( key, prt ) =
             Dict.update key
-                (Maybe.map (updateValue (portValue prt))
+                (Maybe.map (updateValue (toValue prt))
                     >> Maybe.withDefault prt
                     >> Just
                 )
-
-        actionToEntry : ( Addr, Action ) -> PortEntry
-        actionToEntry ( addr, action ) =
-            case action of
-                Reading dir4 ->
-                    toEntry (moveInDir4 dir4 addr) (oppositeDir4 dir4) Query
-
-                Writing dir4 num ->
-                    toEntry addr dir4 (Num num)
     in
-    List.foldl (actionToEntry >> updatePortEntry) Dict.empty
+    List.foldl updatePortEntry Dict.empty
+
+
+fromPuzzle : Puzzle -> Ports
+fromPuzzle puzzle =
+    Puzzle.validWrites puzzle
+        |> List.map entryFromWriteIntent
+        |> fromEntries
+
+
+fromIntents : List ( Addr, Intent ) -> Ports
+fromIntents =
+    List.map entryFromIntent >> fromEntries
+
+
+fromActions : List ( Addr, Action ) -> Ports
+fromActions =
+    List.map entryFromAction >> fromEntries
+
+
+entryFromWriteIntent : ( Addr, Dir4 ) -> PortEntry
+entryFromWriteIntent ( addr, dir4 ) =
+    toEntry addr dir4 Empty
+
+
+entryFromIntent : ( Addr, Intent ) -> PortEntry
+entryFromIntent ( addr, intent ) =
+    case intent of
+        Read dir4 ->
+            toEntry (moveInDir4 dir4 addr) (oppositeDir4 dir4) Empty
+
+        Write dir4 ->
+            toEntry addr dir4 Empty
+
+
+entryFromAction : ( Addr, Action ) -> PortEntry
+entryFromAction ( addr, action ) =
+    case action of
+        Reading dir4 ->
+            toEntry (moveInDir4 dir4 addr) (oppositeDir4 dir4) Query
+
+        Writing dir4 num ->
+            toEntry addr dir4 (Num num)
 
 
 toEntry : Addr -> Dir4 -> Value -> PortEntry
@@ -107,8 +105,8 @@ toEntry addr dir val =
     ( key, ( addr, dir, val ) )
 
 
-portValue : Port -> Value
-portValue ( _, _, v ) =
+toValue : Port -> Value
+toValue ( _, _, v ) =
     v
 
 
