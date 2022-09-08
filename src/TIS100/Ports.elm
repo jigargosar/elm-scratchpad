@@ -1,4 +1,10 @@
-module TIS100.Ports exposing (Action(..), Intent(..), ViewModel, view, viewAllPorts)
+module TIS100.Ports exposing
+    ( Action(..)
+    , Intent(..)
+    , ViewModel
+    , view
+    , viewAllPorts
+    )
 
 import Dict exposing (Dict)
 import TIS100.Addr as Addr exposing (Addr)
@@ -40,8 +46,37 @@ type alias PortEntry =
     ( Key, Port )
 
 
-fromEntries : List PortEntry -> Ports
-fromEntries =
+type alias WriteIntent =
+    ( Addr, Dir4 )
+
+
+fromPuzzle : Puzzle -> Ports
+fromPuzzle puzzle =
+    fromWriteIntents (Puzzle.validWrites puzzle)
+
+
+fromIntents : List ( Addr, Intent ) -> Ports
+fromIntents =
+    let
+        toWriteIntent : ( Addr, Intent ) -> ( Addr, Dir4 )
+        toWriteIntent ( addr, intent ) =
+            case intent of
+                Read dir4 ->
+                    ( moveInDir4 dir4 addr, oppositeDir4 dir4 )
+
+                Write dir4 ->
+                    ( addr, dir4 )
+    in
+    List.map toWriteIntent >> fromWriteIntents
+
+
+fromWriteIntents : List WriteIntent -> Ports
+fromWriteIntents =
+    List.foldl (\( addr, dir ) -> insertEntry (toEntry addr dir Empty)) Dict.empty
+
+
+fromActions : List ( Addr, Action ) -> Ports
+fromActions =
     let
         updatePortEntry : PortEntry -> Ports -> Ports
         updatePortEntry ( key, prt ) =
@@ -50,54 +85,21 @@ fromEntries =
                     >> Maybe.withDefault prt
                     >> Just
                 )
+
+        actionToEntry : ( Addr, Action ) -> PortEntry
+        actionToEntry ( addr, action ) =
+            case action of
+                Reading dir4 ->
+                    toEntry (moveInDir4 dir4 addr) (oppositeDir4 dir4) Query
+
+                Writing dir4 num ->
+                    toEntry addr dir4 (Num num)
     in
-    List.foldl updatePortEntry Dict.empty
+    List.foldl (actionToEntry >> updatePortEntry) Dict.empty
 
 
-fromPuzzle : Puzzle -> Ports
-fromPuzzle puzzle =
-    Puzzle.validWrites puzzle
-        |> List.map portEntryFromWriteEntry
-        |> fromEntries
-
-
-fromIntents : List ( Addr, Intent ) -> Ports
-fromIntents =
-    List.map portEntryFromIntent >> fromEntries
-
-
-fromActions : List ( Addr, Action ) -> Ports
-fromActions =
-    List.map portEntryFromAction >> fromEntries
-
-
-portEntryFromWriteEntry : ( Addr, Dir4 ) -> PortEntry
-portEntryFromWriteEntry ( addr, dir4 ) =
-    toPortEntry addr dir4 Empty
-
-
-portEntryFromIntent : ( Addr, Intent ) -> PortEntry
-portEntryFromIntent ( addr, intent ) =
-    case intent of
-        Read dir4 ->
-            toPortEntry (moveInDir4 dir4 addr) (oppositeDir4 dir4) Empty
-
-        Write dir4 ->
-            toPortEntry addr dir4 Empty
-
-
-portEntryFromAction : ( Addr, Action ) -> PortEntry
-portEntryFromAction ( addr, action ) =
-    case action of
-        Reading dir4 ->
-            toPortEntry (moveInDir4 dir4 addr) (oppositeDir4 dir4) Query
-
-        Writing dir4 num ->
-            toPortEntry addr dir4 (Num num)
-
-
-toPortEntry : Addr -> Dir4 -> Value -> PortEntry
-toPortEntry addr dir val =
+toEntry : Addr -> Dir4 -> Value -> PortEntry
+toEntry addr dir val =
     let
         key =
             ( addr, moveInDir4 dir addr )
