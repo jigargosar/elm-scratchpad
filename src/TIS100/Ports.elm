@@ -5,7 +5,7 @@ import TIS100.Addr as Addr exposing (Addr)
 import TIS100.Num as Num exposing (Num)
 import TIS100.Puzzle as Puzzle exposing (Puzzle)
 import TIS100.UI as UI
-import Utils as U exposing (..)
+import Utils exposing (..)
 
 
 type Intent
@@ -26,34 +26,6 @@ type Value
     = Empty
     | Num Num
     | Query
-
-
-puzzleLayoutIOIntents : Puzzle -> List ( Addr, Intent )
-puzzleLayoutIOIntents puzzle =
-    let
-        ioIntentsFromAddr : Addr -> List ( Addr, Intent )
-        ioIntentsFromAddr addr =
-            [ Up, Down, Left, Right ]
-                |> List.filterMap
-                    (\dir ->
-                        let
-                            to =
-                                moveInDir4 dir addr
-                        in
-                        case dictGet2 addr to puzzle.layout of
-                            Just ( writer, _ ) ->
-                                case writer of
-                                    Puzzle.Executable ->
-                                        Just ( addr, Write dir )
-
-                                    Puzzle.Faulty ->
-                                        Nothing
-
-                            Nothing ->
-                                Nothing
-                    )
-    in
-    List.concatMap ioIntentsFromAddr (Dict.keys puzzle.layout)
 
 
 type alias Ports =
