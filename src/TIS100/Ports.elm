@@ -81,16 +81,12 @@ fromIntents =
 
 addIntent : ( Addr, Intent ) -> Ports -> Ports
 addIntent ( addr, intent ) =
-    let
-        port_ =
-            case intent of
-                Read dir4 ->
-                    ( moveInDir4 dir4 addr, oppositeDir4 dir4, Empty )
+    case intent of
+        Read dir4 ->
+            addPort ( moveInDir4 dir4 addr, oppositeDir4 dir4, Empty )
 
-                Write dir4 ->
-                    ( addr, dir4, Empty )
-    in
-    addPort port_
+        Write dir4 ->
+            addPort ( addr, dir4, Empty )
 
 
 fromActions : List ( Addr, Action ) -> Ports
