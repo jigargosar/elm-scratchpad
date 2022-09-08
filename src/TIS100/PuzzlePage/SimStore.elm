@@ -133,34 +133,6 @@ toStepState node =
             SR.Done
 
 
-inputsToList : (Addr -> IOConfig -> InputNode -> a) -> Model -> List a
-inputsToList fn grid =
-    Dict.toList grid
-        |> List.filterMap
-            (\( addr, cell ) ->
-                case cell of
-                    In conf i ->
-                        Just <| fn addr conf i
-
-                    _ ->
-                        Nothing
-            )
-
-
-outputsToList : (Addr -> IOConfig -> OutputNode -> a) -> Model -> List a
-outputsToList fn grid =
-    Dict.toList grid
-        |> List.filterMap
-            (\( addr, cell ) ->
-                case cell of
-                    Out conf o ->
-                        Just <| fn addr conf o
-
-                    _ ->
-                        Nothing
-            )
-
-
 portsViewModel : Model -> Ports.ViewModel
 portsViewModel simStore =
     Dict.foldl
@@ -198,19 +170,25 @@ leftBarInputs model =
 
 
 leftBarOutputs : Model -> List LB.Output
-leftBarOutputs simStore =
-    outputsToList
-        (\_ c o ->
-            let
-                actual =
-                    OutputNode.getNumsRead o
-            in
-            { title = c.title
-            , expected = SelectionList.fromIndex (List.length actual) c.nums
-            , actual = actual
-            }
-        )
-        simStore
+leftBarOutputs model =
+    Dict.values model
+        |> List.filterMap
+            (\node ->
+                case node of
+                    Out { title, nums } o ->
+                        let
+                            actual =
+                                OutputNode.getNumsRead o
+                        in
+                        { title = title
+                        , expected = SelectionList.fromIndex (List.length actual) nums
+                        , actual = actual
+                        }
+                            |> Just
+
+                    _ ->
+                        Nothing
+            )
 
 
 step : Model -> Model
