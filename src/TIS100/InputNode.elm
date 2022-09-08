@@ -1,7 +1,7 @@
 module TIS100.InputNode exposing
     ( InputNode
     , fromList
-    , state
+    , stepState
     , toSelectionList
     )
 
@@ -51,8 +51,8 @@ afterWrite oldP =
             Done (Pivot.toList oldP)
 
 
-state : InputNode -> SR.NodeState InputNode
-state node =
+stepState : InputNode -> SR.NodeState InputNode
+stepState node =
     case node of
         Done _ ->
             SR.Done

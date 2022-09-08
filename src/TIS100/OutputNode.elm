@@ -2,7 +2,7 @@ module TIS100.OutputNode exposing
     ( OutputNode
     , fromExpected
     , getNumsRead
-    , state
+    , stepState
     )
 
 import TIS100.Num exposing (Num)
@@ -25,8 +25,8 @@ fromExpected expected =
         ReadyToRun expected []
 
 
-state : OutputNode -> SR.NodeState OutputNode
-state node =
+stepState : OutputNode -> SR.NodeState OutputNode
+stepState node =
     case node of
         Done _ ->
             SR.Done
