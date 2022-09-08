@@ -59,25 +59,6 @@ init puzzle exs =
         initOut
         initLayout
         puzzle
-        |> replaceExeEntries exs
-
-
-replaceExeEntries : List ( Addr, ExeNode ) -> Model -> Model
-replaceExeEntries list grid =
-    List.foldl replaceExe grid list
-
-
-replaceExe : ( Addr, ExeNode ) -> Model -> Model
-replaceExe ( addr, e ) =
-    U.mapKey addr
-        (\n ->
-            case n of
-                Exe _ ->
-                    Exe e
-
-                _ ->
-                    n
-        )
 
 
 step : Model -> Model
