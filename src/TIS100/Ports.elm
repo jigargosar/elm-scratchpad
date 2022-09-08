@@ -40,6 +40,13 @@ type alias PortEntry =
     ( Key, Port )
 
 
+fromPuzzle : Puzzle -> Ports
+fromPuzzle puzzle =
+    Puzzle.validWrites puzzle
+        |> List.map portEntryFromWriteEntry
+        |> Dict.fromList
+
+
 fromIntents : List ( Addr, Intent ) -> Ports
 fromIntents =
     List.foldl addIntent Dict.empty
@@ -57,17 +64,17 @@ addIntent ( addr, intent ) =
 
 fromActions : List ( Addr, Action ) -> Ports
 fromActions =
-    List.foldl addAction Dict.empty
+    List.map portEntryFromAction >> Dict.fromList
 
 
-addAction : ( Addr, Action ) -> Ports -> Ports
-addAction ( addr, action ) =
+portEntryFromAction : ( Addr, Action ) -> PortEntry
+portEntryFromAction ( addr, action ) =
     case action of
         Reading dir4 ->
-            addPort (moveInDir4 dir4 addr) (oppositeDir4 dir4) Query
+            toPortEntry (moveInDir4 dir4 addr) (oppositeDir4 dir4) Query
 
         Writing dir4 num ->
-            addPort addr dir4 (Num num)
+            toPortEntry addr dir4 (Num num)
 
 
 addPort : Addr -> Dir4 -> Value -> Ports -> Ports
@@ -119,16 +126,9 @@ updateMaybePort (( addr, dir, new ) as port_) mbPort =
             Just ( addr, dir, val )
 
 
-allPuzzlePorts : Puzzle -> Ports
-allPuzzlePorts puzzle =
-    Puzzle.validWrites puzzle
-        |> List.map portEntryFromWriteEntry
-        |> Dict.fromList
-
-
 viewAllPorts : Puzzle -> List (Html msg)
 viewAllPorts puzzle =
-    allPuzzlePorts puzzle |> viewPorts
+    fromPuzzle puzzle |> viewPorts
 
 
 type alias ViewModel =
@@ -145,7 +145,7 @@ view puzzle { intents, actions } =
                 |> Dict.union (fromActions actions)
 
         ports =
-            allPuzzlePorts puzzle
+            fromPuzzle puzzle
                 |> Dict.intersect selectedPorts
     in
     viewPorts ports
