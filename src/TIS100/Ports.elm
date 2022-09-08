@@ -64,6 +64,10 @@ type alias Port =
     ( Addr, Dir4, Value )
 
 
+type alias PortEntry =
+    ( Key, Port )
+
+
 portKey : Port -> Key
 portKey ( addr, dir, _ ) =
     portKeyHelp addr dir
@@ -111,6 +115,15 @@ addPort addr dir val =
             portKey ( addr, dir, val )
     in
     Dict.update key (updateMaybePort ( addr, dir, val ))
+
+
+parsePortEntry : Addr -> Dir4 -> Value -> Maybe PortEntry
+parsePortEntry addr dir val =
+    let
+        key =
+            ( addr, moveInDir4 dir addr )
+    in
+    Just ( key, ( addr, dir, val ) )
 
 
 updateMaybePort (( addr, dir, new ) as port_) mbPort =
