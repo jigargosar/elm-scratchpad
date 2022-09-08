@@ -112,6 +112,11 @@ toPortEntry addr dir val =
     ( key, ( addr, dir, val ) )
 
 
+portEntryFromWriteEntry : ( Addr, Dir4 ) -> PortEntry
+portEntryFromWriteEntry ( addr, dir4 ) =
+    toPortEntry addr dir4 Empty
+
+
 addPortEntry : PortEntry -> Ports -> Ports
 addPortEntry ( key, prt ) =
     Dict.update key (updateMaybePort prt)
@@ -157,20 +162,11 @@ allPuzzlePorts puzzle =
     fromIntents ioIntents
 
 
-validWrites : Puzzle -> Dict Addr (List Dir4)
+validWrites : Puzzle -> List ( Addr, Dir4 )
 validWrites puzzle =
     let
-        addDir ( addr, d ) dict =
-            case Dict.get addr dict of
-                Just ds ->
-                    Dict.insert addr (d :: ds) dict
-
-                Nothing ->
-                    Dict.insert addr [ d ] dict
-    in
-    let
-        foo : Addr -> List ( Addr, Dir4 )
-        foo addr =
+        nodeWrites : Addr -> List ( Addr, Dir4 )
+        nodeWrites addr =
             [ Up, Down, Left, Right ]
                 |> List.filterMap
                     (\dir ->
@@ -191,24 +187,20 @@ validWrites puzzle =
                                 Nothing
                     )
 
-        layout : List ( Addr, Dir4 )
-        layout =
-            List.concatMap foo (Dict.keys puzzle.layout)
+        layoutNodesWrites : List ( Addr, Dir4 )
+        layoutNodesWrites =
+            List.concatMap nodeWrites (Dict.keys puzzle.layout)
     in
     List.map (\{ x } -> ( ( x, 0 ), Down )) puzzle.inputs
         ++ List.map (\{ x } -> ( ( x, 3 ), Down )) puzzle.outputs
-        ++ layout
-        |> List.foldl addDir Dict.empty
+        ++ layoutNodesWrites
 
 
 initPorts : Puzzle -> Ports
 initPorts puzzle =
     validWrites puzzle
-        |> Dict.foldl
-            (\a ds acc ->
-                List.foldl (\d -> U.insertEntry (toPortEntry a d Empty)) acc ds
-            )
-            Dict.empty
+        |> List.map portEntryFromWriteEntry
+        |> Dict.fromList
 
 
 viewAllPorts : Puzzle -> List (Html msg)
