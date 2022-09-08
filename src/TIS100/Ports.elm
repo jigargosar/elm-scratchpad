@@ -44,8 +44,13 @@ fromEntries : List PortEntry -> Ports
 fromEntries =
     let
         updatePortEntry : PortEntry -> Ports -> Ports
-        updatePortEntry ( key, prt ) =
-            Dict.update key (updateMaybePort prt)
+        updatePortEntry ( key, prt ) ports =
+            case Dict.get key ports of
+                Nothing ->
+                    Dict.insert key prt ports
+
+                Just oldPrt ->
+                    Dict.insert key (updateValue (portValue prt) oldPrt) ports
     in
     List.foldl updatePortEntry Dict.empty
 
@@ -101,29 +106,33 @@ toPortEntry addr dir val =
     ( key, ( addr, dir, val ) )
 
 
-updateMaybePort : Port -> Maybe Port -> Maybe Port
-updateMaybePort (( addr, dir, new ) as port_) mbPort =
-    case mbPort of
-        Nothing ->
-            Just port_
+portValue : Port -> Value
+portValue ( _, _, v ) =
+    v
 
-        Just ( _, _, old ) ->
-            let
-                val =
-                    case ( old, new ) of
-                        ( Empty, _ ) ->
-                            new
 
-                        ( _, Empty ) ->
-                            old
+mapValue : (Value -> Value) -> Port -> Port
+mapValue fn ( a, b, c ) =
+    ( a, b, fn c )
 
-                        ( _, Query ) ->
-                            old
 
-                        _ ->
-                            new
-            in
-            Just ( addr, dir, val )
+updateValue : Value -> Port -> Port
+updateValue new =
+    mapValue
+        (\old ->
+            case ( old, new ) of
+                ( Empty, _ ) ->
+                    new
+
+                ( _, Empty ) ->
+                    old
+
+                ( _, Query ) ->
+                    old
+
+                _ ->
+                    new
+        )
 
 
 viewAllPorts : Puzzle -> List (Html msg)
