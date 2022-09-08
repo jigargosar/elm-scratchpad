@@ -44,13 +44,12 @@ fromEntries : List PortEntry -> Ports
 fromEntries =
     let
         updatePortEntry : PortEntry -> Ports -> Ports
-        updatePortEntry ( key, prt ) ports =
-            case Dict.get key ports of
-                Nothing ->
-                    Dict.insert key prt ports
-
-                Just oldPrt ->
-                    Dict.insert key (updateValue (portValue prt) oldPrt) ports
+        updatePortEntry ( key, prt ) =
+            Dict.update key
+                (Maybe.map (updateValue (portValue prt))
+                    >> Maybe.withDefault prt
+                    >> Just
+                )
     in
     List.foldl updatePortEntry Dict.empty
 
