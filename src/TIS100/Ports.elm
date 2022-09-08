@@ -22,10 +22,6 @@ type alias Key =
     ( Addr, Addr )
 
 
-type alias Id =
-    ( Key, Addr, Dir4 )
-
-
 type Value
     = Empty
     | Num Num
@@ -73,6 +69,11 @@ type alias Port =
     ( Addr, Dir4, Value )
 
 
+portKey : Port -> Key
+portKey ( addr, dir, _ ) =
+    toKey addr dir
+
+
 fromIntents : List ( Addr, Intent ) -> Ports
 fromIntents =
     List.foldl addIntent Dict.empty
@@ -108,31 +109,36 @@ addAction ( addr, action ) =
 
 
 addPort : Port -> Ports -> Ports
-addPort (( addr, dir, new ) as port_) =
-    Dict.update (toKey addr dir)
-        (\mbPort ->
-            case mbPort of
-                Nothing ->
-                    Just port_
+addPort port_ =
+    let
+        key =
+            portKey port_
+    in
+    Dict.update key (updateMaybePort port_)
 
-                Just ( _, _, old ) ->
-                    let
-                        val =
-                            case ( old, new ) of
-                                ( Empty, _ ) ->
-                                    new
 
-                                ( _, Empty ) ->
-                                    old
+updateMaybePort (( addr, dir, new ) as port_) mbPort =
+    case mbPort of
+        Nothing ->
+            Just port_
 
-                                ( _, Query ) ->
-                                    old
+        Just ( _, _, old ) ->
+            let
+                val =
+                    case ( old, new ) of
+                        ( Empty, _ ) ->
+                            new
 
-                                _ ->
-                                    new
-                    in
-                    Just ( addr, dir, val )
-        )
+                        ( _, Empty ) ->
+                            old
+
+                        ( _, Query ) ->
+                            old
+
+                        _ ->
+                            new
+            in
+            Just ( addr, dir, val )
 
 
 allPuzzlePorts : Puzzle -> Ports
