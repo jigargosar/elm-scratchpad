@@ -317,7 +317,7 @@ viewEditor ( addr, editor ) =
         ]
         [ headerView
         , viewEditorTextArea (OnEditorInput addr) outline editor
-        , viewExeCtx outline { acc = Num.zero, mode = "IDLE" }
+        , viewExeBoxes outline { acc = Num.zero, mode = "IDLE" }
         ]
 
 
@@ -372,7 +372,7 @@ viewExeNode ( addr, exe ) =
         , gridTemplateColumns "18ch auto"
         ]
         [ viewSrc vm.srcCode vm.maybeLineNo
-        , viewExeCtx UI.lightOutline vm
+        , viewExeBoxes UI.lightOutline vm
         ]
 
 
@@ -392,8 +392,8 @@ viewSrc srcCode maybeLine =
         )
 
 
-viewExeCtx : Attribute msg -> { a | acc : Num, mode : String } -> Html msg
-viewExeCtx outline { acc, mode } =
+viewExeBoxes : Attribute msg -> { a | acc : Num, mode : String } -> Html msg
+viewExeBoxes outline { acc, mode } =
     gtRows 5
         []
         [ viewExeBox outline "ACC" (Num.toString acc)
