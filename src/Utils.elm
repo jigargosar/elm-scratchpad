@@ -2101,6 +2101,11 @@ mapValueAndSwapWithKey fn =
     Dict.foldl (\k v -> Dict.insert (fn v) k) Dict.empty
 
 
+dictKeepKeys : Set comparable -> Dict comparable x -> Dict comparable x
+dictKeepKeys keys =
+    filterKey (\k -> Set.member k keys)
+
+
 filterKey : (comparable -> Bool) -> Dict comparable b -> Dict comparable b
 filterKey fn =
     Dict.filter (\k _ -> fn k)

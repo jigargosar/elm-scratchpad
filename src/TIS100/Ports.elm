@@ -7,7 +7,7 @@ module TIS100.Ports exposing
     )
 
 import Dict exposing (Dict)
-import Set
+import Set exposing (Set)
 import TIS100.Addr as Addr exposing (Addr)
 import TIS100.Num as Num exposing (Num)
 import TIS100.Puzzle as Puzzle exposing (Puzzle)
@@ -92,11 +92,8 @@ keepPorts writeIntents ports =
             writeIntents
                 |> List.map (\( a, d ) -> toKey a d)
                 |> Set.fromList
-
-        isValid k =
-            Set.member k validKeys
     in
-    Dict.filter (\k _ -> isValid k) ports
+    dictKeepKeys validKeys ports
 
 
 intentToEntry : ( Addr, Intent ) -> PortEntry
