@@ -63,18 +63,9 @@ fromPuzzle puzzle =
 
 fromViewModel : ViewModel -> Ports
 fromViewModel { intents, actions } =
-    fromIntents intents
-        |> Dict.union (fromActions actions)
-
-
-fromIntents : List ( Addr, Intent ) -> Ports
-fromIntents =
-    List.map entryFromIntent >> fromEntries
-
-
-fromActions : List ( Addr, Action ) -> Ports
-fromActions =
-    List.map entryFromAction >> fromEntries
+    List.map entryFromIntent intents
+        ++ List.map entryFromAction actions
+        |> fromEntries
 
 
 entryFromWriteIntent : ( Addr, Dir4 ) -> PortEntry
