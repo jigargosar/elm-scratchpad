@@ -100,35 +100,34 @@ toListBy ifn ofn lfn puzzle =
 validWrites : Puzzle -> List ( Addr, Dir4 )
 validWrites puzzle =
     let
-        nodeWrites : Addr -> List ( Addr, Dir4 )
-        nodeWrites addr =
-            [ Up, Down, Left, Right ]
-                |> List.filterMap
-                    (\dir ->
-                        let
-                            to =
-                                U.moveInDir4 dir addr
-                        in
-                        case U.dictGet2 addr to puzzle.layout of
-                            Just ( writer, _ ) ->
-                                case writer of
-                                    Executable ->
-                                        Just ( addr, dir )
+        nodeWrites : ( Addr, NodeType ) -> List ( Addr, Dir4 )
+        nodeWrites ( addr, writer ) =
+            List.filterMap
+                (\dir ->
+                    let
+                        to =
+                            U.moveInDir4 dir addr
+                    in
+                    case Dict.member to puzzle.layout of
+                        True ->
+                            case writer of
+                                Executable ->
+                                    Just ( addr, dir )
 
-                                    Faulty ->
-                                        Nothing
+                                Faulty ->
+                                    Nothing
 
-                            Nothing ->
-                                Nothing
-                    )
-
-        layoutNodesWrites : List ( Addr, Dir4 )
-        layoutNodesWrites =
-            List.concatMap nodeWrites (Dict.keys puzzle.layout)
+                        False ->
+                            Nothing
+                )
+                [ Up, Down, Left, Right ]
     in
-    List.map (\{ x } -> ( ( x, 0 ), Down )) puzzle.inputs
-        ++ List.map (\{ x } -> ( ( x, 3 ), Down )) puzzle.outputs
-        ++ layoutNodesWrites
+    toListBy
+        (\c -> [ ( inputAddr c, Down ) ])
+        (\c -> [ ( addrAboveOutput c, Down ) ])
+        nodeWrites
+        puzzle
+        |> List.concat
 
 
 toDictBy :
@@ -165,3 +164,8 @@ inputAddr { x } =
 outputAddr : IOConfig -> Addr
 outputAddr { x } =
     ( x, 4 )
+
+
+addrAboveOutput : IOConfig -> Addr
+addrAboveOutput c =
+    outputAddr c |> U.moveInDir4 Up
