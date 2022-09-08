@@ -5,8 +5,8 @@ module TIS100.OutputNode exposing
     , state
     )
 
-import TIS100.NodeState as S
 import TIS100.Num exposing (Num)
+import TIS100.PuzzlePage.StepRunner as SR
 import Utils exposing (Dir4(..))
 
 
@@ -25,17 +25,17 @@ fromExpected expected =
         ReadyToRun expected []
 
 
-state : OutputNode -> S.NodeState OutputNode
+state : OutputNode -> SR.NodeState OutputNode
 state node =
     case node of
         Done _ ->
-            S.Done
+            SR.Done
 
         ReadyToRun pendingReads nums ->
-            S.ReadyToRun (\() -> ReadBlocked pendingReads nums)
+            SR.ReadyToRun (\() -> ReadBlocked pendingReads nums)
 
         ReadBlocked pendingReads nums ->
-            S.ReadBlocked Up (resolveRead pendingReads nums)
+            SR.ReadBlocked Up (resolveRead pendingReads nums)
 
 
 resolveRead : Int -> List Num -> Num -> OutputNode

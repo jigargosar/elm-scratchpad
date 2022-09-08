@@ -1,6 +1,6 @@
 module TIS100.ExeNode exposing
     ( ExeNode
-    , ViewModel(..)
+    , ViewModel
     , compile
     , empty
     , intents
@@ -9,9 +9,9 @@ module TIS100.ExeNode exposing
     )
 
 import Pivot exposing (Pivot)
-import TIS100.NodeState as S
 import TIS100.Num as Num exposing (Num)
 import TIS100.Ports exposing (Intent(..))
+import TIS100.PuzzlePage.StepRunner as SR
 import Utils as U exposing (Dir4(..))
 
 
@@ -228,23 +228,23 @@ empty =
     NotRunnable ""
 
 
-state : ExeNode -> S.NodeState ExeNode
+state : ExeNode -> SR.NodeState ExeNode
 state exe =
     case exe of
         NotRunnable _ ->
-            S.Done
+            SR.Done
 
         Runnable sc nts st ->
             case st of
                 ReadyToRun ctx ->
-                    S.ReadyToRun (\() -> Runnable sc nts (run ctx))
+                    SR.ReadyToRun (\() -> Runnable sc nts (run ctx))
 
                 ReadBlocked ctx f t ->
-                    S.ReadBlocked f
+                    SR.ReadBlocked f
                         (writeAfterRead ctx t >> Runnable sc nts)
 
                 WriteBlocked ctx t num ->
-                    S.WriteBlocked num t <|
+                    SR.WriteBlocked num t <|
                         \() ->
                             Runnable sc nts <|
                                 ReadyToRun (goNext ctx)
@@ -291,20 +291,56 @@ intents exe =
             nts
 
 
-type ViewModel
-    = IDLE String
-    | RUNNING String Int { acc : Num }
+type alias ViewModel =
+    { srcCode : String
+    , acc : Num
+    , mode : String
+    , maybeLineNo : Maybe Int
+    }
 
 
 viewModel : ExeNode -> ViewModel
 viewModel exe =
     case exe of
         NotRunnable srcCode ->
-            IDLE srcCode
+            { srcCode = srcCode
+            , maybeLineNo = Nothing
+            , acc = Num.zero
+            , mode = mode exe
+            }
 
         Runnable srcCode _ st ->
             let
                 ctx =
                     ctxFromState st
             in
-            RUNNING srcCode (currLineNum ctx) { acc = ctx.acc }
+            { srcCode = srcCode
+            , maybeLineNo = Just (currLineNum ctx)
+            , acc = ctx.acc
+            , mode = mode exe
+            }
+
+
+mode : ExeNode -> String
+mode exe =
+    case state exe of
+        SR.ReadyToRun _ ->
+            "RUN"
+
+        SR.ReadBlocked _ _ ->
+            "READ"
+
+        SR.WriteBlocked _ _ _ ->
+            writeModeLabel
+
+        SR.Done ->
+            "IDLE"
+
+
+
+--noinspection SpellCheckingInspection
+
+
+writeModeLabel =
+    -- spelling needs to be 4ch for alignment
+    "WRTE"

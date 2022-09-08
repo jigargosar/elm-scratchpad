@@ -11,7 +11,6 @@ import Dict exposing (Dict)
 import Html
 import TIS100.Addr as Addr exposing (Addr)
 import TIS100.ExeNode as ExeNode exposing (ExeNode)
-import TIS100.NodeState as NS exposing (NodeState)
 import TIS100.Num as Num exposing (Num)
 import TIS100.Ports as Ports exposing (Action(..), Intent(..))
 import TIS100.Puzzle as Puzzle exposing (IOConfig, Puzzle)
@@ -322,13 +321,9 @@ viewEditor ( addr, editor ) =
 viewExeNode : ( Addr, ExeNode ) -> Html msg
 viewExeNode ( addr, exe ) =
     let
-        ( srcView, ctx ) =
-            case ExeNode.viewModel exe of
-                ExeNode.IDLE srcCode ->
-                    ( viewSrc srcCode Nothing, { acc = Num.zero } )
-
-                ExeNode.RUNNING srcCode lineNo ctx_ ->
-                    ( viewSrc srcCode (Just lineNo), ctx_ )
+        vm : ExeNode.ViewModel
+        vm =
+            ExeNode.viewModel exe
     in
     div
         [ Addr.toGridArea addr
@@ -336,13 +331,13 @@ viewExeNode ( addr, exe ) =
         , displayGrid
         , gridTemplateColumns "18ch auto"
         ]
-        [ srcView
-        , viewExeCtx (exeMode exe) ctx
+        [ viewSrc vm.srcCode vm.maybeLineNo
+        , viewExeCtx vm
         ]
 
 
-viewExeCtx : String -> { acc : Num } -> Html msg
-viewExeCtx mode { acc } =
+viewExeCtx : { a | acc : Num, mode : String } -> Html msg
+viewExeCtx { acc, mode } =
     gtRows 5
         []
         [ viewExeBox "ACC" (Num.toString acc)
@@ -375,31 +370,6 @@ viewExeBox a b =
         [ div [ fg UI.lightGray ] [ text a ]
         , div [] [ text b ]
         ]
-
-
-
---noinspection SpellCheckingInspection
-
-
-writeModeLabel =
-    -- spelling needs to be 4ch for alignment
-    "WRTE"
-
-
-exeMode : ExeNode -> String
-exeMode exe =
-    case ExeNode.state exe of
-        NS.ReadyToRun _ ->
-            "RUN"
-
-        NS.ReadBlocked _ _ ->
-            "READ"
-
-        NS.WriteBlocked _ _ _ ->
-            writeModeLabel
-
-        NS.Done ->
-            "IDLE"
 
 
 viewFaultyNode : Addr -> Html msg
