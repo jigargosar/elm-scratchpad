@@ -56,13 +56,17 @@ fromEntries =
 
 fromPuzzle : Puzzle -> Ports
 fromPuzzle puzzle =
+    fromEntries (entriesFromPuzzle puzzle)
+
+
+entriesFromPuzzle : Puzzle -> List PortEntry
+entriesFromPuzzle puzzle =
     let
         entry ( addr, dir4 ) =
             toEntry addr dir4 Empty
     in
     Puzzle.validWrites puzzle
         |> List.map entry
-        |> fromEntries
 
 
 fromViewModel : ViewModel -> Ports
