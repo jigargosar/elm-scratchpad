@@ -47,29 +47,9 @@ type alias PortEntry =
     ( Key, Port )
 
 
-fromEntries : List PortEntry -> Ports
-fromEntries =
-    let
-        updatePortEntry : PortEntry -> Ports -> Ports
-        updatePortEntry ( key, prt ) =
-            Dict.update key
-                (Maybe.map (updateValue (toValue prt))
-                    >> Maybe.withDefault prt
-                    >> Just
-                )
-    in
-    List.foldl updatePortEntry Dict.empty
-
-
 fromPuzzle : Puzzle -> Ports
 fromPuzzle puzzle =
-    let
-        entry ( addr, dir4 ) =
-            toEntry addr dir4 Empty
-    in
-    Puzzle.validWrites puzzle
-        |> List.map entry
-        |> fromEntries
+    addWriteIntents (Puzzle.validWrites puzzle) Dict.empty
 
 
 fromViewModel : Puzzle -> ViewModel -> Ports
@@ -77,9 +57,9 @@ fromViewModel puzzle { intents, actions } =
     let
         ports : Ports
         ports =
-            List.map intentToEntry intents
-                ++ List.map actionToEntry actions
-                |> fromEntries
+            Dict.empty
+                |> addIntents intents
+                |> addActions actions
     in
     keepPorts (Puzzle.validWrites puzzle) ports
 
@@ -96,24 +76,55 @@ keepPorts writeIntents ports =
     dictKeepKeys validKeys ports
 
 
-intentToEntry : ( Addr, Intent ) -> PortEntry
-intentToEntry ( addr, intent ) =
-    case intent of
-        Read dir4 ->
-            toEntry (moveInDir4 dir4 addr) (oppositeDir4 dir4) Empty
-
-        Write dir4 ->
+addWriteIntents : List ( Addr, Dir4 ) -> Ports -> Ports
+addWriteIntents =
+    let
+        entry ( addr, dir4 ) =
             toEntry addr dir4 Empty
+    in
+    addPortEntriesBy entry
 
 
-actionToEntry : ( Addr, Action ) -> PortEntry
-actionToEntry ( addr, action ) =
-    case action of
-        Reading dir4 ->
-            toEntry (moveInDir4 dir4 addr) (oppositeDir4 dir4) Query
+addIntents : List ( Addr, Intent ) -> Ports -> Ports
+addIntents =
+    let
+        entry ( addr, intent ) =
+            case intent of
+                Read dir4 ->
+                    toEntry (moveInDir4 dir4 addr) (oppositeDir4 dir4) Empty
 
-        Writing dir4 num ->
-            toEntry addr dir4 (Num num)
+                Write dir4 ->
+                    toEntry addr dir4 Empty
+    in
+    addPortEntriesBy entry
+
+
+addActions : List ( Addr, Action ) -> Ports -> Ports
+addActions =
+    let
+        entry ( addr, action ) =
+            case action of
+                Reading dir4 ->
+                    toEntry (moveInDir4 dir4 addr) (oppositeDir4 dir4) Query
+
+                Writing dir4 num ->
+                    toEntry addr dir4 (Num num)
+    in
+    addPortEntriesBy entry
+
+
+addPortEntriesBy : (a -> PortEntry) -> List a -> Ports -> Ports
+addPortEntriesBy efn ls ports =
+    let
+        updatePortEntry : PortEntry -> Ports -> Ports
+        updatePortEntry ( key, prt ) =
+            Dict.update key
+                (Maybe.map (updateValue (toValue prt))
+                    >> Maybe.withDefault prt
+                    >> Just
+                )
+    in
+    List.foldl (efn >> updatePortEntry) ports ls
 
 
 toEntry : Addr -> Dir4 -> Value -> PortEntry
