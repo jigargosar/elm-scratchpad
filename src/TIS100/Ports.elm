@@ -71,8 +71,8 @@ fromViewModel puzzle { intents, actions } =
     let
         ports : Ports
         ports =
-            List.map entryFromIntent intents
-                ++ List.map entryFromAction actions
+            List.map intentToEntry intents
+                ++ List.map actionToEntry actions
                 |> fromEntries
 
         validKeys : Set.Set Key
@@ -84,8 +84,8 @@ fromViewModel puzzle { intents, actions } =
     Dict.filter (\key _ -> Set.member key validKeys) ports
 
 
-entryFromIntent : ( Addr, Intent ) -> PortEntry
-entryFromIntent ( addr, intent ) =
+intentToEntry : ( Addr, Intent ) -> PortEntry
+intentToEntry ( addr, intent ) =
     case intent of
         Read dir4 ->
             toEntry (moveInDir4 dir4 addr) (oppositeDir4 dir4) Empty
@@ -94,8 +94,8 @@ entryFromIntent ( addr, intent ) =
             toEntry addr dir4 Empty
 
 
-entryFromAction : ( Addr, Action ) -> PortEntry
-entryFromAction ( addr, action ) =
+actionToEntry : ( Addr, Action ) -> PortEntry
+actionToEntry ( addr, action ) =
     case action of
         Reading dir4 ->
             toEntry (moveInDir4 dir4 addr) (oppositeDir4 dir4) Query
