@@ -5,7 +5,7 @@ import TIS100.Addr as Addr exposing (Addr)
 import TIS100.Num as Num exposing (Num)
 import TIS100.Puzzle as Puzzle exposing (Puzzle)
 import TIS100.UI as UI
-import Utils exposing (..)
+import Utils as U exposing (..)
 
 
 type Intent
@@ -152,6 +152,60 @@ allPuzzlePorts puzzle =
                 ++ puzzleLayoutIOIntents puzzle
     in
     fromIntents ioIntents
+
+
+validWrites : Puzzle -> Dict Addr (List Dir4)
+validWrites puzzle =
+    let
+        addDir ( addr, d ) dict =
+            case Dict.get addr dict of
+                Just ds ->
+                    Dict.insert addr (d :: ds) dict
+
+                Nothing ->
+                    Dict.insert addr [ d ] dict
+    in
+    let
+        foo : Addr -> List ( Addr, Dir4 )
+        foo addr =
+            [ Up, Down, Left, Right ]
+                |> List.filterMap
+                    (\dir ->
+                        let
+                            to =
+                                moveInDir4 dir addr
+                        in
+                        case dictGet2 addr to puzzle.layout of
+                            Just ( writer, _ ) ->
+                                case writer of
+                                    Puzzle.Executable ->
+                                        Just ( addr, dir )
+
+                                    Puzzle.Faulty ->
+                                        Nothing
+
+                            Nothing ->
+                                Nothing
+                    )
+
+        layout : List ( Addr, Dir4 )
+        layout =
+            List.concatMap foo (Dict.keys puzzle.layout)
+    in
+    List.map (\{ x } -> ( ( x, 0 ), Down )) puzzle.inputs
+        ++ List.map (\{ x } -> ( ( x, 3 ), Down )) puzzle.outputs
+        ++ layout
+        |> List.foldl addDir Dict.empty
+
+
+initPorts : Puzzle -> Ports
+initPorts puzzle =
+    validWrites puzzle
+        |> Dict.foldl
+            (\a ds acc ->
+                List.foldl (\d -> U.insertEntry (toPortEntry a d Empty)) acc ds
+            )
+            Dict.empty
 
 
 viewAllPorts : Puzzle -> List (Html msg)
