@@ -1,4 +1,10 @@
-module TIS100.Ports exposing (Action(..), Intent(..), ViewModel, view, viewAllPorts)
+module TIS100.Ports exposing
+    ( Action(..)
+    , Intent(..)
+    , ViewModel
+    , view
+    , viewAllPorts
+    )
 
 import Dict exposing (Dict)
 import Set
