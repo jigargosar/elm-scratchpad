@@ -376,18 +376,6 @@ viewExeNode ( addr, exe ) =
         ]
 
 
-viewExeCtx : Attribute msg -> { a | acc : Num, mode : String } -> Html msg
-viewExeCtx outline { acc, mode } =
-    gtRows 5
-        []
-        [ viewExeBox outline "ACC" (Num.toString acc)
-        , viewExeBox outline "BAK" "<0>"
-        , viewExeBox outline "LAST" "N/A"
-        , viewExeBox outline "MODE" mode
-        , viewExeBox outline "IDLE" "0%"
-        ]
-
-
 viewSrc : String -> Maybe Int -> Html.Html msg
 viewSrc srcCode maybeLine =
     Html.pre [ pa "0.5ch 0" ]
@@ -402,6 +390,18 @@ viewSrc srcCode maybeLine =
                         div [ pl "0.5ch" ] [ text (l ++ "\n") ]
                 )
         )
+
+
+viewExeCtx : Attribute msg -> { a | acc : Num, mode : String } -> Html msg
+viewExeCtx outline { acc, mode } =
+    gtRows 5
+        []
+        [ viewExeBox outline "ACC" (Num.toString acc)
+        , viewExeBox outline "BAK" "<0>"
+        , viewExeBox outline "LAST" "N/A"
+        , viewExeBox outline "MODE" mode
+        , viewExeBox outline "IDLE" "0%"
+        ]
 
 
 viewExeBox : Attribute msg -> String -> String -> Html msg
