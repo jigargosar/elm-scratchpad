@@ -83,10 +83,10 @@ addIntent : ( Addr, Intent ) -> Ports -> Ports
 addIntent ( addr, intent ) =
     case intent of
         Read dir4 ->
-            addPort ( moveInDir4 dir4 addr, oppositeDir4 dir4, Empty )
+            addPort (moveInDir4 dir4 addr) (oppositeDir4 dir4) Empty
 
         Write dir4 ->
-            addPort ( addr, dir4, Empty )
+            addPort addr dir4 Empty
 
 
 fromActions : List ( Addr, Action ) -> Ports
@@ -98,19 +98,19 @@ addAction : ( Addr, Action ) -> Ports -> Ports
 addAction ( addr, action ) =
     case action of
         Reading dir4 ->
-            addPort ( moveInDir4 dir4 addr, oppositeDir4 dir4, Query )
+            addPort (moveInDir4 dir4 addr) (oppositeDir4 dir4) Query
 
         Writing dir4 num ->
-            addPort ( addr, dir4, Num num )
+            addPort addr dir4 (Num num)
 
 
-addPort : Port -> Ports -> Ports
-addPort port_ =
+addPort : Addr -> Dir4 -> Value -> Ports -> Ports
+addPort addr dir val =
     let
         key =
-            portKey port_
+            portKey ( addr, dir, val )
     in
-    Dict.update key (updateMaybePort port_)
+    Dict.update key (updateMaybePort ( addr, dir, val ))
 
 
 updateMaybePort (( addr, dir, new ) as port_) mbPort =
