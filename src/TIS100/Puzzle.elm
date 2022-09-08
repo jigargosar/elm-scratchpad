@@ -6,12 +6,13 @@ module TIS100.Puzzle exposing
     , samplePuzzle
     , toDictBy
     , toListBy
+    , validWrites
     )
 
 import Dict exposing (Dict)
 import TIS100.Addr exposing (Addr)
 import TIS100.Num as Num exposing (Num)
-import Utils exposing (pair)
+import Utils as U exposing (Dir4(..), pair)
 
 
 type alias Puzzle =
@@ -94,6 +95,40 @@ toListBy ifn ofn lfn puzzle =
             List.map lfn (Dict.toList puzzle.layout)
     in
     io ++ layout
+
+
+validWrites : Puzzle -> List ( Addr, Dir4 )
+validWrites puzzle =
+    let
+        nodeWrites : Addr -> List ( Addr, Dir4 )
+        nodeWrites addr =
+            [ Up, Down, Left, Right ]
+                |> List.filterMap
+                    (\dir ->
+                        let
+                            to =
+                                U.moveInDir4 dir addr
+                        in
+                        case U.dictGet2 addr to puzzle.layout of
+                            Just ( writer, _ ) ->
+                                case writer of
+                                    Executable ->
+                                        Just ( addr, dir )
+
+                                    Faulty ->
+                                        Nothing
+
+                            Nothing ->
+                                Nothing
+                    )
+
+        layoutNodesWrites : List ( Addr, Dir4 )
+        layoutNodesWrites =
+            List.concatMap nodeWrites (Dict.keys puzzle.layout)
+    in
+    List.map (\{ x } -> ( ( x, 0 ), Down )) puzzle.inputs
+        ++ List.map (\{ x } -> ( ( x, 3 ), Down )) puzzle.outputs
+        ++ layoutNodesWrites
 
 
 toDictBy :

@@ -149,56 +149,7 @@ updateMaybePort (( addr, dir, new ) as port_) mbPort =
 
 allPuzzlePorts : Puzzle -> Ports
 allPuzzlePorts puzzle =
-    let
-        ioIntents : List ( Addr, Intent )
-        ioIntents =
-            List.map (\{ x } -> ( ( x, 0 ), Write Down )) puzzle.inputs
-                ++ List.map (\{ x } -> ( ( x, 4 ), Read Up )) puzzle.outputs
-                ++ puzzleLayoutIOIntents puzzle
-
-        _ =
-            Debug.log "Debug: " (fromIntents ioIntents == initPorts puzzle)
-    in
-    fromIntents ioIntents
-
-
-validWrites : Puzzle -> List ( Addr, Dir4 )
-validWrites puzzle =
-    let
-        nodeWrites : Addr -> List ( Addr, Dir4 )
-        nodeWrites addr =
-            [ Up, Down, Left, Right ]
-                |> List.filterMap
-                    (\dir ->
-                        let
-                            to =
-                                moveInDir4 dir addr
-                        in
-                        case dictGet2 addr to puzzle.layout of
-                            Just ( writer, _ ) ->
-                                case writer of
-                                    Puzzle.Executable ->
-                                        Just ( addr, dir )
-
-                                    Puzzle.Faulty ->
-                                        Nothing
-
-                            Nothing ->
-                                Nothing
-                    )
-
-        layoutNodesWrites : List ( Addr, Dir4 )
-        layoutNodesWrites =
-            List.concatMap nodeWrites (Dict.keys puzzle.layout)
-    in
-    List.map (\{ x } -> ( ( x, 0 ), Down )) puzzle.inputs
-        ++ List.map (\{ x } -> ( ( x, 3 ), Down )) puzzle.outputs
-        ++ layoutNodesWrites
-
-
-initPorts : Puzzle -> Ports
-initPorts puzzle =
-    validWrites puzzle
+    Puzzle.validWrites puzzle
         |> List.map portEntryFromWriteEntry
         |> Dict.fromList
 
