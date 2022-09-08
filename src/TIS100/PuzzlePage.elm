@@ -299,14 +299,27 @@ viewOutputNode { x, title } =
 
 viewEditor : ( Addr, Editor ) -> Html Msg
 viewEditor ( addr, editor ) =
+    let
+        ( outline, headerView ) =
+            case ExeNode.compile editor of
+                Ok _ ->
+                    ( UI.lightOutline, noView )
+
+                Err error ->
+                    ( UI.errorOutline, viewCompilerError error )
+    in
     div
         [ Addr.toGridArea addr
-        , UI.lightOutline
+
+        --, UI.lightOutline
+        , outline
         , displayGrid
         , gridTemplateColumns "18ch auto"
+        , positionRelative
         ]
-        [ Html.textarea
-            [ pa "0.5ch"
+        [ headerView
+        , Html.textarea
+            [ noAttr
 
             -- reset
             , borderNone
@@ -319,17 +332,29 @@ viewEditor ( addr, editor ) =
             , ttInherit
             , fontInherit
             , onInput (OnEditorInput addr)
+
+            -- actual
+            , outline
+            , pa "0.5ch"
             ]
             [ text editor ]
-        , gtRows 5
-            []
-            [ viewExeBox "ACC" "0"
-            , viewExeBox "BAK" "<0>"
-            , viewExeBox "LAST" "N/A"
-            , viewExeBox "MODE" "IDLE"
-            , viewExeBox "IDLE" "0%"
-            ]
+        , viewExeCtx outline { acc = Num.zero, mode = "IDLE" }
         ]
+
+
+viewCompilerError : String -> Html msg
+viewCompilerError msg =
+    div
+        [ positionAbsolute
+        , style "top" "-4ch"
+        , w100
+        , sHeight "3ch"
+        , displayGrid
+        , bgc "hsl(0deg 80% 50%)"
+        , fg black
+        , placeContentCenter
+        ]
+        [ text msg ]
 
 
 viewExeNode : ( Addr, ExeNode ) -> Html msg
@@ -346,19 +371,19 @@ viewExeNode ( addr, exe ) =
         , gridTemplateColumns "18ch auto"
         ]
         [ viewSrc vm.srcCode vm.maybeLineNo
-        , viewExeCtx vm
+        , viewExeCtx UI.lightOutline vm
         ]
 
 
-viewExeCtx : { a | acc : Num, mode : String } -> Html msg
-viewExeCtx { acc, mode } =
+viewExeCtx : Attribute msg -> { a | acc : Num, mode : String } -> Html msg
+viewExeCtx outline { acc, mode } =
     gtRows 5
         []
-        [ viewExeBox "ACC" (Num.toString acc)
-        , viewExeBox "BAK" "<0>"
-        , viewExeBox "LAST" "N/A"
-        , viewExeBox "MODE" mode
-        , viewExeBox "IDLE" "0%"
+        [ viewExeBox outline "ACC" (Num.toString acc)
+        , viewExeBox outline "BAK" "<0>"
+        , viewExeBox outline "LAST" "N/A"
+        , viewExeBox outline "MODE" mode
+        , viewExeBox outline "IDLE" "0%"
         ]
 
 
@@ -378,9 +403,14 @@ viewSrc srcCode maybeLine =
         )
 
 
-viewExeBox : String -> String -> Html msg
-viewExeBox a b =
-    div [ displayGrid, tac, placeContentCenter, sOutline ("1px solid " ++ UI.lightGray) ]
+viewExeBox : Attribute msg -> String -> String -> Html msg
+viewExeBox outline a b =
+    div
+        [ displayGrid
+        , tac
+        , placeContentCenter
+        , outline
+        ]
         [ div [ fg UI.lightGray ] [ text a ]
         , div [] [ text b ]
         ]
@@ -392,8 +422,8 @@ viewFaultyNode addr =
         [ displayGrid
         , Addr.toGridArea addr
         , placeContentCenter
-        , sOutline ("1px solid " ++ "red")
-        , fg "red"
+        , UI.errorOutline
+        , UI.fgError
         ]
         [ text "ERROR" ]
 
@@ -455,8 +485,8 @@ editModeOutputColumns puzzle =
 
 viewEditModeGridItems : Puzzle -> Dict Addr Editor -> List (Html Msg)
 viewEditModeGridItems puzzle editors =
-    viewEditModeNodes puzzle editors
-        ++ Ports.viewAllPorts puzzle
+    Ports.viewAllPorts puzzle
+        ++ viewEditModeNodes puzzle editors
 
 
 viewEditModeNodes : Puzzle -> Dict Addr Editor -> List (Html Msg)

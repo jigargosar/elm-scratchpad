@@ -17,6 +17,10 @@ lightOutline =
     sOutline ("1px solid " ++ lightGray)
 
 
+errorOutline =
+    sOutline ("1px solid " ++ errorRed)
+
+
 gapSize =
     "5ch"
 
@@ -27,3 +31,7 @@ nodeSize =
 
 errorRed =
     "red"
+
+
+fgError =
+    fg errorRed
