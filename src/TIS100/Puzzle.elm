@@ -104,8 +104,8 @@ validWrites puzzle =
         isValidWriteDestination addr =
             Dict.member addr puzzle.layout
 
-        isValidLayoutWrite : ( Addr, Dir4 ) -> Bool
-        isValidLayoutWrite ( addr, dir4 ) =
+        isValidWrite : ( Addr, Dir4 ) -> Bool
+        isValidWrite ( addr, dir4 ) =
             isValidWriteDestination (U.moveInDir4 dir4 addr)
 
         allWrites : Addr -> List ( Addr, Dir4 )
@@ -114,7 +114,7 @@ validWrites puzzle =
 
         executableNodeWrites : Addr -> List ( Addr, Dir4 )
         executableNodeWrites addr =
-            allWrites addr |> List.filter isValidLayoutWrite
+            allWrites addr |> List.filter isValidWrite
 
         nodeWrites : ( Addr, NodeType ) -> List ( Addr, Dir4 )
         nodeWrites ( addr, nt ) =
