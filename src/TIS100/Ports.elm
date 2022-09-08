@@ -1,6 +1,7 @@
 module TIS100.Ports exposing (Action(..), Intent(..), ViewModel, view, viewAllPorts)
 
 import Dict exposing (Dict)
+import Set
 import TIS100.Addr as Addr exposing (Addr)
 import TIS100.Num as Num exposing (Num)
 import TIS100.Puzzle as Puzzle exposing (Puzzle)
@@ -56,24 +57,31 @@ fromEntries =
 
 fromPuzzle : Puzzle -> Ports
 fromPuzzle puzzle =
-    fromEntries (entriesFromPuzzle puzzle)
-
-
-entriesFromPuzzle : Puzzle -> List PortEntry
-entriesFromPuzzle puzzle =
     let
         entry ( addr, dir4 ) =
             toEntry addr dir4 Empty
     in
     Puzzle.validWrites puzzle
         |> List.map entry
-
-
-fromViewModel : ViewModel -> Ports
-fromViewModel { intents, actions } =
-    List.map entryFromIntent intents
-        ++ List.map entryFromAction actions
         |> fromEntries
+
+
+fromViewModel : Puzzle -> ViewModel -> Ports
+fromViewModel puzzle { intents, actions } =
+    let
+        ports : Ports
+        ports =
+            List.map entryFromIntent intents
+                ++ List.map entryFromAction actions
+                |> fromEntries
+
+        validKeys : Set.Set Key
+        validKeys =
+            Puzzle.validWrites puzzle
+                |> List.map (\( a, d ) -> toKey a d)
+                |> Set.fromList
+    in
+    Dict.filter (\key _ -> Set.member key validKeys) ports
 
 
 entryFromIntent : ( Addr, Intent ) -> PortEntry
@@ -100,9 +108,14 @@ toEntry : Addr -> Dir4 -> Value -> PortEntry
 toEntry addr dir val =
     let
         key =
-            ( addr, moveInDir4 dir addr )
+            toKey addr dir
     in
     ( key, ( addr, dir, val ) )
+
+
+toKey : Addr -> Dir4 -> Key
+toKey addr dir =
+    ( addr, moveInDir4 dir addr )
 
 
 toValue : Port -> Value
@@ -136,7 +149,7 @@ updateValue new =
 
 viewAllPorts : Puzzle -> List (Html msg)
 viewAllPorts puzzle =
-    fromPuzzle puzzle |> viewPorts
+    viewPorts (fromPuzzle puzzle)
 
 
 type alias ViewModel =
@@ -147,12 +160,7 @@ type alias ViewModel =
 
 view : Puzzle -> ViewModel -> List (Html msg)
 view puzzle vm =
-    let
-        ports =
-            fromPuzzle puzzle
-                |> Dict.intersect (fromViewModel vm)
-    in
-    viewPorts ports
+    viewPorts (fromViewModel puzzle vm)
 
 
 viewPorts : Ports -> List (Html msg)
