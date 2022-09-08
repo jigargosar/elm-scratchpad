@@ -68,16 +68,6 @@ type alias PortEntry =
     ( Key, Port )
 
 
-portKey : Port -> Key
-portKey ( addr, dir, _ ) =
-    portKeyHelp addr dir
-
-
-portKeyHelp : Addr -> Dir4 -> Key
-portKeyHelp addr dir4 =
-    ( addr, moveInDir4 dir4 addr )
-
-
 fromIntents : List ( Addr, Intent ) -> Ports
 fromIntents =
     List.foldl addIntent Dict.empty
