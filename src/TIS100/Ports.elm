@@ -100,21 +100,16 @@ addAction ( addr, action ) =
 
 addPort : Addr -> Dir4 -> Value -> Ports -> Ports
 addPort addr dir val =
-    case parsePortEntry addr dir val of
-        Just pe ->
-            addPortEntry pe
-
-        Nothing ->
-            identity
+    addPortEntry (toPortEntry addr dir val)
 
 
-parsePortEntry : Addr -> Dir4 -> Value -> Maybe PortEntry
-parsePortEntry addr dir val =
+toPortEntry : Addr -> Dir4 -> Value -> PortEntry
+toPortEntry addr dir val =
     let
         key =
             ( addr, moveInDir4 dir addr )
     in
-    Just ( key, ( addr, dir, val ) )
+    ( key, ( addr, dir, val ) )
 
 
 addPortEntry : PortEntry -> Ports -> Ports
