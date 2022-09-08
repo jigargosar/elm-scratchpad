@@ -37,7 +37,7 @@ sampleModel =
             , ( ( 1, 1 ), "Mov up down" )
             , ( ( 1, 2 ), "Mov up down" )
             , ( ( 1, 3 ), "Mov up down" )
-            , ( ( 2, 1 ), "Mov up down" )
+            , ( ( 2, 1 ), "" )
             , ( ( 2, 2 ), "Mov up down" )
             , ( ( 2, 3 ), "Mov up down" )
             , ( ( 3, 1 ), "Mov up down" )
