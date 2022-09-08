@@ -2126,6 +2126,11 @@ dictGet2 a b dict =
     Maybe.map2 Tuple.pair (Dict.get a dict) (Dict.get b dict)
 
 
+dictGetOr : a -> comparable -> Dict comparable a -> a
+dictGetOr default key dict =
+    Dict.get key dict |> Maybe.withDefault default
+
+
 getInDict : Dict comparable v -> comparable -> Maybe v
 getInDict dict key =
     Dict.get key dict

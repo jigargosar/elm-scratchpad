@@ -86,3 +86,32 @@ gridToList ifn ofn lfn puzzle =
             List.map lfn (Dict.toList puzzle.layout)
     in
     io ++ layout
+
+
+gridBy :
+    (IOConfig -> v)
+    -> (IOConfig -> v)
+    -> (Addr -> NodeType -> v)
+    -> Puzzle
+    -> Dict Addr v
+gridBy ifn ofn lfn puzzle =
+    let
+        io =
+            List.map (\c -> ( inputAddr c, ifn c )) puzzle.inputs
+                ++ List.map (\c -> ( outputAddr c, ofn c )) puzzle.outputs
+                |> Dict.fromList
+
+        layout =
+            Dict.map lfn puzzle.layout
+    in
+    Dict.union io layout
+
+
+inputAddr : IOConfig -> Addr
+inputAddr { x } =
+    ( x, 0 )
+
+
+outputAddr : IOConfig -> Addr
+outputAddr { x } =
+    ( x, 4 )

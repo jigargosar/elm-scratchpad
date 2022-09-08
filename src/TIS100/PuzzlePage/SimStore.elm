@@ -9,9 +9,9 @@ module TIS100.PuzzlePage.SimStore exposing
 
 import Dict exposing (Dict)
 import TIS100.Addr exposing (Addr)
-import TIS100.ExeNode as ExeNode exposing (ExeNode)
-import TIS100.InputNode as InputNode exposing (InputNode)
-import TIS100.OutputNode as OutputNode exposing (OutputNode)
+import TIS100.ExeNode as EN exposing (ExeNode)
+import TIS100.InputNode as IN exposing (InputNode)
+import TIS100.OutputNode as ON exposing (OutputNode)
 import TIS100.Ports as Ports exposing (Action(..), Intent(..))
 import TIS100.Puzzle as Puzzle exposing (IOConfig, Puzzle)
 import TIS100.PuzzlePage.LeftBar as LB
@@ -34,32 +34,32 @@ type Node
 init : Puzzle -> List ( Addr, ExeNode ) -> Model
 init puzzle exs =
     let
-        io =
-            List.map (\c -> ( ( c.x, 0 ), In c (InputNode.fromList c.nums) )) puzzle.inputs
-                ++ List.map
-                    (\c ->
-                        ( ( c.x, 4 )
-                        , Out c
-                            (OutputNode.fromExpected (List.length c.nums))
-                        )
-                    )
-                    puzzle.outputs
-                |> Dict.fromList
+        initIn c =
+            In c (IN.fromList c.nums)
 
-        layout =
-            Dict.map
-                (\_ nk ->
-                    case nk of
-                        Puzzle.Executable ->
-                            Exe ExeNode.empty
+        initOut c =
+            Out c (ON.fromExpected (List.length c.nums))
 
-                        Puzzle.Faulty ->
-                            Flt
-                )
-                puzzle.layout
-                |> replaceExeEntries exs
+        initLayout addr nk =
+            case nk of
+                Puzzle.Executable ->
+                    initExe addr
+
+                Puzzle.Faulty ->
+                    Flt
+
+        initExe addr =
+            Exe (U.dictGetOr EN.empty addr exd)
+
+        exd =
+            Dict.fromList exs
     in
-    Dict.union io layout
+    Puzzle.gridBy
+        initIn
+        initOut
+        initLayout
+        puzzle
+        |> replaceExeEntries exs
 
 
 replaceExeEntries : List ( Addr, ExeNode ) -> Model -> Model
@@ -89,13 +89,13 @@ toStepState : Node -> SR.NodeState Node
 toStepState node =
     case node of
         In conf inputNode ->
-            InputNode.stepState inputNode |> SR.map (In conf)
+            IN.stepState inputNode |> SR.map (In conf)
 
         Out conf outputNode ->
-            OutputNode.stepState outputNode |> SR.map (Out conf)
+            ON.stepState outputNode |> SR.map (Out conf)
 
         Exe exeNode ->
-            ExeNode.stepState exeNode |> SR.map Exe
+            EN.stepState exeNode |> SR.map Exe
 
         Flt ->
             SR.Done
@@ -123,7 +123,7 @@ intentsOf node =
             [ Read U.Up ]
 
         Exe exe ->
-            ExeNode.intents exe
+            EN.intents exe
 
         Flt ->
             []
@@ -174,7 +174,7 @@ toLBOutput : IOConfig -> OutputNode -> LB.Output
 toLBOutput c o =
     let
         actual =
-            OutputNode.getNumsRead o
+            ON.getNumsRead o
     in
     { title = c.title
     , expected = SelectionList.fromIndex (List.length actual) c.nums
@@ -185,5 +185,5 @@ toLBOutput c o =
 toLBInput : IOConfig -> InputNode -> LB.Input
 toLBInput c i =
     { title = c.title
-    , nums = InputNode.toSelectionList i
+    , nums = IN.toSelectionList i
     }
