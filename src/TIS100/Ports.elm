@@ -150,6 +150,9 @@ allPuzzlePorts puzzle =
             List.map (\{ x } -> ( ( x, 0 ), Write Down )) puzzle.inputs
                 ++ List.map (\{ x } -> ( ( x, 4 ), Read Up )) puzzle.outputs
                 ++ puzzleLayoutIOIntents puzzle
+
+        _ =
+            Debug.log "Debug: " (fromIntents ioIntents == initPorts puzzle)
     in
     fromIntents ioIntents
 
