@@ -100,27 +100,30 @@ toListBy ifn ofn lfn puzzle =
 validWrites : Puzzle -> List ( Addr, Dir4 )
 validWrites puzzle =
     let
+        isValidWriteDestination : Addr -> Bool
+        isValidWriteDestination addr =
+            Dict.member addr puzzle.layout
+
+        isValidLayoutWrite : ( Addr, Dir4 ) -> Bool
+        isValidLayoutWrite ( addr, dir4 ) =
+            isValidWriteDestination (U.moveInDir4 dir4 addr)
+
+        allWrites : Addr -> List ( Addr, Dir4 )
+        allWrites addr =
+            List.map (pair addr) [ Up, Down, Left, Right ]
+
+        executableNodeWrites : Addr -> List ( Addr, Dir4 )
+        executableNodeWrites addr =
+            allWrites addr |> List.filter isValidLayoutWrite
+
         nodeWrites : ( Addr, NodeType ) -> List ( Addr, Dir4 )
-        nodeWrites ( addr, writer ) =
-            List.filterMap
-                (\dir ->
-                    let
-                        to =
-                            U.moveInDir4 dir addr
-                    in
-                    case Dict.member to puzzle.layout of
-                        True ->
-                            case writer of
-                                Executable ->
-                                    Just ( addr, dir )
+        nodeWrites ( addr, nt ) =
+            case nt of
+                Executable ->
+                    executableNodeWrites addr
 
-                                Faulty ->
-                                    Nothing
-
-                        False ->
-                            Nothing
-                )
-                [ Up, Down, Left, Right ]
+                Faulty ->
+                    []
     in
     toListBy
         (\c -> [ ( inputAddr c, Down ) ])
