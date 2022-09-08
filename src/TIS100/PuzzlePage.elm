@@ -310,8 +310,6 @@ viewEditor ( addr, editor ) =
     in
     div
         [ Addr.toGridArea addr
-
-        --, UI.lightOutline
         , outline
         , displayGrid
         , gridTemplateColumns "18ch auto"
@@ -323,6 +321,7 @@ viewEditor ( addr, editor ) =
         ]
 
 
+viewEditorTextArea : (String -> msg) -> Attribute msg -> String -> Html.Html msg
 viewEditorTextArea onInputMsg outline editor =
     Html.textarea
         [ noAttr
