@@ -28,11 +28,6 @@ type Value
     | Query
 
 
-toKey : Addr -> Dir4 -> Key
-toKey addr dir4 =
-    ( addr, moveInDir4 dir4 addr )
-
-
 puzzleLayoutIOIntents : Puzzle -> List ( Addr, Intent )
 puzzleLayoutIOIntents puzzle =
     let
@@ -71,7 +66,12 @@ type alias Port =
 
 portKey : Port -> Key
 portKey ( addr, dir, _ ) =
-    toKey addr dir
+    portKeyHelp addr dir
+
+
+portKeyHelp : Addr -> Dir4 -> Key
+portKeyHelp addr dir4 =
+    ( addr, moveInDir4 dir4 addr )
 
 
 fromIntents : List ( Addr, Intent ) -> Ports
