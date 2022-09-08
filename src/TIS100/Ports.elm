@@ -61,6 +61,12 @@ fromPuzzle puzzle =
         |> fromEntries
 
 
+fromViewModel : ViewModel -> Ports
+fromViewModel { intents, actions } =
+    fromIntents intents
+        |> Dict.union (fromActions actions)
+
+
 fromIntents : List ( Addr, Intent ) -> Ports
 fromIntents =
     List.map entryFromIntent >> fromEntries
@@ -146,15 +152,11 @@ type alias ViewModel =
 
 
 view : Puzzle -> ViewModel -> List (Html msg)
-view puzzle { intents, actions } =
+view puzzle vm =
     let
-        selectedPorts =
-            fromIntents intents
-                |> Dict.union (fromActions actions)
-
         ports =
             fromPuzzle puzzle
-                |> Dict.intersect selectedPorts
+                |> Dict.intersect (fromViewModel vm)
     in
     viewPorts ports
 
