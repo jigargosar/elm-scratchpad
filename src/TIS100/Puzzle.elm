@@ -80,7 +80,7 @@ toLayout lss =
 
 isLayoutAddress : Addr -> Bool
 isLayoutAddress ( x, y ) =
-    U.isBounded 0 3 x && U.isBounded 1 2 y
+    U.isBounded 0 3 x && U.isBounded 1 3 y
 
 
 toListBy :
