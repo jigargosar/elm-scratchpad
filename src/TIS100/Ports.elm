@@ -42,7 +42,12 @@ type alias PortEntry =
 
 fromEntries : List PortEntry -> Ports
 fromEntries =
-    List.foldl addPortEntry Dict.empty
+    let
+        updatePortEntry : PortEntry -> Ports -> Ports
+        updatePortEntry ( key, prt ) =
+            Dict.update key (updateMaybePort prt)
+    in
+    List.foldl updatePortEntry Dict.empty
 
 
 fromPuzzle : Puzzle -> Ports
@@ -60,6 +65,11 @@ fromIntents =
 fromActions : List ( Addr, Action ) -> Ports
 fromActions =
     List.map portEntryFromAction >> fromEntries
+
+
+portEntryFromWriteEntry : ( Addr, Dir4 ) -> PortEntry
+portEntryFromWriteEntry ( addr, dir4 ) =
+    toPortEntry addr dir4 Empty
 
 
 portEntryFromIntent : ( Addr, Intent ) -> PortEntry
@@ -89,16 +99,6 @@ toPortEntry addr dir val =
             ( addr, moveInDir4 dir addr )
     in
     ( key, ( addr, dir, val ) )
-
-
-portEntryFromWriteEntry : ( Addr, Dir4 ) -> PortEntry
-portEntryFromWriteEntry ( addr, dir4 ) =
-    toPortEntry addr dir4 Empty
-
-
-addPortEntry : PortEntry -> Ports -> Ports
-addPortEntry ( key, prt ) =
-    Dict.update key (updateMaybePort prt)
 
 
 updateMaybePort : Port -> Maybe Port -> Maybe Port
