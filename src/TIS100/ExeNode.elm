@@ -161,10 +161,20 @@ compile srcCode =
         srcCode
             |> String.toLower
             |> Parser.run statementsParser
-            |> Result.toMaybe
-            |> Maybe.andThen prgFromStmts
-            |> Maybe.map (init srcCode)
-            |> Result.fromMaybe "Compilation Failed"
+            |> Result.map (List.filterMap prgLineFromStmt)
+            |> Result.map (init2 srcCode)
+            |> Result.mapError
+                (\des ->
+                    let
+                        _ =
+                            des
+                                |> Debug.log "Debug: "
+                    in
+                    des
+                        |> List.head
+                        |> Maybe.map (.problem >> Debug.toString)
+                        |> Maybe.withDefault "Compilation Failed"
+                )
 
 
 type Stmt
@@ -184,11 +194,6 @@ prgLineFromStmt stmt =
 
         OnlyInst ( lineNo, inst ) ->
             Just <| PLine lineNo inst
-
-
-prgFromStmts : List Stmt -> Maybe Prg
-prgFromStmts =
-    List.filterMap prgLineFromStmt >> Pivot.fromList
 
 
 statementsParser : Parser (List Stmt)
@@ -358,6 +363,16 @@ dirParser =
 simpleKeyword : String -> a -> Parser a
 simpleKeyword string a =
     Parser.succeed a |. Parser.keyword string
+
+
+init2 : String -> List PLine -> ExeNode
+init2 srcCode prgLines =
+    case Pivot.fromList prgLines of
+        Nothing ->
+            NotRunnable srcCode
+
+        Just prg ->
+            Runnable srcCode (intentsFromPrg prg) (ReadyToRun (initCtx prg))
 
 
 init : String -> Prg -> ExeNode
