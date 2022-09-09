@@ -16,7 +16,6 @@ import TIS100.Ports as Ports exposing (Action(..), Intent(..))
 import TIS100.Puzzle as Puzzle exposing (IOConfig, Puzzle)
 import TIS100.PuzzlePage.LeftBar as LB
 import TIS100.PuzzlePage.SimStore as SimStore
-import TIS100.SelectionList as SelectionList exposing (SelectionList)
 import TIS100.UI as UI
 import Time
 import Utils exposing (..)
