@@ -37,11 +37,6 @@ type alias Prg =
     Pivot PLine
 
 
-prgFromList : List PLine -> Maybe (Pivot PLine)
-prgFromList =
-    Pivot.fromList
-
-
 type alias PLine =
     { lineNo : Int, inst : Inst }
 
@@ -159,48 +154,15 @@ type Inst
 
 compile : String -> Result String ExeNode
 compile srcCode =
-    let
-        _ =
-            Debug.log "Debug: " testParser
-    in
     if U.isBlank srcCode then
         Ok empty
 
     else
         srcCode
             |> String.toLower
-            |> String.lines
-            |> List.indexedMap U.pair
-            |> U.reject (U.second >> U.isBlank)
-            |> List.map compileLine
-            |> U.maybeCombine
-            |> Maybe.andThen prgFromList
+            |> prgFromSrcCode
             |> Maybe.map (init srcCode)
             |> Result.fromMaybe "Compilation Failed"
-
-
-toTokens : String -> List String
-toTokens line =
-    String.split " " line
-        |> U.reject (U.eq "")
-
-
-compileLine : ( Int, String ) -> Maybe PLine
-compileLine ( no, line ) =
-    parseInst line |> Maybe.map (PLine no)
-
-
-parseInst : String -> Maybe Inst
-parseInst line =
-    case toTokens line of
-        "mov" :: b :: c :: [] ->
-            Maybe.map2 Mov (parseSrc b) (parseDst c)
-
-        "nop" :: [] ->
-            Just Nop
-
-        _ ->
-            Nothing
 
 
 type Stmt
@@ -209,8 +171,29 @@ type Stmt
     | OnlyInst ( Int, Inst )
 
 
-testParser =
-    Parser.run statementsParser "a:nop \n\n nop"
+prgLineFromStmt : Stmt -> Maybe PLine
+prgLineFromStmt stmt =
+    case stmt of
+        Label _ ->
+            Nothing
+
+        LabeledInst _ ( lineNo, inst ) ->
+            Just <| PLine lineNo inst
+
+        OnlyInst ( lineNo, inst ) ->
+            Just <| PLine lineNo inst
+
+
+prgFromStmts : List Stmt -> Maybe Prg
+prgFromStmts =
+    List.filterMap prgLineFromStmt >> Pivot.fromList
+
+
+prgFromSrcCode : String -> Maybe Prg
+prgFromSrcCode string =
+    Parser.run statementsParser string
+        |> Result.toMaybe
+        |> Maybe.andThen prgFromStmts
 
 
 statementsParser : Parser (List Stmt)
@@ -314,7 +297,7 @@ instParser =
 withLineNum : Parser a -> Parser ( Int, a )
 withLineNum parser =
     Parser.succeed U.pair
-        |= Parser.getRow
+        |= (Parser.getRow |> Parser.map U.dec)
         |= parser
 
 
@@ -380,43 +363,6 @@ dirParser =
 simpleKeyword : String -> a -> Parser a
 simpleKeyword string a =
     Parser.succeed a |. Parser.keyword string
-
-
-parseDst : String -> Maybe Dst
-parseDst token =
-    U.maybeOneOf
-        [ Maybe.map DstPort (parseDir token)
-        , U.maybeFromBool (token == "nil") DstNil
-        , U.maybeFromBool (token == "acc") DstAcc
-        ]
-
-
-parseSrc : String -> Maybe Src
-parseSrc token =
-    U.maybeOneOf
-        [ Maybe.map SrcPort (parseDir token)
-        , U.maybeFromBool (token == "acc") SrcAcc
-        , Maybe.map SrcNum (Num.parse token)
-        ]
-
-
-parseDir : String -> Maybe Dir4
-parseDir string =
-    case string of
-        "left" ->
-            Just Left
-
-        "right" ->
-            Just Right
-
-        "up" ->
-            Just Up
-
-        "down" ->
-            Just Down
-
-        _ ->
-            Nothing
 
 
 init : String -> Prg -> ExeNode
