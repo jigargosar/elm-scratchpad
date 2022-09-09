@@ -223,10 +223,10 @@ statementsParserHelp revStmts =
     Parser.succeed identity
         |. Parser.spaces
         |= Parser.oneOf
-            [ stmtParser
-                |> Parser.map (\stmt -> Parser.Loop (stmt :: revStmts))
-            , Parser.end
-                |> Parser.map (\_ -> Parser.Done (List.reverse revStmts))
+            [ Parser.succeed (\stmt -> Parser.Loop (stmt :: revStmts))
+                |= stmtParser
+            , Parser.succeed (\_ -> Parser.Done (List.reverse revStmts))
+                |= Parser.end
             ]
 
 
@@ -326,9 +326,9 @@ movInstParser : Parser Inst
 movInstParser =
     Parser.succeed Mov
         |. Parser.keyword "mov"
-        |. Parser.spaces
+        |. spaceChars
         |= srcParser
-        |. Parser.spaces
+        |. spaceChars
         |= dstParser
 
 
