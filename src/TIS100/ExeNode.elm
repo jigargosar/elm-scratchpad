@@ -81,6 +81,50 @@ type State
     | WriteBlocked Ctx Dir4 Num
 
 
+stateToStepRunnerNodeState : State -> SR.NodeState State
+stateToStepRunnerNodeState state =
+    case state of
+        ReadyToRun ctx ->
+            SR.ReadyToRun (\() -> run ctx)
+
+        ReadBlocked ctx f t ->
+            SR.ReadBlocked f (writeAfterRead ctx t)
+
+        WriteBlocked ctx t num ->
+            SR.WriteBlocked num t (\() -> ReadyToRun (goNext ctx))
+
+
+run : Ctx -> State
+run ctx =
+    case currInst ctx of
+        Mov src dst ->
+            case src of
+                SrcPort dir ->
+                    ReadBlocked ctx dir dst
+
+                SrcAcc ->
+                    writeAfterRead ctx dst ctx.acc
+
+                SrcNum num ->
+                    writeAfterRead ctx dst num
+
+        Nop ->
+            ReadyToRun (goNext ctx)
+
+
+writeAfterRead : Ctx -> Dst -> Num -> State
+writeAfterRead ctx dst num =
+    case dst of
+        DstPort dir ->
+            WriteBlocked ctx dir num
+
+        DstNil ->
+            ReadyToRun (goNext ctx)
+
+        DstAcc ->
+            ReadyToRun (setAccAndGoNext num ctx)
+
+
 ctxFromState : State -> Ctx
 ctxFromState st =
     case st of
@@ -238,50 +282,6 @@ toStepRunnerNodeState exe =
         Runnable sc nts st ->
             stateToStepRunnerNodeState st
                 |> SR.map (Runnable sc nts)
-
-
-stateToStepRunnerNodeState : State -> SR.NodeState State
-stateToStepRunnerNodeState state =
-    case state of
-        ReadyToRun ctx ->
-            SR.ReadyToRun (\() -> run ctx)
-
-        ReadBlocked ctx f t ->
-            SR.ReadBlocked f (writeAfterRead ctx t)
-
-        WriteBlocked ctx t num ->
-            SR.WriteBlocked num t (\() -> ReadyToRun (goNext ctx))
-
-
-run : Ctx -> State
-run ctx =
-    case currInst ctx of
-        Mov src dst ->
-            case src of
-                SrcPort dir ->
-                    ReadBlocked ctx dir dst
-
-                SrcAcc ->
-                    writeAfterRead ctx dst ctx.acc
-
-                SrcNum num ->
-                    writeAfterRead ctx dst num
-
-        Nop ->
-            ReadyToRun (goNext ctx)
-
-
-writeAfterRead : Ctx -> Dst -> Num -> State
-writeAfterRead ctx dst num =
-    case dst of
-        DstPort dir ->
-            WriteBlocked ctx dir num
-
-        DstNil ->
-            ReadyToRun (goNext ctx)
-
-        DstAcc ->
-            ReadyToRun (setAccAndGoNext num ctx)
 
 
 intents : ExeNode -> List Intent
