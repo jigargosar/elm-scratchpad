@@ -250,6 +250,7 @@ labeledStmtParser label =
         ]
 
 
+stmtEndChar : Parser ()
 stmtEndChar =
     Parser.oneOf [ Parser.end, Parser.symbol "\n" ]
 
