@@ -160,7 +160,9 @@ compile srcCode =
     else
         srcCode
             |> String.toLower
-            |> prgFromSrcCode
+            |> Parser.run statementsParser
+            |> Result.toMaybe
+            |> Maybe.andThen prgFromStmts
             |> Maybe.map (init srcCode)
             |> Result.fromMaybe "Compilation Failed"
 
@@ -187,13 +189,6 @@ prgLineFromStmt stmt =
 prgFromStmts : List Stmt -> Maybe Prg
 prgFromStmts =
     List.filterMap prgLineFromStmt >> Pivot.fromList
-
-
-prgFromSrcCode : String -> Maybe Prg
-prgFromSrcCode string =
-    Parser.run statementsParser string
-        |> Result.toMaybe
-        |> Maybe.andThen prgFromStmts
 
 
 statementsParser : Parser (List Stmt)
