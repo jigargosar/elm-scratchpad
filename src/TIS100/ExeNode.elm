@@ -210,7 +210,7 @@ type Stmt
 
 
 testParser =
-    Parser.run statementsParser "nop nop a:mov up down"
+    Parser.run statementsParser "a:"
 
 
 statementsParser : Parser (List Stmt)
@@ -219,17 +219,14 @@ statementsParser =
 
 
 statementsParserHelp : List Stmt -> Parser (Parser.Step (List Stmt) (List Stmt))
-statementsParserHelp revList =
+statementsParserHelp revStmts =
     Parser.succeed identity
         |. Parser.spaces
         |= Parser.oneOf
-            [ Parser.succeed (\stmt -> Parser.Loop (stmt :: revList))
-                |= stmtParser
-
-            --|. spaces
-            --|. Parser.oneOf [ Parser.end, Parser.symbol "\n" ]
-            , Parser.succeed (\_ -> Parser.Done (List.reverse revList))
-                |= Parser.end
+            [ stmtParser
+                |> Parser.map (\stmt -> Parser.Loop (stmt :: revStmts))
+            , Parser.end
+                |> Parser.map (\_ -> Parser.Done (List.reverse revStmts))
             ]
 
 
@@ -245,6 +242,7 @@ stmtParser =
         , Parser.succeed OnlyInst
             |= instParser
         ]
+        |. stmtEnd
 
 
 stmtEnd : Parser ()
