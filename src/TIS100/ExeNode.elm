@@ -4,7 +4,7 @@ module TIS100.ExeNode exposing
     , compile
     , empty
     , intents
-    , stepState
+    , toStepRunnerState
     , viewModel
     )
 
@@ -229,8 +229,8 @@ empty =
     NotRunnable ""
 
 
-stepState : ExeNode -> SR.NodeState ExeNode
-stepState exe =
+toStepRunnerState : ExeNode -> SR.NodeState ExeNode
+toStepRunnerState exe =
     case exe of
         NotRunnable _ ->
             SR.Done
@@ -324,7 +324,7 @@ viewModel exe =
 
 mode : ExeNode -> String
 mode exe =
-    case stepState exe of
+    case toStepRunnerState exe of
         SR.ReadyToRun _ ->
             "RUN"
 

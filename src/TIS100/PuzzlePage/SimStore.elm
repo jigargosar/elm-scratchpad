@@ -64,11 +64,11 @@ init puzzle exs =
 
 step : Model -> Model
 step store =
-    SR.step toStepState store
+    SR.step toStepRunnerState store
 
 
-toStepState : Node -> SR.NodeState Node
-toStepState node =
+toStepRunnerState : Node -> SR.NodeState Node
+toStepRunnerState node =
     case node of
         In conf inputNode ->
             IN.stepState inputNode |> SR.map (In conf)
@@ -77,7 +77,7 @@ toStepState node =
             ON.stepState outputNode |> SR.map (Out conf)
 
         Exe exeNode ->
-            EN.stepState exeNode |> SR.map Exe
+            EN.toStepRunnerState exeNode |> SR.map Exe
 
         Flt ->
             SR.Done
@@ -118,7 +118,7 @@ actionsOf node =
             []
 
         _ ->
-            case toStepState node of
+            case toStepRunnerState node of
                 SR.ReadyToRun _ ->
                     []
 
