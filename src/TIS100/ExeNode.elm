@@ -236,19 +236,8 @@ toStepRunnerNodeState exe =
             SR.Done
 
         Runnable sc nts st ->
-            case st of
-                ReadyToRun ctx ->
-                    SR.ReadyToRun (\() -> Runnable sc nts (run ctx))
-
-                ReadBlocked ctx f t ->
-                    SR.ReadBlocked f
-                        (writeAfterRead ctx t >> Runnable sc nts)
-
-                WriteBlocked ctx t num ->
-                    SR.WriteBlocked num t <|
-                        \() ->
-                            Runnable sc nts <|
-                                ReadyToRun (goNext ctx)
+            stateToStepRunnerNodeState st
+                |> SR.map (Runnable sc nts)
 
 
 stateToStepRunnerNodeState : State -> SR.NodeState State
