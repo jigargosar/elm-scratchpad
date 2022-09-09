@@ -205,12 +205,12 @@ parseInst line =
 
 type Stmt
     = Label String
-    | LabeledInst String Inst
-    | OnlyInst Inst
+    | LabeledInst String ( Int, Inst )
+    | OnlyInst ( Int, Inst )
 
 
 testParser =
-    Parser.run statementsParser "a:"
+    Parser.run statementsParser "a:nop \n\n nop"
 
 
 statementsParser : Parser (List Stmt)
@@ -233,16 +233,25 @@ statementsParserHelp revStmts =
 stmtParser : Parser Stmt
 stmtParser =
     Parser.oneOf
-        [ Parser.succeed LabeledInst
-            |= prefixLabelParser
-            |. spaceChars
-            |= instParser
-        , Parser.succeed Label
-            |= prefixLabelParser
+        [ prefixLabelParser
+            |> Parser.andThen labeledStmtParser
         , Parser.succeed OnlyInst
             |= instParser
         ]
-        |. stmtEnd
+
+
+labeledStmtParser : String -> Parser Stmt
+labeledStmtParser label =
+    Parser.oneOf
+        [ Parser.succeed (Label label)
+            |. stmtEndChar
+        , Parser.succeed (LabeledInst label)
+            |= instParser
+        ]
+
+
+stmtEndChar =
+    Parser.oneOf [ Parser.end, Parser.symbol "\n" ]
 
 
 stmtEnd : Parser ()
@@ -258,6 +267,7 @@ prefixLabelParser =
         |= labelParser
         |. spaceChars
         |. Parser.symbol ":"
+        |. spaceChars
 
 
 labelParser : Parser String
@@ -290,12 +300,21 @@ spaceChars =
     Parser.chompWhile (\c -> c == ' ')
 
 
-instParser : Parser Inst
+instParser : Parser ( Int, Inst )
 instParser =
-    Parser.oneOf
-        [ movInstParser
-        , nopInstParser
-        ]
+    withLineNum <|
+        Parser.oneOf
+            [ movInstParser
+            , nopInstParser
+            ]
+            |. stmtEnd
+
+
+withLineNum : Parser a -> Parser ( Int, a )
+withLineNum parser =
+    Parser.succeed U.pair
+        |= Parser.getRow
+        |= parser
 
 
 nopInstParser : Parser Inst
