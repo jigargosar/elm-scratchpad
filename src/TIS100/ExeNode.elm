@@ -8,6 +8,7 @@ module TIS100.ExeNode exposing
     , viewModel
     )
 
+import Parser exposing ((|.), Parser)
 import Pivot exposing (Pivot)
 import TIS100.Num as Num exposing (Num)
 import TIS100.Ports exposing (Intent(..))
@@ -195,6 +196,26 @@ parseInst line =
 
         _ ->
             Nothing
+
+
+srcParser : Parser Src
+srcParser =
+    Parser.oneOf []
+
+
+dirParser : Parser Dir4
+dirParser =
+    Parser.oneOf
+        [ keyword "left" Left
+        , keyword "right" Right
+        , keyword "up" Up
+        , keyword "down" Down
+        ]
+
+
+keyword : String -> a -> Parser a
+keyword string a =
+    Parser.succeed a |. Parser.keyword string
 
 
 parseDst : String -> Maybe Dst
