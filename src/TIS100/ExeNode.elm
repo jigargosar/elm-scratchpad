@@ -10,6 +10,7 @@ module TIS100.ExeNode exposing
 
 import Parser exposing ((|.), (|=), Parser)
 import Pivot exposing (Pivot)
+import Set
 import TIS100.Num as Num exposing (Num)
 import TIS100.Ports exposing (Intent(..))
 import TIS100.PuzzlePage.StepRunner as SR
@@ -158,6 +159,14 @@ type Inst
 
 compile : String -> Result String ExeNode
 compile srcCode =
+    let
+        _ =
+            let
+                v =
+                    Parser.run instListParser " mov"
+            in
+            Debug.log "Debug: " v
+    in
     if U.isBlank srcCode then
         Ok empty
 
@@ -198,6 +207,76 @@ parseInst line =
             Nothing
 
 
+type Stmt
+    = Label String
+    | LabeledInst String Inst
+
+
+statementsParser =
+    Parser.loop [] statementsParserHelp
+
+
+statementsParserHelp revList =
+    Parser.oneOf
+        [ Parser.succeed (\stmt -> Parser.Loop (stmt :: revList))
+            |= stmtParser
+            |. Parser.spaces
+        , Parser.succeed (\_ -> Parser.Done (List.reverse revList))
+            |= Parser.end
+        ]
+
+
+stmtParser : Parser Stmt
+stmtParser =
+    Parser.oneOf
+        [ Parser.succeed LabeledInst
+            |. spaces
+            |= prefixLabelParser
+            |. spaces
+            |= instParser
+        , Parser.succeed Label
+            |. spaces
+            |= prefixLabelParser
+        ]
+
+
+prefixLabelParser : Parser String
+prefixLabelParser =
+    Parser.succeed identity
+        |= labelParser
+        |. spaces
+        |. Parser.symbol ":"
+
+
+labelParser : Parser String
+labelParser =
+    Parser.variable
+        { start = Char.isAlpha
+        , inner = \c -> Char.isAlphaNum c || c == '_'
+        , reserved = Set.empty
+        }
+
+
+spaces =
+    Parser.chompWhile (\c -> c == ' ')
+
+
+instListParser : Parser (List Inst)
+instListParser =
+    Parser.loop [] instListParserHelp
+
+
+instListParserHelp : List Inst -> Parser (Parser.Step (List Inst) (List Inst))
+instListParserHelp reverseList =
+    Parser.oneOf
+        [ Parser.succeed (\inst -> Parser.Loop (inst :: reverseList))
+            |= instParser
+            |. Parser.spaces
+        , Parser.succeed (\_ -> Parser.Done (List.reverse reverseList))
+            |= Parser.end
+        ]
+
+
 instParser : Parser Inst
 instParser =
     Parser.oneOf
@@ -215,7 +294,9 @@ movInstParser : Parser Inst
 movInstParser =
     Parser.succeed Mov
         |. Parser.keyword "mov"
+        |. Parser.spaces
         |= srcParser
+        |. Parser.spaces
         |= dstParser
 
 
