@@ -191,9 +191,7 @@ leftBarViewModel : Model -> LB.ViewModel
 leftBarViewModel { puzzle, state } =
     case state of
         Edit ->
-            { inputs = editModeInputColumns puzzle
-            , outputs = editModeOutputColumns puzzle
-            }
+            Puzzle.leftBarViewModel puzzle
 
         Sim_ sim ->
             SimStore.leftBarViewModel sim.store
@@ -451,29 +449,6 @@ initEditors puzzle =
     Puzzle.executableAddresses puzzle
         |> List.map (pairTo "")
         |> Dict.fromList
-
-
-editModeInputColumns : Puzzle -> List LB.Input
-editModeInputColumns puzzle =
-    List.map
-        (\conf ->
-            { title = conf.title
-            , nums = SelectionList.None conf.nums
-            }
-        )
-        puzzle.inputs
-
-
-editModeOutputColumns : Puzzle -> List LB.Output
-editModeOutputColumns puzzle =
-    List.map
-        (\conf ->
-            { title = conf.title
-            , expected = SelectionList.None conf.nums
-            , actual = []
-            }
-        )
-        puzzle.outputs
 
 
 viewEditModeGridItems : Puzzle -> Dict Addr Editor -> List (Html Msg)

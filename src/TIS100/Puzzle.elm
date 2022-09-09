@@ -3,6 +3,7 @@ module TIS100.Puzzle exposing
     , NodeType(..)
     , Puzzle
     , executableAddresses
+    , leftBarViewModel
     , samplePuzzle
     , toDictBy
     , toListBy
@@ -12,6 +13,8 @@ module TIS100.Puzzle exposing
 import Dict exposing (Dict)
 import TIS100.Addr exposing (Addr)
 import TIS100.Num as Num exposing (Num)
+import TIS100.PuzzlePage.LeftBar as LB
+import TIS100.SelectionList as SelectionList
 import Utils as U exposing (Dir4(..), pair)
 
 
@@ -76,6 +79,28 @@ toLayout lss =
                 ( ( modBy 4 i, i // 4 + 1 ), nk )
             )
         |> Dict.fromList
+
+
+leftBarViewModel : Puzzle -> LB.ViewModel
+leftBarViewModel puzzle =
+    { inputs = List.map toLBInput puzzle.inputs
+    , outputs = List.map toLBOutput puzzle.outputs
+    }
+
+
+toLBInput : IOConfig -> LB.Input
+toLBInput conf =
+    { title = conf.title
+    , nums = SelectionList.None conf.nums
+    }
+
+
+toLBOutput : IOConfig -> LB.Output
+toLBOutput conf =
+    { title = conf.title
+    , expected = SelectionList.None conf.nums
+    , actual = []
+    }
 
 
 isLayoutAddress : Addr -> Bool
