@@ -18,13 +18,14 @@ import TIS100.SelectionList as SelectionList
 import Utils as U exposing (Dir4(..), pair)
 
 
-type alias Puzzle =
-    { title : String
-    , description : List String
-    , inputs : List IOConfig
-    , outputs : List IOConfig
-    , layout : Layout
-    }
+type Puzzle
+    = Puzzle
+        { title : String
+        , description : List String
+        , inputs : List IOConfig
+        , outputs : List IOConfig
+        , layout : Layout
+        }
 
 
 type alias Layout =
@@ -45,27 +46,28 @@ type NodeType
 
 samplePuzzle : Puzzle
 samplePuzzle =
-    { title = "Differential Converter"
-    , description =
-        [ "READ VALUES FROM IN.A AND IN.B"
-        , "WRITE IN.A - IN.B TO OUT.P"
-        , "WRITE IN.B - IN.A TO OUT.N"
-        ]
-    , inputs =
-        [ { x = 0, title = "IN.A", nums = Num.range 1 20 }
-        , { x = 1, title = "IN.B", nums = Num.range 1 20 }
-        ]
-    , outputs =
-        [ { x = 0, title = "OUT.P", nums = Num.range 1 20 }
-        , { x = 1, title = "OUT.N", nums = Num.range 1 20 }
-        ]
-    , layout =
-        [ [ Executable, Executable, Executable, Executable ]
-        , [ Executable, Executable, Faulty, Executable ]
-        , [ Executable, Executable, Executable, Executable ]
-        ]
-            |> toLayout
-    }
+    Puzzle
+        { title = "Differential Converter"
+        , description =
+            [ "READ VALUES FROM IN.A AND IN.B"
+            , "WRITE IN.A - IN.B TO OUT.P"
+            , "WRITE IN.B - IN.A TO OUT.N"
+            ]
+        , inputs =
+            [ { x = 0, title = "IN.A", nums = Num.range 1 20 }
+            , { x = 1, title = "IN.B", nums = Num.range 1 20 }
+            ]
+        , outputs =
+            [ { x = 0, title = "OUT.P", nums = Num.range 1 20 }
+            , { x = 1, title = "OUT.N", nums = Num.range 1 20 }
+            ]
+        , layout =
+            [ [ Executable, Executable, Executable, Executable ]
+            , [ Executable, Executable, Faulty, Executable ]
+            , [ Executable, Executable, Executable, Executable ]
+            ]
+                |> toLayout
+        }
 
 
 toLayout : List (List NodeType) -> Layout
@@ -82,7 +84,7 @@ toLayout lss =
 
 
 leftBarViewModel : Puzzle -> LB.ViewModel
-leftBarViewModel puzzle =
+leftBarViewModel (Puzzle puzzle) =
     { inputs = List.map toLBInput puzzle.inputs
     , outputs = List.map toLBOutput puzzle.outputs
     }
@@ -114,7 +116,7 @@ toListBy :
     -> (( Addr, NodeType ) -> v)
     -> Puzzle
     -> List v
-toListBy ifn ofn lfn puzzle =
+toListBy ifn ofn lfn (Puzzle puzzle) =
     let
         io =
             List.map (\c -> ifn c) puzzle.inputs
@@ -162,7 +164,7 @@ toDictBy :
     -> (Addr -> NodeType -> v)
     -> Puzzle
     -> Dict Addr v
-toDictBy ifn ofn lfn puzzle =
+toDictBy ifn ofn lfn (Puzzle puzzle) =
     let
         io =
             List.map (\c -> ( inputAddr c, ifn c )) puzzle.inputs
@@ -176,7 +178,7 @@ toDictBy ifn ofn lfn puzzle =
 
 
 executableAddresses : Puzzle -> List Addr
-executableAddresses puzzle =
+executableAddresses (Puzzle puzzle) =
     puzzle.layout
         |> Dict.filter (\_ v -> v == Executable)
         |> Dict.keys
