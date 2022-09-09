@@ -198,6 +198,19 @@ parseInst line =
             Nothing
 
 
+instParser : Parser Inst
+instParser =
+    Parser.oneOf
+        [ movInstParser
+        , nopInstParser
+        ]
+
+
+nopInstParser : Parser Inst
+nopInstParser =
+    simpleKeyword "nop" Nop
+
+
 movInstParser : Parser Inst
 movInstParser =
     Parser.succeed Mov
