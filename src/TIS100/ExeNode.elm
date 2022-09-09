@@ -198,6 +198,15 @@ parseInst line =
             Nothing
 
 
+dstParser : Parser Dst
+dstParser =
+    Parser.oneOf
+        [ Parser.map DstPort dirParser
+        , keyword "acc" DstAcc
+        , keyword "nil" DstNil
+        ]
+
+
 srcParser : Parser Src
 srcParser =
     Parser.oneOf
