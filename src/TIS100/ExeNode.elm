@@ -198,12 +198,20 @@ parseInst line =
             Nothing
 
 
+movInstParser : Parser Inst
+movInstParser =
+    Parser.succeed Mov
+        |. Parser.keyword "mov"
+        |= srcParser
+        |= dstParser
+
+
 dstParser : Parser Dst
 dstParser =
     Parser.oneOf
         [ Parser.map DstPort dirParser
-        , keyword "acc" DstAcc
-        , keyword "nil" DstNil
+        , simpleKeyword "acc" DstAcc
+        , simpleKeyword "nil" DstNil
         ]
 
 
@@ -211,7 +219,7 @@ srcParser : Parser Src
 srcParser =
     Parser.oneOf
         [ Parser.map SrcPort dirParser
-        , keyword "acc" SrcAcc
+        , simpleKeyword "acc" SrcAcc
         , Parser.map SrcNum numParser
         ]
 
@@ -235,15 +243,15 @@ signedIntParser =
 dirParser : Parser Dir4
 dirParser =
     Parser.oneOf
-        [ keyword "left" Left
-        , keyword "right" Right
-        , keyword "up" Up
-        , keyword "down" Down
+        [ simpleKeyword "left" Left
+        , simpleKeyword "right" Right
+        , simpleKeyword "up" Up
+        , simpleKeyword "down" Down
         ]
 
 
-keyword : String -> a -> Parser a
-keyword string a =
+simpleKeyword : String -> a -> Parser a
+simpleKeyword string a =
     Parser.succeed a |. Parser.keyword string
 
 
