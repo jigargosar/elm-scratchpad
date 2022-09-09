@@ -163,7 +163,7 @@ compile srcCode =
         _ =
             let
                 v =
-                    Parser.run instListParser " mov"
+                    Parser.run statementsParser "a1:nop \n a2:nop \n nop:nop"
             in
             Debug.log "Debug: " v
     in
@@ -210,17 +210,19 @@ parseInst line =
 type Stmt
     = Label String
     | LabeledInst String Inst
+    | OnlyInst Inst
 
 
+statementsParser : Parser (List Stmt)
 statementsParser =
     Parser.loop [] statementsParserHelp
 
 
+statementsParserHelp : List Stmt -> Parser (Parser.Step (List Stmt) (List Stmt))
 statementsParserHelp revList =
     Parser.oneOf
         [ Parser.succeed (\stmt -> Parser.Loop (stmt :: revList))
             |= stmtParser
-            |. Parser.spaces
         , Parser.succeed (\_ -> Parser.Done (List.reverse revList))
             |= Parser.end
         ]
@@ -228,16 +230,20 @@ statementsParserHelp revList =
 
 stmtParser : Parser Stmt
 stmtParser =
-    Parser.oneOf
-        [ Parser.succeed LabeledInst
-            |. spaces
-            |= prefixLabelParser
-            |. spaces
-            |= instParser
-        , Parser.succeed Label
-            |. spaces
-            |= prefixLabelParser
-        ]
+    Parser.succeed identity
+        |. spaces
+        |= Parser.oneOf
+            [ Parser.succeed LabeledInst
+                |= Parser.backtrackable prefixLabelParser
+                |. spaces
+                |= instParser
+            , Parser.succeed Label
+                |= Parser.backtrackable prefixLabelParser
+            , Parser.succeed OnlyInst
+                |= instParser
+            ]
+        |. spaces
+        |. Parser.oneOf [ Parser.end, Parser.symbol "\n" ]
 
 
 prefixLabelParser : Parser String
@@ -253,28 +259,28 @@ labelParser =
     Parser.variable
         { start = Char.isAlpha
         , inner = \c -> Char.isAlphaNum c || c == '_'
-        , reserved = Set.empty
+        , reserved = reservedKeywords
         }
+
+
+reservedKeywords : Set.Set String
+reservedKeywords =
+    Set.fromList
+        [ "nop"
+        , "mov"
+        , "add"
+        , "sub"
+        , "sav"
+        , "jmp"
+        , "jez"
+        , "jgz"
+        , "jlz"
+        , "jro"
+        ]
 
 
 spaces =
     Parser.chompWhile (\c -> c == ' ')
-
-
-instListParser : Parser (List Inst)
-instListParser =
-    Parser.loop [] instListParserHelp
-
-
-instListParserHelp : List Inst -> Parser (Parser.Step (List Inst) (List Inst))
-instListParserHelp reverseList =
-    Parser.oneOf
-        [ Parser.succeed (\inst -> Parser.Loop (inst :: reverseList))
-            |= instParser
-            |. Parser.spaces
-        , Parser.succeed (\_ -> Parser.Done (List.reverse reverseList))
-            |= Parser.end
-        ]
 
 
 instParser : Parser Inst
