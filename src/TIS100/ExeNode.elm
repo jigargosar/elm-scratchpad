@@ -247,12 +247,10 @@ stateToStepRunnerNodeState state =
             SR.ReadyToRun (\() -> run ctx)
 
         ReadBlocked ctx f t ->
-            SR.ReadBlocked f
-                (writeAfterRead ctx t)
+            SR.ReadBlocked f (writeAfterRead ctx t)
 
         WriteBlocked ctx t num ->
-            SR.WriteBlocked num t <|
-                \() -> ReadyToRun (goNext ctx)
+            SR.WriteBlocked num t (\() -> ReadyToRun (goNext ctx))
 
 
 run : Ctx -> State
@@ -260,8 +258,8 @@ run ctx =
     case currInst ctx of
         Mov src dst ->
             case src of
-                SrcPort f ->
-                    ReadBlocked ctx f dst
+                SrcPort dir ->
+                    ReadBlocked ctx dir dst
 
                 SrcAcc ->
                     writeAfterRead ctx dst ctx.acc
@@ -276,8 +274,8 @@ run ctx =
 writeAfterRead : Ctx -> Dst -> Num -> State
 writeAfterRead ctx dst num =
     case dst of
-        DstPort t ->
-            WriteBlocked ctx t num
+        DstPort dir ->
+            WriteBlocked ctx dir num
 
         DstNil ->
             ReadyToRun (goNext ctx)
