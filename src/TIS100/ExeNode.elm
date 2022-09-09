@@ -8,7 +8,7 @@ module TIS100.ExeNode exposing
     , viewModel
     )
 
-import Parser exposing ((|.), Parser)
+import Parser exposing ((|.), (|=), Parser)
 import Pivot exposing (Pivot)
 import TIS100.Num as Num exposing (Num)
 import TIS100.Ports exposing (Intent(..))
@@ -200,7 +200,27 @@ parseInst line =
 
 srcParser : Parser Src
 srcParser =
-    Parser.oneOf []
+    Parser.oneOf
+        [ Parser.map SrcPort dirParser
+        , keyword "acc" SrcAcc
+        , Parser.map SrcNum numParser
+        ]
+
+
+numParser : Parser Num
+numParser =
+    Parser.succeed Num.fromInt
+        |= signedIntParser
+
+
+signedIntParser : Parser Int
+signedIntParser =
+    Parser.oneOf
+        [ Parser.succeed negate
+            |. Parser.symbol "-"
+            |= Parser.int
+        , Parser.int
+        ]
 
 
 dirParser : Parser Dir4
