@@ -77,7 +77,7 @@ toStepRunnerState node =
             ON.stepState outputNode |> SR.map (Out conf)
 
         Exe exeNode ->
-            EN.toStepRunnerState exeNode |> SR.map Exe
+            EN.toStepRunnerNodeState exeNode |> SR.map Exe
 
         Flt ->
             SR.Done
