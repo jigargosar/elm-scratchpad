@@ -161,11 +161,7 @@ compile : String -> Result String ExeNode
 compile srcCode =
     let
         _ =
-            let
-                v =
-                    Parser.run statementsParser "a1:nop \n a2:nop \n nop:nop"
-            in
-            Debug.log "Debug: " v
+            Debug.log "Debug: " testParser
     in
     if U.isBlank srcCode then
         Ok empty
@@ -213,6 +209,10 @@ type Stmt
     | OnlyInst Inst
 
 
+testParser =
+    Parser.run statementsParser "nop nop a:mov up down"
+
+
 statementsParser : Parser (List Stmt)
 statementsParser =
     Parser.loop [] statementsParserHelp
@@ -220,29 +220,37 @@ statementsParser =
 
 statementsParserHelp : List Stmt -> Parser (Parser.Step (List Stmt) (List Stmt))
 statementsParserHelp revList =
-    Parser.oneOf
-        [ Parser.succeed (\stmt -> Parser.Loop (stmt :: revList))
-            |= stmtParser
-        , Parser.succeed (\_ -> Parser.Done (List.reverse revList))
-            |= Parser.end
-        ]
+    Parser.succeed identity
+        |. Parser.spaces
+        |= Parser.oneOf
+            [ Parser.succeed (\stmt -> Parser.Loop (stmt :: revList))
+                |= stmtParser
+
+            --|. spaces
+            --|. Parser.oneOf [ Parser.end, Parser.symbol "\n" ]
+            , Parser.succeed (\_ -> Parser.Done (List.reverse revList))
+                |= Parser.end
+            ]
 
 
 stmtParser : Parser Stmt
 stmtParser =
-    Parser.succeed identity
-        |. spaces
-        |= Parser.oneOf
-            [ Parser.succeed LabeledInst
-                |= Parser.backtrackable prefixLabelParser
-                |. spaces
-                |= instParser
-            , Parser.succeed Label
-                |= Parser.backtrackable prefixLabelParser
-            , Parser.succeed OnlyInst
-                |= instParser
-            ]
-        |. spaces
+    Parser.oneOf
+        [ Parser.succeed LabeledInst
+            |= prefixLabelParser
+            |. spaceChars
+            |= instParser
+        , Parser.succeed Label
+            |= prefixLabelParser
+        , Parser.succeed OnlyInst
+            |= instParser
+        ]
+
+
+stmtEnd : Parser ()
+stmtEnd =
+    Parser.succeed ()
+        |. spaceChars
         |. Parser.oneOf [ Parser.end, Parser.symbol "\n" ]
 
 
@@ -250,7 +258,7 @@ prefixLabelParser : Parser String
 prefixLabelParser =
     Parser.succeed identity
         |= labelParser
-        |. spaces
+        |. spaceChars
         |. Parser.symbol ":"
 
 
@@ -279,7 +287,8 @@ reservedKeywords =
         ]
 
 
-spaces =
+spaceChars : Parser ()
+spaceChars =
     Parser.chompWhile (\c -> c == ' ')
 
 
