@@ -23,4 +23,8 @@ suite =
             \_ ->
                 Compiler.compile "nop "
                     |> Expect.equal (Ok (OnlyInst INop))
+        , test "reserved label name" <|
+            \_ ->
+                Compiler.compile "abc"
+                    |> Expect.equal (Err [])
         ]

@@ -14,6 +14,7 @@ type alias Context =
 
 type Problem
     = ExpectingEnd
+    | ExpectingNewLine
     | ExpectingOp
     | ExpectingLabelVar
     | ExpectingLabelSep
@@ -54,7 +55,7 @@ stmtEnd =
         |. spaces
         |. oneOf
             [ end ExpectingEnd
-            , symbol (Token "\n" ExpectingEnd)
+            , symbol (Token "\n" ExpectingNewLine)
             ]
 
 
