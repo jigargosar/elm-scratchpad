@@ -30,12 +30,7 @@ suite =
                         (Err
                             [ { col = 4
                               , contextStack = []
-                              , problem = ExpectingComment
-                              , row = 1
-                              }
-                            , { col = 4
-                              , contextStack = []
-                              , problem = ExpectingEnd
+                              , problem = ExpectingStmtEnd
                               , row = 1
                               }
                             ]
