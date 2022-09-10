@@ -33,14 +33,14 @@ suite =
                     |> Expect.equal
                         (Err
                             [ { row = 1
-                              , col = 5
+                              , col = 4
                               , contextStack =
                                     [ { col = 1
-                                      , context = CInst
+                                      , context = CLabelPrefix
                                       , row = 1
                                       }
                                     ]
-                              , problem = ExpectingStmtEnd
+                              , problem = ExpectingLabelSep
                               }
                             ]
                         )
