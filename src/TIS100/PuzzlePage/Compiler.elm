@@ -2,13 +2,52 @@ module TIS100.PuzzlePage.Compiler exposing (..)
 
 import Parser exposing (..)
 import Set exposing (Set)
-import TIS100.Num as Num exposing (Num)
 
 
-type Token
+type Expr
+    = OnlyLabel String
+    | OnlyInst Inst
+    | LabelInst String Inst
+
+
+stmt : Parser Expr
+stmt =
+    oneOf
+        [ succeed OnlyInst
+            |= inst
+        , succeed LabelInst
+            |= labelPrefix
+            |= inst
+        , succeed OnlyLabel
+            |= labelPrefix
+        ]
+
+
+inst : Parser Inst
+inst =
+    Debug.todo "todo"
+
+
+spaceChars : Parser ()
+spaceChars =
+    Parser.chompWhile (\c -> c == ' ')
+
+
+type LabelOrOp
     = Label String
-    | Num Num
     | Op Op
+
+
+type Inst
+    = IMov Src Dst
+
+
+type Src
+    = Src
+
+
+type Dst
+    = Dst
 
 
 type Op
@@ -24,13 +63,8 @@ type Op
     | Jro
 
 
-token : Parser Token
-token =
-    oneOf [ label, num, map Op op ]
-
-
-op : Parser Op
-op =
+opParser : Parser Op
+opParser =
     oneOf
         [ succeed Nop |. keyword "nop"
         , succeed Mov |. keyword "mov"
@@ -43,27 +77,42 @@ op =
         , succeed Jlz |. keyword "jlz"
         , succeed Jro |. keyword "jro"
         ]
+        |. spaceChars
 
 
-num : Parser Token
-num =
-    Parser.succeed (Num.fromInt >> Num)
-        |= Parser.oneOf
-            [ Parser.succeed negate
-                |. Parser.symbol "-"
-                |= Parser.int
-            , Parser.int
-            ]
+
+--num : Parser LabelOrOp
+--num =
+--    Parser.succeed (Num.fromInt >> Num)
+--        |= Parser.oneOf
+--            [ Parser.succeed negate
+--                |. Parser.symbol "-"
+--                |= Parser.int
+--            , Parser.int
+--            ]
 
 
-label : Parser Token
+label : Parser LabelOrOp
 label =
+    succeed Label
+        |= Parser.variable
+            { start = Char.isAlpha
+            , inner = \c -> Char.isAlphaNum c || c == '_'
+            , reserved = opNames
+            }
+        |. spaceChars
+
+
+labelPrefix : Parser String
+labelPrefix =
     Parser.variable
         { start = Char.isAlpha
         , inner = \c -> Char.isAlphaNum c || c == '_'
         , reserved = opNames
         }
-        |> map Label
+        |. spaceChars
+        |. symbol ":"
+        |. spaceChars
 
 
 opNames : Set String
