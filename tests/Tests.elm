@@ -27,6 +27,23 @@ suite =
             \_ ->
                 Compiler.compile "lab:#comment "
                     |> Expect.equal (Ok (OnlyLabel "lab"))
+        , test "invalid op" <|
+            \_ ->
+                Compiler.compile "abc"
+                    |> Expect.equal
+                        (Err
+                            [ { row = 1
+                              , col = 5
+                              , contextStack =
+                                    [ { col = 1
+                                      , context = CInst
+                                      , row = 1
+                                      }
+                                    ]
+                              , problem = ExpectingStmtEnd
+                              }
+                            ]
+                        )
         , test "label cannot be reserved keyword" <|
             \_ ->
                 Compiler.compile "nop :"
