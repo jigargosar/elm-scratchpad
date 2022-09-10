@@ -6,6 +6,15 @@ import Set exposing (Set)
 
 
 main =
+    let
+        _ =
+            run
+                (stmt
+                    |. end
+                )
+                "nop:nop"
+                |> Debug.log "Debug: "
+    in
     Html.text ""
 
 
