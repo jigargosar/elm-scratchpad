@@ -42,13 +42,11 @@ stmt =
                         [ succeed (LabelInst labelValue)
                             |= inst
                         , succeed (OnlyLabel labelValue)
+                            |. stmtEnd
                         ]
-                        |. stmtEnd
                 )
-        , inContext CInst <|
-            succeed OnlyInst
-                |= inst
-                |. stmtEnd
+        , succeed OnlyInst
+            |= inst
         ]
 
 
@@ -65,13 +63,15 @@ stmtEnd =
 
 inst : Parser Inst
 inst =
-    oneOf
-        [ succeed IMov
-            |. keyword (Token "mov" ExpectingOp)
-        , succeed INop
-            |. keyword (Token "nop" ExpectingOp)
-        ]
-        |. spaceChars
+    inContext CInst <|
+        oneOf
+            [ succeed IMov
+                |. keyword (Token "mov" ExpectingOp)
+            , succeed INop
+                |. keyword (Token "nop" ExpectingOp)
+            ]
+            |. spaceChars
+            |. stmtEnd
 
 
 spaceChars : Parser ()
