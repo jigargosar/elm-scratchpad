@@ -1,6 +1,51 @@
 module TIS100.PuzzlePage.Compiler exposing (..)
 
-import Parser.Advanced as Parser exposing (..)
+import Parser.Advanced as Parser
+    exposing
+        ( (|.)
+        , (|=)
+        , DeadEnd
+        , Nestable(..)
+        , Step(..)
+        , Token(..)
+        , Trailing(..)
+        , andThen
+        , backtrackable
+        , chompIf
+        , chompUntil
+        , chompUntilEndOr
+        , chompWhile
+        , commit
+        , end
+        , float
+        , getChompedString
+        , getCol
+        , getIndent
+        , getOffset
+        , getPosition
+        , getRow
+        , getSource
+        , inContext
+        , int
+        , keyword
+        , lazy
+        , lineComment
+        , loop
+        , map
+        , mapChompedString
+        , multiComment
+        , number
+        , oneOf
+        , problem
+        , run
+        , sequence
+        , spaces
+        , succeed
+        , symbol
+        , token
+        , variable
+        , withIndent
+        )
 import Set exposing (Set)
 
 
@@ -9,7 +54,7 @@ type alias Parser x =
 
 
 type Context
-    = CLabelPrefix
+    = CLabelDef
     | CInst
 
 
@@ -35,18 +80,21 @@ type Stmt
 stmt : Parser Stmt
 stmt =
     oneOf
-        [ labelPrefix
+        [ labelDef
             |> andThen
-                (\labelValue ->
-                    oneOf
-                        [ succeed (LabelInst labelValue)
-                            |= inst
-                        , succeed (OnlyLabel labelValue)
-                            |. stmtEnd
-                        ]
-                )
+                labeledStmt
         , succeed OnlyInst
             |= inst
+        ]
+
+
+labeledStmt : String -> Parser Stmt
+labeledStmt labelValue =
+    oneOf
+        [ succeed (LabelInst labelValue)
+            |= inst
+        , succeed (OnlyLabel labelValue)
+            |. stmtEnd
         ]
 
 
@@ -129,18 +177,28 @@ type Inst
 --            ]
 
 
-labelPrefix : Parser String
-labelPrefix =
-    inContext CLabelPrefix <|
-        Parser.variable
-            { start = Char.isAlpha
-            , inner = \c -> Char.isAlphaNum c || c == '_'
-            , reserved = opNames
-            , expecting = ExpectingLabelVar
-            }
+labelDef : Parser String
+labelDef =
+    labelName |> andThen labelSep
+
+
+labelSep : String -> Parser String
+labelSep labelValue =
+    inContext CLabelDef <|
+        succeed labelValue
             |. spaceChars
             |. symbol (Token ":" ExpectingLabelSep)
             |. spaceChars
+
+
+labelName : Parser String
+labelName =
+    Parser.variable
+        { start = Char.isAlpha
+        , inner = \c -> Char.isAlphaNum c || c == '_'
+        , reserved = opNames
+        , expecting = ExpectingLabelVar
+        }
 
 
 opNames : Set String

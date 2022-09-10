@@ -34,13 +34,30 @@ suite =
                         (Err
                             [ { row = 1
                               , col = 4
-                              , contextStack =
-                                    [ { row = 1
-                                      , col = 1
-                                      , context = CLabelPrefix
-                                      }
-                                    ]
+                              , contextStack = []
                               , problem = ExpectingLabelSep
+                              }
+                            ]
+                        )
+        , test "invalid op after label" <|
+            \_ ->
+                Compiler.compile "abc: xyz"
+                    |> Expect.equal
+                        (Err
+                            [ { row = 1
+                              , col = 6
+                              , contextStack = [ { col = 6, context = CInst, row = 1 } ]
+                              , problem = ExpectingOp
+                              }
+                            , { col = 6
+                              , contextStack = [ { col = 6, context = CInst, row = 1 } ]
+                              , problem = ExpectingOp
+                              , row = 1
+                              }
+                            , { row = 1
+                              , col = 6
+                              , contextStack = []
+                              , problem = ExpectingStmtEnd
                               }
                             ]
                         )
