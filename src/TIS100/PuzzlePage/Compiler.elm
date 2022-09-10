@@ -54,8 +54,8 @@ stmtEnd =
     succeed ()
         |. spaces
         |. oneOf
-            [ end ExpectingEnd
-            , symbol (Token "\n" ExpectingNewLine)
+            [ symbol (Token "\n" ExpectingNewLine)
+            , end ExpectingEnd
             ]
 
 
