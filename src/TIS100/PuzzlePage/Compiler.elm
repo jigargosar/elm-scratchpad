@@ -8,8 +8,8 @@ type alias Parser x =
     Parser.Parser Context Problem x
 
 
-type alias Context =
-    ()
+type Context
+    = Context
 
 
 type Problem
