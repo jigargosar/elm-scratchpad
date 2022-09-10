@@ -35,9 +35,9 @@ suite =
                             [ { row = 1
                               , col = 4
                               , contextStack =
-                                    [ { col = 1
+                                    [ { row = 1
+                                      , col = 1
                                       , context = CLabelPrefix
-                                      , row = 1
                                       }
                                     ]
                               , problem = ExpectingLabelSep
@@ -52,9 +52,9 @@ suite =
                             [ { row = 1
                               , col = 5
                               , contextStack =
-                                    [ { col = 1
+                                    [ { row = 1
+                                      , col = 1
                                       , context = CInst
-                                      , row = 1
                                       }
                                     ]
                               , problem = ExpectingStmtEnd
