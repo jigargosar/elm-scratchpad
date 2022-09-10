@@ -9,7 +9,8 @@ type alias Parser x =
 
 
 type Context
-    = Context
+    = CLabelPrefix
+    | CInst
 
 
 type Problem
@@ -42,11 +43,13 @@ stmt =
                             |= inst
                         , succeed (OnlyLabel labelValue)
                         ]
+                        |. stmtEnd
                 )
-        , succeed OnlyInst
-            |= inst
+        , inContext CInst <|
+            succeed OnlyInst
+                |= inst
+                |. stmtEnd
         ]
-        |. stmtEnd
 
 
 stmtEnd : Parser ()
@@ -123,15 +126,16 @@ type Inst
 
 labelPrefix : Parser String
 labelPrefix =
-    Parser.variable
-        { start = Char.isAlpha
-        , inner = \c -> Char.isAlphaNum c || c == '_'
-        , reserved = opNames
-        , expecting = ExpectingLabelVar
-        }
-        |. spaceChars
-        |. symbol (Token ":" ExpectingLabelSep)
-        |. spaceChars
+    inContext CLabelPrefix <|
+        Parser.variable
+            { start = Char.isAlpha
+            , inner = \c -> Char.isAlphaNum c || c == '_'
+            , reserved = opNames
+            , expecting = ExpectingLabelVar
+            }
+            |. spaceChars
+            |. symbol (Token ":" ExpectingLabelSep)
+            |. spaceChars
 
 
 opNames : Set String

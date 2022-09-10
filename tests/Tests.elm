@@ -1,7 +1,7 @@
 module Tests exposing (..)
 
 import Expect
-import TIS100.PuzzlePage.Compiler as Compiler exposing (Inst(..), Problem(..), Stmt(..))
+import TIS100.PuzzlePage.Compiler as Compiler exposing (Context(..), Inst(..), Problem(..), Stmt(..))
 import Test exposing (..)
 
 
@@ -32,10 +32,15 @@ suite =
                 Compiler.compile "nop:"
                     |> Expect.equal
                         (Err
-                            [ { col = 4
-                              , contextStack = []
+                            [ { row = 1
+                              , col = 4
+                              , contextStack =
+                                    [ { col = 1
+                                      , context = CInst
+                                      , row = 1
+                                      }
+                                    ]
                               , problem = ExpectingStmtEnd
-                              , row = 1
                               }
                             ]
                         )
