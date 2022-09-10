@@ -38,20 +38,12 @@ suite =
                 Compiler.rawCompile "abc: xyz"
                     |> Expect.equal
                         (Err
-                            [ { row = 1
-                              , col = 6
-                              , contextStack = [ { col = 6, context = CInst, row = 1 } ]
-                              , problem = ExpectingOp
-                              }
-                            , { col = 6
-                              , contextStack = [ { col = 6, context = CInst, row = 1 } ]
+                            [ { col = 9
+                              , contextStack =
+                                    [ { col = 9, context = COp "xyz", row = 1 }
+                                    ]
                               , problem = ExpectingOp
                               , row = 1
-                              }
-                            , { row = 1
-                              , col = 6
-                              , contextStack = []
-                              , problem = ExpectingStmtEnd
                               }
                             ]
                         )

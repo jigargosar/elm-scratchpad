@@ -55,6 +55,7 @@ type alias Parser x =
 type Context
     = CLabelDef String
     | CInst
+    | COp String
 
 
 type Problem
@@ -168,8 +169,8 @@ spaces =
     chompWhile (\c -> c == ' ')
 
 
-inst : Parser Inst
-inst =
+inst_ : Parser Inst
+inst_ =
     inContext CInst <|
         oneOf
             [ succeed IMov
@@ -179,6 +180,41 @@ inst =
             ]
             |. spaceChars
             |. stmtEnd
+
+
+inst : Parser Inst
+inst =
+    opVariable
+        |> andThen
+            (\opVarName ->
+                instBody opVarName
+                    |. spaceChars
+                    |. stmtEnd
+            )
+
+
+instBody : String -> Parser Inst
+instBody opVarName =
+    inContext (COp opVarName) <|
+        case opVarName of
+            "mov" ->
+                succeed IMov
+
+            "nop" ->
+                succeed INop
+
+            _ ->
+                problem ExpectingOp
+
+
+opVariable : Parser String
+opVariable =
+    Parser.variable
+        { start = Char.isAlpha
+        , inner = \c -> Char.isAlpha c
+        , reserved = Set.empty
+        , expecting = ExpectingOp
+        }
 
 
 spaceChars : Parser ()
