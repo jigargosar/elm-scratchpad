@@ -1,6 +1,7 @@
 module Tests exposing (..)
 
 import Expect
+import Parser.Advanced exposing (DeadEnd)
 import TIS100.PuzzlePage.Compiler as Compiler exposing (Context(..), Inst(..), Problem(..), Stmt(..))
 import Test exposing (..)
 
@@ -29,7 +30,7 @@ suite =
                     |> Expect.equal (Ok (OnlyLabel "lab"))
         , test "invalid op" <|
             \_ ->
-                Compiler.compile "abc"
+                Compiler.compile "abc "
                     |> expectProblem ExpectingLabelSep
         , test "invalid op after label" <|
             \_ ->
@@ -73,12 +74,16 @@ suite =
         ]
 
 
-expectProblem : a -> Result (List { b | problem : a }) value -> Expect.Expectation
-expectProblem expecting result =
+expectProblem :
+    Problem
+    -> Result (List (DeadEnd Context Problem)) value
+    -> Expect.Expectation
+expectProblem expected result =
     case result of
         Err ({ problem } :: []) ->
-            expecting
+            expected
                 |> Expect.equal problem
 
         _ ->
-            Expect.fail "expectProblem failed"
+            Debug.toString result
+                |> Expect.equal ("Compiler Problem: " ++ Debug.toString expected)
