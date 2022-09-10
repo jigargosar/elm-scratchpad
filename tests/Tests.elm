@@ -33,9 +33,9 @@ suite =
             \_ ->
                 Compiler.compile "abc: xyz"
                     |> expectErr (InvalidOp "xyz")
-        , test "label cannot be reserved keyword" <|
+        , test "too many args" <|
             \_ ->
-                Compiler.rawCompile "nop :"
+                Compiler.rawCompile "nop left"
                     |> Expect.equal
                         (Err
                             [ { row = 1
