@@ -1,6 +1,5 @@
 module TIS100.PuzzlePage.Compiler exposing (..)
 
-import Html
 import Parser.Advanced as Parser exposing (..)
 import Set exposing (Set)
 
@@ -17,28 +16,18 @@ type alias Error =
     String
 
 
-compile : String -> Result (List (DeadEnd Context Error)) Expr
+compile : String -> Result (List (DeadEnd Context Error)) Stmt
 compile =
     run stmt
 
 
-main =
-    let
-        _ =
-            compile
-                "a:mov"
-                |> Debug.log "Debug: "
-    in
-    Html.text ""
-
-
-type Expr
+type Stmt
     = OnlyLabel String
     | OnlyInst Inst
     | LabelInst String Inst
 
 
-stmt : Parser Expr
+stmt : Parser Stmt
 stmt =
     oneOf
         [ labelPrefix
@@ -53,8 +42,17 @@ stmt =
         , succeed OnlyInst
             |= inst
         ]
+        |. stmtEnd
+
+
+stmtEnd : Parser ()
+stmtEnd =
+    succeed ()
         |. spaces
-        |. end "Expecting end of line"
+        |. oneOf
+            [ end "Expecting end of statement"
+            , symbol (Token "\n" "Expecting end of statement")
+            ]
 
 
 inst : Parser Inst

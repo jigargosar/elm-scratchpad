@@ -1,7 +1,7 @@
 module Tests exposing (..)
 
 import Expect
-import TIS100.PuzzlePage.Compiler as Compiler exposing (Expr(..), Inst(..))
+import TIS100.PuzzlePage.Compiler as Compiler exposing (Inst(..), Stmt(..))
 import Test exposing (..)
 
 
