@@ -29,11 +29,11 @@ suite =
                     |> Expect.equal (Ok (OnlyLabel "lab"))
         , test "label cannot be reserved keyword" <|
             \_ ->
-                Compiler.compile "nop:"
+                Compiler.compile "nop :"
                     |> Expect.equal
                         (Err
                             [ { row = 1
-                              , col = 4
+                              , col = 5
                               , contextStack =
                                     [ { col = 1
                                       , context = CInst
