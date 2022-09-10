@@ -23,6 +23,10 @@ suite =
             \_ ->
                 Compiler.compile "nop "
                     |> Expect.equal (Ok (OnlyInst INop))
+        , test "comment after label" <|
+            \_ ->
+                Compiler.compile "lab:#comment "
+                    |> Expect.equal (Ok (OnlyLabel "lab"))
         , test "label cannot be reserved keyword" <|
             \_ ->
                 Compiler.compile "nop:"
