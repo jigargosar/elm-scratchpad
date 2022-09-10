@@ -31,6 +31,10 @@ suite =
                     |> expectErr (InvalidOp "abc")
         , test "invalid op after label" <|
             \_ ->
+                Compiler.compile "abc: xyz"
+                    |> expectErr (InvalidOp "abc")
+        , test "raw: invalid op after label" <|
+            \_ ->
                 Compiler.rawCompile "abc: xyz"
                     |> Expect.equal
                         (Err
