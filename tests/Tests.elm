@@ -28,7 +28,7 @@ suite =
         , test "invalid op" <|
             \_ ->
                 Compiler.compile "abc "
-                    |> expectErr InvalidOp
+                    |> expectErr (InvalidOp "abc")
         , test "invalid op after label" <|
             \_ ->
                 Compiler.rawCompile "abc: xyz"

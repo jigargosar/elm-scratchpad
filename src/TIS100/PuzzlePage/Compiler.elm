@@ -4,7 +4,6 @@ import Parser.Advanced as Parser
     exposing
         ( (|.)
         , (|=)
-        , DeadEnd
         , Nestable(..)
         , Step(..)
         , Token(..)
@@ -54,7 +53,7 @@ type alias Parser x =
 
 
 type Context
-    = CLabelDef
+    = CLabelDef String
     | CInst
 
 
@@ -66,8 +65,12 @@ type Problem
     | ExpectingLabelSep
 
 
+type alias DeadEnd =
+    Parser.DeadEnd Context Problem
+
+
 type alias DeadEnds =
-    List (DeadEnd Context Problem)
+    List DeadEnd
 
 
 rawCompile : String -> Result DeadEnds Stmt
@@ -81,41 +84,47 @@ compile =
 
 
 type Error
-    = InternalError
-    | TooManyErrors
-    | InvalidOp
+    = UnexpectedProblem DeadEnd
+    | EmptyError
+    | TooManyErrors DeadEnds
+    | InvalidOp String
 
 
 toError : DeadEnds -> Error
 toError deadEnds =
     case deadEnds of
         [] ->
-            InternalError
+            EmptyError
 
-        r :: [] ->
-            case r.problem of
+        de :: [] ->
+            case de.problem of
                 ExpectingStmtEnd ->
-                    InternalError
+                    UnexpectedProblem de
 
                 ExpectingComment ->
-                    InternalError
+                    UnexpectedProblem de
 
                 ExpectingOp ->
-                    InternalError
+                    UnexpectedProblem de
 
                 ExpectingLabelVar ->
-                    InternalError
+                    UnexpectedProblem de
 
                 ExpectingLabelSep ->
-                    case r.contextStack of
+                    case de.contextStack of
                         { context } :: _ ->
-                            InvalidOp
+                            case context of
+                                CLabelDef label ->
+                                    InvalidOp label
+
+                                _ ->
+                                    UnexpectedProblem de
 
                         _ ->
-                            InternalError
+                            UnexpectedProblem de
 
         _ ->
-            TooManyErrors
+            TooManyErrors deadEnds
 
 
 type Stmt
@@ -229,7 +238,7 @@ labelDef =
 
 labelSep : String -> Parser String
 labelSep labelValue =
-    inContext CLabelDef <|
+    inContext (CLabelDef labelValue) <|
         succeed labelValue
             |. spaceChars
             |. symbol (Token ":" ExpectingLabelSep)
