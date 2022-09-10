@@ -13,10 +13,8 @@ main =
     let
         _ =
             run
-                (stmt
-                    |. end "Expecting End"
-                )
-                "a:nop"
+                stmt
+                "a:mov"
                 |> Debug.log "Debug: "
     in
     Html.text ""
@@ -35,17 +33,16 @@ stmt =
             |> andThen
                 (\l ->
                     oneOf
-                        [ succeed (OnlyLabel l)
-                            |. end "Invalid Label"
-                        , succeed (LabelInst l)
+                        [ succeed (LabelInst l)
                             |= inst
+                        , succeed (OnlyLabel l)
                         ]
                 )
         , succeed OnlyInst
             |= inst
-            |. spaces
-            |. end "Expecting end of line"
         ]
+        |. spaces
+        |. end "Expecting end of line"
 
 
 inst : Parser Inst
