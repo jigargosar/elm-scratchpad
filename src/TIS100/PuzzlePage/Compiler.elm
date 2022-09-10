@@ -31,11 +31,11 @@ stmt =
     oneOf
         [ labelPrefix
             |> andThen
-                (\string ->
+                (\labelValue ->
                     oneOf
-                        [ succeed (LabelInst string)
+                        [ succeed (LabelInst labelValue)
                             |= inst
-                        , succeed (OnlyLabel string)
+                        , succeed (OnlyLabel labelValue)
                         ]
                 )
         , succeed OnlyInst
