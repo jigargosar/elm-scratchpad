@@ -1,7 +1,12 @@
 module TIS100.PuzzlePage.Compiler exposing (..)
 
+import Html
 import Parser exposing (..)
 import Set exposing (Set)
+
+
+main =
+    Html.text ""
 
 
 type Expr
