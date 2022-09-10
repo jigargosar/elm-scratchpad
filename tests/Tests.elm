@@ -2,7 +2,7 @@ module Tests exposing (..)
 
 import Expect exposing (Expectation)
 import Parser.Advanced exposing (DeadEnd)
-import TIS100.PuzzlePage.Compiler as Compiler exposing (Context(..), DeadEnds, Error(..), Inst(..), Problem(..), Stmt(..))
+import TIS100.PuzzlePage.Compiler as Compiler exposing (..)
 import Test exposing (..)
 
 
@@ -32,7 +32,7 @@ suite =
         , test "invalid op after label" <|
             \_ ->
                 Compiler.compile "abc: xyz"
-                    |> expectErr (InvalidOp "abc")
+                    |> expectErr (InvalidOp "xyz")
         , test "raw: invalid op after label" <|
             \_ ->
                 Compiler.rawCompile "abc: xyz"

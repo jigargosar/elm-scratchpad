@@ -106,7 +106,17 @@ toError deadEnds =
                     UnexpectedProblem de
 
                 ExpectingOp ->
-                    UnexpectedProblem de
+                    case de.contextStack of
+                        { context } :: _ ->
+                            case context of
+                                COp opName ->
+                                    InvalidOp opName
+
+                                _ ->
+                                    UnexpectedProblem de
+
+                        _ ->
+                            UnexpectedProblem de
 
                 ExpectingLabelVar ->
                     UnexpectedProblem de
