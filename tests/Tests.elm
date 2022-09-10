@@ -1,7 +1,7 @@
 module Tests exposing (..)
 
 import Expect
-import TIS100.PuzzlePage.Compiler as Compiler exposing (Inst(..), Stmt(..))
+import TIS100.PuzzlePage.Compiler as Compiler exposing (Inst(..), Problem(..), Stmt(..))
 import Test exposing (..)
 
 
@@ -23,8 +23,16 @@ suite =
             \_ ->
                 Compiler.compile "nop "
                     |> Expect.equal (Ok (OnlyInst INop))
-        , test "reserved label name" <|
+        , test "label cannot be reserved keyword" <|
             \_ ->
-                Compiler.compile "abc"
-                    |> Expect.equal (Err [])
+                Compiler.compile "nop:"
+                    |> Expect.equal
+                        (Err
+                            [ { col = 4
+                              , contextStack = []
+                              , problem = ExpectingEnd
+                              , row = 1
+                              }
+                            ]
+                        )
         ]
