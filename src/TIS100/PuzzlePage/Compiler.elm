@@ -5,18 +5,21 @@ import Set exposing (Set)
 
 
 type alias Parser x =
-    Parser.Parser Context Error x
+    Parser.Parser Context Problem x
 
 
 type alias Context =
     ()
 
 
-type alias Error =
-    String
+type Problem
+    = ExpectingEnd
+    | ExpectingOp
+    | ExpectingLabelVar
+    | ExpectingLabelSep
 
 
-compile : String -> Result (List (DeadEnd Context Error)) Stmt
+compile : String -> Result (List (DeadEnd Context Problem)) Stmt
 compile =
     run stmt
 
@@ -50,8 +53,8 @@ stmtEnd =
     succeed ()
         |. spaces
         |. oneOf
-            [ end "Expecting end of statement"
-            , symbol (Token "\n" "Expecting end of statement")
+            [ end ExpectingEnd
+            , symbol (Token "\n" ExpectingEnd)
             ]
 
 
@@ -59,9 +62,9 @@ inst : Parser Inst
 inst =
     oneOf
         [ succeed IMov
-            |. keyword (Token "mov" "Invalid Op")
+            |. keyword (Token "mov" ExpectingOp)
         , succeed INop
-            |. keyword (Token "nop" "Invalid Op")
+            |. keyword (Token "nop" ExpectingOp)
         ]
         |. spaceChars
 
@@ -122,10 +125,10 @@ labelPrefix =
         { start = Char.isAlpha
         , inner = \c -> Char.isAlphaNum c || c == '_'
         , reserved = opNames
-        , expecting = "Invalid Op"
+        , expecting = ExpectingLabelVar
         }
         |. spaceChars
-        |. symbol (Token ":" "Invalid Op")
+        |. symbol (Token ":" ExpectingLabelSep)
         |. spaceChars
 
 
