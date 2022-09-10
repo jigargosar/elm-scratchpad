@@ -14,6 +14,7 @@ type alias Context =
 
 type Problem
     = ExpectingEnd
+    | ExpectingComment
     | ExpectingOp
     | ExpectingLabelVar
     | ExpectingLabelSep
@@ -52,7 +53,10 @@ stmtEnd : Parser ()
 stmtEnd =
     succeed ()
         |. spaces
-        |. end ExpectingEnd
+        |. oneOf
+            [ lineComment (Token "#" ExpectingComment)
+            , end ExpectingEnd
+            ]
 
 
 inst : Parser Inst
