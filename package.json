@@ -16,6 +16,7 @@
     "@parcel/transformer-elm": "^2.7.0",
     "cross-env": "^7.0.3",
     "elm": "^0.19.1-5",
+    "elm-test": "^0.19.1-revision9",
     "elm-tooling": "^1.8.0",
     "howler": "^2.2.3",
     "parcel": "^2.7.0",

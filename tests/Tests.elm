@@ -1,8 +1,26 @@
 module Tests exposing (..)
 
-import Test exposing (Test)
+import Expect
+import TIS100.PuzzlePage.Compiler as Compiler exposing (Expr(..), Inst(..))
+import Test exposing (..)
 
 
 suite : Test
 suite =
-    Test.todo "Implement the first test. See https://package.elm-lang.org/packages/elm-explorations/test/latest for how to do this!"
+    describe "Compiler"
+        [ {-
+             "Implement the first test. See https://package.elm-lang.org/packages/elm-explorations/test/latest for how to do this!"
+          -}
+          test "labeled inst" <|
+            \_ ->
+                Compiler.compile "a : nop"
+                    |> Expect.equal (Ok (LabelInst "a" INop))
+        , test "only label" <|
+            \_ ->
+                Compiler.compile "a : "
+                    |> Expect.equal (Ok (OnlyLabel "a"))
+        , test "only inst" <|
+            \_ ->
+                Compiler.compile "nop "
+                    |> Expect.equal (Ok (OnlyInst INop))
+        ]

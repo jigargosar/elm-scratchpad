@@ -6,14 +6,26 @@ import Set exposing (Set)
 
 
 type alias Parser x =
-    Parser.Parser () String x
+    Parser.Parser Context Error x
+
+
+type alias Context =
+    ()
+
+
+type alias Error =
+    String
+
+
+compile : String -> Result (List (DeadEnd Context Error)) Expr
+compile =
+    run stmt
 
 
 main =
     let
         _ =
-            run
-                stmt
+            compile
                 "a:mov"
                 |> Debug.log "Debug: "
     in
