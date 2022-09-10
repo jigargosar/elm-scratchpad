@@ -33,20 +33,6 @@ suite =
             \_ ->
                 Compiler.compile "abc: xyz"
                     |> expectErr (InvalidOp "xyz")
-        , test "raw: invalid op after label" <|
-            \_ ->
-                Compiler.rawCompile "abc: xyz"
-                    |> Expect.equal
-                        (Err
-                            [ { col = 9
-                              , contextStack =
-                                    [ { col = 9, context = COp "xyz", row = 1 }
-                                    ]
-                              , problem = ExpectingOp
-                              , row = 1
-                              }
-                            ]
-                        )
         , test "label cannot be reserved keyword" <|
             \_ ->
                 Compiler.rawCompile "nop :"
