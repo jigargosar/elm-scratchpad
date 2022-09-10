@@ -22,8 +22,8 @@ type Problem
 
 
 compile : String -> Result (List (DeadEnd Context Problem)) Stmt
-compile =
-    run stmt
+compile string =
+    run stmt (string ++ "\n")
 
 
 type Stmt
@@ -58,7 +58,12 @@ stmtEnd =
             [ lineComment (Token "#" ExpectingComment)
             , succeed ()
             ]
-        |. end ExpectingStmtEnd
+        |. symbol (Token "\n" ExpectingStmtEnd)
+
+
+spaces : Parser ()
+spaces =
+    chompWhile (\c -> c == ' ')
 
 
 inst : Parser Inst
