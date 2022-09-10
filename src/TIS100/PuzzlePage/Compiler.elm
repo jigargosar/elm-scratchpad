@@ -54,7 +54,7 @@ type alias Parser x =
 
 type Context
     = CLabelDef String
-    | CInst
+    | CAfterInst
     | COp String
 
 
@@ -179,17 +179,19 @@ spaces =
     chompWhile (\c -> c == ' ')
 
 
-inst_ : Parser Inst
-inst_ =
-    inContext CInst <|
-        oneOf
-            [ succeed IMov
-                |. keyword (Token "mov" ExpectingOp)
-            , succeed INop
-                |. keyword (Token "nop" ExpectingOp)
-            ]
-            |. spaceChars
-            |. stmtEnd
+
+--inst_ : Parser Inst
+--inst_ =
+--    inContext CInst <|
+--        oneOf
+--            [ succeed IMov
+--                |. keyword (Token "mov" ExpectingOp)
+--            , succeed INop
+--                |. keyword (Token "nop" ExpectingOp)
+--            ]
+--            |. spaceChars
+--            |. stmtEnd
+--
 
 
 inst : Parser Inst
@@ -198,9 +200,16 @@ inst =
         |> andThen
             (\opVarName ->
                 instBody opVarName
-                    |. spaceChars
-                    |. stmtEnd
+                    |> andThen instEnd
             )
+
+
+instEnd : Inst -> Parser Inst
+instEnd i =
+    inContext CAfterInst <|
+        succeed i
+            |. spaceChars
+            |. stmtEnd
 
 
 instBody : String -> Parser Inst

@@ -55,11 +55,7 @@ suite =
                             [ { row = 1
                               , col = 5
                               , contextStack =
-                                    [ { row = 1
-                                      , col = 1
-                                      , context = CInst
-                                      }
-                                    ]
+                                    [ { col = 4, context = CAfterInst, row = 1 } ]
                               , problem = ExpectingStmtEnd
                               }
                             ]
