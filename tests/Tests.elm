@@ -1,18 +1,15 @@
 module Tests exposing (..)
 
-import Expect
+import Expect exposing (Expectation)
 import Parser.Advanced exposing (DeadEnd)
-import TIS100.PuzzlePage.Compiler as Compiler exposing (Context(..), Inst(..), Problem(..), Stmt(..))
+import TIS100.PuzzlePage.Compiler as Compiler exposing (Context(..), DeadEnds, Error(..), Inst(..), Problem(..), Stmt(..))
 import Test exposing (..)
 
 
 suite : Test
 suite =
     describe "Compiler"
-        [ {-
-             "Implement the first test. See https://package.elm-lang.org/packages/elm-explorations/test/latest for how to do this!"
-          -}
-          test "labeled inst" <|
+        [ test "labeled inst" <|
             \_ ->
                 Compiler.compile "a : nop"
                     |> Expect.equal (Ok (LabelInst "a" INop))
@@ -31,10 +28,10 @@ suite =
         , test "invalid op" <|
             \_ ->
                 Compiler.compile "abc "
-                    |> expectProblem ExpectingLabelSep
+                    |> expectErr InvalidOp
         , test "invalid op after label" <|
             \_ ->
-                Compiler.compile "abc: xyz"
+                Compiler.rawCompile "abc: xyz"
                     |> Expect.equal
                         (Err
                             [ { row = 1
@@ -56,7 +53,7 @@ suite =
                         )
         , test "label cannot be reserved keyword" <|
             \_ ->
-                Compiler.compile "nop :"
+                Compiler.rawCompile "nop :"
                     |> Expect.equal
                         (Err
                             [ { row = 1
@@ -74,10 +71,22 @@ suite =
         ]
 
 
+expectErr : Error -> Result Error value -> Expectation
+expectErr expected result =
+    case result of
+        Err actual ->
+            actual
+                |> Expect.equal expected
+
+        _ ->
+            Debug.toString result
+                |> Expect.equal ("Compiler Problem: " ++ Debug.toString expected)
+
+
 expectProblem :
     Problem
-    -> Result (List (DeadEnd Context Problem)) value
-    -> Expect.Expectation
+    -> Result DeadEnds value
+    -> Expectation
 expectProblem expected result =
     case result of
         Err ({ problem } :: []) ->

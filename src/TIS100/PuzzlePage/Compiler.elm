@@ -66,9 +66,56 @@ type Problem
     | ExpectingLabelSep
 
 
-compile : String -> Result (List (DeadEnd Context Problem)) Stmt
-compile string =
+type alias DeadEnds =
+    List (DeadEnd Context Problem)
+
+
+rawCompile : String -> Result DeadEnds Stmt
+rawCompile string =
     run stmt (string ++ "\n")
+
+
+compile : String -> Result Error Stmt
+compile =
+    rawCompile >> Result.mapError toError
+
+
+type Error
+    = InternalError
+    | TooManyErrors
+    | InvalidOp
+
+
+toError : DeadEnds -> Error
+toError deadEnds =
+    case deadEnds of
+        [] ->
+            InternalError
+
+        r :: [] ->
+            case r.problem of
+                ExpectingStmtEnd ->
+                    InternalError
+
+                ExpectingComment ->
+                    InternalError
+
+                ExpectingOp ->
+                    InternalError
+
+                ExpectingLabelVar ->
+                    InternalError
+
+                ExpectingLabelSep ->
+                    case r.contextStack of
+                        { context } :: _ ->
+                            InvalidOp
+
+                        _ ->
+                            InternalError
+
+        _ ->
+            TooManyErrors
 
 
 type Stmt
