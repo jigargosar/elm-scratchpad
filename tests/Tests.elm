@@ -30,15 +30,7 @@ suite =
         , test "invalid op" <|
             \_ ->
                 Compiler.compile "abc"
-                    |> Expect.equal
-                        (Err
-                            [ { row = 1
-                              , col = 4
-                              , contextStack = []
-                              , problem = ExpectingLabelSep
-                              }
-                            ]
-                        )
+                    |> expectProblem ExpectingLabelSep
         , test "invalid op after label" <|
             \_ ->
                 Compiler.compile "abc: xyz"
@@ -79,3 +71,14 @@ suite =
                             ]
                         )
         ]
+
+
+expectProblem : a -> Result (List { b | problem : a }) value -> Expect.Expectation
+expectProblem expecting result =
+    case result of
+        Err ({ problem } :: []) ->
+            expecting
+                |> Expect.equal problem
+
+        _ ->
+            Expect.fail "expectProblem failed"

@@ -80,9 +80,7 @@ type Stmt
 stmt : Parser Stmt
 stmt =
     oneOf
-        [ labelDef
-            |> andThen
-                labeledStmt
+        [ labelDef |> andThen labeledStmt
         , succeed OnlyInst
             |= inst
         ]
