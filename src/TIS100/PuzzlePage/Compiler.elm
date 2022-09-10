@@ -6,7 +6,7 @@ import Set exposing (Set)
 
 
 type alias Parser x =
-    Parser.Parser () () x
+    Parser.Parser () String x
 
 
 main =
@@ -14,9 +14,9 @@ main =
         _ =
             run
                 (stmt
-                    |. end ()
+                    |. end "Expecting End"
                 )
-                "nop:nop"
+                "a:nop"
                 |> Debug.log "Debug: "
     in
     Html.text ""
@@ -31,13 +31,20 @@ type Expr
 stmt : Parser Expr
 stmt =
     oneOf
-        [ succeed OnlyInst
+        [ labelPrefix
+            |> andThen
+                (\l ->
+                    oneOf
+                        [ succeed (OnlyLabel l)
+                            |. end "Invalid Label"
+                        , succeed (LabelInst l)
+                            |= inst
+                        ]
+                )
+        , succeed OnlyInst
             |= inst
-        , succeed LabelInst
-            |= labelPrefix
-            |= inst
-        , succeed OnlyLabel
-            |= labelPrefix
+            |. spaces
+            |. end "Expecting end of line"
         ]
 
 
@@ -45,10 +52,11 @@ inst : Parser Inst
 inst =
     oneOf
         [ succeed IMov
-            |. keyword (Token "mov" ())
+            |. keyword (Token "mov" "Invalid Op")
         , succeed INop
-            |. keyword (Token "nop" ())
+            |. keyword (Token "nop" "Invalid Op")
         ]
+        |. spaceChars
 
 
 spaceChars : Parser ()
@@ -107,10 +115,10 @@ labelPrefix =
         { start = Char.isAlpha
         , inner = \c -> Char.isAlphaNum c || c == '_'
         , reserved = opNames
-        , expecting = ()
+        , expecting = "Invalid Op"
         }
         |. spaceChars
-        |. symbol (Token ":" ())
+        |. symbol (Token ":" "Invalid Op")
         |. spaceChars
 
 
