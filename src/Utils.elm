@@ -2230,56 +2230,13 @@ allEq v ls =
 
 
 groupEqBy : (a -> b) -> List a -> List ( a, List a )
-groupEqBy extract =
-    groupWith (eqBy extract)
-
-
-groupWith : (a -> a -> Bool) -> List a -> List ( a, List a )
-groupWith pred list =
-    groupByHelp pred list []
-
-
-groupByHelp : (a -> a -> Bool) -> List a -> List ( a, List a ) -> List ( a, List a )
-groupByHelp pred pending done =
-    case pending of
-        [] ->
-            List.reverse done
-
-        h :: t ->
-            let
-                ( headLike, newPending ) =
-                    List.partition (pred h) t
-            in
-            groupByHelp pred newPending (( h, headLike ) :: done)
-
-
-findMapFirst : (a -> Maybe b) -> List a -> Maybe b
-findMapFirst toMaybeFn list =
-    case list of
-        [] ->
-            Nothing
-
-        h :: t ->
-            case toMaybeFn h of
-                Nothing ->
-                    findMapFirst toMaybeFn t
-
-                v ->
-                    v
+groupEqBy =
+    List.Extra.gatherEqualsBy
 
 
 findFirst : (a -> Bool) -> List a -> Maybe a
-findFirst pred xs =
-    case xs of
-        [] ->
-            Nothing
-
-        h :: t ->
-            if pred h then
-                Just h
-
-            else
-                findFirst pred t
+findFirst =
+    List.Extra.find
 
 
 listPadRight : a -> Int -> List a -> List a
