@@ -1,8 +1,12 @@
 module TIS100.PuzzlePage.Compiler exposing (..)
 
 import Html
-import Parser exposing (..)
+import Parser.Advanced as Parser exposing (..)
 import Set exposing (Set)
+
+
+type alias Parser x =
+    Parser.Parser () () x
 
 
 main =
@@ -10,7 +14,7 @@ main =
         _ =
             run
                 (stmt
-                    |. end
+                    |. end ()
                 )
                 "nop:nop"
                 |> Debug.log "Debug: "
@@ -41,9 +45,9 @@ inst : Parser Inst
 inst =
     oneOf
         [ succeed IMov
-            |. keyword "mov"
+            |. keyword (Token "mov" ())
         , succeed INop
-            |. keyword "nop"
+            |. keyword (Token "nop" ())
         ]
 
 
@@ -103,9 +107,10 @@ labelPrefix =
         { start = Char.isAlpha
         , inner = \c -> Char.isAlphaNum c || c == '_'
         , reserved = opNames
+        , expecting = ()
         }
         |. spaceChars
-        |. symbol ":"
+        |. symbol (Token ":" ())
         |. spaceChars
 
 
