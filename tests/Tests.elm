@@ -63,7 +63,7 @@ invalidStatement =
                         , { row = 1
                           , col = 1
                           , contextStack = []
-                          , problem = ExpectingOp
+                          , problem = ExpectingOpVar
                           }
                         ]
                     )
@@ -76,7 +76,7 @@ invalidStatement =
                           , contextStack =
                                 [ { col = 10, context = COp "flop", row = 1 }
                                 ]
-                          , problem = ExpectingOp
+                          , problem = ExpectingOpVar
                           , row = 1
                           }
                         ]
@@ -88,7 +88,7 @@ invalidStatement =
                     (Err
                         [ { col = 6
                           , contextStack = []
-                          , problem = ExpectingOp
+                          , problem = ExpectingOpVar
                           , row = 1
                           }
                         , { col = 6

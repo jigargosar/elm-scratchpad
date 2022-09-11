@@ -61,7 +61,7 @@ type Context
 type Problem
     = ExpectingStmtEnd
     | ExpectingComment
-    | ExpectingOp
+    | ExpectingOpVar
     | ExpectingLabelVar
     | ExpectingLabelOrOpVar
     | ExpectingLabelSep
@@ -150,7 +150,7 @@ instOpVariable =
         { start = Char.isAlpha
         , inner = \c -> Char.isAlpha c
         , reserved = Set.empty
-        , expecting = ExpectingOp
+        , expecting = ExpectingOpVar
         }
 
 
@@ -165,7 +165,7 @@ instBody opVarName =
                 succeed INop
 
             _ ->
-                problem ExpectingOp
+                problem ExpectingOpVar
 
 
 spaceChars : Parser ()
