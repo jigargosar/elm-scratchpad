@@ -11,7 +11,20 @@ suite =
     describe "Compiler"
         [ describe "should compile" validStatement
         , describe "should fail on" invalidStatement
+        , describe "should allow" reservedKeywordsAsLabels
         ]
+
+
+reservedKeywordsAsLabels =
+    [ test "nop:" <|
+        \_ ->
+            Compiler.compile "nop:"
+                |> Expect.equal (Ok (OnlyLabel "nop"))
+    , test "nop:nop " <|
+        \_ ->
+            Compiler.compile "nop:nop"
+                |> Expect.equal (Ok (LabelInst "nop" INop))
+    ]
 
 
 validStatement : List Test

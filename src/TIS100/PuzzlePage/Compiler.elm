@@ -275,7 +275,7 @@ labelVariable =
     Parser.variable
         { start = Char.isAlpha
         , inner = \c -> Char.isAlphaNum c || c == '_'
-        , reserved = opNames
+        , reserved = opNames |> always Set.empty
         , expecting = ExpectingLabelVar
         }
 
