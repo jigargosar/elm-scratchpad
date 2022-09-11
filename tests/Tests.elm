@@ -57,7 +57,7 @@ invalidStatement =
                     (Err
                         [ { col = 1
                           , contextStack = []
-                          , problem = ExpectingOpVar
+                          , problem = ExpectingOp
                           , row = 1
                           }
                         ]
@@ -70,7 +70,7 @@ invalidStatement =
                         [ { row = 1
                           , col = 1
                           , contextStack = []
-                          , problem = ExpectingOpVar
+                          , problem = ExpectingOp
                           }
                         ]
                     )
@@ -81,7 +81,7 @@ invalidStatement =
                     (Err
                         [ { col = 6
                           , contextStack = []
-                          , problem = ExpectingOpVar
+                          , problem = ExpectingOp
                           , row = 1
                           }
                         ]
@@ -93,7 +93,7 @@ invalidStatement =
                     (Err
                         [ { col = 6
                           , contextStack = []
-                          , problem = ExpectingOpVar
+                          , problem = ExpectingOp
                           , row = 1
                           }
                         ]

@@ -59,7 +59,7 @@ type alias Context =
 type Problem
     = ExpectingStmtEnd
     | ExpectingComment
-    | ExpectingOpVar
+    | ExpectingOp
     | ExpectingLabelVar
     | ExpectingLabelSep
 
@@ -198,8 +198,8 @@ opParser : Parser Op
 opParser =
     oneOf
         [ oneOf
-            [ succeed Mov |. keyword (Token "mov" ExpectingOpVar)
-            , succeed Nop |. keyword (Token "nop" ExpectingOpVar)
+            [ succeed Mov |. keyword (Token "mov" ExpectingOp)
+            , succeed Nop |. keyword (Token "nop" ExpectingOp)
             ]
             |> map Just
         , succeed Nothing
@@ -211,7 +211,7 @@ opParser =
                         succeed op
 
                     Nothing ->
-                        problem ExpectingOpVar
+                        problem ExpectingOp
             )
 
 
