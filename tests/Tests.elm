@@ -9,44 +9,56 @@ import Test exposing (..)
 suite : Test
 suite =
     describe "Compiler"
-        [ test "labeled inst" <|
-            \_ ->
-                Compiler.compile "a : nop"
-                    |> Expect.equal (Ok (LabelInst "a" INop))
-        , test "only label" <|
-            \_ ->
-                Compiler.compile "a : "
-                    |> Expect.equal (Ok (OnlyLabel "a"))
-        , test "only inst" <|
-            \_ ->
-                Compiler.compile "nop "
-                    |> Expect.equal (Ok (OnlyInst INop))
-        , test "comment after label" <|
-            \_ ->
-                Compiler.compile "lab:#comment "
-                    |> Expect.equal (Ok (OnlyLabel "lab"))
-        , test "invalid op" <|
-            \_ ->
-                Compiler.compile "lab "
-                    |> expectErr (InvalidOp "lab")
-        , test "invalid op after label" <|
-            \_ ->
-                Compiler.compile "lab: flop"
-                    |> expectErr (InvalidOp "flop")
-        , test "too many args" <|
-            \_ ->
-                Compiler.rawCompile "nop left"
-                    |> Expect.equal
-                        (Err
-                            [ { row = 1
-                              , col = 5
-                              , contextStack =
-                                    [ { col = 4, context = CAfterInst, row = 1 } ]
-                              , problem = ExpectingStmtEnd
-                              }
-                            ]
-                        )
+        [ describe "should compile" validStatements
+        , describe "should fail on" invalidStatements
         ]
+
+
+validStatements : List Test
+validStatements =
+    [ test "labeled inst" <|
+        \_ ->
+            Compiler.compile "a : nop"
+                |> Expect.equal (Ok (LabelInst "a" INop))
+    , test "only label" <|
+        \_ ->
+            Compiler.compile "a : "
+                |> Expect.equal (Ok (OnlyLabel "a"))
+    , test "only inst" <|
+        \_ ->
+            Compiler.compile "nop "
+                |> Expect.equal (Ok (OnlyInst INop))
+    , test "comment after label" <|
+        \_ ->
+            Compiler.compile "lab:#comment "
+                |> Expect.equal (Ok (OnlyLabel "lab"))
+    ]
+
+
+invalidStatements : List Test
+invalidStatements =
+    [ test "invalid op" <|
+        \_ ->
+            Compiler.compile "lab "
+                |> expectErr (InvalidOp "lab")
+    , test "invalid op after label" <|
+        \_ ->
+            Compiler.compile "lab: flop"
+                |> expectErr (InvalidOp "flop")
+    , test "too many args" <|
+        \_ ->
+            Compiler.rawCompile "nop left"
+                |> Expect.equal
+                    (Err
+                        [ { row = 1
+                          , col = 5
+                          , contextStack =
+                                [ { col = 4, context = CAfterInst, row = 1 } ]
+                          , problem = ExpectingStmtEnd
+                          }
+                        ]
+                    )
+    ]
 
 
 expectErr : Error -> Result Error value -> Expectation
