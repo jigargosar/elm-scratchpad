@@ -21,7 +21,7 @@ movInst =
     [ test "mov 1" <|
         \_ ->
             Compiler.compile "mov 1"
-                |> Expect.equal (Ok (OnlyInst (IMov (Num.fromInt 1))))
+                |> Expect.equal (Ok (OnlyInst (Mov (Num.fromInt 1))))
     ]
 
 
@@ -33,7 +33,7 @@ reservedKeywordAsLabel =
     , test "nop:nop " <|
         \_ ->
             Compiler.compile "nop:nop"
-                |> Expect.equal (Ok (LabelInst "nop" INop))
+                |> Expect.equal (Ok (LabelInst "nop" Nop))
     ]
 
 
@@ -42,7 +42,7 @@ validStatement =
     [ test "labeled inst" <|
         \_ ->
             Compiler.compile "a : nop"
-                |> Expect.equal (Ok (LabelInst "a" INop))
+                |> Expect.equal (Ok (LabelInst "a" Nop))
     , test "only label" <|
         \_ ->
             Compiler.compile "a : "
@@ -50,7 +50,7 @@ validStatement =
     , test "only inst" <|
         \_ ->
             Compiler.compile "nop "
-                |> Expect.equal (Ok (OnlyInst INop))
+                |> Expect.equal (Ok (OnlyInst Nop))
     , test "comment after label" <|
         \_ ->
             Compiler.compile "lab:#comment "

@@ -174,13 +174,13 @@ instEnd i =
 instBody : Op -> Parser Inst
 instBody opVarName =
     case opVarName of
-        Mov ->
-            succeed IMov
+        Op_Mov ->
+            succeed Mov
                 |. spaceChars
                 |= numParser
 
-        Nop ->
-            succeed INop
+        Op_Nop ->
+            succeed Nop
 
 
 spaceChars : Parser ()
@@ -189,21 +189,21 @@ spaceChars =
 
 
 type Inst
-    = IMov Num
-    | INop
+    = Mov Num
+    | Nop
 
 
 type Op
-    = Mov
-    | Nop
+    = Op_Mov
+    | Op_Nop
 
 
 opParser : Parser Op
 opParser =
     oneOf
         [ oneOf
-            [ succeed Mov |. keyword (Token "mov" ExpectingOp)
-            , succeed Nop |. keyword (Token "nop" ExpectingOp)
+            [ succeed Op_Mov |. keyword (Token "mov" ExpectingOp)
+            , succeed Op_Nop |. keyword (Token "nop" ExpectingOp)
             ]
             |> map Just
         , succeed Nothing
