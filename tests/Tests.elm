@@ -41,10 +41,23 @@ invalidStatement =
         \_ ->
             Compiler.compile "lab "
                 |> expectErr (InvalidOp "lab")
-    , test "invalid op char" <|
+    , test "invalid op or label char" <|
         \_ ->
-            Compiler.compile "_ "
-                |> expectErr (InvalidOp "_")
+            Compiler.rawCompile "_ "
+                |> Expect.equal
+                    (Err
+                        [ { row = 1
+                          , col = 1
+                          , contextStack = []
+                          , problem = ExpectingLabelVar
+                          }
+                        , { row = 1
+                          , col = 1
+                          , contextStack = []
+                          , problem = ExpectingOp
+                          }
+                        ]
+                    )
     , test "invalid op after label" <|
         \_ ->
             Compiler.compile "lab: flop"
