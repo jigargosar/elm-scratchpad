@@ -63,6 +63,7 @@ type Problem
     | ExpectingComment
     | ExpectingOp
     | ExpectingLabelVar
+    | ExpectingLabelOrOpVar
     | ExpectingLabelSep
 
 
@@ -134,6 +135,9 @@ toError deadEnds =
                         _ ->
                             UnexpectedProblem de
 
+                ExpectingLabelOrOpVar ->
+                    UnexpectedProblem de
+
         _ ->
             TooManyErrors deadEnds
 
@@ -181,21 +185,6 @@ spaces =
     chompWhile (\c -> c == ' ')
 
 
-
---inst_ : Parser Inst
---inst_ =
---    inContext CInst <|
---        oneOf
---            [ succeed IMov
---                |. keyword (Token "mov" ExpectingOp)
---            , succeed INop
---                |. keyword (Token "nop" ExpectingOp)
---            ]
---            |. spaceChars
---            |. stmtEnd
---
-
-
 inst : Parser Inst
 inst =
     instOpVariable
@@ -208,10 +197,9 @@ inst =
 
 instEnd : Inst -> Parser Inst
 instEnd i =
-    inContext CAfterInst <|
-        succeed i
-            |. spaceChars
-            |. stmtEnd
+    succeed i
+        |. spaceChars
+        |. stmtEnd
 
 
 instOpVariable : Parser String
