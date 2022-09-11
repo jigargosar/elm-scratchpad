@@ -162,15 +162,9 @@ inst =
         |> andThen
             (\op ->
                 instBody op
-                    |> andThen instEnd
+                    |. spaceChars
+                    |. stmtEnd TooManyArgs
             )
-
-
-instEnd : Inst -> Parser Inst
-instEnd i =
-    succeed i
-        |. spaceChars
-        |. stmtEnd TooManyArgs
 
 
 instBody : Op -> Parser Inst
