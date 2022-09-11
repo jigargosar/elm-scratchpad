@@ -57,11 +57,6 @@ invalidStatement =
                         [ { row = 1
                           , col = 1
                           , contextStack = []
-                          , problem = ExpectingLabelVar
-                          }
-                        , { row = 1
-                          , col = 1
-                          , contextStack = []
                           , problem = ExpectingOpVar
                           }
                         ]

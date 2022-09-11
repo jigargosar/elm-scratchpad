@@ -90,22 +90,33 @@ type Stmt
 
 stmt : Parser Stmt
 stmt =
-    oneOf
-        [ labelVariable
-            |> andThen labelSep
-            |> andThen labeledStmt
-        , succeed OnlyInst
-            |= inst
-        ]
+    maybePrefixLabel
+        |> andThen
+            (\mbLabel ->
+                case mbLabel of
+                    Nothing ->
+                        succeed OnlyInst
+                            |= inst
+
+                    Just l ->
+                        oneOf
+                            [ succeed (LabelInst l)
+                                |= inst
+                            , succeed (OnlyLabel l)
+                                |. stmtEnd
+                            ]
+            )
 
 
-labeledStmt : String -> Parser Stmt
-labeledStmt labelValue =
+maybePrefixLabel : Parser (Maybe String)
+maybePrefixLabel =
     oneOf
-        [ succeed (LabelInst labelValue)
-            |= inst
-        , succeed (OnlyLabel labelValue)
-            |. stmtEnd
+        [ succeed Just
+            |= labelVariable
+            |. spaceChars
+            |. symbol (Token ":" ExpectingLabelSep)
+            |. spaceChars
+        , succeed Nothing
         ]
 
 
@@ -213,14 +224,6 @@ type Inst
 --                |= Parser.int
 --            , Parser.int
 --            ]
-
-
-labelSep : String -> Parser String
-labelSep labelValue =
-    succeed labelValue
-        |. spaceChars
-        |. symbol (Token ":" ExpectingLabelSep)
-        |. spaceChars
 
 
 labelVariable : Parser String
