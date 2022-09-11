@@ -21,6 +21,7 @@ suite =
         ]
 
 
+movInst : List Test
 movInst =
     [ test "mov 1" <|
         \_ ->
@@ -29,6 +30,7 @@ movInst =
     ]
 
 
+allowReservedKeywordAsLabel : List Test
 allowReservedKeywordAsLabel =
     [ test "nop:" <|
         \_ ->
@@ -41,6 +43,7 @@ allowReservedKeywordAsLabel =
     ]
 
 
+disallowReservedKeywordAsLabel : List Test
 disallowReservedKeywordAsLabel =
     [ test "nop:" <|
         \_ ->
