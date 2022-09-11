@@ -26,7 +26,12 @@ movInst =
     [ test "mov 1" <|
         \_ ->
             Compiler.compile "mov 1"
-                |> Expect.equal (Ok (OnlyInst (Mov (Num.fromInt 1))))
+                |> Expect.equal
+                    (Ok
+                        (OnlyInst
+                            (Mov (SrcNum <| Num.fromInt 1))
+                        )
+                    )
     ]
 
 

@@ -67,6 +67,7 @@ type Problem
     | ExpectingLabelSep
     | InvalidNumber
     | InvalidOp
+    | InvalidSrc
     | TooManyArgs
 
 
@@ -173,10 +174,16 @@ instBody opVarName =
         Op_Mov ->
             succeed Mov
                 |. spaceChars
-                |= numParser
+                |= srcParser
 
         Op_Nop ->
             succeed Nop
+
+
+srcParser : Parser Src
+srcParser =
+    oneOfWithSingleProblem InvalidSrc
+        [ numParser |> map SrcNum ]
 
 
 spaceChars : Parser ()
@@ -185,8 +192,12 @@ spaceChars =
 
 
 type Inst
-    = Mov Num
+    = Mov Src
     | Nop
+
+
+type Src
+    = SrcNum Num
 
 
 type Op
