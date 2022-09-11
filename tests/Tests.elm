@@ -27,12 +27,12 @@ suite =
                     |> Expect.equal (Ok (OnlyLabel "lab"))
         , test "invalid op" <|
             \_ ->
-                Compiler.compile "abc "
-                    |> expectErr (InvalidOp "abc")
+                Compiler.compile "lab "
+                    |> expectErr (InvalidOp "lab")
         , test "invalid op after label" <|
             \_ ->
-                Compiler.compile "abc: xyz"
-                    |> expectErr (InvalidOp "xyz")
+                Compiler.compile "lab: flop"
+                    |> expectErr (InvalidOp "flop")
         , test "too many args" <|
             \_ ->
                 Compiler.rawCompile "nop left"
