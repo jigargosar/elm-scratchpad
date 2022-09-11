@@ -74,13 +74,9 @@ type alias DeadEnds =
     List DeadEnd
 
 
-compileRaw : String -> Result DeadEnds Stmt
-compileRaw string =
+compile : String -> Result DeadEnds Stmt
+compile string =
     run stmt (string ++ "\n")
-
-
-compile =
-    compileRaw
 
 
 type Stmt

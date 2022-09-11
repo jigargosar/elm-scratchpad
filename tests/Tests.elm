@@ -64,7 +64,7 @@ invalidStatement =
                     )
     , test "invalid first start char" <|
         \_ ->
-            Compiler.compileRaw "_ "
+            Compiler.compile "_ "
                 |> Expect.equal
                     (Err
                         [ { row = 1
@@ -88,7 +88,7 @@ invalidStatement =
                     )
     , test "illegal op var after label" <|
         \_ ->
-            Compiler.compileRaw "lab: 1"
+            Compiler.compile "lab: 1"
                 |> Expect.equal
                     (Err
                         [ { col = 6
@@ -100,7 +100,7 @@ invalidStatement =
                     )
     , test "too many args" <|
         \_ ->
-            Compiler.compileRaw "nop left"
+            Compiler.compile "nop left"
                 |> Expect.equal
                     (Err
                         [ { row = 1
