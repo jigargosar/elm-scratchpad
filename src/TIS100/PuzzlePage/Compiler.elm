@@ -147,7 +147,9 @@ type Stmt
 stmt : Parser Stmt
 stmt =
     oneOf
-        [ labelDef |> andThen labeledStmt
+        [ labelVariable
+            |> andThen labelSep
+            |> andThen labeledStmt
         , succeed OnlyInst
             |= inst
         ]
@@ -196,7 +198,7 @@ spaces =
 
 inst : Parser Inst
 inst =
-    opVariable
+    instOpVariable
         |> andThen
             (\opVarName ->
                 instBody opVarName
@@ -212,6 +214,16 @@ instEnd i =
             |. stmtEnd
 
 
+instOpVariable : Parser String
+instOpVariable =
+    Parser.variable
+        { start = Char.isAlpha
+        , inner = \c -> Char.isAlpha c
+        , reserved = Set.empty
+        , expecting = ExpectingOp
+        }
+
+
 instBody : String -> Parser Inst
 instBody opVarName =
     inContext (COp opVarName) <|
@@ -224,16 +236,6 @@ instBody opVarName =
 
             _ ->
                 problem ExpectingOp
-
-
-opVariable : Parser String
-opVariable =
-    Parser.variable
-        { start = Char.isAlpha
-        , inner = \c -> Char.isAlpha c
-        , reserved = Set.empty
-        , expecting = ExpectingOp
-        }
 
 
 spaceChars : Parser ()
@@ -286,11 +288,6 @@ type Inst
 --            ]
 
 
-labelDef : Parser String
-labelDef =
-    labelName |> andThen labelSep
-
-
 labelSep : String -> Parser String
 labelSep labelValue =
     inContext (CLabelDef labelValue) <|
@@ -300,8 +297,8 @@ labelSep labelValue =
             |. spaceChars
 
 
-labelName : Parser String
-labelName =
+labelVariable : Parser String
+labelVariable =
     Parser.variable
         { start = Char.isAlpha
         , inner = \c -> Char.isAlphaNum c || c == '_'

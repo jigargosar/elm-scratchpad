@@ -41,6 +41,10 @@ invalidStatement =
         \_ ->
             Compiler.compile "lab "
                 |> expectErr (InvalidOp "lab")
+    , test "invalid op char" <|
+        \_ ->
+            Compiler.compile "_ "
+                |> expectErr (InvalidOp "_")
     , test "invalid op after label" <|
         \_ ->
             Compiler.compile "lab: flop"
