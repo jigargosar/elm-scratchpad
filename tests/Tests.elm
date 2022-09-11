@@ -106,7 +106,7 @@ invalidStatement =
                         [ { row = 1
                           , col = 5
                           , contextStack = []
-                          , problem = ExpectingStmtEnd
+                          , problem = TooManyArgs
                           }
                         ]
                     )

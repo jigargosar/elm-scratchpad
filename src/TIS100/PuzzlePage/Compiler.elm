@@ -63,6 +63,7 @@ type Problem
     | ExpectingLabelVar
     | ExpectingLabelSep
     | InvalidOp
+    | TooManyArgs
 
 
 type alias DeadEnd =
@@ -117,7 +118,7 @@ maybeOnlyLabel : String -> Parser (Maybe Stmt)
 maybeOnlyLabel l =
     oneOf
         [ succeed (OnlyLabel l)
-            |. stmtEnd
+            |. stmtEnd ExpectingStmtEnd
             |> map Just
         , succeed Nothing
         ]
@@ -137,15 +138,15 @@ maybePrefixLabel =
         ]
 
 
-stmtEnd : Parser ()
-stmtEnd =
+stmtEnd : Problem -> Parser ()
+stmtEnd problem =
     succeed ()
         |. spaces
         |. oneOf
             [ lineComment (Token "#" ExpectingComment)
             , succeed ()
             ]
-        |. symbol (Token "\n" ExpectingStmtEnd)
+        |. symbol (Token "\n" problem)
 
 
 spaces : Parser ()
@@ -167,7 +168,7 @@ instEnd : Inst -> Parser Inst
 instEnd i =
     succeed i
         |. spaceChars
-        |. stmtEnd
+        |. stmtEnd TooManyArgs
 
 
 instBody : Op -> Parser Inst
