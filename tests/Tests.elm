@@ -69,8 +69,7 @@ invalidStatement =
                     (Err
                         [ { row = 1
                           , col = 5
-                          , contextStack =
-                                [ { col = 4, context = CAfterInst, row = 1 } ]
+                          , contextStack = []
                           , problem = ExpectingStmtEnd
                           }
                         ]
