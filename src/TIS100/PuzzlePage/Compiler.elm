@@ -208,37 +208,6 @@ opParser =
         ]
 
 
-
---type Op
---    = Nop
---    | Mov
---    | Add
---    | Sub
---    | Sav
---    | Jmp
---    | Jez
---    | Jgz
---    | Jlz
---    | Jro
---
---opParser : Parser Op
---opParser =
---    oneOf
---        [ succeed Nop |. keyword "nop"
---        , succeed Mov |. keyword "mov"
---        , succeed Add |. keyword "add"
---        , succeed Sub |. keyword "sub"
---        , succeed Sav |. keyword "sav"
---        , succeed Jmp |. keyword "jmp"
---        , succeed Jez |. keyword "jez"
---        , succeed Jgz |. keyword "jgz"
---        , succeed Jlz |. keyword "jlz"
---        , succeed Jro |. keyword "jro"
---        ]
---        |. spaceChars
---
-
-
 numParser : Parser Num
 numParser =
     succeed Num.fromInt
