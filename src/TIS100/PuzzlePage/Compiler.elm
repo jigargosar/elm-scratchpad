@@ -99,13 +99,27 @@ stmt =
                             |= inst
 
                     Just l ->
-                        oneOf
-                            [ succeed (LabelInst l)
-                                |= inst
-                            , succeed (OnlyLabel l)
-                                |. stmtEnd
-                            ]
+                        maybeInst
+                            |> andThen
+                                (\mbInst ->
+                                    case mbInst of
+                                        Just i ->
+                                            succeed (LabelInst l i)
+
+                                        Nothing ->
+                                            succeed (OnlyLabel l)
+                                                |. stmtEnd
+                                )
             )
+
+
+maybeInst : Parser (Maybe Inst)
+maybeInst =
+    oneOf
+        [ succeed Just
+            |= inst
+        , succeed Nothing
+        ]
 
 
 maybePrefixLabel : Parser (Maybe String)
