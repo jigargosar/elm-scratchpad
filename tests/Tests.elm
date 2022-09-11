@@ -43,8 +43,7 @@ invalidStatement =
                 |> Expect.equal
                     (Err
                         [ { col = 5
-                          , contextStack =
-                                [ { col = 4, context = CLabelDef "lab", row = 1 } ]
+                          , contextStack = []
                           , problem = ExpectingLabelSep
                           , row = 1
                           }

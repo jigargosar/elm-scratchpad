@@ -219,11 +219,10 @@ type Inst
 
 labelSep : String -> Parser String
 labelSep labelValue =
-    inContext (CLabelDef labelValue) <|
-        succeed labelValue
-            |. spaceChars
-            |. symbol (Token ":" ExpectingLabelSep)
-            |. spaceChars
+    succeed labelValue
+        |. spaceChars
+        |. symbol (Token ":" ExpectingLabelSep)
+        |. spaceChars
 
 
 labelVariable : Parser String
