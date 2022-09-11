@@ -46,6 +46,7 @@ import Parser.Advanced as Parser
         , withIndent
         )
 import Set exposing (Set)
+import TIS100.Num as Num exposing (Num)
 
 
 type alias Parser x =
@@ -57,11 +58,14 @@ type alias Context =
 
 
 type Problem
-    = ExpectingStmtEnd
+    = ExpectingSymbol
+    | ExpectingInteger
+    | ExpectingStmtEnd
     | ExpectingComment
     | ExpectingOp
     | ExpectingLabelVar
     | ExpectingLabelSep
+    | InvalidNumber
     | InvalidOp
     | TooManyArgs
 
@@ -172,6 +176,8 @@ instBody opVarName =
     case opVarName of
         Mov ->
             succeed IMov
+                |. spaceChars
+                |= numParser
 
         Nop ->
             succeed INop
@@ -183,7 +189,7 @@ spaceChars =
 
 
 type Inst
-    = IMov
+    = IMov Num
     | INop
 
 
@@ -242,20 +248,22 @@ opParser =
 --        ]
 --        |. spaceChars
 --
---num : Parser LabelOrOp
---num =
---    Parser.succeed (Num.fromInt >> Num)
---        |= Parser.oneOf
---            [ Parser.succeed negate
---                |. Parser.symbol "-"
---                |= Parser.int
---            , Parser.int
---            ]
+
+
+numParser : Parser Num
+numParser =
+    succeed Num.fromInt
+        |= oneOf
+            [ succeed negate
+                |. symbol (Token "-" ExpectingSymbol)
+                |= int ExpectingInteger InvalidNumber
+            , int ExpectingInteger InvalidNumber
+            ]
 
 
 labelVariable : Parser String
 labelVariable =
-    Parser.variable
+    variable
         { start = Char.isAlpha
         , inner = \c -> Char.isAlphaNum c || c == '_'
         , reserved = opNames |> always Set.empty
