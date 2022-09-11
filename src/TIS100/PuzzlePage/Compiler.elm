@@ -75,71 +75,13 @@ type alias DeadEnds =
     List DeadEnd
 
 
-rawCompile : String -> Result DeadEnds Stmt
-rawCompile string =
+compileRaw : String -> Result DeadEnds Stmt
+compileRaw string =
     run stmt (string ++ "\n")
 
 
-compile : String -> Result Error Stmt
 compile =
-    rawCompile >> Result.mapError toError
-
-
-type Error
-    = UnexpectedProblem DeadEnd
-    | EmptyError
-    | TooManyErrors DeadEnds
-    | InvalidOp String
-
-
-toError : DeadEnds -> Error
-toError deadEnds =
-    case deadEnds of
-        [] ->
-            EmptyError
-
-        de :: [] ->
-            case de.problem of
-                ExpectingStmtEnd ->
-                    UnexpectedProblem de
-
-                ExpectingComment ->
-                    UnexpectedProblem de
-
-                ExpectingOp ->
-                    case de.contextStack of
-                        { context } :: _ ->
-                            case context of
-                                COp opName ->
-                                    InvalidOp opName
-
-                                _ ->
-                                    UnexpectedProblem de
-
-                        _ ->
-                            UnexpectedProblem de
-
-                ExpectingLabelVar ->
-                    UnexpectedProblem de
-
-                ExpectingLabelSep ->
-                    case de.contextStack of
-                        { context } :: _ ->
-                            case context of
-                                CLabelDef label ->
-                                    InvalidOp label
-
-                                _ ->
-                                    UnexpectedProblem de
-
-                        _ ->
-                            UnexpectedProblem de
-
-                ExpectingLabelOrOpVar ->
-                    UnexpectedProblem de
-
-        _ ->
-            TooManyErrors deadEnds
+    compileRaw
 
 
 type Stmt

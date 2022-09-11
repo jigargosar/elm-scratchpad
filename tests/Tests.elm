@@ -40,10 +40,19 @@ invalidStatement =
     [ test "invalid op" <|
         \_ ->
             Compiler.compile "lab "
-                |> expectErr (InvalidOp "lab")
+                |> Expect.equal
+                    (Err
+                        [ { col = 5
+                          , contextStack =
+                                [ { col = 4, context = CLabelDef "lab", row = 1 } ]
+                          , problem = ExpectingLabelSep
+                          , row = 1
+                          }
+                        ]
+                    )
     , test "invalid op or label char" <|
         \_ ->
-            Compiler.rawCompile "_ "
+            Compiler.compileRaw "_ "
                 |> Expect.equal
                     (Err
                         [ { row = 1
@@ -58,13 +67,40 @@ invalidStatement =
                           }
                         ]
                     )
-    , test "invalid op after label" <|
+    , test "unknown op after label" <|
         \_ ->
             Compiler.compile "lab: flop"
-                |> expectErr (InvalidOp "flop")
+                |> Expect.equal
+                    (Err
+                        [ { col = 10
+                          , contextStack =
+                                [ { col = 10, context = COp "flop", row = 1 }
+                                ]
+                          , problem = ExpectingOp
+                          , row = 1
+                          }
+                        ]
+                    )
+    , test "illegal op var after label" <|
+        \_ ->
+            Compiler.compileRaw "lab: 1"
+                |> Expect.equal
+                    (Err
+                        [ { col = 6
+                          , contextStack = []
+                          , problem = ExpectingOp
+                          , row = 1
+                          }
+                        , { col = 6
+                          , contextStack = []
+                          , problem = ExpectingStmtEnd
+                          , row = 1
+                          }
+                        ]
+                    )
     , test "too many args" <|
         \_ ->
-            Compiler.rawCompile "nop left"
+            Compiler.compileRaw "nop left"
                 |> Expect.equal
                     (Err
                         [ { row = 1
@@ -75,34 +111,3 @@ invalidStatement =
                         ]
                     )
     ]
-
-
-expectErr : Error -> Result Error value -> Expectation
-expectErr expected result =
-    case result of
-        Err actual ->
-            actual
-                |> Expect.equal expected
-
-        _ ->
-            Debug.toString result
-                |> Expect.equal ("Compiler Problem: " ++ Debug.toString expected)
-
-
-
---noinspection ElmUnusedSymbol
-
-
-expectProblem :
-    Problem
-    -> Result DeadEnds value
-    -> Expectation
-expectProblem expected result =
-    case result of
-        Err ({ problem } :: []) ->
-            expected
-                |> Expect.equal problem
-
-        _ ->
-            Debug.toString result
-                |> Expect.equal ("Compiler Problem: " ++ Debug.toString expected)
