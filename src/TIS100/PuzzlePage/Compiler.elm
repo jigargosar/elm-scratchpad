@@ -114,20 +114,6 @@ stmt =
             )
 
 
-orElse : Parser.Parser c x a -> Parser.Parser c x a -> Parser.Parser c x a
-orElse b a =
-    oneOf [ a |> map Just, succeed Nothing ]
-        |> andThen
-            (\mb ->
-                case mb of
-                    Just v ->
-                        succeed v
-
-                    Nothing ->
-                        b
-            )
-
-
 maybeOnlyLabel : String -> Parser (Maybe Stmt)
 maybeOnlyLabel l =
     oneOf
@@ -222,20 +208,6 @@ opParser =
         ]
 
 
-oneOfWithSingleProblem : a -> List (Parser.Parser c a b) -> Parser.Parser c a b
-oneOfWithSingleProblem p xs =
-    oneOf [ oneOf xs |> map Just, succeed Nothing ]
-        |> andThen
-            (\mb ->
-                case mb of
-                    Just v ->
-                        succeed v
-
-                    Nothing ->
-                        problem p
-            )
-
-
 
 --type Op
 --    = Nop
@@ -302,3 +274,39 @@ opNames =
         , "jlz"
         , "jro"
         ]
+
+
+
+-- PARSER UTILS
+
+
+oneOfWithSingleProblem : a -> List (Parser.Parser c a b) -> Parser.Parser c a b
+oneOfWithSingleProblem p xs =
+    oneOf [ oneOf xs |> map Just, succeed Nothing ]
+        |> andThen
+            (\mb ->
+                case mb of
+                    Just v ->
+                        succeed v
+
+                    Nothing ->
+                        problem p
+            )
+
+
+
+--noinspection ElmUnusedSymbol
+
+
+orElse : Parser.Parser c x a -> Parser.Parser c x a -> Parser.Parser c x a
+orElse b a =
+    oneOf [ a |> map Just, succeed Nothing ]
+        |> andThen
+            (\mb ->
+                case mb of
+                    Just v ->
+                        succeed v
+
+                    Nothing ->
+                        b
+            )
