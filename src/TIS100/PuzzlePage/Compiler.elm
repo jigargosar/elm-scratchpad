@@ -154,8 +154,8 @@ inst : Parser Inst
 inst =
     opParser
         |> andThen
-            (\opVarName ->
-                instBody opVarName
+            (\op ->
+                instBody op
                     |> andThen instEnd
             )
 
