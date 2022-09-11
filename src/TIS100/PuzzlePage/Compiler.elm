@@ -52,10 +52,8 @@ type alias Parser x =
     Parser.Parser Context Problem x
 
 
-type Context
-    = CLabelDef String
-    | CAfterInst
-    | CWithOpVarName String
+type alias Context =
+    ()
 
 
 type Problem
