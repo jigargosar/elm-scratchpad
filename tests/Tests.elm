@@ -9,13 +9,13 @@ import Test exposing (..)
 suite : Test
 suite =
     describe "Compiler"
-        [ describe "should compile" validStatements
-        , describe "should fail on" invalidStatements
+        [ describe "should compile" validStatement
+        , describe "should fail on" invalidStatement
         ]
 
 
-validStatements : List Test
-validStatements =
+validStatement : List Test
+validStatement =
     [ test "labeled inst" <|
         \_ ->
             Compiler.compile "a : nop"
@@ -35,8 +35,8 @@ validStatements =
     ]
 
 
-invalidStatements : List Test
-invalidStatements =
+invalidStatement : List Test
+invalidStatement =
     [ test "invalid op" <|
         \_ ->
             Compiler.compile "lab "
@@ -71,6 +71,10 @@ expectErr expected result =
         _ ->
             Debug.toString result
                 |> Expect.equal ("Compiler Problem: " ++ Debug.toString expected)
+
+
+
+--noinspection ElmUnusedSymbol
 
 
 expectProblem :
