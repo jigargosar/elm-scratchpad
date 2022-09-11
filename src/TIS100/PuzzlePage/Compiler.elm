@@ -110,13 +110,35 @@ stmt =
                         --                    succeed (OnlyLabel l)
                         --                        |. stmtEnd
                         --        )
-                        oneOf
-                            [ succeed (LabelInst l)
-                                |= inst
-                            , succeed (OnlyLabel l)
-                                |. stmtEnd
-                            ]
+                        --
+                        --oneOf
+                        --    [ succeed (LabelInst l)
+                        --        |= inst
+                        --    , succeed (OnlyLabel l)
+                        --        |. stmtEnd
+                        --    ]
+                        maybeOnlyLabel l
+                            |> andThen
+                                (\mbStmt ->
+                                    case mbStmt of
+                                        Just s ->
+                                            succeed s
+
+                                        Nothing ->
+                                            succeed (LabelInst l)
+                                                |= inst
+                                )
             )
+
+
+maybeOnlyLabel : String -> Parser (Maybe Stmt)
+maybeOnlyLabel l =
+    oneOf
+        [ succeed (OnlyLabel l)
+            |. stmtEnd
+            |> map Just
+        , succeed Nothing
+        ]
 
 
 maybeInst : Parser (Maybe Inst)

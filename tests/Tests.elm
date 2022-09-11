@@ -83,11 +83,6 @@ invalidStatement =
                           , problem = ExpectingOpVar
                           , row = 1
                           }
-                        , { col = 6
-                          , contextStack = []
-                          , problem = ExpectingStmtEnd
-                          , row = 1
-                          }
                         ]
                     )
     , test "too many args" <|
