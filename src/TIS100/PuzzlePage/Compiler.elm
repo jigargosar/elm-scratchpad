@@ -99,17 +99,23 @@ stmt =
                             |= inst
 
                     Just l ->
-                        maybeInst
-                            |> andThen
-                                (\mbInst ->
-                                    case mbInst of
-                                        Just i ->
-                                            succeed (LabelInst l i)
-
-                                        Nothing ->
-                                            succeed (OnlyLabel l)
-                                                |. stmtEnd
-                                )
+                        --maybeInst
+                        --    |> andThen
+                        --        (\mbInst ->
+                        --            case mbInst of
+                        --                Just i ->
+                        --                    succeed (LabelInst l i)
+                        --
+                        --                Nothing ->
+                        --                    succeed (OnlyLabel l)
+                        --                        |. stmtEnd
+                        --        )
+                        oneOf
+                            [ succeed (OnlyLabel l)
+                                |. stmtEnd
+                            , succeed (LabelInst l)
+                                |= inst
+                            ]
             )
 
 

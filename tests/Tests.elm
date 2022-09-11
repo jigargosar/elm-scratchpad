@@ -49,7 +49,7 @@ invalidStatement =
                           }
                         ]
                     )
-    , test "invalid op or label char" <|
+    , test "invalid first start char" <|
         \_ ->
             Compiler.compileRaw "_ "
                 |> Expect.equal
@@ -81,6 +81,11 @@ invalidStatement =
                         [ { col = 6
                           , contextStack = []
                           , problem = ExpectingStmtEnd
+                          , row = 1
+                          }
+                        , { col = 6
+                          , contextStack = []
+                          , problem = ExpectingOpVar
                           , row = 1
                           }
                         ]
