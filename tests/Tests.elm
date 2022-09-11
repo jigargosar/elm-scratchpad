@@ -73,10 +73,8 @@ invalidStatement =
                 |> Expect.equal
                     (Err
                         [ { col = 10
-                          , contextStack =
-                                [ { col = 10, context = COp "flop", row = 1 }
-                                ]
-                          , problem = ExpectingOpVar
+                          , contextStack = []
+                          , problem = InvalidOpVarFound "flop"
                           , row = 1
                           }
                         ]

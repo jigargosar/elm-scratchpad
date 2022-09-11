@@ -55,15 +55,15 @@ type alias Parser x =
 type Context
     = CLabelDef String
     | CAfterInst
-    | COp String
+    | CWithOpVarName String
 
 
 type Problem
     = ExpectingStmtEnd
     | ExpectingComment
     | ExpectingOpVar
+    | InvalidOpVarFound String
     | ExpectingLabelVar
-    | ExpectingLabelOrOpVar
     | ExpectingLabelSep
 
 
@@ -156,16 +156,15 @@ instOpVariable =
 
 instBody : String -> Parser Inst
 instBody opVarName =
-    inContext (COp opVarName) <|
-        case opVarName of
-            "mov" ->
-                succeed IMov
+    case opVarName of
+        "mov" ->
+            succeed IMov
 
-            "nop" ->
-                succeed INop
+        "nop" ->
+            succeed INop
 
-            _ ->
-                problem ExpectingOpVar
+        _ ->
+            problem (InvalidOpVarFound opVarName)
 
 
 spaceChars : Parser ()
