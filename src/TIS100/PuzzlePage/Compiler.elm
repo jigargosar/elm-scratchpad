@@ -200,22 +200,23 @@ type Op
 
 opParser : Parser Op
 opParser =
-    oneOf
-        [ oneOf
-            [ succeed Op_Mov |. keyword (Token "mov" ExpectingOp)
-            , succeed Op_Nop |. keyword (Token "nop" ExpectingOp)
-            ]
-            |> map Just
-        , succeed Nothing
+    oneOfWithSingleProblem InvalidOp
+        [ succeed Op_Mov |. keyword (Token "mov" ExpectingOp)
+        , succeed Op_Nop |. keyword (Token "nop" ExpectingOp)
         ]
+
+
+oneOfWithSingleProblem : a -> List (Parser.Parser c a b) -> Parser.Parser c a b
+oneOfWithSingleProblem p xs =
+    oneOf [ oneOf xs |> map Just, succeed Nothing ]
         |> andThen
             (\mb ->
                 case mb of
-                    Just op ->
-                        succeed op
+                    Just v ->
+                        succeed v
 
                     Nothing ->
-                        problem InvalidOp
+                        problem p
             )
 
 
