@@ -11,11 +11,11 @@ suite =
     describe "Compiler"
         [ describe "should compile" validStatement
         , describe "should fail on" invalidStatement
-        , describe "should allow" reservedKeywordsAsLabels
+        , describe "should allow" reservedKeywordAsLabel
         ]
 
 
-reservedKeywordsAsLabels =
+reservedKeywordAsLabel =
     [ test "nop:" <|
         \_ ->
             Compiler.compile "nop:"
