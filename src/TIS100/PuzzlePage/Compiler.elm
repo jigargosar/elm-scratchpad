@@ -60,9 +60,9 @@ type Problem
     = ExpectingStmtEnd
     | ExpectingComment
     | ExpectingOp
-    | InvalidOp
     | ExpectingLabelVar
     | ExpectingLabelSep
+    | InvalidOp
 
 
 type alias DeadEnd =
