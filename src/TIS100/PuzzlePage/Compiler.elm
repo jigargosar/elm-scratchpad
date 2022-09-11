@@ -125,11 +125,13 @@ maybeInst =
 maybePrefixLabel : Parser (Maybe String)
 maybePrefixLabel =
     oneOf
-        [ succeed Just
-            |= labelVariable
-            |. spaceChars
-            |. symbol (Token ":" ExpectingLabelSep)
-            |. spaceChars
+        [ backtrackable
+            (succeed Just
+                |= labelVariable
+                |. spaceChars
+                |. symbol (Token ":" ExpectingLabelSep)
+                |. spaceChars
+            )
         , succeed Nothing
         ]
 

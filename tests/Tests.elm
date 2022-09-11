@@ -42,9 +42,9 @@ invalidStatement =
             Compiler.compile "lab "
                 |> Expect.equal
                     (Err
-                        [ { col = 5
+                        [ { col = 4
                           , contextStack = []
-                          , problem = ExpectingLabelSep
+                          , problem = InvalidOpVarFound "lab"
                           , row = 1
                           }
                         ]
