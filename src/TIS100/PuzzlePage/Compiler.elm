@@ -158,8 +158,8 @@ maybePrefixLabel =
                 |= labelVariable
                 |. spaceChars
                 |. symbol (Token ":" ExpectingLabelSep)
-                |. spaceChars
             )
+            |. spaceChars
         , succeed Nothing
         ]
 
