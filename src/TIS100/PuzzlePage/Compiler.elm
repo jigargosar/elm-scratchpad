@@ -65,9 +65,11 @@ type Problem
     | ExpectingOp
     | ExpectingLabelVar
     | ExpectingLabelSep
+    | ExpectingAcc
     | InvalidNumber
     | InvalidOp
     | InvalidSrc
+    | InvalidDst
     | TooManyArgs
 
 
@@ -186,6 +188,12 @@ srcParser =
         [ numParser |> map SrcNum ]
 
 
+dstParser : Parser Dst
+dstParser =
+    oneOfWithSingleProblem InvalidDst
+        [ succeed DstAcc |. keyword (Token "acc" ExpectingAcc) ]
+
+
 spaceChars : Parser ()
 spaceChars =
     Parser.chompWhile (\c -> c == ' ')
@@ -198,6 +206,10 @@ type Inst
 
 type Src
     = SrcNum Num
+
+
+type Dst
+    = DstAcc
 
 
 type Op
