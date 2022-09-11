@@ -58,7 +58,7 @@ type alias Context =
 
 
 type Problem
-    = ExpectingSymbol
+    = ExpectingNegativeSign
     | ExpectingInteger
     | ExpectingStmtEnd
     | ExpectingComment
@@ -244,7 +244,7 @@ numParser =
     succeed Num.fromInt
         |= oneOf
             [ succeed negate
-                |. symbol (Token "-" ExpectingSymbol)
+                |. symbol (Token "-" ExpectingNegativeSign)
                 |= int ExpectingInteger InvalidNumber
             , int ExpectingInteger InvalidNumber
             ]
