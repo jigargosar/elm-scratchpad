@@ -60,6 +60,7 @@ type Problem
     = ExpectingStmtEnd
     | ExpectingComment
     | ExpectingOp
+    | InvalidOp
     | ExpectingLabelVar
     | ExpectingLabelSep
 
@@ -211,7 +212,7 @@ opParser =
                         succeed op
 
                     Nothing ->
-                        problem ExpectingOp
+                        problem InvalidOp
             )
 
 
