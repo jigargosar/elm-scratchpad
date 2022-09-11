@@ -114,6 +114,20 @@ stmt =
             )
 
 
+orElse : Parser.Parser c x a -> Parser.Parser c x a -> Parser.Parser c x a
+orElse a b =
+    oneOf [ a |> map Just, succeed Nothing ]
+        |> andThen
+            (\mb ->
+                case mb of
+                    Just v ->
+                        succeed v
+
+                    Nothing ->
+                        b
+            )
+
+
 maybeOnlyLabel : String -> Parser (Maybe Stmt)
 maybeOnlyLabel l =
     oneOf
