@@ -60,7 +60,6 @@ type Problem
     = ExpectingStmtEnd
     | ExpectingComment
     | ExpectingOpVar
-    | InvalidOpVarFound String
     | ExpectingLabelVar
     | ExpectingLabelSep
 
@@ -99,24 +98,6 @@ stmt =
                             |= inst
 
                     Just l ->
-                        --maybeInst
-                        --    |> andThen
-                        --        (\mbInst ->
-                        --            case mbInst of
-                        --                Just i ->
-                        --                    succeed (LabelInst l i)
-                        --
-                        --                Nothing ->
-                        --                    succeed (OnlyLabel l)
-                        --                        |. stmtEnd
-                        --        )
-                        --
-                        --oneOf
-                        --    [ succeed (LabelInst l)
-                        --        |= inst
-                        --    , succeed (OnlyLabel l)
-                        --        |. stmtEnd
-                        --    ]
                         maybeOnlyLabel l
                             |> andThen
                                 (\mbStmt ->
@@ -137,15 +118,6 @@ maybeOnlyLabel l =
         [ succeed (OnlyLabel l)
             |. stmtEnd
             |> map Just
-        , succeed Nothing
-        ]
-
-
-maybeInst : Parser (Maybe Inst)
-maybeInst =
-    oneOf
-        [ succeed Just
-            |= inst
         , succeed Nothing
         ]
 
@@ -182,7 +154,7 @@ spaces =
 
 inst : Parser Inst
 inst =
-    instOpVariable
+    opParser
         |> andThen
             (\opVarName ->
                 instBody opVarName
@@ -197,27 +169,14 @@ instEnd i =
         |. stmtEnd
 
 
-instOpVariable : Parser String
-instOpVariable =
-    Parser.variable
-        { start = Char.isAlpha
-        , inner = \c -> Char.isAlpha c
-        , reserved = Set.empty
-        , expecting = ExpectingOpVar
-        }
-
-
-instBody : String -> Parser Inst
+instBody : Op -> Parser Inst
 instBody opVarName =
     case opVarName of
-        "mov" ->
+        Mov ->
             succeed IMov
 
-        "nop" ->
+        Nop ->
             succeed INop
-
-        _ ->
-            problem (InvalidOpVarFound opVarName)
 
 
 spaceChars : Parser ()
@@ -228,6 +187,32 @@ spaceChars =
 type Inst
     = IMov
     | INop
+
+
+type Op
+    = Mov
+    | Nop
+
+
+opParser : Parser Op
+opParser =
+    oneOf
+        [ oneOf
+            [ succeed Mov |. keyword (Token "mov" ExpectingOpVar)
+            , succeed Nop |. keyword (Token "nop" ExpectingOpVar)
+            ]
+            |> map Just
+        , succeed Nothing
+        ]
+        |> andThen
+            (\mb ->
+                case mb of
+                    Just op ->
+                        succeed op
+
+                    Nothing ->
+                        problem ExpectingOpVar
+            )
 
 
 

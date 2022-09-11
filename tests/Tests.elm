@@ -55,9 +55,9 @@ invalidStatement =
             Compiler.compile "lab "
                 |> Expect.equal
                     (Err
-                        [ { col = 4
+                        [ { col = 1
                           , contextStack = []
-                          , problem = InvalidOpVarFound "lab"
+                          , problem = ExpectingOpVar
                           , row = 1
                           }
                         ]
@@ -79,9 +79,9 @@ invalidStatement =
             Compiler.compile "lab: flop"
                 |> Expect.equal
                     (Err
-                        [ { col = 10
+                        [ { col = 6
                           , contextStack = []
-                          , problem = InvalidOpVarFound "flop"
+                          , problem = ExpectingOpVar
                           , row = 1
                           }
                         ]
