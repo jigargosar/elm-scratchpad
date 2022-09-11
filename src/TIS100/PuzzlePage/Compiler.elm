@@ -97,7 +97,7 @@ stmt =
                 case mbLabel of
                     Nothing ->
                         succeed OnlyInst
-                            |= inst
+                            |= instParser
 
                     Just l ->
                         maybeOnlyLabel l
@@ -109,7 +109,7 @@ stmt =
 
                                         Nothing ->
                                             succeed (LabelInst l)
-                                                |= inst
+                                                |= instParser
                                 )
             )
 
@@ -156,8 +156,8 @@ spaces =
     chompWhile (\c -> c == ' ')
 
 
-inst : Parser Inst
-inst =
+instParser : Parser Inst
+instParser =
     opParser
         |> andThen
             (\op ->
