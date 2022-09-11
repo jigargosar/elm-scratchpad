@@ -111,10 +111,10 @@ stmt =
                         --                        |. stmtEnd
                         --        )
                         oneOf
-                            [ succeed (OnlyLabel l)
-                                |. stmtEnd
-                            , succeed (LabelInst l)
+                            [ succeed (LabelInst l)
                                 |= inst
+                            , succeed (OnlyLabel l)
+                                |. stmtEnd
                             ]
             )
 
