@@ -2,6 +2,7 @@ module Tests exposing (..)
 
 import Expect exposing (Expectation)
 import Parser.Advanced exposing (DeadEnd)
+import TIS100.Num as Num
 import TIS100.PuzzlePage.Compiler as Compiler exposing (..)
 import Test exposing (..)
 
@@ -10,9 +11,18 @@ suite : Test
 suite =
     describe "Compiler"
         [ describe "should compile" validStatement
+        , describe "mov" movInst
         , describe "should fail on" invalidStatement
         , describe "should allow" reservedKeywordAsLabel
         ]
+
+
+movInst =
+    [ test "mov 1" <|
+        \_ ->
+            Compiler.compile "mov 1"
+                |> Expect.equal (Ok (OnlyInst (IMov (Num.fromInt 1))))
+    ]
 
 
 reservedKeywordAsLabel =
