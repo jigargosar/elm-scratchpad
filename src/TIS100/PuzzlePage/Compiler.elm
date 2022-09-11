@@ -114,21 +114,8 @@ stmt =
             )
 
 
-stmt2 =
-    onlyLabel
-        |> orElse labeledInst
-        |> orElse onlyInst
-
-
-onlyLabel : Parser Stmt
-onlyLabel =
-    succeed OnlyLabel
-        |= prefixLabel
-        |. stmtEnd ExpectingStmtEnd
-
-
 orElse : Parser.Parser c x a -> Parser.Parser c x a -> Parser.Parser c x a
-orElse a b =
+orElse b a =
     oneOf [ a |> map Just, succeed Nothing ]
         |> andThen
             (\mb ->
@@ -154,13 +141,7 @@ maybeOnlyLabel l =
 maybePrefixLabel : Parser (Maybe String)
 maybePrefixLabel =
     oneOf
-        [ backtrackable
-            (succeed Just
-                |= labelVariable
-                |. spaceChars
-                |. symbol (Token ":" ExpectingLabelSep)
-            )
-            |. spaceChars
+        [ backtrackable (prefixLabel |> map Just)
         , succeed Nothing
         ]
 
