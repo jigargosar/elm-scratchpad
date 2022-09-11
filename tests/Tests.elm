@@ -23,13 +23,13 @@ suite =
 
 movInst : List Test
 movInst =
-    [ test "mov 1" <|
+    [ test "mov 1 acc" <|
         \_ ->
-            Compiler.compile "mov 1"
+            Compiler.compile "mov 1 acc"
                 |> Expect.equal
                     (Ok
                         (OnlyInst
-                            (Mov (SrcNum <| Num.fromInt 1))
+                            (Mov (SrcNum <| Num.fromInt 1) DstAcc)
                         )
                     )
     ]

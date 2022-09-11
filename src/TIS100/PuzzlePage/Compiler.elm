@@ -177,6 +177,8 @@ instBody opVarName =
             succeed Mov
                 |. spaceChars
                 |= srcParser
+                |. spaceChars
+                |= dstParser
 
         Op_Nop ->
             succeed Nop
@@ -200,7 +202,7 @@ spaceChars =
 
 
 type Inst
-    = Mov Src
+    = Mov Src Dst
     | Nop
 
 
