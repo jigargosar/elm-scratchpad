@@ -218,7 +218,7 @@ labelVariable =
     variable
         { start = Char.isAlpha
         , inner = \c -> Char.isAlphaNum c || c == '_'
-        , reserved = opNames |> always Set.empty
+        , reserved = opNames --  |> always Set.empty
         , expecting = ExpectingLabelVar
         }
 

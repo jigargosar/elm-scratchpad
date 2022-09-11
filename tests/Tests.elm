@@ -13,7 +13,11 @@ suite =
         [ describe "should compile" validStatement
         , describe "mov" movInst
         , describe "should fail on" invalidStatement
-        , describe "should allow" reservedKeywordAsLabel
+        , if False then
+            describe "should allow" allowReservedKeywordAsLabel
+
+          else
+            describe "fail on reserved labels" disallowReservedKeywordAsLabel
         ]
 
 
@@ -25,7 +29,7 @@ movInst =
     ]
 
 
-reservedKeywordAsLabel =
+allowReservedKeywordAsLabel =
     [ test "nop:" <|
         \_ ->
             Compiler.compile "nop:"
@@ -34,6 +38,34 @@ reservedKeywordAsLabel =
         \_ ->
             Compiler.compile "nop:nop"
                 |> Expect.equal (Ok (LabelInst "nop" Nop))
+    ]
+
+
+disallowReservedKeywordAsLabel =
+    [ test "nop:" <|
+        \_ ->
+            Compiler.compile "nop:"
+                |> Expect.equal
+                    (Err
+                        [ { col = 4
+                          , contextStack = []
+                          , problem = TooManyArgs
+                          , row = 1
+                          }
+                        ]
+                    )
+    , test "nop:nop " <|
+        \_ ->
+            Compiler.compile "nop:nop"
+                |> Expect.equal
+                    (Err
+                        [ { col = 4
+                          , contextStack = []
+                          , problem = TooManyArgs
+                          , row = 1
+                          }
+                        ]
+                    )
     ]
 
 
