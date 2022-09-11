@@ -47,6 +47,7 @@ import Parser.Advanced as Parser
         )
 import Set exposing (Set)
 import TIS100.Num as Num exposing (Num)
+import Utils exposing (Dir4(..))
 
 
 type alias Parser x =
@@ -68,6 +69,7 @@ type Problem
     | ExpectingAcc
     | InvalidNumber
     | InvalidOp
+    | ExpectingDir
     | InvalidSrc
     | InvalidDst
     | TooManyArgs
@@ -187,13 +189,16 @@ instBody opVarName =
 srcParser : Parser Src
 srcParser =
     oneOfWithSingleProblem InvalidSrc
-        [ numParser |> map SrcNum ]
+        [ numParser |> map SrcNum
+        , dirParser |> map SrcPort
+        ]
 
 
 dstParser : Parser Dst
 dstParser =
     oneOfWithSingleProblem InvalidDst
-        [ succeed DstAcc |. keyword (Token "acc" ExpectingAcc) ]
+        [ succeed DstAcc |. keyword (Token "acc" ExpectingAcc)
+        ]
 
 
 spaceChars : Parser ()
@@ -208,6 +213,7 @@ type Inst
 
 type Src
     = SrcNum Num
+    | SrcPort Dir4
 
 
 type Dst
@@ -224,6 +230,14 @@ opParser =
     oneOfWithSingleProblem InvalidOp
         [ succeed Op_Mov |. keyword (Token "mov" ExpectingOp)
         , succeed Op_Nop |. keyword (Token "nop" ExpectingOp)
+        ]
+
+
+dirParser : Parser Dir4
+dirParser =
+    oneOf
+        [ succeed Up |. keyword (Token "up" ExpectingDir)
+        , succeed Down |. keyword (Token "down" ExpectingDir)
         ]
 
 

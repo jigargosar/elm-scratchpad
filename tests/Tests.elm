@@ -5,6 +5,7 @@ import Parser.Advanced exposing (DeadEnd)
 import TIS100.Num as Num
 import TIS100.PuzzlePage.Compiler as Compiler exposing (..)
 import Test exposing (..)
+import Utils exposing (Dir4(..))
 
 
 suite : Test
@@ -30,6 +31,15 @@ movInst =
                     (Ok
                         (OnlyInst
                             (Mov (SrcNum <| Num.fromInt 1) DstAcc)
+                        )
+                    )
+    , test "mov up acc" <|
+        \_ ->
+            Compiler.compile "mov up acc"
+                |> Expect.equal
+                    (Ok
+                        (OnlyInst
+                            (Mov (SrcPort Up) DstAcc)
                         )
                     )
     ]
