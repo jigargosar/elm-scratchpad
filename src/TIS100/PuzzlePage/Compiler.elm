@@ -16,7 +16,6 @@ type alias Context =
 
 type Problem
     = Expecting String
-    | ExpectingNegativeSign
     | ExpectingNum
     | ExpectingOnlyLabelStmt
     | ExpectingOp
@@ -145,7 +144,7 @@ prefixLabel : Parser String
 prefixLabel =
     labelVariable
         |. spaceChars
-        |. symbol (Token ":" ExpectingLabelSep)
+        |. symbol ":"
         |. spaceChars
 
 
@@ -157,7 +156,17 @@ stmtEnd problem =
             [ lineComment (toToken "#")
             , succeed ()
             ]
-        |. symbol (Token "\n" problem)
+        |. Parser.symbol (Token "\n" problem)
+
+
+symbol : String -> Parser ()
+symbol str =
+    Parser.symbol (Token str (Expecting str))
+
+
+keyword : String -> Parser ()
+keyword str =
+    Parser.keyword (Token str (Expecting str))
 
 
 type alias Token =
@@ -210,7 +219,7 @@ srcParser =
 dstParser : Parser Dst
 dstParser =
     oneOfWithSingleProblem InvalidDst
-        [ succeed DstAcc |. keyword (Token "acc" ExpectingAcc)
+        [ succeed DstAcc |. keyword "acc"
         ]
 
 
@@ -241,16 +250,16 @@ type Op
 opParser : Parser Op
 opParser =
     oneOfWithSingleProblem InvalidOp
-        [ succeed Op_Mov |. keyword (Token "mov" ExpectingOp)
-        , succeed Op_Nop |. keyword (Token "nop" ExpectingOp)
+        [ succeed Op_Mov |. keyword "mov"
+        , succeed Op_Nop |. keyword "nop"
         ]
 
 
 dirParser : Parser Dir4
 dirParser =
     oneOf
-        [ succeed Up |. keyword (Token "up" ExpectingDir)
-        , succeed Down |. keyword (Token "down" ExpectingDir)
+        [ succeed Up |. keyword "up"
+        , succeed Down |. keyword "down"
         ]
 
 
@@ -259,7 +268,7 @@ numParser =
     succeed Num.fromInt
         |= oneOf
             [ succeed negate
-                |. symbol (Token "-" ExpectingNegativeSign)
+                |. symbol "-"
                 |= int ExpectingNum ExpectingNum
             , int ExpectingNum ExpectingNum
             ]
