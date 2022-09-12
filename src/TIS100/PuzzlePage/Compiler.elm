@@ -152,30 +152,6 @@ stmtEnd problem =
         |. Parser.symbol (Token "\n" problem)
 
 
-symbol : String -> Parser ()
-symbol str =
-    Parser.symbol (Token str (Expecting str))
-
-
-keyword : String -> Parser ()
-keyword str =
-    Parser.keyword (Token str (Expecting str))
-
-
-type alias Token =
-    Parser.Token Problem
-
-
-toToken : String -> Token
-toToken str =
-    Token str (Expecting str)
-
-
-spaces : Parser ()
-spaces =
-    chompWhile (\c -> c == ' ')
-
-
 instParser : Parser Inst
 instParser =
     opParser
@@ -324,3 +300,27 @@ orElse b a =
                     Nothing ->
                         b
             )
+
+
+symbol : String -> Parser ()
+symbol str =
+    Parser.symbol (Token str (Expecting str))
+
+
+keyword : String -> Parser ()
+keyword str =
+    Parser.keyword (Token str (Expecting str))
+
+
+type alias Token =
+    Parser.Token Problem
+
+
+toToken : String -> Token
+toToken str =
+    Token str (Expecting str)
+
+
+spaces : Parser ()
+spaces =
+    chompWhile (\c -> c == ' ')
