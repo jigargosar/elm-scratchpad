@@ -157,6 +157,25 @@ maybePrefixLabel =
         ]
 
 
+maybePrefixLabel2 : Parser (Maybe String)
+maybePrefixLabel2 =
+    oneOf
+        [ backtrackable
+            (variable
+                { start = Char.isAlpha
+                , inner = \c -> Char.isAlphaNum c || c == '_'
+                , reserved = opNames --  |> always Set.empty
+                , expecting = ExpectingLabelVar
+                }
+                |. spaceChars
+                |. symbol (Token ":" ExpectingLabelSep)
+                |. spaceChars
+            )
+            |> map Just
+        , succeed Nothing
+        ]
+
+
 prefixLabel : Parser String
 prefixLabel =
     labelVariable
