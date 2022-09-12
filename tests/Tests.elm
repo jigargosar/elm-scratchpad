@@ -2,10 +2,8 @@ module Tests exposing (..)
 
 import Expect exposing (Expectation)
 import Parser.Advanced exposing (DeadEnd)
-import TIS100.Num as Num
 import TIS100.PuzzlePage.Compiler as Compiler exposing (..)
 import Test exposing (..)
-import Utils exposing (Dir4(..))
 
 
 suite : Test
