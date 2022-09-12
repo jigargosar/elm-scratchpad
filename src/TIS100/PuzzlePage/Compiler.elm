@@ -116,7 +116,10 @@ dirToString dir =
 
 stmtParser : Parser Stmt
 stmtParser =
-    maybePrefixLabel
+    oneOf
+        [ backtrackable (prefixLabel |> map Just)
+        , succeed Nothing
+        ]
         |> andThen
             (\mbLabel ->
                 case mbLabel of
@@ -125,29 +128,18 @@ stmtParser =
                             |= instParser
 
                     Just l ->
-                        succeed (OnlyLabel l)
+                        succeed (LabeledStmt l Nothing)
                             |. stmtEnd ExpectingStmtEnd
                             |> orElse
-                                (succeed (LabelInst l)
+                                (succeed (Just >> LabeledStmt l)
                                     |= instParser
                                 )
             )
 
 
-maybeOnlyLabel : String -> Parser (Maybe Stmt)
-maybeOnlyLabel l =
+maybeInstParser =
     oneOf
-        [ succeed (OnlyLabel l)
-            |. stmtEnd ExpectingStmtEnd
-            |> map Just
-        , succeed Nothing
-        ]
-
-
-maybePrefixLabel : Parser (Maybe String)
-maybePrefixLabel =
-    oneOf
-        [ backtrackable (prefixLabel |> map Just)
+        [ instParser |> map Just
         , succeed Nothing
         ]
 
