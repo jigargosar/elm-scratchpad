@@ -1,50 +1,6 @@
 module TIS100.PuzzlePage.Compiler exposing (..)
 
-import Parser.Advanced as Parser
-    exposing
-        ( (|.)
-        , (|=)
-        , Nestable(..)
-        , Step(..)
-        , Token(..)
-        , Trailing(..)
-        , andThen
-        , backtrackable
-        , chompIf
-        , chompUntil
-        , chompUntilEndOr
-        , chompWhile
-        , commit
-        , end
-        , float
-        , getChompedString
-        , getCol
-        , getIndent
-        , getOffset
-        , getPosition
-        , getRow
-        , getSource
-        , inContext
-        , int
-        , keyword
-        , lazy
-        , lineComment
-        , loop
-        , map
-        , mapChompedString
-        , multiComment
-        , number
-        , oneOf
-        , problem
-        , run
-        , sequence
-        , spaces
-        , succeed
-        , symbol
-        , token
-        , variable
-        , withIndent
-        )
+import Parser.Advanced as Parser exposing (..)
 import Set exposing (Set)
 import TIS100.Num as Num exposing (Num)
 import Utils exposing (Dir4(..))
