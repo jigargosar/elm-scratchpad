@@ -39,16 +39,6 @@ validStatement =
     ]
 
 
-shouldCompileTo : String -> String -> Test
-shouldCompileTo expected actual =
-    test actual <|
-        \_ ->
-            Compiler.compile actual
-                |> Result.map Compiler.stmtToString
-                |> Result.mapError Debug.toString
-                |> Expect.equal (Ok expected)
-
-
 invalidStatement : List Test
 invalidStatement =
     [ test "unknown op name" <|
@@ -112,3 +102,13 @@ invalidStatement =
                         ]
                     )
     ]
+
+
+shouldCompileTo : String -> String -> Test
+shouldCompileTo expected actual =
+    test actual <|
+        \_ ->
+            Compiler.compile actual
+                |> Result.map Compiler.stmtToString
+                |> Result.mapError Debug.toString
+                |> Expect.equal (Ok expected)
