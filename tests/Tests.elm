@@ -24,24 +24,8 @@ suite =
 
 movInst : List Test
 movInst =
-    [ test "mov 1 acc" <|
-        \_ ->
-            Compiler.compile "mov 1 acc"
-                |> Expect.equal
-                    (Ok
-                        (OnlyInst
-                            (Mov (SrcNum <| Num.fromInt 1) DstAcc)
-                        )
-                    )
-    , test "mov up acc" <|
-        \_ ->
-            Compiler.compile "mov up acc"
-                |> Expect.equal
-                    (Ok
-                        (OnlyInst
-                            (Mov (SrcPort Up) DstAcc)
-                        )
-                    )
+    [ "mov 1 acc" |> shouldCompileTo "mov 1 acc"
+    , "mov up acc" |> shouldCompileTo "mov up acc"
     ]
 
 
@@ -89,23 +73,27 @@ disallowReservedKeywordAsLabel =
 
 validStatement : List Test
 validStatement =
-    [ test "labeled inst" <|
-        \_ ->
-            Compiler.compile "a : nop"
-                |> Expect.equal (Ok (LabelInst "a" Nop))
-    , test "only label" <|
-        \_ ->
-            Compiler.compile "a : "
-                |> Expect.equal (Ok (OnlyLabel "a"))
-    , test "only inst" <|
-        \_ ->
-            Compiler.compile "nop "
-                |> Expect.equal (Ok (OnlyInst Nop))
-    , test "comment after label" <|
-        \_ ->
-            Compiler.compile "lab:#comment "
-                |> Expect.equal (Ok (OnlyLabel "lab"))
+    [ describe "labeled inst"
+        [ "a : nop " |> shouldCompileTo "a: nop" ]
+    , describe "only label"
+        [ "a : " |> shouldCompileTo "a:" ]
+    , describe "only inst"
+        [ "nop " |> shouldCompileTo "nop" ]
+    , describe "comment after label"
+        [ "lab:#comment " |> shouldCompileTo "lab:" ]
+    , describe "comment after labeled inst"
+        [ "lab:nop#comment " |> shouldCompileTo "lab: nop" ]
     ]
+
+
+shouldCompileTo : String -> String -> Test
+shouldCompileTo expected actual =
+    test actual <|
+        \_ ->
+            Compiler.compile actual
+                |> Result.map Compiler.stmtToString
+                |> Result.mapError Debug.toString
+                |> Expect.equal (Ok expected)
 
 
 invalidStatement : List Test

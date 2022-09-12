@@ -41,7 +41,12 @@ type alias DeadEnds =
 
 compile : String -> Result DeadEnds Stmt
 compile string =
-    run stmt (string ++ "\n")
+    run stmtParser (string ++ "\n")
+
+
+type Stmt2
+    = LS String (Maybe Inst)
+    | I Inst
 
 
 type Stmt
@@ -50,8 +55,64 @@ type Stmt
     | LabelInst String Inst
 
 
-stmt : Parser Stmt
-stmt =
+stmtToString : Stmt -> String
+stmtToString stmt =
+    case stmt of
+        OnlyLabel string ->
+            string ++ ":"
+
+        OnlyInst inst ->
+            instToString inst
+
+        LabelInst string inst ->
+            string ++ ": " ++ instToString inst
+
+
+instToString : Inst -> String
+instToString inst =
+    case inst of
+        Mov src dst ->
+            "mov " ++ srcToString src ++ " " ++ dstToString dst
+
+        Nop ->
+            "nop"
+
+
+dstToString : Dst -> String
+dstToString dst =
+    case dst of
+        DstAcc ->
+            "acc"
+
+
+srcToString : Src -> String
+srcToString src =
+    case src of
+        SrcNum num ->
+            Num.toString num
+
+        SrcPort dir ->
+            dirToString dir
+
+
+dirToString : Dir4 -> String
+dirToString dir =
+    case dir of
+        Up ->
+            "up"
+
+        Down ->
+            "down"
+
+        Left ->
+            "left"
+
+        Right ->
+            "right"
+
+
+stmtParser : Parser Stmt
+stmtParser =
     maybePrefixLabel
         |> andThen
             (\mbLabel ->
