@@ -248,6 +248,8 @@ dirParser =
     oneOf
         [ succeed Up |. keyword "up"
         , succeed Down |. keyword "down"
+        , succeed Left |. keyword "left"
+        , succeed Right |. keyword "right"
         ]
 
 
