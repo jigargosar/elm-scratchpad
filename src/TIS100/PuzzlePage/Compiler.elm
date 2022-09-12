@@ -136,9 +136,9 @@ onlyInstStmtParser =
 prefixLabel : Parser String
 prefixLabel =
     labelVariable
-        |. spaceChars
+        |. spaces
         |. symbol ":"
-        |. spaceChars
+        |. spaces
 
 
 stmtEnd : Problem -> Parser ()
@@ -182,7 +182,7 @@ instParser =
         |> andThen
             (\op ->
                 instBody op
-                    |. spaceChars
+                    |. spaces
                     |. stmtEnd TooManyArgs
             )
 
@@ -192,9 +192,9 @@ instBody opVarName =
     case opVarName of
         Op_Mov ->
             succeed Mov
-                |. spaceChars
+                |. spaces
                 |= srcParser
-                |. spaceChars
+                |. spaces
                 |= dstParser
 
         Op_Nop ->
@@ -214,11 +214,6 @@ dstParser =
     oneOfWithSingleProblem InvalidDst
         [ succeed DstAcc |. keyword "acc"
         ]
-
-
-spaceChars : Parser ()
-spaceChars =
-    Parser.chompWhile (\c -> c == ' ')
 
 
 type Inst
