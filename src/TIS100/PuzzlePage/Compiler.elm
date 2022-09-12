@@ -114,6 +114,36 @@ dirToString dir =
             "right"
 
 
+stmtParser2 : Parser Stmt
+stmtParser2 =
+    oneOf
+        [ labeledStatementParser
+        , onlyInstStatementParser
+        ]
+
+
+labeledStatementParser : Parser Stmt
+labeledStatementParser =
+    let
+        isColon : Char -> Bool
+        isColon =
+            \c -> c == ':'
+
+        parsePrefixLabelIfAny : Parser String
+        parsePrefixLabelIfAny =
+            backtrackable labelVariable
+                |. spaceChars
+                |. map (\_ -> succeed ()) (chompIf isColon ExpectingLabelSep)
+                |. spaceChars
+    in
+    Debug.todo "todo"
+
+
+onlyInstStatementParser : Parser Stmt
+onlyInstStatementParser =
+    Debug.todo "todo"
+
+
 stmtParser : Parser Stmt
 stmtParser =
     maybePrefixLabel
