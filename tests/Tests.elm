@@ -12,7 +12,7 @@ suite : Test
 suite =
     describe "Compiler"
         [ describe "should compile" validStatement
-        , describe "mov" movInst
+        , describe "mov instructions" movInstructions
         , describe "should fail on" invalidStatement
         , if False then
             describe "should allow" allowReservedKeywordAsLabel
@@ -22,8 +22,8 @@ suite =
         ]
 
 
-movInst : List Test
-movInst =
+movInstructions : List Test
+movInstructions =
     [ "mov 1 acc"
         |> shouldCompileTo "mov 1 acc"
     , "mov up acc"
