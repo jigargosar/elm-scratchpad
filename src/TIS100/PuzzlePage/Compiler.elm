@@ -16,9 +16,6 @@ type alias Context =
 
 type Problem
     = Expecting String
-    | ExpectingNum
-    | ExpectingOnlyLabelStmt
-    | ExpectingLabelVar
     | InvalidOp
     | InvalidSrc
     | InvalidDst
@@ -123,7 +120,7 @@ stmtParser =
 labeledStmtParser : String -> Parser Stmt
 labeledStmtParser l =
     succeed (OnlyLabel l)
-        |. stmtEnd ExpectingOnlyLabelStmt
+        |. stmtEnd (Expecting "OnlyLabelStmt")
         |> orElse
             (succeed (LabeledInst l)
                 |= instParser
@@ -265,8 +262,8 @@ numParser =
         |= oneOf
             [ succeed negate
                 |. symbol "-"
-                |= int ExpectingNum ExpectingNum
-            , int ExpectingNum ExpectingNum
+                |= int (Expecting "a Num") (Expecting "a Num")
+            , int (Expecting "a Num") (Expecting "a Num")
             ]
 
 
@@ -276,7 +273,7 @@ labelVariable =
         { start = Char.isAlpha
         , inner = \c -> Char.isAlphaNum c || c == '_'
         , reserved = opNames --  |> always Set.empty
-        , expecting = ExpectingLabelVar
+        , expecting = Expecting "a LabelVar"
         }
 
 
