@@ -19,7 +19,6 @@ type Problem
     | ExpectingNegativeSign
     | ExpectingInteger
     | ExpectingStmtEnd
-    | ExpectingComment
     | ExpectingOp
     | ExpectingLabelVar
     | ExpectingLabelSep
