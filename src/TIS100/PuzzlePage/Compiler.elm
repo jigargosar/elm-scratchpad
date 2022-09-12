@@ -125,16 +125,11 @@ stmtParser =
                             |= instParser
 
                     Just l ->
-                        maybeOnlyLabel l
-                            |> andThen
-                                (\mbStmt ->
-                                    case mbStmt of
-                                        Just s ->
-                                            succeed s
-
-                                        Nothing ->
-                                            succeed (LabelInst l)
-                                                |= instParser
+                        succeed (OnlyLabel l)
+                            |. stmtEnd ExpectingStmtEnd
+                            |> orElse
+                                (succeed (LabelInst l)
+                                    |= instParser
                                 )
             )
 
