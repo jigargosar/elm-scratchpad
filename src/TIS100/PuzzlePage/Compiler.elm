@@ -18,12 +18,8 @@ type Problem
     = Expecting String
     | ExpectingNum
     | ExpectingOnlyLabelStmt
-    | ExpectingOp
     | ExpectingLabelVar
-    | ExpectingLabelSep
-    | ExpectingAcc
     | InvalidOp
-    | ExpectingDir
     | InvalidSrc
     | InvalidDst
     | TooManyArgs
