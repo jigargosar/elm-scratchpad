@@ -98,7 +98,7 @@ shouldCompileTo expected actual =
 
 invalidStatement : List Test
 invalidStatement =
-    [ test "invalid op" <|
+    [ test "unknown op name" <|
         \_ ->
             Compiler.compile "lab "
                 |> Expect.equal
@@ -122,7 +122,7 @@ invalidStatement =
                           }
                         ]
                     )
-    , test "unknown op after label" <|
+    , test "unknown op name after label" <|
         \_ ->
             Compiler.compile "lab: flop"
                 |> Expect.equal
@@ -134,7 +134,7 @@ invalidStatement =
                           }
                         ]
                     )
-    , test "illegal op var after label" <|
+    , test "illegal op char after label" <|
         \_ ->
             Compiler.compile "lab: 1"
                 |> Expect.equal
