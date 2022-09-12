@@ -133,7 +133,7 @@ labeledStatementParser =
         parsePrefixLabelIfAny =
             backtrackable labelVariable
                 |. spaceChars
-                |. map (\_ -> succeed ()) (chompIf isColon ExpectingLabelSep)
+                |. chompIf isColon ExpectingLabelSep
                 |. spaceChars
     in
     Debug.todo "todo"
