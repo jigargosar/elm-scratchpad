@@ -24,8 +24,10 @@ suite =
 
 movInst : List Test
 movInst =
-    [ "mov 1 acc" |> shouldCompileTo "mov 1 acc"
-    , "mov up acc" |> shouldCompileTo "mov up acc"
+    [ "mov 1 acc"
+        |> shouldCompileTo "mov 1 acc"
+    , "mov up acc"
+        |> shouldCompileTo "mov up acc"
     ]
 
 
