@@ -38,7 +38,7 @@ allowReservedKeywordAsLabel =
     , test "nop:nop " <|
         \_ ->
             Compiler.compile "nop:nop"
-                |> Expect.equal (Ok (LabelInst "nop" Nop))
+                |> Expect.equal (Ok (LabeledInst "nop" Nop))
     ]
 
 

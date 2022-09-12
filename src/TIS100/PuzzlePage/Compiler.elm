@@ -47,7 +47,7 @@ compile string =
 type Stmt
     = OnlyLabel String
     | OnlyInst Inst
-    | LabelInst String Inst
+    | LabeledInst String Inst
     | LabeledStmt String (Maybe Inst)
 
 
@@ -60,7 +60,7 @@ stmtToString stmt =
         OnlyInst inst ->
             instToString inst
 
-        LabelInst label inst ->
+        LabeledInst label inst ->
             label ++ ": " ++ instToString inst
 
         LabeledStmt label maybeInst ->
@@ -121,20 +121,25 @@ stmtParser =
         , succeed Nothing
         ]
         |> andThen
-            (\mbLabel ->
-                case mbLabel of
-                    Just l ->
-                        succeed (OnlyLabel l)
-                            |. stmtEnd ExpectingStmtEnd
-                            |> orElse
-                                (succeed (LabelInst l)
-                                    |= instParser
-                                )
-
-                    Nothing ->
-                        succeed OnlyInst
-                            |= instParser
+            (Maybe.map labeledStmtParser
+                >> Maybe.withDefault onlyInstStmtParser
             )
+
+
+labeledStmtParser : String -> Parser Stmt
+labeledStmtParser l =
+    succeed (OnlyLabel l)
+        |. stmtEnd ExpectingStmtEnd
+        |> orElse
+            (succeed (LabeledInst l)
+                |= instParser
+            )
+
+
+onlyInstStmtParser : Parser Stmt
+onlyInstStmtParser =
+    succeed OnlyInst
+        |= instParser
 
 
 prefixLabel : Parser String
