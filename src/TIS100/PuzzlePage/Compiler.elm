@@ -44,28 +44,31 @@ compile string =
     run stmtParser (string ++ "\n")
 
 
-type Stmt2
-    = LS String (Maybe Inst)
-    | I Inst
-
-
 type Stmt
     = OnlyLabel String
     | OnlyInst Inst
     | LabelInst String Inst
+    | LabeledStmt String (Maybe Inst)
 
 
 stmtToString : Stmt -> String
 stmtToString stmt =
     case stmt of
-        OnlyLabel string ->
-            string ++ ":"
+        OnlyLabel label ->
+            label ++ ":"
 
         OnlyInst inst ->
             instToString inst
 
-        LabelInst string inst ->
-            string ++ ": " ++ instToString inst
+        LabelInst label inst ->
+            label ++ ": " ++ instToString inst
+
+        LabeledStmt label maybeInst ->
+            (label ++ ":")
+                ++ (maybeInst
+                        |> Maybe.map (\inst -> " " ++ instToString inst)
+                        |> Maybe.withDefault ""
+                   )
 
 
 instToString : Inst -> String
