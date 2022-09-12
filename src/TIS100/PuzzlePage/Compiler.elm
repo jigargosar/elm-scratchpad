@@ -17,13 +17,12 @@ type alias Context =
 type Problem
     = Expecting String
     | ExpectingNegativeSign
-    | ExpectingInteger
-    | ExpectingStmtEnd
+    | ExpectingNum
+    | ExpectingOnlyLabelStmt
     | ExpectingOp
     | ExpectingLabelVar
     | ExpectingLabelSep
     | ExpectingAcc
-    | InvalidNumber
     | InvalidOp
     | ExpectingDir
     | InvalidSrc
@@ -129,7 +128,7 @@ stmtParser =
 labeledStmtParser : String -> Parser Stmt
 labeledStmtParser l =
     succeed (OnlyLabel l)
-        |. stmtEnd ExpectingStmtEnd
+        |. stmtEnd ExpectingOnlyLabelStmt
         |> orElse
             (succeed (LabeledInst l)
                 |= instParser
@@ -261,8 +260,8 @@ numParser =
         |= oneOf
             [ succeed negate
                 |. symbol (Token "-" ExpectingNegativeSign)
-                |= int ExpectingInteger InvalidNumber
-            , int ExpectingInteger InvalidNumber
+                |= int ExpectingNum ExpectingNum
+            , int ExpectingNum ExpectingNum
             ]
 
 
