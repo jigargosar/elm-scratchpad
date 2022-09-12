@@ -123,10 +123,6 @@ stmtParser =
         |> andThen
             (\mbLabel ->
                 case mbLabel of
-                    Nothing ->
-                        succeed OnlyInst
-                            |= instParser
-
                     Just l ->
                         succeed (OnlyLabel l)
                             |. stmtEnd ExpectingStmtEnd
@@ -134,6 +130,10 @@ stmtParser =
                                 (succeed (LabelInst l)
                                     |= instParser
                                 )
+
+                    Nothing ->
+                        succeed OnlyInst
+                            |= instParser
             )
 
 
