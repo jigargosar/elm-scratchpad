@@ -10,13 +10,8 @@ suite : Test
 suite =
     describe "Compiler"
         [ describe "should compile" validStatement
-        , describe "mov instructions" movInstructions
         , describe "should fail on" invalidStatement
-        , if False then
-            describe "should allow" allowReservedKeywordAsLabel
-
-          else
-            describe "fail on reserved labels" disallowReservedKeywordAsLabel
+        , describe "mov instructions" movInstructions
         ]
 
 
@@ -26,48 +21,6 @@ movInstructions =
         |> shouldCompileTo "mov 1 acc"
     , "mov up acc"
         |> shouldCompileTo "mov up acc"
-    ]
-
-
-allowReservedKeywordAsLabel : List Test
-allowReservedKeywordAsLabel =
-    [ test "nop:" <|
-        \_ ->
-            Compiler.compile "nop:"
-                |> Expect.equal (Ok (OnlyLabel "nop"))
-    , test "nop:nop " <|
-        \_ ->
-            Compiler.compile "nop:nop"
-                |> Expect.equal (Ok (LabeledInst "nop" Nop))
-    ]
-
-
-disallowReservedKeywordAsLabel : List Test
-disallowReservedKeywordAsLabel =
-    [ test "nop:" <|
-        \_ ->
-            Compiler.compile "nop:"
-                |> Expect.equal
-                    (Err
-                        [ { col = 4
-                          , contextStack = []
-                          , problem = TooManyArgs
-                          , row = 1
-                          }
-                        ]
-                    )
-    , test "nop:nop " <|
-        \_ ->
-            Compiler.compile "nop:nop"
-                |> Expect.equal
-                    (Err
-                        [ { col = 4
-                          , contextStack = []
-                          , problem = TooManyArgs
-                          , row = 1
-                          }
-                        ]
-                    )
     ]
 
 
