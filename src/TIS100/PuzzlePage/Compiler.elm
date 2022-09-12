@@ -15,7 +15,8 @@ type alias Context =
 
 
 type Problem
-    = ExpectingNegativeSign
+    = Expecting String
+    | ExpectingNegativeSign
     | ExpectingInteger
     | ExpectingStmtEnd
     | ExpectingComment
@@ -155,10 +156,19 @@ stmtEnd problem =
     succeed ()
         |. spaces
         |. oneOf
-            [ lineComment (Token "#" ExpectingComment)
+            [ lineComment (toToken "#")
             , succeed ()
             ]
         |. symbol (Token "\n" problem)
+
+
+type alias Token =
+    Parser.Token Problem
+
+
+toToken : String -> Token
+toToken str =
+    Token str (Expecting str)
 
 
 spaces : Parser ()
