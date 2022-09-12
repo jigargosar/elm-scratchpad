@@ -128,20 +128,13 @@ stmtParser =
                             |= instParser
 
                     Just l ->
-                        succeed (LabeledStmt l Nothing)
+                        succeed (OnlyLabel l)
                             |. stmtEnd ExpectingStmtEnd
                             |> orElse
-                                (succeed (Just >> LabeledStmt l)
+                                (succeed (LabelInst l)
                                     |= instParser
                                 )
             )
-
-
-maybeInstParser =
-    oneOf
-        [ instParser |> map Just
-        , succeed Nothing
-        ]
 
 
 prefixLabel : Parser String
