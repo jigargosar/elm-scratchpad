@@ -16,7 +16,7 @@ type alias Context =
 
 type ProblemPrivate
     = Expecting String
-    | Problem Problem
+    | ReportAs Problem
 
 
 type Problem
@@ -45,7 +45,7 @@ deadEndsToError deadEnds =
     case deadEnds of
         d :: [] ->
             case d.problem of
-                Problem error ->
+                ReportAs error ->
                     Error d.col error
 
                 Expecting _ ->
@@ -179,7 +179,7 @@ instParser =
             (\op ->
                 instBody op
                     |. spaces
-                    |. stmtEnd (Problem TooManyArgs)
+                    |. stmtEnd (ReportAs TooManyArgs)
             )
 
 
@@ -199,7 +199,7 @@ instBody opVarName =
 
 srcParser : Parser Src
 srcParser =
-    oneOfWithSingleProblem (Problem InvalidSrc)
+    oneOfWithSingleProblem (ReportAs InvalidSrc)
         [ numParser |> map SrcNum
         , dirParser |> map SrcPort
         ]
@@ -207,7 +207,7 @@ srcParser =
 
 dstParser : Parser Dst
 dstParser =
-    oneOfWithSingleProblem (Problem InvalidDst)
+    oneOfWithSingleProblem (ReportAs InvalidDst)
         [ succeed DstAcc |. keyword "acc"
         ]
 
@@ -233,7 +233,7 @@ type Op
 
 opParser : Parser Op
 opParser =
-    oneOfWithSingleProblem (Problem InvalidOp)
+    oneOfWithSingleProblem (ReportAs InvalidOp)
         [ succeed Op_Mov |. keyword "mov"
         , succeed Op_Nop |. keyword "nop"
         ]
