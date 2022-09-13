@@ -47,9 +47,7 @@ invalidStatement =
                 |> Expect.equal
                     (Err
                         [ { col = 1
-                          , contextStack = []
                           , problem = InvalidOp
-                          , row = 1
                           }
                         ]
                     )
@@ -58,9 +56,7 @@ invalidStatement =
             Compiler.compile "_ "
                 |> Expect.equal
                     (Err
-                        [ { row = 1
-                          , col = 1
-                          , contextStack = []
+                        [ { col = 1
                           , problem = InvalidOp
                           }
                         ]
@@ -71,9 +67,7 @@ invalidStatement =
                 |> Expect.equal
                     (Err
                         [ { col = 6
-                          , contextStack = []
                           , problem = InvalidOp
-                          , row = 1
                           }
                         ]
                     )
@@ -83,9 +77,7 @@ invalidStatement =
                 |> Expect.equal
                     (Err
                         [ { col = 6
-                          , contextStack = []
                           , problem = InvalidOp
-                          , row = 1
                           }
                         ]
                     )
@@ -94,9 +86,7 @@ invalidStatement =
             Compiler.compile "nop left"
                 |> Expect.equal
                     (Err
-                        [ { row = 1
-                          , col = 5
-                          , contextStack = []
+                        [ { col = 5
                           , problem = TooManyArgs
                           }
                         ]

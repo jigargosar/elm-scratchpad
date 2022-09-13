@@ -16,7 +16,11 @@ type alias Context =
 
 type Problem
     = Expecting String
-    | InvalidOp
+    | Error Error
+
+
+type Error
+    = InvalidOp
     | InvalidSrc
     | InvalidDst
     | TooManyArgs
@@ -30,9 +34,24 @@ type alias DeadEnds =
     List DeadEnd
 
 
-compile : String -> Result DeadEnds Stmt
+compile : String -> Result (List ErrorRec) Stmt
 compile string =
     run stmtParser (string ++ "\n")
+        |> Result.mapError (List.filterMap deadEndToError)
+
+
+type alias ErrorRec =
+    { col : Int, problem : Error }
+
+
+deadEndToError : DeadEnd -> Maybe ErrorRec
+deadEndToError d =
+    case d.problem of
+        Expecting _ ->
+            Nothing
+
+        Error error ->
+            Just <| ErrorRec d.col error
 
 
 type Stmt
@@ -159,7 +178,7 @@ instParser =
             (\op ->
                 instBody op
                     |. spaces
-                    |. stmtEnd TooManyArgs
+                    |. stmtEnd (Error TooManyArgs)
             )
 
 
@@ -179,7 +198,7 @@ instBody opVarName =
 
 srcParser : Parser Src
 srcParser =
-    oneOfWithSingleProblem InvalidSrc
+    oneOfWithSingleProblem (Error InvalidSrc)
         [ numParser |> map SrcNum
         , dirParser |> map SrcPort
         ]
@@ -187,7 +206,7 @@ srcParser =
 
 dstParser : Parser Dst
 dstParser =
-    oneOfWithSingleProblem InvalidDst
+    oneOfWithSingleProblem (Error InvalidDst)
         [ succeed DstAcc |. keyword "acc"
         ]
 
@@ -213,7 +232,7 @@ type Op
 
 opParser : Parser Op
 opParser =
-    oneOfWithSingleProblem InvalidOp
+    oneOfWithSingleProblem (Error InvalidOp)
         [ succeed Op_Mov |. keyword "mov"
         , succeed Op_Nop |. keyword "nop"
         ]
