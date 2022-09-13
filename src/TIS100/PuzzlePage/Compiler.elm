@@ -24,7 +24,6 @@ type Problem
     | InvalidSrc
     | InvalidDst
     | TooManyArgs
-    | InternalError (List DeadEnd)
 
 
 type alias DeadEnd =
@@ -50,10 +49,10 @@ deadEndsToError deadEnds =
                     Error d.col error
 
                 Expecting _ ->
-                    Error d.col (InternalError deadEnds)
+                    Debug.todo (Debug.toString ( "internal error", deadEnds ))
 
         _ ->
-            Error 0 (InternalError deadEnds)
+            Debug.todo (Debug.toString ( "internal error", deadEnds ))
 
 
 type Stmt
