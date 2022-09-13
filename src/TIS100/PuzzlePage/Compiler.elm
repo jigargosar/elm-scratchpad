@@ -31,33 +31,29 @@ type alias DeadEnd =
     Parser.DeadEnd Context ProblemInternal
 
 
-type alias DeadEnds =
-    List DeadEnd
-
-
-compile : String -> Result ErrorRec Stmt
+compile : String -> Result Error Stmt
 compile string =
     run stmtParser (string ++ "\n")
         |> Result.mapError deadEndsToError
 
 
-type alias ErrorRec =
+type alias Error =
     { col : Int, problem : Problem }
 
 
-deadEndsToError : List DeadEnd -> ErrorRec
+deadEndsToError : List DeadEnd -> Error
 deadEndsToError deadEnds =
     case deadEnds of
         d :: [] ->
             case d.problem of
                 Problem error ->
-                    ErrorRec d.col error
+                    Error d.col error
 
                 Expecting _ ->
-                    ErrorRec d.col InternalError
+                    Error d.col InternalError
 
         _ ->
-            ErrorRec 0 InternalError
+            Error 0 InternalError
 
 
 type Stmt
