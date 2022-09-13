@@ -78,7 +78,7 @@ invalidStatement =
     ]
 
 
-expectErrorOnCompile : ( String, String, Error ) -> Expect.Expectation
+expectErrorOnCompile : ( String, String, Problem ) -> Expect.Expectation
 expectErrorOnCompile ( src, marker, prob ) =
     case compile src of
         Err err ->

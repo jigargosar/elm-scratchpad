@@ -7,19 +7,19 @@ import Utils exposing (Dir4(..))
 
 
 type alias Parser x =
-    Parser.Parser Context Problem x
+    Parser.Parser Context ProblemInternal x
 
 
 type alias Context =
     ()
 
 
-type Problem
+type ProblemInternal
     = Expecting String
-    | Error Error
+    | Problem Problem
 
 
-type Error
+type Problem
     = InvalidOp
     | InvalidSrc
     | InvalidDst
@@ -28,7 +28,7 @@ type Error
 
 
 type alias DeadEnd =
-    Parser.DeadEnd Context Problem
+    Parser.DeadEnd Context ProblemInternal
 
 
 type alias DeadEnds =
@@ -42,7 +42,7 @@ compile string =
 
 
 type alias ErrorRec =
-    { col : Int, problem : Error }
+    { col : Int, problem : Problem }
 
 
 deadEndsToError : List DeadEnd -> ErrorRec
@@ -50,7 +50,7 @@ deadEndsToError deadEnds =
     case deadEnds of
         d :: [] ->
             case d.problem of
-                Error error ->
+                Problem error ->
                     ErrorRec d.col error
 
                 Expecting _ ->
@@ -166,7 +166,7 @@ prefixLabel =
         |. spaces
 
 
-stmtEnd : Problem -> Parser ()
+stmtEnd : ProblemInternal -> Parser ()
 stmtEnd problem =
     succeed ()
         |. spaces
@@ -184,7 +184,7 @@ instParser =
             (\op ->
                 instBody op
                     |. spaces
-                    |. stmtEnd (Error TooManyArgs)
+                    |. stmtEnd (Problem TooManyArgs)
             )
 
 
@@ -204,7 +204,7 @@ instBody opVarName =
 
 srcParser : Parser Src
 srcParser =
-    oneOfWithSingleProblem (Error InvalidSrc)
+    oneOfWithSingleProblem (Problem InvalidSrc)
         [ numParser |> map SrcNum
         , dirParser |> map SrcPort
         ]
@@ -212,7 +212,7 @@ srcParser =
 
 dstParser : Parser Dst
 dstParser =
-    oneOfWithSingleProblem (Error InvalidDst)
+    oneOfWithSingleProblem (Problem InvalidDst)
         [ succeed DstAcc |. keyword "acc"
         ]
 
@@ -238,7 +238,7 @@ type Op
 
 opParser : Parser Op
 opParser =
-    oneOfWithSingleProblem (Error InvalidOp)
+    oneOfWithSingleProblem (Problem InvalidOp)
         [ succeed Op_Mov |. keyword "mov"
         , succeed Op_Nop |. keyword "nop"
         ]
@@ -338,7 +338,7 @@ keyword str =
 
 
 type alias Token =
-    Parser.Token Problem
+    Parser.Token ProblemInternal
 
 
 toToken : String -> Token
