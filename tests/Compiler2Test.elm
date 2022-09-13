@@ -10,18 +10,39 @@ import Test exposing (Test, describe, test)
 -}
 
 
-type Error
-    = InvalidOp String
+type Prob
+    = InvalidOp
+
+
+type alias Error =
+    { msg : Prob
+    , arg : String
+    , col : Int
+    }
 
 
 compile : String -> Result Error ()
 compile s =
-    Err (InvalidOp s)
+    Err (Error InvalidOp s 0)
 
 
 suite : Test
 suite =
     test "invalid op" <|
         \_ ->
-            compile "foo"
-                |> Expect.equal (Err (InvalidOp "foo"))
+            expectErrorOnCompile
+                ( "foo"
+                , 0
+                , InvalidOp
+                )
+
+
+expectErrorOnCompile : ( String, Int, Prob ) -> Expect.Expectation
+expectErrorOnCompile ( src, marker, prob ) =
+    case compile src of
+        Err err ->
+            ( src, err.col, err.msg )
+                |> Expect.equal ( src, marker, prob )
+
+        Ok _ ->
+            Debug.todo "todo"
