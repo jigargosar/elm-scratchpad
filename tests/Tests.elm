@@ -43,14 +43,18 @@ invalidStatement : List Test
 invalidStatement =
     [ test "unknown op name" <|
         \_ ->
-            Compiler.compile "lab "
-                |> Expect.equal
-                    (Err { col = 1, problem = InvalidOp })
+            expectErrorOnCompile
+                ( "lab "
+                , "^"
+                , InvalidOp
+                )
     , test "invalid first start char" <|
         \_ ->
-            Compiler.compile "_ "
-                |> Expect.equal
-                    (Err { col = 1, problem = InvalidOp })
+            expectErrorOnCompile
+                ( "_ "
+                , "^"
+                , InvalidOp
+                )
     , test "unknown op name after label" <|
         \_ ->
             expectErrorOnCompile
