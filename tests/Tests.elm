@@ -58,9 +58,11 @@ invalidStatement =
                     (Err { col = 6, problem = InvalidOp })
     , test "illegal op char after label" <|
         \_ ->
-            Compiler.compile "lab: 1"
-                |> Expect.equal
-                    (Err { col = 6, problem = InvalidOp })
+            expectErrorOnCompile
+                ( "lab: 1"
+                , "-----^"
+                , InvalidOp
+                )
     , test "too many args" <|
         \_ ->
             expectErrorOnCompile
