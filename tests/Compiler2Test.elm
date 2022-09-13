@@ -23,9 +23,44 @@ type alias Error =
     }
 
 
+dropSpaces =
+    List.Extra.dropWhile (U.second >> U.eq ' ')
+
+
+splitNonSpaces =
+    List.Extra.splitWhen (U.second >> U.eq ' ')
+        >> Maybe.withDefault ( [], [] )
+
+
+splitAtWord : List ( a, Char ) -> ( List ( a, Char ), List ( a, Char ) )
+splitAtWord =
+    dropSpaces
+        >> splitNonSpaces
+
+
 compile : String -> Result Error ()
 compile s =
     let
+        chars =
+            s
+                |> String.toList
+                |> List.indexedMap Tuple.pair
+
+        ( firstTokenChars, chars2 ) =
+            splitAtWord chars
+
+        firstToken : Maybe ( Int, String )
+        firstToken =
+            case firstTokenChars of
+                ( i, c ) :: rest ->
+                    Just ( i, c :: List.map U.second rest |> String.fromList )
+
+                _ ->
+                    Nothing
+
+        ( secondToken, chars3 ) =
+            splitAtWord chars2
+
         col =
             s
                 |> String.toList
