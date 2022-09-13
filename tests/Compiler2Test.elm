@@ -31,17 +31,17 @@ suite =
     test "invalid op" <|
         \_ ->
             expectErrorOnCompile
-                ( "foo"
-                , 0
+                ( " foo"
+                , "-^"
                 , InvalidOp
                 )
 
 
-expectErrorOnCompile : ( String, Int, Prob ) -> Expect.Expectation
+expectErrorOnCompile : ( String, String, Prob ) -> Expect.Expectation
 expectErrorOnCompile ( src, marker, prob ) =
     case compile src of
         Err err ->
-            ( src, err.col, err.msg )
+            ( src, String.repeat (err.col - 1) "-" ++ "^", err.msg )
                 |> Expect.equal ( src, marker, prob )
 
         Ok _ ->
