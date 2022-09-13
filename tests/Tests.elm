@@ -80,7 +80,7 @@ invalidStatement =
 
 expectErrorOnCompile : ( String, String, Problem ) -> Expect.Expectation
 expectErrorOnCompile ( src, marker, prob ) =
-    case compile src of
+    case compileStmt src of
         Err err ->
             ( src, String.repeat (err.col - 1) "-" ++ "^", err.problem )
                 |> Expect.equal ( src, marker, prob )
@@ -93,7 +93,7 @@ shouldCompileTo : String -> String -> Test
 shouldCompileTo expected actual =
     test actual <|
         \_ ->
-            Compiler.compile actual
+            Compiler.compileStmt actual
                 |> Result.map Compiler.stmtToString
                 |> Result.mapError Debug.toString
                 |> Expect.equal (Ok expected)

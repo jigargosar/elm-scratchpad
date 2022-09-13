@@ -30,8 +30,8 @@ type alias DeadEnd =
     Parser.DeadEnd Context ProblemPrivate
 
 
-compile : String -> Result Error Stmt
-compile string =
+compileStmt : String -> Result Error Stmt
+compileStmt string =
     run stmtParser (string ++ "\n")
         |> Result.mapError deadEndsToError
 
