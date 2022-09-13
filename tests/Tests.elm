@@ -53,9 +53,11 @@ invalidStatement =
                     (Err { col = 1, problem = InvalidOp })
     , test "unknown op name after label" <|
         \_ ->
-            Compiler.compile "lab: flop"
-                |> Expect.equal
-                    (Err { col = 6, problem = InvalidOp })
+            expectErrorOnCompile
+                ( "lab: flop"
+                , "-----^"
+                , InvalidOp
+                )
     , test "illegal op char after label" <|
         \_ ->
             expectErrorOnCompile
