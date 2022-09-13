@@ -10,8 +10,8 @@ suite : Test
 suite =
     describe "Compiler"
         [ describe "should compile" validStatement
-        , describe "should fail on" invalidStatement
         , describe "mov instructions" movInstructions
+        , describe "should fail on" invalidStatement
         ]
 
 
