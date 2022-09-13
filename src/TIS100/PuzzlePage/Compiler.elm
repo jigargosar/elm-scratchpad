@@ -24,6 +24,7 @@ type Error
     | InvalidSrc
     | InvalidDst
     | TooManyArgs
+    | InternalError
 
 
 type alias DeadEnd =
@@ -34,24 +35,29 @@ type alias DeadEnds =
     List DeadEnd
 
 
-compile : String -> Result (List ErrorRec) Stmt
+compile : String -> Result ErrorRec Stmt
 compile string =
     run stmtParser (string ++ "\n")
-        |> Result.mapError (List.filterMap deadEndToError)
+        |> Result.mapError deadEndsToError
 
 
 type alias ErrorRec =
     { col : Int, problem : Error }
 
 
-deadEndToError : DeadEnd -> Maybe ErrorRec
-deadEndToError d =
-    case d.problem of
-        Expecting _ ->
-            Nothing
+deadEndsToError : List DeadEnd -> ErrorRec
+deadEndsToError deadEnds =
+    case deadEnds of
+        d :: [] ->
+            case d.problem of
+                Error error ->
+                    ErrorRec d.col error
 
-        Error error ->
-            Just <| ErrorRec d.col error
+                Expecting _ ->
+                    ErrorRec d.col InternalError
+
+        _ ->
+            ErrorRec 0 InternalError
 
 
 type Stmt

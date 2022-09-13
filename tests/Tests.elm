@@ -46,50 +46,45 @@ invalidStatement =
             Compiler.compile "lab "
                 |> Expect.equal
                     (Err
-                        [ { col = 1
-                          , problem = InvalidOp
-                          }
-                        ]
+                        { col = 1
+                        , problem = InvalidOp
+                        }
                     )
     , test "invalid first start char" <|
         \_ ->
             Compiler.compile "_ "
                 |> Expect.equal
                     (Err
-                        [ { col = 1
-                          , problem = InvalidOp
-                          }
-                        ]
+                        { col = 1
+                        , problem = InvalidOp
+                        }
                     )
     , test "unknown op name after label" <|
         \_ ->
             Compiler.compile "lab: flop"
                 |> Expect.equal
                     (Err
-                        [ { col = 6
-                          , problem = InvalidOp
-                          }
-                        ]
+                        { col = 6
+                        , problem = InvalidOp
+                        }
                     )
     , test "illegal op char after label" <|
         \_ ->
             Compiler.compile "lab: 1"
                 |> Expect.equal
                     (Err
-                        [ { col = 6
-                          , problem = InvalidOp
-                          }
-                        ]
+                        { col = 6
+                        , problem = InvalidOp
+                        }
                     )
     , test "too many args" <|
         \_ ->
             Compiler.compile "nop left"
                 |> Expect.equal
                     (Err
-                        [ { col = 5
-                          , problem = TooManyArgs
-                          }
-                        ]
+                        { col = 5
+                        , problem = TooManyArgs
+                        }
                     )
     ]
 
