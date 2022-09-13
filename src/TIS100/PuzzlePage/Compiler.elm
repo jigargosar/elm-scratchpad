@@ -7,14 +7,14 @@ import Utils exposing (Dir4(..))
 
 
 type alias Parser x =
-    Parser.Parser Context ProblemInternal x
+    Parser.Parser Context ProblemPrivate x
 
 
 type alias Context =
     ()
 
 
-type ProblemInternal
+type ProblemPrivate
     = Expecting String
     | Problem Problem
 
@@ -28,7 +28,7 @@ type Problem
 
 
 type alias DeadEnd =
-    Parser.DeadEnd Context ProblemInternal
+    Parser.DeadEnd Context ProblemPrivate
 
 
 compile : String -> Result Error Stmt
@@ -162,7 +162,7 @@ prefixLabel =
         |. spaces
 
 
-stmtEnd : ProblemInternal -> Parser ()
+stmtEnd : ProblemPrivate -> Parser ()
 stmtEnd problem =
     succeed ()
         |. spaces
@@ -334,7 +334,7 @@ keyword str =
 
 
 type alias Token =
-    Parser.Token ProblemInternal
+    Parser.Token ProblemPrivate
 
 
 toToken : String -> Token
