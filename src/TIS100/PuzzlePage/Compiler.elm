@@ -24,7 +24,7 @@ type Problem
     | InvalidSrc
     | InvalidDst
     | TooManyArgs
-    | InternalError
+    | InternalError (List DeadEnd)
 
 
 type alias DeadEnd =
@@ -50,10 +50,10 @@ deadEndsToError deadEnds =
                     Error d.col error
 
                 Expecting _ ->
-                    Error d.col InternalError
+                    Error d.col (InternalError deadEnds)
 
         _ ->
-            Error 0 InternalError
+            Error 0 (InternalError deadEnds)
 
 
 type Stmt
