@@ -1,7 +1,7 @@
 module Compiler2Test exposing (..)
 
 import Expect
-import Test exposing (Test, test)
+import Test exposing (Test, describe, test)
 
 
 
@@ -10,7 +10,18 @@ import Test exposing (Test, test)
 -}
 
 
+type Error
+    = InvalidOp String
+
+
+compile : String -> Result Error ()
+compile s =
+    Err (InvalidOp s)
+
+
 suite : Test
 suite =
-    test "foo" <|
-        \_ -> Expect.equal True True
+    test "invalid op" <|
+        \_ ->
+            compile "foo"
+                |> Expect.equal (Err (InvalidOp "foo"))
