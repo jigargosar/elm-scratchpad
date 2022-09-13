@@ -63,10 +63,23 @@ invalidStatement =
                     (Err { col = 6, problem = InvalidOp })
     , test "too many args" <|
         \_ ->
-            Compiler.compile "nop left"
-                |> Expect.equal
-                    (Err { col = 5, problem = TooManyArgs })
+            expectErrorOnCompile
+                ( "nop left"
+                , "----^"
+                , TooManyArgs
+                )
     ]
+
+
+expectErrorOnCompile : ( String, String, Error ) -> Expect.Expectation
+expectErrorOnCompile ( src, marker, prob ) =
+    case compile src of
+        Err err ->
+            ( src, String.repeat (err.col - 1) "-" ++ "^", err.problem )
+                |> Expect.equal ( src, marker, prob )
+
+        Ok _ ->
+            Debug.todo "todo"
 
 
 shouldCompileTo : String -> String -> Test
