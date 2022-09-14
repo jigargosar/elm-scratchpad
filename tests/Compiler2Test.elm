@@ -60,8 +60,7 @@ tokenParser =
     succeed identity
         |. spaces
         |= oneOf
-            [ --getChompedString (chompWhile (\c -> c /= ' ' && c /= ':'))
-              variable
+            [ variable
                 { start = \c -> c /= ' ' && c /= ':'
                 , inner = \c -> c /= ' ' && c /= ':'
                 , reserved = Set.empty
