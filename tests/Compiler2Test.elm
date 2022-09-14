@@ -80,7 +80,7 @@ wordParser =
 testLexer : Test
 testLexer =
     describe "lexer"
-        [ test "tokens" <|
+        [ test "single word" <|
             \_ ->
                 " foo "
                     |> lex
