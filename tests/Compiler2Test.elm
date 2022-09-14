@@ -152,7 +152,10 @@ wordParser =
 testCompilerSuccess : Test
 testCompilerSuccess =
     describe "compiler ok"
-        ([ "nop" ]
+        ([ "nop"
+         , "lab : nop"
+         , "nop : nop"
+         ]
             |> List.map
                 (\s ->
                     test s (\_ -> Expect.ok (compile s))
