@@ -85,6 +85,11 @@ testLexer =
                 " foo "
                     |> lex
                     |> Expect.equal (Ok [ Word "foo" ])
+        , test "label sep" <|
+            \_ ->
+                " : "
+                    |> lex
+                    |> Expect.equal (Ok [ LabelSep ])
         ]
 
 
