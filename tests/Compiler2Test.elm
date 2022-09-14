@@ -36,7 +36,6 @@ lex src =
 type Token
     = Word String
     | LabelSep
-    | Comment
 
 
 tokenListParser : Parser (List Token)
@@ -46,31 +45,26 @@ tokenListParser =
 
 tokenListParserHelp : List Token -> Parser (Step (List Token) (List Token))
 tokenListParserHelp rs =
-    oneOf
-        [ succeed (\t -> Loop (t :: rs))
-            |= tokenParser
-        , succeed ()
-            --|. end
-            |> map (\_ -> Done <| List.reverse rs)
-        ]
-
-
-tokenParser : Parser Token
-tokenParser =
     succeed identity
         |. spaces
         |= oneOf
-            [ variable
-                { start = \c -> c /= ' ' && c /= ':'
-                , inner = \c -> c /= ' ' && c /= ':'
-                , reserved = Set.empty
-                }
-                |> map Word
-            , chompIf (\c -> c == ':')
-                |> map (\_ -> LabelSep)
-            , succeed Comment |. lineComment "#"
+            [ succeed (Loop rs)
+                |. lineComment "#"
+            , succeed (\t -> Loop (t :: rs))
+                |= oneOf
+                    [ variable
+                        { start = \c -> c /= ' ' && c /= ':'
+                        , inner = \c -> c /= ' ' && c /= ':'
+                        , reserved = Set.empty
+                        }
+                        |> map Word
+                    , chompIf (\c -> c == ':')
+                        |> map (\_ -> LabelSep)
+                    ]
+            , succeed ()
+                |. end
+                |> map (\_ -> Done <| List.reverse rs)
             ]
-        |. spaces
 
 
 testLexer : Test
