@@ -3,6 +3,7 @@ module Compiler2Test exposing (..)
 import Expect
 import List.Extra
 import Parser exposing (..)
+import Set
 import Test exposing (Test, describe, skip, test)
 import Utils as U
 
@@ -28,9 +29,8 @@ import Utils as U
 --
 
 
-lex : String -> Result (List DeadEnd) Token
 lex src =
-    Parser.run tokenParser src
+    Parser.run tokenListParser src
 
 
 type Token
@@ -39,12 +39,33 @@ type Token
     | Comment
 
 
+tokenListParser : Parser (List Token)
+tokenListParser =
+    loop [] tokenListParserHelp
+
+
+tokenListParserHelp : List Token -> Parser (Step (List Token) (List Token))
+tokenListParserHelp rs =
+    oneOf
+        [ succeed (\t -> Loop (t :: rs))
+            |= tokenParser
+        , succeed ()
+            --|. end
+            |> map (\_ -> Done <| List.reverse rs)
+        ]
+
+
 tokenParser : Parser Token
 tokenParser =
     succeed identity
         |. spaces
         |= oneOf
-            [ getChompedString (chompWhile (\c -> c /= ' ' && c /= ':'))
+            [ --getChompedString (chompWhile (\c -> c /= ' ' && c /= ':'))
+              variable
+                { start = \c -> c /= ' ' && c /= ':'
+                , inner = \c -> c /= ' ' && c /= ':'
+                , reserved = Set.empty
+                }
                 |> map Word
             , chompIf (\c -> c == ':')
                 |> map (\_ -> LabelSep)
@@ -59,7 +80,7 @@ testLexer =
         \_ ->
             " foo "
                 |> lex
-                |> Expect.equal (Ok (Word "foo"))
+                |> Expect.equal (Ok [ Word "foo" ])
 
 
 
