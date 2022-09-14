@@ -41,8 +41,15 @@ parse tokens =
         [] ->
             Ok ()
 
-        only :: _ ->
-            Err (Error only.col (InvalidOp (tokenToString only.token)))
+        f :: s :: t :: _ ->
+            if s.token == LabelSep then
+                Err (Error t.col (InvalidOp (tokenToString t.token)))
+
+            else
+                Err (Error f.col (InvalidOp (tokenToString f.token)))
+
+        f :: _ ->
+            Err (Error f.col (InvalidOp (tokenToString f.token)))
 
 
 lex : String -> Result (List DeadEnd) (List Located)
@@ -128,7 +135,7 @@ testCompilerErrors =
             \_ ->
                 "label: foo "
                     |> compile
-                    |> Expect.equal (Err <| Error 2 (InvalidOp "foo"))
+                    |> Expect.equal (Err <| Error 8 (InvalidOp "foo"))
         ]
 
 
