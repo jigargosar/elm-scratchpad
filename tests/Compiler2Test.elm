@@ -79,11 +79,13 @@ wordParser =
 
 testLexer : Test
 testLexer =
-    test "tokens" <|
-        \_ ->
-            " foo "
-                |> lex
-                |> Expect.equal (Ok [ Word "foo" ])
+    describe "lexer"
+        [ test "tokens" <|
+            \_ ->
+                " foo "
+                    |> lex
+                    |> Expect.equal (Ok [ Word "foo" ])
+        ]
 
 
 
