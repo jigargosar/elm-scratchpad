@@ -33,7 +33,7 @@ lex src =
     Parser.run tokenListParser src
 
 
-type alias LocatedToken =
+type alias Located =
     { col : Int
     , token : Token
     }
@@ -62,9 +62,9 @@ tokenListParserHelp rs =
             ]
 
 
-locatedTokenParser : Parser LocatedToken
+locatedTokenParser : Parser Located
 locatedTokenParser =
-    succeed LocatedToken
+    succeed Located
         |= getCol
         |= tokenParser
 
@@ -95,27 +95,27 @@ testLexer =
             \_ ->
                 " foo "
                     |> lex
-                    |> Expect.equal (Ok [ LocatedToken 2 (Word "foo") ])
+                    |> Expect.equal (Ok [ Located 2 (Word "foo") ])
         , test "single word with symbols" <|
             \_ ->
                 " !@# "
                     |> lex
-                    |> Expect.equal (Ok [ LocatedToken 2 (Word "!@#") ])
+                    |> Expect.equal (Ok [ Located 2 (Word "!@#") ])
         , test "two word" <|
             \_ ->
                 " foo bar"
                     |> lex
                     |> Expect.equal
                         (Ok
-                            [ LocatedToken 2 <| Word "foo"
-                            , LocatedToken 6 <| Word "bar"
+                            [ Located 2 <| Word "foo"
+                            , Located 6 <| Word "bar"
                             ]
                         )
         , test "comment" <|
             \_ ->
                 " foo # bar"
                     |> lex
-                    |> Expect.equal (Ok [ LocatedToken 2 (Word "foo") ])
+                    |> Expect.equal (Ok [ Located 2 (Word "foo") ])
         , test "no token" <|
             \_ ->
                 "  "
@@ -125,7 +125,7 @@ testLexer =
             \_ ->
                 " : "
                     |> lex
-                    |> Expect.equal (Ok [ LocatedToken 2 LabelSep ])
+                    |> Expect.equal (Ok [ Located 2 LabelSep ])
         ]
 
 
