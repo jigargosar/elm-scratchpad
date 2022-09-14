@@ -85,6 +85,16 @@ testLexer =
                 " foo "
                     |> lex
                     |> Expect.equal (Ok [ Word "foo" ])
+        , test "two word" <|
+            \_ ->
+                " foo bar"
+                    |> lex
+                    |> Expect.equal (Ok [ Word "foo", Word "bar" ])
+        , test "comment" <|
+            \_ ->
+                " foo # bar"
+                    |> lex
+                    |> Expect.equal (Ok [ Word "foo" ])
         , test "no token" <|
             \_ ->
                 "  "
