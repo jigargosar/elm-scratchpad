@@ -149,8 +149,8 @@ wordParser =
         }
 
 
-testCompilerSuccess : Test
-testCompilerSuccess =
+testValidStmts : Test
+testValidStmts =
     describe "compiler ok"
         ([ "nop"
          , "lab : nop"
