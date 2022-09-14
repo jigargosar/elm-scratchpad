@@ -116,6 +116,17 @@ wordParser =
         }
 
 
+testCompilerErrors : Test
+testCompilerErrors =
+    describe "compiler"
+        [ test "single word" <|
+            \_ ->
+                " foo "
+                    |> compile
+                    |> Expect.equal (Err <| Error 2 (InvalidOp "foo"))
+        ]
+
+
 testLexer : Test
 testLexer =
     describe "lexer"
