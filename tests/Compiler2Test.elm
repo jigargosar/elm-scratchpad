@@ -33,17 +33,21 @@ lex src =
     Parser.run tokenListParser src
 
 
+type alias LocatedToken =
+    { col : Int
+    , token : Token
+    }
+
+
 type Token
     = Word String
     | LabelSep
 
 
-tokenListParser : Parser (List Token)
 tokenListParser =
     loop [] tokenListParserHelp
 
 
-tokenListParserHelp : List Token -> Parser (Step (List Token) (List Token))
 tokenListParserHelp rs =
     succeed identity
         |. spaces
@@ -51,11 +55,18 @@ tokenListParserHelp rs =
             [ succeed (Loop rs)
                 |. lineComment "#"
             , succeed (\t -> Loop (t :: rs))
-                |= tokenParser
+                |= locatedTokenParser
             , succeed ()
                 |. end
                 |> map (\_ -> Done <| List.reverse rs)
             ]
+
+
+locatedTokenParser : Parser LocatedToken
+locatedTokenParser =
+    succeed LocatedToken
+        |= getCol
+        |= tokenParser
 
 
 tokenParser : Parser Token
@@ -84,17 +95,22 @@ testLexer =
             \_ ->
                 " foo "
                     |> lex
-                    |> Expect.equal (Ok [ Word "foo" ])
+                    |> Expect.equal (Ok [ LocatedToken 2 (Word "foo") ])
         , test "two word" <|
             \_ ->
                 " foo bar"
                     |> lex
-                    |> Expect.equal (Ok [ Word "foo", Word "bar" ])
+                    |> Expect.equal
+                        (Ok
+                            [ LocatedToken 2 <| Word "foo"
+                            , LocatedToken 6 <| Word "bar"
+                            ]
+                        )
         , test "comment" <|
             \_ ->
                 " foo # bar"
                     |> lex
-                    |> Expect.equal (Ok [ Word "foo" ])
+                    |> Expect.equal (Ok [ LocatedToken 2 (Word "foo") ])
         , test "no token" <|
             \_ ->
                 "  "
@@ -104,7 +120,7 @@ testLexer =
             \_ ->
                 " : "
                     |> lex
-                    |> Expect.equal (Ok [ LabelSep ])
+                    |> Expect.equal (Ok [ LocatedToken 2 LabelSep ])
         ]
 
 
