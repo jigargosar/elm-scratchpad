@@ -151,7 +151,7 @@ wordParser =
 
 testValidStmts : Test
 testValidStmts =
-    describe "compiler ok"
+    describe "valid stmts"
         ([ "nop"
          , "lab : nop"
          , "nop : nop"
@@ -163,9 +163,9 @@ testValidStmts =
         )
 
 
-testCompilerErrors : Test
-testCompilerErrors =
-    describe "compiler err"
+testInvalidStmts : Test
+testInvalidStmts =
+    describe "invalid stmts"
         [ test "invalid op" <|
             \_ ->
                 " foo "
