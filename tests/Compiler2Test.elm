@@ -12,23 +12,35 @@ import Utils as U
 {-
    npx elm-test-rs --watch tests/Compiler2Test.elm
 -}
---type ErrTyp
---    = InvalidOp String
---
---
---type alias Error =
---    { typ : ErrTyp
---    , col : Int
---    }
---
---
---compile : String -> Result Error ()
---compile src =
---    --Parser.run tokenise src
---    Debug.todo "todo"
---
 
 
+type ErrTyp
+    = InvalidOp String
+    | InternalError
+
+
+type alias Error =
+    { col : Int
+    , typ : ErrTyp
+    }
+
+
+compile : String -> Result Error ()
+compile src =
+    case lex src of
+        Ok value ->
+            parse value
+
+        Err _ ->
+            Err (Error 0 InternalError)
+
+
+parse : List Located -> Result Error ()
+parse tokens =
+    Debug.todo "todo"
+
+
+lex : String -> Result (List DeadEnd) (List Located)
 lex src =
     Parser.run tokenListParser src
 
@@ -44,6 +56,7 @@ type Token
     | LabelSep
 
 
+tokenListParser : Parser (List Located)
 tokenListParser =
     loop [] tokenListParserHelp
 
