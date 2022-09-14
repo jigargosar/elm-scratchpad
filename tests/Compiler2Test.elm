@@ -124,6 +124,11 @@ testCompilerErrors =
                 " foo "
                     |> compile
                     |> Expect.equal (Err <| Error 2 (InvalidOp "foo"))
+        , test "invalid op after label" <|
+            \_ ->
+                "label: foo "
+                    |> compile
+                    |> Expect.equal (Err <| Error 2 (InvalidOp "foo"))
         ]
 
 
