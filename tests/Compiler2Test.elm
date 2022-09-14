@@ -56,14 +56,14 @@ parseInst tokens =
             Ok ()
 
         f :: [] ->
-            parseNoArgInst f
+            parseZeroArgInst f
 
         f :: _ ->
             invalidOp f
 
 
-parseNoArgInst : Located -> Result Error ()
-parseNoArgInst l =
+parseZeroArgInst : Located -> Result Error ()
+parseZeroArgInst l =
     case l.token of
         Word "nop" ->
             Ok ()
