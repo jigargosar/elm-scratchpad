@@ -37,7 +37,12 @@ compile src =
 
 parse : List Located -> Result Error ()
 parse tokens =
-    Debug.todo "todo"
+    case tokens of
+        [] ->
+            Ok ()
+
+        only :: _ ->
+            Err (Error only.col (InvalidOp (tokenToString only.token)))
 
 
 lex : String -> Result (List DeadEnd) (List Located)
@@ -54,6 +59,16 @@ type alias Located =
 type Token
     = Word String
     | LabelSep
+
+
+tokenToString : Token -> String
+tokenToString token =
+    case token of
+        Word string ->
+            string
+
+        LabelSep ->
+            ":"
 
 
 tokenListParser : Parser (List Located)
