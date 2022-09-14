@@ -36,6 +36,7 @@ lex src =
 type Token
     = Word String
     | LabelSep
+    | Comment
 
 
 tokenParser : Parser Token
@@ -47,6 +48,7 @@ tokenParser =
                 |> map Word
             , chompIf (\c -> c == ':')
                 |> map (\_ -> LabelSep)
+            , succeed Comment |. lineComment "#"
             ]
         |. spaces
 
