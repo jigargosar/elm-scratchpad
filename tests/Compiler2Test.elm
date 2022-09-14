@@ -38,18 +38,43 @@ compile src =
 parse : List Located -> Result Error ()
 parse tokens =
     case tokens of
+        _ :: s :: rest ->
+            if s.token == LabelSep then
+                parseInst rest
+
+            else
+                parseInst tokens
+
+        _ ->
+            parseInst tokens
+
+
+parseInst : List Located -> Result Error ()
+parseInst tokens =
+    case tokens of
         [] ->
             Ok ()
 
-        f :: s :: t :: _ ->
-            if s.token == LabelSep then
-                Err (Error t.col (InvalidOp (tokenToString t.token)))
-
-            else
-                Err (Error f.col (InvalidOp (tokenToString f.token)))
+        f :: [] ->
+            parseNoArgInst f
 
         f :: _ ->
-            Err (Error f.col (InvalidOp (tokenToString f.token)))
+            invalidOp f
+
+
+parseNoArgInst : Located -> Result Error ()
+parseNoArgInst l =
+    case l.token of
+        Word "nop" ->
+            Ok ()
+
+        _ ->
+            invalidOp l
+
+
+invalidOp : Located -> Result Error value
+invalidOp l =
+    Err (Error l.col (InvalidOp (tokenToString l.token)))
 
 
 lex : String -> Result (List DeadEnd) (List Located)
@@ -83,6 +108,7 @@ tokenListParser =
     loop [] tokenListParserHelp
 
 
+tokenListParserHelp : List Located -> Parser (Step (List Located) (List Located))
 tokenListParserHelp rs =
     succeed identity
         |. spaces
