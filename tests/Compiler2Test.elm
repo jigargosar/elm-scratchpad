@@ -51,20 +51,30 @@ tokenListParserHelp rs =
             [ succeed (Loop rs)
                 |. lineComment "#"
             , succeed (\t -> Loop (t :: rs))
-                |= oneOf
-                    [ variable
-                        { start = \c -> c /= ' ' && c /= ':'
-                        , inner = \c -> c /= ' ' && c /= ':'
-                        , reserved = Set.empty
-                        }
-                        |> map Word
-                    , chompIf (\c -> c == ':')
-                        |> map (\_ -> LabelSep)
-                    ]
+                |= tokenParser
             , succeed ()
                 |. end
                 |> map (\_ -> Done <| List.reverse rs)
             ]
+
+
+tokenParser : Parser Token
+tokenParser =
+    oneOf
+        [ succeed Word
+            |= wordParser
+        , succeed LabelSep
+            |. symbol ":"
+        ]
+
+
+wordParser : Parser String
+wordParser =
+    variable
+        { start = \c -> c /= ' ' && c /= ':'
+        , inner = \c -> c /= ' ' && c /= ':'
+        , reserved = Set.empty
+        }
 
 
 testLexer : Test
