@@ -123,9 +123,20 @@ wordParser =
         }
 
 
+testCompilerSuccess : Test
+testCompilerSuccess =
+    describe "compiler ok"
+        ([ "nop" ]
+            |> List.map
+                (\s ->
+                    test s (\_ -> Expect.ok (compile s))
+                )
+        )
+
+
 testCompilerErrors : Test
 testCompilerErrors =
-    describe "compiler"
+    describe "compiler err"
         [ test "invalid op" <|
             \_ ->
                 " foo "
