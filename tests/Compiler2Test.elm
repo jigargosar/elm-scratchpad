@@ -116,28 +116,23 @@ tokenListParserHelp rs =
             [ succeed (Loop rs)
                 |. lineComment "#"
             , succeed (\t -> Loop (t :: rs))
-                |= locatedTokenParser
+                |= tokenParser
             , succeed ()
                 |. end
                 |> map (\_ -> Done <| List.reverse rs)
             ]
 
 
-locatedTokenParser : Parser Located
-locatedTokenParser =
+tokenParser : Parser Located
+tokenParser =
     succeed Located
         |= getCol
-        |= tokenParser
-
-
-tokenParser : Parser Token
-tokenParser =
-    oneOf
-        [ succeed Word
-            |= wordParser
-        , succeed LabelSep
-            |. symbol ":"
-        ]
+        |= oneOf
+            [ succeed Word
+                |= wordParser
+            , succeed LabelSep
+                |. symbol ":"
+            ]
 
 
 wordParser : Parser String
