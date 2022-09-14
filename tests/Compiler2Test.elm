@@ -119,7 +119,7 @@ wordParser =
 testCompilerErrors : Test
 testCompilerErrors =
     describe "compiler"
-        [ test "single word" <|
+        [ test "invalid op" <|
             \_ ->
                 " foo "
                     |> compile
