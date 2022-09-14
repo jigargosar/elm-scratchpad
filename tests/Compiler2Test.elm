@@ -2,7 +2,8 @@ module Compiler2Test exposing (..)
 
 import Expect
 import List.Extra
-import Test exposing (Test, describe, test)
+import Parser exposing (..)
+import Test exposing (Test, describe, skip, test)
 import Utils as U
 
 
@@ -10,87 +11,75 @@ import Utils as U
 {-
    npx elm-test-rs --watch tests/Compiler2Test.elm
 -}
+--type ErrTyp
+--    = InvalidOp String
+--
+--
+--type alias Error =
+--    { typ : ErrTyp
+--    , col : Int
+--    }
+--
+--
+--compile : String -> Result Error ()
+--compile src =
+--    --Parser.run tokenise src
+--    Debug.todo "todo"
+--
 
 
-type Prob
-    = InvalidOp
+lex : String -> Result (List DeadEnd) Token
+lex src =
+    Parser.run tokenParser src
 
 
-type alias Error =
-    { msg : Prob
-    , arg : String
-    , col : Int
-    }
+type Token
+    = Word String
+    | LabelSep
 
 
-dropSpaces =
-    List.Extra.dropWhile (U.second >> U.eq ' ')
+tokenParser : Parser Token
+tokenParser =
+    succeed identity
+        |. spaces
+        |= oneOf
+            [ getChompedString (chompWhile (\c -> c /= ' ' && c /= ':'))
+                |> map Word
+            , chompIf (\c -> c == ':')
+                |> map (\_ -> LabelSep)
+            ]
+        |. spaces
 
 
-splitNonSpaces =
-    List.Extra.splitWhen (U.second >> U.eq ' ')
-        >> Maybe.withDefault ( [], [] )
-
-
-splitAtWord : List ( a, Char ) -> ( List ( a, Char ), List ( a, Char ) )
-splitAtWord =
-    dropSpaces
-        >> splitNonSpaces
-
-
-compile : String -> Result Error ()
-compile s =
-    let
-        chars =
-            s
-                |> String.toList
-                |> List.indexedMap Tuple.pair
-
-        ( firstTokenChars, chars2 ) =
-            splitAtWord chars
-
-        firstToken : Maybe ( Int, String )
-        firstToken =
-            case firstTokenChars of
-                ( i, c ) :: rest ->
-                    Just ( i, c :: List.map U.second rest |> String.fromList )
-
-                _ ->
-                    Nothing
-
-        ( secondToken, chars3 ) =
-            splitAtWord chars2
-
-        col =
-            s
-                |> String.toList
-                |> List.indexedMap Tuple.pair
-                |> List.Extra.dropWhile (U.second >> U.eq ' ')
-                |> List.head
-                |> Maybe.map U.first
-                |> Maybe.withDefault 0
-                |> Debug.log "Debug: "
-    in
-    Err (Error InvalidOp s col)
-
-
-suite : Test
-suite =
-    test "invalid op" <|
+testLexer : Test
+testLexer =
+    test "tokens" <|
         \_ ->
-            expectErrorOnCompile
-                ( "  foo"
-                , "--^"
-                , InvalidOp
-                )
+            " foo "
+                |> lex
+                |> Expect.equal (Ok (Word "foo"))
 
 
-expectErrorOnCompile : ( String, String, Prob ) -> Expect.Expectation
-expectErrorOnCompile ( src, marker, prob ) =
-    case compile src of
-        Err err ->
-            ( src, String.repeat err.col "-" ++ "^", err.msg )
-                |> Expect.equal ( src, marker, prob )
 
-        Ok _ ->
-            Debug.todo "todo"
+--suite : Test
+--suite =
+--    describe "errors"
+--        [ test "invalid op" <|
+--            \_ ->
+--                expectErrorOnCompile
+--                    ( "  foo"
+--                    , "--^"
+--                    , InvalidOp "foo"
+--                    )
+--        ]
+--
+--
+--expectErrorOnCompile : ( String, String, ErrTyp ) -> Expect.Expectation
+--expectErrorOnCompile ( src, marker, prob ) =
+--    case compile src of
+--        Err err ->
+--            ( src, String.repeat err.col "-" ++ "^", err.typ )
+--                |> Expect.equal ( src, marker, prob )
+--
+--        Ok _ ->
+--            Debug.todo "todo"
