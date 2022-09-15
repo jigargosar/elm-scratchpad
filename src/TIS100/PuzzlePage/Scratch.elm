@@ -51,7 +51,7 @@ errorText =
                     |> List.map
                         (\w ->
                             span
-                                [ textDecoration "underline red"
+                                [ textDecoration "underline 1px solid red"
                                 ]
                                 [ text w ]
                         )
