@@ -972,6 +972,10 @@ overflow =
     style "overflow"
 
 
+overflowClip =
+    overflow "clip"
+
+
 overflowHidden =
     style "overflow" "hidden"
 

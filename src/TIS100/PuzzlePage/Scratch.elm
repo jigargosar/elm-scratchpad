@@ -31,7 +31,7 @@ main =
                     , pa "0.5ch"
                     , w100
                     , h100
-                    , overflow "clip"
+                    , overflowClip
                     , noPointerEvents
                     ]
                     errorText
@@ -79,7 +79,7 @@ viewEditor =
         , sOutline "1px solid white"
         , pa "0.5ch"
         , whiteSpace "pre"
-        , overflow "clip"
+        , overflowClip
         , w100
         , style "scroll-left" "0"
         ]
