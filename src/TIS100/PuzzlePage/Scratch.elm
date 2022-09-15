@@ -81,6 +81,7 @@ viewEditor =
         , whiteSpace "pre"
         , overflowClip
         , w100
+        , h100
         , style "scroll-left" "0"
         ]
         [ text editorText ]
