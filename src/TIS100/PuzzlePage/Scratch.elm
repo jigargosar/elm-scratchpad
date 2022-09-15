@@ -1,6 +1,6 @@
 module TIS100.PuzzlePage.Scratch exposing (..)
 
-import Html exposing (input, textarea)
+import Html exposing (input, pre, textarea)
 import TIS100.UI as UI
 import Utils exposing (..)
 
@@ -25,16 +25,17 @@ main =
                 , sHeight UI.nodeSize
                 , positionRelative
                 ]
-                [ viewEditor
-                , div
+                [ pre
                     [ positionAbsolute
                     , pa "0.5ch"
                     ]
-                    [ span
+                    [ text "  "
+                    , span
                         [ textDecoration "underline wavy red"
                         ]
                         [ text "editor" ]
                     ]
+                , viewEditor
                 ]
             ]
         ]
@@ -62,4 +63,4 @@ viewEditor =
         , sOutline "1px solid white"
         , pa "0.5ch"
         ]
-        [ text "editor" ]
+        [ text "  editor" ]
