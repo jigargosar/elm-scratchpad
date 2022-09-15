@@ -23,8 +23,15 @@ main =
                 [ displayGrid
                 , sWidth "18ch"
                 , sHeight UI.nodeSize
+                , positionRelative
                 ]
-                [ viewEditor ]
+                [ viewEditor
+                , div
+                    [ positionAbsolute
+                    , pa "0.5ch"
+                    ]
+                    [ text "editor" ]
+                ]
             ]
         ]
 
