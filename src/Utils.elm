@@ -853,6 +853,14 @@ styleNode string =
     Html.node "style" [] [ Html.text string ]
 
 
+textDecoration =
+    style "text-decoration"
+
+
+whiteSpace =
+    style "white-space"
+
+
 ttu =
     textTransform "uppercase"
 

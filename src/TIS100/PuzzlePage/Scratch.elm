@@ -63,10 +63,6 @@ error underlined
 """
 
 
-textDecoration =
-    style "text-decoration"
-
-
 viewEditor =
     Html.textarea
         [ -- reset
@@ -89,7 +85,3 @@ viewEditor =
         , style "scroll-left" "0"
         ]
         [ text editorText ]
-
-
-whiteSpace =
-    style "white-space"
