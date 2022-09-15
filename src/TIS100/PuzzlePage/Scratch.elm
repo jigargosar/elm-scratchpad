@@ -1,6 +1,7 @@
 module TIS100.PuzzlePage.Scratch exposing (..)
 
 import Html exposing (input, pre, textarea)
+import Html.Attributes
 import List.Extra
 import TIS100.UI as UI
 import Utils exposing (..)
@@ -33,6 +34,7 @@ main =
                     , h100
                     , overflowClip
                     , noPointerEvents
+                    , fg transparent
                     ]
                     errorText
                 , viewEditor
@@ -45,12 +47,18 @@ errorText =
     String.lines editorText
         |> List.map
             (\l ->
-                span
-                    [ textDecoration "underline wavy red"
-                    ]
-                    [ text l ]
+                String.split " " l
+                    |> List.map
+                        (\w ->
+                            span
+                                [ textDecoration "underline red"
+                                ]
+                                [ text w ]
+                        )
+                    |> List.intersperse (text " ")
             )
-        |> List.intersperse (text "\n")
+        |> List.intersperse [ text "\n" ]
+        |> List.concat
 
 
 editorText =
@@ -77,6 +85,7 @@ viewEditor =
 
         --, onInput onInputMsg
         -- actual
+        , Html.Attributes.spellcheck False
         , sOutline "1px solid white"
         , pa "0.5ch"
         , whiteSpace "pre"
