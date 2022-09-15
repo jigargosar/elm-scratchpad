@@ -960,6 +960,10 @@ overflowVisible =
     style "overflow" "visible"
 
 
+overflow =
+    style "overflow"
+
+
 overflowHidden =
     style "overflow" "hidden"
 
