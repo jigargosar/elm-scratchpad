@@ -29,11 +29,9 @@ main =
                 [ pre
                     [ positionAbsolute
                     , pa "0.5ch"
-                    , overflow "hidden"
                     , w100
                     , h100
-
-                    --, noUserSelect
+                    , overflow "clip"
                     , noPointerEvents
                     ]
                     errorText
@@ -81,7 +79,8 @@ viewEditor =
         , sOutline "1px solid white"
         , pa "0.5ch"
         , whiteSpace "pre"
-        , overflow "hidden"
+        , overflow "clip"
+        , w100
         , style "scroll-left" "0"
         ]
         [ text editorText ]
