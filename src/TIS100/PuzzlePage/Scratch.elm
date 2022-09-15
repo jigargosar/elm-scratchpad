@@ -54,10 +54,11 @@ errorText =
 
 
 editorText =
-    """all characters
+    """
+    all characters
 except whitespaces
-should be
-error underlined
+should be error
+underlined
 """
 
 
