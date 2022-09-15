@@ -30,10 +30,18 @@ main =
                     [ positionAbsolute
                     , pa "0.5ch"
                     ]
-                    [ text "editor" ]
+                    [ span
+                        [ textDecoration "underline wavy red"
+                        ]
+                        [ text "editor" ]
+                    ]
                 ]
             ]
         ]
+
+
+textDecoration =
+    style "text-decoration"
 
 
 viewEditor =
