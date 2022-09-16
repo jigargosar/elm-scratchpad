@@ -225,13 +225,10 @@ tokenParser : Parser Token
 tokenParser =
     oneOf
         [ backtrackable
-            (succeed (Token PrefixLabel)
-                |= getCol
-                |= variable
-                    { start = Char.isAlpha
-                    , inner = Char.isAlphaNum
-                    , reserved = Set.empty
-                    }
+            (toTokenParser
+                (succeed PrefixLabel
+                    |. labelVariable
+                )
                 |. spaces
                 |. symbol ":"
             )
@@ -252,18 +249,28 @@ tokenParser =
         ]
 
 
+labelVariable : Parser String
+labelVariable =
+    variable
+        { start = Char.isAlpha
+        , inner = Char.isAlphaNum
+        , reserved = Set.empty
+        }
+
+
 toTokenParser : Parser TokenTyp -> Parser Token
 toTokenParser ttp =
     succeed
-        (\startCol tokenType endCol src ->
+        (\startCol startOffset tokenType endOffset src ->
             Token
                 tokenType
                 startCol
-                (String.slice startCol endCol src)
+                (String.slice startOffset endOffset src)
         )
         |= getCol
+        |= getOffset
         |= ttp
-        |= getCol
+        |= getOffset
         |= getSource
 
 
