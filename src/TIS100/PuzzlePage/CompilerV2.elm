@@ -165,9 +165,6 @@ tokenStartColumn token =
         LabelSep col ->
             col
 
-        PrefixLabel col _ ->
-            col
-
 
 tokenEndColumn : Token -> Int
 tokenEndColumn token =
@@ -177,9 +174,6 @@ tokenEndColumn token =
 
         LabelSep col ->
             col
-
-        PrefixLabel col string ->
-            col + String.length string - 1
 
 
 invalidOp : Token -> Result Error value
@@ -191,9 +185,6 @@ invalidOp l =
         LabelSep col ->
             Err (InvalidOpCode col ":")
 
-        PrefixLabel col string ->
-            Err (InvalidOpCode col string)
-
 
 lex : String -> Result (List DeadEnd) (List Token)
 lex src =
@@ -203,7 +194,11 @@ lex src =
 type Token
     = Word Int String
     | LabelSep Int
-    | PrefixLabel Int String
+
+
+type TokenTyp
+    = WordTyp
+    | LabelSepTyp
 
 
 wordToken : Int -> String -> Token
