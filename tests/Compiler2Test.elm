@@ -4,7 +4,7 @@ import Expect
 import TIS100.PuzzlePage.CompilerV2
     exposing
         ( Error(..)
-        , compile
+        , compileLine
         , labelToken
         , lex
         , wordToken
@@ -27,7 +27,7 @@ testValidStmts =
          ]
             |> List.map
                 (\s ->
-                    test s (\_ -> Expect.ok (compile s))
+                    test s (\_ -> Expect.ok (compileLine s))
                 )
         )
 
@@ -38,12 +38,12 @@ testInvalidStmts =
         [ test "invalid op" <|
             \_ ->
                 " foo "
-                    |> compile
+                    |> compileLine
                     |> Expect.equal (Err <| InvalidOp 2 "foo")
         , test "invalid op after label" <|
             \_ ->
                 "label: foo "
-                    |> compile
+                    |> compileLine
                     |> Expect.equal (Err <| InvalidOp 8 "foo")
         ]
 

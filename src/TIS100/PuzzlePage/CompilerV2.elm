@@ -1,6 +1,6 @@
 module TIS100.PuzzlePage.CompilerV2 exposing
     ( Error(..)
-    , compile
+    , compileLine
     , labelToken
     , lex
     , wordToken
@@ -15,18 +15,18 @@ type Error
     | InternalError
 
 
-compile : String -> Result Error ()
-compile src =
+compileLine : String -> Result Error ()
+compileLine src =
     case lex src of
         Ok value ->
-            parse value
+            parseLine value
 
         Err _ ->
             Err InternalError
 
 
-parse : List Token -> Result Error ()
-parse tokens =
+parseLine : List Token -> Result Error ()
+parseLine tokens =
     case tokens of
         _ :: (LabelSep _) :: rest ->
             parseInst rest
