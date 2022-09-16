@@ -224,14 +224,7 @@ tokenListParserHelp rs =
 tokenParser : Parser Token
 tokenParser =
     oneOf
-        [ backtrackable
-            (toTokenParser
-                (succeed PrefixLabel
-                    |. labelVariable
-                )
-                |. spaces
-                |. symbol ":"
-            )
+        [ backtrackable prefixLabelTokenParser
         , toTokenParser
             (succeed OpCode
                 |= oneOf
@@ -247,6 +240,16 @@ tokenParser =
                 , reserved = Set.empty
                 }
         ]
+
+
+prefixLabelTokenParser : Parser Token
+prefixLabelTokenParser =
+    toTokenParser
+        (succeed PrefixLabel
+            |. labelVariable
+        )
+        |. spaces
+        |. symbol ":"
 
 
 labelVariable : Parser String
