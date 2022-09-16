@@ -356,14 +356,14 @@ viewEditorHelp addr editor errors =
             , noPointerEvents
             , fg transparent
             ]
-            (List.map viewError errors)
+            (List.map viewErrorMarks errors)
         , viewEditorTextArea (OnEditorInput addr) outline editor
         , viewExeBoxes outline { acc = Num.zero, mode = "IDLE" }
         ]
 
 
-viewError : ErrorDetail -> Html msg
-viewError error =
+viewErrorMarks : ErrorDetail -> Html msg
+viewErrorMarks error =
     span [ positionAbsolute ]
         [ text (String.repeat (error.row - 1) "\n")
         , text (String.repeat (error.startCol - 1) " ")
