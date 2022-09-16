@@ -114,30 +114,44 @@ parseInst tokens =
             Ok ()
 
         (Token (OpCode NOP) _) :: rest ->
-            case rest of
-                [] ->
-                    Ok ()
-
-                x :: xs ->
-                    tooManyOperands x xs
+            withZeroArgOp (\_ -> ()) rest
 
         ((Token (OpCode MOV) _) as fst) :: rest ->
-            case rest of
-                _ :: _ :: [] ->
-                    --parseMoveInst a b
-                    Ok ()
-
-                [] ->
-                    missingOperand fst fst
-
-                last :: [] ->
-                    missingOperand fst last
-
-                _ :: _ :: x :: xs ->
-                    tooManyOperands x xs
+            with2ArgOp (\_ _ -> Ok ()) fst rest
 
         f :: _ ->
             invalidOp f
+
+
+withZeroArgOp : (() -> v) -> List Token -> Result Error v
+withZeroArgOp fn rest =
+    case rest of
+        [] ->
+            Ok (fn ())
+
+        x :: xs ->
+            tooManyOperands x xs
+
+
+with2ArgOp :
+    (Token -> Token -> Result Error value)
+    -> Token
+    -> List Token
+    -> Result Error value
+with2ArgOp fn fst rest =
+    case rest of
+        a :: b :: [] ->
+            --parseMoveInst a b
+            fn a b
+
+        [] ->
+            missingOperand fst fst
+
+        last :: [] ->
+            missingOperand fst last
+
+        _ :: _ :: x :: xs ->
+            tooManyOperands x xs
 
 
 tooManyOperands : Token -> List Token -> Result Error value
