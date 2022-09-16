@@ -34,9 +34,9 @@ testInvalidSrc =
                     |> compile
                     |> Expect.equal
                         (Err
-                            [ ( 1, InvalidOp 2 "foo" )
-                            , ( 2, InvalidOp 2 "bar" )
-                            , ( 3, InvalidOp 1 ":" )
+                            [ ( 1, InvalidOpCode 2 "foo" )
+                            , ( 2, InvalidOpCode 2 "bar" )
+                            , ( 3, InvalidOpCode 1 ":" )
                             ]
                         )
         ]
@@ -49,12 +49,12 @@ testInvalidStmts =
             \_ ->
                 " foo "
                     |> compileLine
-                    |> Expect.equal (Err <| InvalidOp 2 "foo")
+                    |> Expect.equal (Err <| InvalidOpCode 2 "foo")
         , test "invalid op after label" <|
             \_ ->
                 "label: foo "
                     |> compileLine
-                    |> Expect.equal (Err <| InvalidOp 8 "foo")
+                    |> Expect.equal (Err <| InvalidOpCode 8 "foo")
         ]
 
 

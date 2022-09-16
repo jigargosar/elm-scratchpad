@@ -15,7 +15,9 @@ import Utils as U
 
 
 type Error
-    = InvalidOp Int String
+    = InvalidOpCode Int String
+    | MissingOperand
+    | TooManyOperands
     | InternalError
 
 
@@ -36,7 +38,7 @@ errorsToRecord =
     List.filterMap
         (\( l, e ) ->
             case e of
-                InvalidOp col string ->
+                InvalidOpCode col string ->
                     Just
                         { row = l
                         , startCol = col
@@ -44,7 +46,23 @@ errorsToRecord =
                         , msg = "Invalid op:\"" ++ string ++ "\""
                         }
 
-                _ ->
+                MissingOperand ->
+                    Just
+                        { row = l
+                        , startCol = 0
+                        , endCol = 1
+                        , msg = "missing operand"
+                        }
+
+                TooManyOperands ->
+                    Just
+                        { row = l
+                        , startCol = 0
+                        , endCol = 1
+                        , msg = "missing operand"
+                        }
+
+                InternalError ->
                     Nothing
         )
 
@@ -97,6 +115,18 @@ parseInst tokens =
         f :: [] ->
             parseZeroArgInst f
 
+        (Word _ "mov") :: rest ->
+            case rest of
+                _ :: _ :: _ :: _ ->
+                    Err TooManyOperands
+
+                a :: b :: [] ->
+                    --parseMoveInst a b
+                    Ok ()
+
+                _ ->
+                    Err MissingOperand
+
         f :: _ ->
             invalidOp f
 
@@ -115,15 +145,15 @@ invalidOp : Token -> Result Error value
 invalidOp l =
     case l of
         Word col string ->
-            Err (InvalidOp col string)
+            Err (InvalidOpCode col string)
 
         LabelSep col ->
-            Err (InvalidOp col ":")
+            Err (InvalidOpCode col ":")
 
 
 lex : String -> Result (List DeadEnd) (List Token)
 lex src =
-    Parser.run tokenListParser src
+    Parser.run tokenListParser (String.toLower src)
 
 
 type Token
