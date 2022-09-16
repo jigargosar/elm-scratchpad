@@ -87,7 +87,7 @@ compile string =
         |> Err
 
 
-compileLine : String -> Result Error Inst
+compileLine : String -> Result Error Stmt
 compileLine src =
     case lex src of
         Ok value ->
@@ -97,14 +97,20 @@ compileLine src =
             Err InternalError
 
 
-parseLine : List Token -> Result Error Inst
+type Stmt
+    = Stmt
+
+
+parseLine : List Token -> Result Error Stmt
 parseLine tokens =
     case tokens of
         (Token PrefixLabel _) :: rest ->
             parseInst rest
+                |> Result.map (\_ -> Stmt)
 
         _ ->
             parseInst tokens
+                |> Result.map (\_ -> Stmt)
 
 
 type Inst
