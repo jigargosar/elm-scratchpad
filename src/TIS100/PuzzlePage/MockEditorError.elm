@@ -30,9 +30,6 @@ main =
                 [ pre
                     [ positionAbsolute
                     , pa "0.5ch"
-                    , w100
-                    , h100
-                    , overflowClip
                     , noPointerEvents
                     , fg transparent
                     ]
