@@ -176,16 +176,6 @@ tokenEndColumn token =
             col
 
 
-parseZeroArgInst : Token -> Result Error ()
-parseZeroArgInst l =
-    case l of
-        Word _ "nop" ->
-            Ok ()
-
-        _ ->
-            invalidOp l
-
-
 invalidOp : Token -> Result Error value
 invalidOp l =
     case l of
