@@ -239,6 +239,7 @@ tokenParser =
             |= getCol
             |= oneOf
                 [ opCodeParser MOV "mov"
+                , opCodeParser NOP "nop"
                 ]
         , succeed (Token Word)
             |= getCol
