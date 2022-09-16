@@ -68,6 +68,16 @@ except whitespaces
 should be error
 underlined
 """
+        |> String.replace "\u{000D}" ""
+        |> tapBy String.length
+
+
+tapBy fn e =
+    let
+        _ =
+            Debug.log "tap: " (fn e)
+    in
+    e
 
 
 viewEditor =
