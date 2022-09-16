@@ -100,7 +100,7 @@ compileLine src =
 parseLine : List Token -> Result Error ()
 parseLine tokens =
     case tokens of
-        _ :: (LabelSep _) :: rest ->
+        _ :: (Token LabelSep _ _) :: rest ->
             parseInst rest
 
         _ ->
@@ -113,10 +113,10 @@ parseInst tokens =
         [] ->
             Ok ()
 
-        (Word _ "nop") :: [] ->
+        (Token Word _ "nop") :: [] ->
             Ok ()
 
-        ((Word _ "mov") as fst) :: rest ->
+        ((Token Word _ "mov") as fst) :: rest ->
             case rest of
                 [] ->
                     missingOperand fst
@@ -124,7 +124,7 @@ parseInst tokens =
                 last :: [] ->
                     missingOperand last
 
-                a :: b :: [] ->
+                _ :: _ :: [] ->
                     --parseMoveInst a b
                     Ok ()
 
@@ -159,31 +159,22 @@ missingOperand token =
 tokenStartColumn : Token -> Int
 tokenStartColumn token =
     case token of
-        Word col _ ->
-            col
-
-        LabelSep col ->
+        Token _ col _ ->
             col
 
 
 tokenEndColumn : Token -> Int
 tokenEndColumn token =
     case token of
-        Word col string ->
+        Token _ col string ->
             col + String.length string - 1
-
-        LabelSep col ->
-            col
 
 
 invalidOp : Token -> Result Error value
 invalidOp l =
     case l of
-        Word col string ->
+        Token _ col string ->
             Err (InvalidOpCode col string)
-
-        LabelSep col ->
-            Err (InvalidOpCode col ":")
 
 
 lex : String -> Result (List DeadEnd) (List Token)
@@ -192,23 +183,22 @@ lex src =
 
 
 type Token
-    = Word Int String
-    | LabelSep Int
+    = Token TokenTyp Int String
 
 
 type TokenTyp
-    = WordTyp
-    | LabelSepTyp
+    = Word
+    | LabelSep
 
 
 wordToken : Int -> String -> Token
 wordToken col string =
-    Word col string
+    Token Word col string
 
 
 labelToken : Int -> Token
 labelToken col =
-    LabelSep col
+    Token LabelSep col ":"
 
 
 tokenListParser : Parser (List Token)
@@ -234,7 +224,7 @@ tokenListParserHelp rs =
 tokenParser : Parser Token
 tokenParser =
     oneOf
-        [ succeed LabelSep
+        [ succeed (\col -> Token LabelSep col ":")
             |= getCol
             |. symbol ":"
         , wordParser
@@ -242,7 +232,7 @@ tokenParser =
 
 
 wordParser =
-    succeed Word
+    succeed (Token Word)
         |= getCol
         |= variable
             { start = isWordChar
