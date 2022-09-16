@@ -362,16 +362,6 @@ viewEditorHelp addr editor errors =
         ]
 
 
-errorText : String -> List (Html msg)
-errorText editorText =
-    case Compiler.compile editorText of
-        Err errors ->
-            List.map viewError (Compiler.errorsToRecord errors)
-
-        Ok _ ->
-            []
-
-
 viewError : ErrorDetail -> Html msg
 viewError error =
     span [ positionAbsolute ]
