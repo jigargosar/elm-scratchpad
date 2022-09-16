@@ -8,11 +8,35 @@ module TIS100.PuzzlePage.CompilerV2 exposing
 
 import Parser exposing (..)
 import Set
+import Utils as U
 
 
 type Error
     = InvalidOp Int String
     | InternalError
+
+
+type alias Errors =
+    List ( Int, Error )
+
+
+compile : String -> Result Errors ()
+compile string =
+    string
+        |> String.split "\n"
+        |> List.indexedMap U.pair
+        |> List.map (U.mapSecond compileLine)
+        |> List.foldr
+            (\( li, res ) errAcc ->
+                case res of
+                    Err err ->
+                        ( li, err ) :: errAcc
+
+                    Ok _ ->
+                        errAcc
+            )
+            []
+        |> Err
 
 
 compileLine : String -> Result Error ()
