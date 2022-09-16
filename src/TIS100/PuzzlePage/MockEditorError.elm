@@ -65,7 +65,7 @@ viewError error =
 compilerResult : Result (List ErrorRecord) ()
 compilerResult =
     editorText
-        |> Compiler.compile
+        |> Compiler.compileInternal
         |> Result.mapError
             (List.filterMap
                 (\( l, e ) ->
