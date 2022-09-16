@@ -8,14 +8,14 @@ module TIS100.PuzzlePage exposing
     )
 
 import Dict exposing (Dict)
-import Html
+import Html exposing (pre)
 import Html.Attributes
 import TIS100.Addr as Addr exposing (Addr)
 import TIS100.ExeNode as ExeNode exposing (ExeNode)
 import TIS100.Num as Num exposing (Num)
 import TIS100.Ports as Ports exposing (Action(..), Intent(..))
 import TIS100.Puzzle as Puzzle exposing (IOConfig, Puzzle)
-import TIS100.PuzzlePage.CompilerV2 exposing (ErrorDetail)
+import TIS100.PuzzlePage.CompilerV2 as Compiler exposing (ErrorDetail)
 import TIS100.PuzzlePage.LeftBar as LB
 import TIS100.PuzzlePage.SimStore as SimStore
 import TIS100.UI as UI
@@ -298,26 +298,37 @@ viewOutputNode { x, title } =
 
 viewEditor : ( Addr, Editor ) -> Html Msg
 viewEditor ( addr, editor ) =
-    let
-        ( outline, headerView ) =
-            case ExeNode.compile editor of
-                Ok _ ->
-                    ( UI.lightOutline, noView )
+    --let
+    --    ( outline, headerView ) =
+    --        case ExeNode.compile editor of
+    --            Ok _ ->
+    --                ( UI.lightOutline, noView )
+    --
+    --            Err error ->
+    --                ( UI.errorOutline, viewCompilerError error )
+    --in
+    --div
+    --    [ Addr.toGridArea addr
+    --    , outline
+    --    , displayGrid
+    --    , gridTemplateColumns "18ch auto"
+    --    , positionRelative
+    --    ]
+    --    [ headerView
+    --    , viewEditorTextArea (OnEditorInput addr) outline editor
+    --    , viewExeBoxes outline { acc = Num.zero, mode = "IDLE" }
+    --    ]
+    viewEditorHelp addr editor (toErrors editor)
 
-                Err error ->
-                    ( UI.errorOutline, viewCompilerError error )
-    in
-    div
-        [ Addr.toGridArea addr
-        , outline
-        , displayGrid
-        , gridTemplateColumns "18ch auto"
-        , positionRelative
-        ]
-        [ headerView
-        , viewEditorTextArea (OnEditorInput addr) outline editor
-        , viewExeBoxes outline { acc = Num.zero, mode = "IDLE" }
-        ]
+
+toErrors : Editor -> List ErrorDetail
+toErrors editor =
+    case Compiler.compile editor of
+        Err errors ->
+            Compiler.errorsToRecord errors
+
+        Ok _ ->
+            []
 
 
 viewEditorHelp : Addr -> String -> List ErrorDetail -> Html Msg
@@ -339,8 +350,37 @@ viewEditorHelp addr editor errors =
         , positionRelative
         ]
         [ headerView
+        , pre
+            [ positionAbsolute
+            , pa "0.5ch"
+            , noPointerEvents
+            , fg transparent
+            ]
+            (List.map viewError errors)
         , viewEditorTextArea (OnEditorInput addr) outline editor
         , viewExeBoxes outline { acc = Num.zero, mode = "IDLE" }
+        ]
+
+
+errorText : String -> List (Html msg)
+errorText editorText =
+    case Compiler.compile editorText of
+        Err errors ->
+            List.map viewError (Compiler.errorsToRecord errors)
+
+        Ok _ ->
+            []
+
+
+viewError : ErrorDetail -> Html msg
+viewError error =
+    span [ positionAbsolute ]
+        [ text (String.repeat (error.row - 1) "\n")
+        , text (String.repeat (error.startCol - 1) " ")
+        , span
+            [ textDecoration "underline 1px solid red"
+            ]
+            [ text (String.repeat (error.endCol - error.startCol) " ") ]
         ]
 
 

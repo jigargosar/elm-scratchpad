@@ -165,11 +165,11 @@ compile srcCode =
             |> Result.map (init2 srcCode)
             |> Result.mapError
                 (\des ->
-                    let
-                        _ =
-                            des
-                                |> Debug.log "Debug: "
-                    in
+                    --let
+                    --    _ =
+                    --        des
+                    --            |> Debug.log "Debug: "
+                    --in
                     des
                         |> List.head
                         |> Maybe.map (.problem >> Debug.toString)
