@@ -100,7 +100,7 @@ compileLine src =
 parseLine : List Token -> Result Error ()
 parseLine tokens =
     case tokens of
-        (Token PrefixLabel _ _) :: rest ->
+        (Token PrefixLabel _) :: rest ->
             parseInst rest
 
         _ ->
@@ -113,10 +113,10 @@ parseInst tokens =
         [] ->
             Ok ()
 
-        (Token (OpCode NOP) _ _) :: [] ->
+        (Token (OpCode NOP) _) :: [] ->
             Ok ()
 
-        ((Token (OpCode MOV) _ _) as fst) :: rest ->
+        ((Token (OpCode MOV) _) as fst) :: rest ->
             case rest of
                 [] ->
                     missingOperand fst fst
@@ -153,21 +153,21 @@ missingOperand start end =
 tokenStartColumn : Token -> Int
 tokenStartColumn token =
     case token of
-        Token _ col _ ->
+        Token _ (Loc col _) ->
             col
 
 
 tokenEndColumn : Token -> Int
 tokenEndColumn token =
     case token of
-        Token _ col string ->
+        Token _ (Loc col string) ->
             col + String.length string - 1
 
 
 invalidOp : Token -> Result Error value
 invalidOp l =
     case l of
-        Token _ col string ->
+        Token _ (Loc col string) ->
             Err (InvalidOpCode col string)
 
 
@@ -177,7 +177,11 @@ lex src =
 
 
 type Token
-    = Token TokenTyp Int String
+    = Token TokenTyp Loc
+
+
+type Loc
+    = Loc Int String
 
 
 type TokenTyp
@@ -193,12 +197,12 @@ type OpCode
 
 wordToken : Int -> String -> Token
 wordToken col string =
-    Token Word col string
+    Token Word <| Loc col string
 
 
 prefixLabelToken : Int -> String -> Token
 prefixLabelToken col str =
-    Token PrefixLabel col str
+    Token PrefixLabel <| Loc col str
 
 
 tokenListParser : Parser (List Token)
@@ -268,8 +272,9 @@ toTokenParser ttp =
         (\startCol startOffset tokenType endOffset src ->
             Token
                 tokenType
-                startCol
-                (String.slice startOffset endOffset src)
+            <|
+                Loc startCol
+                    (String.slice startOffset endOffset src)
         )
         |= getCol
         |= getOffset
