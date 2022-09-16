@@ -340,7 +340,7 @@ viewEditorHelp addr editor errors =
                     ( UI.lightOutline, noView )
 
                 h :: _ ->
-                    ( UI.errorOutline, viewCompilerError h.msg )
+                    ( UI.errorOutline, viewCompilerErrorMsg h.msg )
     in
     div
         [ Addr.toGridArea addr
@@ -403,8 +403,8 @@ viewEditorTextArea onInputMsg outline editor =
         [ text editor ]
 
 
-viewCompilerError : String -> Html msg
-viewCompilerError msg =
+viewCompilerErrorMsg : String -> Html msg
+viewCompilerErrorMsg msg =
     div
         [ positionAbsolute
         , style "top" "-4ch"
