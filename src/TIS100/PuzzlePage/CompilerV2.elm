@@ -99,14 +99,15 @@ compileLine src =
 
 type Stmt
     = Stmt
+    | LabeledStmt String
 
 
 parseLine : List Token -> Result Error Stmt
 parseLine tokens =
     case tokens of
-        (Token PrefixLabel _) :: rest ->
+        (Token (PrefixLabel lbl) _) :: rest ->
             parseInst rest
-                |> Result.map (\_ -> Stmt)
+                |> Result.map (\_ -> LabeledStmt lbl)
 
         _ ->
             parseInst tokens
@@ -215,7 +216,7 @@ type Loc
 
 type TokenTyp
     = Word
-    | PrefixLabel
+    | PrefixLabel String
     | OpCode OpCode
 
 
@@ -231,7 +232,7 @@ wordToken col string =
 
 prefixLabelToken : Int -> String -> Token
 prefixLabelToken col str =
-    Token PrefixLabel <| Loc col str
+    Token (PrefixLabel str) (Loc col str)
 
 
 tokenListParser : Parser (List Token)
@@ -280,7 +281,7 @@ prefixLabelTokenParser : Parser Token
 prefixLabelTokenParser =
     toTokenParser
         (succeed PrefixLabel
-            |. labelVariable
+            |= labelVariable
         )
         |. spaces
         |. symbol ":"
