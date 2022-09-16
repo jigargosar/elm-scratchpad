@@ -3,8 +3,7 @@ module Compiler2Test exposing (..)
 import Expect
 import TIS100.PuzzlePage.CompilerV2
     exposing
-        ( ErrTyp(..)
-        , Error
+        ( Error(..)
         , compile
         , labelToken
         , lex
@@ -40,12 +39,12 @@ testInvalidStmts =
             \_ ->
                 " foo "
                     |> compile
-                    |> Expect.equal (Err <| Error 2 (InvalidOp "foo"))
+                    |> Expect.equal (Err <| InvalidOp 2 "foo")
         , test "invalid op after label" <|
             \_ ->
                 "label: foo "
                     |> compile
-                    |> Expect.equal (Err <| Error 8 (InvalidOp "foo"))
+                    |> Expect.equal (Err <| InvalidOp 8 "foo")
         ]
 
 

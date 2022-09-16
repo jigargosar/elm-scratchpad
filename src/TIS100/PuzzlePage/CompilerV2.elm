@@ -1,6 +1,5 @@
 module TIS100.PuzzlePage.CompilerV2 exposing
-    ( ErrTyp(..)
-    , Error
+    ( Error(..)
     , compile
     , labelToken
     , lex
@@ -11,15 +10,9 @@ import Parser exposing (..)
 import Set
 
 
-type ErrTyp
-    = InvalidOp String
+type Error
+    = InvalidOp Int String
     | InternalError
-
-
-type alias Error =
-    { col : Int
-    , typ : ErrTyp
-    }
 
 
 compile : String -> Result Error ()
@@ -29,7 +22,7 @@ compile src =
             parse value
 
         Err _ ->
-            Err (Error 0 InternalError)
+            Err InternalError
 
 
 parse : List Token -> Result Error ()
@@ -69,10 +62,10 @@ invalidOp : Token -> Result Error value
 invalidOp l =
     case l of
         Word col string ->
-            Err (Error col (InvalidOp string))
+            Err (InvalidOp col string)
 
         LabelSep col ->
-            Err (Error col (InvalidOp ":"))
+            Err (InvalidOp col ":")
 
 
 lex : String -> Result (List DeadEnd) (List Token)
