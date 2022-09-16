@@ -1,14 +1,7 @@
 module Compiler2Test exposing (..)
 
 import Expect
-import TIS100.PuzzlePage.CompilerV2
-    exposing
-        ( Error(..)
-        , compileLine
-        , labelToken
-        , lex
-        , wordToken
-        )
+import TIS100.PuzzlePage.CompilerV2 exposing (Error(..), compile, compileLine, labelToken, lex, wordToken)
 import Test exposing (Test, describe, test)
 
 
@@ -30,6 +23,22 @@ testValidStmts =
                     test s (\_ -> Expect.ok (compileLine s))
                 )
         )
+
+
+testInvalidSrc : Test
+testInvalidSrc =
+    describe "invalid src"
+        [ test "invalid ops" <|
+            \_ ->
+                " foo \n bar"
+                    |> compile
+                    |> Expect.equal
+                        (Err
+                            [ ( 0, InvalidOp 2 "foo" )
+                            , ( 1, InvalidOp 2 "bar" )
+                            ]
+                        )
+        ]
 
 
 testInvalidStmts : Test

@@ -1,5 +1,6 @@
 module TIS100.PuzzlePage.CompilerV2 exposing
     ( Error(..)
+    , compile
     , compileLine
     , labelToken
     , lex
