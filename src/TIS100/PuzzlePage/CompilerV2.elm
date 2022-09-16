@@ -100,7 +100,7 @@ compileLine src =
 parseLine : List Token -> Result Error ()
 parseLine tokens =
     case tokens of
-        _ :: (Token LabelSep _ _) :: rest ->
+        (Token PrefixLabel _ _) :: rest ->
             parseInst rest
 
         _ ->
@@ -183,6 +183,7 @@ type Token
 type TokenTyp
     = Word
     | LabelSep
+    | PrefixLabel
 
 
 wordToken : Int -> String -> Token
@@ -218,9 +219,21 @@ tokenListParserHelp rs =
 tokenParser : Parser Token
 tokenParser =
     oneOf
-        [ succeed (\col -> Token LabelSep col ":")
-            |= getCol
-            |. symbol ":"
+        [ backtrackable
+            (succeed (Token PrefixLabel)
+                |= getCol
+                |= variable
+                    { start = Char.isAlpha
+                    , inner = Char.isAlphaNum
+                    , reserved = Set.empty
+                    }
+                |. spaces
+                |. symbol ":"
+            )
+
+        --, succeed (\col -> Token LabelSep col ":")
+        --    |= getCol
+        --    |. symbol ":"
         , succeed (Token Word)
             |= getCol
             |= variable
@@ -233,4 +246,4 @@ tokenParser =
 
 isWordChar : Char -> Bool
 isWordChar c =
-    c /= ' ' && c /= ':' && c /= '#'
+    c /= ' ' && c /= '#'

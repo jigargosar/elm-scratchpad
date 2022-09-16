@@ -95,7 +95,7 @@ testLexer =
             \_ ->
                 " : "
                     |> lex
-                    |> Expect.equal (Ok [ labelToken 2 ])
+                    |> Expect.equal (Ok [ wordToken 2 ":" ])
         ]
 
 
