@@ -1,7 +1,7 @@
 module Compiler2Test exposing (..)
 
 import Expect
-import TIS100.PuzzlePage.CompilerV2 exposing (ErrTyp(..), Error, Located, Token(..), compile, labelToken, lex)
+import TIS100.PuzzlePage.CompilerV2 exposing (ErrTyp(..), Error, Located, Token(..), compile, labelToken, lex, wordToken)
 import Test exposing (Test, describe, test)
 
 
@@ -48,27 +48,27 @@ testLexer =
             \_ ->
                 " foo "
                     |> lex
-                    |> Expect.equal (Ok [ Located 2 (Word "foo") ])
+                    |> Expect.equal (Ok [ wordToken 2 "foo" ])
         , test "single word with symbols" <|
             \_ ->
                 " !@# "
                     |> lex
-                    |> Expect.equal (Ok [ Located 2 (Word "!@#") ])
+                    |> Expect.equal (Ok [ wordToken 2 "!@#" ])
         , test "two word" <|
             \_ ->
                 " foo bar"
                     |> lex
                     |> Expect.equal
                         (Ok
-                            [ Located 2 (Word "foo")
-                            , Located 6 (Word "bar")
+                            [ wordToken 2 "foo"
+                            , wordToken 6 "bar"
                             ]
                         )
         , test "comment" <|
             \_ ->
                 " foo # bar"
                     |> lex
-                    |> Expect.equal (Ok [ Located 2 (Word "foo") ])
+                    |> Expect.equal (Ok [ wordToken 2 "foo" ])
         , test "no token" <|
             \_ ->
                 "  "
