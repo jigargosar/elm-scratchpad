@@ -100,7 +100,7 @@ compileLine src =
 parseLine : List Token -> Result Error ()
 parseLine tokens =
     case tokens of
-        (Token (PrefixLabel _) _ _) :: rest ->
+        (Token PrefixLabel _ _) :: rest ->
             parseInst rest
 
         _ ->
@@ -182,7 +182,7 @@ type Token
 
 type TokenTyp
     = Word
-    | PrefixLabel String
+    | PrefixLabel
     | OpCode OpCode
 
 
@@ -198,7 +198,7 @@ wordToken col string =
 
 prefixLabelToken : Int -> String -> Token
 prefixLabelToken col str =
-    Token (PrefixLabel str) col str
+    Token PrefixLabel col str
 
 
 tokenListParser : Parser (List Token)
@@ -225,7 +225,7 @@ tokenParser : Parser Token
 tokenParser =
     oneOf
         [ backtrackable
-            (succeed (\col str -> Token (PrefixLabel str) col str)
+            (succeed (Token PrefixLabel)
                 |= getCol
                 |= variable
                     { start = Char.isAlpha
