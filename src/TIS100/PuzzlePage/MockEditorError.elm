@@ -1,9 +1,8 @@
 module TIS100.PuzzlePage.MockEditorError exposing (..)
 
-import Html exposing (input, pre, textarea)
+import Html exposing (pre)
 import Html.Attributes
-import List.Extra
-import TIS100.PuzzlePage.CompilerV2 as Comiler
+import TIS100.PuzzlePage.CompilerV2 as Compiler
 import TIS100.UI as UI
 import Utils exposing (..)
 
@@ -48,8 +47,8 @@ errorText =
     String.lines editorText
         |> List.map
             (\string ->
-                case Comiler.compileLine string of
-                    Err (Comiler.InvalidOp col token) ->
+                case Compiler.compileLine string of
+                    Err (Compiler.InvalidOp col token) ->
                         List.repeat (col - 1) (text " ")
                             ++ [ span
                                     [ textDecoration "underline 1px solid red"
