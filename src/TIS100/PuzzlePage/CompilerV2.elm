@@ -235,12 +235,13 @@ tokenParser =
                 |. spaces
                 |. symbol ":"
             )
-        , succeed (\col ( opCode, string ) -> Token (OpCode opCode) col string)
-            |= getCol
-            |= oneOf
-                [ opCodeParser MOV "mov"
-                , opCodeParser NOP "nop"
-                ]
+        , toTokenParser
+            (succeed OpCode
+                |= oneOf
+                    [ opCodeParser MOV "mov"
+                    , opCodeParser NOP "nop"
+                    ]
+            )
         , succeed (Token Word)
             |= getCol
             |= variable
@@ -251,9 +252,24 @@ tokenParser =
         ]
 
 
-opCodeParser : OpCode -> String -> Parser ( OpCode, String )
+toTokenParser : Parser TokenTyp -> Parser Token
+toTokenParser ttp =
+    succeed
+        (\startCol tokenType endCol src ->
+            Token
+                tokenType
+                startCol
+                (String.slice startCol endCol src)
+        )
+        |= getCol
+        |= ttp
+        |= getCol
+        |= getSource
+
+
+opCodeParser : OpCode -> String -> Parser OpCode
 opCodeParser opCode string =
-    succeed ( opCode, string ) |. keyword string
+    succeed opCode |. keyword string
 
 
 isWordChar : Char -> Bool
