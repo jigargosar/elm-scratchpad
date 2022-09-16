@@ -232,13 +232,14 @@ tokenParser =
                     , opCodeParser NOP "nop"
                     ]
             )
-        , succeed (Token Word)
-            |= getCol
-            |= variable
-                { start = isWordChar
-                , inner = isWordChar
-                , reserved = Set.empty
-                }
+        , toTokenParser
+            (succeed Word
+                |. variable
+                    { start = isWordChar
+                    , inner = isWordChar
+                    , reserved = Set.empty
+                    }
+            )
         ]
 
 
