@@ -58,15 +58,6 @@ errorText =
 
                     _ ->
                         [ text "" ]
-             --String.split " " l
-             --    |> List.map
-             --        (\w ->
-             --            span
-             --                [ textDecoration "underline 1px solid red"
-             --                ]
-             --                [ text w ]
-             --        )
-             --    |> List.intersperse (text " ")
             )
         |> List.intersperse [ text "\n" ]
         |> List.concat
