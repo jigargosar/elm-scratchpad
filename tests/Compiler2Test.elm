@@ -30,12 +30,13 @@ testInvalidSrc =
     describe "invalid src"
         [ test "invalid ops" <|
             \_ ->
-                " foo \n bar"
+                " foo \n bar \n:"
                     |> compile
                     |> Expect.equal
                         (Err
                             [ ( 1, InvalidOp 2 "foo" )
                             , ( 2, InvalidOp 2 "bar" )
+                            , ( 3, InvalidOp 1 ":" )
                             ]
                         )
         ]
