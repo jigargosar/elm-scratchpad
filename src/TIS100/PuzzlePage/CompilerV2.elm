@@ -99,7 +99,7 @@ compileLine src =
 
 type Stmt
     = Stmt
-    | LabeledStmt String
+    | LabeledStmt String (Maybe Inst)
 
 
 parseLine : List Token -> Result Error Stmt
@@ -107,7 +107,7 @@ parseLine tokens =
     case tokens of
         (Token (PrefixLabel lbl) _) :: rest ->
             parseInst rest
-                |> Result.map (\_ -> LabeledStmt lbl)
+                |> Result.map (LabeledStmt lbl)
 
         _ ->
             parseInst tokens
@@ -118,20 +118,28 @@ type Inst
     = Inst
 
 
-parseInst : List Token -> Result Error Inst
+parseInst : List Token -> Result Error (Maybe Inst)
 parseInst tokens =
     case tokens of
         [] ->
-            Ok Inst
+            Ok Nothing
 
-        (Token (OpCode NOP) _) :: rest ->
+        x :: xs ->
+            parseInstHelp x xs
+                |> Result.map Just
+
+
+parseInstHelp : Token -> List Token -> Result Error Inst
+parseInstHelp fst rest =
+    case fst of
+        Token (OpCode NOP) _ ->
             withZeroArgOp (\_ -> Inst) rest
 
-        ((Token (OpCode MOV) _) as fst) :: rest ->
+        Token (OpCode MOV) _ ->
             with2ArgOp (\_ _ -> Ok Inst) fst rest
 
-        f :: _ ->
-            invalidOp f
+        _ ->
+            invalidOp fst
 
 
 withZeroArgOp : (() -> v) -> List Token -> Result Error v
