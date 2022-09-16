@@ -34,8 +34,8 @@ testInvalidSrc =
                     |> compile
                     |> Expect.equal
                         (Err
-                            [ ( 0, InvalidOp 2 "foo" )
-                            , ( 1, InvalidOp 2 "bar" )
+                            [ ( 1, InvalidOp 2 "foo" )
+                            , ( 2, InvalidOp 2 "bar" )
                             ]
                         )
         ]

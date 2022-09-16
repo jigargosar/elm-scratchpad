@@ -26,7 +26,7 @@ compile string =
     string
         |> String.split "\n"
         |> List.indexedMap U.pair
-        |> List.map (U.mapSecond compileLine)
+        |> List.map (U.biMap U.inc compileLine)
         |> List.foldr
             (\( li, res ) errAcc ->
                 case res of

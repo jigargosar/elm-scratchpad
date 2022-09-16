@@ -1732,6 +1732,10 @@ mapBoth =
     Tuple.mapBoth
 
 
+biMap =
+    Tuple.mapBoth
+
+
 swap ( a, b ) =
     ( b, a )
 
