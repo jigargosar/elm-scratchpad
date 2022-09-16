@@ -90,8 +90,8 @@ compile string =
 compileLine : String -> Result Error Stmt
 compileLine src =
     case lex src of
-        Ok value ->
-            parseLine value
+        Ok tokens ->
+            parseLine tokens
 
         Err _ ->
             Err InternalError
