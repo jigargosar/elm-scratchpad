@@ -2,7 +2,7 @@ module TIS100.PuzzlePage.MockEditorError exposing (..)
 
 import Html exposing (pre)
 import Html.Attributes
-import TIS100.PuzzlePage.CompilerV2 as Compiler exposing (ErrorRecord)
+import TIS100.PuzzlePage.CompilerV2 as Compiler exposing (ErrorDetail)
 import TIS100.UI as UI
 import Utils exposing (..)
 
@@ -50,7 +50,7 @@ errorText =
             []
 
 
-viewError : ErrorRecord -> Html msg
+viewError : ErrorDetail -> Html msg
 viewError error =
     span [ positionAbsolute ]
         [ text (String.repeat (error.row - 1) "\n")
@@ -98,6 +98,5 @@ viewEditor =
         , overflowClip
         , w100
         , h100
-        , style "scroll-left" "0"
         ]
         [ text editorText ]

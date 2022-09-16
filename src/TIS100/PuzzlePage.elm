@@ -9,11 +9,13 @@ module TIS100.PuzzlePage exposing
 
 import Dict exposing (Dict)
 import Html
+import Html.Attributes
 import TIS100.Addr as Addr exposing (Addr)
 import TIS100.ExeNode as ExeNode exposing (ExeNode)
 import TIS100.Num as Num exposing (Num)
 import TIS100.Ports as Ports exposing (Action(..), Intent(..))
 import TIS100.Puzzle as Puzzle exposing (IOConfig, Puzzle)
+import TIS100.PuzzlePage.CompilerV2 exposing (ErrorDetail)
 import TIS100.PuzzlePage.LeftBar as LB
 import TIS100.PuzzlePage.SimStore as SimStore
 import TIS100.UI as UI
@@ -318,6 +320,30 @@ viewEditor ( addr, editor ) =
         ]
 
 
+viewEditorHelp : Addr -> String -> List ErrorDetail -> Html Msg
+viewEditorHelp addr editor errors =
+    let
+        ( outline, headerView ) =
+            case errors of
+                [] ->
+                    ( UI.lightOutline, noView )
+
+                h :: _ ->
+                    ( UI.errorOutline, viewCompilerError h.msg )
+    in
+    div
+        [ Addr.toGridArea addr
+        , outline
+        , displayGrid
+        , gridTemplateColumns "18ch auto"
+        , positionRelative
+        ]
+        [ headerView
+        , viewEditorTextArea (OnEditorInput addr) outline editor
+        , viewExeBoxes outline { acc = Num.zero, mode = "IDLE" }
+        ]
+
+
 viewEditorTextArea : (String -> msg) -> Attribute msg -> String -> Html.Html msg
 viewEditorTextArea onInputMsg outline editor =
     Html.textarea
@@ -331,11 +357,21 @@ viewEditorTextArea onInputMsg outline editor =
         , fgInherit
         , ttInherit
         , fontInherit
-        , onInput onInputMsg
 
         -- actual
+        , onInput onInputMsg
         , outline
         , pa "0.5ch"
+
+        -- new
+        , Html.Attributes.spellcheck False
+
+        --, sOutline "1px solid white"
+        --, pa "0.5ch"
+        , whiteSpace "pre"
+        , overflowClip
+        , w100
+        , h100
         ]
         [ text editor ]
 

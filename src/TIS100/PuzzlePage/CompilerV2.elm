@@ -1,6 +1,6 @@
 module TIS100.PuzzlePage.CompilerV2 exposing
     ( Error(..)
-    , ErrorRecord
+    , ErrorDetail
     , compile
     , compileLine
     , errorsToRecord
@@ -19,7 +19,7 @@ type Error
     | InternalError
 
 
-type alias ErrorRecord =
+type alias ErrorDetail =
     { row : Int
     , startCol : Int
     , endCol : Int
@@ -31,7 +31,7 @@ type alias Errors =
     List ( Int, Error )
 
 
-errorsToRecord : Errors -> List ErrorRecord
+errorsToRecord : Errors -> List ErrorDetail
 errorsToRecord =
     List.filterMap
         (\( l, e ) ->
