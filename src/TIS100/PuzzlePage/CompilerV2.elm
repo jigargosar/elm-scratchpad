@@ -136,19 +136,13 @@ parseInst tokens =
 
 
 tooManyOperands : Token -> List Token -> Result Error value
-tooManyOperands x xs =
+tooManyOperands first rest =
     let
         last =
-            List.Extra.last xs
-                |> Maybe.withDefault x
-
-        startCol =
-            tokenStartColumn x
-
-        endCol =
-            tokenEndColumn last
+            List.Extra.last rest
+                |> Maybe.withDefault first
     in
-    Err (TooManyOperands startCol endCol)
+    Err (TooManyOperands (tokenStartColumn first) (tokenEndColumn last))
 
 
 missingOperand : Token -> Token -> Result Error value
