@@ -17,6 +17,14 @@ type Error
     | InternalError
 
 
+type alias ErrInfo =
+    { row : Int
+    , colStart : Int
+    , colEnd : Int
+    , msg : String
+    }
+
+
 type alias Errors =
     List ( Int, Error )
 

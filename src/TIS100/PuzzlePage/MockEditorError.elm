@@ -63,6 +63,36 @@ errorText =
         |> List.concat
 
 
+type alias Error =
+    { row : Int
+    , startCol : Int
+    , endCol : Int
+    , msg : String
+    }
+
+
+errors : Result (List Error) ()
+errors =
+    editorText
+        |> Compiler.compile
+        |> Result.mapError
+            (List.filterMap
+                (\( l, e ) ->
+                    case e of
+                        Compiler.InvalidOp col string ->
+                            Just
+                                { row = l
+                                , startCol = col
+                                , endCol = col + String.length string
+                                , msg = "Invalid op:\"" ++ string ++ "\""
+                                }
+
+                        _ ->
+                            Nothing
+                )
+            )
+
+
 editorText =
     """
 nop # valid
