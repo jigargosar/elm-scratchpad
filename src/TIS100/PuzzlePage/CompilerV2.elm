@@ -80,12 +80,6 @@ lex src =
     Parser.run tokenListParser src
 
 
-type alias Located =
-    { col : Int
-    , token : Token
-    }
-
-
 type Token
     = Word Int String
     | LabelSep Int
