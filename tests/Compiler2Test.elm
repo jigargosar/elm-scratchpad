@@ -83,7 +83,7 @@ testLexer =
                         )
         , test "comment" <|
             \_ ->
-                " foo # bar"
+                " foo# bar"
                     |> lex
                     |> Expect.equal (Ok [ wordToken 2 "foo" ])
         , test "no token" <|
