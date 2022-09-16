@@ -43,29 +43,19 @@ main =
         ]
 
 
+errorText : List (Html msg)
 errorText =
-    String.lines editorText
-        |> List.map
-            (\string ->
-                case Compiler.compileLine string of
-                    Err (Compiler.InvalidOp col token) ->
-                        List.repeat (col - 1) (text " ")
-                            ++ [ span
-                                    [ textDecoration "underline 1px solid red"
-                                    ]
-                                    [ text token ]
-                               ]
+    case compilerResult of
+        Err errors ->
+            List.map viewError errors
 
-                    _ ->
-                        [ text "" ]
-            )
-        |> List.intersperse [ text "\n" ]
-        |> List.concat
+        Ok _ ->
+            []
 
 
 viewError : Error -> Html msg
 viewError error =
-    span []
+    span [ positionAbsolute ]
         [ text (String.repeat (error.row - 1) "\n")
         , text (String.repeat (error.startCol - 1) " ")
         , span
@@ -83,8 +73,8 @@ type alias Error =
     }
 
 
-errors : Result (List Error) ()
-errors =
+compilerResult : Result (List Error) ()
+compilerResult =
     editorText
         |> Compiler.compile
         |> Result.mapError
