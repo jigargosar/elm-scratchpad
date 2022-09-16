@@ -183,6 +183,12 @@ type Token
 type TokenTyp
     = Word
     | PrefixLabel
+    | OpCode OpCode
+
+
+type OpCode
+    = NOP
+    | MOV
 
 
 wordToken : Int -> String -> Token
@@ -229,6 +235,11 @@ tokenParser =
                 |. spaces
                 |. symbol ":"
             )
+        , succeed (\col ( opCode, string ) -> Token (OpCode opCode) col string)
+            |= getCol
+            |= oneOf
+                [ opCodeParser MOV "mov"
+                ]
         , succeed (Token Word)
             |= getCol
             |= variable
@@ -237,6 +248,11 @@ tokenParser =
                 , reserved = Set.empty
                 }
         ]
+
+
+opCodeParser : OpCode -> String -> Parser ( OpCode, String )
+opCodeParser opCode string =
+    succeed ( opCode, string ) |. keyword string
 
 
 isWordChar : Char -> Bool
