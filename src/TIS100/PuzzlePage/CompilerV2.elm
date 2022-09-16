@@ -182,7 +182,6 @@ type Token
 
 type TokenTyp
     = Word
-    | LabelSep
     | PrefixLabel
 
 
@@ -230,10 +229,6 @@ tokenParser =
                 |. spaces
                 |. symbol ":"
             )
-
-        --, succeed (\col -> Token LabelSep col ":")
-        --    |= getCol
-        --    |. symbol ":"
         , succeed (Token Word)
             |= getCol
             |= variable
