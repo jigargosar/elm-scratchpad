@@ -75,10 +75,10 @@ compile string =
         |> List.indexedMap U.pair
         |> List.map (U.biMap U.inc compileLine)
         |> List.foldr
-            (\( rowNum, result ) errAcc ->
+            (\( row, result ) errAcc ->
                 case result of
                     Err err ->
-                        ( rowNum, err ) :: errAcc
+                        ( row, err ) :: errAcc
 
                     Ok _ ->
                         errAcc
