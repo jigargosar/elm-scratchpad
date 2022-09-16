@@ -250,7 +250,12 @@ wordParser =
     succeed Word
         |= getCol
         |= variable
-            { start = \c -> c /= ' ' && c /= ':'
-            , inner = \c -> c /= ' ' && c /= ':'
+            { start = isWordChar
+            , inner = isWordChar
             , reserved = Set.empty
             }
+
+
+isWordChar : Char -> Bool
+isWordChar c =
+    c /= ' ' && c /= ':' && c /= '#'
