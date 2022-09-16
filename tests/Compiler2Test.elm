@@ -1,7 +1,15 @@
 module Compiler2Test exposing (..)
 
 import Expect
-import TIS100.PuzzlePage.CompilerV2 exposing (ErrTyp(..), Error, Located, Token(..), compile, labelToken, lex, wordToken)
+import TIS100.PuzzlePage.CompilerV2
+    exposing
+        ( ErrTyp(..)
+        , Error
+        , compile
+        , labelToken
+        , lex
+        , wordToken
+        )
 import Test exposing (Test, describe, test)
 
 

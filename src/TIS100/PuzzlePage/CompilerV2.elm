@@ -1,4 +1,11 @@
-module TIS100.PuzzlePage.CompilerV2 exposing (ErrTyp(..), Error, Located, Token(..), compile, labelToken, lex, wordToken)
+module TIS100.PuzzlePage.CompilerV2 exposing
+    ( ErrTyp(..)
+    , Error
+    , compile
+    , labelToken
+    , lex
+    , wordToken
+    )
 
 import Parser exposing (..)
 import Set
@@ -25,21 +32,17 @@ compile src =
             Err (Error 0 InternalError)
 
 
-parse : List Located -> Result Error ()
+parse : List Token -> Result Error ()
 parse tokens =
     case tokens of
-        _ :: s :: rest ->
-            if s.token == LabelSep then
-                parseInst rest
-
-            else
-                parseInst tokens
+        _ :: (LabelSep _) :: rest ->
+            parseInst rest
 
         _ ->
             parseInst tokens
 
 
-parseInst : List Located -> Result Error ()
+parseInst : List Token -> Result Error ()
 parseInst tokens =
     case tokens of
         [] ->
@@ -52,22 +55,27 @@ parseInst tokens =
             invalidOp f
 
 
-parseZeroArgInst : Located -> Result Error ()
+parseZeroArgInst : Token -> Result Error ()
 parseZeroArgInst l =
-    case l.token of
-        Word "nop" ->
+    case l of
+        Word _ "nop" ->
             Ok ()
 
         _ ->
             invalidOp l
 
 
-invalidOp : Located -> Result Error value
+invalidOp : Token -> Result Error value
 invalidOp l =
-    Err (Error l.col (InvalidOp (tokenToString l.token)))
+    case l of
+        Word col string ->
+            Err (Error col (InvalidOp string))
+
+        LabelSep col ->
+            Err (Error col (InvalidOp ":"))
 
 
-lex : String -> Result (List DeadEnd) (List Located)
+lex : String -> Result (List DeadEnd) (List Token)
 lex src =
     Parser.run tokenListParser src
 
@@ -79,36 +87,26 @@ type alias Located =
 
 
 type Token
-    = Word String
-    | LabelSep
+    = Word Int String
+    | LabelSep Int
 
 
-wordToken : Int -> String -> Located
+wordToken : Int -> String -> Token
 wordToken col string =
-    Located col (Word string)
+    Word col string
 
 
-labelToken : Int -> Located
+labelToken : Int -> Token
 labelToken col =
-    Located col LabelSep
+    LabelSep col
 
 
-tokenToString : Token -> String
-tokenToString token =
-    case token of
-        Word string ->
-            string
-
-        LabelSep ->
-            ":"
-
-
-tokenListParser : Parser (List Located)
+tokenListParser : Parser (List Token)
 tokenListParser =
     loop [] tokenListParserHelp
 
 
-tokenListParserHelp : List Located -> Parser (Step (List Located) (List Located))
+tokenListParserHelp : List Token -> Parser (Step (List Token) (List Token))
 tokenListParserHelp rs =
     succeed identity
         |. spaces
@@ -123,22 +121,21 @@ tokenListParserHelp rs =
             ]
 
 
-tokenParser : Parser Located
+tokenParser : Parser Token
 tokenParser =
-    succeed Located
-        |= getCol
-        |= oneOf
-            [ succeed Word
-                |= wordParser
-            , succeed LabelSep
-                |. symbol ":"
-            ]
+    oneOf
+        [ wordParser
+        , succeed LabelSep
+            |= getCol
+            |. symbol ":"
+        ]
 
 
-wordParser : Parser String
 wordParser =
-    variable
-        { start = \c -> c /= ' ' && c /= ':'
-        , inner = \c -> c /= ' ' && c /= ':'
-        , reserved = Set.empty
-        }
+    succeed Word
+        |= getCol
+        |= variable
+            { start = \c -> c /= ' ' && c /= ':'
+            , inner = \c -> c /= ' ' && c /= ':'
+            , reserved = Set.empty
+            }
