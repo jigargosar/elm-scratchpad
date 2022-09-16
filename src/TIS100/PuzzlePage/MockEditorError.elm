@@ -63,6 +63,18 @@ errorText =
         |> List.concat
 
 
+viewError : Error -> Html msg
+viewError error =
+    span []
+        [ text (String.repeat (error.row - 1) "\n")
+        , text (String.repeat (error.startCol - 1) " ")
+        , span
+            [ textDecoration "underline 1px solid red"
+            ]
+            [ text (String.repeat (error.endCol - error.startCol) " ") ]
+        ]
+
+
 type alias Error =
     { row : Int
     , startCol : Int
