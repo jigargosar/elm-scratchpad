@@ -2,7 +2,7 @@ module TIS100.PuzzlePage.MockEditorError exposing (..)
 
 import Html exposing (pre)
 import Html.Attributes
-import TIS100.PuzzlePage.CompilerV2 as Compiler
+import TIS100.PuzzlePage.CompilerV2 as Compiler exposing (ErrorRecord)
 import TIS100.UI as UI
 import Utils exposing (..)
 
@@ -50,7 +50,7 @@ errorText =
             []
 
 
-viewError : Error -> Html msg
+viewError : ErrorRecord -> Html msg
 viewError error =
     span [ positionAbsolute ]
         [ text (String.repeat (error.row - 1) "\n")
@@ -62,15 +62,7 @@ viewError error =
         ]
 
 
-type alias Error =
-    { row : Int
-    , startCol : Int
-    , endCol : Int
-    , msg : String
-    }
-
-
-compilerResult : Result (List Error) ()
+compilerResult : Result (List ErrorRecord) ()
 compilerResult =
     editorText
         |> Compiler.compile

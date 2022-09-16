@@ -1,5 +1,6 @@
 module TIS100.PuzzlePage.CompilerV2 exposing
     ( Error(..)
+    , ErrorRecord
     , compile
     , compileLine
     , labelToken
@@ -17,16 +18,34 @@ type Error
     | InternalError
 
 
-type alias ErrInfo =
+type alias ErrorRecord =
     { row : Int
-    , colStart : Int
-    , colEnd : Int
+    , startCol : Int
+    , endCol : Int
     , msg : String
     }
 
 
 type alias Errors =
     List ( Int, Error )
+
+
+errorsToRecord : Errors -> List ErrorRecord
+errorsToRecord =
+    List.filterMap
+        (\( l, e ) ->
+            case e of
+                InvalidOp col string ->
+                    Just
+                        { row = l
+                        , startCol = col
+                        , endCol = col + String.length string
+                        , msg = "Invalid op:\"" ++ string ++ "\""
+                        }
+
+                _ ->
+                    Nothing
+        )
 
 
 compile : String -> Result Errors ()
