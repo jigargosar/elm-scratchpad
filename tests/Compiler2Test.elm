@@ -68,9 +68,9 @@ testLexer =
                     |> Expect.equal (Ok [ wordToken 2 "foo" ])
         , test "single word with symbols" <|
             \_ ->
-                " !@# "
+                " !@$ "
                     |> lex
-                    |> Expect.equal (Ok [ wordToken 2 "!@#" ])
+                    |> Expect.equal (Ok [ wordToken 2 "!@$" ])
         , test "two word" <|
             \_ ->
                 " foo bar"
