@@ -13,7 +13,6 @@ import Html.Attributes as HA
 import Html.Events
 import Html.Keyed
 import Json.Decode as JD exposing (Decoder)
-import Json.Decode.Pipeline as JP
 import List.Extra
 import Pivot exposing (Pivot)
 import Random exposing (Generator)
@@ -2868,3 +2867,15 @@ lcrRange lo c hi =
 lcrFromPivot : Pivot a -> LCR a
 lcrFromPivot p =
     ( Pivot.getL p, Pivot.getC p, Pivot.getR p )
+
+
+
+-- DEBUG
+
+
+tapBy fn e =
+    let
+        _ =
+            Debug.log "tap: " (fn e)
+    in
+    e

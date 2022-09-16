@@ -81,20 +81,9 @@ nop: nop #valid
 #valid
 foo: bar #invalid
 """
-        |> String.replace "\u{000D}" ""
-
-
-
---|> tapBy String.length
---noinspection ElmUnusedSymbol
-
-
-tapBy fn e =
-    let
-        _ =
-            Debug.log "tap: " (fn e)
-    in
-    e
+        |> String.lines
+        |> List.drop 1
+        |> String.join "\n"
 
 
 viewEditor =
