@@ -9,6 +9,7 @@ module TIS100.PuzzlePage.CompilerV2 exposing
     , wordToken
     )
 
+import List.Extra
 import Parser exposing (..)
 import Set
 import Utils as U
@@ -17,7 +18,7 @@ import Utils as U
 type Error
     = InvalidOpCode Int String
     | MissingOperand Int
-    | TooManyOperands
+    | TooManyOperands Int Int
     | InternalError
 
 
@@ -54,11 +55,11 @@ errorsToRecord =
                         , msg = "missing operand"
                         }
 
-                TooManyOperands ->
+                TooManyOperands startCol endCol ->
                     Just
                         { row = l
-                        , startCol = 1
-                        , endCol = 1
+                        , startCol = startCol
+                        , endCol = endCol
                         , msg = "too many operands"
                         }
 
@@ -127,16 +128,42 @@ parseInst tokens =
                     --parseMoveInst a b
                     Ok ()
 
-                _ :: _ :: _ :: _ ->
-                    Err TooManyOperands
+                _ :: _ :: x :: xs ->
+                    tooManyOperands x xs
 
         f :: _ ->
             invalidOp f
 
 
+tooManyOperands : Token -> List Token -> Result Error value
+tooManyOperands x xs =
+    let
+        last =
+            List.Extra.last xs
+                |> Maybe.withDefault x
+
+        startCol =
+            tokenStartColumn x
+
+        endCol =
+            tokenEndColumn last
+    in
+    Err (TooManyOperands startCol endCol)
+
+
 missingOperand : Token -> Result Error value
 missingOperand token =
     Err (MissingOperand (tokenEndColumn token))
+
+
+tokenStartColumn : Token -> Int
+tokenStartColumn token =
+    case token of
+        Word col _ ->
+            col
+
+        LabelSep col ->
+            col
 
 
 tokenEndColumn : Token -> Int
