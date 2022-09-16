@@ -2,8 +2,8 @@ module TIS100.PuzzlePage.CompilerV2 exposing
     ( Error(..)
     , ErrorRecord
     , compile
-    , compileInternal
     , compileLine
+    , errorsToRecord
     , labelToken
     , lex
     , wordToken
@@ -49,13 +49,8 @@ errorsToRecord =
         )
 
 
-compile : String -> Result (List ErrorRecord) ()
-compile =
-    compileInternal >> Result.mapError errorsToRecord
-
-
-compileInternal : String -> Result Errors ()
-compileInternal string =
+compile : String -> Result Errors ()
+compile string =
     string
         |> String.split "\n"
         |> List.indexedMap U.pair

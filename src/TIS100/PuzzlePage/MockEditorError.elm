@@ -42,9 +42,9 @@ main =
 
 errorText : List (Html msg)
 errorText =
-    case compilerResult of
+    case Compiler.compile editorText of
         Err errors ->
-            List.map viewError errors
+            List.map viewError (Compiler.errorsToRecord errors)
 
         Ok _ ->
             []
@@ -60,28 +60,6 @@ viewError error =
             ]
             [ text (String.repeat (error.endCol - error.startCol) " ") ]
         ]
-
-
-compilerResult : Result (List ErrorRecord) ()
-compilerResult =
-    editorText
-        |> Compiler.compileInternal
-        |> Result.mapError
-            (List.filterMap
-                (\( l, e ) ->
-                    case e of
-                        Compiler.InvalidOp col string ->
-                            Just
-                                { row = l
-                                , startCol = col
-                                , endCol = col + String.length string
-                                , msg = "Invalid op:\"" ++ string ++ "\""
-                                }
-
-                        _ ->
-                            Nothing
-                )
-            )
 
 
 editorText =

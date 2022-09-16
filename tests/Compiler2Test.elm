@@ -1,7 +1,7 @@
 module Compiler2Test exposing (..)
 
 import Expect
-import TIS100.PuzzlePage.CompilerV2 exposing (Error(..), compileInternal, compileLine, labelToken, lex, wordToken)
+import TIS100.PuzzlePage.CompilerV2 exposing (Error(..), compile, compileLine, labelToken, lex, wordToken)
 import Test exposing (Test, describe, test)
 
 
@@ -31,7 +31,7 @@ testInvalidSrc =
         [ test "invalid ops" <|
             \_ ->
                 " foo \n bar \n:"
-                    |> compileInternal
+                    |> compile
                     |> Expect.equal
                         (Err
                             [ ( 1, InvalidOp 2 "foo" )
