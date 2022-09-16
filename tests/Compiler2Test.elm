@@ -1,7 +1,7 @@
 module Compiler2Test exposing (..)
 
 import Expect
-import TIS100.PuzzlePage.CompilerV2 exposing (Error(..), compile, compileLine, labelToken, lex, wordToken)
+import TIS100.PuzzlePage.CompilerV2 exposing (Error(..), compile, compileLine, lex, prefixLabelToken, wordToken)
 import Test exposing (Test, describe, test)
 
 
@@ -96,6 +96,11 @@ testLexer =
                 " : "
                     |> lex
                     |> Expect.equal (Ok [ wordToken 2 ":" ])
+        , test "label token" <|
+            \_ ->
+                " label : "
+                    |> lex
+                    |> Expect.equal (Ok [ prefixLabelToken 2 "label" ])
         ]
 
 

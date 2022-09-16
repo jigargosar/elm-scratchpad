@@ -4,8 +4,8 @@ module TIS100.PuzzlePage.CompilerV2 exposing
     , compile
     , compileLine
     , errorsToRecord
-    , labelToken
     , lex
+    , prefixLabelToken
     , wordToken
     )
 
@@ -191,9 +191,9 @@ wordToken col string =
     Token Word col string
 
 
-labelToken : Int -> Token
-labelToken col =
-    Token LabelSep col ":"
+prefixLabelToken : Int -> String -> Token
+prefixLabelToken col =
+    Token PrefixLabel col
 
 
 tokenListParser : Parser (List Token)
