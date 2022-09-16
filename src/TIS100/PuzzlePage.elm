@@ -350,20 +350,25 @@ viewEditorHelp addr editor errors =
         , positionRelative
         ]
         [ headerView
-        , pre
-            [ positionAbsolute
-            , pa "0.5ch"
-            , noPointerEvents
-            , fg transparent
-            ]
-            (List.map viewErrorMarks errors)
+        , viewErrorMarks errors
         , viewEditorTextArea (OnEditorInput addr) outline editor
         , viewExeBoxes outline { acc = Num.zero, mode = "IDLE" }
         ]
 
 
-viewErrorMarks : ErrorDetail -> Html msg
-viewErrorMarks error =
+viewErrorMarks : List ErrorDetail -> Html.Html msg
+viewErrorMarks errors =
+    pre
+        [ positionAbsolute
+        , pa "0.5ch"
+        , noPointerEvents
+        , fg transparent
+        ]
+        (List.map viewErrorMark errors)
+
+
+viewErrorMark : ErrorDetail -> Html msg
+viewErrorMark error =
     span [ positionAbsolute ]
         [ text (String.repeat (error.row - 1) "\n")
         , text (String.repeat (error.startCol - 1) " ")
