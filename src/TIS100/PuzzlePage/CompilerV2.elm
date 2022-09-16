@@ -113,8 +113,13 @@ parseInst tokens =
         [] ->
             Ok ()
 
-        (Token (OpCode NOP) _) :: [] ->
-            Ok ()
+        (Token (OpCode NOP) _) :: rest ->
+            case rest of
+                [] ->
+                    Ok ()
+
+                x :: xs ->
+                    tooManyOperands x xs
 
         ((Token (OpCode MOV) _) as fst) :: rest ->
             case rest of
