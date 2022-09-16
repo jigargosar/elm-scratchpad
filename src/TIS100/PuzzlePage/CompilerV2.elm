@@ -113,10 +113,10 @@ parseInst tokens =
         [] ->
             Ok ()
 
-        (Token Word _ "nop") :: [] ->
+        (Token (OpCode NOP) _ _) :: [] ->
             Ok ()
 
-        ((Token Word _ "mov") as fst) :: rest ->
+        ((Token (OpCode MOV) _ _) as fst) :: rest ->
             case rest of
                 [] ->
                     missingOperand fst fst
