@@ -375,7 +375,7 @@ viewErrorMark error =
         , span
             [ textDecoration "underline 1px solid red"
             ]
-            [ text (String.repeat (error.endCol - error.startCol) " ") ]
+            [ text (String.repeat (error.endCol - error.startCol + 1) " ") ]
         ]
 
 

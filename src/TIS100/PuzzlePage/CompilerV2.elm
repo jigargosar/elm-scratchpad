@@ -16,7 +16,7 @@ import Utils as U
 
 type Error
     = InvalidOpCode Int String
-    | MissingOperand
+    | MissingOperand Int
     | TooManyOperands
     | InternalError
 
@@ -38,28 +38,28 @@ errorsToRecord =
     List.filterMap
         (\( l, e ) ->
             case e of
-                InvalidOpCode col string ->
+                InvalidOpCode startCol string ->
                     Just
                         { row = l
-                        , startCol = col
-                        , endCol = col + String.length string
+                        , startCol = startCol
+                        , endCol = startCol + String.length string - 1
                         , msg = "Invalid op:\"" ++ string ++ "\""
                         }
 
-                MissingOperand ->
+                MissingOperand endCol ->
                     Just
                         { row = l
-                        , startCol = 0
-                        , endCol = 1
+                        , startCol = 1
+                        , endCol = endCol
                         , msg = "missing operand"
                         }
 
                 TooManyOperands ->
                     Just
                         { row = l
-                        , startCol = 0
+                        , startCol = 1
                         , endCol = 1
-                        , msg = "missing operand"
+                        , msg = "too many operands"
                         }
 
                 InternalError ->
@@ -112,23 +112,41 @@ parseInst tokens =
         [] ->
             Ok ()
 
-        f :: [] ->
-            parseZeroArgInst f
+        (Word _ "nop") :: [] ->
+            Ok ()
 
-        (Word _ "mov") :: rest ->
+        ((Word _ "mov") as fst) :: rest ->
             case rest of
-                _ :: _ :: _ :: _ ->
-                    Err TooManyOperands
+                [] ->
+                    missingOperand fst
+
+                last :: [] ->
+                    missingOperand last
 
                 a :: b :: [] ->
                     --parseMoveInst a b
                     Ok ()
 
-                _ ->
-                    Err MissingOperand
+                _ :: _ :: _ :: _ ->
+                    Err TooManyOperands
 
         f :: _ ->
             invalidOp f
+
+
+missingOperand : Token -> Result Error value
+missingOperand token =
+    Err (MissingOperand (tokenEndColumn token))
+
+
+tokenEndColumn : Token -> Int
+tokenEndColumn token =
+    case token of
+        Word col string ->
+            col + String.length string - 1
+
+        LabelSep col ->
+            col
 
 
 parseZeroArgInst : Token -> Result Error ()
