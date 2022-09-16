@@ -229,10 +229,10 @@ tokenListParserHelp rs =
 tokenParser : Parser Token
 tokenParser =
     oneOf
-        [ wordParser
-        , succeed LabelSep
+        [ succeed LabelSep
             |= getCol
             |. symbol ":"
+        , wordParser
         ]
 
 
