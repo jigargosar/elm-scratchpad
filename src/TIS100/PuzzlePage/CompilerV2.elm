@@ -68,7 +68,7 @@ errorsToRecord =
         )
 
 
-compile : String -> Result Errors ()
+compile : String -> Result Errors value
 compile string =
     string
         |> String.split "\n"
