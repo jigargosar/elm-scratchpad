@@ -123,15 +123,15 @@ parseInst tokens =
 
         ((Token (OpCode MOV) _) as fst) :: rest ->
             case rest of
+                _ :: _ :: [] ->
+                    --parseMoveInst a b
+                    Ok ()
+
                 [] ->
                     missingOperand fst fst
 
                 last :: [] ->
                     missingOperand fst last
-
-                _ :: _ :: [] ->
-                    --parseMoveInst a b
-                    Ok ()
 
                 _ :: _ :: x :: xs ->
                     tooManyOperands x xs
