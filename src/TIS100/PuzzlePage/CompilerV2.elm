@@ -17,7 +17,7 @@ import Utils as U
 
 type Error
     = InvalidOpCode Int String
-    | MissingOperand Int
+    | MissingOperand Int Int
     | TooManyOperands Int Int
     | InternalError
 
@@ -47,10 +47,10 @@ errorsToRecord =
                         , msg = "Invalid op:\"" ++ string ++ "\""
                         }
 
-                MissingOperand endCol ->
+                MissingOperand startCol endCol ->
                     Just
                         { row = l
-                        , startCol = 1
+                        , startCol = startCol
                         , endCol = endCol
                         , msg = "missing operand"
                         }
@@ -119,10 +119,10 @@ parseInst tokens =
         ((Token Word _ "mov") as fst) :: rest ->
             case rest of
                 [] ->
-                    missingOperand fst
+                    missingOperand fst fst
 
                 last :: [] ->
-                    missingOperand last
+                    missingOperand fst last
 
                 _ :: _ :: [] ->
                     --parseMoveInst a b
@@ -151,9 +151,9 @@ tooManyOperands x xs =
     Err (TooManyOperands startCol endCol)
 
 
-missingOperand : Token -> Result Error value
-missingOperand token =
-    Err (MissingOperand (tokenEndColumn token))
+missingOperand : Token -> Token -> Result Error value
+missingOperand start end =
+    Err (MissingOperand (tokenStartColumn start) (tokenEndColumn end))
 
 
 tokenStartColumn : Token -> Int
@@ -227,18 +227,14 @@ tokenParser =
         [ succeed (\col -> Token LabelSep col ":")
             |= getCol
             |. symbol ":"
-        , wordParser
+        , succeed (Token Word)
+            |= getCol
+            |= variable
+                { start = isWordChar
+                , inner = isWordChar
+                , reserved = Set.empty
+                }
         ]
-
-
-wordParser =
-    succeed (Token Word)
-        |= getCol
-        |= variable
-            { start = isWordChar
-            , inner = isWordChar
-            , reserved = Set.empty
-            }
 
 
 isWordChar : Char -> Bool
