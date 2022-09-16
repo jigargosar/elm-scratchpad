@@ -1,4 +1,4 @@
-module TIS100.PuzzlePage.Scratch exposing (..)
+module TIS100.PuzzlePage.MockEditorError exposing (..)
 
 import Html exposing (input, pre, textarea)
 import Html.Attributes
