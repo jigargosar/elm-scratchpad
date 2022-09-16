@@ -74,10 +74,12 @@ errorText =
 
 editorText =
     """
-    all characters
-except whitespaces
-should be error
-underlined
+nop # valid
+nop: nop #valid
+ foo #invalid
+: #invalid
+#valid
+foo: bar #invalid
 """
         |> String.replace "\u{000D}" ""
 
