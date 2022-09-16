@@ -87,7 +87,7 @@ compile string =
         |> Err
 
 
-compileLine : String -> Result Error ()
+compileLine : String -> Result Error Inst
 compileLine src =
     case lex src of
         Ok value ->
@@ -97,7 +97,7 @@ compileLine src =
             Err InternalError
 
 
-parseLine : List Token -> Result Error ()
+parseLine : List Token -> Result Error Inst
 parseLine tokens =
     case tokens of
         (Token PrefixLabel _) :: rest ->
@@ -107,17 +107,21 @@ parseLine tokens =
             parseInst tokens
 
 
-parseInst : List Token -> Result Error ()
+type Inst
+    = Inst
+
+
+parseInst : List Token -> Result Error Inst
 parseInst tokens =
     case tokens of
         [] ->
-            Ok ()
+            Ok Inst
 
         (Token (OpCode NOP) _) :: rest ->
-            withZeroArgOp (\_ -> ()) rest
+            withZeroArgOp (\_ -> Inst) rest
 
         ((Token (OpCode MOV) _) as fst) :: rest ->
-            with2ArgOp (\_ _ -> Ok ()) fst rest
+            with2ArgOp (\_ _ -> Ok Inst) fst rest
 
         f :: _ ->
             invalidOp f
