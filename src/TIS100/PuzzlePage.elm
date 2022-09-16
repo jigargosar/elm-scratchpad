@@ -365,9 +365,6 @@ viewEditorTextArea onInputMsg outline editor =
 
         -- new
         , Html.Attributes.spellcheck False
-
-        --, sOutline "1px solid white"
-        --, pa "0.5ch"
         , whiteSpace "pre"
         , overflowClip
         , w100
