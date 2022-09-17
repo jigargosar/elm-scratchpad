@@ -13,6 +13,7 @@ import List.Extra
 import Parser exposing (..)
 import Set
 import TIS100.Num as Num exposing (Num)
+import TIS100.PuzzlePage.Inst exposing (..)
 import Utils as U exposing (Dir4(..))
 
 
@@ -297,23 +298,6 @@ type TokenTyp
     | ACC
     | NIL
     | NUM Num
-
-
-type Inst
-    = Mov Src Dst
-    | Nop
-
-
-type Src
-    = SrcPort Dir4
-    | SrcNum Num
-    | SrcAcc
-
-
-type Dst
-    = DstPort Dir4
-    | DstAcc
-    | DstNil
 
 
 type OpCode

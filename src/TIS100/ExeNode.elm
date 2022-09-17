@@ -13,6 +13,7 @@ import Pivot exposing (Pivot)
 import Set
 import TIS100.Num as Num exposing (Num)
 import TIS100.Ports exposing (Intent(..))
+import TIS100.PuzzlePage.Inst exposing (..)
 import TIS100.PuzzlePage.StepRunner as SR
 import Utils as U exposing (Dir4(..))
 
@@ -133,23 +134,6 @@ ctxFromState st =
 
         WriteBlocked prg _ _ ->
             prg
-
-
-type Dst
-    = DstPort Dir4
-    | DstAcc
-    | DstNil
-
-
-type Src
-    = SrcPort Dir4
-    | SrcAcc
-    | SrcNum Num
-
-
-type Inst
-    = Mov Src Dst
-    | Nop
 
 
 compile : String -> Result String ExeNode
