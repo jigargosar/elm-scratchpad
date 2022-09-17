@@ -90,12 +90,21 @@ compile string =
                     Err err ->
                         ( ( row, err ) :: errAcc, okAcc )
 
-                    Ok _ ->
+                    Ok (Stmt _ (Just inst)) ->
+                        ( errAcc, ( row - 1, inst ) :: okAcc )
+
+                    _ ->
                         ( errAcc, okAcc )
             )
             ( [], [] )
-        |> U.first
-        |> Err
+        |> (\( es, os ) ->
+                case es of
+                    [] ->
+                        Ok os
+
+                    _ ->
+                        Err es
+           )
 
 
 compileLine : String -> Result Error Stmt
