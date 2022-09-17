@@ -468,13 +468,13 @@ initEditors puzzle =
         |> Dict.fromList
 
 
-viewEditModeGridItems : Puzzle -> Dict Addr Editor -> List (Html Msg)
+viewEditModeGridItems : Puzzle -> Editors -> List (Html Msg)
 viewEditModeGridItems puzzle editors =
     Ports.viewAllPorts puzzle
         ++ viewEditModeNodes puzzle editors
 
 
-viewEditModeNodes : Puzzle -> Dict Addr Editor -> List (Html Msg)
+viewEditModeNodes : Puzzle -> Editors -> List (Html Msg)
 viewEditModeNodes puzzle editors =
     Puzzle.toListBy
         viewInputNode
