@@ -2082,19 +2082,9 @@ mapDocument tagger { title, body } =
 -- DICT HELPERS
 
 
-insertEntry : ( comparable, b ) -> Dict comparable b -> Dict comparable b
-insertEntry ( k, v ) =
-    Dict.insert k v
-
-
 replaceEntry : ( comparable, b ) -> Dict comparable b -> Dict comparable b
 replaceEntry ( k, v ) =
     Dict.update k (Maybe.map (always v))
-
-
-mapKey : comparable -> (b -> b) -> Dict comparable b -> Dict comparable b
-mapKey k fn =
-    Dict.update k (Maybe.map fn)
 
 
 replaceEntries : List ( comparable, b ) -> Dict comparable b -> Dict comparable b
@@ -2104,7 +2094,11 @@ replaceEntries entries dict =
 
 {-| Only when `from` is member and `to` is not member.
 -}
-moveValueFromKeyToKey : comparable -> comparable -> Dict comparable v -> Dict comparable v
+moveValueFromKeyToKey :
+    comparable
+    -> comparable
+    -> Dict comparable v
+    -> Dict comparable v
 moveValueFromKeyToKey from to dict =
     case ( Dict.get from dict, Dict.get to dict ) of
         ( Just value, Nothing ) ->
@@ -2131,29 +2125,9 @@ filterKey fn =
     Dict.filter (\k _ -> fn k)
 
 
-rejectKey : (comparable -> Bool) -> Dict comparable b -> Dict comparable b
-rejectKey fn =
-    filterKey (fn >> not)
-
-
-filterValue : (b -> Bool) -> Dict comparable b -> Dict comparable b
-filterValue fn =
-    Dict.filter (\_ v -> fn v)
-
-
-partitionKey : (comparable -> Bool) -> Dict comparable b -> ( Dict comparable b, Dict comparable b )
-partitionKey fn d =
-    ( filterKey fn d, rejectKey fn d )
-
-
 renameKey : (a -> comparable) -> Dict a v -> Dict comparable v
 renameKey fn =
     Dict.toList >> List.map (Tuple.mapFirst fn) >> Dict.fromList
-
-
-dictGet2 : comparable -> comparable -> Dict comparable v -> Maybe ( v, v )
-dictGet2 a b dict =
-    Maybe.map2 Tuple.pair (Dict.get a dict) (Dict.get b dict)
 
 
 dictGetOr : a -> comparable -> Dict comparable a -> a
@@ -2174,21 +2148,6 @@ getEntry key dict =
 getEntryIn : Dict comparable a -> comparable -> Maybe ( comparable, a )
 getEntryIn dict key =
     getEntry key dict
-
-
-foldlEntries : (( k, v ) -> a -> a) -> a -> Dict k v -> a
-foldlEntries fn =
-    Dict.foldl (\k v -> fn ( k, v ))
-
-
-foldlValues : (v -> a -> a) -> a -> Dict k v -> a
-foldlValues fn =
-    Dict.foldl (always fn)
-
-
-foldrValues : (v -> b -> b) -> b -> Dict a v -> b
-foldrValues fn =
-    Dict.foldr (always fn)
 
 
 maybeMapValues :
