@@ -319,23 +319,33 @@ tokenParser : Parser Token
 tokenParser =
     oneOf
         [ backtrackable prefixLabelTokenParser
-        , toTokenParser
-            (succeed OpCode
-                |= oneOf
-                    [ keyword2 MOV "mov"
-                    , keyword2 NOP "nop"
-                    ]
-            )
-        , toTokenParser
-            (succeed Word
-                |. variable
-                    { start = isWordChar
-                    , inner = isWordChar
-                    , reserved = Set.empty
-                    }
-            )
+        , opCodeTokenParser
         , dirTokenParser
+        , wordTokenParser
         ]
+
+
+wordTokenParser : Parser Token
+wordTokenParser =
+    toTokenParser
+        (succeed Word
+            |. variable
+                { start = isWordChar
+                , inner = isWordChar
+                , reserved = Set.empty
+                }
+        )
+
+
+opCodeTokenParser : Parser Token
+opCodeTokenParser =
+    toTokenParser
+        (succeed OpCode
+            |= oneOf
+                [ keyword2 MOV "mov"
+                , keyword2 NOP "nop"
+                ]
+        )
 
 
 dirTokenParser : Parser Token
