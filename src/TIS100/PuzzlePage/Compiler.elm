@@ -5,8 +5,8 @@ module TIS100.PuzzlePage.Compiler exposing
     , compile
     , compileLine
     , errorsToDetails
+    , getErrorDetails
     , lexLine
-    , listErrorDetails
     , prefixLabelToken
     , wordToken
     )
@@ -81,8 +81,8 @@ errorsToDetails =
         )
 
 
-listErrorDetails : String -> List ErrorDetail
-listErrorDetails srcCode =
+getErrorDetails : String -> List ErrorDetail
+getErrorDetails srcCode =
     case compile srcCode of
         Err errors ->
             errorsToDetails errors

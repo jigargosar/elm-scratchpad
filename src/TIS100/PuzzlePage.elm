@@ -294,7 +294,7 @@ viewEditor : ( Addr, Editor ) -> Html Msg
 viewEditor ( addr, editor ) =
     let
         errors =
-            Compiler.listErrorDetails editor
+            Compiler.getErrorDetails editor
 
         ( outline, headerView ) =
             case errors of
