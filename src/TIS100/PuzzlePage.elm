@@ -109,7 +109,7 @@ subscriptions model =
 
 startDebugging : StepMode -> Model -> Model
 startDebugging stepMode model =
-    case compile model.editors of
+    case maybeMapValues ExeNode.compile model.editors of
         Just exs ->
             { model | state = SIM (initSim model.puzzle exs stepMode) }
 
@@ -119,11 +119,6 @@ startDebugging stepMode model =
 
 type alias ExeDict =
     Dict Addr ExeNode
-
-
-compile : Editors -> Maybe ExeDict
-compile editors =
-    maybeMapValues (ExeNode.compile >> Result.toMaybe) editors
 
 
 update : Msg -> Model -> Model

@@ -135,12 +135,13 @@ ctxFromState st =
             prg
 
 
-compile : String -> Result Compiler.Errors ExeNode
+compile : String -> Maybe ExeNode
 compile srcCode =
     srcCode
         |> Compiler.compile
-        |> Result.map (List.map prgLineFromTuple)
-        |> Result.map (init srcCode)
+        |> Result.toMaybe
+        |> Maybe.map (List.map prgLineFromTuple)
+        |> Maybe.map (init srcCode)
 
 
 prgLineFromTuple : ( Int, Inst ) -> PLine
