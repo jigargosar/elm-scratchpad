@@ -68,7 +68,9 @@ type State
 init : Puzzle -> List ( Addr, String ) -> Model
 init puzzle sourceEntries =
     { puzzle = puzzle
-    , editors = initEditorsWithSourceEntries puzzle sourceEntries
+    , editors =
+        initEditors puzzle
+            |> replaceEntries sourceEntries
     , state = Edit
     }
 
@@ -457,11 +459,6 @@ type alias Editors =
 
 type alias Editor =
     String
-
-
-initEditorsWithSourceEntries : Puzzle -> List ( Addr, String ) -> Dict Addr String
-initEditorsWithSourceEntries puzzle sourceEntries =
-    replaceEntries sourceEntries (initEditors puzzle)
 
 
 initEditors : Puzzle -> Editors
