@@ -98,15 +98,15 @@ compileLine src =
 
 
 type Stmt
-    = Stmt (Maybe String) (Maybe Inst)
+    = Stmt (Maybe ( String, Loc )) (Maybe Inst)
 
 
 parseLine : List Token -> Result Error Stmt
 parseLine tokens =
     case tokens of
-        (Token (PrefixLabel lbl) _) :: rest ->
+        (Token (PrefixLabel lbl) loc) :: rest ->
             parseInst rest
-                |> Result.map (Stmt (Just lbl))
+                |> Result.map (Stmt (Just ( lbl, loc )))
 
         _ ->
             parseInst tokens
