@@ -301,17 +301,7 @@ viewOutputNode { x, title } =
 
 viewEditor : ( Addr, Editor ) -> Html Msg
 viewEditor ( addr, editor ) =
-    viewEditorHelp addr editor (toErrors editor)
-
-
-toErrors : Editor -> List ErrorDetail
-toErrors editor =
-    case Compiler.compile editor of
-        Err errors ->
-            Compiler.errorsToDetails errors
-
-        Ok _ ->
-            []
+    viewEditorHelp addr editor (Compiler.listErrorDetails editor)
 
 
 viewEditorHelp : Addr -> String -> List ErrorDetail -> Html Msg

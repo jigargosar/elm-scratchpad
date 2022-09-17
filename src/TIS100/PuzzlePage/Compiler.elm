@@ -6,6 +6,7 @@ module TIS100.PuzzlePage.Compiler exposing
     , compileLine
     , errorsToDetails
     , lexLine
+    , listErrorDetails
     , prefixLabelToken
     , wordToken
     )
@@ -78,6 +79,16 @@ errorsToDetails =
                 InternalError ->
                     Nothing
         )
+
+
+listErrorDetails : String -> List ErrorDetail
+listErrorDetails srcCode =
+    case compile srcCode of
+        Err errors ->
+            errorsToDetails errors
+
+        Ok _ ->
+            []
 
 
 compile : String -> Result Errors (List ( Int, Inst ))
