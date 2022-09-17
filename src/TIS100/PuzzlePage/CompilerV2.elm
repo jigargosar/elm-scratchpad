@@ -146,10 +146,15 @@ parseInstHelp fst rest =
             withZeroArgOp Nop rest
 
         Token (OpCode MOV) _ ->
-            with2ArgOp (\_ _ -> Ok Inst) fst rest
+            with2ArgOp parseMovInst fst rest
 
         _ ->
             invalidOp fst
+
+
+parseMovInst : Token -> Token -> Result Error Inst
+parseMovInst a b =
+    Ok Inst
 
 
 withZeroArgOp : v -> List Token -> Result Error v
