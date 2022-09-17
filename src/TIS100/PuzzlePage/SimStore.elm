@@ -31,11 +31,11 @@ type Node
     | Flt
 
 
-type alias CompiledNodes =
+type alias ExeDict =
     Dict Addr ExeNode
 
 
-init : Puzzle -> CompiledNodes -> Model
+init : Puzzle -> ExeDict -> Model
 init puzzle exs =
     let
         initIn c =
