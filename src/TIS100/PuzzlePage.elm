@@ -516,8 +516,8 @@ type StepMode
 
 
 initSim : Puzzle -> ExeDict -> StepMode -> Sim
-initSim puzzle exs stepMode =
-    { store = SimStore.init puzzle exs
+initSim puzzle exd stepMode =
+    { store = SimStore.init puzzle exd
     , state = Stepping stepMode
     , cycle = 0
     }
