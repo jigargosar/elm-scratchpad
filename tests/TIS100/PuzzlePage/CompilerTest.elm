@@ -15,7 +15,7 @@ import Test exposing (Test, describe, test)
 
 
 {-
-   npx elm-test-rs --watch **/CompilerTest.elm
+   npx elm-test-rs --watch tests/**/CompilerTest.elm
 -}
 
 
