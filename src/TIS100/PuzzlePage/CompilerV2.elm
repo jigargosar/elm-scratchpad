@@ -188,6 +188,9 @@ parseDstOperand ((Token typ _) as t) =
         ACC ->
             Ok <| DstAcc
 
+        NIL ->
+            Ok DstNil
+
         _ ->
             invalidExpr t
 
@@ -297,6 +300,7 @@ type TokenTyp
     | OpCode OpCode
     | DIR Dir4
     | ACC
+    | NIL
     | NUM Num
 
 
@@ -309,6 +313,7 @@ type Src
 type Dst
     = DstPort Dir4
     | DstAcc
+    | DstNil
 
 
 type OpCode
@@ -352,6 +357,7 @@ tokenParser =
         [ backtrackable prefixLabelTokenParser
         , opCodeTokenParser
         , toTokenParser (keyword2 ACC "acc")
+        , toTokenParser (keyword2 NIL "nil")
         , numTokenParser
         , dirTokenParser
         , wordTokenParser
