@@ -115,6 +115,7 @@ parseLine tokens =
 
 type Inst
     = Inst
+    | Nop
 
 
 parseInst : List Token -> Result Error (Maybe Inst)
@@ -132,7 +133,7 @@ parseInstHelp : Token -> List Token -> Result Error Inst
 parseInstHelp fst rest =
     case fst of
         Token (OpCode NOP) _ ->
-            withZeroArgOp (\_ -> Inst) rest
+            withZeroArgOp Nop rest
 
         Token (OpCode MOV) _ ->
             with2ArgOp (\_ _ -> Ok Inst) fst rest
@@ -141,11 +142,11 @@ parseInstHelp fst rest =
             invalidOp fst
 
 
-withZeroArgOp : (() -> v) -> List Token -> Result Error v
-withZeroArgOp fn rest =
+withZeroArgOp : v -> List Token -> Result Error v
+withZeroArgOp v rest =
     case rest of
         [] ->
-            Ok (fn ())
+            Ok v
 
         x :: xs ->
             tooManyOperands x xs
