@@ -2191,14 +2191,41 @@ foldrValues fn =
     Dict.foldr (always fn)
 
 
+
+--maybeMapValues :
+--    (b -> Maybe v)
+--    -> Dict comparable b
+--    -> Maybe (Dict comparable v)
+--maybeMapValues fn =
+--    Dict.toList
+--        >> Maybe.Extra.traverse (filterMapSecond fn)
+--        >> Maybe.map Dict.fromList
+
+
 maybeMapValues :
-    (b -> Maybe v)
-    -> Dict comparable b
-    -> Maybe (Dict comparable v)
+    (a -> Maybe b)
+    -> Dict comparable a
+    -> Maybe (Dict comparable b)
 maybeMapValues fn =
-    Dict.toList
-        >> Maybe.Extra.traverse (filterMapSecond fn)
-        >> Maybe.map Dict.fromList
+    let
+        do :
+            Dict comparable b
+            -> List ( comparable, a )
+            -> Maybe (Dict comparable b)
+        do dict list =
+            case list of
+                [] ->
+                    Just dict
+
+                ( k, v ) :: t ->
+                    case fn v of
+                        Nothing ->
+                            Nothing
+
+                        Just nv ->
+                            do (Dict.insert k nv dict) t
+    in
+    Dict.toList >> do Dict.empty
 
 
 
