@@ -307,7 +307,7 @@ type OpCode
 
 wordToken : Int -> String -> Token
 wordToken col string =
-    Token Word <| Loc col string
+    Token Word (Loc col string)
 
 
 prefixLabelToken : Int -> String -> Token
