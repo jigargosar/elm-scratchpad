@@ -101,12 +101,22 @@ type Stmt
     = Stmt (Maybe ( String, Loc )) (Maybe Inst)
 
 
+stmtWithLabel : String -> Loc -> Maybe Inst -> Stmt
+stmtWithLabel string loc =
+    Stmt (Just ( string, loc ))
+
+
+stmtWithoutLabel : Maybe Inst -> Stmt
+stmtWithoutLabel =
+    Stmt Nothing
+
+
 parseLine : List Token -> Result Error Stmt
 parseLine tokens =
     case tokens of
         (Token (PrefixLabel lbl) loc) :: rest ->
             parseInst rest
-                |> Result.map (Stmt (Just ( lbl, loc )))
+                |> Result.map (stmtWithLabel lbl loc)
 
         _ ->
             parseInst tokens
