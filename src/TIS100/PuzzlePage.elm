@@ -119,12 +119,15 @@ type alias CompiledNodes =
     Dict Addr ExeNode
 
 
-compile : Editors -> Result String CompiledNodes
+compile : Editors -> Result Compiler.Errors CompiledNodes
 compile editors =
     compileHelp Dict.empty (Dict.toList editors)
 
 
-compileHelp : CompiledNodes -> List ( Addr, Editor ) -> Result String CompiledNodes
+compileHelp :
+    CompiledNodes
+    -> List ( Addr, Editor )
+    -> Result Compiler.Errors CompiledNodes
 compileHelp exd ls =
     case ls of
         [] ->

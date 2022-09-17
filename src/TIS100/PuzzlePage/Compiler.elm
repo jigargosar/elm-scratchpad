@@ -1,6 +1,7 @@
 module TIS100.PuzzlePage.Compiler exposing
     ( Error(..)
     , ErrorDetail
+    , Errors
     , compile
     , compileLine
     , errorsToDetails
