@@ -124,7 +124,7 @@ parseLine tokens =
 
 
 type Inst
-    = Inst
+    = Mov () ()
     | Nop
 
 
@@ -154,7 +154,19 @@ parseInstHelp fst rest =
 
 parseMovInst : Token -> Token -> Result Error Inst
 parseMovInst a b =
-    Ok Inst
+    Result.map2 Mov
+        (parseSrcOperand a)
+        (parseDstOperand b)
+
+
+parseDstOperand : Token -> Result error ()
+parseDstOperand (Token _ _) =
+    Ok ()
+
+
+parseSrcOperand : Token -> Result error ()
+parseSrcOperand (Token _ _) =
+    Ok ()
 
 
 withZeroArgOp : v -> List Token -> Result Error v
