@@ -1,4 +1,4 @@
-module TIS100.PuzzlePage.Compiler exposing (..)
+module TIS100.PuzzlePage.Compiler exposing (Problem(..), compileStmt, stmtToString)
 
 import Parser.Advanced as Parser exposing (..)
 import Set exposing (Set)
