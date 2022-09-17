@@ -13,7 +13,7 @@ import List.Extra
 import Parser exposing (..)
 import Set
 import TIS100.Num exposing (Num)
-import Utils as U exposing (Dir4)
+import Utils as U exposing (Dir4(..))
 
 
 type Error
@@ -254,6 +254,7 @@ type TokenTyp
     = Word
     | PrefixLabel String
     | OpCode OpCode
+    | Dir Dir4
 
 
 type Src
@@ -304,8 +305,8 @@ tokenParser =
         , toTokenParser
             (succeed OpCode
                 |= oneOf
-                    [ opCodeParser MOV "mov"
-                    , opCodeParser NOP "nop"
+                    [ keyword2 MOV "mov"
+                    , keyword2 NOP "nop"
                     ]
             )
         , toTokenParser
@@ -316,7 +317,21 @@ tokenParser =
                     , reserved = Set.empty
                     }
             )
+        , dirTokenParser
         ]
+
+
+dirTokenParser : Parser Token
+dirTokenParser =
+    toTokenParser
+        (succeed Dir
+            |= oneOf
+                [ keyword2 Up "up"
+                , keyword2 Down "down"
+                , keyword2 Left "left"
+                , keyword2 Right "right"
+                ]
+        )
 
 
 prefixLabelTokenParser : Parser Token
@@ -358,6 +373,10 @@ toTokenParser ttp =
 opCodeParser : OpCode -> String -> Parser OpCode
 opCodeParser opCode string =
     succeed opCode |. keyword string
+
+
+keyword2 tag string =
+    succeed tag |. keyword string
 
 
 isWordChar : Char -> Bool
