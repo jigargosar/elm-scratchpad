@@ -35,7 +35,7 @@ testValidStmts =
 
 testInvalidSrcCode : Test
 testInvalidSrcCode =
-    describe "invalid src"
+    describe "invalid src code"
         [ test "invalid ops" <|
             \_ ->
                 " foo \n bar \n:"
