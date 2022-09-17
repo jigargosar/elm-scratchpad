@@ -14,7 +14,7 @@ import TIS100.Ports exposing (Intent(..))
 import TIS100.PuzzlePage.Compiler as Compiler
 import TIS100.PuzzlePage.Inst exposing (..)
 import TIS100.PuzzlePage.StepRunner as SR
-import Utils as U exposing (Dir4(..))
+import Utils exposing (Dir4)
 
 
 type ExeNode
@@ -137,14 +137,10 @@ ctxFromState st =
 
 compile : String -> Result Compiler.Errors ExeNode
 compile srcCode =
-    if U.isBlank srcCode then
-        Ok empty
-
-    else
-        srcCode
-            |> Compiler.compile
-            |> Result.map (List.map prgLineFromTuple)
-            |> Result.map (init srcCode)
+    srcCode
+        |> Compiler.compile
+        |> Result.map (List.map prgLineFromTuple)
+        |> Result.map (init srcCode)
 
 
 prgLineFromTuple : ( Int, Inst ) -> PLine
