@@ -135,47 +135,56 @@ update : Msg -> Model -> Model
 update msg model =
     case model.state of
         Edit ->
-            case msg of
-                STOP ->
-                    model
-
-                STEP ->
-                    startDebugging Manual model
-
-                AutoStep ->
-                    model
-
-                RUN ->
-                    startDebugging Auto model
-
-                FAST ->
-                    startDebugging AutoFast model
-
-                OnEditorInput addr string ->
-                    { model
-                        | editors =
-                            replaceEntry ( addr, string ) model.editors
-                    }
+            updateWhenEditing msg model
 
         SIM sim ->
-            case msg of
-                STOP ->
-                    startEditing model
+            updateWhenSimulating msg sim model
 
-                STEP ->
-                    { model | state = SIM (manualStep sim) }
 
-                AutoStep ->
-                    { model | state = SIM (autoStep sim) }
+updateWhenSimulating msg sim model =
+    case msg of
+        STOP ->
+            startEditing model
 
-                RUN ->
-                    { model | state = SIM (setStepMode Auto sim) }
+        STEP ->
+            { model | state = SIM (manualStep sim) }
 
-                FAST ->
-                    { model | state = SIM (setStepMode AutoFast sim) }
+        AutoStep ->
+            { model | state = SIM (autoStep sim) }
 
-                OnEditorInput _ _ ->
-                    model
+        RUN ->
+            { model | state = SIM (setStepMode Auto sim) }
+
+        FAST ->
+            { model | state = SIM (setStepMode AutoFast sim) }
+
+        OnEditorInput _ _ ->
+            model
+
+
+updateWhenEditing : Msg -> Model -> Model
+updateWhenEditing msg model =
+    case msg of
+        STOP ->
+            model
+
+        STEP ->
+            startDebugging Manual model
+
+        AutoStep ->
+            model
+
+        RUN ->
+            startDebugging Auto model
+
+        FAST ->
+            startDebugging AutoFast model
+
+        OnEditorInput addr string ->
+            { model
+                | editors =
+                    replaceEntry ( addr, string ) model.editors
+            }
 
 
 leftBarViewModel : Model -> LB.ViewModel
