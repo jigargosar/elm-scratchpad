@@ -33,8 +33,8 @@ testValidStmts =
         )
 
 
-testInvalidSrc : Test
-testInvalidSrc =
+testInvalidSrcCode : Test
+testInvalidSrcCode =
     describe "invalid src"
         [ test "invalid ops" <|
             \_ ->
