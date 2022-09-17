@@ -134,7 +134,7 @@ parseLine tokens =
 
 
 type Inst
-    = Mov Src ()
+    = Mov Src Dst
     | Nop
 
 
@@ -169,9 +169,17 @@ parseMovInst a b =
         (parseDstOperand b)
 
 
-parseDstOperand : Token -> Result error ()
-parseDstOperand (Token _ _) =
-    Ok ()
+parseDstOperand : Token -> Result Error Dst
+parseDstOperand ((Token typ _) as t) =
+    case typ of
+        DIR dir ->
+            Ok <| DstPort dir
+
+        ACC ->
+            Ok <| DstAcc
+
+        _ ->
+            invalidExpr t
 
 
 parseSrcOperand : Token -> Result Error Src
@@ -286,6 +294,11 @@ type Src
     = SrcPort Dir4
     | SrcNum Num
     | SrcAcc
+
+
+type Dst
+    = DstPort Dir4
+    | DstAcc
 
 
 type OpCode
