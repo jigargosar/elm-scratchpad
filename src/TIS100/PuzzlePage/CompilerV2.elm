@@ -78,22 +78,23 @@ errorsToRecord =
         )
 
 
-compile : String -> Result Errors value
+compile : String -> Result Errors (List ( Int, Inst ))
 compile string =
     string
         |> String.split "\n"
         |> List.indexedMap U.pair
         |> List.map (U.biMap U.inc compileLine)
         |> List.foldr
-            (\( row, result ) errAcc ->
+            (\( row, result ) ( errAcc, okAcc ) ->
                 case result of
                     Err err ->
-                        ( row, err ) :: errAcc
+                        ( ( row, err ) :: errAcc, okAcc )
 
                     Ok _ ->
-                        errAcc
+                        ( errAcc, okAcc )
             )
-            []
+            ( [], [] )
+        |> U.first
         |> Err
 
 
