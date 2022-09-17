@@ -62,7 +62,7 @@ type alias Model =
 
 type State
     = Edit
-    | Sim_ Sim
+    | SIM Sim
 
 
 init : Puzzle -> List ( Addr, String ) -> Model
@@ -88,7 +88,7 @@ subscriptions model =
         Edit ->
             Sub.none
 
-        Sim_ sim ->
+        SIM sim ->
             case sim.state of
                 Stepping debugger ->
                     case debugger of
@@ -109,7 +109,7 @@ startDebugging : StepMode -> Model -> Model
 startDebugging stepMode model =
     case compile model.editors of
         Just exs ->
-            { model | state = Sim_ (initSim model.puzzle exs stepMode) }
+            { model | state = SIM (initSim model.puzzle exs stepMode) }
 
         Nothing ->
             model
@@ -152,22 +152,22 @@ update msg model =
                 OnEditorInput addr string ->
                     { model | editors = replaceEntry ( addr, string ) model.editors }
 
-        Sim_ sim ->
+        SIM sim ->
             case msg of
                 STOP ->
                     startEditing model
 
                 STEP ->
-                    { model | state = Sim_ (manualStep sim) }
+                    { model | state = SIM (manualStep sim) }
 
                 AutoStep ->
-                    { model | state = Sim_ (autoStep sim) }
+                    { model | state = SIM (autoStep sim) }
 
                 RUN ->
-                    { model | state = Sim_ (setStepMode Auto sim) }
+                    { model | state = SIM (setStepMode Auto sim) }
 
                 FAST ->
-                    { model | state = Sim_ (setStepMode AutoFast sim) }
+                    { model | state = SIM (setStepMode AutoFast sim) }
 
                 OnEditorInput _ _ ->
                     model
@@ -179,7 +179,7 @@ leftBarViewModel { puzzle, state } =
         Edit ->
             Puzzle.leftBarViewModel puzzle
 
-        Sim_ sim ->
+        SIM sim ->
             SimStore.leftBarViewModel sim.store
 
 
@@ -217,7 +217,7 @@ viewCycle model =
                 Edit ->
                     "NA"
 
-                Sim_ sim ->
+                SIM sim ->
                     fromInt sim.cycle
     in
     div [] [ text "Cycle: ", text cycleText ]
@@ -237,7 +237,7 @@ viewGrid { puzzle, state, editors } =
             Edit ->
                 viewEditModeGridItems puzzle editors
 
-            Sim_ sim ->
+            SIM sim ->
                 viewSimGridItems puzzle sim
         )
 
