@@ -118,11 +118,11 @@ startDebugging stepMode model =
             model
 
 
-type alias CompiledNodes =
+type alias ExeDict =
     Dict Addr ExeNode
 
 
-compile : Editors -> Maybe CompiledNodes
+compile : Editors -> Maybe ExeDict
 compile editors =
     maybeMapValues (ExeNode.compile >> Result.toMaybe) editors
 
@@ -518,7 +518,7 @@ type StepMode
     | AutoFast
 
 
-initSim : Puzzle -> CompiledNodes -> StepMode -> Sim
+initSim : Puzzle -> ExeDict -> StepMode -> Sim
 initSim puzzle exs stepMode =
     { store = SimStore.init puzzle exs
     , state = Stepping stepMode

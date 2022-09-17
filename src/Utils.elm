@@ -2191,17 +2191,6 @@ foldrValues fn =
     Dict.foldr (always fn)
 
 
-
---maybeMapValues :
---    (b -> Maybe v)
---    -> Dict comparable b
---    -> Maybe (Dict comparable v)
---maybeMapValues fn =
---    Dict.toList
---        >> Maybe.Extra.traverse (filterMapSecond fn)
---        >> Maybe.map Dict.fromList
-
-
 maybeMapValues :
     (a -> Maybe b)
     -> Dict comparable a
