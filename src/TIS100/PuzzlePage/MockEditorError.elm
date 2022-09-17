@@ -2,7 +2,7 @@ module TIS100.PuzzlePage.MockEditorError exposing (..)
 
 import Html exposing (pre)
 import Html.Attributes
-import TIS100.PuzzlePage.CompilerV2 as Compiler exposing (ErrorDetail)
+import TIS100.PuzzlePage.Compiler as Compiler exposing (ErrorDetail)
 import TIS100.UI as UI
 import Utils exposing (..)
 

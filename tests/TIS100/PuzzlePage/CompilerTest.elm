@@ -1,13 +1,21 @@
-module Compiler2Test exposing (..)
+module TIS100.PuzzlePage.CompilerTest exposing (..)
 
 import Expect
-import TIS100.PuzzlePage.CompilerV2 exposing (Error(..), compile, compileLine, lexLine, prefixLabelToken, wordToken)
+import TIS100.PuzzlePage.Compiler
+    exposing
+        ( Error(..)
+        , compile
+        , compileLine
+        , lexLine
+        , prefixLabelToken
+        , wordToken
+        )
 import Test exposing (Test, describe, test)
 
 
 
 {-
-   npx elm-test-rs --watch tests/Compiler2Test.elm
+   npx elm-test-rs --watch **/CompilerTest.elm
 -}
 
 

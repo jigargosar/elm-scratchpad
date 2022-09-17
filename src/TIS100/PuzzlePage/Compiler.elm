@@ -1,4 +1,4 @@
-module TIS100.PuzzlePage.CompilerV2 exposing
+module TIS100.PuzzlePage.Compiler exposing
     ( Error(..)
     , ErrorDetail
     , compile

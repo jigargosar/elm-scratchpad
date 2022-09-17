@@ -15,7 +15,7 @@ import TIS100.ExeNode as ExeNode exposing (ExeNode)
 import TIS100.Num as Num exposing (Num)
 import TIS100.Ports as Ports exposing (Action(..), Intent(..))
 import TIS100.Puzzle as Puzzle exposing (IOConfig, Puzzle)
-import TIS100.PuzzlePage.CompilerV2 as Compiler exposing (ErrorDetail)
+import TIS100.PuzzlePage.Compiler as Compiler exposing (ErrorDetail)
 import TIS100.PuzzlePage.LeftBar as LB
 import TIS100.PuzzlePage.SimStore as SimStore
 import TIS100.UI as UI
