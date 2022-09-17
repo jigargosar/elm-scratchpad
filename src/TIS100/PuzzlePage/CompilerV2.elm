@@ -120,7 +120,7 @@ parseLine tokens =
 
         _ ->
             parseInst tokens
-                |> Result.map (Stmt Nothing)
+                |> Result.map stmtWithoutLabel
 
 
 type Inst
