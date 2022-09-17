@@ -3,7 +3,7 @@ module TIS100.PuzzlePage.Compiler exposing
     , ErrorDetail
     , compile
     , compileLine
-    , errorsToRecord
+    , errorsToDetails
     , lexLine
     , prefixLabelToken
     , wordToken
@@ -37,8 +37,8 @@ type alias Errors =
     List ( Int, Error )
 
 
-errorsToRecord : Errors -> List ErrorDetail
-errorsToRecord =
+errorsToDetails : Errors -> List ErrorDetail
+errorsToDetails =
     List.filterMap
         (\( l, e ) ->
             case e of

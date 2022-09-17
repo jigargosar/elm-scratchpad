@@ -325,7 +325,7 @@ toErrors : Editor -> List ErrorDetail
 toErrors editor =
     case Compiler.compile editor of
         Err errors ->
-            Compiler.errorsToRecord errors
+            Compiler.errorsToDetails errors
 
         Ok _ ->
             []

@@ -44,7 +44,7 @@ errorText : List (Html msg)
 errorText =
     case Compiler.compile editorText of
         Err errors ->
-            List.map viewError (Compiler.errorsToRecord errors)
+            List.map viewError (Compiler.errorsToDetails errors)
 
         Ok _ ->
             []
