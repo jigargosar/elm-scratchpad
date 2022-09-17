@@ -8,11 +8,8 @@ module TIS100.PuzzlePage exposing
     )
 
 import Dict exposing (Dict)
-import Dict.Extra
 import Html exposing (pre)
 import Html.Attributes
-import List.Extra
-import Maybe.Extra
 import TIS100.Addr as Addr exposing (Addr)
 import TIS100.ExeNode as ExeNode exposing (ExeNode)
 import TIS100.Num as Num exposing (Num)
