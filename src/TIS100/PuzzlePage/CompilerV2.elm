@@ -18,6 +18,7 @@ import Utils as U exposing (Dir4(..))
 
 type Error
     = InvalidOpCode Int String
+    | InvalidExpression Int String
     | MissingOperand Int Int
     | TooManyOperands Int Int
     | InternalError
@@ -41,6 +42,14 @@ errorsToRecord =
         (\( l, e ) ->
             case e of
                 InvalidOpCode startCol string ->
+                    Just
+                        { row = l
+                        , startCol = startCol
+                        , endCol = startCol + String.length string - 1
+                        , msg = "Invalid op:\"" ++ string ++ "\""
+                        }
+
+                InvalidExpression startCol string ->
                     Just
                         { row = l
                         , startCol = startCol
@@ -166,8 +175,13 @@ parseDstOperand (Token _ _) =
 
 
 parseSrcOperand : Token -> Result Error Src
-parseSrcOperand (Token _ _) =
-    Err InternalError
+parseSrcOperand ((Token typ _) as t) =
+    case typ of
+        Dir dir ->
+            Ok <| SrcPort dir
+
+        _ ->
+            invalidExpr t
 
 
 withZeroArgOp : v -> List Token -> Result Error v
@@ -231,10 +245,13 @@ tokenEndColumn token =
 
 
 invalidOp : Token -> Result Error value
-invalidOp l =
-    case l of
-        Token _ (Loc col string) ->
-            Err (InvalidOpCode col string)
+invalidOp (Token _ (Loc col string)) =
+    Err (InvalidOpCode col string)
+
+
+invalidExpr : Token -> Result Error value
+invalidExpr (Token _ (Loc col string)) =
+    Err (InvalidExpression col string)
 
 
 lexLine : String -> Result (List DeadEnd) (List Token)
@@ -368,11 +385,6 @@ toTokenParser ttp =
         |= ttp
         |= getOffset
         |= getSource
-
-
-opCodeParser : OpCode -> String -> Parser OpCode
-opCodeParser opCode string =
-    succeed opCode |. keyword string
 
 
 keyword2 tag string =
