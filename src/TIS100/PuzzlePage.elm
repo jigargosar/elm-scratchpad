@@ -131,6 +131,7 @@ update msg model =
             updateWhenSimulating msg sim model
 
 
+updateWhenSimulating : Msg -> Sim -> Model -> Model
 updateWhenSimulating msg sim model =
     case msg of
         STOP ->
