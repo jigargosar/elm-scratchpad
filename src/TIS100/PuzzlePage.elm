@@ -301,26 +301,6 @@ viewOutputNode { x, title } =
 
 viewEditor : ( Addr, Editor ) -> Html Msg
 viewEditor ( addr, editor ) =
-    --let
-    --    ( outline, headerView ) =
-    --        case ExeNode.compile editor of
-    --            Ok _ ->
-    --                ( UI.lightOutline, noView )
-    --
-    --            Err error ->
-    --                ( UI.errorOutline, viewCompilerError error )
-    --in
-    --div
-    --    [ Addr.toGridArea addr
-    --    , outline
-    --    , displayGrid
-    --    , gridTemplateColumns "18ch auto"
-    --    , positionRelative
-    --    ]
-    --    [ headerView
-    --    , viewEditorTextArea (OnEditorInput addr) outline editor
-    --    , viewExeBoxes outline { acc = Num.zero, mode = "IDLE" }
-    --    ]
     viewEditorHelp addr editor (toErrors editor)
 
 
