@@ -126,11 +126,6 @@ compile editors =
     maybeMapValues (ExeNode.compile >> Result.toMaybe) editors
 
 
-startEditing : Model -> Model
-startEditing model =
-    { model | state = Edit }
-
-
 update : Msg -> Model -> Model
 update msg model =
     case model.state of
@@ -144,7 +139,7 @@ update msg model =
 updateWhenSimulating msg sim model =
     case msg of
         STOP ->
-            startEditing model
+            { model | state = Edit }
 
         STEP ->
             { model | state = SIM (manualStep sim) }
