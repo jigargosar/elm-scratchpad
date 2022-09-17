@@ -108,10 +108,10 @@ subscriptions model =
 startDebugging : StepMode -> Model -> Model
 startDebugging stepMode model =
     case compile model.editors of
-        Ok exs ->
+        Just exs ->
             { model | state = Sim_ (initSim model.puzzle exs stepMode) }
 
-        Err _ ->
+        Nothing ->
             model
 
 
@@ -119,7 +119,7 @@ type alias CompiledNodes =
     Dict Addr ExeNode
 
 
-compile : Editors -> Result Compiler.Errors CompiledNodes
+compile : Editors -> Maybe CompiledNodes
 compile editors =
     compileHelp Dict.empty (Dict.toList editors)
 
@@ -127,19 +127,19 @@ compile editors =
 compileHelp :
     CompiledNodes
     -> List ( Addr, Editor )
-    -> Result Compiler.Errors CompiledNodes
+    -> Maybe CompiledNodes
 compileHelp exd ls =
     case ls of
         [] ->
-            Ok exd
+            Just exd
 
         ( a, sc ) :: ls_ ->
             case ExeNode.compile sc of
                 Ok e ->
                     compileHelp (Dict.insert a e exd) ls_
 
-                Err e ->
-                    Err e
+                Err _ ->
+                    Nothing
 
 
 startEditing : Model -> Model
