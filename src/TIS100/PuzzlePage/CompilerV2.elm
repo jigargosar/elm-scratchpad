@@ -177,7 +177,7 @@ parseDstOperand (Token _ _) =
 parseSrcOperand : Token -> Result Error Src
 parseSrcOperand ((Token typ _) as t) =
     case typ of
-        Dir dir ->
+        DIR dir ->
             Ok <| SrcPort dir
 
         _ ->
@@ -271,7 +271,9 @@ type TokenTyp
     = Word
     | PrefixLabel String
     | OpCode OpCode
-    | Dir Dir4
+    | DIR Dir4
+    | ACC
+    | NUM Num
 
 
 type Src
@@ -320,6 +322,7 @@ tokenParser =
     oneOf
         [ backtrackable prefixLabelTokenParser
         , opCodeTokenParser
+        , toTokenParser (keyword2 ACC "acc")
         , dirTokenParser
         , wordTokenParser
         ]
@@ -351,7 +354,7 @@ opCodeTokenParser =
 dirTokenParser : Parser Token
 dirTokenParser =
     toTokenParser
-        (succeed Dir
+        (succeed DIR
             |= oneOf
                 [ keyword2 Up "up"
                 , keyword2 Down "down"
