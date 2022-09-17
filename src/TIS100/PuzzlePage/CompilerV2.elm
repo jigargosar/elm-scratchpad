@@ -143,11 +143,6 @@ parseLine tokens =
                 |> Result.map stmtWithoutLabel
 
 
-type Inst
-    = Mov Src Dst
-    | Nop
-
-
 parseInst : List Token -> Result Error (Maybe Inst)
 parseInst tokens =
     case tokens of
@@ -302,6 +297,11 @@ type TokenTyp
     | ACC
     | NIL
     | NUM Num
+
+
+type Inst
+    = Mov Src Dst
+    | Nop
 
 
 type Src
