@@ -8,9 +8,7 @@ module TIS100.ExeNode exposing
     , viewModel
     )
 
-import Parser exposing ((|.), (|=), Parser)
 import Pivot exposing (Pivot)
-import Set
 import TIS100.Num as Num exposing (Num)
 import TIS100.Ports exposing (Intent(..))
 import TIS100.PuzzlePage.Compiler as Compiler
@@ -143,36 +141,10 @@ compile srcCode =
         Ok empty
 
     else
-        {- srcCode
-           |> String.toLower
-           |> Parser.run statementsParser
-           |> Result.map (List.filterMap prgLineFromStmt)
-        -}
         srcCode
             |> Compiler.compile
             |> Result.map (List.map prgLineFromTuple)
-            |> Result.map (init2 srcCode)
-
-
-
---|> Result.mapError
---    (\des ->
---        --let
---        --    _ =
---        --        des
---        --            |> Debug.log "Debug: "
---        --in
---        des
---            |> List.head
---            |> Maybe.map (.problem >> Debug.toString)
---            |> Maybe.withDefault "Compilation Failed"
---    )
-
-
-type Stmt
-    = Label String
-    | LabeledInst String ( Int, Inst )
-    | OnlyInst ( Int, Inst )
+            |> Result.map (init srcCode)
 
 
 prgLineFromTuple : ( Int, Inst ) -> PLine
@@ -180,201 +152,14 @@ prgLineFromTuple ( a, b ) =
     PLine a b
 
 
-prgLineFromStmt : Stmt -> Maybe PLine
-prgLineFromStmt stmt =
-    case stmt of
-        Label _ ->
-            Nothing
-
-        LabeledInst _ ( lineNo, inst ) ->
-            Just <| PLine lineNo inst
-
-        OnlyInst ( lineNo, inst ) ->
-            Just <| PLine lineNo inst
-
-
-statementsParser : Parser (List Stmt)
-statementsParser =
-    Parser.loop [] statementsParserHelp
-
-
-statementsParserHelp : List Stmt -> Parser (Parser.Step (List Stmt) (List Stmt))
-statementsParserHelp revStmts =
-    Parser.succeed identity
-        |. Parser.spaces
-        |= Parser.oneOf
-            [ Parser.succeed (\stmt -> Parser.Loop (stmt :: revStmts))
-                |= stmtParser
-            , Parser.succeed (\_ -> Parser.Done (List.reverse revStmts))
-                |= Parser.end
-            ]
-
-
-stmtParser : Parser Stmt
-stmtParser =
-    Parser.oneOf
-        [ prefixLabelParser
-            |> Parser.andThen labeledStmtParser
-        , Parser.succeed OnlyInst
-            |= instParser
-        ]
-
-
-labeledStmtParser : String -> Parser Stmt
-labeledStmtParser label =
-    Parser.oneOf
-        [ Parser.succeed (Label label)
-            |. stmtEndChar
-        , Parser.succeed (LabeledInst label)
-            |= instParser
-        ]
-
-
-stmtEndChar : Parser ()
-stmtEndChar =
-    Parser.oneOf [ Parser.end, Parser.symbol "\n" ]
-
-
-stmtEnd : Parser ()
-stmtEnd =
-    Parser.succeed ()
-        |. spaceChars
-        |. Parser.oneOf [ Parser.end, Parser.symbol "\n" ]
-
-
-prefixLabelParser : Parser String
-prefixLabelParser =
-    Parser.succeed identity
-        |= labelParser
-        |. spaceChars
-        |. Parser.symbol ":"
-        |. spaceChars
-
-
-labelParser : Parser String
-labelParser =
-    Parser.variable
-        { start = Char.isAlpha
-        , inner = \c -> Char.isAlphaNum c || c == '_'
-        , reserved = reservedKeywords
-        }
-
-
-reservedKeywords : Set.Set String
-reservedKeywords =
-    Set.fromList
-        [ "nop"
-        , "mov"
-        , "add"
-        , "sub"
-        , "sav"
-        , "jmp"
-        , "jez"
-        , "jgz"
-        , "jlz"
-        , "jro"
-        ]
-
-
-spaceChars : Parser ()
-spaceChars =
-    Parser.chompWhile (\c -> c == ' ')
-
-
-instParser : Parser ( Int, Inst )
-instParser =
-    withLineNum <|
-        Parser.oneOf
-            [ movInstParser
-            , nopInstParser
-            ]
-            |. stmtEnd
-
-
-withLineNum : Parser a -> Parser ( Int, a )
-withLineNum parser =
-    Parser.succeed U.pair
-        |= (Parser.getRow |> Parser.map U.dec)
-        |= parser
-
-
-nopInstParser : Parser Inst
-nopInstParser =
-    simpleKeyword "nop" Nop
-
-
-movInstParser : Parser Inst
-movInstParser =
-    Parser.succeed Mov
-        |. Parser.keyword "mov"
-        |. spaceChars
-        |= srcParser
-        |. spaceChars
-        |= dstParser
-
-
-dstParser : Parser Dst
-dstParser =
-    Parser.oneOf
-        [ Parser.map DstPort dirParser
-        , simpleKeyword "acc" DstAcc
-        , simpleKeyword "nil" DstNil
-        ]
-
-
-srcParser : Parser Src
-srcParser =
-    Parser.oneOf
-        [ Parser.map SrcPort dirParser
-        , simpleKeyword "acc" SrcAcc
-        , Parser.map SrcNum numParser
-        ]
-
-
-numParser : Parser Num
-numParser =
-    Parser.succeed Num.fromInt
-        |= signedIntParser
-
-
-signedIntParser : Parser Int
-signedIntParser =
-    Parser.oneOf
-        [ Parser.succeed negate
-            |. Parser.symbol "-"
-            |= Parser.int
-        , Parser.int
-        ]
-
-
-dirParser : Parser Dir4
-dirParser =
-    Parser.oneOf
-        [ simpleKeyword "left" Left
-        , simpleKeyword "right" Right
-        , simpleKeyword "up" Up
-        , simpleKeyword "down" Down
-        ]
-
-
-simpleKeyword : String -> a -> Parser a
-simpleKeyword string a =
-    Parser.succeed a |. Parser.keyword string
-
-
-init2 : String -> List PLine -> ExeNode
-init2 srcCode prgLines =
+init : String -> List PLine -> ExeNode
+init srcCode prgLines =
     case Pivot.fromList prgLines of
         Nothing ->
             NotRunnable srcCode
 
         Just prg ->
             Runnable srcCode (intentsFromPrg prg) (ReadyToRun (initCtx prg))
-
-
-init : String -> Prg -> ExeNode
-init srcCode prg =
-    Runnable srcCode (intentsFromPrg prg) (ReadyToRun (initCtx prg))
 
 
 intentsFromPrg : Prg -> List Intent
