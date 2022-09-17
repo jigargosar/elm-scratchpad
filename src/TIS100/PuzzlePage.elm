@@ -301,12 +301,10 @@ viewOutputNode { x, title } =
 
 viewEditor : ( Addr, Editor ) -> Html Msg
 viewEditor ( addr, editor ) =
-    viewEditorHelp addr editor (Compiler.listErrorDetails editor)
-
-
-viewEditorHelp : Addr -> String -> List ErrorDetail -> Html Msg
-viewEditorHelp addr editor errors =
     let
+        errors =
+            Compiler.listErrorDetails editor
+
         ( outline, headerView ) =
             case errors of
                 [] ->
