@@ -12,7 +12,7 @@ module TIS100.PuzzlePage.CompilerV2 exposing
 import List.Extra
 import Parser exposing (..)
 import Set
-import TIS100.Num exposing (Num)
+import TIS100.Num as Num exposing (Num)
 import Utils as U exposing (Dir4(..))
 
 
@@ -180,6 +180,12 @@ parseSrcOperand ((Token typ _) as t) =
         DIR dir ->
             Ok <| SrcPort dir
 
+        NUM num ->
+            Ok <| SrcNum num
+
+        ACC ->
+            Ok <| SrcAcc
+
         _ ->
             invalidExpr t
 
@@ -323,6 +329,7 @@ tokenParser =
         [ backtrackable prefixLabelTokenParser
         , opCodeTokenParser
         , toTokenParser (keyword2 ACC "acc")
+        , numTokenParser
         , dirTokenParser
         , wordTokenParser
         ]
@@ -360,6 +367,19 @@ dirTokenParser =
                 , keyword2 Down "down"
                 , keyword2 Left "left"
                 , keyword2 Right "right"
+                ]
+        )
+
+
+numTokenParser : Parser Token
+numTokenParser =
+    toTokenParser
+        (succeed (Num.fromInt >> NUM)
+            |= oneOf
+                [ succeed negate
+                    |. symbol "-"
+                    |= int
+                , int
                 ]
         )
 
