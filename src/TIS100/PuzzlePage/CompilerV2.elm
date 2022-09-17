@@ -12,7 +12,8 @@ module TIS100.PuzzlePage.CompilerV2 exposing
 import List.Extra
 import Parser exposing (..)
 import Set
-import Utils as U
+import TIS100.Num exposing (Num)
+import Utils as U exposing (Dir4)
 
 
 type Error
@@ -253,6 +254,12 @@ type TokenTyp
     = Word
     | PrefixLabel String
     | OpCode OpCode
+
+
+type Src
+    = SrcPort Dir4
+    | SrcNum Num
+    | SrcAcc
 
 
 type OpCode
