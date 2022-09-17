@@ -4,7 +4,7 @@ module TIS100.PuzzlePage.CompilerV2 exposing
     , compile
     , compileLine
     , errorsToRecord
-    , lex
+    , lexLine
     , prefixLabelToken
     , wordToken
     )
@@ -89,7 +89,7 @@ compile string =
 
 compileLine : String -> Result Error Stmt
 compileLine src =
-    case lex src of
+    case lexLine src of
         Ok tokens ->
             parseLine tokens
 
@@ -98,8 +98,7 @@ compileLine src =
 
 
 type Stmt
-    = Stmt
-    | LabeledStmt String (Maybe Inst)
+    = Stmt (Maybe String) (Maybe Inst)
 
 
 parseLine : List Token -> Result Error Stmt
@@ -107,11 +106,11 @@ parseLine tokens =
     case tokens of
         (Token (PrefixLabel lbl) _) :: rest ->
             parseInst rest
-                |> Result.map (LabeledStmt lbl)
+                |> Result.map (Stmt (Just lbl))
 
         _ ->
             parseInst tokens
-                |> Result.map (\_ -> Stmt)
+                |> Result.map (Stmt Nothing)
 
 
 type Inst
@@ -209,8 +208,8 @@ invalidOp l =
             Err (InvalidOpCode col string)
 
 
-lex : String -> Result (List DeadEnd) (List Token)
-lex src =
+lexLine : String -> Result (List DeadEnd) (List Token)
+lexLine src =
     Parser.run tokenListParser (String.toLower src)
 
 
