@@ -2208,11 +2208,11 @@ maybeMapValues :
     -> Maybe (Dict comparable b)
 maybeMapValues fn =
     let
-        do :
+        reduce :
             Dict comparable b
             -> List ( comparable, a )
             -> Maybe (Dict comparable b)
-        do dict list =
+        reduce dict list =
             case list of
                 [] ->
                     Just dict
@@ -2223,9 +2223,9 @@ maybeMapValues fn =
                             Nothing
 
                         Just nv ->
-                            do (Dict.insert k nv dict) t
+                            reduce (Dict.insert k nv dict) t
     in
-    Dict.toList >> do Dict.empty
+    Dict.toList >> reduce Dict.empty
 
 
 
