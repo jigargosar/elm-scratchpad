@@ -14,6 +14,7 @@ import Html.Events
 import Html.Keyed
 import Json.Decode as JD exposing (Decoder)
 import List.Extra
+import Maybe.Extra
 import Pivot exposing (Pivot)
 import Random exposing (Generator)
 import Random.Char
@@ -2190,6 +2191,16 @@ foldrValues fn =
     Dict.foldr (always fn)
 
 
+maybeMapValues :
+    (b -> Maybe v)
+    -> Dict comparable b
+    -> Maybe (Dict comparable v)
+maybeMapValues fn =
+    Dict.toList
+        >> Maybe.Extra.traverse (filterMapSecond fn)
+        >> Maybe.map Dict.fromList
+
+
 
 -- LIST HELPERS
 
@@ -2350,26 +2361,6 @@ maybeOneOf maybes =
 
         (Just a) :: _ ->
             Just a
-
-
-maybeCombine : List (Maybe a) -> Maybe (List a)
-maybeCombine list =
-    maybeCombineHelp list []
-
-
-maybeCombineHelp : List (Maybe a) -> List a -> Maybe (List a)
-maybeCombineHelp list acc =
-    case list of
-        head :: tail ->
-            case head of
-                Just a ->
-                    maybeCombineHelp tail (a :: acc)
-
-                Nothing ->
-                    Nothing
-
-        [] ->
-            Just (List.reverse acc)
 
 
 
