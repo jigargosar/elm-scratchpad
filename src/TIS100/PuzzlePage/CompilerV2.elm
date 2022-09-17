@@ -125,7 +125,7 @@ parseLine tokens =
 
 
 type Inst
-    = Mov () ()
+    = Mov Src ()
     | Nop
 
 
@@ -165,9 +165,9 @@ parseDstOperand (Token _ _) =
     Ok ()
 
 
-parseSrcOperand : Token -> Result error ()
+parseSrcOperand : Token -> Result Error Src
 parseSrcOperand (Token _ _) =
-    Ok ()
+    Err InternalError
 
 
 withZeroArgOp : v -> List Token -> Result Error v
