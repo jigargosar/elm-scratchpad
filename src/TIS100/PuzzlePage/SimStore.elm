@@ -82,16 +82,16 @@ portsViewModel : Model -> Ports.ViewModel
 portsViewModel simStore =
     Dict.foldl
         (\addr node { intents, actions } ->
-            { intents = List.map (U.pair addr) (intentsOf node) ++ intents
-            , actions = List.map (U.pair addr) (actionsOf node) ++ actions
+            { intents = List.map (U.pair addr) (nodeIntents node) ++ intents
+            , actions = List.map (U.pair addr) (nodeActions node) ++ actions
             }
         )
         { intents = [], actions = [] }
         simStore
 
 
-intentsOf : Node -> List Intent
-intentsOf node =
+nodeIntents : Node -> List Intent
+nodeIntents node =
     case node of
         IN _ _ ->
             [ Write U.Down ]
@@ -106,8 +106,8 @@ intentsOf node =
             []
 
 
-actionsOf : Node -> List Action
-actionsOf node =
+nodeActions : Node -> List Action
+nodeActions node =
     case node of
         OUT _ _ ->
             []
