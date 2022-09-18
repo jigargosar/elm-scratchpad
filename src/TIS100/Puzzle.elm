@@ -6,7 +6,6 @@ module TIS100.Puzzle exposing
     , leftBarViewModel
     , samplePuzzle
     , toDictBy
-    , toDictBy2
     , toListBy
     , validWrites
     )
@@ -160,25 +159,6 @@ validWriteDirs addr =
 
 
 toDictBy :
-    (IOConfig -> v)
-    -> (IOConfig -> v)
-    -> (Addr -> NodeType -> v)
-    -> Puzzle
-    -> Dict Addr v
-toDictBy ifn ofn lfn (Puzzle puzzle) =
-    let
-        io =
-            List.map (\c -> ( inputAddr c, ifn c )) puzzle.inputs
-                ++ List.map (\c -> ( outputAddr c, ofn c )) puzzle.outputs
-                |> Dict.fromList
-
-        layout =
-            Dict.map lfn puzzle.layout
-    in
-    Dict.union io layout
-
-
-toDictBy2 :
     { in_ : IOConfig -> v
     , out : IOConfig -> v
     , exe : Addr -> v
@@ -186,7 +166,7 @@ toDictBy2 :
     }
     -> Puzzle
     -> Dict Addr v
-toDictBy2 { in_, out, exe, flt } (Puzzle puzzle) =
+toDictBy { in_, out, exe, flt } (Puzzle puzzle) =
     let
         io =
             List.map (\c -> ( inputAddr c, in_ c )) puzzle.inputs

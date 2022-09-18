@@ -45,21 +45,15 @@ init puzzle exs =
         initOut c =
             OUT c (Out.fromExpected (List.length c.nums))
 
-        initLayout addr nk =
-            case nk of
-                Puzzle.Executable ->
-                    initExe addr
-
-                Puzzle.Faulty ->
-                    FLT
-
         initExe addr =
             EXE (U.dictGetOr Exe.empty addr exs)
     in
     Puzzle.toDictBy
-        initIn
-        initOut
-        initLayout
+        { in_ = initIn
+        , out = initOut
+        , exe = initExe
+        , flt = always FLT
+        }
         puzzle
 
 
