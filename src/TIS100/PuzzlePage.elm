@@ -252,18 +252,18 @@ viewGrid { puzzle, state, editors } =
 
 
 viewInputNode : InConfig -> Html msg
-viewInputNode { x, title } =
+viewInputNode c =
     div
         [ displayGrid
         , placeContentCenter
         , sWidth "50%"
         , sHeight UI.gapSize
-        , Addr.inputGridArea x
+        , Addr.inputGridArea <| Puzzle.inX c
         , positionRelative
         , style "bottom" UI.gapSize
         ]
         [ div [ tac, fg UI.lightGray ]
-            [ div [] [ text title ]
+            [ div [] [ text <| Puzzle.inTitle c ]
             , div [] [ text "(IDLE 0%)" ]
             ]
         ]

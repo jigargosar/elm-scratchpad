@@ -4,6 +4,9 @@ module TIS100.Puzzle exposing
     , OutConfig
     , Puzzle
     , getExeAddr
+    , inNums
+    , inTitle
+    , inX
     , leftBarViewModel
     , samplePuzzle
     , toDictBy
@@ -33,11 +36,12 @@ type alias Layout =
     Dict Addr NodeType
 
 
-type alias InConfig =
-    { x : Int
-    , title : String
-    , nums : List Num
-    }
+type InConfig
+    = InConfig
+        { x : Int
+        , title : String
+        , nums : List Num
+        }
 
 
 type alias OutConfig =
@@ -62,8 +66,8 @@ samplePuzzle =
             , "WRITE IN.B - IN.A TO OUT.N"
             ]
         , inputs =
-            [ { x = 0, title = "IN.A", nums = Num.range 1 20 }
-            , { x = 1, title = "IN.B", nums = Num.range 1 20 }
+            [ InConfig { x = 0, title = "IN.A", nums = Num.range 1 20 }
+            , InConfig { x = 1, title = "IN.B", nums = Num.range 1 20 }
             ]
         , outputs =
             [ { x = 0, title = "OUT.P", nums = Num.range 1 20 }
@@ -99,7 +103,7 @@ leftBarViewModel (Puzzle puzzle) =
 
 
 toLBInput : InConfig -> LB.Input
-toLBInput conf =
+toLBInput (InConfig conf) =
     { title = conf.title
     , nums = SelectionList.None conf.nums
     }
@@ -188,9 +192,24 @@ getExeAddr (Puzzle puzzle) =
         |> Dict.keys
 
 
+inNums : InConfig -> List Num
+inNums (InConfig { nums }) =
+    nums
+
+
+inTitle : InConfig -> String
+inTitle (InConfig { title }) =
+    title
+
+
 inputAddr : InConfig -> Addr
-inputAddr { x } =
+inputAddr (InConfig { x }) =
     ( x, 0 )
+
+
+inX : InConfig -> Int
+inX (InConfig { x }) =
+    x
 
 
 outputAddr : OutConfig -> Addr

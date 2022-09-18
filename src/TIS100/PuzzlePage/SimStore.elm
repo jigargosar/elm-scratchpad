@@ -39,8 +39,9 @@ type alias ExeDict =
 init : Puzzle -> ExeDict -> Model
 init puzzle exs =
     let
+        initIn : InConfig -> Node
         initIn c =
-            IN c (In.fromList c.nums)
+            IN c (In.fromList (Puzzle.inNums c))
 
         initOut c =
             OUT c (Out.fromExpected (List.length c.nums))
@@ -149,7 +150,7 @@ leftBarViewModel simStore =
 
 toLBInput : InConfig -> InNode -> LB.Input
 toLBInput c i =
-    { title = c.title
+    { title = Puzzle.inTitle c
     , nums = In.toSelectionList i
     }
 
