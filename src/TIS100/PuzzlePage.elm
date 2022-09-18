@@ -381,8 +381,8 @@ viewCompilerErrorMsg msg =
         [ text msg ]
 
 
-viewExeNode : ( Addr, ExeNode ) -> Html msg
-viewExeNode ( addr, exe ) =
+viewExeNode : Addr -> ExeNode -> Html msg
+viewExeNode addr exe =
     let
         vm : ExeNode.ViewModel
         vm =
@@ -569,7 +569,7 @@ viewSimNode ( addr, node ) =
             viewOutputNode conf
 
         SimStore.EXE exe ->
-            viewExeNode ( addr, exe )
+            viewExeNode addr exe
 
         SimStore.FLT ->
             viewFaultyNode addr
