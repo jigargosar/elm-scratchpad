@@ -14,7 +14,7 @@ import TIS100.Addr as Addr exposing (Addr)
 import TIS100.Exe as ExeNode exposing (Exe)
 import TIS100.Num as Num exposing (Num)
 import TIS100.Ports as Ports exposing (Action(..), Intent(..))
-import TIS100.Puzzle as Puzzle exposing (IOConfig, Puzzle)
+import TIS100.Puzzle as Puzzle exposing (Input, Output, Puzzle)
 import TIS100.PuzzlePage.Compiler as Compiler exposing (ErrorDetail)
 import TIS100.PuzzlePage.LeftBar as LB
 import TIS100.PuzzlePage.SimStore as SimStore
@@ -251,7 +251,7 @@ viewGrid { puzzle, state, editors } =
 -- NODE
 
 
-viewInputNode : IOConfig -> Html msg
+viewInputNode : Input -> Html msg
 viewInputNode { x, title } =
     div
         [ displayGrid
@@ -269,7 +269,7 @@ viewInputNode { x, title } =
         ]
 
 
-viewOutputNode : IOConfig -> Html msg
+viewOutputNode : Output -> Html msg
 viewOutputNode { x, title } =
     div
         [ displayGrid

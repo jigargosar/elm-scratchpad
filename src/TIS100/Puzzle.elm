@@ -1,6 +1,7 @@
 module TIS100.Puzzle exposing
-    ( IOConfig
+    ( Input
     , NodeType(..)
+    , Output
     , Puzzle
     , getExeAddr
     , leftBarViewModel
@@ -22,8 +23,8 @@ type Puzzle
     = Puzzle
         { title : String
         , description : List String
-        , inputs : List IOConfig
-        , outputs : List IOConfig
+        , inputs : List Input
+        , outputs : List Output
         , layout : Layout
         }
 
@@ -32,7 +33,14 @@ type alias Layout =
     Dict Addr NodeType
 
 
-type alias IOConfig =
+type alias Output =
+    { x : Int
+    , title : String
+    , nums : List Num
+    }
+
+
+type alias Input =
     { x : Int
     , title : String
     , nums : List Num
@@ -90,14 +98,14 @@ leftBarViewModel (Puzzle puzzle) =
     }
 
 
-toLBInput : IOConfig -> LB.Input
+toLBInput : Input -> LB.Input
 toLBInput conf =
     { title = conf.title
     , nums = SelectionList.None conf.nums
     }
 
 
-toLBOutput : IOConfig -> LB.Output
+toLBOutput : Output -> LB.Output
 toLBOutput conf =
     { title = conf.title
     , expected = SelectionList.None conf.nums
@@ -132,8 +140,8 @@ validWriteDirs addr =
 
 
 toDictBy :
-    { in_ : IOConfig -> v
-    , out : IOConfig -> v
+    { in_ : Input -> v
+    , out : Output -> v
     , exe : Addr -> v
     , flt : Addr -> v
     }
@@ -162,8 +170,8 @@ toDictBy { in_, out, exe, flt } (Puzzle puzzle) =
 
 
 toListBy :
-    { in_ : IOConfig -> v
-    , out : IOConfig -> v
+    { in_ : Input -> v
+    , out : Output -> v
     , exe : Addr -> v
     , flt : Addr -> v
     }
@@ -180,16 +188,16 @@ getExeAddr (Puzzle puzzle) =
         |> Dict.keys
 
 
-inputAddr : IOConfig -> Addr
+inputAddr : Input -> Addr
 inputAddr { x } =
     ( x, 0 )
 
 
-outputAddr : IOConfig -> Addr
+outputAddr : Output -> Addr
 outputAddr { x } =
     ( x, 4 )
 
 
-addrAboveOutput : IOConfig -> Addr
+addrAboveOutput : Output -> Addr
 addrAboveOutput c =
     outputAddr c |> U.moveInDir4 Up
