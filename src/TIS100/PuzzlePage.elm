@@ -11,7 +11,7 @@ import Dict exposing (Dict)
 import Html exposing (pre)
 import Html.Attributes
 import TIS100.Addr as Addr exposing (Addr)
-import TIS100.ExeNode as ExeNode exposing (ExeNode)
+import TIS100.Exe as ExeNode exposing (Exe)
 import TIS100.Num as Num exposing (Num)
 import TIS100.Ports as Ports exposing (Action(..), Intent(..))
 import TIS100.Puzzle as Puzzle exposing (IOConfig, Puzzle)
@@ -118,7 +118,7 @@ startDebugging stepMode model =
 
 
 type alias ExeDict =
-    Dict Addr ExeNode
+    Dict Addr Exe
 
 
 update : Msg -> Model -> Model
@@ -381,7 +381,7 @@ viewCompilerErrorMsg msg =
         [ text msg ]
 
 
-viewExeNode : ( Addr, ExeNode ) -> Html msg
+viewExeNode : ( Addr, Exe ) -> Html msg
 viewExeNode ( addr, exe ) =
     let
         vm : ExeNode.ViewModel

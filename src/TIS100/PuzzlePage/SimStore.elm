@@ -9,7 +9,7 @@ module TIS100.PuzzlePage.SimStore exposing
 
 import Dict exposing (Dict)
 import TIS100.Addr exposing (Addr)
-import TIS100.ExeNode as Exe exposing (ExeNode)
+import TIS100.Exe as Exe exposing (Exe)
 import TIS100.InputNode as In exposing (InputNode)
 import TIS100.OutputNode as Out exposing (OutputNode)
 import TIS100.Ports as Ports exposing (Action(..), Intent(..))
@@ -28,12 +28,12 @@ type alias Model =
 type Node
     = IN IOConfig InputNode
     | OUT IOConfig OutputNode
-    | EXE ExeNode
+    | EXE Exe
     | FLT
 
 
 type alias ExeDict =
-    Dict Addr ExeNode
+    Dict Addr Exe
 
 
 init : Puzzle -> ExeDict -> Model
@@ -71,14 +71,14 @@ step store =
 nodeState : Node -> NodeState Node
 nodeState node =
     case node of
-        IN conf inputNode ->
-            In.stepState inputNode |> NodeState.map (IN conf)
+        IN conf i ->
+            In.stepState i |> NodeState.map (IN conf)
 
-        OUT conf outputNode ->
-            Out.stepState outputNode |> NodeState.map (OUT conf)
+        OUT conf out ->
+            Out.stepState out |> NodeState.map (OUT conf)
 
-        EXE exeNode ->
-            Exe.toState exeNode |> NodeState.map EXE
+        EXE exe ->
+            Exe.toState exe |> NodeState.map EXE
 
         FLT ->
             NodeState.Idle
