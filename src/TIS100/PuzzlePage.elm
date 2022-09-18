@@ -286,8 +286,8 @@ viewOutputNode { x, title } =
         ]
 
 
-viewEditor : ( Addr, Editor ) -> Html Msg
-viewEditor ( addr, editor ) =
+viewEditor : Addr -> Editor -> Html Msg
+viewEditor addr editor =
     let
         errors =
             Compiler.getErrorDetails editor
@@ -486,8 +486,7 @@ viewEditModeNodes puzzle editors =
         , flt = viewFaultyNode
         }
         puzzle
-        |> Dict.union
-            (Dict.map (\addr editor -> viewEditor ( addr, editor )) editors)
+        |> Dict.union (Dict.map viewEditor editors)
         |> Dict.values
 
 
