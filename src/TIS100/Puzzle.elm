@@ -6,6 +6,7 @@ module TIS100.Puzzle exposing
     , leftBarViewModel
     , samplePuzzle
     , toDictBy
+    , toDictBy2
     , toListBy
     , validWrites
     )
@@ -173,6 +174,36 @@ toDictBy ifn ofn lfn (Puzzle puzzle) =
 
         layout =
             Dict.map lfn puzzle.layout
+    in
+    Dict.union io layout
+
+
+toDictBy2 :
+    { in_ : IOConfig -> v
+    , out : IOConfig -> v
+    , exe : Addr -> v
+    , flt : Addr -> v
+    }
+    -> Puzzle
+    -> Dict Addr v
+toDictBy2 { in_, out, exe, flt } (Puzzle puzzle) =
+    let
+        io =
+            List.map (\c -> ( inputAddr c, in_ c )) puzzle.inputs
+                ++ List.map (\c -> ( outputAddr c, out c )) puzzle.outputs
+                |> Dict.fromList
+
+        layout =
+            Dict.map
+                (\a nt ->
+                    case nt of
+                        Executable ->
+                            exe a
+
+                        Faulty ->
+                            flt a
+                )
+                puzzle.layout
     in
     Dict.union io layout
 
