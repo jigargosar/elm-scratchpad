@@ -147,7 +147,14 @@ leftBarViewModel simStore =
             }
 
 
-toLBOutput : Input -> Out -> LB.Output
+toLBInput : Input -> In -> LB.Input
+toLBInput c i =
+    { title = c.title
+    , nums = In.toSelectionList i
+    }
+
+
+toLBOutput : Output -> Out -> LB.Output
 toLBOutput c o =
     let
         actual =
@@ -156,11 +163,4 @@ toLBOutput c o =
     { title = c.title
     , expected = SelectionList.fromIndex (List.length actual) c.nums
     , actual = actual
-    }
-
-
-toLBInput : Output -> In -> LB.Input
-toLBInput c i =
-    { title = c.title
-    , nums = In.toSelectionList i
     }
