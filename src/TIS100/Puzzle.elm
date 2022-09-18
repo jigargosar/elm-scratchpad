@@ -110,41 +110,14 @@ isLayoutAddress ( x, y ) =
     U.isBounded 0 3 x && U.isBounded 1 3 y
 
 
-toListBy :
-    (IOConfig -> v)
-    -> (IOConfig -> v)
-    -> (( Addr, NodeType ) -> v)
-    -> Puzzle
-    -> List v
-toListBy ifn ofn lfn (Puzzle puzzle) =
-    let
-        io =
-            List.map (\c -> ifn c) puzzle.inputs
-                ++ List.map (\c -> ofn c) puzzle.outputs
-
-        layout : List v
-        layout =
-            List.map lfn (Dict.toList puzzle.layout)
-    in
-    io ++ layout
-
-
 validWrites : Puzzle -> List ( Addr, Dir4 )
 validWrites puzzle =
-    let
-        nodeWrites : ( Addr, NodeType ) -> List ( Addr, Dir4 )
-        nodeWrites ( addr, nt ) =
-            case nt of
-                Executable ->
-                    List.map (pair addr) (validWriteDirs addr)
-
-                Faulty ->
-                    []
-    in
     toListBy
-        (\c -> [ ( inputAddr c, Down ) ])
-        (\c -> [ ( addrAboveOutput c, Down ) ])
-        nodeWrites
+        { in_ = \c -> [ ( inputAddr c, Down ) ]
+        , out = \c -> [ ( addrAboveOutput c, Down ) ]
+        , exe = \addr -> List.map (pair addr) (validWriteDirs addr)
+        , flt = always []
+        }
         puzzle
         |> List.concat
 
@@ -186,6 +159,18 @@ toDictBy { in_, out, exe, flt } (Puzzle puzzle) =
                 puzzle.layout
     in
     Dict.union io layout
+
+
+toListBy :
+    { in_ : IOConfig -> v
+    , out : IOConfig -> v
+    , exe : Addr -> v
+    , flt : Addr -> v
+    }
+    -> Puzzle
+    -> List v
+toListBy c p =
+    toDictBy c p |> Dict.values
 
 
 executableAddresses : Puzzle -> List Addr

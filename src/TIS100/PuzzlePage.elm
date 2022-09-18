@@ -479,18 +479,16 @@ viewEditModeGridItems puzzle editors =
 
 viewEditModeNodes : Puzzle -> Editors -> List (Html Msg)
 viewEditModeNodes puzzle editors =
-    Puzzle.toListBy
-        viewInputNode
-        viewOutputNode
-        (\( addr, nk ) ->
-            case nk of
-                Puzzle.Executable ->
-                    maybeView viewEditor (getEntry addr editors)
-
-                Puzzle.Faulty ->
-                    viewFaultyNode addr
-        )
+    Puzzle.toDictBy
+        { in_ = viewInputNode
+        , out = viewOutputNode
+        , exe =
+            \addr ->
+                maybeView viewEditor (getEntry addr editors)
+        , flt = viewFaultyNode
+        }
         puzzle
+        |> Dict.values
 
 
 
