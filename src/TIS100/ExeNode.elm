@@ -13,7 +13,7 @@ import TIS100.Num as Num exposing (Num)
 import TIS100.Ports exposing (Intent(..))
 import TIS100.PuzzlePage.Compiler as Compiler
 import TIS100.PuzzlePage.Inst exposing (..)
-import TIS100.PuzzlePage.StepRunner as SR
+import TIS100.PuzzlePage.NodeState as NS
 import Utils exposing (Dir4)
 
 
@@ -78,17 +78,17 @@ type State
     | WriteBlocked Ctx Dir4 Num
 
 
-runnableToState : State -> SR.NodeState State
+runnableToState : State -> NS.NodeState State
 runnableToState state =
     case state of
         ReadyToRun ctx ->
-            SR.ReadyToRun (\() -> run ctx)
+            NS.ReadyToRun (\() -> run ctx)
 
         ReadBlocked ctx f t ->
-            SR.ReadBlocked f (writeAfterRead ctx t)
+            NS.ReadBlocked f (writeAfterRead ctx t)
 
         WriteBlocked ctx t num ->
-            SR.WriteBlocked num t (\() -> ReadyToRun (goNext ctx))
+            NS.WriteBlocked num t (\() -> ReadyToRun (goNext ctx))
 
 
 run : Ctx -> State
@@ -193,15 +193,15 @@ empty =
     NotRunnable ""
 
 
-toState : ExeNode -> SR.NodeState ExeNode
+toState : ExeNode -> NS.NodeState ExeNode
 toState exe =
     case exe of
         NotRunnable _ ->
-            SR.Done
+            NS.Done
 
         Runnable sc nts st ->
             runnableToState st
-                |> SR.map (Runnable sc nts)
+                |> NS.map (Runnable sc nts)
 
 
 intents : ExeNode -> List Intent
@@ -247,16 +247,16 @@ viewModel exe =
 mode : ExeNode -> String
 mode exe =
     case toState exe of
-        SR.ReadyToRun _ ->
+        NS.ReadyToRun _ ->
             "RUN"
 
-        SR.ReadBlocked _ _ ->
+        NS.ReadBlocked _ _ ->
             "READ"
 
-        SR.WriteBlocked _ _ _ ->
+        NS.WriteBlocked _ _ _ ->
             writeModeLabel
 
-        SR.Done ->
+        NS.Done ->
             "IDLE"
 
 

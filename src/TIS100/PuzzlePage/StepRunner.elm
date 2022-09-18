@@ -1,36 +1,14 @@
-module TIS100.PuzzlePage.StepRunner exposing (NodeState(..), map, step)
+module TIS100.PuzzlePage.StepRunner exposing (step)
 
 import Dict exposing (Dict)
 import TIS100.Addr exposing (Addr)
 import TIS100.Num exposing (Num)
+import TIS100.PuzzlePage.NodeState exposing (NodeState(..))
 import Utils as U exposing (Dir4)
 
 
 type alias Model a =
     Dict Addr a
-
-
-type NodeState a
-    = ReadyToRun (() -> a)
-    | ReadBlocked Dir4 (Num -> a)
-    | WriteBlocked Num Dir4 (() -> a)
-    | Done
-
-
-map : (a -> b) -> NodeState a -> NodeState b
-map fn nodeState =
-    case nodeState of
-        WriteBlocked num dir cont ->
-            WriteBlocked num dir (cont >> fn)
-
-        Done ->
-            Done
-
-        ReadBlocked dir cont ->
-            ReadBlocked dir (cont >> fn)
-
-        ReadyToRun cont ->
-            ReadyToRun (cont >> fn)
 
 
 step : (a -> NodeState a) -> Model a -> Model a

@@ -7,7 +7,7 @@ module TIS100.InputNode exposing
 
 import Pivot exposing (Pivot)
 import TIS100.Num exposing (Num)
-import TIS100.PuzzlePage.StepRunner as SR
+import TIS100.PuzzlePage.NodeState as NS
 import TIS100.SelectionList as SelectionList exposing (SelectionList)
 import Utils exposing (Dir4(..))
 
@@ -51,14 +51,14 @@ afterWrite oldP =
             Done (Pivot.toList oldP)
 
 
-stepState : InputNode -> SR.NodeState InputNode
+stepState : InputNode -> NS.NodeState InputNode
 stepState node =
     case node of
         Done _ ->
-            SR.Done
+            NS.Done
 
         Running p ->
-            SR.ReadyToRun (\() -> WriteBlocked p)
+            NS.ReadyToRun (\() -> WriteBlocked p)
 
         WriteBlocked p ->
-            SR.WriteBlocked (Pivot.getC p) Down (\() -> afterWrite p)
+            NS.WriteBlocked (Pivot.getC p) Down (\() -> afterWrite p)

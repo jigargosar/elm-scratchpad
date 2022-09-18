@@ -15,7 +15,8 @@ import TIS100.OutputNode as ON exposing (OutputNode)
 import TIS100.Ports as Ports exposing (Action(..), Intent(..))
 import TIS100.Puzzle as Puzzle exposing (IOConfig, Puzzle)
 import TIS100.PuzzlePage.LeftBar as LB
-import TIS100.PuzzlePage.StepRunner as SR
+import TIS100.PuzzlePage.NodeState as NodeState exposing (NodeState(..))
+import TIS100.PuzzlePage.StepRunner as StepRunner
 import TIS100.SelectionList as SelectionList
 import Utils as U exposing (Dir4)
 
@@ -64,23 +65,23 @@ init puzzle exs =
 
 step : Model -> Model
 step store =
-    SR.step nodeState store
+    StepRunner.step nodeState store
 
 
-nodeState : Node -> SR.NodeState Node
+nodeState : Node -> NodeState Node
 nodeState node =
     case node of
         IN conf inputNode ->
-            IN.stepState inputNode |> SR.map (IN conf)
+            IN.stepState inputNode |> NodeState.map (IN conf)
 
         OUT conf outputNode ->
-            ON.stepState outputNode |> SR.map (OUT conf)
+            ON.stepState outputNode |> NodeState.map (OUT conf)
 
         EXE exeNode ->
-            EN.toState exeNode |> SR.map EXE
+            EN.toState exeNode |> NodeState.map EXE
 
         FLT ->
-            SR.Done
+            NodeState.Done
 
 
 portsViewModel : Model -> Ports.ViewModel
@@ -119,16 +120,16 @@ actionsOf node =
 
         _ ->
             case nodeState node of
-                SR.ReadyToRun _ ->
+                ReadyToRun _ ->
                     []
 
-                SR.ReadBlocked dir4 _ ->
+                ReadBlocked dir4 _ ->
                     [ Reading dir4 ]
 
-                SR.WriteBlocked num dir4 _ ->
+                WriteBlocked num dir4 _ ->
                     [ Writing dir4 num ]
 
-                SR.Done ->
+                Done ->
                     []
 
 
