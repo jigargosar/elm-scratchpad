@@ -4,7 +4,7 @@ module TIS100.ExeNode exposing
     , compile
     , empty
     , intents
-    , toStepRunnerNodeState
+    , toState
     , viewModel
     )
 
@@ -78,8 +78,8 @@ type State
     | WriteBlocked Ctx Dir4 Num
 
 
-stateToStepRunnerNodeState : State -> SR.NodeState State
-stateToStepRunnerNodeState state =
+runnableToState : State -> SR.NodeState State
+runnableToState state =
     case state of
         ReadyToRun ctx ->
             SR.ReadyToRun (\() -> run ctx)
@@ -193,14 +193,14 @@ empty =
     NotRunnable ""
 
 
-toStepRunnerNodeState : ExeNode -> SR.NodeState ExeNode
-toStepRunnerNodeState exe =
+toState : ExeNode -> SR.NodeState ExeNode
+toState exe =
     case exe of
         NotRunnable _ ->
             SR.Done
 
         Runnable sc nts st ->
-            stateToStepRunnerNodeState st
+            runnableToState st
                 |> SR.map (Runnable sc nts)
 
 
@@ -246,7 +246,7 @@ viewModel exe =
 
 mode : ExeNode -> String
 mode exe =
-    case toStepRunnerNodeState exe of
+    case toState exe of
         SR.ReadyToRun _ ->
             "RUN"
 
