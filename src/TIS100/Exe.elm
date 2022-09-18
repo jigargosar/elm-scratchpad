@@ -1,5 +1,5 @@
 module TIS100.Exe exposing
-    ( Exe
+    ( ExeNode
     , ViewModel
     , compile
     , empty
@@ -17,7 +17,7 @@ import TIS100.PuzzlePage.NodeState as NS
 import Utils exposing (Dir4)
 
 
-type Exe
+type ExeNode
     = Runnable String (List Intent) State
     | NotRunnable String
 
@@ -135,7 +135,7 @@ ctxFromState st =
             prg
 
 
-compile : String -> Maybe Exe
+compile : String -> Maybe ExeNode
 compile srcCode =
     srcCode
         |> Compiler.compile
@@ -149,7 +149,7 @@ prgLineFromTuple ( a, b ) =
     PLine a b
 
 
-init : String -> List PLine -> Exe
+init : String -> List PLine -> ExeNode
 init srcCode prgLines =
     case Pivot.fromList prgLines of
         Nothing ->
@@ -188,12 +188,12 @@ intentsFromInst inst =
             []
 
 
-empty : Exe
+empty : ExeNode
 empty =
     NotRunnable ""
 
 
-toState : Exe -> NS.NodeState Exe
+toState : ExeNode -> NS.NodeState ExeNode
 toState exe =
     case exe of
         NotRunnable _ ->
@@ -204,7 +204,7 @@ toState exe =
                 |> NS.map (Runnable sc nts)
 
 
-intents : Exe -> List Intent
+intents : ExeNode -> List Intent
 intents exe =
     case exe of
         NotRunnable _ ->
@@ -222,7 +222,7 @@ type alias ViewModel =
     }
 
 
-viewModel : Exe -> ViewModel
+viewModel : ExeNode -> ViewModel
 viewModel exe =
     case exe of
         NotRunnable srcCode ->
@@ -244,7 +244,7 @@ viewModel exe =
             }
 
 
-mode : Exe -> String
+mode : ExeNode -> String
 mode exe =
     case toState exe of
         NS.ReadyToRun _ ->

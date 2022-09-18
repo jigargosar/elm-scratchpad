@@ -9,11 +9,11 @@ module TIS100.PuzzlePage.SimStore exposing
 
 import Dict exposing (Dict)
 import TIS100.Addr exposing (Addr)
-import TIS100.Exe as Exe exposing (Exe)
-import TIS100.In as In exposing (In)
-import TIS100.Out as Out exposing (Out)
+import TIS100.Exe as Exe exposing (ExeNode)
+import TIS100.InNode as In exposing (InNode)
+import TIS100.OutNode as Out exposing (OutNode)
 import TIS100.Ports as Ports exposing (Action(..), Intent(..))
-import TIS100.Puzzle as Puzzle exposing (Input, Output, Puzzle)
+import TIS100.Puzzle as Puzzle exposing (InConfig, OutConfig, Puzzle)
 import TIS100.PuzzlePage.LeftBar as LB
 import TIS100.PuzzlePage.NodeState as NodeState exposing (NodeState(..))
 import TIS100.PuzzlePage.StepRunner as StepRunner
@@ -26,14 +26,14 @@ type alias Model =
 
 
 type Node
-    = IN Input In
-    | OUT Output Out
-    | EXE Exe
+    = IN InConfig InNode
+    | OUT OutConfig OutNode
+    | EXE ExeNode
     | FLT
 
 
 type alias ExeDict =
-    Dict Addr Exe
+    Dict Addr ExeNode
 
 
 init : Puzzle -> ExeDict -> Model
@@ -147,14 +147,14 @@ leftBarViewModel simStore =
             }
 
 
-toLBInput : Input -> In -> LB.Input
+toLBInput : InConfig -> InNode -> LB.Input
 toLBInput c i =
     { title = c.title
     , nums = In.toSelectionList i
     }
 
 
-toLBOutput : Output -> Out -> LB.Output
+toLBOutput : OutConfig -> OutNode -> LB.Output
 toLBOutput c o =
     let
         actual =

@@ -11,10 +11,10 @@ import Dict exposing (Dict)
 import Html exposing (pre)
 import Html.Attributes
 import TIS100.Addr as Addr exposing (Addr)
-import TIS100.Exe as ExeNode exposing (Exe)
+import TIS100.Exe as ExeNode exposing (ExeNode)
 import TIS100.Num as Num exposing (Num)
 import TIS100.Ports as Ports exposing (Action(..), Intent(..))
-import TIS100.Puzzle as Puzzle exposing (Input, Output, Puzzle)
+import TIS100.Puzzle as Puzzle exposing (InConfig, OutConfig, Puzzle)
 import TIS100.PuzzlePage.Compiler as Compiler exposing (ErrorDetail)
 import TIS100.PuzzlePage.LeftBar as LB
 import TIS100.PuzzlePage.SimStore as SimStore
@@ -118,7 +118,7 @@ startDebugging stepMode model =
 
 
 type alias ExeDict =
-    Dict Addr Exe
+    Dict Addr ExeNode
 
 
 update : Msg -> Model -> Model
@@ -251,7 +251,7 @@ viewGrid { puzzle, state, editors } =
 -- NODE
 
 
-viewInputNode : Input -> Html msg
+viewInputNode : InConfig -> Html msg
 viewInputNode { x, title } =
     div
         [ displayGrid
@@ -269,7 +269,7 @@ viewInputNode { x, title } =
         ]
 
 
-viewOutputNode : Output -> Html msg
+viewOutputNode : OutConfig -> Html msg
 viewOutputNode { x, title } =
     div
         [ displayGrid
@@ -381,7 +381,7 @@ viewCompilerErrorMsg msg =
         [ text msg ]
 
 
-viewExeNode : ( Addr, Exe ) -> Html msg
+viewExeNode : ( Addr, ExeNode ) -> Html msg
 viewExeNode ( addr, exe ) =
     let
         vm : ExeNode.ViewModel

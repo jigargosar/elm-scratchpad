@@ -1,5 +1,5 @@
-module TIS100.In exposing
-    ( In
+module TIS100.InNode exposing
+    ( InNode
     , fromList
     , stepState
     , toSelectionList
@@ -12,13 +12,13 @@ import TIS100.SelectionList as SelectionList exposing (SelectionList)
 import Utils exposing (Dir4(..))
 
 
-type In
+type InNode
     = Done (List Num)
     | Running (Pivot Num)
     | WriteBlocked (Pivot Num)
 
 
-toSelectionList : In -> SelectionList Num
+toSelectionList : InNode -> SelectionList Num
 toSelectionList node =
     case node of
         Done nums ->
@@ -31,7 +31,7 @@ toSelectionList node =
             SelectionList.Selected pivot
 
 
-fromList : List Num -> In
+fromList : List Num -> InNode
 fromList nums =
     case Pivot.fromList nums of
         Just p ->
@@ -41,7 +41,7 @@ fromList nums =
             Done []
 
 
-afterWrite : Pivot Num -> In
+afterWrite : Pivot Num -> InNode
 afterWrite oldP =
     case Pivot.goR oldP of
         Just newP ->
@@ -51,7 +51,7 @@ afterWrite oldP =
             Done (Pivot.toList oldP)
 
 
-stepState : In -> NS.NodeState In
+stepState : InNode -> NS.NodeState InNode
 stepState node =
     case node of
         Done _ ->
