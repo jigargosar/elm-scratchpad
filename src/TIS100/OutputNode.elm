@@ -29,7 +29,7 @@ stepState : OutputNode -> NS.NodeState OutputNode
 stepState node =
     case node of
         Done _ ->
-            NS.Done
+            NS.Idle
 
         ReadyToRun pendingReads nums ->
             NS.ReadyToRun (\() -> ReadBlocked pendingReads nums)

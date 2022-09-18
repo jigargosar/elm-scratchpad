@@ -81,7 +81,7 @@ nodeState node =
             EN.toState exeNode |> NodeState.map EXE
 
         FLT ->
-            NodeState.Done
+            NodeState.Idle
 
 
 portsViewModel : Model -> Ports.ViewModel
@@ -129,7 +129,7 @@ actionsOf node =
                 WriteBlocked num dir4 _ ->
                     [ Writing dir4 num ]
 
-                Done ->
+                Idle ->
                     []
 
 

@@ -197,7 +197,7 @@ toState : ExeNode -> NS.NodeState ExeNode
 toState exe =
     case exe of
         NotRunnable _ ->
-            NS.Done
+            NS.Idle
 
         Runnable sc nts st ->
             runnableToState st
@@ -256,7 +256,7 @@ mode exe =
         NS.WriteBlocked _ _ _ ->
             writeModeLabel
 
-        NS.Done ->
+        NS.Idle ->
             "IDLE"
 
 

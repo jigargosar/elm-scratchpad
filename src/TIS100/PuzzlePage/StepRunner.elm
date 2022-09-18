@@ -24,7 +24,7 @@ stepNode simNodeState addr node =
         WriteBlocked num dir cont ->
             addToWriteBlocked addr node num dir cont
 
-        Done ->
+        Idle ->
             addToCompleted addr node
 
         ReadBlocked dir cont ->

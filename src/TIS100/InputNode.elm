@@ -55,7 +55,7 @@ stepState : InputNode -> NS.NodeState InputNode
 stepState node =
     case node of
         Done _ ->
-            NS.Done
+            NS.Idle
 
         Running p ->
             NS.ReadyToRun (\() -> WriteBlocked p)

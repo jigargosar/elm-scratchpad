@@ -8,7 +8,7 @@ type NodeState a
     = ReadyToRun (() -> a)
     | ReadBlocked Dir4 (Num -> a)
     | WriteBlocked Num Dir4 (() -> a)
-    | Done
+    | Idle
 
 
 map : (a -> b) -> NodeState a -> NodeState b
@@ -17,8 +17,8 @@ map fn nodeState =
         WriteBlocked num dir cont ->
             WriteBlocked num dir (cont >> fn)
 
-        Done ->
-            Done
+        Idle ->
+            Idle
 
         ReadBlocked dir cont ->
             ReadBlocked dir (cont >> fn)
