@@ -466,7 +466,7 @@ type alias Editor =
 
 initEditors : Puzzle -> Editors
 initEditors puzzle =
-    Puzzle.executableAddresses puzzle
+    Puzzle.getExeAddr puzzle
         |> List.map (pairTo "")
         |> Dict.fromList
 

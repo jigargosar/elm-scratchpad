@@ -2,7 +2,7 @@ module TIS100.Puzzle exposing
     ( IOConfig
     , NodeType(..)
     , Puzzle
-    , executableAddresses
+    , getExeAddr
     , leftBarViewModel
     , samplePuzzle
     , toDictBy
@@ -173,8 +173,8 @@ toListBy c p =
     toDictBy c p |> Dict.values
 
 
-executableAddresses : Puzzle -> List Addr
-executableAddresses (Puzzle puzzle) =
+getExeAddr : Puzzle -> List Addr
+getExeAddr (Puzzle puzzle) =
     puzzle.layout
         |> Dict.filter (\_ v -> v == Executable)
         |> Dict.keys
