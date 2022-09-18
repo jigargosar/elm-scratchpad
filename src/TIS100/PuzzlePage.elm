@@ -286,8 +286,8 @@ viewOutputNode { x, title } =
         ]
 
 
-viewEditor : ( Addr, Editor ) -> Html Msg
-viewEditor ( addr, editor ) =
+viewEditor : Addr -> Editor -> Html Msg
+viewEditor addr editor =
     let
         errors =
             Compiler.getErrorDetails editor
@@ -482,12 +482,11 @@ viewEditModeNodes puzzle editors =
     Puzzle.toDictBy
         { in_ = viewInputNode
         , out = viewOutputNode
-        , exe =
-            \addr ->
-                maybeView viewEditor (getEntry addr editors)
+        , exe = always noView
         , flt = viewFaultyNode
         }
         puzzle
+        |> Dict.union (Dict.map viewEditor editors)
         |> Dict.values
 
 
