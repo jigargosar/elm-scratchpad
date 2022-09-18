@@ -565,14 +565,14 @@ viewSimGridItems puzzle { store } =
 viewSimNode : ( Addr, SimStore.Node ) -> Html msg
 viewSimNode ( addr, node ) =
     case node of
-        SimStore.In conf _ ->
+        SimStore.IN conf _ ->
             viewInputNode conf
 
-        SimStore.Out conf _ ->
+        SimStore.OUT conf _ ->
             viewOutputNode conf
 
-        SimStore.Exe exe ->
+        SimStore.EXE exe ->
             viewExeNode ( addr, exe )
 
-        SimStore.Flt ->
+        SimStore.FLT ->
             viewFaultyNode addr

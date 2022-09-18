@@ -25,10 +25,10 @@ type alias Model =
 
 
 type Node
-    = In IOConfig InputNode
-    | Out IOConfig OutputNode
-    | Exe ExeNode
-    | Flt
+    = IN IOConfig InputNode
+    | OUT IOConfig OutputNode
+    | EXE ExeNode
+    | FLT
 
 
 type alias ExeDict =
@@ -39,10 +39,10 @@ init : Puzzle -> ExeDict -> Model
 init puzzle exs =
     let
         initIn c =
-            In c (IN.fromList c.nums)
+            IN c (IN.fromList c.nums)
 
         initOut c =
-            Out c (ON.fromExpected (List.length c.nums))
+            OUT c (ON.fromExpected (List.length c.nums))
 
         initLayout addr nk =
             case nk of
@@ -50,10 +50,10 @@ init puzzle exs =
                     initExe addr
 
                 Puzzle.Faulty ->
-                    Flt
+                    FLT
 
         initExe addr =
-            Exe (U.dictGetOr EN.empty addr exs)
+            EXE (U.dictGetOr EN.empty addr exs)
     in
     Puzzle.toDictBy
         initIn
@@ -70,16 +70,16 @@ step store =
 toStepRunnerState : Node -> SR.NodeState Node
 toStepRunnerState node =
     case node of
-        In conf inputNode ->
-            IN.stepState inputNode |> SR.map (In conf)
+        IN conf inputNode ->
+            IN.stepState inputNode |> SR.map (IN conf)
 
-        Out conf outputNode ->
-            ON.stepState outputNode |> SR.map (Out conf)
+        OUT conf outputNode ->
+            ON.stepState outputNode |> SR.map (OUT conf)
 
-        Exe exeNode ->
-            EN.toState exeNode |> SR.map Exe
+        EXE exeNode ->
+            EN.toState exeNode |> SR.map EXE
 
-        Flt ->
+        FLT ->
             SR.Done
 
 
@@ -98,23 +98,23 @@ portsViewModel simStore =
 intentsOf : Node -> List Intent
 intentsOf node =
     case node of
-        In _ _ ->
+        IN _ _ ->
             [ Write U.Down ]
 
-        Out _ _ ->
+        OUT _ _ ->
             [ Read U.Up ]
 
-        Exe exe ->
+        EXE exe ->
             EN.intents exe
 
-        Flt ->
+        FLT ->
             []
 
 
 actionsOf : Node -> List Action
 actionsOf node =
     case node of
-        Out _ _ ->
+        OUT _ _ ->
             []
 
         _ ->
@@ -138,10 +138,10 @@ leftBarViewModel simStore =
         |> List.foldr
             (\n vm ->
                 case n of
-                    In c i ->
+                    IN c i ->
                         { vm | inputs = toLBInput c i :: vm.inputs }
 
-                    Out c o ->
+                    OUT c o ->
                         { vm | outputs = toLBOutput c o :: vm.outputs }
 
                     _ ->
