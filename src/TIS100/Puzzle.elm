@@ -51,8 +51,8 @@ type alias OutConfig =
 
 
 type NodeType
-    = EXE
-    | FLT
+    = Exe
+    | Flt
 
 
 samplePuzzle : Puzzle
@@ -73,9 +73,9 @@ samplePuzzle =
             , { x = 1, title = "OUT.N", nums = Num.range 1 20 }
             ]
         , layout =
-            [ [ EXE, EXE, EXE, EXE ]
-            , [ EXE, EXE, FLT, EXE ]
-            , [ EXE, EXE, EXE, EXE ]
+            [ [ Exe, Exe, Exe, Exe ]
+            , [ Exe, Exe, Flt, Exe ]
+            , [ Exe, Exe, Exe, Exe ]
             ]
                 |> toLayout
         }
@@ -84,7 +84,7 @@ samplePuzzle =
 toLayout : List (List NodeType) -> Layout
 toLayout lss =
     List.concat lss
-        ++ List.repeat 12 EXE
+        ++ List.repeat 12 Exe
         |> List.take 12
         |> List.indexedMap pair
         |> List.map
@@ -161,10 +161,10 @@ toDictBy { in_, out, exe, flt } (Puzzle puzzle) =
             Dict.map
                 (\a nt ->
                     case nt of
-                        EXE ->
+                        Exe ->
                             exe a
 
-                        FLT ->
+                        Flt ->
                             flt a
                 )
                 puzzle.layout
@@ -187,7 +187,7 @@ toListBy c p =
 getExeAddr : Puzzle -> List Addr
 getExeAddr (Puzzle puzzle) =
     puzzle.layout
-        |> Dict.filter (\_ v -> v == EXE)
+        |> Dict.filter (\_ v -> v == Exe)
         |> Dict.keys
 
 
