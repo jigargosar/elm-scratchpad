@@ -9,9 +9,9 @@ module TIS100.PuzzlePage.SimStore exposing
 
 import Dict exposing (Dict)
 import TIS100.Addr exposing (Addr)
-import TIS100.ExeNode as EN exposing (ExeNode)
-import TIS100.InputNode as IN exposing (InputNode)
-import TIS100.OutputNode as ON exposing (OutputNode)
+import TIS100.ExeNode as Exe exposing (ExeNode)
+import TIS100.InputNode as In exposing (InputNode)
+import TIS100.OutputNode as Out exposing (OutputNode)
 import TIS100.Ports as Ports exposing (Action(..), Intent(..))
 import TIS100.Puzzle as Puzzle exposing (IOConfig, Puzzle)
 import TIS100.PuzzlePage.LeftBar as LB
@@ -40,10 +40,10 @@ init : Puzzle -> ExeDict -> Model
 init puzzle exs =
     let
         initIn c =
-            IN c (IN.fromList c.nums)
+            IN c (In.fromList c.nums)
 
         initOut c =
-            OUT c (ON.fromExpected (List.length c.nums))
+            OUT c (Out.fromExpected (List.length c.nums))
 
         initLayout addr nk =
             case nk of
@@ -54,7 +54,7 @@ init puzzle exs =
                     FLT
 
         initExe addr =
-            EXE (U.dictGetOr EN.empty addr exs)
+            EXE (U.dictGetOr Exe.empty addr exs)
     in
     Puzzle.toDictBy
         initIn
@@ -72,13 +72,13 @@ nodeState : Node -> NodeState Node
 nodeState node =
     case node of
         IN conf inputNode ->
-            IN.stepState inputNode |> NodeState.map (IN conf)
+            In.stepState inputNode |> NodeState.map (IN conf)
 
         OUT conf outputNode ->
-            ON.stepState outputNode |> NodeState.map (OUT conf)
+            Out.stepState outputNode |> NodeState.map (OUT conf)
 
         EXE exeNode ->
-            EN.toState exeNode |> NodeState.map EXE
+            Exe.toState exeNode |> NodeState.map EXE
 
         FLT ->
             NodeState.Idle
@@ -106,7 +106,7 @@ intentsOf node =
             [ Read U.Up ]
 
         EXE exe ->
-            EN.intents exe
+            Exe.intents exe
 
         FLT ->
             []
@@ -157,7 +157,7 @@ toLBOutput : IOConfig -> OutputNode -> LB.Output
 toLBOutput c o =
     let
         actual =
-            ON.getNumsRead o
+            Out.getNumsRead o
     in
     { title = c.title
     , expected = SelectionList.fromIndex (List.length actual) c.nums
@@ -168,5 +168,5 @@ toLBOutput c o =
 toLBInput : IOConfig -> InputNode -> LB.Input
 toLBInput c i =
     { title = c.title
-    , nums = IN.toSelectionList i
+    , nums = In.toSelectionList i
     }
