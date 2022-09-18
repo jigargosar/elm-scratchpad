@@ -1,4 +1,4 @@
-module TIS100.PuzzlePage.StepRunner exposing (step)
+module TIS100.PuzzlePage.SimRunner exposing (step)
 
 import Dict exposing (Dict)
 import TIS100.Addr exposing (Addr)

@@ -16,7 +16,7 @@ import TIS100.Ports as Ports exposing (Action(..), Intent(..))
 import TIS100.Puzzle as Puzzle exposing (InConfig, OutConfig, Puzzle)
 import TIS100.PuzzlePage.LeftBar as LB
 import TIS100.PuzzlePage.NodeState as NodeState exposing (NodeState(..))
-import TIS100.PuzzlePage.StepRunner as StepRunner
+import TIS100.PuzzlePage.SimRunner as StepRunner
 import TIS100.SelectionList as SelectionList
 import Utils as U exposing (Dir4)
 
