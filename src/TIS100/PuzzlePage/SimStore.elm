@@ -10,8 +10,8 @@ module TIS100.PuzzlePage.SimStore exposing
 import Dict exposing (Dict)
 import TIS100.Addr exposing (Addr)
 import TIS100.Exe as Exe exposing (Exe)
-import TIS100.InputNode as In exposing (InputNode)
-import TIS100.OutputNode as Out exposing (OutputNode)
+import TIS100.In as In exposing (In)
+import TIS100.Out as Out exposing (Out)
 import TIS100.Ports as Ports exposing (Action(..), Intent(..))
 import TIS100.Puzzle as Puzzle exposing (IOConfig, Puzzle)
 import TIS100.PuzzlePage.LeftBar as LB
@@ -26,8 +26,8 @@ type alias Model =
 
 
 type Node
-    = IN IOConfig InputNode
-    | OUT IOConfig OutputNode
+    = IN IOConfig In
+    | OUT IOConfig Out
     | EXE Exe
     | FLT
 
@@ -153,7 +153,7 @@ leftBarViewModel simStore =
             }
 
 
-toLBOutput : IOConfig -> OutputNode -> LB.Output
+toLBOutput : IOConfig -> Out -> LB.Output
 toLBOutput c o =
     let
         actual =
@@ -165,7 +165,7 @@ toLBOutput c o =
     }
 
 
-toLBInput : IOConfig -> InputNode -> LB.Input
+toLBInput : IOConfig -> In -> LB.Input
 toLBInput c i =
     { title = c.title
     , nums = In.toSelectionList i

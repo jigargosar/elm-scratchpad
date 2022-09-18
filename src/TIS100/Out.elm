@@ -1,5 +1,5 @@
-module TIS100.OutputNode exposing
-    ( OutputNode
+module TIS100.Out exposing
+    ( Out
     , fromExpected
     , getNumsRead
     , stepState
@@ -10,13 +10,13 @@ import TIS100.PuzzlePage.NodeState as NS
 import Utils exposing (Dir4(..))
 
 
-type OutputNode
+type Out
     = Done (List Num)
     | ReadyToRun Int (List Num)
     | ReadBlocked Int (List Num)
 
 
-fromExpected : Int -> OutputNode
+fromExpected : Int -> Out
 fromExpected expected =
     if expected <= 0 then
         Done []
@@ -25,7 +25,7 @@ fromExpected expected =
         ReadyToRun expected []
 
 
-stepState : OutputNode -> NS.NodeState OutputNode
+stepState : Out -> NS.NodeState Out
 stepState node =
     case node of
         Done _ ->
@@ -38,7 +38,7 @@ stepState node =
             NS.ReadBlocked Up (resolveRead pendingReads nums)
 
 
-resolveRead : Int -> List Num -> Num -> OutputNode
+resolveRead : Int -> List Num -> Num -> Out
 resolveRead pendingReads nums num =
     if pendingReads == 1 then
         Done (num :: nums)
@@ -47,12 +47,12 @@ resolveRead pendingReads nums num =
         ReadyToRun (pendingReads - 1) (num :: nums)
 
 
-getNumsRead : OutputNode -> List Num
+getNumsRead : Out -> List Num
 getNumsRead node =
     getNumsReadHelp node |> List.reverse
 
 
-getNumsReadHelp : OutputNode -> List Num
+getNumsReadHelp : Out -> List Num
 getNumsReadHelp node =
     case node of
         Done nums ->
