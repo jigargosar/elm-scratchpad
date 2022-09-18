@@ -1,6 +1,5 @@
 module TIS100.Puzzle exposing
     ( InConfig
-    , NodeType(..)
     , OutConfig
     , Puzzle
     , getExeAddr
