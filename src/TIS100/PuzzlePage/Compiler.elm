@@ -13,7 +13,7 @@ module TIS100.PuzzlePage.Compiler exposing
 
 import List.Extra
 import Parser exposing (..)
-import Set
+import Set exposing (Set)
 import TIS100.Num as Num exposing (Num)
 import TIS100.PuzzlePage.Inst exposing (..)
 import Utils as U exposing (Dir4(..))
@@ -100,7 +100,7 @@ getErrorDetails srcCode =
             []
 
 
-compile : String -> Result Errors (List ( Int, Inst ))
+compile : String -> Result Errors (List ( Int, Set String, Inst ))
 compile string =
     string
         |> String.split "\n"
@@ -130,7 +130,9 @@ compile string =
            )
 
 
-compileStatements : List ( Int, Stmt ) -> Result Errors (List ( Int, Inst ))
+compileStatements :
+    List ( Int, Stmt )
+    -> Result Errors (List ( Int, Set String, Inst ))
 compileStatements stmts =
     let
         acc =
@@ -138,20 +140,22 @@ compileStatements stmts =
                 (\( r, s ) a ->
                     case s of
                         Stmt _ (Just i) ->
-                            { a | revPLines = ( r, i ) :: a.revPLines }
+                            { a
+                                | revPLines = ( r, Set.empty, i ) :: a.revPLines
+                                , prevLabels = Set.empty
+                            }
 
                         _ ->
                             a
                 )
-                { allLabels = []
-                , prevLabels = []
+                { prevLabels = Set.empty
                 , revPLines = []
                 }
                 stmts
     in
     Ok
         (List.reverse acc.revPLines
-            |> List.map (\( r, i ) -> ( r, i ))
+            |> List.map (\( r, ls, i ) -> ( r, ls, i ))
         )
 
 

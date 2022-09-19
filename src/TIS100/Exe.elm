@@ -40,8 +40,8 @@ type alias Prg =
 
 type alias PLine =
     { lineNo : Int
-    , inst : Inst
     , labels : Set String
+    , inst : Inst
     }
 
 
@@ -163,13 +163,16 @@ compile srcCode =
     srcCode
         |> Compiler.compile
         |> Result.toMaybe
-        |> Maybe.map (List.map prgLineFromTuple)
+        |> Maybe.map (List.map toPrgLine)
         |> Maybe.map (init srcCode)
 
 
-prgLineFromTuple : ( Int, Inst ) -> PLine
-prgLineFromTuple ( lineNo, inst ) =
-    PLine lineNo inst Set.empty
+toPrgLine : ( Int, Set String, Inst ) -> PLine
+toPrgLine ( lineNo, labels, inst ) =
+    { lineNo = lineNo
+    , labels = labels
+    , inst = inst
+    }
 
 
 init : String -> List PLine -> ExeNode
