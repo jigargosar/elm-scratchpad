@@ -118,17 +118,20 @@ compile string =
             )
             ( [], [] )
         |> (\( es, os ) ->
-                case es of
-                    [] ->
-                        foo os
+                case ( es, compileStatements os ) of
+                    ( [], Ok prg ) ->
+                        Ok prg
 
-                    _ ->
+                    ( _, Ok _ ) ->
                         Err es
+
+                    ( _, Err nes ) ->
+                        Err <| es ++ nes
            )
 
 
-foo : List ( Int, Stmt ) -> Result Errors (List ( Int, Inst ))
-foo os =
+compileStatements : List ( Int, Stmt ) -> Result Errors (List ( Int, Inst ))
+compileStatements os =
     Ok
         (os
             |> List.filterMap
