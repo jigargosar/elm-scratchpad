@@ -190,8 +190,8 @@ intentsFromInst inst =
         Nop ->
             []
 
-        Jmp string ->
-            Debug.todo "todo"
+        Jmp _ ->
+            []
 
 
 empty : ExeNode
