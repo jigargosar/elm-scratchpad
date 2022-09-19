@@ -146,7 +146,6 @@ compileStatements stmts =
                 { allLabels = []
                 , prevLabels = []
                 , revPLines = []
-                , errors = []
                 }
                 stmts
     in
