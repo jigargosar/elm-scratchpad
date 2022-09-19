@@ -105,7 +105,6 @@ compile string =
     string
         |> String.split "\n"
         |> List.indexedMap U.pair
-        --|> List.map (U.mapFirst U.inc)
         |> List.map (U.biMap U.inc compileLine)
         |> List.foldr
             (\( row, result ) ( errAcc, okAcc ) ->
