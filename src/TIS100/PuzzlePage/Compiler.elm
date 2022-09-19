@@ -302,8 +302,8 @@ missingOperand start end =
 
 
 undefinedLabel : Token -> Result Error value
-undefinedLabel t =
-    Err (MissingOperand (tokenStartColumn t) (tokenEndColumn t))
+undefinedLabel (Token _ (Loc col string)) =
+    Err (UndefinedLabel col string)
 
 
 invalidOp : Token -> Result Error value
