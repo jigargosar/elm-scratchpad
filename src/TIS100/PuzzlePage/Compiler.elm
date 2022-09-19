@@ -163,28 +163,25 @@ toPLines stmts =
 
                 _ ->
                     identity
-    in
-    List.foldl
-        (\( row, stmt ) acc ->
+
+        step ( row, stmt ) acc =
             case stmt of
-                Stmt mbLbl (Just i) ->
+                Stmt mbl (Just inst) ->
                     { acc
                         | revPLines =
                             ( row
-                            , insertMaybeLabel mbLbl acc.prevLabels
-                            , i
+                            , insertMaybeLabel mbl acc.prevLabels
+                            , inst
                             )
                                 :: acc.revPLines
                         , prevLabels = Set.empty
                     }
 
-                _ ->
-                    acc
-        )
-        { prevLabels = Set.empty
-        , revPLines = []
-        }
-        stmts
+                Stmt mbl Nothing ->
+                    { acc | prevLabels = insertMaybeLabel mbl acc.prevLabels }
+    in
+    stmts
+        |> List.foldl step { prevLabels = Set.empty, revPLines = [] }
         |> .revPLines
         |> List.reverse
 
