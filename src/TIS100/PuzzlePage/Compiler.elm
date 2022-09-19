@@ -131,9 +131,9 @@ compile string =
 
 
 compileStatements : List ( Int, Stmt ) -> Result Errors (List ( Int, Inst ))
-compileStatements os =
+compileStatements stmts =
     Ok
-        (os
+        (stmts
             |> List.filterMap
                 (\( row, stmt ) ->
                     case stmt of
