@@ -7,6 +7,7 @@ import Utils exposing (Dir4)
 type Inst
     = Mov Src Dst
     | Nop
+    | Jmp String
 
 
 type Src

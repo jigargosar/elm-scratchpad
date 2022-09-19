@@ -108,6 +108,9 @@ run ctx =
         Nop ->
             ReadyToRun (goNext ctx)
 
+        Jmp string ->
+            Debug.todo "todo"
+
 
 writeAfterRead : Ctx -> Dst -> Num -> State
 writeAfterRead ctx dst num =
@@ -186,6 +189,9 @@ intentsFromInst inst =
 
         Nop ->
             []
+
+        Jmp string ->
+            Debug.todo "todo"
 
 
 empty : ExeNode
