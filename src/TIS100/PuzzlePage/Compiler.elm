@@ -25,6 +25,7 @@ type Error
     | MissingOperand Int Int
     | TooManyOperands Int Int
     | InternalError
+    | UndefinedLabel Int String
 
 
 type alias ErrorDetail =
@@ -58,6 +59,14 @@ errorsToDetails =
                         , startCol = startCol
                         , endCol = startCol + String.length string - 1
                         , msg = "Invalid op:\"" ++ string ++ "\""
+                        }
+
+                UndefinedLabel startCol string ->
+                    Just
+                        { row = l
+                        , startCol = startCol
+                        , endCol = startCol + String.length string - 1
+                        , msg = "undefined label"
                         }
 
                 MissingOperand startCol endCol ->
@@ -170,14 +179,24 @@ parseInst tokens =
 parseInstHelp : Token -> List Token -> Result Error Inst
 parseInstHelp fst rest =
     case fst of
-        Token (OpCode NOP) _ ->
-            withZeroArgOp Nop rest
+        Token (OpCode op) _ ->
+            case op of
+                NOP ->
+                    withZeroArgOp Nop rest
 
-        Token (OpCode MOV) _ ->
-            with2ArgOp parseMovInst fst rest
+                JMP ->
+                    with1ArgOp (parseJumpInst Jmp) fst rest
+
+                MOV ->
+                    with2ArgOp parseMovInst fst rest
 
         _ ->
             invalidOp fst
+
+
+parseJumpInst : (String -> value) -> Token -> Result error value
+parseJumpInst fn (Token _ (Loc _ string)) =
+    fn string |> Ok
 
 
 parseMovInst : Token -> Token -> Result Error Inst
@@ -229,6 +248,23 @@ withZeroArgOp v rest =
             tooManyOperands x xs
 
 
+with1ArgOp :
+    (Token -> Result Error value)
+    -> Token
+    -> List Token
+    -> Result Error value
+with1ArgOp fn fst rest =
+    case rest of
+        a :: [] ->
+            fn a
+
+        [] ->
+            missingOperand fst fst
+
+        _ :: x :: xs ->
+            tooManyOperands x xs
+
+
 with2ArgOp :
     (Token -> Token -> Result Error value)
     -> Token
@@ -265,6 +301,21 @@ missingOperand start end =
     Err (MissingOperand (tokenStartColumn start) (tokenEndColumn end))
 
 
+undefinedLabel : Token -> Result Error value
+undefinedLabel t =
+    Err (MissingOperand (tokenStartColumn t) (tokenEndColumn t))
+
+
+invalidOp : Token -> Result Error value
+invalidOp (Token _ (Loc col string)) =
+    Err (InvalidOpCode col string)
+
+
+invalidExpr : Token -> Result Error value
+invalidExpr (Token _ (Loc col string)) =
+    Err (InvalidExpression col string)
+
+
 tokenStartColumn : Token -> Int
 tokenStartColumn token =
     case token of
@@ -277,16 +328,6 @@ tokenEndColumn token =
     case token of
         Token _ (Loc col string) ->
             col + String.length string - 1
-
-
-invalidOp : Token -> Result Error value
-invalidOp (Token _ (Loc col string)) =
-    Err (InvalidOpCode col string)
-
-
-invalidExpr : Token -> Result Error value
-invalidExpr (Token _ (Loc col string)) =
-    Err (InvalidExpression col string)
 
 
 lexLine : String -> Result (List DeadEnd) (List Token)
@@ -303,7 +344,7 @@ type Loc
 
 
 type TokenTyp
-    = Word
+    = Word String
     | PrefixLabel String
     | OpCode OpCode
     | DIR Dir4
@@ -320,7 +361,7 @@ type OpCode
 
 wordToken : Int -> String -> Token
 wordToken col string =
-    Token Word (Loc col string)
+    Token (Word string) (Loc col string)
 
 
 prefixLabelToken : Int -> String -> Token
@@ -365,7 +406,7 @@ wordTokenParser : Parser Token
 wordTokenParser =
     toTokenParser
         (succeed Word
-            |. variable
+            |= variable
                 { start = isWordChar
                 , inner = isWordChar
                 , reserved = Set.empty
