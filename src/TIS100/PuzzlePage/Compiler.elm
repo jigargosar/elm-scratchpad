@@ -26,6 +26,7 @@ type Error
     | TooManyOperands Int Int
     | InternalError
     | UndefinedLabel Int String
+    | LabelAlreadyDefined Int String
 
 
 type alias ErrorDetail =
@@ -67,6 +68,14 @@ errorsToDetails =
                         , startCol = startCol
                         , endCol = startCol + String.length string - 1
                         , msg = "undefined label"
+                        }
+
+                LabelAlreadyDefined startCol string ->
+                    Just
+                        { row = l
+                        , startCol = startCol
+                        , endCol = startCol + String.length string - 1
+                        , msg = "label already defined"
                         }
 
                 MissingOperand startCol endCol ->
@@ -150,8 +159,34 @@ toPrg stmts =
 labelErrors : List ( Int, Stmt ) -> Errors
 labelErrors =
     let
-        step _ acc =
+        handleMaybePrefixLabel row mbl acc =
+            case mbl of
+                Nothing ->
+                    acc
+
+                Just (Label { col, val }) ->
+                    if Set.member val acc.prefixLabels then
+                        { acc
+                            | errors =
+                                ( row, LabelAlreadyDefined col val )
+                                    :: acc.errors
+                        }
+
+                    else
+                        { acc | prefixLabels = Set.insert val acc.prefixLabels }
+
+        addJumpLabel row mbi acc =
+            case mbi of
+                Just (Jmp lbl) ->
+                    { acc | jumpLabels = ( row, lbl ) :: acc.jumpLabels }
+
+                _ ->
+                    acc
+
+        step ( row, Stmt mbl mbi ) acc =
             acc
+                |> handleMaybePrefixLabel row mbl
+                |> addJumpLabel row mbi
 
         done _ =
             []
@@ -159,6 +194,7 @@ labelErrors =
     List.foldl step
         { errors = []
         , prefixLabels = Set.empty
+        , jumpLabels = []
         }
         >> done
 
