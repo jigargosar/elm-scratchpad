@@ -148,8 +148,19 @@ toPrg stmts =
 
 
 labelErrors : List ( Int, Stmt ) -> Errors
-labelErrors stmts =
-    []
+labelErrors =
+    let
+        step _ acc =
+            acc
+
+        done _ =
+            []
+    in
+    List.foldl step
+        { errors = []
+        , prefixLabels = Set.empty
+        }
+        >> done
 
 
 toPLines : List ( Int, Stmt ) -> List PLine
