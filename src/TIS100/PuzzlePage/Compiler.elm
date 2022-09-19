@@ -51,7 +51,7 @@ errorsToDetails =
                         { row = l
                         , startCol = startCol
                         , endCol = startCol + String.length string - 1
-                        , msg = "Invalid op:\"" ++ string ++ "\""
+                        , msg = "Invalid opcode \"" ++ string ++ "\""
                         }
 
                 InvalidExpression startCol string ->
@@ -600,7 +600,7 @@ prefixLabelTokenParser =
 labelVariable : Parser String
 labelVariable =
     variable
-        { start = Char.isAlpha
+        { start = Char.isAlphaNum
         , inner = Char.isAlphaNum
         , reserved = Set.empty
         }
