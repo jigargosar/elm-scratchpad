@@ -292,25 +292,25 @@ viewEditor addr editor =
         errors =
             Compiler.getErrorDetails editor
 
-        ( outline, headerView ) =
+        headerView =
             case errors of
                 [] ->
-                    ( UI.lightOutline, noView )
+                    noView
 
                 h :: _ ->
-                    ( UI.errorOutline, viewCompilerErrorMsg h.msg )
+                    viewCompilerErrorMsg h.msg
     in
     div
         [ Addr.toGridArea addr
-        , outline
+        , UI.lightOutline
         , displayGrid
         , gridTemplateColumns "18ch auto"
         , positionRelative
         ]
         [ headerView
         , viewErrorMarks errors
-        , viewEditorTextArea (OnEditorInput addr) outline editor
-        , viewExeBoxes outline { acc = Num.zero, mode = "IDLE" }
+        , viewEditorTextArea (OnEditorInput addr) editor
+        , viewExeBoxes { acc = Num.zero, mode = "IDLE" }
         ]
 
 
@@ -337,8 +337,8 @@ viewErrorMark error =
         ]
 
 
-viewEditorTextArea : (String -> msg) -> Attribute msg -> String -> Html.Html msg
-viewEditorTextArea onInputMsg outline editor =
+viewEditorTextArea : (String -> msg) -> String -> Html.Html msg
+viewEditorTextArea onInputMsg editor =
     Html.textarea
         [ -- reset
           borderNone
@@ -353,7 +353,7 @@ viewEditorTextArea onInputMsg outline editor =
 
         -- actual
         , onInput onInputMsg
-        , outline
+        , UI.lightOutline
         , pa "0.5ch"
 
         -- new
@@ -390,7 +390,7 @@ viewExeNode addr vm =
         , gridTemplateColumns "18ch auto"
         ]
         [ viewSrc vm.srcCode vm.maybeLineNo
-        , viewExeBoxes UI.lightOutline vm
+        , viewExeBoxes vm
         ]
 
 
@@ -410,25 +410,25 @@ viewSrc srcCode maybeLine =
         )
 
 
-viewExeBoxes : Attribute msg -> { a | acc : Num, mode : String } -> Html msg
-viewExeBoxes outline { acc, mode } =
+viewExeBoxes : { a | acc : Num, mode : String } -> Html msg
+viewExeBoxes { acc, mode } =
     gtRows 5
         []
-        [ viewExeBox outline "ACC" (Num.toString acc)
-        , viewExeBox outline "BAK" "<0>"
-        , viewExeBox outline "LAST" "N/A"
-        , viewExeBox outline "MODE" mode
-        , viewExeBox outline "IDLE" "0%"
+        [ viewExeBox "ACC" (Num.toString acc)
+        , viewExeBox "BAK" "<0>"
+        , viewExeBox "LAST" "N/A"
+        , viewExeBox "MODE" mode
+        , viewExeBox "IDLE" "0%"
         ]
 
 
-viewExeBox : Attribute msg -> String -> String -> Html msg
-viewExeBox outline a b =
+viewExeBox : String -> String -> Html msg
+viewExeBox a b =
     div
         [ displayGrid
         , tac
         , placeContentCenter
-        , outline
+        , UI.lightOutline
         ]
         [ div [ fg UI.lightGray ] [ text a ]
         , div [] [ text b ]
