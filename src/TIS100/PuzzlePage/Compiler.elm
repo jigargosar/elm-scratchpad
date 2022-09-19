@@ -136,29 +136,18 @@ compile string =
 compileStatements : List ( Int, Stmt ) -> Result Errors (List PLine)
 compileStatements stmts =
     let
-        pLines =
-            List.foldl
-                (\( r, s ) a ->
-                    case s of
-                        Stmt _ (Just i) ->
-                            { a
-                                | revPLines = ( r, a.prevLabels, i ) :: a.revPLines
-                                , prevLabels = Set.empty
-                            }
-
-                        _ ->
-                            a
-                )
-                { prevLabels = Set.empty
-                , revPLines = []
-                }
-                stmts
-                |> .revPLines
-                |> List.reverse
+        rpl =
+            toPLines stmts
     in
-    Ok pLines
+    case rpl of
+        Err pes ->
+            Err pes
+
+        Ok pls ->
+            Ok pls
 
 
+toPLines : List ( Int, Stmt ) -> Result Errors (List PLine)
 toPLines stmts =
     List.foldl
         (\( r, s ) a ->
@@ -178,6 +167,7 @@ toPLines stmts =
         stmts
         |> .revPLines
         |> List.reverse
+        |> Ok
 
 
 compileLine : String -> Result Error Stmt
