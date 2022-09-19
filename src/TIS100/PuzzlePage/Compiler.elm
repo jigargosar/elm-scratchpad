@@ -168,8 +168,8 @@ toPLines =
     let
         insertMaybeLabel mbl =
             case mbl of
-                Just ( lbl, _ ) ->
-                    Set.insert lbl
+                Just (Label { val }) ->
+                    Set.insert val
 
                 _ ->
                     identity
@@ -223,12 +223,12 @@ compileLine src =
 
 
 type Stmt
-    = Stmt (Maybe ( String, Loc )) (Maybe Inst)
+    = Stmt (Maybe Label) (Maybe Inst)
 
 
-stmtWithLabel : String -> Loc -> Maybe Inst -> Stmt
-stmtWithLabel string loc =
-    Stmt (Just ( string, loc ))
+stmtWithLabel : Label -> Maybe Inst -> Stmt
+stmtWithLabel label =
+    Stmt (Just label)
 
 
 stmtWithoutLabel : Maybe Inst -> Stmt
@@ -239,9 +239,9 @@ stmtWithoutLabel =
 parseLine : List Token -> Result Error Stmt
 parseLine tokens =
     case tokens of
-        (Token (PrefixLabel lbl) loc) :: rest ->
+        (Token (PrefixLabel lbl) (Loc col _)) :: rest ->
             parseInst rest
-                |> Result.map (stmtWithLabel lbl loc)
+                |> Result.map (stmtWithLabel (Label { col = col, val = lbl }))
 
         _ ->
             parseInst tokens
