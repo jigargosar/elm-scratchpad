@@ -110,7 +110,10 @@ getErrorDetails srcCode =
 
 
 type alias PLine =
-    ( Int, Set String, Inst )
+    { lineNo : Int
+    , labels : Set String
+    , inst : Inst
+    }
 
 
 type alias Prg =
@@ -224,10 +227,10 @@ toPLines =
                 Stmt mbl (Just inst) ->
                     { acc
                         | revPLines =
-                            ( row
-                            , insertMaybeLabel mbl acc.prevLabels
-                            , inst
-                            )
+                            PLine
+                                row
+                                (insertMaybeLabel mbl acc.prevLabels)
+                                inst
                                 :: acc.revPLines
                         , prevLabels = Set.empty
                     }
@@ -239,8 +242,8 @@ toPLines =
             acc.revPLines
                 |> List.reverse
                 |> mapHead
-                    (\( row, labels, inst ) ->
-                        ( row, Set.union acc.prevLabels labels, inst )
+                    (\pl ->
+                        { pl | labels = Set.union acc.prevLabels pl.labels }
                     )
     in
     List.foldl step { prevLabels = Set.empty, revPLines = [] }

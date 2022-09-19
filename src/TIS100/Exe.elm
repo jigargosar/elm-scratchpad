@@ -163,16 +163,7 @@ compile srcCode =
     srcCode
         |> Compiler.compile
         |> Result.toMaybe
-        |> Maybe.map (List.map toPrgLine)
         |> Maybe.map (init srcCode)
-
-
-toPrgLine : ( Int, Set String, Inst ) -> PLine
-toPrgLine ( lineNo, labels, inst ) =
-    { lineNo = lineNo
-    , labels = labels
-    , inst = inst
-    }
 
 
 init : String -> List PLine -> ExeNode
