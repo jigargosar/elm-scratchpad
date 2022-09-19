@@ -105,6 +105,7 @@ compile string =
     string
         |> String.split "\n"
         |> List.indexedMap U.pair
+        --|> List.map (U.mapFirst U.inc)
         |> List.map (U.biMap U.inc compileLine)
         |> List.foldr
             (\( row, result ) ( errAcc, okAcc ) ->
@@ -112,17 +113,25 @@ compile string =
                     Err err ->
                         ( ( row, err ) :: errAcc, okAcc )
 
-                    Ok (Stmt _ (Just inst)) ->
-                        ( errAcc, ( row, inst ) :: okAcc )
-
-                    _ ->
-                        ( errAcc, okAcc )
+                    Ok v ->
+                        ( errAcc, ( row, v ) :: okAcc )
             )
             ( [], [] )
         |> (\( es, os ) ->
                 case es of
                     [] ->
-                        Ok os
+                        Ok
+                            (os
+                                |> List.filterMap
+                                    (\( row, stmt ) ->
+                                        case stmt of
+                                            Stmt _ (Just inst) ->
+                                                Just ( row, inst )
+
+                                            _ ->
+                                                Nothing
+                                    )
+                            )
 
                     _ ->
                         Err es
