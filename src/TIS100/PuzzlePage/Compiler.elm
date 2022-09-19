@@ -179,11 +179,28 @@ toPLines stmts =
 
                 Stmt mbl Nothing ->
                     { acc | prevLabels = insertMaybeLabel mbl acc.prevLabels }
+
+        done acc =
+            acc.revPLines
+                |> List.reverse
+                |> mapHead
+                    (\( row, labels, inst ) ->
+                        ( row, labels, inst )
+                    )
     in
     stmts
         |> List.foldl step { prevLabels = Set.empty, revPLines = [] }
-        |> .revPLines
-        |> List.reverse
+        |> done
+
+
+mapHead : (a -> a) -> List a -> List a
+mapHead fn xs =
+    case xs of
+        [] ->
+            []
+
+        h :: t ->
+            fn h :: t
 
 
 compileLine : String -> Result Error Stmt
