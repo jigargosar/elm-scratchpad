@@ -384,11 +384,6 @@ missingOperand start end =
     Err (MissingOperand (tokenStartColumn start) (tokenEndColumn end))
 
 
-undefinedLabel : Token -> Result Error value
-undefinedLabel (Token _ (Loc col string)) =
-    Err (UndefinedLabel col string)
-
-
 invalidOp : Token -> Result Error value
 invalidOp (Token _ (Loc col string)) =
     Err (InvalidOpCode col string)
