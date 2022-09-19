@@ -132,6 +132,24 @@ compile string =
 
 compileStatements : List ( Int, Stmt ) -> Result Errors (List ( Int, Inst ))
 compileStatements stmts =
+    let
+        _ =
+            List.foldl
+                (\( r, s ) a ->
+                    case s of
+                        Stmt _ (Just i) ->
+                            { a | revPLines = ( r, i ) :: a.revPLines }
+
+                        _ ->
+                            a
+                )
+                { labels = Set.empty
+                , prevLabels = Set.empty
+                , revPLines = []
+                , errors = []
+                }
+                stmts
+    in
     Ok
         (stmts
             |> List.filterMap
