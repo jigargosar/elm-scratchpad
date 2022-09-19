@@ -127,7 +127,7 @@ compile string =
            )
 
 
-foo : List ( Int, Stmt ) -> Result error (List ( Int, Inst ))
+foo : List ( Int, Stmt ) -> Result Errors (List ( Int, Inst ))
 foo os =
     Ok
         (os
