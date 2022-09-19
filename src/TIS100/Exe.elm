@@ -168,8 +168,8 @@ compile srcCode =
 
 
 prgLineFromTuple : ( Int, Inst ) -> PLine
-prgLineFromTuple ( a, b ) =
-    PLine a b Set.empty
+prgLineFromTuple ( lineNo, inst ) =
+    PLine lineNo inst Set.empty
 
 
 init : String -> List PLine -> ExeNode
