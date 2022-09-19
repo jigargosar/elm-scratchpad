@@ -133,7 +133,7 @@ compile string =
 compileStatements : List ( Int, Stmt ) -> Result Errors (List ( Int, Inst ))
 compileStatements stmts =
     let
-        _ =
+        acc =
             List.foldl
                 (\( r, s ) a ->
                     case s of
@@ -143,25 +143,14 @@ compileStatements stmts =
                         _ ->
                             a
                 )
-                { labels = Set.empty
-                , prevLabels = Set.empty
+                { allLabels = []
+                , prevLabels = []
                 , revPLines = []
                 , errors = []
                 }
                 stmts
     in
-    Ok
-        (stmts
-            |> List.filterMap
-                (\( row, stmt ) ->
-                    case stmt of
-                        Stmt _ (Just inst) ->
-                            Just ( row, inst )
-
-                        _ ->
-                            Nothing
-                )
-        )
+    Ok (List.reverse acc.revPLines)
 
 
 compileLine : String -> Result Error Stmt
