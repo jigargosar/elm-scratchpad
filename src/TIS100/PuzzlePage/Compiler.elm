@@ -371,7 +371,11 @@ prefixLabelToken col str =
 
 tokenListParser : Parser (List Token)
 tokenListParser =
-    loop [] tokenListParserHelp
+    oneOf
+        [ backtrackable prefixLabelTokenParser
+            |> andThen (\t -> loop [ t ] tokenListParserHelp)
+        , loop [] tokenListParserHelp
+        ]
 
 
 tokenListParserHelp : List Token -> Parser (Step (List Token) (List Token))
@@ -392,8 +396,7 @@ tokenListParserHelp rs =
 tokenParser : Parser Token
 tokenParser =
     oneOf
-        [ backtrackable prefixLabelTokenParser
-        , opCodeTokenParser
+        [ opCodeTokenParser
         , toTokenParser (keyword2 ACC "acc")
         , toTokenParser (keyword2 NIL "nil")
         , numTokenParser
