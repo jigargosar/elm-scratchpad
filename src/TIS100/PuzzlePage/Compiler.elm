@@ -155,7 +155,6 @@ labelErrors stmts =
 toPLines : List ( Int, Stmt ) -> List PLine
 toPLines stmts =
     let
-        insertMaybeLabel : Maybe ( String, b ) -> Set String -> Set String
         insertMaybeLabel mbl =
             case mbl of
                 Just ( lbl, _ ) ->
