@@ -153,7 +153,7 @@ labelErrors stmts =
 
 
 toPLines : List ( Int, Stmt ) -> List PLine
-toPLines stmts =
+toPLines =
     let
         insertMaybeLabel mbl =
             case mbl of
@@ -187,9 +187,8 @@ toPLines stmts =
                         ( row, Set.union acc.prevLabels labels, inst )
                     )
     in
-    stmts
-        |> List.foldl step { prevLabels = Set.empty, revPLines = [] }
-        |> done
+    List.foldl step { prevLabels = Set.empty, revPLines = [] }
+        >> done
 
 
 mapHead : (a -> a) -> List a -> List a
