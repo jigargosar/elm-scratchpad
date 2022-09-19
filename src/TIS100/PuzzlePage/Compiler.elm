@@ -100,7 +100,11 @@ getErrorDetails srcCode =
             []
 
 
-compile : String -> Result Errors (List ( Int, Set String, Inst ))
+type alias PLine =
+    ( Int, Set String, Inst )
+
+
+compile : String -> Result Errors (List PLine)
 compile string =
     string
         |> String.split "\n"
