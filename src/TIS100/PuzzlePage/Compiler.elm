@@ -120,22 +120,27 @@ compile string =
         |> (\( es, os ) ->
                 case es of
                     [] ->
-                        Ok
-                            (os
-                                |> List.filterMap
-                                    (\( row, stmt ) ->
-                                        case stmt of
-                                            Stmt _ (Just inst) ->
-                                                Just ( row, inst )
-
-                                            _ ->
-                                                Nothing
-                                    )
-                            )
+                        foo os
 
                     _ ->
                         Err es
            )
+
+
+foo : List ( Int, Stmt ) -> Result error (List ( Int, Inst ))
+foo os =
+    Ok
+        (os
+            |> List.filterMap
+                (\( row, stmt ) ->
+                    case stmt of
+                        Stmt _ (Just inst) ->
+                            Just ( row, inst )
+
+                        _ ->
+                            Nothing
+                )
+        )
 
 
 compileLine : String -> Result Error Stmt
