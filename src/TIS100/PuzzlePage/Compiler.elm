@@ -277,9 +277,9 @@ parseInstHelp fst rest =
             invalidOp fst
 
 
-parseJumpInst : (String -> value) -> Token -> Result error value
-parseJumpInst fn (Token _ (Loc _ string)) =
-    fn string |> Ok
+parseJumpInst : (Label -> value) -> Token -> Result error value
+parseJumpInst fn (Token _ (Loc col string)) =
+    fn (Label { col = col, val = string }) |> Ok
 
 
 parseMovInst : Token -> Token -> Result Error Inst
