@@ -185,7 +185,7 @@ toPLines stmts =
                 |> List.reverse
                 |> mapHead
                     (\( row, labels, inst ) ->
-                        ( row, labels, inst )
+                        ( row, Set.union acc.prevLabels labels, inst )
                     )
     in
     stmts
