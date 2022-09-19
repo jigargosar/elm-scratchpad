@@ -11,7 +11,7 @@ import Dict exposing (Dict)
 import Html exposing (pre)
 import Html.Attributes
 import TIS100.Addr as Addr exposing (Addr)
-import TIS100.Exe as ExeNode exposing (ExeNode)
+import TIS100.Exe as Exe exposing (ExeNode)
 import TIS100.Num as Num exposing (Num)
 import TIS100.Ports as Ports exposing (Action(..), Intent(..))
 import TIS100.Puzzle as Puzzle exposing (InConfig, OutConfig, Puzzle)
@@ -109,7 +109,7 @@ subscriptions model =
 
 startDebugging : StepMode -> Model -> Model
 startDebugging stepMode model =
-    case maybeMapValues ExeNode.compile model.editors of
+    case maybeMapValues Exe.compile model.editors of
         Just exs ->
             { model | state = SIM (initSim model.puzzle exs stepMode) }
 
@@ -381,13 +381,8 @@ viewCompilerErrorMsg msg =
         [ text msg ]
 
 
-viewExeNode : Addr -> ExeNode -> Html msg
-viewExeNode addr exe =
-    let
-        vm : ExeNode.ViewModel
-        vm =
-            ExeNode.viewModel exe
-    in
+viewExeNode : Addr -> Exe.ViewModel -> Html msg
+viewExeNode addr vm =
     div
         [ Addr.toGridArea addr
         , UI.lightOutline
@@ -569,7 +564,7 @@ viewSimNode ( addr, node ) =
             viewOutputNode conf
 
         SimStore.EXE exe ->
-            viewExeNode addr exe
+            viewExeNode addr (Exe.viewModel exe)
 
         SimStore.FLT ->
             viewFaultyNode addr
