@@ -9,6 +9,7 @@ module TIS100.Exe exposing
     )
 
 import Pivot exposing (Pivot)
+import Set exposing (Set)
 import TIS100.Num as Num exposing (Num)
 import TIS100.Ports exposing (Intent(..))
 import TIS100.PuzzlePage.Compiler as Compiler
@@ -38,7 +39,15 @@ type alias Prg =
 
 
 type alias PLine =
-    { lineNo : Int, inst : Inst }
+    { lineNo : Int
+    , inst : Inst
+    , labels : Set String
+    }
+
+
+hasLabel : String -> PLine -> Bool
+hasLabel lbl { labels } =
+    Set.member lbl labels
 
 
 goNext : Ctx -> Ctx
@@ -49,6 +58,17 @@ goNext ({ prg } as ctx) =
 
         Nothing ->
             { ctx | prg = Pivot.goToStart prg }
+
+
+jmpToLabel : String -> Ctx -> Ctx
+jmpToLabel lbl ({ prg } as ctx) =
+    Pivot.findCR (hasLabel lbl) prg
+        |> Utils.orElseLazy
+            (\_ ->
+                Pivot.firstWith (hasLabel lbl) prg
+            )
+        |> Maybe.map (\newPrg -> { ctx | prg = newPrg })
+        |> Maybe.withDefault ctx
 
 
 
@@ -108,8 +128,8 @@ run ctx =
         Nop ->
             ReadyToRun (goNext ctx)
 
-        Jmp string ->
-            Debug.todo "todo"
+        Jmp label ->
+            ReadyToRun (jmpToLabel label ctx)
 
 
 writeAfterRead : Ctx -> Dst -> Num -> State
@@ -149,7 +169,7 @@ compile srcCode =
 
 prgLineFromTuple : ( Int, Inst ) -> PLine
 prgLineFromTuple ( a, b ) =
-    PLine a b
+    PLine a b Set.empty
 
 
 init : String -> List PLine -> ExeNode
