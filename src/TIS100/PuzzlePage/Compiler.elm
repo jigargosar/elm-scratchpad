@@ -104,6 +104,10 @@ type alias PLine =
     ( Int, Set String, Inst )
 
 
+type alias Prg =
+    List PLine
+
+
 compile : String -> Result Errors (List PLine)
 compile string =
     string
@@ -121,7 +125,7 @@ compile string =
             )
             ( [], [] )
         |> (\( es, os ) ->
-                case ( es, compileStatements os ) of
+                case ( es, toPrg os ) of
                     ( [], Ok prg ) ->
                         Ok prg
 
@@ -133,21 +137,22 @@ compile string =
            )
 
 
-compileStatements : List ( Int, Stmt ) -> Result Errors (List PLine)
-compileStatements stmts =
-    let
-        rpl =
-            toPLines stmts
-    in
-    case rpl of
-        Err pes ->
-            Err pes
+toPrg : List ( Int, Stmt ) -> Result Errors (List PLine)
+toPrg stmts =
+    case labelErrors stmts of
+        [] ->
+            Ok (toPLines stmts)
 
-        Ok pls ->
-            Ok pls
+        es ->
+            Err es
 
 
-toPLines : List ( Int, Stmt ) -> Result Errors (List PLine)
+labelErrors : List ( Int, Stmt ) -> Errors
+labelErrors stmts =
+    []
+
+
+toPLines : List ( Int, Stmt ) -> List PLine
 toPLines stmts =
     List.foldl
         (\( r, s ) a ->
@@ -167,7 +172,6 @@ toPLines stmts =
         stmts
         |> .revPLines
         |> List.reverse
-        |> Ok
 
 
 compileLine : String -> Result Error Stmt
