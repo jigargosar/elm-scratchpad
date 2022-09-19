@@ -400,7 +400,7 @@ viewSrc srcCode maybeLine =
         (String.lines srcCode
             |> List.indexedMap
                 (\i l ->
-                    if Just i == maybeLine then
+                    if Just (i + 1) == maybeLine then
                         div [ pl "0.5ch", fg black, bgc UI.lightGray ]
                             [ text (l ++ "\n") ]
 

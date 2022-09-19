@@ -113,7 +113,7 @@ compile string =
                         ( ( row, err ) :: errAcc, okAcc )
 
                     Ok (Stmt _ (Just inst)) ->
-                        ( errAcc, ( row - 1, inst ) :: okAcc )
+                        ( errAcc, ( row, inst ) :: okAcc )
 
                     _ ->
                         ( errAcc, okAcc )
