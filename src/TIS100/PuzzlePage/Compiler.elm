@@ -133,18 +133,16 @@ compile string =
            )
 
 
-compileStatements :
-    List ( Int, Stmt )
-    -> Result Errors (List ( Int, Set String, Inst ))
+compileStatements : List ( Int, Stmt ) -> Result Errors (List PLine)
 compileStatements stmts =
     let
-        acc =
+        pLines =
             List.foldl
                 (\( r, s ) a ->
                     case s of
                         Stmt _ (Just i) ->
                             { a
-                                | revPLines = ( r, Set.empty, i ) :: a.revPLines
+                                | revPLines = ( r, a.prevLabels, i ) :: a.revPLines
                                 , prevLabels = Set.empty
                             }
 
@@ -155,11 +153,31 @@ compileStatements stmts =
                 , revPLines = []
                 }
                 stmts
+                |> .revPLines
+                |> List.reverse
     in
-    Ok
-        (List.reverse acc.revPLines
-            |> List.map (\( r, ls, i ) -> ( r, ls, i ))
+    Ok pLines
+
+
+toPLines stmts =
+    List.foldl
+        (\( r, s ) a ->
+            case s of
+                Stmt _ (Just i) ->
+                    { a
+                        | revPLines = ( r, a.prevLabels, i ) :: a.revPLines
+                        , prevLabels = Set.empty
+                    }
+
+                _ ->
+                    a
         )
+        { prevLabels = Set.empty
+        , revPLines = []
+        }
+        stmts
+        |> .revPLines
+        |> List.reverse
 
 
 compileLine : String -> Result Error Stmt
