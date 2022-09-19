@@ -155,16 +155,16 @@ labelErrors stmts =
 toPLines : List ( Int, Stmt ) -> List PLine
 toPLines stmts =
     List.foldl
-        (\( r, s ) a ->
-            case s of
+        (\( row, stmt ) acc ->
+            case stmt of
                 Stmt _ (Just i) ->
-                    { a
-                        | revPLines = ( r, a.prevLabels, i ) :: a.revPLines
+                    { acc
+                        | revPLines = ( row, acc.prevLabels, i ) :: acc.revPLines
                         , prevLabels = Set.empty
                     }
 
                 _ ->
-                    a
+                    acc
         )
         { prevLabels = Set.empty
         , revPLines = []
