@@ -315,6 +315,7 @@ type TokenTyp
 type OpCode
     = NOP
     | MOV
+    | JMP
 
 
 wordToken : Int -> String -> Token
@@ -379,6 +380,7 @@ opCodeTokenParser =
             |= oneOf
                 [ keyword2 MOV "mov"
                 , keyword2 NOP "nop"
+                , keyword2 JMP "jmp"
                 ]
         )
 
