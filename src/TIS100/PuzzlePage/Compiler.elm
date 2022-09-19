@@ -154,12 +154,27 @@ labelErrors stmts =
 
 toPLines : List ( Int, Stmt ) -> List PLine
 toPLines stmts =
+    let
+        insertMaybeLabel : Maybe ( String, b ) -> Set String -> Set String
+        insertMaybeLabel mbl =
+            case mbl of
+                Just ( lbl, _ ) ->
+                    Set.insert lbl
+
+                _ ->
+                    identity
+    in
     List.foldl
         (\( row, stmt ) acc ->
             case stmt of
-                Stmt _ (Just i) ->
+                Stmt mbLbl (Just i) ->
                     { acc
-                        | revPLines = ( row, acc.prevLabels, i ) :: acc.revPLines
+                        | revPLines =
+                            ( row
+                            , insertMaybeLabel mbLbl acc.prevLabels
+                            , i
+                            )
+                                :: acc.revPLines
                         , prevLabels = Set.empty
                     }
 
