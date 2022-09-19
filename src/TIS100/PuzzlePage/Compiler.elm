@@ -150,7 +150,10 @@ compileStatements stmts =
                 }
                 stmts
     in
-    Ok (List.reverse acc.revPLines)
+    Ok
+        (List.reverse acc.revPLines
+            |> List.map (\( r, i ) -> ( r, i ))
+        )
 
 
 compileLine : String -> Result Error Stmt
