@@ -188,8 +188,17 @@ labelErrors =
                 |> handleMaybePrefixLabel row mbl
                 |> addJumpLabel row mbi
 
-        done _ =
-            []
+        done acc =
+            acc.errors
+                ++ List.filterMap
+                    (\( row, Label { col, val } ) ->
+                        if Set.member val acc.prefixLabels then
+                            Nothing
+
+                        else
+                            Just ( row, UndefinedLabel col val )
+                    )
+                    acc.jumpLabels
     in
     List.foldl step
         { errors = []
@@ -485,11 +494,13 @@ prefixLabelToken col str =
 
 tokenListParser : Parser (List Token)
 tokenListParser =
-    oneOf
-        [ backtrackable prefixLabelTokenParser
-            |> andThen (\t -> loop [ t ] tokenListParserHelp)
-        , loop [] tokenListParserHelp
-        ]
+    succeed identity
+        |. spaces
+        |= oneOf
+            [ backtrackable prefixLabelTokenParser
+                |> andThen (\t -> loop [ t ] tokenListParserHelp)
+            , loop [] tokenListParserHelp
+            ]
 
 
 tokenListParserHelp : List Token -> Parser (Step (List Token) (List Token))
@@ -577,6 +588,10 @@ prefixLabelTokenParser =
         )
         |. spaces
         |. symbol ":"
+
+
+
+--|. commit ()
 
 
 labelVariable : Parser String
