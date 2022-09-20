@@ -455,6 +455,11 @@ tokenEndColumn token =
             col + String.length string - 1
 
 
+lexLines : List String -> Result Errors (List (List Token))
+lexLines strings =
+    Debug.todo "todo"
+
+
 lexLine : String -> Result (List DeadEnd) (List Token)
 lexLine src =
     Parser.run tokenListParser (String.toLower src)
