@@ -205,6 +205,12 @@ compileLines ls =
                     )
                     Set.empty
 
+        step : ( Int, String ) -> CAcc -> CAcc
+        step ( row, srcLine ) acc =
+            updateCAcc row
+                (compileLineHelp acc.prevLabels allPrefixLabels srcLine)
+                acc
+
         done : CAcc -> Result Errors Prg
         done acc =
             case
@@ -222,7 +228,7 @@ compileLines ls =
                     Err es
     in
     ls
-        |> List.foldl (compileLine allPrefixLabels)
+        |> List.foldl step
             { revErrors = []
             , revStmts = []
             , prevLabels = Set.empty
