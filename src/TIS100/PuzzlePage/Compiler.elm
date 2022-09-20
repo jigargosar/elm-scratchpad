@@ -137,10 +137,10 @@ toPLines =
                 Stmt mbl (Just inst) ->
                     { acc
                         | revPLines =
-                            PLine
-                                row
-                                (U.insertMaybe mbl acc.prevLabels)
-                                inst
+                            { lineNo = row
+                            , labels = U.insertMaybe mbl acc.prevLabels
+                            , inst = inst
+                            }
                                 :: acc.revPLines
                         , prevLabels = Set.empty
                     }
