@@ -233,45 +233,51 @@ compileLines ls =
 compileLinesHelp : Set String -> ( Int, String ) -> CAcc -> CAcc
 compileLinesHelp allPrefixLabels ( row, line ) acc =
     let
-        ( maybeLabel, res ) =
-            case lexLine line of
-                Ok tokens ->
-                    case tokens of
-                        (Token (PrefixLabel lbl) (Loc col _)) :: rest ->
-                            ( Just lbl
-                            , if Set.member lbl acc.prevLabels then
-                                Err (LabelAlreadyDefined col lbl)
+        processWithMaybeLabel mbl r =
+            case r of
+                Ok stmt ->
+                    { acc
+                        | revStmts = ( row, stmt ) :: acc.revStmts
+                        , prevLabels = insertMaybe mbl acc.prevLabels
+                    }
 
-                              else
-                                parseInst
-                                    allPrefixLabels
-                                    rest
-                                    |> Result.map (stmtWithLabel lbl)
-                            )
+                Err err ->
+                    { acc
+                        | revErrors = ( row, err ) :: acc.revErrors
+                        , prevLabels = insertMaybe mbl acc.prevLabels
+                    }
 
-                        _ ->
-                            ( Nothing
-                            , parseInst
-                                allPrefixLabels
-                                tokens
-                                |> Result.map stmtWithoutLabel
-                            )
+        processWithLabel label r =
+            processWithMaybeLabel (Just label) r
 
-                Err _ ->
-                    ( Nothing, Err InternalError )
+        processWithoutLabel r =
+            processWithMaybeLabel Nothing r
     in
-    case res of
-        Ok stmt ->
-            { acc
-                | revStmts = ( row, stmt ) :: acc.revStmts
-                , prevLabels = insertMaybe maybeLabel acc.prevLabels
-            }
+    case lexLine line of
+        Ok tokens ->
+            case tokens of
+                (Token (PrefixLabel lbl) (Loc col _)) :: rest ->
+                    (if Set.member lbl acc.prevLabels then
+                        Err (LabelAlreadyDefined col lbl)
 
-        Err err ->
-            { acc
-                | revErrors = ( row, err ) :: acc.revErrors
-                , prevLabels = insertMaybe maybeLabel acc.prevLabels
-            }
+                     else
+                        parseInst
+                            allPrefixLabels
+                            rest
+                            |> Result.map (stmtWithLabel lbl)
+                    )
+                        |> processWithLabel lbl
+
+                _ ->
+                    parseInst
+                        allPrefixLabels
+                        tokens
+                        |> Result.map stmtWithoutLabel
+                        |> processWithoutLabel
+
+        Err _ ->
+            Err InternalError
+                |> processWithoutLabel
 
 
 insertMaybe : Maybe comparable -> Set comparable -> Set comparable
