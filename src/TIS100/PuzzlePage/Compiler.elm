@@ -181,8 +181,12 @@ type alias AllPrefixLabels =
     Set String
 
 
+type alias PrevLabels =
+    Set String
+
+
 type alias CAcc =
-    { prevLabels : AllPrefixLabels
+    { prevLabels : PrevLabels
     , revStmts : List ( Int, Stmt )
     , revErrors : Errors
     }
@@ -247,10 +251,6 @@ unconsTokensWithPrefixLabel tokens =
 
         _ ->
             Nothing
-
-
-type alias PrevLabels =
-    Set String
 
 
 compileLineHelp :
