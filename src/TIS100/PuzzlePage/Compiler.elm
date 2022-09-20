@@ -12,6 +12,7 @@ module TIS100.PuzzlePage.Compiler exposing
 
 import List.Extra
 import Parser exposing (..)
+import Result.Extra
 import Set exposing (Set)
 import TIS100.Num as Num exposing (Num)
 import TIS100.PuzzlePage.Inst exposing (..)
@@ -253,26 +254,32 @@ unconsTokensWithPrefixLabel tokens =
             Nothing
 
 
+unconsPrefixLabel : List Token -> ( Maybe ( Int, String ), List Token )
+unconsPrefixLabel tokens =
+    case tokens of
+        (Token (PrefixLabel lbl) (Loc col _)) :: rest ->
+            ( Just ( col, lbl ), rest )
+
+        _ ->
+            ( Nothing, tokens )
+
+
 compileLineHelp :
     PrevLabels
     -> AllPrefixLabels
     -> String
     -> ( Maybe String, Result Error Stmt )
 compileLineHelp prevLabels allPrefixLabels srcLine =
-    let
-        _ =
-            lexLine srcLine
-    in
-    case lexLine srcLine of
-        Ok tokens ->
-            case unconsTokensWithPrefixLabel tokens of
-                Just ( ( col, lbl ), rest ) ->
+    case lexLine srcLine |> Result.map unconsPrefixLabel of
+        Ok ( mbl, tokens ) ->
+            case mbl of
+                Just ( col, lbl ) ->
                     ( Just lbl
                     , if Set.member lbl prevLabels then
                         Err (LabelAlreadyDefined col lbl)
 
                       else
-                        parseInst allPrefixLabels rest
+                        parseInst allPrefixLabels tokens
                             |> Result.map (stmtWithLabel lbl)
                     )
 
