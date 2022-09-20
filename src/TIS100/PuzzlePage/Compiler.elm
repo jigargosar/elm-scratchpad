@@ -151,23 +151,13 @@ toPLines =
         done acc =
             acc.revPLines
                 |> List.reverse
-                |> mapHead
+                |> U.mapHead
                     (\pl ->
                         { pl | labels = Set.union acc.prevLabels pl.labels }
                     )
     in
     List.foldl step { prevLabels = Set.empty, revPLines = [] }
         >> done
-
-
-mapHead : (a -> a) -> List a -> List a
-mapHead fn xs =
-    case xs of
-        [] ->
-            []
-
-        h :: t ->
-            fn h :: t
 
 
 type alias PrevLabels =

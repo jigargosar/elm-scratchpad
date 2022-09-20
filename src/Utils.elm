@@ -2180,6 +2180,16 @@ maybeMapValues fn =
 -- LIST HELPERS
 
 
+mapHead : (a -> a) -> List a -> List a
+mapHead fn xs =
+    case xs of
+        [] ->
+            []
+
+        h :: t ->
+            fn h :: t
+
+
 keep : (a -> Bool) -> List a -> List a
 keep =
     List.filter
