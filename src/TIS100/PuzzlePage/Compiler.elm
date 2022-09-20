@@ -221,7 +221,11 @@ compileLines ls =
 
         step : ( Int, String ) -> CAcc -> CAcc
         step ( row, srcLine ) =
-            updateCAcc row (parseStmt labelDefs row srcLine)
+            srcLine
+                |> lexLine
+                |> Result.andThen (validateLabelDef labelDefs row)
+                |> Result.andThen (parseStmt labelDefs)
+                |> updateCAcc row
 
         done : CAcc -> Result Errors Prg
         done acc =
@@ -241,16 +245,6 @@ compileLines ls =
         |> done
 
 
-prefixLabelFromTokens : List Token -> Maybe ( Int, String )
-prefixLabelFromTokens tokens =
-    case tokens of
-        (Token (PrefixLabel lbl) (Loc col _)) :: _ ->
-            Just ( col, lbl )
-
-        _ ->
-            Nothing
-
-
 validateLabelDef : LabelDefs -> Int -> List Token -> Result Error (List Token)
 validateLabelDef labelDefs row tokens =
     case tokens of
@@ -265,13 +259,6 @@ validateLabelDef labelDefs row tokens =
             Ok tokens
 
 
-parseStmt : LabelDefs -> Int -> String -> Result Error Stmt
-parseStmt labelDefs row srcLine =
-    lexLine srcLine
-        |> Result.andThen (validateLabelDef labelDefs row)
-        |> Result.andThen (parseStmtHelp labelDefs)
-
-
 unconsPrefixLabel : List Token -> ( Maybe String, List Token )
 unconsPrefixLabel tokens =
     case tokens of
@@ -282,8 +269,8 @@ unconsPrefixLabel tokens =
             ( Nothing, rest )
 
 
-parseStmtHelp : LabelDefs -> List Token -> Result Error Stmt
-parseStmtHelp labelDefs tokens =
+parseStmt : LabelDefs -> List Token -> Result Error Stmt
+parseStmt labelDefs tokens =
     let
         ( mbl, rest ) =
             unconsPrefixLabel tokens
