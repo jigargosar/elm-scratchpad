@@ -177,12 +177,12 @@ mapHead fn xs =
             fn h :: t
 
 
-type alias PrefixLabels =
+type alias AllPrefixLabels =
     Set String
 
 
 type alias CAcc =
-    { prevLabels : PrefixLabels
+    { prevLabels : AllPrefixLabels
     , revStmts : List ( Int, Stmt )
     , revErrors : Errors
     }
@@ -191,7 +191,7 @@ type alias CAcc =
 compileLines : List ( Int, String ) -> Result Errors Prg
 compileLines ls =
     let
-        allPrefixLabels : PrefixLabels
+        allPrefixLabels : AllPrefixLabels
         allPrefixLabels =
             ls
                 |> List.foldr
@@ -240,45 +240,60 @@ unconsTokensWithPrefixLabel tokens =
             Nothing
 
 
-compileLine : PrefixLabels -> ( Int, String ) -> CAcc -> CAcc
-compileLine allPrefixLabels ( row, line ) acc =
-    case lexLine line of
+compileLine : AllPrefixLabels -> ( Int, String ) -> CAcc -> CAcc
+compileLine allPrefixLabels ( row, srcLine ) acc =
+    updateCAcc row
+        (compileLineHelp acc.prevLabels allPrefixLabels srcLine)
+        acc
+
+
+type alias PrevLabels =
+    Set String
+
+
+compileLineHelp :
+    PrevLabels
+    -> AllPrefixLabels
+    -> String
+    -> ( Maybe String, Result Error Stmt )
+compileLineHelp prevLabels allPrefixLabels srcLine =
+    case lexLine srcLine of
         Ok tokens ->
             case unconsTokensWithPrefixLabel tokens of
                 Just ( ( col, lbl ), rest ) ->
-                    (if Set.member lbl acc.prevLabels then
+                    ( Just lbl
+                    , if Set.member lbl prevLabels then
                         Err (LabelAlreadyDefined col lbl)
 
-                     else
+                      else
                         parseInst allPrefixLabels rest
                             |> Result.map (stmtWithLabel lbl)
                     )
-                        |> updateCAccWithLabel lbl row acc
 
                 Nothing ->
-                    parseInst allPrefixLabels tokens
+                    ( Nothing
+                    , parseInst allPrefixLabels tokens
                         |> Result.map stmtWithoutLabel
-                        |> updateCAcc row acc
+                    )
 
         Err _ ->
-            Err InternalError
-                |> updateCAcc row acc
+            ( Nothing, Err InternalError )
 
 
-updateCAccWithLabel : String -> Int -> CAcc -> Result Error Stmt -> CAcc
-updateCAccWithLabel lbl row acc =
-    { acc | prevLabels = Set.insert lbl acc.prevLabels }
-        |> updateCAcc row
-
-
-updateCAcc : Int -> CAcc -> Result Error Stmt -> CAcc
-updateCAcc row acc res =
+updateCAcc : Int -> ( Maybe String, Result Error Stmt ) -> CAcc -> CAcc
+updateCAcc row ( mbl, res ) acc =
     case res of
         Ok stmt ->
-            { acc | revStmts = ( row, stmt ) :: acc.revStmts }
+            { acc
+                | revStmts = ( row, stmt ) :: acc.revStmts
+                , prevLabels = U.insertMaybe mbl acc.prevLabels
+            }
 
         Err err ->
-            { acc | revErrors = ( row, err ) :: acc.revErrors }
+            { acc
+                | revErrors = ( row, err ) :: acc.revErrors
+                , prevLabels = U.insertMaybe mbl acc.prevLabels
+            }
 
 
 type Stmt
@@ -295,7 +310,7 @@ stmtWithoutLabel =
     Stmt Nothing
 
 
-parseInst : PrefixLabels -> List Token -> Result Error (Maybe Inst)
+parseInst : AllPrefixLabels -> List Token -> Result Error (Maybe Inst)
 parseInst prefixLabels tokens =
     case tokens of
         [] ->
@@ -306,7 +321,7 @@ parseInst prefixLabels tokens =
                 |> Result.map Just
 
 
-parseInstHelp : PrefixLabels -> Token -> List Token -> Result Error Inst
+parseInstHelp : AllPrefixLabels -> Token -> List Token -> Result Error Inst
 parseInstHelp prefixLabels fst rest =
     case fst of
         Token (OpCode op) _ ->
@@ -324,7 +339,7 @@ parseInstHelp prefixLabels fst rest =
             invalidOp fst
 
 
-parseJumpInst : PrefixLabels -> (String -> value) -> Token -> Result Error value
+parseJumpInst : AllPrefixLabels -> (String -> value) -> Token -> Result Error value
 parseJumpInst prefixLabels fn (Token _ (Loc col string)) =
     if Set.member string prefixLabels then
         Ok (fn string)

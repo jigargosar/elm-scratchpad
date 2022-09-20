@@ -2724,6 +2724,16 @@ type alias NEL a =
 -- SET
 
 
+insertMaybe : Maybe comparable -> Set comparable -> Set comparable
+insertMaybe mb =
+    case mb of
+        Just v ->
+            Set.insert v
+
+        Nothing ->
+            identity
+
+
 setToggleMember e s =
     if Set.member e s then
         Set.remove e s
