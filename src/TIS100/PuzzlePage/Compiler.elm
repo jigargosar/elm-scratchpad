@@ -250,6 +250,10 @@ compileLines ls =
         |> done
 
 
+type Stmt
+    = Stmt (Maybe String) (Maybe Inst)
+
+
 parseStmt : LabelDefs -> Int -> List Token -> Result Error Stmt
 parseStmt labelDefs row tokens =
     case tokens of
@@ -262,10 +266,6 @@ parseStmt labelDefs row tokens =
 
         otherTokens ->
             Result.map (Stmt Nothing) (parseInst labelDefs otherTokens)
-
-
-type Stmt
-    = Stmt (Maybe String) (Maybe Inst)
 
 
 parseInst : LabelDefs -> List Token -> Result Error (Maybe Inst)
