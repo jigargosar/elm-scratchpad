@@ -161,10 +161,10 @@ toPrg =
                     (\pl ->
                         { pl | labels = Set.union acc.prevLabels pl.labels }
                     )
-                |> Pivot.fromList
     in
     List.foldl step { prevLabels = Set.empty, revPLines = [] }
         >> done
+        >> Pivot.fromList
 
 
 type alias LabelDefs =
