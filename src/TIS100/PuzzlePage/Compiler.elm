@@ -293,7 +293,7 @@ parseInstHelp labelDefs fst rest =
                     with2Operands parseMovInst fst rest
 
         _ ->
-            invalidOp fst
+            invalidOpCode fst
 
 
 parseJumpInst : LabelDefs -> (String -> value) -> Token -> Result Error value
@@ -405,8 +405,8 @@ missingOperand start end =
     Err (MissingOperand (tokenStartColumn start) (tokenEndColumn end))
 
 
-invalidOp : Token -> Result Error value
-invalidOp (Token _ (Loc col string)) =
+invalidOpCode : Token -> Result Error value
+invalidOpCode (Token _ (Loc col string)) =
     Err (InvalidOpCode col string)
 
 
