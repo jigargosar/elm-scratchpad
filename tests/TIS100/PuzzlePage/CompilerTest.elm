@@ -26,6 +26,7 @@ testValidStmts =
             , "lab : nop"
             , "nop : nop"
             , " nop"
+            , "jmp lab"
             ]
                 |> compileLines
                 |> Expect.ok

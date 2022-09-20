@@ -127,6 +127,10 @@ compile string =
         |> List.map (U.mapFirst U.inc)
         |> compileLines
         |> (\( es, os ) ->
+                let
+                    _ =
+                        Debug.log "Debug: " es
+                in
                 case ( es, toPrg os ) of
                     ( [], Ok prg ) ->
                         Ok prg
@@ -153,7 +157,7 @@ toPrg stmts =
 labelErrors : List ( Int, Stmt ) -> Errors
 labelErrors =
     let
-        handleMaybePrefixLabel row mbl acc =
+        step ( row, Stmt mbl _ ) acc =
             case mbl of
                 Nothing ->
                     acc
@@ -169,35 +173,12 @@ labelErrors =
                     else
                         { acc | prefixLabels = Set.insert val acc.prefixLabels }
 
-        addJumpLabel row mbi acc =
-            case mbi of
-                Just (Jmp lbl) ->
-                    { acc | jumpLabels = ( row, lbl ) :: acc.jumpLabels }
-
-                _ ->
-                    acc
-
-        step ( row, Stmt mbl mbi ) acc =
-            acc
-                |> handleMaybePrefixLabel row mbl
-                |> addJumpLabel row mbi
-
         done acc =
             acc.errors
-                ++ List.filterMap
-                    (\( row, Label { col, val } ) ->
-                        if Set.member val acc.prefixLabels then
-                            Nothing
-
-                        else
-                            Just ( row, UndefinedLabel col val )
-                    )
-                    acc.jumpLabels
     in
     List.foldl step
         { errors = []
         , prefixLabels = Set.empty
-        , jumpLabels = []
         }
         >> done
 
