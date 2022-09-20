@@ -149,6 +149,7 @@ compile string =
                     ( _, Err nes ) ->
                         Err <| es ++ nes
            )
+        |> Result.mapError (List.sortBy U.first)
 
 
 toPrg : List ( Int, Stmt ) -> Result Errors (List PLine)

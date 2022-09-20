@@ -43,7 +43,6 @@ testInvalidSrcCode =
         [ test "invalid ops" <|
             \_ ->
                 [ " foo"
-                , " bar"
                 , ":"
                 , " label: foo"
                 , "jmp undef"
@@ -54,11 +53,10 @@ testInvalidSrcCode =
                     |> Expect.equal
                         (Err
                             [ ( 1, InvalidOpCode 2 "foo" )
-                            , ( 2, InvalidOpCode 2 "bar" )
-                            , ( 3, InvalidOpCode 1 ":" )
-                            , ( 4, InvalidOpCode 9 "foo" )
-                            , ( 7, LabelAlreadyDefined 2 "a" )
-                            , ( 5, UndefinedLabel 5 "undef" )
+                            , ( 2, InvalidOpCode 1 ":" )
+                            , ( 3, InvalidOpCode 9 "foo" )
+                            , ( 4, UndefinedLabel 5 "undef" )
+                            , ( 6, LabelAlreadyDefined 2 "a" )
                             ]
                         )
         ]
