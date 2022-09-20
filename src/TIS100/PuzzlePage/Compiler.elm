@@ -126,18 +126,6 @@ compile string =
         |> List.indexedMap U.pair
         |> List.map (U.mapFirst U.inc)
         |> compileLines
-        --|> List.indexedMap U.pair
-        --|> List.map (U.biMap U.inc compileLine)
-        --|> List.foldr
-        --    (\( row, result ) ( errAcc, okAcc ) ->
-        --        case result of
-        --            Err err ->
-        --                ( ( row, err ) :: errAcc, okAcc )
-        --
-        --            Ok v ->
-        --                ( errAcc, ( row, v ) :: okAcc )
-        --    )
-        --    ( [], [] )
         |> (\( es, os ) ->
                 case ( es, toPrg os ) of
                     ( [], Ok prg ) ->
