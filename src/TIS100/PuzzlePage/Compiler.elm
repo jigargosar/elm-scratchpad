@@ -185,17 +185,17 @@ toLabelDefs =
 
 compileLines : LabelDefs -> List ( Int, String ) -> Result Errors (Maybe Prg)
 compileLines labelDefs =
-    let
-        compileStmt : ( Int, String ) -> Result ( Int, Error ) ( Int, Stmt )
-        compileStmt ( row, srcLine ) =
-            srcLine
-                |> lexLine
-                |> Result.andThen (parseStmt labelDefs row)
-                |> Result.Extra.mapBoth (pair row) (pair row)
-    in
-    List.map compileStmt
+    List.map (compileLine labelDefs)
         >> resultConcat
         >> Result.map toPrg
+
+
+compileLine : LabelDefs -> ( Int, String ) -> Result ( Int, Error ) ( Int, Stmt )
+compileLine labelDefs ( row, srcLine ) =
+    srcLine
+        |> lexLine
+        |> Result.andThen (parseStmt labelDefs row)
+        |> Result.Extra.mapBoth (pair row) (pair row)
 
 
 type Stmt
