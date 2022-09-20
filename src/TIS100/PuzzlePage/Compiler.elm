@@ -14,13 +14,12 @@ module TIS100.PuzzlePage.Compiler exposing
 
 import Dict exposing (Dict)
 import List.Extra
-import Maybe.Extra
 import Parser exposing (..)
 import Pivot exposing (Pivot)
 import Set exposing (Set)
 import TIS100.Num as Num exposing (Num)
 import TIS100.PuzzlePage.Inst exposing (..)
-import Utils as U exposing (Dir4(..), filterMapAccuml, insertMaybe, mapHead, mapSecond, pair, resultConcat)
+import Utils exposing (Dir4(..), filterMapAccuml, insertMaybe, mapHead, pair, resultConcat)
 
 
 type Error
