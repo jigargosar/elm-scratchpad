@@ -126,15 +126,6 @@ compile string =
         |> List.indexedMap U.pair
         |> List.map (U.mapFirst U.inc)
         |> compileLines
-        |> (\( es, os ) ->
-                case es of
-                    [] ->
-                        Ok (toPLines os)
-
-                    _ ->
-                        Err es
-           )
-        |> Result.mapError (List.sortBy U.first)
 
 
 toPLines : List ( Int, Stmt ) -> List PLine
@@ -197,7 +188,7 @@ type alias CAcc =
     }
 
 
-compileLines : List ( Int, String ) -> ( Errors, List ( Int, Stmt ) )
+compileLines : List ( Int, String ) -> Result Errors Prg
 compileLines ls =
     let
         allPrefixLabels : Set String
@@ -215,7 +206,12 @@ compileLines ls =
                     Set.empty
 
         done acc =
-            ( acc.revErrors |> List.reverse, acc.revStmts |> List.reverse )
+            case acc.revErrors |> List.reverse |> List.sortBy U.first of
+                [] ->
+                    Ok <| toPLines (acc.revStmts |> List.reverse)
+
+                es ->
+                    Err es
     in
     ls
         |> List.foldl (compileLinesHelp allPrefixLabels)
