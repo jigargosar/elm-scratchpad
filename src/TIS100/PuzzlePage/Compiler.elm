@@ -222,7 +222,7 @@ compileLines ls =
                     Err es
     in
     ls
-        |> List.foldl (compileLinesHelp allPrefixLabels)
+        |> List.foldl (compileLine allPrefixLabels)
             { revErrors = []
             , revStmts = []
             , prevLabels = Set.empty
@@ -230,8 +230,8 @@ compileLines ls =
         |> done
 
 
-compileLinesHelp : Set String -> ( Int, String ) -> CAcc -> CAcc
-compileLinesHelp allPrefixLabels ( row, line ) =
+compileLine : Set String -> ( Int, String ) -> CAcc -> CAcc
+compileLine allPrefixLabels ( row, line ) =
     let
         insertLabel : String -> CAcc -> CAcc
         insertLabel lbl acc =
