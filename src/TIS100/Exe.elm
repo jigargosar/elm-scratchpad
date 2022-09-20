@@ -45,9 +45,9 @@ type alias PLine =
     }
 
 
-hasLabel : Label -> PLine -> Bool
-hasLabel (Label { val }) { labels } =
-    Set.member val labels
+hasLabel : String -> PLine -> Bool
+hasLabel label { labels } =
+    Set.member label labels
 
 
 goNext : Ctx -> Ctx
@@ -60,7 +60,7 @@ goNext ({ prg } as ctx) =
             { ctx | prg = Pivot.goToStart prg }
 
 
-jmpToLabel : Label -> Ctx -> Ctx
+jmpToLabel : String -> Ctx -> Ctx
 jmpToLabel lbl ({ prg } as ctx) =
     Pivot.findCR (hasLabel lbl) prg
         |> Utils.orElseLazy

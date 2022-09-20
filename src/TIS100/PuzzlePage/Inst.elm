@@ -7,11 +7,7 @@ import Utils exposing (Dir4)
 type Inst
     = Mov Src Dst
     | Nop
-    | Jmp Label
-
-
-type Label
-    = Label { col : Int, val : String }
+    | Jmp String
 
 
 type Src

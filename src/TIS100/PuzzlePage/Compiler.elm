@@ -133,8 +133,8 @@ toPLines =
     let
         insertMaybeLabel mbl =
             case mbl of
-                Just (Label { val }) ->
-                    Set.insert val
+                Just lbl ->
+                    Set.insert lbl
 
                 _ ->
                     identity
@@ -246,14 +246,7 @@ compileLinesHelp allPrefixLabels ( row, line ) acc =
                                 parseInst
                                     allPrefixLabels
                                     rest
-                                    |> Result.map
-                                        (stmtWithLabel
-                                            (Label
-                                                { col = col
-                                                , val = lbl
-                                                }
-                                            )
-                                        )
+                                    |> Result.map (stmtWithLabel lbl)
                             )
 
                         _ ->
@@ -292,10 +285,10 @@ insertMaybe mb =
 
 
 type Stmt
-    = Stmt (Maybe Label) (Maybe Inst)
+    = Stmt (Maybe String) (Maybe Inst)
 
 
-stmtWithLabel : Label -> Maybe Inst -> Stmt
+stmtWithLabel : String -> Maybe Inst -> Stmt
 stmtWithLabel label =
     Stmt (Just label)
 
@@ -334,10 +327,10 @@ parseInstHelp prefixLabels fst rest =
             invalidOp fst
 
 
-parseJumpInst : PrefixLabels -> (Label -> value) -> Token -> Result Error value
+parseJumpInst : PrefixLabels -> (String -> value) -> Token -> Result Error value
 parseJumpInst prefixLabels fn (Token _ (Loc col string)) =
     if Set.member string prefixLabels then
-        Ok (fn (Label { col = col, val = string }))
+        Ok (fn string)
 
     else
         Err (UndefinedLabel col string)
