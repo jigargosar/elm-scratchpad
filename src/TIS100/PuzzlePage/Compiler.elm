@@ -272,11 +272,11 @@ unconsPrefixLabel tokens =
 parseStmt : LabelDefs -> List Token -> Result Error Stmt
 parseStmt labelDefs tokens =
     let
-        ( mbl, rest ) =
+        ( mbLabel, otherTokens ) =
             unconsPrefixLabel tokens
     in
-    parseInst labelDefs rest
-        |> Result.map (Stmt mbl)
+    parseInst labelDefs otherTokens
+        |> Result.map (Stmt mbLabel)
 
 
 updateCAcc : Int -> Result Error Stmt -> CAcc -> CAcc
