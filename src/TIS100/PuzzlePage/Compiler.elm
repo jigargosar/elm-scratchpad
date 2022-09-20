@@ -250,13 +250,6 @@ compileLines ls =
         |> done
 
 
-compileLineHelp : LabelDefs -> Int -> String -> Result Error Stmt
-compileLineHelp labelDefs row srcLine =
-    srcLine
-        |> lexLine
-        |> Result.andThen (parseStmt labelDefs row)
-
-
 parseStmt : LabelDefs -> Int -> List Token -> Result Error Stmt
 parseStmt labelDefs row tokens =
     case tokens of
