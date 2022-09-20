@@ -290,11 +290,11 @@ compileLineHelpHelp : LabelDefs -> List Token -> Result Error Stmt
 compileLineHelpHelp labelDefs tokens =
     case tokens of
         (Token (PrefixLabel lbl) _) :: rest ->
-            parseInst labelDefs tokens
+            parseInst labelDefs rest
                 |> Result.map (stmtWithLabel lbl)
 
-        _ ->
-            parseInst labelDefs tokens
+        rest ->
+            parseInst labelDefs rest
                 |> Result.map stmtWithoutLabel
 
 
