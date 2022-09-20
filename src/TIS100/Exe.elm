@@ -51,6 +51,16 @@ mapPrg fn ctx =
     setPrg (fn ctx.prg) ctx
 
 
+mapPrgMaybe : (Prg -> Maybe Prg) -> Ctx -> Ctx
+mapPrgMaybe fn ctx =
+    case fn ctx.prg of
+        Just prg ->
+            setPrg prg ctx
+
+        Nothing ->
+            ctx
+
+
 setPrg : Prg -> Ctx -> Ctx
 setPrg prg ctx =
     { ctx | prg = prg }
@@ -58,11 +68,10 @@ setPrg prg ctx =
 
 jmpToLabel : String -> Ctx -> Ctx
 jmpToLabel lbl =
-    mapPrg <|
-        Pivot.withRollback
-            (cyclicFindFromCenter
-                (.labels >> Set.member lbl)
-            )
+    mapPrgMaybe
+        (cyclicFindFromCenter
+            (.labels >> Set.member lbl)
+        )
 
 
 cyclicFindFromCenter : (a -> Bool) -> Pivot a -> Maybe (Pivot a)
