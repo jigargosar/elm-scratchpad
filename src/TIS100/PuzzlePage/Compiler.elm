@@ -13,7 +13,6 @@ module TIS100.PuzzlePage.Compiler exposing
 import Dict exposing (Dict)
 import List.Extra
 import Parser exposing (..)
-import Result.Extra
 import Set exposing (Set)
 import TIS100.Num as Num exposing (Num)
 import TIS100.PuzzlePage.Inst exposing (..)
@@ -216,20 +215,6 @@ toLabelDefs ls =
 compileLines : List ( Int, String ) -> Result Errors Prg
 compileLines ls =
     let
-        allPrefixLabels : AllPrefixLabels
-        allPrefixLabels =
-            ls
-                |> List.foldr
-                    (\( _, line ) ->
-                        case lexLine line of
-                            Ok ((Token (PrefixLabel lbl) _) :: _) ->
-                                Set.insert lbl
-
-                            _ ->
-                                identity
-                    )
-                    Set.empty
-
         labelDefs =
             toLabelDefs ls
 
@@ -255,28 +240,30 @@ compileLines ls =
         |> done
 
 
-unconsPrefixLabel : List Token -> ( Maybe ( Int, String ), List Token )
-unconsPrefixLabel tokens =
+prefixLabelFromTokens : List Token -> Maybe ( Int, String )
+prefixLabelFromTokens tokens =
     case tokens of
-        (Token (PrefixLabel lbl) (Loc col _)) :: rest ->
-            ( Just ( col, lbl ), rest )
+        (Token (PrefixLabel lbl) (Loc col _)) :: _ ->
+            Just ( col, lbl )
 
         _ ->
-            ( Nothing, tokens )
+            Nothing
 
 
 compileLineHelp : LabelDefs -> Int -> String -> Result Error Stmt
 compileLineHelp labelDefs row srcLine =
     case lexLine srcLine of
-        Ok (((Token (PrefixLabel lbl) (Loc col _)) :: _) as tokens) ->
-            if Dict.get lbl labelDefs /= Just row then
-                Err (LabelAlreadyDefined col lbl)
-
-            else
-                compileLineHelpHelp labelDefs tokens
-
         Ok tokens ->
-            compileLineHelpHelp labelDefs tokens
+            case prefixLabelFromTokens tokens of
+                Just ( col, lbl ) ->
+                    if Dict.get lbl labelDefs /= Just row then
+                        Err (LabelAlreadyDefined col lbl)
+
+                    else
+                        compileLineHelpHelp labelDefs tokens
+
+                Nothing ->
+                    compileLineHelpHelp labelDefs tokens
 
         Err e ->
             Err e
