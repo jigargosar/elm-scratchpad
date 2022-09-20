@@ -207,9 +207,12 @@ compileLines ls =
 
         step : ( Int, String ) -> CAcc -> CAcc
         step ( row, srcLine ) acc =
-            updateCAcc row
-                (compileLineHelp acc.prevLabels allPrefixLabels srcLine)
-                acc
+            let
+                ( mbl, res ) =
+                    compileLineHelp acc.prevLabels allPrefixLabels srcLine
+            in
+            { acc | prevLabels = U.insertMaybe mbl acc.prevLabels }
+                |> updateCAcc row res
 
         done : CAcc -> Result Errors Prg
         done acc =
@@ -246,13 +249,6 @@ unconsTokensWithPrefixLabel tokens =
             Nothing
 
 
-compileLine : AllPrefixLabels -> ( Int, String ) -> CAcc -> CAcc
-compileLine allPrefixLabels ( row, srcLine ) acc =
-    updateCAcc row
-        (compileLineHelp acc.prevLabels allPrefixLabels srcLine)
-        acc
-
-
 type alias PrevLabels =
     Set String
 
@@ -286,20 +282,14 @@ compileLineHelp prevLabels allPrefixLabels srcLine =
             ( Nothing, Err InternalError )
 
 
-updateCAcc : Int -> ( Maybe String, Result Error Stmt ) -> CAcc -> CAcc
-updateCAcc row ( mbl, res ) acc =
+updateCAcc : Int -> Result Error Stmt -> CAcc -> CAcc
+updateCAcc row res acc =
     case res of
         Ok stmt ->
-            { acc
-                | revStmts = ( row, stmt ) :: acc.revStmts
-                , prevLabels = U.insertMaybe mbl acc.prevLabels
-            }
+            { acc | revStmts = ( row, stmt ) :: acc.revStmts }
 
         Err err ->
-            { acc
-                | revErrors = ( row, err ) :: acc.revErrors
-                , prevLabels = U.insertMaybe mbl acc.prevLabels
-            }
+            { acc | revErrors = ( row, err ) :: acc.revErrors }
 
 
 type Stmt
