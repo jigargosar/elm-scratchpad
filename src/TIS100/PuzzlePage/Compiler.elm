@@ -179,17 +179,12 @@ mapHead fn xs =
             fn h :: t
 
 
-type alias AllPrefixLabels =
-    Set String
-
-
 type alias PrevLabels =
     Set String
 
 
 type alias CAcc =
-    { prevLabels : PrevLabels
-    , revStmts : List ( Int, Stmt )
+    { revStmts : List ( Int, Stmt )
     , revErrors : Errors
     }
 
@@ -244,7 +239,6 @@ compileLines ls =
         |> List.foldl step
             { revErrors = []
             , revStmts = []
-            , prevLabels = Set.empty
             }
         |> done
 
