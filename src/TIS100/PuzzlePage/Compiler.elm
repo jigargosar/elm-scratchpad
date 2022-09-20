@@ -220,7 +220,7 @@ compileLines ls =
 
         step : ( Int, String ) -> CAcc -> CAcc
         step ( row, srcLine ) =
-            updateCAcc row (compileLineHelp labelDefs row srcLine)
+            updateCAcc row (compileLine labelDefs row srcLine)
 
         done : CAcc -> Result Errors Prg
         done acc =
@@ -250,8 +250,8 @@ prefixLabelFromTokens tokens =
             Nothing
 
 
-compileLineHelp : LabelDefs -> Int -> String -> Result Error Stmt
-compileLineHelp labelDefs row srcLine =
+compileLine : LabelDefs -> Int -> String -> Result Error Stmt
+compileLine labelDefs row srcLine =
     case lexLine srcLine of
         Ok tokens ->
             case prefixLabelFromTokens tokens of
@@ -260,17 +260,17 @@ compileLineHelp labelDefs row srcLine =
                         Err (LabelAlreadyDefined col lbl)
 
                     else
-                        compileLineHelpHelp labelDefs tokens
+                        parseStmt labelDefs tokens
 
                 Nothing ->
-                    compileLineHelpHelp labelDefs tokens
+                    parseStmt labelDefs tokens
 
         Err e ->
             Err e
 
 
-compileLineHelpHelp : LabelDefs -> List Token -> Result Error Stmt
-compileLineHelpHelp labelDefs tokens =
+parseStmt : LabelDefs -> List Token -> Result Error Stmt
+parseStmt labelDefs tokens =
     case tokens of
         (Token (PrefixLabel lbl) _) :: rest ->
             parseInst labelDefs rest
