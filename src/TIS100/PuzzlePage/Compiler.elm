@@ -359,11 +359,11 @@ with1Operand :
     -> Result Error value
 with1Operand fn fst rest =
     case rest of
-        a :: [] ->
-            fn a
-
         [] ->
             missingOperand fst fst
+
+        a :: [] ->
+            fn a
 
         _ :: x :: xs ->
             tooManyOperands x xs
