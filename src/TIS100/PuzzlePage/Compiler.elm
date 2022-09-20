@@ -259,24 +259,14 @@ validateLabelDef labelDefs row tokens =
             Ok tokens
 
 
-unconsPrefixLabel : List Token -> ( Maybe String, List Token )
-unconsPrefixLabel tokens =
-    case tokens of
-        (Token (PrefixLabel lbl) _) :: rest ->
-            ( Just lbl, rest )
-
-        rest ->
-            ( Nothing, rest )
-
-
 parseStmt : LabelDefs -> List Token -> Result Error Stmt
 parseStmt labelDefs tokens =
-    let
-        ( mbLabel, otherTokens ) =
-            unconsPrefixLabel tokens
-    in
-    parseInst labelDefs otherTokens
-        |> Result.map (Stmt mbLabel)
+    case tokens of
+        (Token (PrefixLabel lbl) _) :: otherTokens ->
+            Result.map (Stmt (Just lbl)) (parseInst labelDefs otherTokens)
+
+        otherTokens ->
+            Result.map (Stmt Nothing) (parseInst labelDefs otherTokens)
 
 
 updateCAcc : Int -> Result Error Stmt -> CAcc -> CAcc
