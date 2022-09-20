@@ -199,18 +199,17 @@ type alias LabelDefs =
 
 
 toLabelDefs : List ( Int, String ) -> LabelDefs
-toLabelDefs ls =
-    ls
-        |> List.foldr
-            (\( row, line ) ->
-                case lexLine line of
-                    Ok ((Token (PrefixLabel lbl) _) :: _) ->
-                        Dict.insert lbl row
+toLabelDefs =
+    List.foldr
+        (\( row, line ) ->
+            case lexLine line of
+                Ok ((Token (PrefixLabel lbl) _) :: _) ->
+                    Dict.insert lbl row
 
-                    _ ->
-                        identity
-            )
-            Dict.empty
+                _ ->
+                    identity
+        )
+        Dict.empty
 
 
 compileLines : List ( Int, String ) -> Result Errors Prg
