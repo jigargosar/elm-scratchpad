@@ -235,12 +235,32 @@ compileLines ls =
         |> done
 
 
+prefixLabelFromToken : Token -> Maybe ( Int, String )
+prefixLabelFromToken (Token typ (Loc col _)) =
+    case typ of
+        PrefixLabel lbl ->
+            Just ( col, lbl )
+
+        _ ->
+            Nothing
+
+
+unconsTokensWithPrefixLabel : List Token -> Maybe ( ( Int, String ), List Token )
+unconsTokensWithPrefixLabel tokens =
+    case tokens of
+        (Token (PrefixLabel lbl) (Loc col _)) :: rest ->
+            Just ( ( col, lbl ), rest )
+
+        _ ->
+            Nothing
+
+
 compileLine : PrefixLabels -> ( Int, String ) -> CAcc -> CAcc
 compileLine allPrefixLabels ( row, line ) acc =
     case lexLine line of
         Ok tokens ->
-            case tokens of
-                (Token (PrefixLabel lbl) (Loc col _)) :: rest ->
+            case unconsTokensWithPrefixLabel tokens of
+                Just ( ( col, lbl ), rest ) ->
                     (if Set.member lbl acc.prevLabels then
                         Err (LabelAlreadyDefined col lbl)
 
@@ -250,7 +270,7 @@ compileLine allPrefixLabels ( row, line ) acc =
                     )
                         |> updateCAccWithLabel lbl row acc
 
-                _ ->
+                Nothing ->
                     parseInst allPrefixLabels tokens
                         |> Result.map stmtWithoutLabel
                         |> updateCAcc row acc
