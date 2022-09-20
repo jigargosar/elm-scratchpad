@@ -255,16 +255,6 @@ compileLines ls =
         |> done
 
 
-unconsTokensWithPrefixLabel : List Token -> Maybe ( ( Int, String ), List Token )
-unconsTokensWithPrefixLabel tokens =
-    case tokens of
-        (Token (PrefixLabel lbl) (Loc col _)) :: rest ->
-            Just ( ( col, lbl ), rest )
-
-        _ ->
-            Nothing
-
-
 unconsPrefixLabel : List Token -> ( Maybe ( Int, String ), List Token )
 unconsPrefixLabel tokens =
     case tokens of
@@ -294,6 +284,18 @@ compileLineHelp labelDefs row srcLine =
 
         Err e ->
             Err e
+
+
+compileLineHelpHelp : LabelDefs -> List Token -> Result Error Stmt
+compileLineHelpHelp labelDefs tokens =
+    case tokens of
+        (Token (PrefixLabel lbl) _) :: rest ->
+            parseInst labelDefs tokens
+                |> Result.map (stmtWithLabel lbl)
+
+        _ ->
+            parseInst labelDefs tokens
+                |> Result.map stmtWithoutLabel
 
 
 updateCAcc : Int -> Result Error Stmt -> CAcc -> CAcc
