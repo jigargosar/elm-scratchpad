@@ -34,11 +34,6 @@ initCtx prg =
     { acc = Num.zero, prg = prg }
 
 
-hasLabel : String -> PrgLine -> Bool
-hasLabel label { labels } =
-    Set.member label labels
-
-
 goNext : Ctx -> Ctx
 goNext ({ prg } as ctx) =
     case Pivot.goR prg of
@@ -51,13 +46,18 @@ goNext ({ prg } as ctx) =
 
 jmpToLabel : String -> Ctx -> Ctx
 jmpToLabel lbl ({ prg } as ctx) =
-    Pivot.findCR (hasLabel lbl) prg
-        |> Utils.orElseLazy
-            (\_ ->
-                Pivot.firstWith (hasLabel lbl) prg
-            )
+    cyclicFindFromCenter (.labels >> Set.member lbl) prg
         |> Maybe.map (\newPrg -> { ctx | prg = newPrg })
         |> Maybe.withDefault ctx
+
+
+cyclicFindFromCenter : (a -> Bool) -> Pivot a -> Maybe (Pivot a)
+cyclicFindFromCenter pred pivot =
+    Pivot.findCR pred pivot
+        |> Utils.orElseLazy
+            (\_ ->
+                Pivot.firstWith pred pivot
+            )
 
 
 
