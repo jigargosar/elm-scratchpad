@@ -255,17 +255,13 @@ compileLinesHelp allPrefixLabels ( row, line ) =
                             Err (LabelAlreadyDefined col lbl)
 
                          else
-                            parseInst
-                                allPrefixLabels
-                                rest
+                            parseInst allPrefixLabels rest
                                 |> Result.map (stmtWithLabel lbl)
                         )
                             |> process (insertLabel lbl acc)
 
                     _ ->
-                        parseInst
-                            allPrefixLabels
-                            tokens
+                        parseInst allPrefixLabels tokens
                             |> Result.map stmtWithoutLabel
                             |> process acc
 
