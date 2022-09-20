@@ -284,13 +284,13 @@ parseInstHelp labelDefs fst rest =
         Token (OpCode op) _ ->
             case op of
                 NOP ->
-                    withZeroArgOp Nop rest
+                    withoutOperand Nop rest
 
                 JMP ->
-                    with1ArgOp (parseJumpInst labelDefs Jmp) fst rest
+                    with1Operand (parseJumpInst labelDefs Jmp) fst rest
 
                 MOV ->
-                    with2ArgOp parseMovInst fst rest
+                    with2Operands parseMovInst fst rest
 
         _ ->
             invalidOp fst
@@ -342,8 +342,8 @@ parseSrcOperand ((Token typ _) as t) =
             invalidExpr t
 
 
-withZeroArgOp : v -> List Token -> Result Error v
-withZeroArgOp v rest =
+withoutOperand : v -> List Token -> Result Error v
+withoutOperand v rest =
     case rest of
         [] ->
             Ok v
@@ -352,12 +352,12 @@ withZeroArgOp v rest =
             tooManyOperands x xs
 
 
-with1ArgOp :
+with1Operand :
     (Token -> Result Error value)
     -> Token
     -> List Token
     -> Result Error value
-with1ArgOp fn fst rest =
+with1Operand fn fst rest =
     case rest of
         a :: [] ->
             fn a
@@ -369,12 +369,12 @@ with1ArgOp fn fst rest =
             tooManyOperands x xs
 
 
-with2ArgOp :
+with2Operands :
     (Token -> Token -> Result Error value)
     -> Token
     -> List Token
     -> Result Error value
-with2ArgOp fn fst rest =
+with2Operands fn fst rest =
     case rest of
         a :: b :: [] ->
             --parseMoveInst a b
