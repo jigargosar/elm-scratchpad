@@ -185,8 +185,12 @@ toLabelDefs =
 
 compileLines : List ( Int, String ) -> Result Errors (Maybe Prg)
 compileLines ls =
+    let
+        labelDefs =
+            toLabelDefs ls
+    in
     ls
-        |> List.map (compileLine (toLabelDefs ls))
+        |> List.map (compileLine labelDefs)
         |> resultConcat
         |> Result.map toPrg
 
