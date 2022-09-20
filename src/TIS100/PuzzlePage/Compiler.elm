@@ -160,10 +160,6 @@ toPLines =
         >> done
 
 
-type alias PrevLabels =
-    Set String
-
-
 type alias LabelDefs =
     Dict String Int
 
