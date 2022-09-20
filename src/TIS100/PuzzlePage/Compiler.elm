@@ -193,22 +193,6 @@ type LabelDefs
     = LabelDefs (Dict String Int)
 
 
-toLabelDefs : List ( Int, String ) -> LabelDefs
-toLabelDefs ls =
-    ls
-        |> List.foldr
-            (\( row, srcLine ) ->
-                case lexLine srcLine of
-                    Ok ((Token (PrefixLabel lbl) _) :: _) ->
-                        Dict.insert lbl row
-
-                    _ ->
-                        identity
-            )
-            Dict.empty
-        |> LabelDefs
-
-
 compileLines : List ( Int, String ) -> Result Errors Prg
 compileLines ls =
     let
@@ -252,43 +236,44 @@ compileLines ls =
 
 
 compileLine : PrefixLabels -> ( Int, String ) -> CAcc -> CAcc
-compileLine allPrefixLabels ( row, line ) =
-    let
-        insertLabel : String -> CAcc -> CAcc
-        insertLabel lbl acc =
-            { acc | prevLabels = Set.insert lbl acc.prevLabels }
+compileLine allPrefixLabels ( row, line ) acc =
+    case lexLine line of
+        Ok tokens ->
+            case tokens of
+                (Token (PrefixLabel lbl) (Loc col _)) :: rest ->
+                    (if Set.member lbl acc.prevLabels then
+                        Err (LabelAlreadyDefined col lbl)
 
-        process : CAcc -> Result Error Stmt -> CAcc
-        process acc res =
-            case res of
-                Ok stmt ->
-                    { acc | revStmts = ( row, stmt ) :: acc.revStmts }
+                     else
+                        parseInst allPrefixLabels rest
+                            |> Result.map (stmtWithLabel lbl)
+                    )
+                        |> updateCAccWithLabel lbl row acc
 
-                Err err ->
-                    { acc | revErrors = ( row, err ) :: acc.revErrors }
-    in
-    \acc ->
-        case lexLine line of
-            Ok tokens ->
-                case tokens of
-                    (Token (PrefixLabel lbl) (Loc col _)) :: rest ->
-                        (if Set.member lbl acc.prevLabels then
-                            Err (LabelAlreadyDefined col lbl)
+                _ ->
+                    parseInst allPrefixLabels tokens
+                        |> Result.map stmtWithoutLabel
+                        |> updateCAcc row acc
 
-                         else
-                            parseInst allPrefixLabels rest
-                                |> Result.map (stmtWithLabel lbl)
-                        )
-                            |> process (insertLabel lbl acc)
+        Err _ ->
+            Err InternalError
+                |> updateCAcc row acc
 
-                    _ ->
-                        parseInst allPrefixLabels tokens
-                            |> Result.map stmtWithoutLabel
-                            |> process acc
 
-            Err _ ->
-                Err InternalError
-                    |> process acc
+updateCAccWithLabel : String -> Int -> CAcc -> Result Error Stmt -> CAcc
+updateCAccWithLabel lbl row acc =
+    { acc | prevLabels = Set.insert lbl acc.prevLabels }
+        |> updateCAcc row
+
+
+updateCAcc : Int -> CAcc -> Result Error Stmt -> CAcc
+updateCAcc row acc res =
+    case res of
+        Ok stmt ->
+            { acc | revStmts = ( row, stmt ) :: acc.revStmts }
+
+        Err err ->
+            { acc | revErrors = ( row, err ) :: acc.revErrors }
 
 
 type Stmt
