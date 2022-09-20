@@ -259,6 +259,10 @@ compileLineHelp :
     -> String
     -> ( Maybe String, Result Error Stmt )
 compileLineHelp prevLabels allPrefixLabels srcLine =
+    let
+        _ =
+            lexLine srcLine
+    in
     case lexLine srcLine of
         Ok tokens ->
             case unconsTokensWithPrefixLabel tokens of
@@ -278,8 +282,8 @@ compileLineHelp prevLabels allPrefixLabels srcLine =
                         |> Result.map stmtWithoutLabel
                     )
 
-        Err _ ->
-            ( Nothing, Err InternalError )
+        Err e ->
+            ( Nothing, Err e )
 
 
 updateCAcc : Int -> Result Error Stmt -> CAcc -> CAcc
@@ -470,8 +474,14 @@ tokenEndColumn token =
             col + String.length string - 1
 
 
-lexLine : String -> Result (List DeadEnd) (List Token)
-lexLine src =
+lexLine : String -> Result Error (List Token)
+lexLine srcLine =
+    lexLineInternal srcLine
+        |> Result.mapError (always InternalError)
+
+
+lexLineInternal : String -> Result (List DeadEnd) (List Token)
+lexLineInternal src =
     Parser.run tokenListParser (String.toLower src)
 
 
