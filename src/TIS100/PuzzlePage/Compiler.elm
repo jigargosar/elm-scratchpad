@@ -160,8 +160,7 @@ toPrg =
                         { pLine | labels = Set.union prevLabels pLine.labels }
                     )
     in
-    List.Extra.mapAccuml step Set.empty
-        >> mapSecond (List.filterMap identity)
+    filterMapAccuml step Set.empty
         >> done
         >> Pivot.fromList
 
