@@ -520,10 +520,6 @@ prefixLabelTokenParser =
         |. symbol ":"
 
 
-
---|. commit ()
-
-
 labelVariable : Parser String
 labelVariable =
     variable
