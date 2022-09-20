@@ -20,7 +20,7 @@ import Pivot exposing (Pivot)
 import Set exposing (Set)
 import TIS100.Num as Num exposing (Num)
 import TIS100.PuzzlePage.Inst exposing (..)
-import Utils as U exposing (Dir4(..), filterMapAccuml, insertMaybe, mapSecond, pair, resultConcat)
+import Utils as U exposing (Dir4(..), filterMapAccuml, insertMaybe, mapHead, mapSecond, pair, resultConcat)
 
 
 type Error
@@ -154,11 +154,11 @@ toPrg =
                     ( insertMaybe mbl prevLabels, Nothing )
 
         done ( prevLabels, prgLines ) =
-            prgLines
-                |> U.mapHead
-                    (\pLine ->
-                        { pLine | labels = Set.union prevLabels pLine.labels }
-                    )
+            mapHead
+                (\pLine ->
+                    { pLine | labels = Set.union prevLabels pLine.labels }
+                )
+                prgLines
     in
     filterMapAccuml step Set.empty
         >> done
