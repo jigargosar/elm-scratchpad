@@ -221,7 +221,11 @@ compileLines ls =
 
         step : ( Int, String ) -> CAcc -> CAcc
         step ( row, srcLine ) acc =
-            case compileLineHelp labelDefs row srcLine of
+            case
+                srcLine
+                    |> lexLine
+                    |> Result.andThen (parseStmt labelDefs row)
+            of
                 Ok stmt ->
                     { acc | revStmts = ( row, stmt ) :: acc.revStmts }
 
