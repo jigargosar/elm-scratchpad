@@ -269,7 +269,7 @@ compileLines ls =
                     Set.empty
 
         step ( row, line ) acc =
-            case compileLine line of
+            case compileLine prefixLabels line of
                 Ok stmt ->
                     { acc | stmts = ( row, stmt ) :: acc.stmts }
 
@@ -284,11 +284,11 @@ compileLines ls =
         |> done
 
 
-compileLine : String -> Result Error Stmt
-compileLine src =
+compileLine : Set String -> String -> Result Error Stmt
+compileLine prefixLabels src =
     case lexLine src of
         Ok tokens ->
-            parseLine tokens
+            parseLine prefixLabels tokens
 
         Err _ ->
             Err InternalError
@@ -308,31 +308,31 @@ stmtWithoutLabel =
     Stmt Nothing
 
 
-parseLine : List Token -> Result Error Stmt
-parseLine tokens =
+parseLine : Set String -> List Token -> Result Error Stmt
+parseLine prefixLabels tokens =
     case tokens of
         (Token (PrefixLabel lbl) (Loc col _)) :: rest ->
-            parseInst rest
+            parseInst prefixLabels rest
                 |> Result.map (stmtWithLabel (Label { col = col, val = lbl }))
 
         _ ->
-            parseInst tokens
+            parseInst prefixLabels tokens
                 |> Result.map stmtWithoutLabel
 
 
-parseInst : List Token -> Result Error (Maybe Inst)
-parseInst tokens =
+parseInst : Set String -> List Token -> Result Error (Maybe Inst)
+parseInst prefixLabels tokens =
     case tokens of
         [] ->
             Ok Nothing
 
         x :: xs ->
-            parseInstHelp x xs
+            parseInstHelp prefixLabels x xs
                 |> Result.map Just
 
 
-parseInstHelp : Token -> List Token -> Result Error Inst
-parseInstHelp fst rest =
+parseInstHelp : Set String -> Token -> List Token -> Result Error Inst
+parseInstHelp prefixLabels fst rest =
     case fst of
         Token (OpCode op) _ ->
             case op of
@@ -340,7 +340,7 @@ parseInstHelp fst rest =
                     withZeroArgOp Nop rest
 
                 JMP ->
-                    with1ArgOp (parseJumpInst Jmp) fst rest
+                    with1ArgOp (parseJumpInst prefixLabels Jmp) fst rest
 
                 MOV ->
                     with2ArgOp parseMovInst fst rest
@@ -349,9 +349,13 @@ parseInstHelp fst rest =
             invalidOp fst
 
 
-parseJumpInst : (Label -> value) -> Token -> Result error value
-parseJumpInst fn (Token _ (Loc col string)) =
-    fn (Label { col = col, val = string }) |> Ok
+parseJumpInst : Set String -> (Label -> value) -> Token -> Result Error value
+parseJumpInst prefixLabels fn (Token _ (Loc col string)) =
+    if Set.member string prefixLabels then
+        Ok (fn (Label { col = col, val = string }))
+
+    else
+        Err (UndefinedLabel col string)
 
 
 parseMovInst : Token -> Token -> Result Error Inst
