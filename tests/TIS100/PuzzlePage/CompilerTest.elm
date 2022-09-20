@@ -37,7 +37,12 @@ testInvalidSrcCode =
     describe "invalid src code"
         [ test "invalid ops" <|
             \_ ->
-                " foo \n bar \n:\n label: foo "
+                [ " foo"
+                , " bar"
+                , ":"
+                , " label: foo"
+                ]
+                    |> String.join "\n"
                     |> compile
                     |> Expect.equal
                         (Err
