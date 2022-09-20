@@ -182,7 +182,7 @@ type alias PrefixLabels =
 
 
 type alias CAcc =
-    { prevLabels : Set String
+    { prevLabels : PrefixLabels
     , revStmts : List ( Int, Stmt )
     , revErrors : Errors
     }
@@ -191,7 +191,7 @@ type alias CAcc =
 compileLines : List ( Int, String ) -> Result Errors Prg
 compileLines ls =
     let
-        allPrefixLabels : Set String
+        allPrefixLabels : PrefixLabels
         allPrefixLabels =
             ls
                 |> List.foldr
@@ -230,7 +230,7 @@ compileLines ls =
         |> done
 
 
-compileLine : Set String -> ( Int, String ) -> CAcc -> CAcc
+compileLine : PrefixLabels -> ( Int, String ) -> CAcc -> CAcc
 compileLine allPrefixLabels ( row, line ) =
     let
         insertLabel : String -> CAcc -> CAcc
