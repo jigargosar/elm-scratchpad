@@ -3,6 +3,7 @@ module TIS100.PuzzlePage.Compiler exposing
     , ErrorDetail
     , Errors
     , PLine
+    , Prg
     , compile
     , errorsToDetails
     , getErrorDetails
@@ -122,7 +123,7 @@ type alias Prg =
     Pivot PLine
 
 
-compile : String -> Result Errors (List PLine)
+compile : String -> Result Errors (Maybe Prg)
 compile string =
     string
         |> String.split "\n"
@@ -131,7 +132,7 @@ compile string =
         |> (\ls -> compileLines (toLabelDefs ls) ls)
 
 
-toPLines : List ( Int, Stmt ) -> List PLine
+toPLines : List ( Int, Stmt ) -> Maybe Prg
 toPLines =
     let
         step ( row, stmt ) acc =
@@ -157,6 +158,7 @@ toPLines =
                     (\pl ->
                         { pl | labels = Set.union acc.prevLabels pl.labels }
                     )
+                |> Pivot.fromList
     in
     List.foldl step { prevLabels = Set.empty, revPLines = [] }
         >> done
@@ -180,7 +182,7 @@ toLabelDefs =
         Dict.empty
 
 
-compileLines : LabelDefs -> List ( Int, String ) -> Result Errors (List PLine)
+compileLines : LabelDefs -> List ( Int, String ) -> Result Errors (Maybe Prg)
 compileLines labelDefs =
     let
         step ( row, srcLine ) ( revErrs, revStmts ) =
@@ -204,7 +206,6 @@ compileLines labelDefs =
                     Err es
     in
     List.foldl step ( [], [] )
-        >> U.biMap List.reverse List.reverse
         >> done
 
 

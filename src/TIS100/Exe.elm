@@ -12,7 +12,7 @@ import Pivot exposing (Pivot)
 import Set exposing (Set)
 import TIS100.Num as Num exposing (Num)
 import TIS100.Ports exposing (Intent(..))
-import TIS100.PuzzlePage.Compiler as Compiler exposing (PLine)
+import TIS100.PuzzlePage.Compiler as Compiler exposing (PLine, Prg)
 import TIS100.PuzzlePage.Inst exposing (..)
 import TIS100.PuzzlePage.NodeState as NS
 import Utils exposing (Dir4)
@@ -32,10 +32,6 @@ type alias Ctx =
 initCtx : Prg -> Ctx
 initCtx prg =
     { acc = Num.zero, prg = prg }
-
-
-type alias Prg =
-    Pivot PLine
 
 
 hasLabel : String -> PLine -> Bool
@@ -159,9 +155,9 @@ compile srcCode =
         |> Maybe.map (init srcCode)
 
 
-init : String -> List PLine -> ExeNode
-init srcCode prgLines =
-    case Pivot.fromList prgLines of
+init : String -> Maybe Prg -> ExeNode
+init srcCode mbPrg =
+    case mbPrg of
         Nothing ->
             NotRunnable srcCode
 
