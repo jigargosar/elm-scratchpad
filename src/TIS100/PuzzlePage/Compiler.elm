@@ -241,8 +241,8 @@ type alias PrefixLabels =
 compileLines : List ( Int, String ) -> ( Errors, List ( Int, Stmt ) )
 compileLines ls =
     let
-        prefixLabels : Set String
-        prefixLabels =
+        allPrefixLabels : Set String
+        allPrefixLabels =
             ls
                 |> List.foldr
                     (\( _, line ) ->
@@ -256,22 +256,41 @@ compileLines ls =
                     Set.empty
 
         step ( row, line ) acc =
-            case compileLine prefixLabels line of
+            case
+                compileLine
+                    { prev = acc.prevLabels
+                    , all = allPrefixLabels
+                    }
+                    line
+            of
                 Ok stmt ->
-                    { acc | stmts = ( row, stmt ) :: acc.stmts }
+                    { acc
+                        | revStmts = ( row, stmt ) :: acc.revStmts
+                        , prevLabels =
+                            case stmt of
+                                Stmt (Just (Label { val })) _ ->
+                                    Set.insert val acc.prevLabels
+
+                                _ ->
+                                    acc.prevLabels
+                    }
 
                 Err err ->
-                    { acc | errors = ( row, err ) :: acc.errors }
+                    { acc | revErrors = ( row, err ) :: acc.revErrors }
 
         done acc =
-            ( acc.errors, acc.stmts )
+            ( acc.revErrors |> List.reverse, acc.revStmts |> List.reverse )
     in
     ls
-        |> List.foldr step { errors = [], stmts = [] }
+        |> List.foldl step
+            { revErrors = []
+            , revStmts = []
+            , prevLabels = Set.empty
+            }
         |> done
 
 
-compileLine : Set String -> String -> Result Error Stmt
+compileLine : PrefixLabels -> String -> Result Error Stmt
 compileLine prefixLabels src =
     case lexLine src of
         Ok tokens ->
@@ -295,7 +314,7 @@ stmtWithoutLabel =
     Stmt Nothing
 
 
-parseLine : Set String -> List Token -> Result Error Stmt
+parseLine : PrefixLabels -> List Token -> Result Error Stmt
 parseLine prefixLabels tokens =
     case tokens of
         (Token (PrefixLabel lbl) (Loc col _)) :: rest ->
@@ -307,7 +326,7 @@ parseLine prefixLabels tokens =
                 |> Result.map stmtWithoutLabel
 
 
-parseInst : Set String -> List Token -> Result Error (Maybe Inst)
+parseInst : PrefixLabels -> List Token -> Result Error (Maybe Inst)
 parseInst prefixLabels tokens =
     case tokens of
         [] ->
@@ -318,7 +337,7 @@ parseInst prefixLabels tokens =
                 |> Result.map Just
 
 
-parseInstHelp : Set String -> Token -> List Token -> Result Error Inst
+parseInstHelp : PrefixLabels -> Token -> List Token -> Result Error Inst
 parseInstHelp prefixLabels fst rest =
     case fst of
         Token (OpCode op) _ ->
@@ -336,9 +355,9 @@ parseInstHelp prefixLabels fst rest =
             invalidOp fst
 
 
-parseJumpInst : Set String -> (Label -> value) -> Token -> Result Error value
+parseJumpInst : PrefixLabels -> (Label -> value) -> Token -> Result Error value
 parseJumpInst prefixLabels fn (Token _ (Loc col string)) =
-    if Set.member string prefixLabels then
+    if Set.member string prefixLabels.all then
         Ok (fn (Label { col = col, val = string }))
 
     else
