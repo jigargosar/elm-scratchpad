@@ -11,6 +11,7 @@ module TIS100.PuzzlePage.Compiler exposing
     )
 
 import List.Extra
+import Maybe.Extra
 import Parser exposing (..)
 import Set exposing (Set)
 import TIS100.Num as Num exposing (Num)
@@ -238,6 +239,13 @@ type alias PrefixLabels =
     }
 
 
+type alias CAcc =
+    { prevLabels : Set String
+    , revStmts : List ( Int, Stmt )
+    , revErrors : Errors
+    }
+
+
 compileLines : List ( Int, String ) -> ( Errors, List ( Int, Stmt ) )
 compileLines ls =
     let
@@ -255,48 +263,77 @@ compileLines ls =
                     )
                     Set.empty
 
-        step ( row, line ) acc =
-            let
-                prefixLabels : PrefixLabels
-                prefixLabels =
-                    { prev = acc.prevLabels
-                    , all = allPrefixLabels
-                    }
-
-                res =
-                    case lexLine line of
-                        Ok tokens ->
-                            parseLine prefixLabels tokens
-
-                        Err _ ->
-                            Err InternalError
-            in
-            case res of
-                Ok stmt ->
-                    { acc
-                        | revStmts = ( row, stmt ) :: acc.revStmts
-                        , prevLabels =
-                            case stmt of
-                                Stmt (Just (Label { val })) _ ->
-                                    Set.insert val acc.prevLabels
-
-                                _ ->
-                                    acc.prevLabels
-                    }
-
-                Err err ->
-                    { acc | revErrors = ( row, err ) :: acc.revErrors }
-
         done acc =
             ( acc.revErrors |> List.reverse, acc.revStmts |> List.reverse )
     in
     ls
-        |> List.foldl step
+        |> List.foldl (compileLinesHelp allPrefixLabels)
             { revErrors = []
             , revStmts = []
             , prevLabels = Set.empty
             }
         |> done
+
+
+compileLinesHelp : Set String -> ( Int, String ) -> CAcc -> CAcc
+compileLinesHelp allPrefixLabels ( row, line ) acc =
+    let
+        ( maybeLabel, res ) =
+            case lexLine line of
+                Ok tokens ->
+                    case tokens of
+                        (Token (PrefixLabel lbl) (Loc col _)) :: rest ->
+                            ( Just lbl
+                            , parseInst
+                                { prev = Set.insert lbl acc.prevLabels
+                                , all = allPrefixLabels
+                                }
+                                rest
+                                |> Result.map
+                                    (stmtWithLabel
+                                        (Label
+                                            { col = col
+                                            , val = lbl
+                                            }
+                                        )
+                                    )
+                            )
+
+                        _ ->
+                            ( Nothing
+                            , parseInst
+                                { prev = acc.prevLabels
+                                , all = allPrefixLabels
+                                }
+                                tokens
+                                |> Result.map stmtWithoutLabel
+                            )
+
+                Err _ ->
+                    ( Nothing, Err InternalError )
+    in
+    case res of
+        Ok stmt ->
+            { acc
+                | revStmts = ( row, stmt ) :: acc.revStmts
+                , prevLabels = insertMaybe maybeLabel acc.prevLabels
+            }
+
+        Err err ->
+            { acc
+                | revErrors = ( row, err ) :: acc.revErrors
+                , prevLabels = insertMaybe maybeLabel acc.prevLabels
+            }
+
+
+insertMaybe : Maybe comparable -> Set comparable -> Set comparable
+insertMaybe mb =
+    case mb of
+        Just v ->
+            Set.insert v
+
+        Nothing ->
+            identity
 
 
 type Stmt
@@ -311,18 +348,6 @@ stmtWithLabel label =
 stmtWithoutLabel : Maybe Inst -> Stmt
 stmtWithoutLabel =
     Stmt Nothing
-
-
-parseLine : PrefixLabels -> List Token -> Result Error Stmt
-parseLine prefixLabels tokens =
-    case tokens of
-        (Token (PrefixLabel lbl) (Loc col _)) :: rest ->
-            parseInst prefixLabels rest
-                |> Result.map (stmtWithLabel (Label { col = col, val = lbl }))
-
-        _ ->
-            parseInst prefixLabels tokens
-                |> Result.map stmtWithoutLabel
 
 
 parseInst : PrefixLabels -> List Token -> Result Error (Maybe Inst)
