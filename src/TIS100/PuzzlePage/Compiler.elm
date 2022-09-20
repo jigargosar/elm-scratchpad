@@ -231,9 +231,9 @@ compileLines ls =
 
 
 compileLinesHelp : Set String -> ( Int, String ) -> CAcc -> CAcc
-compileLinesHelp allPrefixLabels ( row, line ) acc =
+compileLinesHelp allPrefixLabels ( row, line ) =
     let
-        processWithMaybeLabel mbl r =
+        processWithMaybeLabel acc mbl r =
             case r of
                 Ok stmt ->
                     { acc
@@ -247,37 +247,38 @@ compileLinesHelp allPrefixLabels ( row, line ) acc =
                         , prevLabels = insertMaybe mbl acc.prevLabels
                     }
 
-        processWithLabel label r =
-            processWithMaybeLabel (Just label) r
+        processWithLabel acc label r =
+            processWithMaybeLabel acc (Just label) r
 
-        processWithoutLabel r =
-            processWithMaybeLabel Nothing r
+        processWithoutLabel acc r =
+            processWithMaybeLabel acc Nothing r
     in
-    case lexLine line of
-        Ok tokens ->
-            case tokens of
-                (Token (PrefixLabel lbl) (Loc col _)) :: rest ->
-                    (if Set.member lbl acc.prevLabels then
-                        Err (LabelAlreadyDefined col lbl)
+    \acc ->
+        case lexLine line of
+            Ok tokens ->
+                case tokens of
+                    (Token (PrefixLabel lbl) (Loc col _)) :: rest ->
+                        (if Set.member lbl acc.prevLabels then
+                            Err (LabelAlreadyDefined col lbl)
 
-                     else
+                         else
+                            parseInst
+                                allPrefixLabels
+                                rest
+                                |> Result.map (stmtWithLabel lbl)
+                        )
+                            |> processWithLabel acc lbl
+
+                    _ ->
                         parseInst
                             allPrefixLabels
-                            rest
-                            |> Result.map (stmtWithLabel lbl)
-                    )
-                        |> processWithLabel lbl
+                            tokens
+                            |> Result.map stmtWithoutLabel
+                            |> processWithoutLabel acc
 
-                _ ->
-                    parseInst
-                        allPrefixLabels
-                        tokens
-                        |> Result.map stmtWithoutLabel
-                        |> processWithoutLabel
-
-        Err _ ->
-            Err InternalError
-                |> processWithoutLabel
+            Err _ ->
+                Err InternalError
+                    |> processWithoutLabel acc
 
 
 insertMaybe : Maybe comparable -> Set comparable -> Set comparable
