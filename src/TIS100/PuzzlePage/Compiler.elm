@@ -10,6 +10,7 @@ module TIS100.PuzzlePage.Compiler exposing
     , wordToken
     )
 
+import Dict exposing (Dict)
 import List.Extra
 import Parser exposing (..)
 import Result.Extra
@@ -191,6 +192,25 @@ type alias CAcc =
     , revStmts : List ( Int, Stmt )
     , revErrors : Errors
     }
+
+
+type alias LabelDefs =
+    Dict String Int
+
+
+toLabelDefs : List ( Int, String ) -> LabelDefs
+toLabelDefs ls =
+    ls
+        |> List.foldr
+            (\( row, line ) ->
+                case lexLine line of
+                    Ok ((Token (PrefixLabel lbl) _) :: _) ->
+                        Dict.insert lbl row
+
+                    _ ->
+                        identity
+            )
+            Dict.empty
 
 
 compileLines : List ( Int, String ) -> Result Errors Prg
