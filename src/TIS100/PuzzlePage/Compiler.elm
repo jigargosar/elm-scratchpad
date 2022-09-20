@@ -20,7 +20,7 @@ import Pivot exposing (Pivot)
 import Set exposing (Set)
 import TIS100.Num as Num exposing (Num)
 import TIS100.PuzzlePage.Inst exposing (..)
-import Utils as U exposing (Dir4(..), insertMaybe, mapSecond, pair, resultConcat)
+import Utils as U exposing (Dir4(..), filterMapAccuml, insertMaybe, mapSecond, pair, resultConcat)
 
 
 type Error
@@ -163,32 +163,6 @@ toPrg =
     filterMapAccuml step Set.empty
         >> done
         >> Pivot.fromList
-
-
-
---noinspection SpellCheckingInspection
-
-
-filterMapAccuml :
-    (acc -> a -> ( acc, Maybe b ))
-    -> acc
-    -> List a
-    -> ( acc, List b )
-filterMapAccuml f acc0 list =
-    let
-        ( accFinal, generatedList ) =
-            List.foldl
-                (\x ( acc1, ys ) ->
-                    let
-                        ( acc2, y ) =
-                            f acc1 x
-                    in
-                    ( acc2, y :: ys )
-                )
-                ( acc0, [] )
-                list
-    in
-    ( accFinal, List.foldl Maybe.Extra.cons [] generatedList )
 
 
 type alias LabelDefs =

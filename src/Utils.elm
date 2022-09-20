@@ -2191,6 +2191,32 @@ mapHead fn xs =
             fn h :: t
 
 
+
+--noinspection SpellCheckingInspection
+
+
+filterMapAccuml :
+    (acc -> a -> ( acc, Maybe b ))
+    -> acc
+    -> List a
+    -> ( acc, List b )
+filterMapAccuml f acc0 list =
+    let
+        ( accFinal, generatedList ) =
+            List.foldl
+                (\x ( acc1, ys ) ->
+                    let
+                        ( acc2, y ) =
+                            f acc1 x
+                    in
+                    ( acc2, y :: ys )
+                )
+                ( acc0, [] )
+                list
+    in
+    ( accFinal, List.foldl Maybe.Extra.cons [] generatedList )
+
+
 keep : (a -> Bool) -> List a -> List a
 keep =
     List.filter
