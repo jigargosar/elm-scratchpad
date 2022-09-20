@@ -16,10 +16,11 @@ import Dict exposing (Dict)
 import List.Extra
 import Parser exposing (..)
 import Pivot exposing (Pivot)
+import Result.Extra
 import Set exposing (Set)
 import TIS100.Num as Num exposing (Num)
 import TIS100.PuzzlePage.Inst exposing (..)
-import Utils as U exposing (Dir4(..))
+import Utils as U exposing (Dir4(..), pair)
 
 
 type Error
@@ -185,27 +186,22 @@ toLabelDefs =
 compileLines : LabelDefs -> List ( Int, String ) -> Result Errors (Maybe Prg)
 compileLines labelDefs =
     let
-        step ( row, srcLine ) ( revErrs, revStmts ) =
-            case
-                srcLine
-                    |> lexLine
-                    |> Result.andThen (parseStmt labelDefs row)
-            of
-                Ok stmt ->
-                    ( revErrs, ( row, stmt ) :: revStmts )
+        compileStmt ( row, srcLine ) =
+            srcLine
+                |> lexLine
+                |> Result.andThen (parseStmt labelDefs row)
+                |> Result.Extra.mapBoth (pair row) (pair row)
 
-                Err err ->
-                    ( ( row, err ) :: revErrs, revStmts )
-
-        done ( revErrs, revStmts ) =
-            case List.sortBy U.first (List.reverse revErrs) of
+        done ( stmts, errs ) =
+            case List.sortBy U.first errs of
                 [] ->
-                    Ok (toPLines (List.reverse revStmts))
+                    Ok (toPLines stmts)
 
                 es ->
                     Err es
     in
-    List.foldl step ( [], [] )
+    List.map compileStmt
+        >> Result.Extra.partition
         >> done
 
 
