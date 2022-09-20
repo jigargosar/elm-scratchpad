@@ -183,12 +183,6 @@ type alias PrevLabels =
     Set String
 
 
-type alias CAcc =
-    { revStmts : List ( Int, Stmt )
-    , revErrors : Errors
-    }
-
-
 type alias LabelDefs =
     Dict String Int
 
@@ -213,7 +207,6 @@ compileLines ls =
         labelDefs =
             toLabelDefs ls
 
-        step : ( Int, String ) -> CAcc -> CAcc
         step ( row, srcLine ) acc =
             case
                 srcLine
@@ -226,7 +219,6 @@ compileLines ls =
                 Err err ->
                     { acc | revErrors = ( row, err ) :: acc.revErrors }
 
-        done : CAcc -> Result Errors Prg
         done acc =
             case acc.revErrors |> List.reverse |> List.sortBy U.first of
                 [] ->
