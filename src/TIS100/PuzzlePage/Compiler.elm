@@ -377,7 +377,6 @@ with2Operands :
 with2Operands fn fst rest =
     case rest of
         a :: b :: [] ->
-            --parseMoveInst a b
             fn a b
 
         [] ->
