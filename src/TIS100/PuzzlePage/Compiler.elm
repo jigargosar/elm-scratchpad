@@ -130,7 +130,12 @@ compile string =
         |> String.split "\n"
         |> List.indexedMap U.pair
         |> List.map (U.mapFirst U.inc)
-        |> (\ls -> compileLines (toLabelDefs ls) ls)
+        |> (\ls ->
+                ls
+                    |> List.map (compileLine (toLabelDefs ls))
+           )
+        |> resultConcat
+        |> Result.map toPrg
 
 
 toPrg : List ( Int, Stmt ) -> Maybe Prg
@@ -181,13 +186,6 @@ toLabelDefs =
                     identity
         )
         Dict.empty
-
-
-compileLines : LabelDefs -> List ( Int, String ) -> Result Errors (Maybe Prg)
-compileLines labelDefs =
-    List.map (compileLine labelDefs)
-        >> resultConcat
-        >> Result.map toPrg
 
 
 compileLine : LabelDefs -> ( Int, String ) -> Result ( Int, Error ) ( Int, Stmt )
