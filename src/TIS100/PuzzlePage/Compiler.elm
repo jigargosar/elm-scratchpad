@@ -13,7 +13,6 @@ module TIS100.PuzzlePage.Compiler exposing
 import Dict exposing (Dict)
 import List.Extra
 import Parser exposing (..)
-import Result.Extra
 import Set exposing (Set)
 import TIS100.Num as Num exposing (Num)
 import TIS100.PuzzlePage.Inst exposing (..)
