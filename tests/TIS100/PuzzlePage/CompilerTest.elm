@@ -32,6 +32,12 @@ testValidStmts =
                 |> Expect.ok
 
 
+compileLines ls =
+    ls
+        |> String.join "\n"
+        |> compile
+
+
 testInvalidSrcCode : Test
 testInvalidSrcCode =
     describe "invalid src code"
@@ -42,8 +48,7 @@ testInvalidSrcCode =
                 , ":"
                 , " label: foo"
                 ]
-                    |> String.join "\n"
-                    |> compile
+                    |> compileLines
                     |> Expect.equal
                         (Err
                             [ ( 1, InvalidOpCode 2 "foo" )
