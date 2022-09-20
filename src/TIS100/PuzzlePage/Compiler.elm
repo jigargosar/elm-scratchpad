@@ -259,6 +259,29 @@ mapHead fn xs =
             fn h :: t
 
 
+compileLines : List ( Int, String ) -> Result Errors (List ( Int, Stmt ))
+compileLines =
+    let
+        step ( row, line ) acc =
+            case compileLine line of
+                Ok stmt ->
+                    { acc | stmts = ( row, stmt ) :: acc.stmts }
+
+                Err err ->
+                    { acc | errors = ( row, err ) :: acc.errors }
+
+        done acc =
+            case acc.errors of
+                [] ->
+                    Ok acc.stmts
+
+                es ->
+                    Err es
+    in
+    List.foldr step { errors = [], stmts = [] }
+        >> done
+
+
 compileLine : String -> Result Error Stmt
 compileLine src =
     case lexLine src of
@@ -453,19 +476,6 @@ tokenEndColumn token =
     case token of
         Token _ (Loc col string) ->
             col + String.length string - 1
-
-
-compileLines : List ( Int, String ) -> Result Errors (List Stmt)
-compileLines =
-    let
-        step =
-            Debug.todo "todo"
-
-        done =
-            Debug.todo "todo"
-    in
-    List.foldr step {}
-        >> done
 
 
 lexLine : String -> Result (List DeadEnd) (List Token)
