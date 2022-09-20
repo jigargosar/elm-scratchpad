@@ -204,27 +204,28 @@ toLabelDefs =
 compileLines : LabelDefs -> List ( Int, String ) -> Result Errors Prg
 compileLines labelDefs =
     let
-        step ( row, srcLine ) acc =
+        step ( row, srcLine ) ( revErrs, revStmts ) =
             case
                 srcLine
                     |> lexLine
                     |> Result.andThen (parseStmt labelDefs row)
             of
                 Ok stmt ->
-                    { acc | revStmts = ( row, stmt ) :: acc.revStmts }
+                    ( revErrs, ( row, stmt ) :: revStmts )
 
                 Err err ->
-                    { acc | revErrors = ( row, err ) :: acc.revErrors }
+                    ( ( row, err ) :: revErrs, revStmts )
 
-        done acc =
-            case acc.revErrors |> List.reverse |> List.sortBy U.first of
+        done ( revErrs, revStmts ) =
+            case List.sortBy U.first (List.reverse revErrs) of
                 [] ->
-                    acc.revStmts |> List.reverse |> toPLines |> Ok
+                    Ok (toPLines (List.reverse revStmts))
 
                 es ->
                     Err es
     in
-    List.foldl step { revErrors = [], revStmts = [] }
+    List.foldl step ( [], [] )
+        >> U.mapBoth List.reverse List.reverse
         >> done
 
 
