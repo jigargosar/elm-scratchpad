@@ -395,12 +395,12 @@ viewExeNode addr vm =
 
 
 viewSrc : String -> Maybe Int -> Html.Html msg
-viewSrc srcCode maybeLine =
+viewSrc srcCode mbRow =
     Html.pre [ pa "0.5ch 0" ]
         (String.lines srcCode
             |> List.indexedMap
                 (\i l ->
-                    if Just (i + 1) == maybeLine then
+                    if Just (i + 1) == mbRow then
                         div [ pl "0.5ch", fg black, bgc UI.lightGray ]
                             [ text (l ++ "\n") ]
 
