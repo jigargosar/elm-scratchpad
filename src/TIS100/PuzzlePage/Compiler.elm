@@ -274,9 +274,8 @@ parseInst labelDefs tokens =
         [] ->
             Ok Nothing
 
-        x :: xs ->
-            parseInstHelp labelDefs x xs
-                |> Result.map Just
+        t :: ts ->
+            Result.map Just (parseInstHelp labelDefs t ts)
 
 
 parseInstHelp : LabelDefs -> Token -> List Token -> Result Error Inst
