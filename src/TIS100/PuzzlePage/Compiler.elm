@@ -13,6 +13,7 @@ module TIS100.PuzzlePage.Compiler exposing
 import Dict exposing (Dict)
 import List.Extra
 import Parser exposing (..)
+import Result.Extra
 import Set exposing (Set)
 import TIS100.Num as Num exposing (Num)
 import TIS100.PuzzlePage.Inst exposing (..)
@@ -281,14 +282,11 @@ unconsPrefixLabel tokens =
 
 parseStmt : LabelDefs -> List Token -> Result Error Stmt
 parseStmt labelDefs tokens =
-    case tokens of
-        (Token (PrefixLabel lbl) _) :: rest ->
-            parseInst labelDefs rest
-                |> Result.map (stmtWithLabel lbl)
-
-        rest ->
-            parseInst labelDefs rest
-                |> Result.map stmtWithoutLabel
+    unconsPrefixLabel tokens
+        |> (\( mbl, rest ) ->
+                Ok (Stmt mbl)
+                    |> Result.Extra.andMap (parseInst labelDefs rest)
+           )
 
 
 updateCAcc : Int -> Result Error Stmt -> CAcc -> CAcc
