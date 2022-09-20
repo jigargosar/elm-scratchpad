@@ -455,8 +455,8 @@ tokenEndColumn token =
             col + String.length string - 1
 
 
-lexLines : List ( Int, String ) -> Result Errors (List ( Int, List Token ))
-lexLines =
+compileLines : List ( Int, String ) -> Result Errors (List Stmt)
+compileLines =
     let
         step =
             Debug.todo "todo"
