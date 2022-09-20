@@ -19,7 +19,7 @@ import Pivot exposing (Pivot)
 import Set exposing (Set)
 import TIS100.Num as Num exposing (Num)
 import TIS100.PuzzlePage.Inst exposing (..)
-import Utils as U exposing (Dir4(..), pair, resultConcat)
+import Utils as U exposing (Dir4(..), insertMaybe, pair, resultConcat)
 
 
 type Error
@@ -144,7 +144,7 @@ toPrg =
                     { acc
                         | revPLines =
                             { lineNo = row
-                            , labels = U.insertMaybe mbl acc.prevLabels
+                            , labels = insertMaybe mbl acc.prevLabels
                             , inst = inst
                             }
                                 :: acc.revPLines
@@ -152,7 +152,7 @@ toPrg =
                     }
 
                 Stmt _ mbl Nothing ->
-                    { acc | prevLabels = U.insertMaybe mbl acc.prevLabels }
+                    { acc | prevLabels = insertMaybe mbl acc.prevLabels }
 
         done acc =
             acc.revPLines
