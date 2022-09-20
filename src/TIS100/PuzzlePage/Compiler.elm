@@ -205,10 +205,18 @@ compileLines ls =
                     )
                     Set.empty
 
+        done : CAcc -> Result Errors Prg
         done acc =
-            case acc.revErrors |> List.reverse |> List.sortBy U.first of
+            case
+                acc.revErrors
+                    |> List.reverse
+                    |> List.sortBy U.first
+            of
                 [] ->
-                    Ok <| toPLines (acc.revStmts |> List.reverse)
+                    acc.revStmts
+                        |> List.reverse
+                        |> toPLines
+                        |> Ok
 
                 es ->
                     Err es
