@@ -267,20 +267,16 @@ unconsPrefixLabel tokens =
 
 compileLineHelp : LabelDefs -> Int -> String -> Result Error Stmt
 compileLineHelp labelDefs row srcLine =
-    case lexLine srcLine |> Result.map unconsPrefixLabel of
-        Ok ( mbl, tokens ) ->
-            case mbl of
-                Just ( col, lbl ) ->
-                    if Dict.get lbl labelDefs /= Just row then
-                        Err (LabelAlreadyDefined col lbl)
+    case lexLine srcLine of
+        Ok (((Token (PrefixLabel lbl) (Loc col _)) :: _) as tokens) ->
+            if Dict.get lbl labelDefs /= Just row then
+                Err (LabelAlreadyDefined col lbl)
 
-                    else
-                        parseInst labelDefs tokens
-                            |> Result.map (stmtWithLabel lbl)
+            else
+                compileLineHelpHelp labelDefs tokens
 
-                Nothing ->
-                    parseInst labelDefs tokens
-                        |> Result.map stmtWithoutLabel
+        Ok tokens ->
+            compileLineHelpHelp labelDefs tokens
 
         Err e ->
             Err e
