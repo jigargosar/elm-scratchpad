@@ -13,6 +13,7 @@ module TIS100.PuzzlePage.Compiler exposing
 import Dict exposing (Dict)
 import List.Extra
 import Parser exposing (..)
+import Result.Extra
 import Set exposing (Set)
 import TIS100.Num as Num exposing (Num)
 import TIS100.PuzzlePage.Inst exposing (..)
@@ -250,20 +251,26 @@ prefixLabelFromTokens tokens =
             Nothing
 
 
+validateLabelDef : LabelDefs -> Int -> List Token -> Result Error (List Token)
+validateLabelDef labelDefs row tokens =
+    case tokens of
+        (Token (PrefixLabel lbl) (Loc col _)) :: _ ->
+            if Dict.get lbl labelDefs /= Just row then
+                Err (LabelAlreadyDefined col lbl)
+
+            else
+                Ok tokens
+
+        _ ->
+            Ok tokens
+
+
 parseStmt : LabelDefs -> Int -> String -> Result Error Stmt
 parseStmt labelDefs row srcLine =
     case lexLine srcLine of
         Ok tokens ->
-            case prefixLabelFromTokens tokens of
-                Just ( col, lbl ) ->
-                    if Dict.get lbl labelDefs /= Just row then
-                        Err (LabelAlreadyDefined col lbl)
-
-                    else
-                        parseStmtHelp labelDefs tokens
-
-                Nothing ->
-                    parseStmtHelp labelDefs tokens
+            validateLabelDef labelDefs row tokens
+                |> Result.andThen (parseStmtHelp labelDefs)
 
         Err e ->
             Err e
