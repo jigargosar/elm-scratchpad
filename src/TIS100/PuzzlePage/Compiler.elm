@@ -133,8 +133,8 @@ compile string =
         |> (\ls -> compileLines (toLabelDefs ls) ls)
 
 
-toPLines : List ( Int, Stmt ) -> Maybe Prg
-toPLines =
+toPrg : List ( Int, Stmt ) -> Maybe Prg
+toPrg =
     let
         step ( row, stmt ) acc =
             case stmt of
@@ -195,7 +195,7 @@ compileLines labelDefs =
         done ( stmts, errs ) =
             case List.sortBy U.first errs of
                 [] ->
-                    Ok (toPLines stmts)
+                    Ok stmts
 
                 es ->
                     Err es
@@ -203,6 +203,7 @@ compileLines labelDefs =
     List.map compileStmt
         >> Result.Extra.partition
         >> done
+        >> Result.map toPrg
 
 
 type Stmt
