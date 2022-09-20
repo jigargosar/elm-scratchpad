@@ -16,7 +16,6 @@ import Dict exposing (Dict)
 import List.Extra
 import Parser exposing (..)
 import Pivot exposing (Pivot)
-import Result.Extra
 import Set exposing (Set)
 import TIS100.Num as Num exposing (Num)
 import TIS100.PuzzlePage.Inst exposing (..)
@@ -136,12 +135,12 @@ toLines srcCode =
         |> List.indexedMap (\i line -> ( i + 1, line ))
 
 
-toPrg : List ( Int, Stmt ) -> Maybe Prg
+toPrg : List Stmt -> Maybe Prg
 toPrg =
     let
-        step ( row, stmt ) acc =
+        step stmt acc =
             case stmt of
-                Stmt mbl (Just inst) ->
+                Stmt row mbl (Just inst) ->
                     { acc
                         | revPLines =
                             { lineNo = row
@@ -152,7 +151,7 @@ toPrg =
                         , prevLabels = Set.empty
                     }
 
-                Stmt mbl Nothing ->
+                Stmt _ mbl Nothing ->
                     { acc | prevLabels = U.insertMaybe mbl acc.prevLabels }
 
         done acc =
@@ -198,16 +197,16 @@ compileLines lines =
         |> Result.map toPrg
 
 
-compileLine : LabelDefs -> ( Int, String ) -> Result ( Int, Error ) ( Int, Stmt )
+compileLine : LabelDefs -> ( Int, String ) -> Result ( Int, Error ) Stmt
 compileLine labelDefs ( row, srcLine ) =
     srcLine
         |> lexLine
         |> Result.andThen (parseStmt labelDefs row)
-        |> Result.Extra.mapBoth (pair row) (pair row)
+        |> Result.mapError (pair row)
 
 
 type Stmt
-    = Stmt (Maybe String) (Maybe Inst)
+    = Stmt Int (Maybe String) (Maybe Inst)
 
 
 parseStmt : LabelDefs -> Int -> List Token -> Result Error Stmt
@@ -218,10 +217,10 @@ parseStmt labelDefs row tokens =
                 Err (LabelAlreadyDefined col lbl)
 
             else
-                Result.map (Stmt (Just lbl)) (parseInst labelDefs otherTokens)
+                Result.map (Stmt row (Just lbl)) (parseInst labelDefs otherTokens)
 
         otherTokens ->
-            Result.map (Stmt Nothing) (parseInst labelDefs otherTokens)
+            Result.map (Stmt row Nothing) (parseInst labelDefs otherTokens)
 
 
 parseInst : LabelDefs -> List Token -> Result Error (Maybe Inst)
