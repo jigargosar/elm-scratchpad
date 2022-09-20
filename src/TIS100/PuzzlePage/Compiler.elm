@@ -10,7 +10,6 @@ module TIS100.PuzzlePage.Compiler exposing
     , wordToken
     )
 
-import Dict exposing (Dict)
 import List.Extra
 import Parser exposing (..)
 import Set exposing (Set)
@@ -189,10 +188,6 @@ type alias CAcc =
     }
 
 
-type LabelDefs
-    = LabelDefs (Dict String Int)
-
-
 compileLines : List ( Int, String ) -> Result Errors Prg
 compileLines ls =
     let
@@ -233,16 +228,6 @@ compileLines ls =
             , prevLabels = Set.empty
             }
         |> done
-
-
-prefixLabelFromToken : Token -> Maybe ( Int, String )
-prefixLabelFromToken (Token typ (Loc col _)) =
-    case typ of
-        PrefixLabel lbl ->
-            Just ( col, lbl )
-
-        _ ->
-            Nothing
 
 
 unconsTokensWithPrefixLabel : List Token -> Maybe ( ( Int, String ), List Token )
