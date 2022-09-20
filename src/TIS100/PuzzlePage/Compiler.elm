@@ -269,6 +269,16 @@ compileLine labelDefs row srcLine =
             Err e
 
 
+unconsPrefixLabel : List Token -> ( Maybe String, List Token )
+unconsPrefixLabel tokens =
+    case tokens of
+        (Token (PrefixLabel lbl) _) :: rest ->
+            ( Just lbl, rest )
+
+        rest ->
+            ( Nothing, rest )
+
+
 parseStmt : LabelDefs -> List Token -> Result Error Stmt
 parseStmt labelDefs tokens =
     case tokens of
