@@ -27,8 +27,7 @@ testValidStmts =
             , "nop : nop"
             , " nop"
             ]
-                |> String.join "\n"
-                |> compile
+                |> compileLines
                 |> Expect.ok
 
 
