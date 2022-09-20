@@ -257,14 +257,16 @@ compileLines ls =
 
         step ( row, line ) acc =
             let
+                prefixLabels : PrefixLabels
+                prefixLabels =
+                    { prev = acc.prevLabels
+                    , all = allPrefixLabels
+                    }
+
                 res =
                     case lexLine line of
                         Ok tokens ->
-                            parseLine
-                                { prev = acc.prevLabels
-                                , all = allPrefixLabels
-                                }
-                                tokens
+                            parseLine prefixLabels tokens
 
                         Err _ ->
                             Err InternalError
