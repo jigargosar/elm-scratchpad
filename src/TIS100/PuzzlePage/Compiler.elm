@@ -252,7 +252,7 @@ mapHead fn xs =
 
 
 compileLines : List ( Int, String ) -> ( Errors, List ( Int, Stmt ) )
-compileLines =
+compileLines ls =
     let
         step ( row, line ) acc =
             case compileLine line of
@@ -265,8 +265,9 @@ compileLines =
         done acc =
             ( acc.errors, acc.stmts )
     in
-    List.foldr step { errors = [], stmts = [] }
-        >> done
+    ls
+        |> List.foldr step { errors = [], stmts = [] }
+        |> done
 
 
 compileLine : String -> Result Error Stmt
