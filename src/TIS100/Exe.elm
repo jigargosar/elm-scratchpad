@@ -44,11 +44,19 @@ goNext ({ prg } as ctx) =
             { ctx | prg = Pivot.goToStart prg }
 
 
+setPrg : Prg -> Ctx -> Ctx
+setPrg prg ctx =
+    { ctx | prg = prg }
+
+
 jmpToLabel : String -> Ctx -> Ctx
-jmpToLabel lbl ({ prg } as ctx) =
-    cyclicFindFromCenter (.labels >> Set.member lbl) prg
-        |> Maybe.map (\newPrg -> { ctx | prg = newPrg })
-        |> Maybe.withDefault ctx
+jmpToLabel lbl ctx =
+    case cyclicFindFromCenter (.labels >> Set.member lbl) ctx.prg of
+        Just prg ->
+            setPrg prg ctx
+
+        Nothing ->
+            ctx
 
 
 cyclicFindFromCenter : (a -> Bool) -> Pivot a -> Maybe (Pivot a)
