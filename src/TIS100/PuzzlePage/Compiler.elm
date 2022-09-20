@@ -250,29 +250,18 @@ compileLineHelp : LabelDefs -> Int -> String -> Result Error Stmt
 compileLineHelp labelDefs row srcLine =
     srcLine
         |> lexLine
-        |> Result.andThen (validateLabelDef labelDefs row)
-        |> Result.andThen (parseStmt labelDefs)
+        |> Result.andThen (parseStmt labelDefs row)
 
 
-validateLabelDef : LabelDefs -> Int -> List Token -> Result Error (List Token)
-validateLabelDef labelDefs row tokens =
+parseStmt : LabelDefs -> Int -> List Token -> Result Error Stmt
+parseStmt labelDefs row tokens =
     case tokens of
-        (Token (PrefixLabel lbl) (Loc col _)) :: _ ->
+        (Token (PrefixLabel lbl) (Loc col _)) :: otherTokens ->
             if Dict.get lbl labelDefs /= Just row then
                 Err (LabelAlreadyDefined col lbl)
 
             else
-                Ok tokens
-
-        _ ->
-            Ok tokens
-
-
-parseStmt : LabelDefs -> List Token -> Result Error Stmt
-parseStmt labelDefs tokens =
-    case tokens of
-        (Token (PrefixLabel lbl) _) :: otherTokens ->
-            Result.map (Stmt (Just lbl)) (parseInst labelDefs otherTokens)
+                Result.map (Stmt (Just lbl)) (parseInst labelDefs otherTokens)
 
         otherTokens ->
             Result.map (Stmt Nothing) (parseInst labelDefs otherTokens)
