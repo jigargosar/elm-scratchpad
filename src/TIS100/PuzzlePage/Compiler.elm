@@ -127,7 +127,7 @@ compile string =
         |> String.split "\n"
         |> List.indexedMap U.pair
         |> List.map (U.mapFirst U.inc)
-        |> compileLines
+        |> (\ls -> compileLines (toLabelDefs ls) ls)
 
 
 toPLines : List ( Int, Stmt ) -> List PLine
@@ -201,12 +201,9 @@ toLabelDefs =
         Dict.empty
 
 
-compileLines : List ( Int, String ) -> Result Errors Prg
-compileLines ls =
+compileLines : LabelDefs -> List ( Int, String ) -> Result Errors Prg
+compileLines labelDefs =
     let
-        labelDefs =
-            toLabelDefs ls
-
         step ( row, srcLine ) acc =
             case
                 srcLine
@@ -227,12 +224,8 @@ compileLines ls =
                 es ->
                     Err es
     in
-    ls
-        |> List.foldl step
-            { revErrors = []
-            , revStmts = []
-            }
-        |> done
+    List.foldl step { revErrors = [], revStmts = [] }
+        >> done
 
 
 type Stmt
