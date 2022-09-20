@@ -307,9 +307,7 @@ parseJumpInst labelDefs fn (Token _ (Loc col string)) =
 
 parseMovInst : Token -> Token -> Result Error Inst
 parseMovInst a b =
-    Result.map2 Mov
-        (parseSrcOperand a)
-        (parseDstOperand b)
+    Result.map2 Mov (parseSrcOperand a) (parseDstOperand b)
 
 
 parseDstOperand : Token -> Result Error Dst
