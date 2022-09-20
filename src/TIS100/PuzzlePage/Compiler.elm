@@ -256,13 +256,20 @@ compileLines ls =
                     Set.empty
 
         step ( row, line ) acc =
-            case
-                compileLine
-                    { prev = acc.prevLabels
-                    , all = allPrefixLabels
-                    }
-                    line
-            of
+            let
+                res =
+                    case lexLine line of
+                        Ok tokens ->
+                            parseLine
+                                { prev = acc.prevLabels
+                                , all = allPrefixLabels
+                                }
+                                tokens
+
+                        Err _ ->
+                            Err InternalError
+            in
+            case res of
                 Ok stmt ->
                     { acc
                         | revStmts = ( row, stmt ) :: acc.revStmts
@@ -288,16 +295,6 @@ compileLines ls =
             , prevLabels = Set.empty
             }
         |> done
-
-
-compileLine : PrefixLabels -> String -> Result Error Stmt
-compileLine prefixLabels src =
-    case lexLine src of
-        Ok tokens ->
-            parseLine prefixLabels tokens
-
-        Err _ ->
-            Err InternalError
 
 
 type Stmt
