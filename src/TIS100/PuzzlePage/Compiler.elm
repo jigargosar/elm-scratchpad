@@ -254,6 +254,20 @@ mapHead fn xs =
 compileLines : List ( Int, String ) -> ( Errors, List ( Int, Stmt ) )
 compileLines ls =
     let
+        prefixLabels : Set String
+        prefixLabels =
+            ls
+                |> List.foldr
+                    (\( _, line ) ->
+                        case lexLine line of
+                            Ok ((Token (PrefixLabel lbl) _) :: _) ->
+                                Set.insert lbl
+
+                            _ ->
+                                identity
+                    )
+                    Set.empty
+
         step ( row, line ) acc =
             case compileLine line of
                 Ok stmt ->
