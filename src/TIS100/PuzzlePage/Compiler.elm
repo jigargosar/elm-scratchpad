@@ -125,12 +125,15 @@ type alias Prg =
 
 
 compile : String -> Result Errors (Maybe Prg)
-compile string =
-    string
+compile =
+    toLines >> compileLines
+
+
+toLines : String -> List ( Int, String )
+toLines srcCode =
+    srcCode
         |> String.split "\n"
-        |> List.indexedMap U.pair
-        |> List.map (U.mapFirst U.inc)
-        |> compileLines
+        |> List.indexedMap (\i line -> ( i + 1, line ))
 
 
 toPrg : List ( Int, Stmt ) -> Maybe Prg
