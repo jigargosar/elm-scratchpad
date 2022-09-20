@@ -267,13 +267,9 @@ validateLabelDef labelDefs row tokens =
 
 parseStmt : LabelDefs -> Int -> String -> Result Error Stmt
 parseStmt labelDefs row srcLine =
-    case lexLine srcLine of
-        Ok tokens ->
-            validateLabelDef labelDefs row tokens
-                |> Result.andThen (parseStmtHelp labelDefs)
-
-        Err e ->
-            Err e
+    lexLine srcLine
+        |> Result.andThen (validateLabelDef labelDefs row)
+        |> Result.andThen (parseStmtHelp labelDefs)
 
 
 unconsPrefixLabel : List Token -> ( Maybe String, List Token )
@@ -476,13 +472,8 @@ tokenEndColumn token =
 
 lexLine : String -> Result Error (List Token)
 lexLine srcLine =
-    lexLineInternal srcLine
+    Parser.run tokenListParser (String.toLower srcLine)
         |> Result.mapError (always InternalError)
-
-
-lexLineInternal : String -> Result (List DeadEnd) (List Token)
-lexLineInternal src =
-    Parser.run tokenListParser (String.toLower src)
 
 
 type Token
