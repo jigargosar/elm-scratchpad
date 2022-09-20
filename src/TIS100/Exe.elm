@@ -35,13 +35,20 @@ initCtx prg =
 
 
 goNext : Ctx -> Ctx
-goNext ({ prg } as ctx) =
-    case Pivot.goR prg of
-        Just nPrg ->
-            { ctx | prg = nPrg }
+goNext =
+    mapPrg <|
+        \prg ->
+            case Pivot.goR prg of
+                Just nPrg ->
+                    nPrg
 
-        Nothing ->
-            { ctx | prg = Pivot.goToStart prg }
+                Nothing ->
+                    Pivot.goToStart prg
+
+
+mapPrg : (Prg -> Prg) -> Ctx -> Ctx
+mapPrg fn ctx =
+    setPrg (fn ctx.prg) ctx
 
 
 setPrg : Prg -> Ctx -> Ctx
