@@ -11,7 +11,6 @@ module TIS100.PuzzlePage.Compiler exposing
     )
 
 import List.Extra
-import Maybe.Extra
 import Parser exposing (..)
 import Set exposing (Set)
 import TIS100.Num as Num exposing (Num)
@@ -128,60 +127,14 @@ compile string =
         |> List.map (U.mapFirst U.inc)
         |> compileLines
         |> (\( es, os ) ->
-                let
-                    _ =
-                        Debug.log "Debug: " es
-                in
-                case ( es, toPrg os ) of
-                    ( [], Ok prg ) ->
-                        Ok prg
+                case es of
+                    [] ->
+                        Ok (toPLines os)
 
-                    ( _, Ok _ ) ->
+                    _ ->
                         Err es
-
-                    ( _, Err nes ) ->
-                        Err <| es ++ nes
            )
         |> Result.mapError (List.sortBy U.first)
-
-
-toPrg : List ( Int, Stmt ) -> Result Errors (List PLine)
-toPrg stmts =
-    case labelErrors stmts of
-        [] ->
-            Ok (toPLines stmts)
-
-        es ->
-            Err es
-
-
-labelErrors : List ( Int, Stmt ) -> Errors
-labelErrors =
-    let
-        step ( row, Stmt mbl _ ) acc =
-            case mbl of
-                Nothing ->
-                    acc
-
-                Just (Label { col, val }) ->
-                    if Set.member val acc.prefixLabels then
-                        { acc
-                            | errors =
-                                ( row, LabelAlreadyDefined col val )
-                                    :: acc.errors
-                        }
-
-                    else
-                        { acc | prefixLabels = Set.insert val acc.prefixLabels }
-
-        done acc =
-            acc.errors
-    in
-    List.foldl step
-        { errors = []
-        , prefixLabels = Set.empty
-        }
-        >> done
 
 
 toPLines : List ( Int, Stmt ) -> List PLine
@@ -234,9 +187,7 @@ mapHead fn xs =
 
 
 type alias PrefixLabels =
-    { prev : Set String
-    , all : Set String
-    }
+    Set String
 
 
 type alias CAcc =
@@ -284,27 +235,27 @@ compileLinesHelp allPrefixLabels ( row, line ) acc =
                     case tokens of
                         (Token (PrefixLabel lbl) (Loc col _)) :: rest ->
                             ( Just lbl
-                            , parseInst
-                                { prev = Set.insert lbl acc.prevLabels
-                                , all = allPrefixLabels
-                                }
-                                rest
-                                |> Result.map
-                                    (stmtWithLabel
-                                        (Label
-                                            { col = col
-                                            , val = lbl
-                                            }
+                            , if Set.member lbl acc.prevLabels then
+                                Err (LabelAlreadyDefined col lbl)
+
+                              else
+                                parseInst
+                                    allPrefixLabels
+                                    rest
+                                    |> Result.map
+                                        (stmtWithLabel
+                                            (Label
+                                                { col = col
+                                                , val = lbl
+                                                }
+                                            )
                                         )
-                                    )
                             )
 
                         _ ->
                             ( Nothing
                             , parseInst
-                                { prev = acc.prevLabels
-                                , all = allPrefixLabels
-                                }
+                                allPrefixLabels
                                 tokens
                                 |> Result.map stmtWithoutLabel
                             )
@@ -381,7 +332,7 @@ parseInstHelp prefixLabels fst rest =
 
 parseJumpInst : PrefixLabels -> (Label -> value) -> Token -> Result Error value
 parseJumpInst prefixLabels fn (Token _ (Loc col string)) =
-    if Set.member string prefixLabels.all then
+    if Set.member string prefixLabels then
         Ok (fn (Label { col = col, val = string }))
 
     else
