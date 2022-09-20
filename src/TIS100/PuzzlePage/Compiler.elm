@@ -217,10 +217,12 @@ parseStmt labelDefs row tokens =
                 Err (LabelAlreadyDefined col lbl)
 
             else
-                Result.map (Stmt row (Just lbl)) (parseInst labelDefs otherTokens)
+                Result.map (Stmt row (Just lbl))
+                    (parseInst labelDefs otherTokens)
 
         otherTokens ->
-            Result.map (Stmt row Nothing) (parseInst labelDefs otherTokens)
+            Result.map (Stmt row Nothing)
+                (parseInst labelDefs otherTokens)
 
 
 parseInst : LabelDefs -> List Token -> Result Error (Maybe Inst)
