@@ -14,6 +14,7 @@ module TIS100.PuzzlePage.Compiler exposing
 import Dict exposing (Dict)
 import List.Extra
 import Parser exposing (..)
+import Pivot exposing (Pivot)
 import Set exposing (Set)
 import TIS100.Num as Num exposing (Num)
 import TIS100.PuzzlePage.Inst exposing (..)
@@ -118,7 +119,7 @@ type alias PLine =
 
 
 type alias Prg =
-    List PLine
+    Pivot PLine
 
 
 compile : String -> Result Errors (List PLine)
@@ -179,7 +180,7 @@ toLabelDefs =
         Dict.empty
 
 
-compileLines : LabelDefs -> List ( Int, String ) -> Result Errors Prg
+compileLines : LabelDefs -> List ( Int, String ) -> Result Errors (List PLine)
 compileLines labelDefs =
     let
         step ( row, srcLine ) ( revErrs, revStmts ) =
