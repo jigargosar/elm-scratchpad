@@ -46,6 +46,7 @@ testInvalidSrcCode =
                 , " bar"
                 , ":"
                 , " label: foo"
+                , "jmp undef"
                 ]
                     |> compileLines
                     |> Expect.equal
@@ -54,6 +55,7 @@ testInvalidSrcCode =
                             , ( 2, InvalidOpCode 2 "bar" )
                             , ( 3, InvalidOpCode 1 ":" )
                             , ( 4, InvalidOpCode 9 "foo" )
+                            , ( 5, UndefinedLabel 5 "undef" )
                             ]
                         )
         ]
