@@ -270,16 +270,6 @@ compileLinesHelp allPrefixLabels ( row, line ) =
                     |> process acc
 
 
-insertMaybe : Maybe comparable -> Set comparable -> Set comparable
-insertMaybe mb =
-    case mb of
-        Just v ->
-            Set.insert v
-
-        Nothing ->
-            identity
-
-
 type Stmt
     = Stmt (Maybe String) (Maybe Inst)
 
