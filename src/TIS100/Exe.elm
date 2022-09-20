@@ -12,7 +12,7 @@ import Pivot exposing (Pivot)
 import Set exposing (Set)
 import TIS100.Num as Num exposing (Num)
 import TIS100.Ports exposing (Intent(..))
-import TIS100.PuzzlePage.Compiler as Compiler exposing (PLine, Prg)
+import TIS100.PuzzlePage.Compiler as Compiler exposing (Prg, PrgLine)
 import TIS100.PuzzlePage.Inst exposing (..)
 import TIS100.PuzzlePage.NodeState as NS
 import Utils exposing (Dir4)
@@ -34,7 +34,7 @@ initCtx prg =
     { acc = Num.zero, prg = prg }
 
 
-hasLabel : String -> PLine -> Bool
+hasLabel : String -> PrgLine -> Bool
 hasLabel label { labels } =
     Set.member label labels
 

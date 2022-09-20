@@ -2,8 +2,8 @@ module TIS100.PuzzlePage.Compiler exposing
     ( Error(..)
     , ErrorDetail
     , Errors
-    , PLine
     , Prg
+    , PrgLine
     , compile
     , errorsToDetails
     , getErrorDetails
@@ -112,7 +112,7 @@ getErrorDetails srcCode =
             []
 
 
-type alias PLine =
+type alias PrgLine =
     { lineNo : Int
     , labels : Set String
     , inst : Inst
@@ -120,7 +120,7 @@ type alias PLine =
 
 
 type alias Prg =
-    Pivot PLine
+    Pivot PrgLine
 
 
 compile : String -> Result Errors (Maybe Prg)
