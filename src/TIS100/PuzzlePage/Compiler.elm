@@ -3,7 +3,6 @@ module TIS100.PuzzlePage.Compiler exposing
     , ErrorDetail
     , Errors
     , compile
-    , compileLine
     , errorsToDetails
     , getErrorDetails
     , lexLine

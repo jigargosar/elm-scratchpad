@@ -5,7 +5,6 @@ import TIS100.PuzzlePage.Compiler
     exposing
         ( Error(..)
         , compile
-        , compileLine
         , lexLine
         , prefixLabelToken
         , wordToken
@@ -21,16 +20,16 @@ import Test exposing (Test, describe, test)
 
 testValidStmts : Test
 testValidStmts =
-    describe "valid stmts"
-        ([ "nop"
-         , "lab : nop"
-         , "nop : nop"
-         ]
-            |> List.map
-                (\s ->
-                    test s (\_ -> Expect.ok (compileLine s))
-                )
-        )
+    test "valid src" <|
+        \_ ->
+            [ "nop"
+            , "lab : nop"
+            , "nop : nop"
+            , " nop"
+            ]
+                |> String.join "\n"
+                |> compile
+                |> Expect.ok
 
 
 testInvalidSrcCode : Test
@@ -38,31 +37,16 @@ testInvalidSrcCode =
     describe "invalid src code"
         [ test "invalid ops" <|
             \_ ->
-                " foo \n bar \n:"
+                " foo \n bar \n:\n label: foo "
                     |> compile
                     |> Expect.equal
                         (Err
                             [ ( 1, InvalidOpCode 2 "foo" )
                             , ( 2, InvalidOpCode 2 "bar" )
                             , ( 3, InvalidOpCode 1 ":" )
+                            , ( 4, InvalidOpCode 9 "foo" )
                             ]
                         )
-        ]
-
-
-testInvalidStmts : Test
-testInvalidStmts =
-    describe "invalid stmts"
-        [ test "invalid op" <|
-            \_ ->
-                " foo "
-                    |> compileLine
-                    |> Expect.equal (Err <| InvalidOpCode 2 "foo")
-        , test "invalid op after label" <|
-            \_ ->
-                "label: foo "
-                    |> compileLine
-                    |> Expect.equal (Err <| InvalidOpCode 8 "foo")
         ]
 
 
