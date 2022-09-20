@@ -455,9 +455,17 @@ tokenEndColumn token =
             col + String.length string - 1
 
 
-lexLines : List String -> Result Errors (List (List Token))
-lexLines strings =
-    Debug.todo "todo"
+lexLines : List ( Int, String ) -> Result Errors (List ( Int, List Token ))
+lexLines =
+    let
+        step =
+            Debug.todo "todo"
+
+        done =
+            Debug.todo "todo"
+    in
+    List.foldr step {}
+        >> done
 
 
 lexLine : String -> Result (List DeadEnd) (List Token)
