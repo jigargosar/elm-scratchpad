@@ -376,14 +376,14 @@ with2Operands :
     -> Result Error value
 with2Operands fn fst rest =
     case rest of
-        a :: b :: [] ->
-            fn a b
-
         [] ->
             missingOperand fst fst
 
-        last :: [] ->
-            missingOperand fst last
+        a :: [] ->
+            missingOperand fst a
+
+        a :: b :: [] ->
+            fn a b
 
         _ :: _ :: x :: xs ->
             tooManyOperands x xs
