@@ -389,18 +389,18 @@ viewExeNode addr vm =
         , displayGrid
         , gridTemplateColumns "18ch auto"
         ]
-        [ viewSrc vm.srcCode vm.maybeLineNo
+        [ viewSrc vm.srcCode vm.mbCurrentRow
         , viewExeBoxes vm
         ]
 
 
 viewSrc : String -> Maybe Int -> Html.Html msg
-viewSrc srcCode mbRow =
+viewSrc srcCode currentRow =
     Html.pre [ pa "0.5ch 0" ]
         (String.lines srcCode
             |> List.indexedMap
                 (\i l ->
-                    if Just (i + 1) == mbRow then
+                    if Just (i + 1) == currentRow then
                         div [ pl "0.5ch", fg black, bgc UI.lightGray ]
                             [ text (l ++ "\n") ]
 

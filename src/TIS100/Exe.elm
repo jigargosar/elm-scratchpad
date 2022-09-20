@@ -12,7 +12,7 @@ import Pivot exposing (Pivot)
 import Set exposing (Set)
 import TIS100.Num as Num exposing (Num)
 import TIS100.Ports exposing (Intent(..))
-import TIS100.PuzzlePage.Compiler as Compiler
+import TIS100.PuzzlePage.Compiler as Compiler exposing (PLine)
 import TIS100.PuzzlePage.Inst exposing (..)
 import TIS100.PuzzlePage.NodeState as NS
 import Utils exposing (Dir4)
@@ -36,13 +36,6 @@ initCtx prg =
 
 type alias Prg =
     Pivot PLine
-
-
-type alias PLine =
-    { lineNo : Int
-    , labels : Set String
-    , inst : Inst
-    }
 
 
 hasLabel : String -> PLine -> Bool
@@ -87,8 +80,8 @@ currInst { prg } =
     Pivot.getC prg |> .inst
 
 
-currLineNum : Ctx -> Int
-currLineNum { prg } =
+currentRow : Ctx -> Int
+currentRow { prg } =
     Pivot.getC prg |> .lineNo
 
 
@@ -238,7 +231,7 @@ type alias ViewModel =
     { srcCode : String
     , acc : Num
     , mode : String
-    , maybeLineNo : Maybe Int
+    , mbCurrentRow : Maybe Int
     }
 
 
@@ -247,7 +240,7 @@ viewModel exe =
     case exe of
         NotRunnable srcCode ->
             { srcCode = srcCode
-            , maybeLineNo = Nothing
+            , mbCurrentRow = Nothing
             , acc = Num.zero
             , mode = mode exe
             }
@@ -258,7 +251,7 @@ viewModel exe =
                     ctxFromState st
             in
             { srcCode = srcCode
-            , maybeLineNo = Just (currLineNum ctx)
+            , mbCurrentRow = Just (currentRow ctx)
             , acc = ctx.acc
             , mode = mode exe
             }
