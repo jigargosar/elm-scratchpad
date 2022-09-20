@@ -232,6 +232,12 @@ mapHead fn xs =
             fn h :: t
 
 
+type alias PrefixLabels =
+    { prev : Set String
+    , all : Set String
+    }
+
+
 compileLines : List ( Int, String ) -> ( Errors, List ( Int, Stmt ) )
 compileLines ls =
     let
