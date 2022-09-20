@@ -14,12 +14,13 @@ module TIS100.PuzzlePage.Compiler exposing
 
 import Dict exposing (Dict)
 import List.Extra
+import Maybe.Extra
 import Parser exposing (..)
 import Pivot exposing (Pivot)
 import Set exposing (Set)
 import TIS100.Num as Num exposing (Num)
 import TIS100.PuzzlePage.Inst exposing (..)
-import Utils as U exposing (Dir4(..), insertMaybe, pair, resultConcat)
+import Utils as U exposing (Dir4(..), insertMaybe, mapSecond, pair, resultConcat)
 
 
 type Error
@@ -138,31 +139,29 @@ toLines srcCode =
 toPrg : List Stmt -> Maybe Prg
 toPrg =
     let
-        step stmt acc =
+        step prevLabels stmt =
             case stmt of
                 Stmt row mbl (Just inst) ->
-                    { acc
-                        | revPLines =
-                            { lineNo = row
-                            , labels = insertMaybe mbl acc.prevLabels
-                            , inst = inst
-                            }
-                                :: acc.revPLines
-                        , prevLabels = Set.empty
-                    }
+                    ( Set.empty
+                    , Just
+                        { lineNo = row
+                        , labels = insertMaybe mbl prevLabels
+                        , inst = inst
+                        }
+                    )
 
                 Stmt _ mbl Nothing ->
-                    { acc | prevLabels = insertMaybe mbl acc.prevLabels }
+                    ( insertMaybe mbl prevLabels, Nothing )
 
-        done acc =
-            acc.revPLines
-                |> List.reverse
+        done ( prevLabels, prgLines ) =
+            prgLines
                 |> U.mapHead
-                    (\pl ->
-                        { pl | labels = Set.union acc.prevLabels pl.labels }
+                    (\pLine ->
+                        { pLine | labels = Set.union prevLabels pLine.labels }
                     )
     in
-    List.foldl step { prevLabels = Set.empty, revPLines = [] }
+    List.Extra.mapAccuml step Set.empty
+        >> mapSecond (List.filterMap identity)
         >> done
         >> Pivot.fromList
 
