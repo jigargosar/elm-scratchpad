@@ -132,14 +132,6 @@ compile string =
 toPLines : List ( Int, Stmt ) -> List PLine
 toPLines =
     let
-        insertMaybeLabel mbl =
-            case mbl of
-                Just lbl ->
-                    Set.insert lbl
-
-                _ ->
-                    identity
-
         step ( row, stmt ) acc =
             case stmt of
                 Stmt mbl (Just inst) ->
@@ -147,14 +139,14 @@ toPLines =
                         | revPLines =
                             PLine
                                 row
-                                (insertMaybeLabel mbl acc.prevLabels)
+                                (U.insertMaybe mbl acc.prevLabels)
                                 inst
                                 :: acc.revPLines
                         , prevLabels = Set.empty
                     }
 
                 Stmt mbl Nothing ->
-                    { acc | prevLabels = insertMaybeLabel mbl acc.prevLabels }
+                    { acc | prevLabels = U.insertMaybe mbl acc.prevLabels }
 
         done acc =
             acc.revPLines
