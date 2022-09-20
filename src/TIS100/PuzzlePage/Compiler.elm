@@ -230,14 +230,12 @@ compileLines ls =
                     )
                     Set.empty
 
+        labelDefs =
+            toLabelDefs ls
+
         step : ( Int, String ) -> CAcc -> CAcc
-        step ( row, srcLine ) acc =
-            let
-                ( mbl, res ) =
-                    compileLineHelp acc.prevLabels allPrefixLabels srcLine
-            in
-            { acc | prevLabels = U.insertMaybe mbl acc.prevLabels }
-                |> updateCAcc row res
+        step ( row, srcLine ) =
+            updateCAcc row (compileLineHelp labelDefs row srcLine)
 
         done : CAcc -> Result Errors Prg
         done acc =
@@ -277,33 +275,25 @@ unconsPrefixLabel tokens =
             ( Nothing, tokens )
 
 
-compileLineHelp :
-    PrevLabels
-    -> AllPrefixLabels
-    -> String
-    -> ( Maybe String, Result Error Stmt )
-compileLineHelp prevLabels allPrefixLabels srcLine =
+compileLineHelp : LabelDefs -> Int -> String -> Result Error Stmt
+compileLineHelp labelDefs row srcLine =
     case lexLine srcLine |> Result.map unconsPrefixLabel of
         Ok ( mbl, tokens ) ->
             case mbl of
                 Just ( col, lbl ) ->
-                    ( Just lbl
-                    , if Set.member lbl prevLabels then
+                    if Dict.get lbl labelDefs /= Just row then
                         Err (LabelAlreadyDefined col lbl)
 
-                      else
-                        parseInst allPrefixLabels tokens
+                    else
+                        parseInst labelDefs tokens
                             |> Result.map (stmtWithLabel lbl)
-                    )
 
                 Nothing ->
-                    ( Nothing
-                    , parseInst allPrefixLabels tokens
+                    parseInst labelDefs tokens
                         |> Result.map stmtWithoutLabel
-                    )
 
         Err e ->
-            ( Nothing, Err e )
+            Err e
 
 
 updateCAcc : Int -> Result Error Stmt -> CAcc -> CAcc
@@ -330,19 +320,19 @@ stmtWithoutLabel =
     Stmt Nothing
 
 
-parseInst : AllPrefixLabels -> List Token -> Result Error (Maybe Inst)
-parseInst prefixLabels tokens =
+parseInst : LabelDefs -> List Token -> Result Error (Maybe Inst)
+parseInst labelDefs tokens =
     case tokens of
         [] ->
             Ok Nothing
 
         x :: xs ->
-            parseInstHelp prefixLabels x xs
+            parseInstHelp labelDefs x xs
                 |> Result.map Just
 
 
-parseInstHelp : AllPrefixLabels -> Token -> List Token -> Result Error Inst
-parseInstHelp prefixLabels fst rest =
+parseInstHelp : LabelDefs -> Token -> List Token -> Result Error Inst
+parseInstHelp labelDefs fst rest =
     case fst of
         Token (OpCode op) _ ->
             case op of
@@ -350,7 +340,7 @@ parseInstHelp prefixLabels fst rest =
                     withZeroArgOp Nop rest
 
                 JMP ->
-                    with1ArgOp (parseJumpInst prefixLabels Jmp) fst rest
+                    with1ArgOp (parseJumpInst labelDefs Jmp) fst rest
 
                 MOV ->
                     with2ArgOp parseMovInst fst rest
@@ -359,9 +349,9 @@ parseInstHelp prefixLabels fst rest =
             invalidOp fst
 
 
-parseJumpInst : AllPrefixLabels -> (String -> value) -> Token -> Result Error value
-parseJumpInst prefixLabels fn (Token _ (Loc col string)) =
-    if Set.member string prefixLabels then
+parseJumpInst : LabelDefs -> (String -> value) -> Token -> Result Error value
+parseJumpInst labelDefs fn (Token _ (Loc col string)) =
+    if Dict.member string labelDefs then
         Ok (fn string)
 
     else
