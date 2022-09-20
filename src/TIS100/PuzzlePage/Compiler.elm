@@ -220,12 +220,13 @@ compileLines ls =
             toLabelDefs ls
 
         step : ( Int, String ) -> CAcc -> CAcc
-        step ( row, srcLine ) =
-            srcLine
-                |> lexLine
-                |> Result.andThen (validateLabelDef labelDefs row)
-                |> Result.andThen (parseStmt labelDefs)
-                |> updateCAcc row
+        step ( row, srcLine ) acc =
+            case compileLineHelp labelDefs row srcLine of
+                Ok stmt ->
+                    { acc | revStmts = ( row, stmt ) :: acc.revStmts }
+
+                Err err ->
+                    { acc | revErrors = ( row, err ) :: acc.revErrors }
 
         done : CAcc -> Result Errors Prg
         done acc =
@@ -243,6 +244,14 @@ compileLines ls =
             , prevLabels = Set.empty
             }
         |> done
+
+
+compileLineHelp : LabelDefs -> Int -> String -> Result Error Stmt
+compileLineHelp labelDefs row srcLine =
+    srcLine
+        |> lexLine
+        |> Result.andThen (validateLabelDef labelDefs row)
+        |> Result.andThen (parseStmt labelDefs)
 
 
 validateLabelDef : LabelDefs -> Int -> List Token -> Result Error (List Token)
@@ -267,16 +276,6 @@ parseStmt labelDefs tokens =
 
         otherTokens ->
             Result.map (Stmt Nothing) (parseInst labelDefs otherTokens)
-
-
-updateCAcc : Int -> Result Error Stmt -> CAcc -> CAcc
-updateCAcc row res acc =
-    case res of
-        Ok stmt ->
-            { acc | revStmts = ( row, stmt ) :: acc.revStmts }
-
-        Err err ->
-            { acc | revErrors = ( row, err ) :: acc.revErrors }
 
 
 type Stmt
