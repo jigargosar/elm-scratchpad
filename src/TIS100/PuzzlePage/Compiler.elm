@@ -233,25 +233,18 @@ compileLines ls =
 compileLinesHelp : Set String -> ( Int, String ) -> CAcc -> CAcc
 compileLinesHelp allPrefixLabels ( row, line ) =
     let
-        processWithMaybeLabel acc mbl r =
-            case r of
+        insertLabel : String -> CAcc -> CAcc
+        insertLabel lbl acc =
+            { acc | prevLabels = Set.insert lbl acc.prevLabels }
+
+        process : CAcc -> Result Error Stmt -> CAcc
+        process acc res =
+            case res of
                 Ok stmt ->
-                    { acc
-                        | revStmts = ( row, stmt ) :: acc.revStmts
-                        , prevLabels = insertMaybe mbl acc.prevLabels
-                    }
+                    { acc | revStmts = ( row, stmt ) :: acc.revStmts }
 
                 Err err ->
-                    { acc
-                        | revErrors = ( row, err ) :: acc.revErrors
-                        , prevLabels = insertMaybe mbl acc.prevLabels
-                    }
-
-        processWithLabel acc label r =
-            processWithMaybeLabel acc (Just label) r
-
-        processWithoutLabel acc r =
-            processWithMaybeLabel acc Nothing r
+                    { acc | revErrors = ( row, err ) :: acc.revErrors }
     in
     \acc ->
         case lexLine line of
@@ -267,18 +260,18 @@ compileLinesHelp allPrefixLabels ( row, line ) =
                                 rest
                                 |> Result.map (stmtWithLabel lbl)
                         )
-                            |> processWithLabel acc lbl
+                            |> process (insertLabel lbl acc)
 
                     _ ->
                         parseInst
                             allPrefixLabels
                             tokens
                             |> Result.map stmtWithoutLabel
-                            |> processWithoutLabel acc
+                            |> process acc
 
             Err _ ->
                 Err InternalError
-                    |> processWithoutLabel acc
+                    |> process acc
 
 
 insertMaybe : Maybe comparable -> Set comparable -> Set comparable
