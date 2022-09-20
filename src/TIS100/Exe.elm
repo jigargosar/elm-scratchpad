@@ -57,13 +57,12 @@ setPrg prg ctx =
 
 
 jmpToLabel : String -> Ctx -> Ctx
-jmpToLabel lbl ctx =
-    case cyclicFindFromCenter (.labels >> Set.member lbl) ctx.prg of
-        Just prg ->
-            setPrg prg ctx
-
-        Nothing ->
-            ctx
+jmpToLabel lbl =
+    mapPrg <|
+        Pivot.withRollback
+            (cyclicFindFromCenter
+                (.labels >> Set.member lbl)
+            )
 
 
 cyclicFindFromCenter : (a -> Bool) -> Pivot a -> Maybe (Pivot a)
