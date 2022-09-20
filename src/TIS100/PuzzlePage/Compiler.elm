@@ -225,7 +225,7 @@ compileLines labelDefs =
                     Err es
     in
     List.foldl step ( [], [] )
-        >> U.mapBoth List.reverse List.reverse
+        >> U.biMap List.reverse List.reverse
         >> done
 
 
