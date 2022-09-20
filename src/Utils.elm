@@ -19,6 +19,7 @@ import Pivot exposing (Pivot)
 import Random exposing (Generator)
 import Random.Char
 import Random.Extra
+import Result.Extra
 import Set exposing (Set)
 import Svg
 import Svg.Attributes as SA
@@ -2269,6 +2270,23 @@ listPadRight default toLength list =
 
         GT ->
             List.take toLength list
+
+
+
+-- RESULT HELPERS
+
+
+resultConcat : List (Result a b) -> Result (List a) (List b)
+resultConcat =
+    Result.Extra.partition
+        >> (\( os, es ) ->
+                case es of
+                    [] ->
+                        Ok os
+
+                    _ ->
+                        Err es
+           )
 
 
 

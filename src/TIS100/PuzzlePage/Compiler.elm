@@ -20,7 +20,7 @@ import Result.Extra
 import Set exposing (Set)
 import TIS100.Num as Num exposing (Num)
 import TIS100.PuzzlePage.Inst exposing (..)
-import Utils as U exposing (Dir4(..), pair)
+import Utils as U exposing (Dir4(..), pair, resultConcat)
 
 
 type Error
@@ -186,23 +186,15 @@ toLabelDefs =
 compileLines : LabelDefs -> List ( Int, String ) -> Result Errors (Maybe Prg)
 compileLines labelDefs =
     let
+        compileStmt : ( Int, String ) -> Result ( Int, Error ) ( Int, Stmt )
         compileStmt ( row, srcLine ) =
             srcLine
                 |> lexLine
                 |> Result.andThen (parseStmt labelDefs row)
                 |> Result.Extra.mapBoth (pair row) (pair row)
-
-        done ( stmts, errs ) =
-            case List.sortBy U.first errs of
-                [] ->
-                    Ok stmts
-
-                es ->
-                    Err es
     in
     List.map compileStmt
-        >> Result.Extra.partition
-        >> done
+        >> resultConcat
         >> Result.map toPrg
 
 
