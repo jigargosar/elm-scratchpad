@@ -221,16 +221,9 @@ compileLines ls =
 
         done : CAcc -> Result Errors Prg
         done acc =
-            case
-                acc.revErrors
-                    |> List.reverse
-                    |> List.sortBy U.first
-            of
+            case acc.revErrors |> List.reverse |> List.sortBy U.first of
                 [] ->
-                    acc.revStmts
-                        |> List.reverse
-                        |> toPLines
-                        |> Ok
+                    acc.revStmts |> List.reverse |> toPLines |> Ok
 
                 es ->
                     Err es
