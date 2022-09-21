@@ -158,10 +158,10 @@ subscriptions model =
                             Sub.none
 
                         Auto ->
-                            Time.every 50 (\_ -> AutoStep)
+                            Time.every 20 (\_ -> AutoStep)
 
                         AutoFast ->
-                            Time.every 20 (\_ -> AutoStepFast)
+                            Time.every 0 (\_ -> AutoStepFast)
 
                 Completed ->
                     Sub.none
