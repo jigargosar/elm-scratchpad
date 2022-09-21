@@ -8,10 +8,11 @@ module TIS100.Exe exposing
     , viewModel
     )
 
+import Basics.Extra exposing (uncurry)
 import TIS100.Num as Num exposing (Num)
 import TIS100.Ports exposing (Intent(..))
 import TIS100.PuzzlePage.Compiler as Compiler
-import TIS100.PuzzlePage.Inst exposing (..)
+import TIS100.PuzzlePage.Inst as Inst exposing (..)
 import TIS100.PuzzlePage.NodeState as NS
 import TIS100.PuzzlePage.Program as Prg exposing (Prg)
 import Utils exposing (Dir4)
@@ -170,48 +171,25 @@ allIntents prg =
 
 intentsFromInst : Inst -> List Intent
 intentsFromInst inst =
-    case inst of
-        Mov src dst ->
-            (case src of
-                SrcPort f ->
-                    [ Read f ]
+    Inst.getSrcAndDstOperands inst
+        |> Utils.biMap
+            (\mbs ->
+                case mbs of
+                    Just (SrcPort f) ->
+                        [ Read f ]
 
-                _ ->
-                    []
+                    _ ->
+                        []
             )
-                ++ (case dst of
-                        DstPort t ->
-                            [ Write t ]
+            (\mbd ->
+                case mbd of
+                    Just (DstPort t) ->
+                        [ Write t ]
 
-                        _ ->
-                            []
-                   )
-
-        Jro src ->
-            case src of
-                SrcPort f ->
-                    [ Read f ]
-
-                _ ->
-                    []
-
-        Nop ->
-            []
-
-        Jmp _ ->
-            []
-
-        Jnz _ ->
-            []
-
-        Jez _ ->
-            []
-
-        Jgz _ ->
-            []
-
-        Jlz _ ->
-            []
+                    _ ->
+                        []
+            )
+        |> uncurry List.append
 
 
 empty : ExeNode
