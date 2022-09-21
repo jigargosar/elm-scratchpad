@@ -7,7 +7,7 @@ module TIS100.Puzzle exposing
     , inTitle
     , inX
     , leftBarViewModel
-    , samplePuzzle
+    , samplePuzzle1
     , toDictBy
     , toListBy
     , validWrites
@@ -55,8 +55,8 @@ type NodeType
     | Flt
 
 
-samplePuzzle : Puzzle
-samplePuzzle =
+samplePuzzle1 : Puzzle
+samplePuzzle1 =
     Puzzle
         { title = "Differential Converter"
         , description =

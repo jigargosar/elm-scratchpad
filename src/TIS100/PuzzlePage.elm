@@ -79,7 +79,11 @@ sampleModel =
               )
             ]
     in
-    init Puzzle.samplePuzzle sourceEntries
+    init Puzzle.samplePuzzle1 sourceEntries
+
+
+
+--noinspection ElmUnusedSymbol
 
 
 sampleModel1 : Model
@@ -101,7 +105,7 @@ sampleModel1 =
             , ( ( 3, 3 ), "Mov up down" )
             ]
     in
-    init Puzzle.samplePuzzle sourceEntries
+    init Puzzle.samplePuzzle1 sourceEntries
 
 
 
