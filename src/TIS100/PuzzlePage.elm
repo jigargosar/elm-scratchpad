@@ -216,11 +216,6 @@ updateWhenSimulating msg sim model =
             { model | state = SIM (autoStepFast sim) }
 
 
-autoStepFast : Sim -> Sim
-autoStepFast sim =
-    applyN 15 autoStep sim
-
-
 updateWhenEditing : Msg -> Model -> Model
 updateWhenEditing msg model =
     case msg of
@@ -601,6 +596,11 @@ manualStep sim =
     sim
         |> setStepMode Manual
         |> autoStep
+
+
+autoStepFast : Sim -> Sim
+autoStepFast sim =
+    applyN 15 autoStep sim
 
 
 autoStep : Sim -> Sim
