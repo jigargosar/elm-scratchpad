@@ -13,7 +13,6 @@ module TIS100.PuzzlePage.Compiler exposing
 import Dict exposing (Dict)
 import List.Extra
 import Parser exposing (..)
-import Pivot exposing (Pivot)
 import Set exposing (Set)
 import TIS100.Num as Num exposing (Num)
 import TIS100.PuzzlePage.Inst exposing (..)
@@ -228,11 +227,23 @@ parseInstHelp labelDefs fst rest =
                 NOP ->
                     withoutOperand Nop rest
 
+                MOV ->
+                    with2Operands parseMovInst fst rest
+
                 JMP ->
                     with1Operand (parseJumpInst labelDefs Jmp) fst rest
 
-                MOV ->
-                    with2Operands parseMovInst fst rest
+                JEZ ->
+                    with1Operand (parseJumpInst labelDefs Jez) fst rest
+
+                JNZ ->
+                    with1Operand (parseJumpInst labelDefs Jnz) fst rest
+
+                JGZ ->
+                    with1Operand (parseJumpInst labelDefs Jgz) fst rest
+
+                JLZ ->
+                    with1Operand (parseJumpInst labelDefs Jlz) fst rest
 
         _ ->
             invalidOpCode fst
@@ -398,6 +409,10 @@ type OpCode
     = NOP
     | MOV
     | JMP
+    | JEZ
+    | JNZ
+    | JGZ
+    | JLZ
 
 
 wordToken : Int -> String -> Token
