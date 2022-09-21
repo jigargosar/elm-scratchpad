@@ -2,6 +2,7 @@ module TIS100.PuzzlePage.SimStore exposing
     ( Model
     , Node(..)
     , init
+    , isCompleted
     , leftBarViewModel
     , portsViewModel
     , step
@@ -61,6 +62,16 @@ init puzzle exs =
 step : Model -> Model
 step store =
     StepRunner.step nodeState store
+
+
+isCompleted : Model -> Bool
+isCompleted model =
+    model
+        |> Dict.toList
+        |> List.all
+            (\( ( _, y ), n ) ->
+                y /= 4 || nodeState n == NodeState.Idle
+            )
 
 
 nodeState : Node -> NodeState Node

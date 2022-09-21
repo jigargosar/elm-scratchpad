@@ -17,6 +17,7 @@ import TIS100.Ports as Ports exposing (Action(..), Intent(..))
 import TIS100.Puzzle as Puzzle exposing (InConfig, OutConfig, Puzzle)
 import TIS100.PuzzlePage.Compiler as Compiler exposing (ErrorDetail)
 import TIS100.PuzzlePage.LeftBar as LB
+import TIS100.PuzzlePage.NodeState as NodeState
 import TIS100.PuzzlePage.SimStore as SimStore
 import TIS100.UI as UI
 import Time
@@ -605,16 +606,12 @@ autoStepFast sim =
 
 autoStep : Sim -> Sim
 autoStep sim =
-    let
-        newStore =
-            SimStore.step sim.store
-    in
-    if newStore == sim.store then
+    if SimStore.isCompleted sim.store then
         { sim | state = Completed }
 
     else
         { sim
-            | store = newStore
+            | store = SimStore.step sim.store
             , cycle = sim.cycle + 1
         }
 

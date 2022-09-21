@@ -91,7 +91,7 @@ samplePuzzle2 =
             Random.int -2 2
 
         rInList =
-            Random.list 43 rIn
+            Random.list 39 rIn
 
         is =
             U.stepWithInitialSeed 0 rInList
