@@ -8,8 +8,6 @@ module TIS100.Exe exposing
     , viewModel
     )
 
-import Pivot exposing (Pivot)
-import Set exposing (Set)
 import TIS100.Num as Num exposing (Num)
 import TIS100.Ports exposing (Intent(..))
 import TIS100.PuzzlePage.Compiler as Compiler
@@ -43,16 +41,6 @@ goNext =
 mapPrg : (Prg -> Prg) -> Ctx -> Ctx
 mapPrg fn ctx =
     setPrg (fn ctx.prg) ctx
-
-
-mapPrgMaybe : (Prg -> Maybe Prg) -> Ctx -> Ctx
-mapPrgMaybe fn ctx =
-    case fn ctx.prg of
-        Just prg ->
-            setPrg prg ctx
-
-        Nothing ->
-            ctx
 
 
 setPrg : Prg -> Ctx -> Ctx
