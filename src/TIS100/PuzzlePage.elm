@@ -218,7 +218,7 @@ updateWhenSimulating msg sim model =
 
 autoStepFast : Sim -> Sim
 autoStepFast sim =
-    applyN 5 autoStep sim
+    applyN 15 autoStep sim
 
 
 updateWhenEditing : Msg -> Model -> Model
