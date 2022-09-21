@@ -34,19 +34,19 @@ init () =
 
 
 type Msg
-    = SimMsg PuzzlePage.Msg
+    = PuzzlePageMsg PuzzlePage.Msg
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
     PuzzlePage.subscriptions model.page
-        |> Sub.map SimMsg
+        |> Sub.map PuzzlePageMsg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        SimMsg sm ->
+        PuzzlePageMsg sm ->
             ( { model | page = PuzzlePage.update sm model.page }, Cmd.none )
 
 
@@ -56,14 +56,11 @@ viewDocument model =
         [ basicStylesNode
 
         --, node "SCRIPT" [ attribute "src" "https://livejs.com/live.js" ] []
-        , view model.page
+        , PuzzlePage.view model.page |> Html.map PuzzlePageMsg
         ]
 
 
 view : PuzzlePage.Model -> Html Msg
 view sim =
     div []
-        [ div [] [ text <| Debug.toString sim ]
-            |> always noView
-        , PuzzlePage.view sim |> Html.map SimMsg
-        ]
+        []
