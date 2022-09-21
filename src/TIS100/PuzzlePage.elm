@@ -258,7 +258,8 @@ leftBarViewModel { puzzle, state } =
 view : Model -> Html Msg
 view model =
     fCol
-        [ h100
+        [ sWidth "fit-content"
+        , sHeight "fit-content"
         , fontSize "12px"
         , styleLineHeight "0.9"
         , pa "2ch"
@@ -285,10 +286,14 @@ view model =
             , left0
             , bottom0
             , right0
+            , displayGrid
+            , placeContentCenter
             , bgc <| blackA 0.8
             , fontSize "100px"
             ]
             [ text "Test Passed" ]
+
+        --|> always noView
         ]
 
 
