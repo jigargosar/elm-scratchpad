@@ -79,7 +79,7 @@ sampleModel =
               )
             ]
     in
-    init Puzzle.samplePuzzle1 sourceEntries
+    init Puzzle.samplePuzzle2 sourceEntries
 
 
 

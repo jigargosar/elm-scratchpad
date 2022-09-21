@@ -8,6 +8,7 @@ module TIS100.Puzzle exposing
     , inX
     , leftBarViewModel
     , samplePuzzle1
+    , samplePuzzle2
     , toDictBy
     , toListBy
     , validWrites
@@ -75,6 +76,35 @@ samplePuzzle1 =
         , layout =
             [ [ Exe, Exe, Exe, Exe ]
             , [ Exe, Exe, Flt, Exe ]
+            , [ Exe, Exe, Exe, Exe ]
+            ]
+                |> toLayout
+        }
+
+
+samplePuzzle2 : Puzzle
+samplePuzzle2 =
+    Puzzle
+        { title = "signal comparator"
+        , description =
+            [ "READ VALUES FROM IN"
+            , "WRITE 1 TO OUT.G IF IN > 0"
+            , "WRITE 1 TO OUT.E IF IN = 0"
+            , "WRITE 1 TO OUT.L IF IN < 0"
+            , "WHEN A 1 IS NOT WRITTEN TO"
+            , "AN OUTPUT, WRITE A 0 INSTEAD"
+            ]
+        , inputs =
+            [ InConfig { x = 0, title = "IN", nums = Num.range -10 10 }
+            ]
+        , outputs =
+            [ { x = 1, title = "OUT.G", nums = Num.range 1 20 }
+            , { x = 2, title = "OUT.E", nums = Num.range 1 20 }
+            , { x = 3, title = "OUT.L", nums = Num.range 1 20 }
+            ]
+        , layout =
+            [ [ Exe, Exe, Exe, Exe ]
+            , [ Exe, Flt, Flt, Flt ]
             , [ Exe, Exe, Exe, Exe ]
             ]
                 |> toLayout
