@@ -2,6 +2,7 @@ module TIS100.Num exposing
     ( Num
     , add
     , fromInt
+    , isGreaterThanZero
     , parse
     , range
     , toString
@@ -28,6 +29,11 @@ fromInt i =
 parse : String -> Maybe Num
 parse string =
     String.toInt string |> Maybe.map fromInt
+
+
+isGreaterThanZero : Num -> Bool
+isGreaterThanZero (Num i) =
+    i > 0
 
 
 zero : Num

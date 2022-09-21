@@ -110,8 +110,14 @@ run ctx =
         Jez _ ->
             Debug.todo "todo"
 
-        Jgz _ ->
-            Debug.todo "todo"
+        Jgz label ->
+            ReadyToRun
+                (if Num.isGreaterThanZero ctx.acc then
+                    jmpToLabel label ctx
+
+                 else
+                    goNext ctx
+                )
 
         Jlz _ ->
             Debug.todo "todo"
