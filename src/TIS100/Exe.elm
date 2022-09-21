@@ -104,11 +104,23 @@ run ctx =
         Jmp label ->
             ReadyToRun (jmpToLabel label ctx)
 
-        Jnz _ ->
-            Debug.todo "todo"
+        Jnz label ->
+            ReadyToRun
+                (if Num.isGreaterThanZero ctx.acc then
+                    jmpToLabel label ctx
 
-        Jez _ ->
-            Debug.todo "todo"
+                 else
+                    goNext ctx
+                )
+
+        Jez label ->
+            ReadyToRun
+                (if Num.isGreaterThanZero ctx.acc then
+                    jmpToLabel label ctx
+
+                 else
+                    goNext ctx
+                )
 
         Jgz label ->
             ReadyToRun
@@ -119,8 +131,14 @@ run ctx =
                     goNext ctx
                 )
 
-        Jlz _ ->
-            Debug.todo "todo"
+        Jlz label ->
+            ReadyToRun
+                (if Num.isGreaterThanZero ctx.acc then
+                    jmpToLabel label ctx
+
+                 else
+                    goNext ctx
+                )
 
         Jro _ ->
             Debug.todo "todo"
