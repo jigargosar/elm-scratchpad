@@ -27,22 +27,17 @@ import Utils exposing (..)
 -- MAIN
 
 
-sampleModel2 : Model
-sampleModel2 =
+sampleModel : Model
+sampleModel =
     let
         sourceEntries : List ( Addr, String )
         sourceEntries =
-            [ ( ( 0, 1 ), "mov up acc\n\n\nmov acc down" )
-            , ( ( 0, 2 ), "Mov up down\nmov 1 acc" )
-            , ( ( 0, 3 ), "Mov up down\nnop" )
-
-            --, ( ( 1, 1 ), "Mov up down" )
-            , ( ( 1, 1 ), "Mov up right" )
-            , ( ( 1, 2 ), "Mov up down" )
-            , ( ( 1, 3 ), "Mov up down" )
-
-            --, ( ( 2, 1 ), "lbl:Jmp lbl\n jmp : \na : Jmp : " )
-            , ( ( 2, 1 )
+            [ ( ( 0, 1 ), "MOV UP DOWN" )
+            , ( ( 0, 2 ), "MOV UP DOWN" )
+            , ( ( 0, 3 ), "MOV UP right" )
+            , ( ( 1, 1 ), "" )
+            , ( ( 1, 2 ), "" )
+            , ( ( 1, 3 )
               , [ "S: MOV LEFT ACC"
                 , "MOV ACC RIGHT"
                 , ""
@@ -54,20 +49,41 @@ sampleModel2 =
                 ]
                     |> String.join "\n"
               )
-            , ( ( 2, 2 ), "Mov up down" )
-            , ( ( 2, 3 ), "Mov up down" )
-
-            --, ( ( 3, 1 ), "Mov up down" )
-            , ( ( 3, 1 ), "Mov left acc" )
-            , ( ( 3, 2 ), "Mov up down" )
-            , ( ( 3, 3 ), "Mov up down" )
+            , ( ( 2, 1 ), "" )
+            , ( ( 2, 2 ), "" )
+            , ( ( 2, 3 )
+              , [ "S: MOV LEFT ACC"
+                , "MOV ACC RIGHT"
+                , ""
+                , "JEZ 1"
+                , "MOV 0 DOWN"
+                , "JMP S"
+                , ""
+                , "1: MOV 1 DOWN"
+                ]
+                    |> String.join "\n"
+              )
+            , ( ( 3, 1 ), "" )
+            , ( ( 3, 2 ), "" )
+            , ( ( 3, 3 )
+              , [ "S: MOV LEFT ACC"
+                , "# MOV ACC RIGHT"
+                , ""
+                , "JLZ 1"
+                , "MOV 0 DOWN"
+                , "JMP S"
+                , ""
+                , "1: MOV 1 DOWN"
+                ]
+                    |> String.join "\n"
+              )
             ]
     in
     init Puzzle.samplePuzzle sourceEntries
 
 
-sampleModel : Model
-sampleModel =
+sampleModel1 : Model
+sampleModel1 =
     let
         sourceEntries : List ( Addr, String )
         sourceEntries =
