@@ -1,6 +1,7 @@
 module TIS100 exposing (main)
 
-import Html
+import Html exposing (node)
+import Html.Attributes exposing (attribute)
 import TIS100.PuzzlePage as PuzzlePage
 import Utils exposing (..)
 
@@ -54,7 +55,7 @@ viewDocument model =
     Document "ELM TIS 100 CLONE"
         [ basicStylesNode
 
-        --, text "BrowserDocumentTemplate"
+        --, node "SCRIPT" [ attribute "src" "https://livejs.com/live.js" ] []
         , view model.page
         ]
 
