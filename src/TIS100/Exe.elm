@@ -103,6 +103,21 @@ run ctx =
         Jmp label ->
             ReadyToRun (jmpToLabel label ctx)
 
+        Jnz _ ->
+            Debug.todo "todo"
+
+        Jez _ ->
+            Debug.todo "todo"
+
+        Jgz _ ->
+            Debug.todo "todo"
+
+        Jlz _ ->
+            Debug.todo "todo"
+
+        Jro _ ->
+            Debug.todo "todo"
+
 
 writeAfterRead : Ctx -> Dst -> Num -> State
 writeAfterRead ctx dst num =
@@ -172,10 +187,30 @@ intentsFromInst inst =
                             []
                    )
 
+        Jro src ->
+            case src of
+                SrcPort f ->
+                    [ Read f ]
+
+                _ ->
+                    []
+
         Nop ->
             []
 
         Jmp _ ->
+            []
+
+        Jnz _ ->
+            []
+
+        Jez _ ->
+            []
+
+        Jgz _ ->
+            []
+
+        Jlz _ ->
             []
 
 

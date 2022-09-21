@@ -8,6 +8,11 @@ type Inst
     = Mov Src Dst
     | Nop
     | Jmp String
+    | Jez String
+    | Jnz String
+    | Jgz String
+    | Jlz String
+    | Jro Src
 
 
 type Src
