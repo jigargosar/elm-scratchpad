@@ -483,6 +483,10 @@ opCodeTokenParser =
                 [ keyword2 MOV "mov"
                 , keyword2 NOP "nop"
                 , keyword2 JMP "jmp"
+                , keyword2 JEZ "jez"
+                , keyword2 JNZ "jnz"
+                , keyword2 JGZ "jgz"
+                , keyword2 JLZ "jlz"
                 ]
         )
 
