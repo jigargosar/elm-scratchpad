@@ -157,11 +157,11 @@ init srcCode mbPrg =
             NotRunnable srcCode
 
         Just prg ->
-            Runnable srcCode (intentsFromPrg prg) (ReadyToRun (initCtx prg))
+            Runnable srcCode (allIntents prg) (ReadyToRun (initCtx prg))
 
 
-intentsFromPrg : Prg -> List Intent
-intentsFromPrg prg =
+allIntents : Prg -> List Intent
+allIntents prg =
     Prg.allInst prg |> List.concatMap intentsFromInst
 
 
