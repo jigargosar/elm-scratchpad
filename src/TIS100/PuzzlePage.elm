@@ -288,13 +288,40 @@ view model =
             , right0
             , displayGrid
             , placeContentCenter
-            , bgc <| blackA 0.8
-            , fontSize "100px"
+            , bgc (blackA 0.8)
+
+            --, fontSize "100px"
             ]
-            [ text "Test Passed" ]
+            [ fCol [ gap "2ch" ]
+                [ div [ tac ] [ text "- signal comparator - Test Passed -" ]
+                , fRow [ gap "2ch" ]
+                    [ btn "continue editing this segment" STOP
+                    , btn "return to segment list" STOP
+                    ]
+                ]
+            ]
 
         --|> always noView
         ]
+
+
+btn : String -> msg -> Html msg
+btn txt msg =
+    button
+        [ UI.lightOutline
+        , bgc "inherit"
+        , fg "inherit"
+        , style "text-transform" "inherit"
+        , style "font" "inherit"
+        , borderNone
+        , displayGrid
+        , placeContentCenter
+        , pa "1ch"
+
+        --, aspectRatio "1"
+        , notifyClick msg
+        ]
+        [ text txt ]
 
 
 viewCycle : Model -> Html msg
