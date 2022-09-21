@@ -58,9 +58,3 @@ viewDocument model =
         --, node "SCRIPT" [ attribute "src" "https://livejs.com/live.js" ] []
         , PuzzlePage.view model.page |> Html.map PuzzlePageMsg
         ]
-
-
-view : PuzzlePage.Model -> Html Msg
-view sim =
-    div []
-        []
