@@ -2,7 +2,10 @@ module TIS100.Num exposing
     ( Num
     , add
     , fromInt
+    , isEqualToZero
     , isGreaterThanZero
+    , isLessThanZero
+    , isNotEqualToZero
     , parse
     , range
     , toString
@@ -34,6 +37,21 @@ parse string =
 isGreaterThanZero : Num -> Bool
 isGreaterThanZero (Num i) =
     i > 0
+
+
+isLessThanZero : Num -> Bool
+isLessThanZero (Num i) =
+    i < 0
+
+
+isEqualToZero : Num -> Bool
+isEqualToZero (Num i) =
+    i == 0
+
+
+isNotEqualToZero : Num -> Bool
+isNotEqualToZero (Num i) =
+    i /= 0
 
 
 zero : Num

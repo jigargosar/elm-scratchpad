@@ -106,7 +106,7 @@ run ctx =
 
         Jnz label ->
             ReadyToRun
-                (if Num.isGreaterThanZero ctx.acc then
+                (if Num.isNotEqualToZero ctx.acc then
                     jmpToLabel label ctx
 
                  else
@@ -115,7 +115,7 @@ run ctx =
 
         Jez label ->
             ReadyToRun
-                (if Num.isGreaterThanZero ctx.acc then
+                (if Num.isEqualToZero ctx.acc then
                     jmpToLabel label ctx
 
                  else
@@ -133,7 +133,7 @@ run ctx =
 
         Jlz label ->
             ReadyToRun
-                (if Num.isGreaterThanZero ctx.acc then
+                (if Num.isLessThanZero ctx.acc then
                     jmpToLabel label ctx
 
                  else
