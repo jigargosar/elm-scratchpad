@@ -266,6 +266,7 @@ view model =
         , ffMonospace
         , gap "2ch"
         , ttu
+        , positionRelative
         ]
         [ viewCycle model
         , fRow [ gap "2ch" ]
@@ -278,6 +279,16 @@ view model =
                 (leftBarViewModel model)
             , viewGrid model
             ]
+        , div
+            [ positionAbsolute
+            , top0
+            , left0
+            , bottom0
+            , right0
+            , bgc <| blackA 0.8
+            , fontSize "100px"
+            ]
+            [ text "Test Passed" ]
         ]
 
 
