@@ -35,13 +35,30 @@ sampleModel =
             [ ( ( 0, 1 ), "mov up acc\n\n\nmov acc down" )
             , ( ( 0, 2 ), "Mov up down\nmov 1 acc" )
             , ( ( 0, 3 ), "Mov up down\nnop" )
-            , ( ( 1, 1 ), "Mov up down" )
+
+            --, ( ( 1, 1 ), "Mov up down" )
+            , ( ( 1, 1 ), "Mov up right" )
             , ( ( 1, 2 ), "Mov up down" )
             , ( ( 1, 3 ), "Mov up down" )
-            , ( ( 2, 1 ), "lbl:Jmp lbl\n jmp : \na : Jmp : " )
+
+            --, ( ( 2, 1 ), "lbl:Jmp lbl\n jmp : \na : Jmp : " )
+            , ( ( 2, 1 )
+              , [ "S: MOV LEFT ACC"
+                , "MOV ACC RIGHT"
+                , ""
+                , "JGZ 1"
+                , "MOV 0 DOWN"
+                , "JMP S"
+                , ""
+                , "1: MOV 1 DOWN"
+                ]
+                    |> String.join "\n"
+              )
             , ( ( 2, 2 ), "Mov up down" )
             , ( ( 2, 3 ), "Mov up down" )
-            , ( ( 3, 1 ), "Mov up down" )
+
+            --, ( ( 3, 1 ), "Mov up down" )
+            , ( ( 3, 1 ), "Mov left acc" )
             , ( ( 3, 2 ), "Mov up down" )
             , ( ( 3, 3 ), "Mov up down" )
             ]
