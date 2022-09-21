@@ -140,6 +140,7 @@ type Msg
     | RUN
     | FAST
     | AutoStep
+    | AutoStepFast
     | OnEditorInput Addr String
 
 
@@ -160,7 +161,7 @@ subscriptions model =
                             Time.every 50 (\_ -> AutoStep)
 
                         AutoFast ->
-                            Time.every 20 (\_ -> AutoStep)
+                            Time.every 20 (\_ -> AutoStepFast)
 
                 Completed ->
                     Sub.none
@@ -199,9 +200,6 @@ updateWhenSimulating msg sim model =
         STEP ->
             { model | state = SIM (manualStep sim) }
 
-        AutoStep ->
-            { model | state = SIM (autoStep sim) }
-
         RUN ->
             { model | state = SIM (setStepMode Auto sim) }
 
@@ -210,6 +208,17 @@ updateWhenSimulating msg sim model =
 
         OnEditorInput _ _ ->
             model
+
+        AutoStep ->
+            { model | state = SIM (autoStep sim) }
+
+        AutoStepFast ->
+            { model | state = SIM (autoStepFast sim) }
+
+
+autoStepFast : Sim -> Sim
+autoStepFast sim =
+    applyN 5 autoStep sim
 
 
 updateWhenEditing : Msg -> Model -> Model
@@ -220,9 +229,6 @@ updateWhenEditing msg model =
 
         STEP ->
             startDebugging Manual model
-
-        AutoStep ->
-            model
 
         RUN ->
             startDebugging Auto model
@@ -235,6 +241,12 @@ updateWhenEditing msg model =
                 | editors =
                     replaceEntry ( addr, string ) model.editors
             }
+
+        AutoStep ->
+            model
+
+        AutoStepFast ->
+            model
 
 
 leftBarViewModel : Model -> LB.ViewModel
