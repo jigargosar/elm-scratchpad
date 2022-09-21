@@ -2,8 +2,6 @@ module TIS100.PuzzlePage.Compiler exposing
     ( Error(..)
     , ErrorDetail
     , Errors
-    , Prg
-    , PrgLine
     , compile
     , errorsToDetails
     , getErrorDetails
@@ -19,6 +17,7 @@ import Pivot exposing (Pivot)
 import Set exposing (Set)
 import TIS100.Num as Num exposing (Num)
 import TIS100.PuzzlePage.Inst exposing (..)
+import TIS100.PuzzlePage.Program as Program exposing (Prg)
 import Utils exposing (Dir4(..), filterMapAccuml, insertMaybe, mapHead, pair, resultConcat)
 
 
@@ -112,17 +111,6 @@ getErrorDetails srcCode =
             []
 
 
-type alias PrgLine =
-    { lineNo : Int
-    , labels : Set String
-    , inst : Inst
-    }
-
-
-type alias Prg =
-    Pivot PrgLine
-
-
 compile : String -> Result Errors (Maybe Prg)
 compile =
     toLines >> compileLines
@@ -161,7 +149,7 @@ toPrg =
     in
     filterMapAccuml step Set.empty
         >> done
-        >> Pivot.fromList
+        >> Program.fromList
 
 
 type alias LabelDefs =

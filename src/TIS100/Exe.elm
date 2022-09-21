@@ -12,9 +12,10 @@ import Pivot exposing (Pivot)
 import Set exposing (Set)
 import TIS100.Num as Num exposing (Num)
 import TIS100.Ports exposing (Intent(..))
-import TIS100.PuzzlePage.Compiler as Compiler exposing (Prg, PrgLine)
+import TIS100.PuzzlePage.Compiler as Compiler
 import TIS100.PuzzlePage.Inst exposing (..)
 import TIS100.PuzzlePage.NodeState as NS
+import TIS100.PuzzlePage.Program as Prg exposing (Prg)
 import Utils exposing (Dir4)
 
 
@@ -36,14 +37,7 @@ initCtx prg =
 
 goNext : Ctx -> Ctx
 goNext =
-    mapPrg <|
-        \prg ->
-            case Pivot.goR prg of
-                Just nPrg ->
-                    nPrg
-
-                Nothing ->
-                    Pivot.goToStart prg
+    mapPrg Prg.next
 
 
 mapPrg : (Prg -> Prg) -> Ctx -> Ctx
@@ -68,19 +62,7 @@ setPrg prg ctx =
 
 jmpToLabel : String -> Ctx -> Ctx
 jmpToLabel lbl =
-    mapPrgMaybe
-        (cyclicFindFromCenter
-            (.labels >> Set.member lbl)
-        )
-
-
-cyclicFindFromCenter : (a -> Bool) -> Pivot a -> Maybe (Pivot a)
-cyclicFindFromCenter pred pivot =
-    Pivot.findCR pred pivot
-        |> Utils.orElseLazy
-            (\_ ->
-                Pivot.firstWith pred pivot
-            )
+    mapPrg (Prg.jumpTo lbl)
 
 
 
@@ -92,16 +74,6 @@ cyclicFindFromCenter pred pivot =
 setAccAndGoNext : Num -> Ctx -> Ctx
 setAccAndGoNext num ctx =
     { ctx | acc = num } |> goNext
-
-
-currInst : Ctx -> Inst
-currInst { prg } =
-    Pivot.getC prg |> .inst
-
-
-currentRow : Ctx -> Int
-currentRow { prg } =
-    Pivot.getC prg |> .lineNo
 
 
 type State
@@ -125,7 +97,7 @@ runnableToState state =
 
 run : Ctx -> State
 run ctx =
-    case currInst ctx of
+    case Prg.inst ctx.prg of
         Mov src dst ->
             case src of
                 SrcPort dir ->
@@ -190,8 +162,7 @@ init srcCode mbPrg =
 
 intentsFromPrg : Prg -> List Intent
 intentsFromPrg prg =
-    Pivot.toList prg
-        |> List.concatMap (.inst >> intentsFromInst)
+    Prg.allInst prg |> List.concatMap intentsFromInst
 
 
 intentsFromInst : Inst -> List Intent
@@ -270,7 +241,7 @@ viewModel exe =
                     ctxFromState st
             in
             { srcCode = srcCode
-            , mbCurrentRow = Just (currentRow ctx)
+            , mbCurrentRow = Just (Prg.row ctx.prg)
             , acc = ctx.acc
             , mode = mode exe
             }
