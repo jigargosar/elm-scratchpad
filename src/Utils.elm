@@ -2181,6 +2181,20 @@ maybeMapValues fn =
 -- LIST HELPERS
 
 
+unzip3 : List ( a, b, c ) -> ( List a, List b, List c )
+unzip3 trips =
+    let
+        step ( x, y, z ) ( xs, ys, zs ) =
+            ( cons x xs, cons y ys, cons z zs )
+    in
+    List.foldr step ( [], [], [] ) trips
+
+
+applyAll : List (a -> a) -> a -> a
+applyAll fns a =
+    List.foldl (<|) a fns
+
+
 mapHead : (a -> a) -> List a -> List a
 mapHead fn xs =
     case xs of
@@ -2590,15 +2604,6 @@ opacityFromBool bool =
 
     else
         opacity 0
-
-
-
--- LIST UTILS
-
-
-applyAll : List (a -> a) -> a -> a
-applyAll fns a =
-    List.foldl (<|) a fns
 
 
 

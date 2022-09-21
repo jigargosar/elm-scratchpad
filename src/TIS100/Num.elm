@@ -2,6 +2,7 @@ module TIS100.Num exposing
     ( Num
     , add
     , fromInt
+    , fromList
     , isEqualToZero
     , isGreaterThanZero
     , isLessThanZero
@@ -79,6 +80,11 @@ clamp i =
 range : Int -> Int -> List Num
 range lo hi =
     List.range lo hi |> List.map fromInt
+
+
+fromList : List Int -> List Num
+fromList =
+    List.map fromInt
 
 
 toString : Num -> String

@@ -15,11 +15,13 @@ module TIS100.Puzzle exposing
     )
 
 import Dict exposing (Dict)
+import List.Extra
+import Random
 import TIS100.Addr exposing (Addr)
 import TIS100.Num as Num exposing (Num)
 import TIS100.PuzzlePage.LeftBar as LB
 import TIS100.SelectionList as SelectionList
-import Utils as U exposing (Dir4(..), pair)
+import Utils as U exposing (Dir4(..), cons, pair, unzip3)
 
 
 type Puzzle
@@ -84,6 +86,34 @@ samplePuzzle1 =
 
 samplePuzzle2 : Puzzle
 samplePuzzle2 =
+    let
+        rIn =
+            Random.int -2 2
+
+        rInList =
+            Random.list 43 rIn
+
+        is =
+            U.stepWithInitialSeed 0 rInList
+
+        os =
+            List.map
+                (\i ->
+                    case compare i 0 of
+                        GT ->
+                            ( 1, 0, 0 )
+
+                        EQ ->
+                            ( 0, 1, 0 )
+
+                        LT ->
+                            ( 0, 0, 1 )
+                )
+                is
+
+        ( gs, es, ls ) =
+            unzip3 os
+    in
     Puzzle
         { title = "signal comparator"
         , description =
@@ -95,12 +125,12 @@ samplePuzzle2 =
             , "AN OUTPUT, WRITE A 0 INSTEAD"
             ]
         , inputs =
-            [ InConfig { x = 0, title = "IN", nums = Num.range -10 10 }
+            [ InConfig { x = 0, title = "IN", nums = Num.fromList is }
             ]
         , outputs =
-            [ { x = 1, title = "OUT.G", nums = Num.range 1 20 }
-            , { x = 2, title = "OUT.E", nums = Num.range 1 20 }
-            , { x = 3, title = "OUT.L", nums = Num.range 1 20 }
+            [ { x = 1, title = "OUT.G", nums = Num.fromList gs }
+            , { x = 2, title = "OUT.E", nums = Num.fromList es }
+            , { x = 3, title = "OUT.L", nums = Num.fromList ls }
             ]
         , layout =
             [ [ Exe, Exe, Exe, Exe ]
