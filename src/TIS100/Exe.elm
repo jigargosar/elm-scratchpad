@@ -105,43 +105,30 @@ run ctx =
             ReadyToRun (jmpToLabel label ctx)
 
         Jnz label ->
-            ReadyToRun
-                (if Num.isNotEqualToZero ctx.acc then
-                    jmpToLabel label ctx
-
-                 else
-                    goNext ctx
-                )
+            conditionalJump Num.isNotEqualToZero label ctx
 
         Jez label ->
-            ReadyToRun
-                (if Num.isEqualToZero ctx.acc then
-                    jmpToLabel label ctx
-
-                 else
-                    goNext ctx
-                )
+            conditionalJump Num.isEqualToZero label ctx
 
         Jgz label ->
-            ReadyToRun
-                (if Num.isGreaterThanZero ctx.acc then
-                    jmpToLabel label ctx
-
-                 else
-                    goNext ctx
-                )
+            conditionalJump Num.isGreaterThanZero label ctx
 
         Jlz label ->
-            ReadyToRun
-                (if Num.isLessThanZero ctx.acc then
-                    jmpToLabel label ctx
-
-                 else
-                    goNext ctx
-                )
+            conditionalJump Num.isLessThanZero label ctx
 
         Jro _ ->
             Debug.todo "todo"
+
+
+conditionalJump : (Num -> Bool) -> String -> Ctx -> State
+conditionalJump fn label ctx =
+    ReadyToRun
+        (if fn ctx.acc then
+            jmpToLabel label ctx
+
+         else
+            goNext ctx
+        )
 
 
 writeAfterRead : Ctx -> Dst -> Num -> State
