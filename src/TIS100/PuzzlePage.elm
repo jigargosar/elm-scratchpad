@@ -277,13 +277,13 @@ view model =
         ]
         [ viewCycle model
         , fRow [ gap "2ch" ] [ viewLeftBar model, viewGrid model ]
-        , case toDialog model of
-            NoDialog ->
-                noView
-
-            TestPassed ->
-                viewTestPassedDialog
+        , viewDialog model
         ]
+
+
+type Dialog
+    = TestPassed
+    | NoDialog
 
 
 toDialog : Model -> Dialog
@@ -301,9 +301,14 @@ toDialog model =
             NoDialog
 
 
-type Dialog
-    = TestPassed
-    | NoDialog
+viewDialog : Model -> Html Msg
+viewDialog model =
+    case toDialog model of
+        NoDialog ->
+            noView
+
+        TestPassed ->
+            viewTestPassedDialog
 
 
 viewTestPassedDialog : Html Msg
