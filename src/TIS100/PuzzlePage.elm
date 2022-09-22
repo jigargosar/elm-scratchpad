@@ -214,7 +214,7 @@ updateWhenSimulating msg sim model =
             model
 
         AutoStep ->
-            { model | state = SIM (autoStep sim) }
+            { model | state = SIM (step sim) }
 
         AutoStepFast ->
             { model | state = SIM (autoStepFast sim) }
@@ -714,28 +714,16 @@ manualStep : Sim -> Sim
 manualStep sim =
     sim
         |> setStepMode Manual
-        |> autoStep
-
-
-step : Sim -> Sim
-step sim =
-    if SimStore.isCompleted sim.store then
-        { sim | state = Completed }
-
-    else
-        { sim
-            | store = SimStore.step sim.store
-            , cycle = sim.cycle + 1
-        }
+        |> step
 
 
 autoStepFast : Sim -> Sim
 autoStepFast sim =
-    applyN 15 autoStep sim
+    applyN 15 step sim
 
 
-autoStep : Sim -> Sim
-autoStep sim =
+step : Sim -> Sim
+step sim =
     if SimStore.isCompleted sim.store then
         { sim | state = Completed }
 
