@@ -244,6 +244,15 @@ updateWhenEditing msg model =
         STOP ->
             model
 
+        AutoStep ->
+            model
+
+        AutoStepFast ->
+            model
+
+        OnContinueEdit ->
+            model
+
         STEP ->
             startDebugging Manual model
 
@@ -258,15 +267,6 @@ updateWhenEditing msg model =
                 | editors =
                     replaceEntry ( addr, string ) model.editors
             }
-
-        AutoStep ->
-            model
-
-        AutoStepFast ->
-            model
-
-        OnContinueEdit ->
-            model
 
 
 leftBarViewModel : Model -> LB.ViewModel
