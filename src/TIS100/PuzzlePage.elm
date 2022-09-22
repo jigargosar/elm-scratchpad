@@ -282,7 +282,7 @@ view model =
 
 
 type Dialog
-    = TestPassed
+    = TestPassedDialog
     | HelpDialog
     | NoDialog
 
@@ -293,7 +293,7 @@ toDialog model =
         SIM sim ->
             case sim.state of
                 Completed ->
-                    TestPassed
+                    TestPassedDialog
 
                 Stepping _ ->
                     NoDialog
@@ -308,7 +308,7 @@ viewDialog model =
         NoDialog ->
             noView
 
-        TestPassed ->
+        TestPassedDialog ->
             viewTestPassedDialog
 
         HelpDialog ->
@@ -715,6 +715,18 @@ manualStep sim =
     sim
         |> setStepMode Manual
         |> autoStep
+
+
+step : Sim -> Sim
+step sim =
+    if SimStore.isCompleted sim.store then
+        { sim | state = Completed }
+
+    else
+        { sim
+            | store = SimStore.step sim.store
+            , cycle = sim.cycle + 1
+        }
 
 
 autoStepFast : Sim -> Sim
