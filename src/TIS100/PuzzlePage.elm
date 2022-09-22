@@ -120,8 +120,9 @@ type alias Model =
 
 
 type State
-    = Edit
-    | SIM Sim
+    = Edit Dialog
+    | SIM Dialog Sim
+    | TestPassed Sim
 
 
 init : Puzzle -> List ( Addr, String ) -> Model
@@ -130,7 +131,7 @@ init puzzle sourceEntries =
     , editors =
         initEditors puzzle
             |> replaceEntries sourceEntries
-    , state = Edit
+    , state = Edit NoDialog
     }
 
 
@@ -148,10 +149,10 @@ type Msg
 subscriptions : Model -> Sub Msg
 subscriptions model =
     case model.state of
-        Edit ->
+        Edit _ ->
             Sub.none
 
-        SIM sim ->
+        SIM _ sim ->
             case sim.state of
                 Stepping debugger ->
                     case debugger of
@@ -167,12 +168,15 @@ subscriptions model =
                 Completed ->
                     Sub.none
 
+        TestPassed _ ->
+            Sub.none
+
 
 startDebugging : StepMode -> Model -> Model
 startDebugging stepMode model =
     case maybeMapValues Exe.compile model.editors of
         Just exs ->
-            { model | state = SIM (initSim model.puzzle exs stepMode) }
+            { model | state = SIM NoDialog (initSim model.puzzle exs stepMode) }
 
         Nothing ->
             model
@@ -185,39 +189,53 @@ type alias ExeDict =
 update : Msg -> Model -> Model
 update msg model =
     case model.state of
-        Edit ->
+        Edit NoDialog ->
             updateWhenEditing msg model
 
-        SIM sim ->
+        Edit _ ->
+            Debug.todo "todo"
+
+        SIM NoDialog sim ->
             updateWhenSimulating msg sim model
+
+        SIM _ _ ->
+            Debug.todo "todo"
+
+        TestPassed _ ->
+            case msg of
+                OnContinueEdit ->
+                    { model | state = Edit NoDialog }
+
+                _ ->
+                    model
 
 
 updateWhenSimulating : Msg -> Sim -> Model -> Model
 updateWhenSimulating msg sim model =
     case msg of
-        STOP ->
-            { model | state = Edit }
-
-        OnContinueEdit ->
-            { model | state = Edit }
-
-        STEP ->
-            { model | state = SIM (manualStep sim) }
-
-        RUN ->
-            { model | state = SIM (setStepMode Auto sim) }
-
-        FAST ->
-            { model | state = SIM (setStepMode AutoFast sim) }
-
         OnEditorInput _ _ ->
             model
 
+        STOP ->
+            { model | state = Edit NoDialog }
+
+        OnContinueEdit ->
+            { model | state = Edit NoDialog }
+
+        STEP ->
+            { model | state = manualStep sim }
+
+        RUN ->
+            { model | state = SIM NoDialog (setStepMode Auto sim) }
+
+        FAST ->
+            { model | state = SIM NoDialog (setStepMode AutoFast sim) }
+
         AutoStep ->
-            { model | state = SIM (step sim) }
+            { model | state = step sim }
 
         AutoStepFast ->
-            { model | state = SIM (autoStepFast sim) }
+            { model | state = autoStepFast sim }
 
 
 updateWhenEditing : Msg -> Model -> Model
@@ -254,10 +272,13 @@ updateWhenEditing msg model =
 leftBarViewModel : Model -> LB.ViewModel
 leftBarViewModel { puzzle, state } =
     case state of
-        Edit ->
+        Edit _ ->
             Puzzle.leftBarViewModel puzzle
 
-        SIM sim ->
+        SIM _ sim ->
+            SimStore.leftBarViewModel sim.store
+
+        TestPassed sim ->
             SimStore.leftBarViewModel sim.store
 
 
@@ -282,36 +303,53 @@ view model =
 
 
 type Dialog
-    = TestPassedDialog
+    = SystemDialog
     | HelpDialog
     | NoDialog
 
 
-toDialog : Model -> Dialog
-toDialog model =
+type DialogView
+    = TestPassedDialogView
+    | HelpDialogView
+    | NoDialogView
+
+
+toDialogView : Model -> DialogView
+toDialogView model =
     case model.state of
-        SIM sim ->
-            case sim.state of
-                Completed ->
-                    TestPassedDialog
+        SIM dialog _ ->
+            toDialogViewHelp dialog
 
-                Stepping _ ->
-                    NoDialog
+        Edit dialog ->
+            toDialogViewHelp dialog
 
-        Edit ->
-            NoDialog
+        TestPassed _ ->
+            TestPassedDialogView
+
+
+toDialogViewHelp : Dialog -> DialogView
+toDialogViewHelp dialog =
+    case dialog of
+        SystemDialog ->
+            Debug.todo "todo"
+
+        HelpDialog ->
+            HelpDialogView
+
+        NoDialog ->
+            NoDialogView
 
 
 viewDialog : Model -> Html Msg
 viewDialog model =
-    case toDialog model of
-        NoDialog ->
+    case toDialogView model of
+        NoDialogView ->
             noView
 
-        TestPassedDialog ->
+        TestPassedDialogView ->
             viewTestPassedDialog
 
-        HelpDialog ->
+        HelpDialogView ->
             viewHelpDialog
 
 
@@ -393,10 +431,13 @@ viewCycle model =
     let
         cycleText =
             case model.state of
-                Edit ->
+                Edit _ ->
                     "NA"
 
-                SIM sim ->
+                SIM _ sim ->
+                    fromInt sim.cycle
+
+                TestPassed sim ->
                     fromInt sim.cycle
     in
     div [] [ text "Cycle: ", text cycleText ]
@@ -424,10 +465,13 @@ viewGrid { puzzle, state, editors } =
         , sMaxHeight "100vh"
         ]
         (case state of
-            Edit ->
+            Edit _ ->
                 viewEditModeGridItems puzzle editors
 
-            SIM sim ->
+            SIM _ sim ->
+                viewSimGridItems puzzle sim
+
+            TestPassed sim ->
                 viewSimGridItems puzzle sim
         )
 
@@ -710,28 +754,38 @@ setStepMode stepMode sim =
             sim
 
 
-manualStep : Sim -> Sim
+manualStep : Sim -> State
 manualStep sim =
     sim
         |> setStepMode Manual
         |> step
 
 
-autoStepFast : Sim -> Sim
+autoStepFast : Sim -> State
 autoStepFast sim =
-    applyN 15 step sim
+    autoStepFastHelp 15 sim
 
 
-step : Sim -> Sim
+autoStepFastHelp n sim =
+    case step sim of
+        SIM _ sim2 ->
+            autoStepFastHelp (n - 1) sim2
+
+        x ->
+            x
+
+
+step : Sim -> State
 step sim =
     if SimStore.isCompleted sim.store then
-        { sim | state = Completed }
+        TestPassed sim
 
     else
-        { sim
-            | store = SimStore.step sim.store
-            , cycle = sim.cycle + 1
-        }
+        SIM NoDialog
+            { sim
+                | store = SimStore.step sim.store
+                , cycle = sim.cycle + 1
+            }
 
 
 viewSimGridItems : Puzzle -> Sim -> List (Html msg)
