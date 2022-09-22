@@ -261,7 +261,7 @@ view model =
         [ sWidth "fit-content"
         , sHeight "fit-content"
         , fontSize "12px"
-        , styleLineHeight "0.9"
+        , styleLineHeight "1"
         , pa "2ch"
         , bold
         , ffMonospace
@@ -289,10 +289,14 @@ view model =
             , displayGrid
             , placeContentCenter
             , bgc (blackA 0.8)
-
-            --, fontSize "100px"
             ]
-            [ fCol [ gap "2ch" ]
+            [ fCol
+                [ style "border" "solid white"
+                , style "border-width" "1.5ch 1ch"
+                , pa "2ch"
+                , gap "2ch"
+                , bgc black
+                ]
                 [ div [ tac ] [ text "- signal comparator - Test Passed -" ]
                 , fRow [ gap "2ch" ]
                     [ btn "continue editing this segment" STOP
@@ -317,8 +321,6 @@ btn txt msg =
         , displayGrid
         , placeContentCenter
         , pa "1ch"
-
-        --, aspectRatio "1"
         , notifyClick msg
         ]
         [ text txt ]
