@@ -283,6 +283,7 @@ view model =
 
 type Dialog
     = TestPassed
+    | HelpDialog
     | NoDialog
 
 
@@ -309,6 +310,37 @@ viewDialog model =
 
         TestPassed ->
             viewTestPassedDialog
+
+        HelpDialog ->
+            viewHelpDialog
+
+
+viewHelpDialog : Html Msg
+viewHelpDialog =
+    div
+        [ positionAbsolute
+        , top0
+        , left0
+        , bottom0
+        , right0
+        , displayGrid
+        , placeContentCenter
+        , bgc (blackA 0.8)
+        ]
+        [ fCol
+            [ style "border" "solid white"
+            , style "border-width" "1.5ch 1ch"
+            , pa "2ch"
+            , gap "2ch"
+            , bgc black
+            ]
+            [ div [ tac ] [ text "- signal comparator - Test Passed -" ]
+            , fRow [ gap "2ch" ]
+                [ btn "continue editing this segment" OnContinueEdit
+                , btn "return to segment list" OnContinueEdit
+                ]
+            ]
+        ]
 
 
 viewTestPassedDialog : Html Msg
