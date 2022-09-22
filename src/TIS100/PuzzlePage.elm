@@ -305,10 +305,10 @@ type Dialog
 viewDialog : Model -> Html Msg
 viewDialog model =
     case model.state of
-        SIM dialog _ _ ->
+        Edit dialog ->
             maybeView viewDialogHelp dialog
 
-        Edit dialog ->
+        SIM dialog _ _ ->
             maybeView viewDialogHelp dialog
 
         TestPassed _ ->
