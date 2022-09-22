@@ -312,8 +312,8 @@ viewDialog =
             ]
             [ div [ tac ] [ text "- signal comparator - Test Passed -" ]
             , fRow [ gap "2ch" ]
-                [ btn "continue editing this segment" STOP
-                , btn "return to segment list" STOP
+                [ btn "continue editing this segment" OnContinueEdit
+                , btn "return to segment list" OnContinueEdit
                 ]
             ]
         ]
