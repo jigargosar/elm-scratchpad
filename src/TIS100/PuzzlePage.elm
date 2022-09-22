@@ -121,7 +121,7 @@ type alias Model =
 
 type State
     = Edit Dialog
-    | SIM Dialog Sim
+    | SIM Dialog StepMode Sim
     | TestPassed Sim
 
 
@@ -152,21 +152,16 @@ subscriptions model =
         Edit _ ->
             Sub.none
 
-        SIM _ sim ->
-            case sim.state of
-                Stepping debugger ->
-                    case debugger of
-                        Manual ->
-                            Sub.none
-
-                        Auto ->
-                            Time.every 20 (\_ -> AutoStep)
-
-                        AutoFast ->
-                            Time.every 0 (\_ -> AutoStepFast)
-
-                Completed ->
+        SIM _ stepMode _ ->
+            case stepMode of
+                Manual ->
                     Sub.none
+
+                Auto ->
+                    Time.every 20 (\_ -> AutoStep)
+
+                AutoFast ->
+                    Time.every 0 (\_ -> AutoStepFast)
 
         TestPassed _ ->
             Sub.none
@@ -176,7 +171,7 @@ startDebugging : StepMode -> Model -> Model
 startDebugging stepMode model =
     case maybeMapValues Exe.compile model.editors of
         Just exs ->
-            { model | state = SIM NoDialog (initSim model.puzzle exs stepMode) }
+            { model | state = initSim model.puzzle exs stepMode }
 
         Nothing ->
             model
@@ -195,10 +190,10 @@ update msg model =
         Edit _ ->
             Debug.todo "todo"
 
-        SIM NoDialog sim ->
-            updateWhenSimulating msg sim model
+        SIM NoDialog stepMode sim ->
+            updateWhenSimulating msg stepMode sim model
 
-        SIM _ _ ->
+        SIM _ _ _ ->
             Debug.todo "todo"
 
         TestPassed _ ->
@@ -210,8 +205,8 @@ update msg model =
                     model
 
 
-updateWhenSimulating : Msg -> Sim -> Model -> Model
-updateWhenSimulating msg sim model =
+updateWhenSimulating : Msg -> StepMode -> Sim -> Model -> Model
+updateWhenSimulating msg stepMode sim model =
     case msg of
         OnEditorInput _ _ ->
             model
@@ -223,19 +218,19 @@ updateWhenSimulating msg sim model =
             { model | state = Edit NoDialog }
 
         STEP ->
-            { model | state = manualStep sim }
+            { model | state = step Manual sim }
 
         RUN ->
-            { model | state = SIM NoDialog (setStepMode Auto sim) }
+            { model | state = SIM NoDialog Auto sim }
 
         FAST ->
-            { model | state = SIM NoDialog (setStepMode AutoFast sim) }
+            { model | state = SIM NoDialog AutoFast sim }
 
         AutoStep ->
-            { model | state = step sim }
+            { model | state = step stepMode sim }
 
         AutoStepFast ->
-            { model | state = autoStepFast sim }
+            { model | state = autoStepFast stepMode sim }
 
 
 updateWhenEditing : Msg -> Model -> Model
@@ -275,7 +270,7 @@ leftBarViewModel { puzzle, state } =
         Edit _ ->
             Puzzle.leftBarViewModel puzzle
 
-        SIM _ sim ->
+        SIM _ _ sim ->
             SimStore.leftBarViewModel sim.store
 
         TestPassed sim ->
@@ -317,7 +312,7 @@ type DialogView
 toDialogView : Model -> DialogView
 toDialogView model =
     case model.state of
-        SIM dialog _ ->
+        SIM dialog _ _ ->
             toDialogViewHelp dialog
 
         Edit dialog ->
@@ -434,7 +429,7 @@ viewCycle model =
                 Edit _ ->
                     "NA"
 
-                SIM _ sim ->
+                SIM _ _ sim ->
                     fromInt sim.cycle
 
                 TestPassed sim ->
@@ -468,7 +463,7 @@ viewGrid { puzzle, state, editors } =
             Edit _ ->
                 viewEditModeGridItems puzzle editors
 
-            SIM _ sim ->
+            SIM _ _ sim ->
                 viewSimGridItems puzzle sim
 
             TestPassed sim ->
@@ -720,14 +715,8 @@ viewEditModeNodes puzzle editors =
 
 type alias Sim =
     { store : SimStore.Model
-    , state : SimState
     , cycle : Int
     }
-
-
-type SimState
-    = Stepping StepMode
-    | Completed
 
 
 type StepMode
@@ -736,52 +725,37 @@ type StepMode
     | AutoFast
 
 
-initSim : Puzzle -> ExeDict -> StepMode -> Sim
+initSim : Puzzle -> ExeDict -> StepMode -> State
 initSim puzzle exd stepMode =
-    { store = SimStore.init puzzle exd
-    , state = Stepping stepMode
-    , cycle = 0
-    }
+    SIM NoDialog
+        stepMode
+        { store = SimStore.init puzzle exd
+        , cycle = 0
+        }
 
 
-setStepMode : StepMode -> Sim -> Sim
-setStepMode stepMode sim =
-    case sim.state of
-        Stepping _ ->
-            { sim | state = Stepping stepMode }
-
-        Completed ->
-            sim
+autoStepFast : StepMode -> Sim -> State
+autoStepFast stepMode sim =
+    autoStepFastHelp 15 stepMode sim
 
 
-manualStep : Sim -> State
-manualStep sim =
-    sim
-        |> setStepMode Manual
-        |> step
-
-
-autoStepFast : Sim -> State
-autoStepFast sim =
-    autoStepFastHelp 15 sim
-
-
-autoStepFastHelp n sim =
-    case step sim of
-        SIM _ sim2 ->
-            autoStepFastHelp (n - 1) sim2
+autoStepFastHelp n stepMode sim =
+    case step stepMode sim of
+        SIM _ stepMode2 sim2 ->
+            autoStepFastHelp (n - 1) stepMode2 sim2
 
         x ->
             x
 
 
-step : Sim -> State
-step sim =
+step : StepMode -> Sim -> State
+step stepMode sim =
     if SimStore.isCompleted sim.store then
         TestPassed sim
 
     else
         SIM NoDialog
+            stepMode
             { sim
                 | store = SimStore.step sim.store
                 , cycle = sim.cycle + 1
