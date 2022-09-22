@@ -270,36 +270,36 @@ view model =
         , positionRelative
         ]
         [ viewCycle model
-        , fRow [ gap "2ch" ]
-            [ viewLeftBar model
-            , viewGrid model
-            ]
-        , div
-            [ positionAbsolute
-            , top0
-            , left0
-            , bottom0
-            , right0
-            , displayGrid
-            , placeContentCenter
-            , bgc (blackA 0.8)
-            ]
-            [ fCol
-                [ style "border" "solid white"
-                , style "border-width" "1.5ch 1ch"
-                , pa "2ch"
-                , gap "2ch"
-                , bgc black
-                ]
-                [ div [ tac ] [ text "- signal comparator - Test Passed -" ]
-                , fRow [ gap "2ch" ]
-                    [ btn "continue editing this segment" STOP
-                    , btn "return to segment list" STOP
-                    ]
-                ]
-            ]
+        , fRow [ gap "2ch" ] [ viewLeftBar model, viewGrid model ]
+        , viewDialog
+        ]
 
-        --|> always noView
+
+viewDialog : Html Msg
+viewDialog =
+    div
+        [ positionAbsolute
+        , top0
+        , left0
+        , bottom0
+        , right0
+        , displayGrid
+        , placeContentCenter
+        , bgc (blackA 0.8)
+        ]
+        [ fCol
+            [ style "border" "solid white"
+            , style "border-width" "1.5ch 1ch"
+            , pa "2ch"
+            , gap "2ch"
+            , bgc black
+            ]
+            [ div [ tac ] [ text "- signal comparator - Test Passed -" ]
+            , fRow [ gap "2ch" ]
+                [ btn "continue editing this segment" STOP
+                , btn "return to segment list" STOP
+                ]
+            ]
         ]
 
 
