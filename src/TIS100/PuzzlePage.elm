@@ -294,10 +294,10 @@ toDialog model =
                 Completed ->
                     TestPassed
 
-                _ ->
+                Stepping _ ->
                     NoDialog
 
-        _ ->
+        Edit ->
             NoDialog
 
 
