@@ -299,7 +299,7 @@ view model =
 
 type Dialog
     = SystemDialog
-    | HelpDialog
+    | QuickRefDialog
     | NoDialog
 
 
@@ -322,15 +322,15 @@ viewDialogHelp dialog =
         SystemDialog ->
             Debug.todo "todo"
 
-        HelpDialog ->
-            viewHelpDialog
+        QuickRefDialog ->
+            viewQuickRefDialog
 
         NoDialog ->
             noView
 
 
-viewHelpDialog : Html Msg
-viewHelpDialog =
+viewQuickRefDialog : Html Msg
+viewQuickRefDialog =
     div
         [ positionAbsolute
         , top0
