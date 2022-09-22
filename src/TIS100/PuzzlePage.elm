@@ -211,10 +211,10 @@ updateWhenSimulating msg stepMode sim model =
         OnEditorInput _ _ ->
             model
 
-        STOP ->
-            { model | state = Edit NoDialog }
-
         OnContinueEdit ->
+            model
+
+        STOP ->
             { model | state = Edit NoDialog }
 
         STEP ->
@@ -303,49 +303,30 @@ type Dialog
     | NoDialog
 
 
-type DialogView
-    = TestPassedDialogView
-    | HelpDialogView
-    | NoDialogView
-
-
-toDialogView : Model -> DialogView
-toDialogView model =
+viewDialog : Model -> Html Msg
+viewDialog model =
     case model.state of
         SIM dialog _ _ ->
-            toDialogViewHelp dialog
+            viewDialogHelp dialog
 
         Edit dialog ->
-            toDialogViewHelp dialog
+            viewDialogHelp dialog
 
         TestPassed _ ->
-            TestPassedDialogView
+            viewTestPassedDialog
 
 
-toDialogViewHelp : Dialog -> DialogView
-toDialogViewHelp dialog =
+viewDialogHelp : Dialog -> Html Msg
+viewDialogHelp dialog =
     case dialog of
         SystemDialog ->
             Debug.todo "todo"
 
         HelpDialog ->
-            HelpDialogView
+            viewHelpDialog
 
         NoDialog ->
-            NoDialogView
-
-
-viewDialog : Model -> Html Msg
-viewDialog model =
-    case toDialogView model of
-        NoDialogView ->
             noView
-
-        TestPassedDialogView ->
-            viewTestPassedDialog
-
-        HelpDialogView ->
-            viewHelpDialog
 
 
 viewHelpDialog : Html Msg
