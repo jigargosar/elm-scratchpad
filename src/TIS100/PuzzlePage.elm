@@ -143,7 +143,11 @@ type Msg
     | AutoStep
     | AutoStepFast
     | OnEditorInput Addr String
-    | OnContinueEdit
+    | DialogMsg DialogMsg
+
+
+type DialogMsg
+    = OnContinue
 
 
 subscriptions : Model -> Sub Msg
@@ -198,8 +202,10 @@ update msg model =
 
         TestPassed _ ->
             case msg of
-                OnContinueEdit ->
-                    { model | state = Edit Nothing }
+                DialogMsg dm ->
+                    case dm of
+                        OnContinue ->
+                            { model | state = Edit Nothing }
 
                 _ ->
                     model
@@ -211,7 +217,7 @@ updateWhenSimulating msg stepMode sim model =
         OnEditorInput _ _ ->
             model
 
-        OnContinueEdit ->
+        DialogMsg _ ->
             model
 
         STOP ->
@@ -245,7 +251,7 @@ updateWhenEditing msg model =
         AutoStepFast ->
             model
 
-        OnContinueEdit ->
+        DialogMsg _ ->
             model
 
         STEP ->
@@ -313,6 +319,7 @@ viewDialog model =
 
         TestPassed _ ->
             viewTestPassedDialog
+                |> Html.map DialogMsg
 
 
 viewDialogHelp : Dialog -> Html Msg
@@ -353,7 +360,7 @@ viewQuickRefDialog =
         ]
 
 
-viewTestPassedDialog : Html Msg
+viewTestPassedDialog : Html DialogMsg
 viewTestPassedDialog =
     div
         [ positionAbsolute
@@ -374,8 +381,8 @@ viewTestPassedDialog =
             ]
             [ div [ tac ] [ text "- signal comparator - Test Passed -" ]
             , fRow [ gap "2ch" ]
-                [ btn "continue editing this segment" OnContinueEdit
-                , btn "return to segment list" OnContinueEdit
+                [ btn "continue editing this segment" OnContinue
+                , btn "return to segment list" OnContinue
                 ]
             ]
         ]
