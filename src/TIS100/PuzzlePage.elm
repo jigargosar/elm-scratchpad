@@ -271,13 +271,7 @@ view model =
         ]
         [ viewCycle model
         , fRow [ gap "2ch" ]
-            [ LB.view
-                { step = STEP
-                , stop = STOP
-                , run = RUN
-                , fast = FAST
-                }
-                (leftBarViewModel model)
+            [ viewLeftBar model
             , viewGrid model
             ]
         , div
@@ -338,6 +332,17 @@ viewCycle model =
                     fromInt sim.cycle
     in
     div [] [ text "Cycle: ", text cycleText ]
+
+
+viewLeftBar : Model -> Html Msg
+viewLeftBar model =
+    LB.view
+        { step = STEP
+        , stop = STOP
+        , run = RUN
+        , fast = FAST
+        }
+        (leftBarViewModel model)
 
 
 viewGrid : Model -> Html Msg
