@@ -17,7 +17,6 @@ import TIS100.Ports as Ports exposing (Action(..), Intent(..))
 import TIS100.Puzzle as Puzzle exposing (InConfig, OutConfig, Puzzle)
 import TIS100.PuzzlePage.Compiler as Compiler exposing (ErrorDetail)
 import TIS100.PuzzlePage.LeftBar as LB
-import TIS100.PuzzlePage.NodeState as NodeState
 import TIS100.PuzzlePage.SimStore as SimStore
 import TIS100.UI as UI
 import Time
@@ -143,6 +142,7 @@ type Msg
     | AutoStep
     | AutoStepFast
     | OnEditorInput Addr String
+    | OnContinueEdit
 
 
 subscriptions : Model -> Sub Msg
@@ -198,6 +198,9 @@ updateWhenSimulating msg sim model =
         STOP ->
             { model | state = Edit }
 
+        OnContinueEdit ->
+            { model | state = Edit }
+
         STEP ->
             { model | state = SIM (manualStep sim) }
 
@@ -244,6 +247,9 @@ updateWhenEditing msg model =
         AutoStepFast ->
             model
 
+        OnContinueEdit ->
+            model
+
 
 leftBarViewModel : Model -> LB.ViewModel
 leftBarViewModel { puzzle, state } =
@@ -271,7 +277,17 @@ view model =
         ]
         [ viewCycle model
         , fRow [ gap "2ch" ] [ viewLeftBar model, viewGrid model ]
-        , viewDialog
+        , case model.state of
+            SIM sim ->
+                case sim.state of
+                    Completed ->
+                        viewDialog
+
+                    _ ->
+                        noView
+
+            _ ->
+                noView
         ]
 
 
