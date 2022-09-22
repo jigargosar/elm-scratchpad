@@ -120,8 +120,8 @@ type alias Model =
 
 
 type State
-    = Edit Dialog
-    | SIM Dialog StepMode Sim
+    = Edit (Maybe Dialog)
+    | SIM (Maybe Dialog) StepMode Sim
     | TestPassed Sim
 
 
@@ -131,7 +131,7 @@ init puzzle sourceEntries =
     , editors =
         initEditors puzzle
             |> replaceEntries sourceEntries
-    , state = Edit NoDialog
+    , state = Edit Nothing
     }
 
 
@@ -184,13 +184,13 @@ type alias ExeDict =
 update : Msg -> Model -> Model
 update msg model =
     case model.state of
-        Edit NoDialog ->
+        Edit Nothing ->
             updateWhenEditing msg model
 
         Edit _ ->
             Debug.todo "todo"
 
-        SIM NoDialog stepMode sim ->
+        SIM Nothing stepMode sim ->
             updateWhenSimulating msg stepMode sim model
 
         SIM _ _ _ ->
@@ -199,7 +199,7 @@ update msg model =
         TestPassed _ ->
             case msg of
                 OnContinueEdit ->
-                    { model | state = Edit NoDialog }
+                    { model | state = Edit Nothing }
 
                 _ ->
                     model
@@ -215,16 +215,16 @@ updateWhenSimulating msg stepMode sim model =
             model
 
         STOP ->
-            { model | state = Edit NoDialog }
+            { model | state = Edit Nothing }
 
         STEP ->
             { model | state = step Manual sim }
 
         RUN ->
-            { model | state = SIM NoDialog Auto sim }
+            { model | state = SIM Nothing Auto sim }
 
         FAST ->
-            { model | state = SIM NoDialog AutoFast sim }
+            { model | state = SIM Nothing AutoFast sim }
 
         AutoStep ->
             { model | state = step stepMode sim }
@@ -300,17 +300,16 @@ view model =
 type Dialog
     = SystemDialog
     | QuickRefDialog
-    | NoDialog
 
 
 viewDialog : Model -> Html Msg
 viewDialog model =
     case model.state of
         SIM dialog _ _ ->
-            viewDialogHelp dialog
+            maybeView viewDialogHelp dialog
 
         Edit dialog ->
-            viewDialogHelp dialog
+            maybeView viewDialogHelp dialog
 
         TestPassed _ ->
             viewTestPassedDialog
@@ -324,9 +323,6 @@ viewDialogHelp dialog =
 
         QuickRefDialog ->
             viewQuickRefDialog
-
-        NoDialog ->
-            noView
 
 
 viewQuickRefDialog : Html Msg
@@ -708,7 +704,7 @@ type StepMode
 
 initSim : Puzzle -> ExeDict -> StepMode -> State
 initSim puzzle exd stepMode =
-    SIM NoDialog
+    SIM Nothing
         stepMode
         { store = SimStore.init puzzle exd
         , cycle = 0
@@ -735,7 +731,7 @@ step stepMode sim =
         TestPassed sim
 
     else
-        SIM NoDialog
+        SIM Nothing
             stepMode
             { sim
                 | store = SimStore.step sim.store
