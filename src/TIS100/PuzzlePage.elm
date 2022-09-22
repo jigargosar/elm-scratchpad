@@ -277,22 +277,37 @@ view model =
         ]
         [ viewCycle model
         , fRow [ gap "2ch" ] [ viewLeftBar model, viewGrid model ]
-        , case model.state of
-            SIM sim ->
-                case sim.state of
-                    Completed ->
-                        viewDialog
-
-                    _ ->
-                        noView
-
-            _ ->
+        , case toDialog model of
+            NoDialog ->
                 noView
+
+            TestPassed ->
+                viewTestPassedDialog
         ]
 
 
-viewDialog : Html Msg
-viewDialog =
+toDialog : Model -> Dialog
+toDialog model =
+    case model.state of
+        SIM sim ->
+            case sim.state of
+                Completed ->
+                    TestPassed
+
+                _ ->
+                    NoDialog
+
+        _ ->
+            NoDialog
+
+
+type Dialog
+    = TestPassed
+    | NoDialog
+
+
+viewTestPassedDialog : Html Msg
+viewTestPassedDialog =
     div
         [ positionAbsolute
         , top0
