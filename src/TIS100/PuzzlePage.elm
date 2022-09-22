@@ -334,11 +334,11 @@ viewHelpDialog =
             , gap "2ch"
             , bgc black
             ]
-            [ div [ tac ] [ text "- signal comparator - Test Passed -" ]
-            , fRow [ gap "2ch" ]
-                [ btn "continue editing this segment" OnContinueEdit
-                , btn "return to segment list" OnContinueEdit
-                ]
+            [ text "help"
+            , text "commands"
+            , text "a"
+            , text "b"
+            , text "c"
             ]
         ]
 
