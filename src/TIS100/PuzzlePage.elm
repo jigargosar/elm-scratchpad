@@ -186,12 +186,12 @@ type alias ExeDict =
     Dict Addr ExeNode
 
 
-update2 : Msg -> Model -> Model
-update2 msg model =
+update : Msg -> Model -> Model
+update msg model =
     case msg of
         SimMsg simMsg ->
             case model.state of
-                SIM stepMode sim ->
+                SIM _ stepMode sim ->
                     updateWhenSimulating simMsg stepMode sim model
 
                 _ ->
@@ -199,7 +199,7 @@ update2 msg model =
 
         EditMsg editMsg ->
             case model.state of
-                EditMsg editMsg ->
+                Edit _ ->
                     updateWhenEditing editMsg model
 
                 _ ->
@@ -211,8 +211,8 @@ update2 msg model =
                     { model | state = Edit Nothing }
 
 
-update : Msg -> Model -> Model
-update msg model =
+update1 : Msg -> Model -> Model
+update1 msg model =
     case model.state of
         Edit Nothing ->
             case msg of
