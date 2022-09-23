@@ -141,6 +141,7 @@ type Msg
     = EditMsg EditMsg
     | SimMsg SimMsg
     | TestPassedMsg TestPassedMsg
+    | CloseDialog
 
 
 type SimMsg
@@ -188,7 +189,7 @@ update : Msg -> Model -> Model
 update msg model =
     case model.dialog of
         Just _ ->
-            Debug.todo "todo"
+            { model | dialog = Nothing }
 
         Nothing ->
             updateHelp msg model
