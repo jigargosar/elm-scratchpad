@@ -249,7 +249,7 @@ updateWhenSimulating msg stepMode sim =
                 Manual ->
                     step Manual sim
 
-                _ ->
+                Auto _ ->
                     SIM Manual sim
 
         RUN ->
