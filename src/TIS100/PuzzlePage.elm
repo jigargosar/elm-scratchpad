@@ -236,25 +236,8 @@ update msg model =
 updateWhenEditing : Msg -> Model -> Model
 updateWhenEditing msg model =
     case msg of
-        SimMsg simMsg ->
-            case simMsg of
-                STOP ->
-                    model
-
-                AutoStep ->
-                    model
-
-                AutoStepFast ->
-                    model
-
-                STEP ->
-                    startDebugging Manual model
-
-                RUN ->
-                    startDebugging Auto model
-
-                FAST ->
-                    startDebugging AutoFast model
+        SimMsg _ ->
+            model
 
         DialogMsg _ ->
             model
