@@ -154,7 +154,7 @@ type EditMsg
     = StartStepping
     | StartRunning
     | StartRunningFast
-    | OnEditorInput2 Addr String
+    | OnEditorInput Addr String
 
 
 type DialogMsg
@@ -252,7 +252,7 @@ updateWhenEditing msg model =
         StartRunningFast ->
             startDebugging AutoFast model
 
-        OnEditorInput2 addr string ->
+        OnEditorInput addr string ->
             { model
                 | editors =
                     replaceEntry ( addr, string ) model.editors
@@ -537,7 +537,7 @@ viewEditor addr editor =
         ]
         [ headerView
         , viewErrorMarks errors
-        , viewEditorTextArea (OnEditorInput2 addr) editor
+        , viewEditorTextArea (OnEditorInput addr) editor
         , viewExeBoxes { acc = Num.zero, mode = "IDLE" }
         ]
 
