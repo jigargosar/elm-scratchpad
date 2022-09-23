@@ -159,8 +159,7 @@ type EditMsg
 type SimMsg
     = StopClicked
     | StepOrPauseClicked
-    | RunClicked
-    | RunFastClicked
+    | RunClicked Speed
     | AutoStepTriggered
 
 
@@ -252,11 +251,8 @@ updateWhenSimulating msg stepMode sim =
                 Auto _ ->
                     SIM Manual sim
 
-        RunClicked ->
-            SIM (Auto Normal) sim
-
-        RunFastClicked ->
-            SIM (Auto Fast) sim
+        RunClicked speed ->
+            SIM (Auto speed) sim
 
         AutoStepTriggered ->
             case stepMode of
@@ -460,8 +456,8 @@ viewLeftBar { puzzle, state } =
             LB.view
                 { stop = Just StopClicked
                 , step = Just StepOrPauseClicked
-                , run = Just RunClicked
-                , fast = Just RunFastClicked
+                , run = Just (RunClicked Normal)
+                , fast = Just (RunClicked Fast)
                 }
                 (SimStore.leftBarViewModel sim.store)
                 |> Html.map SimMsg
