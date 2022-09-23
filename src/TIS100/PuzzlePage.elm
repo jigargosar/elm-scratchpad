@@ -239,8 +239,8 @@ updateWhenEditing msg model =
 
         StartDebugging stepMode ->
             case maybeTraverseValues Exe.compile model.editors of
-                Just exs ->
-                    { model | state = initSim model.puzzle exs stepMode }
+                Just exd ->
+                    { model | state = initSim model.puzzle exd stepMode }
 
                 Nothing ->
                     model
