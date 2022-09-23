@@ -204,14 +204,11 @@ update msg model =
 updateHelp : Msg -> Model -> Model
 updateHelp msg model =
     case ( msg, model.state ) of
-        ( OpenQuickRef, _ ) ->
-            { model | dialog = Just QuickRefDialog }
+        ( EditMsg editMsg, Edit ) ->
+            updateWhenEditing editMsg model
 
         ( SimMsg simMsg, SIM stepMode sim ) ->
             updateWhenSimulating simMsg stepMode sim model
-
-        ( EditMsg editMsg, Edit ) ->
-            updateWhenEditing editMsg model
 
         ( TestPassedMsg OnContinueEditing, TestPassed _ ) ->
             { model | state = Edit }
@@ -275,7 +272,7 @@ view model =
         , positionRelative
         ]
         [ viewCycle model
-        , button [ notifyClick CloseDialog ] [ text "quick ref" ]
+        , button [ notifyClick OpenQuickRef ] [ text "quick ref" ]
         , fRow [ gap "2ch" ] [ viewLeftBar model, viewGrid model ]
         , viewDialog model
         ]
@@ -305,7 +302,7 @@ viewDialog model =
             noView
 
 
-viewQuickRefDialog : Html msg
+viewQuickRefDialog : Html Msg
 viewQuickRefDialog =
     div
         [ positionAbsolute
@@ -329,6 +326,7 @@ viewQuickRefDialog =
             , text "a"
             , text "b"
             , text "c"
+            , btn "close" CloseDialog
             ]
         ]
 
