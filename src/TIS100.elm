@@ -1,8 +1,11 @@
 module TIS100 exposing (main)
 
+import Browser.Dom
 import Html exposing (node)
 import Html.Attributes exposing (attribute)
+import TIS100.Effect exposing (Effect(..))
 import TIS100.PuzzlePage as PuzzlePage
+import Task
 import Utils exposing (..)
 
 
@@ -35,6 +38,7 @@ init () =
 
 type Msg
     = PuzzlePageMsg PuzzlePage.Msg
+    | OnFocus (Result Browser.Dom.Error ())
 
 
 subscriptions : Model -> Sub Msg
@@ -47,7 +51,31 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         PuzzlePageMsg sm ->
-            ( { model | page = PuzzlePage.update sm model.page }, Cmd.none )
+            let
+                ( page, effect ) =
+                    PuzzlePage.update sm model.page
+            in
+            ( { model | page = page }, runEffect effect )
+
+        OnFocus (Ok ()) ->
+            ( model, Cmd.none )
+
+        OnFocus (Err err) ->
+            let
+                _ =
+                    Debug.log "Focus Error: " err
+            in
+            ( model, Cmd.none )
+
+
+runEffect : Effect -> Cmd Msg
+runEffect effect =
+    case effect of
+        Focus hid ->
+            Browser.Dom.focus hid |> Task.attempt OnFocus
+
+        None ->
+            Cmd.none
 
 
 viewDocument : Model -> Document Msg

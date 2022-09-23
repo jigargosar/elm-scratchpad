@@ -9,8 +9,9 @@ module TIS100.PuzzlePage exposing
 
 import Dict exposing (Dict)
 import Html exposing (pre)
-import Html.Attributes
+import Html.Attributes as HA
 import TIS100.Addr as Addr exposing (Addr)
+import TIS100.Effect exposing (Effect, withoutEffect)
 import TIS100.ExeNode as ExeNode exposing (ExeNode)
 import TIS100.Num as Num exposing (Num)
 import TIS100.Ports as Ports exposing (Action(..), Intent(..))
@@ -187,34 +188,40 @@ type alias ExeDict =
     Dict Addr ExeNode
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Effect )
 update msg model =
     case ( msg, model.state ) of
         ( CloseDialog, Dialog _ bg ) ->
             case bg of
                 EditBG ->
                     { model | state = Edit }
+                        |> withoutEffect
 
                 SIM_BG stepMode sim ->
                     { model | state = SIM stepMode sim }
+                        |> withoutEffect
 
         ( CloseDialog, TestPassed _ ) ->
             { model | state = Edit }
+                |> withoutEffect
 
         ( Open dialog, Edit ) ->
             { model | state = Dialog dialog EditBG }
+                |> withoutEffect
 
         ( Open dialog, SIM stepMode sim ) ->
             { model | state = Dialog dialog (SIM_BG stepMode sim) }
+                |> withoutEffect
 
         ( EditMsg editMsg, Edit ) ->
-            updateWhenEditing editMsg model
+            updateWhenEditing editMsg model |> withoutEffect
 
         ( SimMsg simMsg, SIM stepMode sim ) ->
             { model | state = updateWhenSimulating simMsg stepMode sim }
+                |> withoutEffect
 
         _ ->
-            model
+            withoutEffect model
 
 
 updateWhenEditing : EditMsg -> Model -> Model
@@ -380,7 +387,7 @@ viewTestPassedDialog =
 
 btnAutoFocus : String -> msg -> Html msg
 btnAutoFocus =
-    btnHelp [ autofocus True ]
+    btnHelp [ HA.id "auto-focus", autofocus True ]
 
 
 btn : String -> msg -> Html msg
@@ -621,7 +628,7 @@ viewEditorTextArea onInputMsg editor =
         , pa "0.5ch"
 
         -- new
-        , Html.Attributes.spellcheck False
+        , HA.spellcheck False
         , whiteSpace "pre"
         , overflowClip
         , w100
