@@ -194,16 +194,13 @@ update msg model =
         ( CloseDialog, Dialog _ bg ) ->
             case bg of
                 EditBG ->
-                    { model | state = Edit }
-                        |> withoutEff
+                    { model | state = Edit } |> withoutEff
 
                 SimBG stepMode sim ->
-                    { model | state = SIM stepMode sim }
-                        |> withoutEff
+                    { model | state = SIM stepMode sim } |> withoutEff
 
         ( CloseDialog, TestPassed _ ) ->
-            { model | state = Edit }
-                |> withoutEff
+            { model | state = Edit } |> withoutEff
 
         ( Open dialog, Edit ) ->
             { model | state = Dialog dialog EditBG }
