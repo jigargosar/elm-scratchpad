@@ -791,17 +791,17 @@ initSim puzzle exd stepMode =
 
 
 autoStepFast : StepMode -> Sim -> State
-autoStepFast stepMode sim =
-    autoStepFastHelp 15 stepMode sim
+autoStepFast =
+    let
+        autoStepFastHelp n stepMode sim =
+            case step stepMode sim of
+                SIM stepMode2 sim2 ->
+                    autoStepFastHelp (n - 1) stepMode2 sim2
 
-
-autoStepFastHelp n stepMode sim =
-    case step stepMode sim of
-        SIM stepMode2 sim2 ->
-            autoStepFastHelp (n - 1) stepMode2 sim2
-
-        x ->
-            x
+                x ->
+                    x
+    in
+    \stepMode sim -> autoStepFastHelp 15 stepMode sim
 
 
 step : StepMode -> Sim -> State
