@@ -256,14 +256,11 @@ updateWhenSimulating msg stepMode sim =
 
         AutoStepTriggered ->
             case stepMode of
-                Auto Fast ->
-                    autoStepFast stepMode sim
-
-                Auto Normal ->
-                    step stepMode sim
-
                 Manual ->
                     SIM stepMode sim
+
+                Auto speed ->
+                    autoStep speed sim
 
 
 view : Model -> Html Msg
@@ -788,6 +785,16 @@ initSim puzzle exd stepMode =
         { store = SimStore.init puzzle exd
         , cycle = 0
         }
+
+
+autoStep : Speed -> Sim -> State
+autoStep speed =
+    case speed of
+        Normal ->
+            step (Auto speed)
+
+        Fast ->
+            autoStepFast (Auto speed)
 
 
 autoStepFast : StepMode -> Sim -> State
