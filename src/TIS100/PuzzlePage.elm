@@ -280,7 +280,12 @@ viewDialog : Model -> Html Msg
 viewDialog model =
     case ( model.dialog, model.state ) of
         ( Just dialog, _ ) ->
-            viewDialogHelp dialog
+            case dialog of
+                SystemDialog ->
+                    Debug.todo "todo"
+
+                QuickRefDialog ->
+                    viewQuickRefDialog
 
         ( Nothing, TestPassed _ ) ->
             viewTestPassedDialog
@@ -288,16 +293,6 @@ viewDialog model =
 
         _ ->
             noView
-
-
-viewDialogHelp : Dialog -> Html Msg
-viewDialogHelp dialog =
-    case dialog of
-        SystemDialog ->
-            Debug.todo "todo"
-
-        QuickRefDialog ->
-            viewQuickRefDialog
 
 
 viewQuickRefDialog : Html Msg
