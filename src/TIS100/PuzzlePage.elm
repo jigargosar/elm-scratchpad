@@ -138,7 +138,6 @@ init puzzle sourceEntries =
 type Msg
     = SimMsg SimMsg
     | EditMsg EditMsg
-    | OnEditorInput Addr String
     | DialogMsg DialogMsg
 
 
@@ -272,19 +271,10 @@ updateWhenEditing msg model =
                             replaceEntry ( addr, string ) model.editors
                     }
 
-        OnEditorInput addr string ->
-            { model
-                | editors =
-                    replaceEntry ( addr, string ) model.editors
-            }
-
 
 updateWhenSimulating : Msg -> StepMode -> Sim -> Model -> Model
 updateWhenSimulating msg stepMode sim model =
     case msg of
-        OnEditorInput _ _ ->
-            model
-
         DialogMsg _ ->
             model
 
@@ -545,7 +535,7 @@ viewOutputNode { x, title } =
         ]
 
 
-viewEditor : Addr -> Editor -> Html Msg
+viewEditor : Addr -> Editor -> Html EditMsg
 viewEditor addr editor =
     let
         errors =
@@ -568,7 +558,7 @@ viewEditor addr editor =
         ]
         [ headerView
         , viewErrorMarks errors
-        , viewEditorTextArea (OnEditorInput addr) editor
+        , viewEditorTextArea (OnEditorInput2 addr) editor
         , viewExeBoxes { acc = Num.zero, mode = "IDLE" }
         ]
 
@@ -740,7 +730,10 @@ viewEditModeNodes puzzle editors =
         , flt = viewFaultyNode
         }
         puzzle
-        |> Dict.union (Dict.map viewEditor editors)
+        |> Dict.union
+            (Dict.map viewEditor editors
+                |> Dict.map (\_ -> Html.map EditMsg)
+            )
         |> Dict.values
 
 
