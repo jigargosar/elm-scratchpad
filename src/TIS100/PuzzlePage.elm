@@ -136,8 +136,8 @@ init puzzle sourceEntries =
 
 
 type Msg
-    = SimMsg SimMsg
-    | EditMsg EditMsg
+    = EditMsg EditMsg
+    | SimMsg SimMsg
     | DialogMsg DialogMsg
 
 
@@ -210,14 +210,14 @@ update msg model =
 
         SIM Nothing stepMode sim ->
             case msg of
-                DialogMsg _ ->
-                    model
-
                 EditMsg _ ->
                     model
 
                 SimMsg simMsg ->
                     updateWhenSimulating simMsg stepMode sim model
+
+                DialogMsg _ ->
+                    model
 
         SIM _ _ _ ->
             Debug.todo "todo"
