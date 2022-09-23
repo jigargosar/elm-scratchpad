@@ -140,7 +140,7 @@ init puzzle sourceEntries =
 type Msg
     = EditMsg EditMsg
     | SimMsg SimMsg
-    | DialogMsg DialogMsg
+    | TestPassedMsg TestPassedMsg
 
 
 type SimMsg
@@ -157,7 +157,7 @@ type EditMsg
     | OnEditorInput Addr String
 
 
-type DialogMsg
+type TestPassedMsg
     = OnContinueEditing
 
 
@@ -212,13 +212,15 @@ update msg model =
                         _ ->
                             model
 
-                DialogMsg OnContinueEditing ->
-                    case model.state of
-                        TestPassed _ ->
-                            { model | state = Edit }
+                TestPassedMsg testPassedMsg ->
+                    case testPassedMsg of
+                        OnContinueEditing ->
+                            case model.state of
+                                TestPassed _ ->
+                                    { model | state = Edit }
 
-                        _ ->
-                            model
+                                _ ->
+                                    model
 
 
 
@@ -307,7 +309,7 @@ viewDialog model =
 
                 TestPassed _ ->
                     viewTestPassedDialog
-                        |> Html.map DialogMsg
+                        |> Html.map TestPassedMsg
 
 
 viewDialogHelp : Dialog -> Html Msg
@@ -348,7 +350,7 @@ viewQuickRefDialog =
         ]
 
 
-viewTestPassedDialog : Html DialogMsg
+viewTestPassedDialog : Html TestPassedMsg
 viewTestPassedDialog =
     div
         [ positionAbsolute
