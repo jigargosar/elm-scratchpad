@@ -1,4 +1,4 @@
-module TIS100.Exe exposing
+module TIS100.ExeNode exposing
     ( ExeNode
     , ViewModel
     , compile

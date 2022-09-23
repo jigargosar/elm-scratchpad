@@ -11,7 +11,7 @@ import Dict exposing (Dict)
 import Html exposing (pre)
 import Html.Attributes
 import TIS100.Addr as Addr exposing (Addr)
-import TIS100.Exe as Exe exposing (ExeNode)
+import TIS100.ExeNode as ExeNode exposing (ExeNode)
 import TIS100.Num as Num exposing (Num)
 import TIS100.Ports as Ports exposing (Action(..), Intent(..))
 import TIS100.Puzzle as Puzzle exposing (InConfig, OutConfig, Puzzle)
@@ -238,7 +238,7 @@ updateWhenEditing msg model =
             }
 
         StartDebugging stepMode ->
-            case maybeTraverseValues Exe.compile model.editors of
+            case maybeTraverseValues ExeNode.compile model.editors of
                 Just exd ->
                     { model | state = initSim model.puzzle exd stepMode }
 
@@ -596,7 +596,7 @@ viewCompilerErrorMsg msg =
         [ text msg ]
 
 
-viewExeNode : Addr -> Exe.ViewModel -> Html msg
+viewExeNode : Addr -> ExeNode.ViewModel -> Html msg
 viewExeNode addr vm =
     div
         [ Addr.toGridArea addr
@@ -772,7 +772,7 @@ viewSimNode ( addr, node ) =
             viewOutputNode conf
 
         SimStore.EXE exe ->
-            viewExeNode addr (Exe.viewModel exe)
+            viewExeNode addr (ExeNode.viewModel exe)
 
         SimStore.FLT ->
             viewFaultyNode addr

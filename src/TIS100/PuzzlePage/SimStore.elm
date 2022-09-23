@@ -10,7 +10,7 @@ module TIS100.PuzzlePage.SimStore exposing
 
 import Dict exposing (Dict)
 import TIS100.Addr exposing (Addr)
-import TIS100.Exe as Exe exposing (ExeNode)
+import TIS100.ExeNode as ExeNode exposing (ExeNode)
 import TIS100.InNode as In exposing (InNode)
 import TIS100.OutNode as Out exposing (OutNode)
 import TIS100.Ports as Ports exposing (Action(..), Intent(..))
@@ -48,7 +48,7 @@ init puzzle exs =
             OUT c (Out.fromExpected (List.length c.nums))
 
         initExe addr =
-            EXE (U.dictGetOr Exe.empty addr exs)
+            EXE (U.dictGetOr ExeNode.empty addr exs)
     in
     Puzzle.toDictBy
         { in_ = initIn
@@ -84,7 +84,7 @@ nodeState node =
             Out.stepState out |> NodeState.map (OUT conf)
 
         EXE exe ->
-            Exe.toState exe |> NodeState.map EXE
+            ExeNode.toState exe |> NodeState.map EXE
 
         FLT ->
             NodeState.Idle
@@ -112,7 +112,7 @@ nodeIntents node =
             [ Read U.Up ]
 
         EXE exe ->
-            Exe.intents exe
+            ExeNode.intents exe
 
         FLT ->
             []
