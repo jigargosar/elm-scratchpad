@@ -169,13 +169,13 @@ subscriptions model =
         SIM stepMode _ ->
             Sub.map SimMsg <|
                 case stepMode of
-                    Manual ->
+                    ManualStep ->
                         Sub.none
 
-                    Auto Normal ->
+                    AutoStep Normal ->
                         Time.every 20 (\_ -> AutoStepTriggered)
 
-                    Auto Fast ->
+                    AutoStep Fast ->
                         Time.every 0 (\_ -> AutoStepTriggered)
 
         _ ->
@@ -245,22 +245,32 @@ updateWhenSimulating msg stepMode sim =
 
         StepOrPauseClicked ->
             case stepMode of
-                Manual ->
-                    step Manual sim
+                ManualStep ->
+                    step sim |> stepResToState stepMode
 
-                Auto _ ->
-                    SIM Manual sim
+                AutoStep _ ->
+                    SIM ManualStep sim
 
         RunClicked speed ->
-            SIM (Auto speed) sim
+            SIM (AutoStep speed) sim
 
         AutoStepTriggered ->
             case stepMode of
-                Manual ->
+                ManualStep ->
                     SIM stepMode sim
 
-                Auto speed ->
-                    autoStep speed sim
+                AutoStep speed ->
+                    autoStep speed sim |> stepResToState stepMode
+
+
+stepResToState : StepMode -> StepRes -> State
+stepResToState stepMode stepRes =
+    case stepRes of
+        Completed sim2 ->
+            TestPassed sim2
+
+        Running sim2 ->
+            SIM stepMode sim2
 
 
 view : Model -> Html Msg
@@ -442,9 +452,9 @@ viewLeftBar { puzzle, state } =
         Edit ->
             LB.view
                 { stop = Nothing
-                , step = Just (StartDebugging Manual)
-                , run = Just (StartDebugging (Auto Normal))
-                , fast = Just (StartDebugging (Auto Fast))
+                , step = Just (StartDebugging ManualStep)
+                , run = Just (StartDebugging (AutoStep Normal))
+                , fast = Just (StartDebugging (AutoStep Fast))
                 }
                 (Puzzle.leftBarViewModel puzzle)
                 |> Html.map EditMsg
@@ -769,8 +779,8 @@ type alias Sim =
 
 
 type StepMode
-    = Manual
-    | Auto Speed
+    = ManualStep
+    | AutoStep Speed
 
 
 type Speed
@@ -787,38 +797,42 @@ initSim puzzle exd stepMode =
         }
 
 
-autoStep : Speed -> Sim -> State
+autoStep : Speed -> Sim -> StepRes
 autoStep speed =
     case speed of
         Normal ->
-            step (Auto speed)
+            step
 
         Fast ->
-            autoStepFast (Auto speed)
+            autoStepFast
 
 
-autoStepFast : StepMode -> Sim -> State
+autoStepFast : Sim -> StepRes
 autoStepFast =
     let
-        autoStepFastHelp n stepMode sim =
-            case step stepMode sim of
-                SIM stepMode2 sim2 ->
-                    autoStepFastHelp (n - 1) stepMode2 sim2
+        autoStepFastHelp n sim =
+            case step sim of
+                Running sim2 ->
+                    autoStepFastHelp (n - 1) sim2
 
-                x ->
-                    x
+                Completed sim2 ->
+                    Completed sim2
     in
-    \stepMode sim -> autoStepFastHelp 15 stepMode sim
+    autoStepFastHelp 15
 
 
-step : StepMode -> Sim -> State
-step stepMode sim =
+type StepRes
+    = Completed Sim
+    | Running Sim
+
+
+step : Sim -> StepRes
+step sim =
     if SimStore.isCompleted sim.store then
-        TestPassed sim
+        Completed sim
 
     else
-        SIM
-            stepMode
+        Running
             { sim
                 | store = SimStore.step sim.store
                 , cycle = sim.cycle + 1
