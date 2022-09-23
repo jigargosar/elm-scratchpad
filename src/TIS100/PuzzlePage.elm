@@ -209,7 +209,15 @@ update msg model =
             Debug.todo "todo"
 
         SIM Nothing stepMode sim ->
-            updateWhenSimulating msg stepMode sim model
+            case msg of
+                DialogMsg _ ->
+                    model
+
+                EditMsg _ ->
+                    model
+
+                SimMsg simMsg ->
+                    updateWhenSimulating simMsg stepMode sim model
 
         SIM _ _ _ ->
             Debug.todo "todo"
@@ -272,34 +280,26 @@ updateWhenEditing msg model =
                     }
 
 
-updateWhenSimulating : Msg -> StepMode -> Sim -> Model -> Model
+updateWhenSimulating : SimMsg -> StepMode -> Sim -> Model -> Model
 updateWhenSimulating msg stepMode sim model =
     case msg of
-        DialogMsg _ ->
-            model
+        STOP ->
+            { model | state = Edit Nothing }
 
-        EditMsg _ ->
-            model
+        STEP ->
+            { model | state = step Manual sim }
 
-        SimMsg simMsg ->
-            case simMsg of
-                STOP ->
-                    { model | state = Edit Nothing }
+        RUN ->
+            { model | state = SIM Nothing Auto sim }
 
-                STEP ->
-                    { model | state = step Manual sim }
+        FAST ->
+            { model | state = SIM Nothing AutoFast sim }
 
-                RUN ->
-                    { model | state = SIM Nothing Auto sim }
+        AutoStep ->
+            { model | state = step stepMode sim }
 
-                FAST ->
-                    { model | state = SIM Nothing AutoFast sim }
-
-                AutoStep ->
-                    { model | state = step stepMode sim }
-
-                AutoStepFast ->
-                    { model | state = autoStepFast stepMode sim }
+        AutoStepFast ->
+            { model | state = autoStepFast stepMode sim }
 
 
 view : Model -> Html Msg
