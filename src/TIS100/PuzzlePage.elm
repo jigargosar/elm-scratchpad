@@ -140,7 +140,6 @@ init puzzle sourceEntries =
 type Msg
     = EditMsg EditMsg
     | SimMsg SimMsg
-    | TestPassedMsg TestPassedMsg
     | CloseDialog
     | OpenQuickRef
 
@@ -157,10 +156,6 @@ type SimMsg
 type EditMsg
     = StartDebugging StepMode
     | OnEditorInput Addr String
-
-
-type TestPassedMsg
-    = OnContinueEditing
 
 
 subscriptions : Model -> Sub Msg
@@ -209,9 +204,6 @@ updateHelp msg model =
 
         ( SimMsg simMsg, SIM stepMode sim ) ->
             updateWhenSimulating simMsg stepMode sim model
-
-        ( TestPassedMsg OnContinueEditing, TestPassed _ ) ->
-            { model | state = Edit }
 
         _ ->
             model
@@ -281,12 +273,13 @@ view model =
 type Dialog
     = SystemDialog
     | QuickRefDialog
+    | TestPassedDialog
 
 
 viewDialog : Model -> Html Msg
 viewDialog model =
-    case ( model.dialog, model.state ) of
-        ( Just dialog, _ ) ->
+    case model.dialog of
+        Just dialog ->
             case dialog of
                 SystemDialog ->
                     Debug.todo "todo"
@@ -294,9 +287,8 @@ viewDialog model =
                 QuickRefDialog ->
                     viewQuickRefDialog
 
-        ( Nothing, TestPassed _ ) ->
-            viewTestPassedDialog
-                |> Html.map TestPassedMsg
+                TestPassedDialog ->
+                    viewTestPassedDialog
 
         _ ->
             noView
@@ -331,7 +323,7 @@ viewQuickRefDialog =
         ]
 
 
-viewTestPassedDialog : Html TestPassedMsg
+viewTestPassedDialog : Html Msg
 viewTestPassedDialog =
     div
         [ positionAbsolute
@@ -352,8 +344,8 @@ viewTestPassedDialog =
             ]
             [ div [ tac ] [ text "- signal comparator - Test Passed -" ]
             , fRow [ gap "2ch" ]
-                [ btn "continue editing this segment" OnContinueEditing
-                , btn "return to segment list" OnContinueEditing
+                [ btn "continue editing this segment" CloseDialog
+                , btn "return to segment list" CloseDialog
                 ]
             ]
         ]
