@@ -158,7 +158,7 @@ type EditMsg
 
 type SimMsg
     = STOP
-    | STEP
+    | StepOrPause
     | RUN
     | FAST
     | AutoStep
@@ -244,7 +244,7 @@ updateWhenSimulating msg stepMode sim =
         STOP ->
             Edit
 
-        STEP ->
+        StepOrPause ->
             case stepMode of
                 Manual ->
                     step Manual sim
@@ -459,7 +459,7 @@ viewLeftBar { puzzle, state } =
         SIM _ sim ->
             LB.view
                 { stop = Just STOP
-                , step = Just STEP
+                , step = Just StepOrPause
                 , run = Just RUN
                 , fast = Just FAST
                 }
