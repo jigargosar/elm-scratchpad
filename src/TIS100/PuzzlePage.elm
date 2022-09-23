@@ -246,7 +246,7 @@ updateWhenSimulating msg stepMode sim =
         StepOrPauseClicked ->
             case stepMode of
                 Manual ->
-                    step sim |> stateFromStepResponse stepMode
+                    step sim |> stepResponseToState stepMode
 
                 Auto _ ->
                     SIM Manual sim
@@ -260,11 +260,11 @@ updateWhenSimulating msg stepMode sim =
                     SIM stepMode sim
 
                 Auto speed ->
-                    autoStep speed sim |> stateFromStepResponse stepMode
+                    autoStep speed sim |> stepResponseToState stepMode
 
 
-stateFromStepResponse : StepMode -> StepResponse -> State
-stateFromStepResponse stepMode stepRes =
+stepResponseToState : StepMode -> StepResponse -> State
+stepResponseToState stepMode stepRes =
     case stepRes of
         Completed sim2 ->
             TestPassed sim2
