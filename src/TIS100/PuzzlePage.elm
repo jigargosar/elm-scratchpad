@@ -278,21 +278,16 @@ type Dialog
 
 viewDialog : Model -> Html Msg
 viewDialog model =
-    case model.dialog of
-        Just dialog ->
+    case ( model.dialog, model.state ) of
+        ( Just dialog, _ ) ->
             viewDialogHelp dialog
 
-        Nothing ->
-            case model.state of
-                Edit ->
-                    maybeView viewDialogHelp Nothing
+        ( Nothing, TestPassed _ ) ->
+            viewTestPassedDialog
+                |> Html.map TestPassedMsg
 
-                SIM _ _ ->
-                    maybeView viewDialogHelp Nothing
-
-                TestPassed _ ->
-                    viewTestPassedDialog
-                        |> Html.map TestPassedMsg
+        _ ->
+            noView
 
 
 viewDialogHelp : Dialog -> Html Msg
