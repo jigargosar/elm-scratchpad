@@ -2151,11 +2151,27 @@ getEntryIn dict key =
     getEntry key dict
 
 
-maybeMapValues :
+{-| Name inspired from Maybe.Extra.traverse
+
+Like [`combine`](#combine), but map a function over each element of the list first.
+
+If every function call succeeds (returns `Just`), `traverse` will return a list.
+If any function call fails (returns `Nothing`), `traverse` will return `Nothing`.
+
+`combine` is equivalent to `traverse identity`.
+
+    traverse (\x -> Just (x * 10)) [ 1, 2, 3, 4, 5 ]
+    --> Just [ 10, 20, 30, 40, 50 ]
+
+    traverse List.head [ [1], [2, 3], [] ]
+    --> Nothing
+
+-}
+maybeTraverseValues :
     (a -> Maybe b)
     -> Dict comparable a
     -> Maybe (Dict comparable b)
-maybeMapValues fn =
+maybeTraverseValues fn =
     let
         reduce :
             Dict comparable b

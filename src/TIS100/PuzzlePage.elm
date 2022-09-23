@@ -10,6 +10,7 @@ module TIS100.PuzzlePage exposing
 import Dict exposing (Dict)
 import Html exposing (pre)
 import Html.Attributes
+import Maybe.Extra
 import TIS100.Addr as Addr exposing (Addr)
 import TIS100.Exe as Exe exposing (ExeNode)
 import TIS100.Num as Num exposing (Num)
@@ -184,7 +185,7 @@ subscriptions model =
 
 startDebugging : StepMode -> Model -> Model
 startDebugging stepMode model =
-    case maybeMapValues Exe.compile model.editors of
+    case maybeTraverseValues Exe.compile model.editors of
         Just exs ->
             { model | state = initSim model.puzzle exs stepMode }
 
@@ -248,7 +249,7 @@ updateWhenEditing msg model =
             }
 
         StartDebugging stepMode ->
-            case maybeMapValues Exe.compile model.editors of
+            case maybeTraverseValues Exe.compile model.editors of
                 Just exs ->
                     { model | state = initSim model.puzzle exs stepMode }
 
