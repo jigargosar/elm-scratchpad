@@ -136,15 +136,19 @@ init puzzle sourceEntries =
 
 
 type Msg
+    = SimMsg SimMsg
+    | EditMsg EditMsg
+    | OnEditorInput Addr String
+    | DialogMsg DialogMsg
+
+
+type SimMsg
     = STOP
     | STEP
     | RUN
     | FAST
     | AutoStep
     | AutoStepFast
-    | EditMsg EditMsg
-    | OnEditorInput Addr String
-    | DialogMsg DialogMsg
 
 
 type EditMsg
@@ -152,6 +156,7 @@ type EditMsg
     | StartRunning
     | StartRunningFast
     | OnEditorInput2 Addr String
+    | EditMsgNop
 
 
 type DialogMsg
@@ -165,7 +170,7 @@ subscriptions model =
             Sub.none
 
         SIM _ stepMode _ ->
-            case stepMode of
+            (case stepMode of
                 Manual ->
                     Sub.none
 
@@ -174,6 +179,8 @@ subscriptions model =
 
                 AutoFast ->
                     Time.every 0 (\_ -> AutoStepFast)
+            )
+                |> Sub.map SimMsg
 
         TestPassed _ ->
             Sub.none
@@ -222,20 +229,34 @@ update msg model =
 updateWhenEditing : Msg -> Model -> Model
 updateWhenEditing msg model =
     case msg of
-        STOP ->
-            model
+        SimMsg simMsg ->
+            case simMsg of
+                STOP ->
+                    model
 
-        AutoStep ->
-            model
+                AutoStep ->
+                    model
 
-        AutoStepFast ->
-            model
+                AutoStepFast ->
+                    model
+
+                STEP ->
+                    startDebugging Manual model
+
+                RUN ->
+                    startDebugging Auto model
+
+                FAST ->
+                    startDebugging AutoFast model
 
         DialogMsg _ ->
             model
 
         EditMsg editMsg ->
             case editMsg of
+                EditMsgNop ->
+                    model
+
                 StartStepping ->
                     startDebugging Manual model
 
@@ -250,15 +271,6 @@ updateWhenEditing msg model =
                         | editors =
                             replaceEntry ( addr, string ) model.editors
                     }
-
-        STEP ->
-            startDebugging Manual model
-
-        RUN ->
-            startDebugging Auto model
-
-        FAST ->
-            startDebugging AutoFast model
 
         OnEditorInput addr string ->
             { model
@@ -279,36 +291,25 @@ updateWhenSimulating msg stepMode sim model =
         EditMsg _ ->
             model
 
-        STOP ->
-            { model | state = Edit Nothing }
+        SimMsg simMsg ->
+            case simMsg of
+                STOP ->
+                    { model | state = Edit Nothing }
 
-        STEP ->
-            { model | state = step Manual sim }
+                STEP ->
+                    { model | state = step Manual sim }
 
-        RUN ->
-            { model | state = SIM Nothing Auto sim }
+                RUN ->
+                    { model | state = SIM Nothing Auto sim }
 
-        FAST ->
-            { model | state = SIM Nothing AutoFast sim }
+                FAST ->
+                    { model | state = SIM Nothing AutoFast sim }
 
-        AutoStep ->
-            { model | state = step stepMode sim }
+                AutoStep ->
+                    { model | state = step stepMode sim }
 
-        AutoStepFast ->
-            { model | state = autoStepFast stepMode sim }
-
-
-leftBarViewModel : Model -> LB.ViewModel
-leftBarViewModel { puzzle, state } =
-    case state of
-        Edit _ ->
-            Puzzle.leftBarViewModel puzzle
-
-        SIM _ _ sim ->
-            SimStore.leftBarViewModel sim.store
-
-        TestPassed sim ->
-            SimStore.leftBarViewModel sim.store
+                AutoStepFast ->
+                    { model | state = autoStepFast stepMode sim }
 
 
 view : Model -> Html Msg
@@ -451,14 +452,30 @@ viewCycle model =
 
 
 viewLeftBar : Model -> Html Msg
-viewLeftBar model =
-    LB.view
-        { step = STEP
-        , stop = STOP
-        , run = RUN
-        , fast = FAST
-        }
-        (leftBarViewModel model)
+viewLeftBar { puzzle, state } =
+    case state of
+        Edit _ ->
+            LB.view
+                { step = StartStepping
+                , stop = EditMsgNop
+                , run = StartRunning
+                , fast = StartRunningFast
+                }
+                (Puzzle.leftBarViewModel puzzle)
+                |> Html.map EditMsg
+
+        SIM _ _ sim ->
+            LB.view
+                { step = STEP
+                , stop = STOP
+                , run = RUN
+                , fast = FAST
+                }
+                (SimStore.leftBarViewModel sim.store)
+                |> Html.map SimMsg
+
+        TestPassed sim ->
+            Debug.todo "todo"
 
 
 viewGrid : Model -> Html Msg
