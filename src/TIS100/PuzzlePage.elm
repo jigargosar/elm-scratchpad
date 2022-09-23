@@ -174,10 +174,10 @@ subscriptions model =
                     Manual ->
                         Sub.none
 
-                    Auto ->
+                    Auto Normal ->
                         Time.every 20 (\_ -> AutoStep)
 
-                    AutoFast ->
+                    Auto Fast ->
                         Time.every 0 (\_ -> AutoStepFast)
 
         _ ->
@@ -254,10 +254,10 @@ updateWhenSimulating msg stepMode sim =
                     SIM Manual sim
 
         RUN ->
-            SIM Auto sim
+            SIM (Auto Normal) sim
 
         FAST ->
-            SIM AutoFast sim
+            SIM (Auto Fast) sim
 
         AutoStep ->
             step stepMode sim
@@ -446,8 +446,8 @@ viewLeftBar { puzzle, state } =
             LB.view
                 { stop = Nothing
                 , step = Just (StartDebugging Manual)
-                , run = Just (StartDebugging Auto)
-                , fast = Just (StartDebugging AutoFast)
+                , run = Just (StartDebugging (Auto Normal))
+                , fast = Just (StartDebugging (Auto Fast))
                 }
                 (Puzzle.leftBarViewModel puzzle)
                 |> Html.map EditMsg
@@ -773,8 +773,12 @@ type alias Sim =
 
 type StepMode
     = Manual
-    | Auto
-    | AutoFast
+    | Auto Speed
+
+
+type Speed
+    = Normal
+    | Fast
 
 
 initSim : Puzzle -> ExeDict -> StepMode -> State
