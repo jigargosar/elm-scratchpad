@@ -203,7 +203,15 @@ update : Msg -> Model -> Model
 update msg model =
     case model.state of
         Edit Nothing ->
-            updateWhenEditing msg model
+            case msg of
+                SimMsg _ ->
+                    model
+
+                DialogMsg _ ->
+                    model
+
+                EditMsg editMsg ->
+                    updateWhenEditing editMsg model
 
         Edit _ ->
             Debug.todo "todo"
@@ -233,34 +241,26 @@ update msg model =
                     model
 
 
-updateWhenEditing : Msg -> Model -> Model
+updateWhenEditing : EditMsg -> Model -> Model
 updateWhenEditing msg model =
     case msg of
-        SimMsg _ ->
+        EditMsgNop ->
             model
 
-        DialogMsg _ ->
-            model
+        StartStepping ->
+            startDebugging Manual model
 
-        EditMsg editMsg ->
-            case editMsg of
-                EditMsgNop ->
-                    model
+        StartRunning ->
+            startDebugging Auto model
 
-                StartStepping ->
-                    startDebugging Manual model
+        StartRunningFast ->
+            startDebugging AutoFast model
 
-                StartRunning ->
-                    startDebugging Auto model
-
-                StartRunningFast ->
-                    startDebugging AutoFast model
-
-                OnEditorInput2 addr string ->
-                    { model
-                        | editors =
-                            replaceEntry ( addr, string ) model.editors
-                    }
+        OnEditorInput2 addr string ->
+            { model
+                | editors =
+                    replaceEntry ( addr, string ) model.editors
+            }
 
 
 updateWhenSimulating : SimMsg -> StepMode -> Sim -> Model -> Model
