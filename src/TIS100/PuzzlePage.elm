@@ -145,8 +145,8 @@ init puzzle sourceEntries =
 type Msg
     = EditMsg EditMsg
     | SimMsg SimMsg
-    | CloseDialog
     | Open Dialog
+    | CloseDialog
 
 
 type EditMsg
