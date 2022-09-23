@@ -246,7 +246,7 @@ updateWhenSimulating msg stepMode sim =
         StepOrPauseClicked ->
             case stepMode of
                 Manual ->
-                    step sim |> stateFromStepRes stepMode
+                    step sim |> stateFromStepResponse stepMode
 
                 Auto _ ->
                     SIM Manual sim
@@ -260,11 +260,11 @@ updateWhenSimulating msg stepMode sim =
                     SIM stepMode sim
 
                 Auto speed ->
-                    autoStep speed sim |> stateFromStepRes stepMode
+                    autoStep speed sim |> stateFromStepResponse stepMode
 
 
-stateFromStepRes : StepMode -> StepRes -> State
-stateFromStepRes stepMode stepRes =
+stateFromStepResponse : StepMode -> StepResponse -> State
+stateFromStepResponse stepMode stepRes =
     case stepRes of
         Completed sim2 ->
             TestPassed sim2
@@ -797,7 +797,7 @@ initSim puzzle exd stepMode =
         }
 
 
-autoStep : Speed -> Sim -> StepRes
+autoStep : Speed -> Sim -> StepResponse
 autoStep speed =
     case speed of
         Normal ->
@@ -807,7 +807,7 @@ autoStep speed =
             autoStepFast
 
 
-autoStepFast : Sim -> StepRes
+autoStepFast : Sim -> StepResponse
 autoStepFast =
     let
         autoStepFastHelp n sim =
@@ -821,12 +821,12 @@ autoStepFast =
     autoStepFastHelp 15
 
 
-type StepRes
+type StepResponse
     = Completed Sim
     | Pending Sim
 
 
-step : Sim -> StepRes
+step : Sim -> StepResponse
 step sim =
     if SimStore.isCompleted sim.store then
         Completed sim
