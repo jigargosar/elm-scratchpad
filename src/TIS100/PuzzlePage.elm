@@ -142,8 +142,16 @@ type Msg
     | FAST
     | AutoStep
     | AutoStepFast
+    | EditMsg EditMsg
     | OnEditorInput Addr String
     | DialogMsg DialogMsg
+
+
+type EditMsg
+    = StartStepping
+    | StartRunning
+    | StartRunningFast
+    | OnEditorInput2 Addr String
 
 
 type DialogMsg
@@ -220,6 +228,9 @@ updateWhenSimulating msg stepMode sim model =
         DialogMsg _ ->
             model
 
+        EditMsg _ ->
+            model
+
         STOP ->
             { model | state = Edit Nothing }
 
@@ -253,6 +264,23 @@ updateWhenEditing msg model =
 
         DialogMsg _ ->
             model
+
+        EditMsg editMsg ->
+            case editMsg of
+                StartStepping ->
+                    startDebugging Manual model
+
+                StartRunning ->
+                    startDebugging Auto model
+
+                StartRunningFast ->
+                    startDebugging AutoFast model
+
+                OnEditorInput2 addr string ->
+                    { model
+                        | editors =
+                            replaceEntry ( addr, string ) model.editors
+                    }
 
         STEP ->
             startDebugging Manual model
