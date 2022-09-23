@@ -208,11 +208,11 @@ update msg model =
                 EditMsg _ ->
                     model
 
-                SimMsg simMsg ->
-                    updateWhenSimulating simMsg stepMode sim model
-
                 DialogMsg _ ->
                     model
+
+                SimMsg simMsg ->
+                    updateWhenSimulating simMsg stepMode sim model
 
         SIM _ _ _ ->
             Debug.todo "todo"
