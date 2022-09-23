@@ -156,7 +156,7 @@ type EditMsg
 
 
 type DialogMsg
-    = OnContinue
+    = OnContinueEditing
 
 
 subscriptions : Model -> Sub Msg
@@ -184,6 +184,31 @@ subscriptions model =
 
 type alias ExeDict =
     Dict Addr ExeNode
+
+
+update2 : Msg -> Model -> Model
+update2 msg model =
+    case msg of
+        SimMsg simMsg ->
+            case model.state of
+                SIM stepMode sim ->
+                    updateWhenSimulating simMsg stepMode sim model
+
+                _ ->
+                    model
+
+        EditMsg editMsg ->
+            case model.state of
+                EditMsg editMsg ->
+                    updateWhenEditing editMsg model
+
+                _ ->
+                    model
+
+        DialogMsg dialogMsg ->
+            case dialogMsg of
+                OnContinueEditing ->
+                    { model | state = Edit Nothing }
 
 
 update : Msg -> Model -> Model
@@ -227,7 +252,7 @@ update msg model =
 
                 DialogMsg dm ->
                     case dm of
-                        OnContinue ->
+                        OnContinueEditing ->
                             { model | state = Edit Nothing }
 
 
@@ -369,8 +394,8 @@ viewTestPassedDialog =
             ]
             [ div [ tac ] [ text "- signal comparator - Test Passed -" ]
             , fRow [ gap "2ch" ]
-                [ btn "continue editing this segment" OnContinue
-                , btn "return to segment list" OnContinue
+                [ btn "continue editing this segment" OnContinueEditing
+                , btn "return to segment list" OnContinueEditing
                 ]
             ]
         ]
