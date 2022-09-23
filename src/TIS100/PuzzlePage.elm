@@ -114,6 +114,7 @@ sampleModel1 =
 
 type alias Model =
     { puzzle : Puzzle
+    , dialog : Maybe Dialog
     , editors : Editors
     , state : State
     }
@@ -128,6 +129,7 @@ type State
 init : Puzzle -> List ( Addr, String ) -> Model
 init puzzle sourceEntries =
     { puzzle = puzzle
+    , dialog = Nothing
     , editors =
         initEditors puzzle
             |> replaceEntries sourceEntries
@@ -278,16 +280,21 @@ type Dialog
 
 viewDialog : Model -> Html Msg
 viewDialog model =
-    case model.state of
-        Edit ->
-            maybeView viewDialogHelp Nothing
+    case model.dialog of
+        Just dialog ->
+            viewDialogHelp dialog
 
-        SIM _ _ ->
-            maybeView viewDialogHelp Nothing
+        Nothing ->
+            case model.state of
+                Edit ->
+                    maybeView viewDialogHelp Nothing
 
-        TestPassed _ ->
-            viewTestPassedDialog
-                |> Html.map DialogMsg
+                SIM _ _ ->
+                    maybeView viewDialogHelp Nothing
+
+                TestPassed _ ->
+                    viewTestPassedDialog
+                        |> Html.map DialogMsg
 
 
 viewDialogHelp : Dialog -> Html Msg
