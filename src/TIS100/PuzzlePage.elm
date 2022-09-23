@@ -157,11 +157,11 @@ type EditMsg
 
 
 type SimMsg
-    = STOP
-    | StepOrPause
-    | RUN
-    | FAST
-    | AutoStep
+    = StopClicked
+    | StepOrPauseClicked
+    | RunClicked
+    | RunFastClicked
+    | AutoStepTriggered
 
 
 subscriptions : Model -> Sub Msg
@@ -174,10 +174,10 @@ subscriptions model =
                         Sub.none
 
                     Auto Normal ->
-                        Time.every 20 (\_ -> AutoStep)
+                        Time.every 20 (\_ -> AutoStepTriggered)
 
                     Auto Fast ->
-                        Time.every 0 (\_ -> AutoStep)
+                        Time.every 0 (\_ -> AutoStepTriggered)
 
         _ ->
             Sub.none
@@ -241,10 +241,10 @@ updateWhenEditing msg model =
 updateWhenSimulating : SimMsg -> StepMode -> Sim -> State
 updateWhenSimulating msg stepMode sim =
     case msg of
-        STOP ->
+        StopClicked ->
             Edit
 
-        StepOrPause ->
+        StepOrPauseClicked ->
             case stepMode of
                 Manual ->
                     step Manual sim
@@ -252,13 +252,13 @@ updateWhenSimulating msg stepMode sim =
                 Auto _ ->
                     SIM Manual sim
 
-        RUN ->
+        RunClicked ->
             SIM (Auto Normal) sim
 
-        FAST ->
+        RunFastClicked ->
             SIM (Auto Fast) sim
 
-        AutoStep ->
+        AutoStepTriggered ->
             case stepMode of
                 Auto Fast ->
                     autoStepFast stepMode sim
@@ -458,10 +458,10 @@ viewLeftBar { puzzle, state } =
 
         SIM _ sim ->
             LB.view
-                { stop = Just STOP
-                , step = Just StepOrPause
-                , run = Just RUN
-                , fast = Just FAST
+                { stop = Just StopClicked
+                , step = Just StepOrPauseClicked
+                , run = Just RunClicked
+                , fast = Just RunFastClicked
                 }
                 (SimStore.leftBarViewModel sim.store)
                 |> Html.map SimMsg
