@@ -211,51 +211,6 @@ update msg model =
                     { model | state = Edit Nothing }
 
 
-update1 : Msg -> Model -> Model
-update1 msg model =
-    case model.state of
-        Edit Nothing ->
-            case msg of
-                SimMsg _ ->
-                    model
-
-                DialogMsg _ ->
-                    model
-
-                EditMsg editMsg ->
-                    updateWhenEditing editMsg model
-
-        Edit (Just _) ->
-            Debug.todo "todo"
-
-        SIM Nothing stepMode sim ->
-            case msg of
-                EditMsg _ ->
-                    model
-
-                DialogMsg _ ->
-                    model
-
-                SimMsg simMsg ->
-                    updateWhenSimulating simMsg stepMode sim model
-
-        SIM (Just _) _ _ ->
-            Debug.todo "todo"
-
-        TestPassed _ ->
-            case msg of
-                EditMsg _ ->
-                    model
-
-                SimMsg _ ->
-                    model
-
-                DialogMsg dm ->
-                    case dm of
-                        OnContinueEditing ->
-                            { model | state = Edit Nothing }
-
-
 updateWhenEditing : EditMsg -> Model -> Model
 updateWhenEditing msg model =
     case msg of
