@@ -195,32 +195,7 @@ update msg model =
             Debug.todo "todo"
 
         Nothing ->
-            case msg of
-                SimMsg simMsg ->
-                    case model.state of
-                        SIM stepMode sim ->
-                            updateWhenSimulating simMsg stepMode sim model
-
-                        _ ->
-                            model
-
-                EditMsg editMsg ->
-                    case model.state of
-                        Edit ->
-                            updateWhenEditing editMsg model
-
-                        _ ->
-                            model
-
-                TestPassedMsg testPassedMsg ->
-                    case testPassedMsg of
-                        OnContinueEditing ->
-                            case model.state of
-                                TestPassed _ ->
-                                    { model | state = Edit }
-
-                                _ ->
-                                    model
+            updateHelp msg model
 
 
 updateHelp : Msg -> Model -> Model
