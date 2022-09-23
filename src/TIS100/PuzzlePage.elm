@@ -150,6 +150,11 @@ type Msg
     | OpenQuickRef
 
 
+type EditMsg
+    = StartDebugging StepMode
+    | OnEditorInput Addr String
+
+
 type SimMsg
     = STOP
     | STEP
@@ -157,11 +162,6 @@ type SimMsg
     | FAST
     | AutoStep
     | AutoStepFast
-
-
-type EditMsg
-    = StartDebugging StepMode
-    | OnEditorInput Addr String
 
 
 subscriptions : Model -> Sub Msg
