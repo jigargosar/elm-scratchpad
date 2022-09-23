@@ -196,32 +196,18 @@ update msg model =
 
 updateHelp : Msg -> Model -> Model
 updateHelp msg model =
-    case msg of
-        SimMsg simMsg ->
-            case model.state of
-                SIM stepMode sim ->
-                    updateWhenSimulating simMsg stepMode sim model
+    case ( msg, model.state ) of
+        ( SimMsg simMsg, SIM stepMode sim ) ->
+            updateWhenSimulating simMsg stepMode sim model
 
-                _ ->
-                    model
+        ( EditMsg editMsg, Edit ) ->
+            updateWhenEditing editMsg model
 
-        EditMsg editMsg ->
-            case model.state of
-                Edit ->
-                    updateWhenEditing editMsg model
+        ( TestPassedMsg OnContinueEditing, TestPassed _ ) ->
+            { model | state = Edit }
 
-                _ ->
-                    model
-
-        TestPassedMsg testPassedMsg ->
-            case testPassedMsg of
-                OnContinueEditing ->
-                    case model.state of
-                        TestPassed _ ->
-                            { model | state = Edit }
-
-                        _ ->
-                            model
+        _ ->
+            model
 
 
 updateWhenEditing : EditMsg -> Model -> Model
