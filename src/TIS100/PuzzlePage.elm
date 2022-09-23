@@ -291,13 +291,38 @@ viewDialog model =
             viewQuickRefDialog
 
         Dialog SystemDialog _ ->
-            Debug.todo "todo"
+            viewSystemDialog
 
         TestPassed _ ->
             viewTestPassedDialog
 
         _ ->
             noView
+
+
+viewSystemDialog : Html Msg
+viewSystemDialog =
+    div
+        [ positionAbsolute
+        , top0
+        , left0
+        , bottom0
+        , right0
+        , displayGrid
+        , placeContentCenter
+        , bgc (blackA 0.8)
+        ]
+        [ fCol
+            [ style "border" "solid white"
+            , style "border-width" "1.5ch 1ch"
+            , pa "2ch"
+            , gap "2ch"
+            , bgc black
+            ]
+            [ text "system dialog"
+            , btnAutoFocus "close" CloseDialog
+            ]
+        ]
 
 
 viewQuickRefDialog : Html Msg
@@ -319,12 +344,8 @@ viewQuickRefDialog =
             , gap "2ch"
             , bgc black
             ]
-            [ text "help"
-            , text "commands"
-            , text "a"
-            , text "b"
-            , text "c"
-            , btn "close" CloseDialog
+            [ text "quick ref"
+            , btnAutoFocus "close" CloseDialog
             ]
         ]
 
@@ -350,27 +371,39 @@ viewTestPassedDialog =
             ]
             [ div [ tac ] [ text "- signal comparator - Test Passed -" ]
             , fRow [ gap "2ch" ]
-                [ btn "continue editing this segment" CloseDialog
+                [ btnAutoFocus "continue editing this segment" CloseDialog
                 , btn "return to segment list" CloseDialog
                 ]
             ]
         ]
 
 
+btnAutoFocus : String -> msg -> Html msg
+btnAutoFocus =
+    btnHelp [ autofocus True ]
+
+
 btn : String -> msg -> Html msg
-btn txt msg =
+btn =
+    btnHelp []
+
+
+btnHelp : List (Attribute msg) -> String -> msg -> Html msg
+btnHelp attrs txt msg =
     button
-        [ UI.lightOutline
-        , bgc "inherit"
-        , fg "inherit"
-        , style "text-transform" "inherit"
-        , style "font" "inherit"
-        , borderNone
-        , displayGrid
-        , placeContentCenter
-        , pa "1ch"
-        , notifyClick msg
-        ]
+        ([ UI.lightOutline
+         , bgc "inherit"
+         , fg "inherit"
+         , style "text-transform" "inherit"
+         , style "font" "inherit"
+         , borderNone
+         , displayGrid
+         , placeContentCenter
+         , pa "1ch"
+         , notifyClick msg
+         ]
+            ++ attrs
+        )
         [ text txt ]
 
 
