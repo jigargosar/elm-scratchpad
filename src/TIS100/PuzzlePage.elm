@@ -142,6 +142,7 @@ type Msg
     | SimMsg SimMsg
     | TestPassedMsg TestPassedMsg
     | CloseDialog
+    | OpenQuickRef
 
 
 type SimMsg
@@ -189,7 +190,12 @@ update : Msg -> Model -> Model
 update msg model =
     case model.dialog of
         Just _ ->
-            { model | dialog = Nothing }
+            case msg of
+                CloseDialog ->
+                    { model | dialog = Nothing }
+
+                _ ->
+                    model
 
         Nothing ->
             updateHelp msg model
@@ -198,6 +204,9 @@ update msg model =
 updateHelp : Msg -> Model -> Model
 updateHelp msg model =
     case ( msg, model.state ) of
+        ( OpenQuickRef, _ ) ->
+            { model | dialog = Just QuickRefDialog }
+
         ( SimMsg simMsg, SIM stepMode sim ) ->
             updateWhenSimulating simMsg stepMode sim model
 
@@ -266,6 +275,7 @@ view model =
         , positionRelative
         ]
         [ viewCycle model
+        , button [ notifyClick CloseDialog ] [ text "quick ref" ]
         , fRow [ gap "2ch" ] [ viewLeftBar model, viewGrid model ]
         , viewDialog model
         ]
