@@ -295,7 +295,7 @@ viewDialog model =
             noView
 
 
-viewQuickRefDialog : Html Msg
+viewQuickRefDialog : Html msg
 viewQuickRefDialog =
     div
         [ positionAbsolute
