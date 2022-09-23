@@ -1,6 +1,7 @@
 module TIS100.Effect exposing (..)
 
-import Utils exposing (pairTo)
+import Html.Attributes as HA
+import Utils exposing (pair, pairTo, swap)
 
 
 type Effect
@@ -8,5 +9,21 @@ type Effect
     | None
 
 
-withoutEffect =
+withoutEff =
     pairTo None
+
+
+withEff eff =
+    pairTo eff
+
+
+autoFocus =
+    Focus autoFocusId
+
+
+autoFocusId =
+    "auto-focus"
+
+
+attrAutoFocusId =
+    HA.id autoFocusId

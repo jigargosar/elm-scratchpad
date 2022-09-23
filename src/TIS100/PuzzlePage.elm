@@ -11,7 +11,7 @@ import Dict exposing (Dict)
 import Html exposing (pre)
 import Html.Attributes as HA
 import TIS100.Addr as Addr exposing (Addr)
-import TIS100.Effect exposing (Effect, withoutEffect)
+import TIS100.Effect as Eff exposing (Effect, autoFocus, withEff, withoutEff)
 import TIS100.ExeNode as ExeNode exposing (ExeNode)
 import TIS100.Num as Num exposing (Num)
 import TIS100.Ports as Ports exposing (Action(..), Intent(..))
@@ -195,33 +195,33 @@ update msg model =
             case bg of
                 EditBG ->
                     { model | state = Edit }
-                        |> withoutEffect
+                        |> withoutEff
 
                 SIM_BG stepMode sim ->
                     { model | state = SIM stepMode sim }
-                        |> withoutEffect
+                        |> withoutEff
 
         ( CloseDialog, TestPassed _ ) ->
             { model | state = Edit }
-                |> withoutEffect
+                |> withoutEff
 
         ( Open dialog, Edit ) ->
             { model | state = Dialog dialog EditBG }
-                |> withoutEffect
+                |> withEff autoFocus
 
         ( Open dialog, SIM stepMode sim ) ->
             { model | state = Dialog dialog (SIM_BG stepMode sim) }
-                |> withoutEffect
+                |> withEff autoFocus
 
         ( EditMsg editMsg, Edit ) ->
-            updateWhenEditing editMsg model |> withoutEffect
+            updateWhenEditing editMsg model |> withoutEff
 
         ( SimMsg simMsg, SIM stepMode sim ) ->
             { model | state = updateWhenSimulating simMsg stepMode sim }
-                |> withoutEffect
+                |> withoutEff
 
         _ ->
-            withoutEffect model
+            withoutEff model
 
 
 updateWhenEditing : EditMsg -> Model -> Model
@@ -387,7 +387,7 @@ viewTestPassedDialog =
 
 btnAutoFocus : String -> msg -> Html msg
 btnAutoFocus =
-    btnHelp [ HA.id "auto-focus", autofocus True ]
+    btnHelp [ Eff.attrAutoFocusId, autofocus True ]
 
 
 btn : String -> msg -> Html msg
