@@ -189,7 +189,7 @@ type alias ExeDict =
 
 update : Msg -> Model -> Model
 update msg model =
-    case Debug.log "( msg, model.state )" ( msg, model.state ) of
+    case ( msg, model.state ) of
         ( CloseDialog, Dialog _ bg ) ->
             case bg of
                 EditBG ->
