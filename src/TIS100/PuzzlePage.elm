@@ -219,13 +219,16 @@ update msg model =
 
         TestPassed _ ->
             case msg of
+                EditMsg _ ->
+                    model
+
+                SimMsg _ ->
+                    model
+
                 DialogMsg dm ->
                     case dm of
                         OnContinue ->
                             { model | state = Edit Nothing }
-
-                _ ->
-                    model
 
 
 updateWhenEditing : EditMsg -> Model -> Model
