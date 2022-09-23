@@ -208,9 +208,14 @@ update msg model =
                     model
 
         DialogMsg dialogMsg ->
-            case dialogMsg of
-                OnContinueEditing ->
-                    { model | state = Edit }
+            case model.dialog of
+                Just dialog ->
+                    Debug.todo "todo"
+
+                Nothing ->
+                    case dialogMsg of
+                        OnContinueEditing ->
+                            { model | state = Edit }
 
 
 updateWhenEditing : EditMsg -> Model -> Model
