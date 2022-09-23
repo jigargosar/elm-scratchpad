@@ -246,7 +246,12 @@ updateWhenSimulating msg stepMode sim =
             Edit
 
         STEP ->
-            step Manual sim
+            case stepMode of
+                Manual ->
+                    step Manual sim
+
+                _ ->
+                    SIM Manual sim
 
         RUN ->
             SIM Auto sim
