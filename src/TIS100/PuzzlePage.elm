@@ -219,37 +219,6 @@ update msg model =
                     model
 
 
-updateWhenSimulating : Msg -> StepMode -> Sim -> Model -> Model
-updateWhenSimulating msg stepMode sim model =
-    case msg of
-        OnEditorInput _ _ ->
-            model
-
-        DialogMsg _ ->
-            model
-
-        EditMsg _ ->
-            model
-
-        STOP ->
-            { model | state = Edit Nothing }
-
-        STEP ->
-            { model | state = step Manual sim }
-
-        RUN ->
-            { model | state = SIM Nothing Auto sim }
-
-        FAST ->
-            { model | state = SIM Nothing AutoFast sim }
-
-        AutoStep ->
-            { model | state = step stepMode sim }
-
-        AutoStepFast ->
-            { model | state = autoStepFast stepMode sim }
-
-
 updateWhenEditing : Msg -> Model -> Model
 updateWhenEditing msg model =
     case msg of
@@ -296,6 +265,37 @@ updateWhenEditing msg model =
                 | editors =
                     replaceEntry ( addr, string ) model.editors
             }
+
+
+updateWhenSimulating : Msg -> StepMode -> Sim -> Model -> Model
+updateWhenSimulating msg stepMode sim model =
+    case msg of
+        OnEditorInput _ _ ->
+            model
+
+        DialogMsg _ ->
+            model
+
+        EditMsg _ ->
+            model
+
+        STOP ->
+            { model | state = Edit Nothing }
+
+        STEP ->
+            { model | state = step Manual sim }
+
+        RUN ->
+            { model | state = SIM Nothing Auto sim }
+
+        FAST ->
+            { model | state = SIM Nothing AutoFast sim }
+
+        AutoStep ->
+            { model | state = step stepMode sim }
+
+        AutoStepFast ->
+            { model | state = autoStepFast stepMode sim }
 
 
 leftBarViewModel : Model -> LB.ViewModel
