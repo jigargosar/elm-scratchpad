@@ -145,8 +145,8 @@ init puzzle sourceEntries =
 type Msg
     = EditMsg EditMsg
     | SimMsg SimMsg
-    | Open Dialog
-    | CloseDialog
+    | OpenDialogClicked Dialog
+    | CloseClicked
 
 
 type EditMsg
@@ -187,7 +187,7 @@ type alias ExeDict =
 update : Msg -> Model -> ( Model, Effect )
 update msg model =
     case ( msg, model.state ) of
-        ( CloseDialog, Dialog _ bg ) ->
+        ( CloseClicked, Dialog _ bg ) ->
             case bg of
                 EditBG ->
                     { model | state = Edit } |> withoutEff
@@ -195,14 +195,14 @@ update msg model =
                 SimBG stepMode sim ->
                     { model | state = SIM stepMode sim } |> withoutEff
 
-        ( CloseDialog, TestPassed _ ) ->
+        ( CloseClicked, TestPassed _ ) ->
             { model | state = Edit } |> withoutEff
 
-        ( Open dialog, Edit ) ->
+        ( OpenDialogClicked dialog, Edit ) ->
             { model | state = Dialog dialog EditBG }
                 |> withEff autoFocus
 
-        ( Open dialog, SIM stepMode sim ) ->
+        ( OpenDialogClicked dialog, SIM stepMode sim ) ->
             { model | state = Dialog dialog (SimBG stepMode sim) }
                 |> withEff autoFocus
 
@@ -286,8 +286,8 @@ view model =
         , positionRelative
         ]
         [ viewCycle model
-        , button [ notifyClick (Open QuickRefDialog) ] [ text "quick ref" ]
-        , button [ notifyClick (Open SystemDialog) ] [ text "system" ]
+        , button [ notifyClick (OpenDialogClicked QuickRefDialog) ] [ text "quick ref" ]
+        , button [ notifyClick (OpenDialogClicked SystemDialog) ] [ text "system" ]
         , fRow [ gap "2ch" ] [ viewLeftBar model, viewGrid model ]
         , viewDialog model
         ]
@@ -334,7 +334,7 @@ viewSystemDialog =
             , bgc black
             ]
             [ text "system dialog"
-            , btnAutoFocus "close" CloseDialog
+            , btnAutoFocus "close" CloseClicked
             ]
         ]
 
@@ -359,7 +359,7 @@ viewQuickRefDialog =
             , bgc black
             ]
             [ text "quick ref"
-            , btnAutoFocus "close" CloseDialog
+            , btnAutoFocus "close" CloseClicked
             ]
         ]
 
@@ -385,8 +385,8 @@ viewTestPassedDialog =
             ]
             [ div [ tac ] [ text "- signal comparator - Test Passed -" ]
             , fRow [ gap "2ch" ]
-                [ btnAutoFocus "continue editing this segment" CloseDialog
-                , btn "return to segment list" CloseDialog
+                [ btnAutoFocus "continue editing this segment" CloseClicked
+                , btn "return to segment list" CloseClicked
                 ]
             ]
         ]
