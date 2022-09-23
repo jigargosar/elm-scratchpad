@@ -200,7 +200,7 @@ update msg model =
                 EditMsg editMsg ->
                     updateWhenEditing editMsg model
 
-        Edit _ ->
+        Edit (Just _) ->
             Debug.todo "todo"
 
         SIM Nothing stepMode sim ->
@@ -214,7 +214,7 @@ update msg model =
                 SimMsg simMsg ->
                     updateWhenSimulating simMsg stepMode sim model
 
-        SIM _ _ _ ->
+        SIM (Just _) _ _ ->
             Debug.todo "todo"
 
         TestPassed _ ->
