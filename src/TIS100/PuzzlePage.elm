@@ -160,7 +160,7 @@ type EditMsg
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    case ( model.dialog, model.state ) of
+    case ( getDialog model, model.state ) of
         ( Nothing, SIM stepMode _ ) ->
             Sub.map SimMsg <|
                 case stepMode of
@@ -181,9 +181,19 @@ type alias ExeDict =
     Dict Addr ExeNode
 
 
+getDialog : Model -> Maybe Dialog
+getDialog model =
+    case model.state of
+        TestPassed _ ->
+            Just TestPassedDialog
+
+        _ ->
+            model.dialog
+
+
 update : Msg -> Model -> Model
 update msg model =
-    case model.dialog of
+    case getDialog model of
         Just _ ->
             case msg of
                 CloseDialog ->
@@ -278,7 +288,7 @@ type Dialog
 
 viewDialog : Model -> Html Msg
 viewDialog model =
-    case model.dialog of
+    case getDialog model of
         Just dialog ->
             case dialog of
                 SystemDialog ->
