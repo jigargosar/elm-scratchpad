@@ -147,7 +147,7 @@ type Msg
     = EditMsg EditMsg
     | SimMsg SimMsg
     | CloseDialog
-    | OpenQuickRef
+    | Open Dialog
 
 
 type EditMsg
@@ -201,11 +201,11 @@ update msg model =
         ( CloseDialog, TestPassed _ ) ->
             { model | state = Edit }
 
-        ( OpenQuickRef, Edit ) ->
-            { model | state = Dialog QuickRefDialog EditBG }
+        ( Open dialog, Edit ) ->
+            { model | state = Dialog dialog EditBG }
 
-        ( OpenQuickRef, SIM stepMode sim ) ->
-            { model | state = Dialog QuickRefDialog (SIM_BG stepMode sim) }
+        ( Open dialog, SIM stepMode sim ) ->
+            { model | state = Dialog dialog (SIM_BG stepMode sim) }
 
         ( EditMsg editMsg, Edit ) ->
             updateWhenEditing editMsg model
@@ -272,7 +272,7 @@ view model =
         , positionRelative
         ]
         [ viewCycle model
-        , button [ notifyClick OpenQuickRef ] [ text "quick ref" ]
+        , button [ notifyClick (Open QuickRefDialog) ] [ text "quick ref" ]
         , fRow [ gap "2ch" ] [ viewLeftBar model, viewGrid model ]
         , viewDialog model
         ]
