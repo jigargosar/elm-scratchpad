@@ -289,6 +289,9 @@ viewDialog model =
         Dialog QuickRefDialog _ ->
             viewQuickRefDialog
 
+        Dialog SystemDialog _ ->
+            Debug.todo "todo"
+
         TestPassed _ ->
             viewTestPassedDialog
 
