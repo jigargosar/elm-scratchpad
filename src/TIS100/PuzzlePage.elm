@@ -456,26 +456,32 @@ viewLeftBar { puzzle, state } =
     case state of
         Edit _ ->
             LB.view
-                { step = StartStepping
-                , stop = EditMsgNop
-                , run = StartRunning
-                , fast = StartRunningFast
+                { stop = Nothing
+                , step = Just StartStepping
+                , run = Just StartRunning
+                , fast = Just StartRunningFast
                 }
                 (Puzzle.leftBarViewModel puzzle)
                 |> Html.map EditMsg
 
         SIM _ _ sim ->
             LB.view
-                { step = STEP
-                , stop = STOP
-                , run = RUN
-                , fast = FAST
+                { stop = Just STOP
+                , step = Just STEP
+                , run = Just RUN
+                , fast = Just FAST
                 }
                 (SimStore.leftBarViewModel sim.store)
                 |> Html.map SimMsg
 
         TestPassed sim ->
-            Debug.todo "todo"
+            LB.view
+                { stop = Nothing
+                , step = Nothing
+                , run = Nothing
+                , fast = Nothing
+                }
+                (SimStore.leftBarViewModel sim.store)
 
 
 viewGrid : Model -> Html Msg

@@ -2550,6 +2550,16 @@ randomFloatT ( a, b ) =
 -- STYLE HELPERS
 
 
+maybeAttr : (a -> Attribute msg) -> Maybe a -> Attribute msg
+maybeAttr fn mb =
+    case mb of
+        Just x ->
+            fn x
+
+        Nothing ->
+            noAttr
+
+
 noAttr =
     style "" ""
 

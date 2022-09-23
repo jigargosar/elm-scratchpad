@@ -13,10 +13,10 @@ type alias ViewModel =
 
 
 type alias Config msg =
-    { stop : msg
-    , step : msg
-    , run : msg
-    , fast : msg
+    { stop : Maybe msg
+    , step : Maybe msg
+    , run : Maybe msg
+    , fast : Maybe msg
     }
 
 
@@ -43,7 +43,6 @@ view conf model =
         ]
 
 
-viewButtons : { a | stop : msg, step : msg, run : msg, fast : msg } -> Html msg
 viewButtons { stop, step, run, fast } =
     gtCols 4
         [ gap "2ch" ]
@@ -54,8 +53,8 @@ viewButtons { stop, step, run, fast } =
         ]
 
 
-btn : String -> msg -> Html msg
-btn txt msg =
+btn : String -> Maybe msg -> Html msg
+btn txt mbMsg =
     button
         [ UI.lightOutline
         , bgc "inherit"
@@ -66,7 +65,7 @@ btn txt msg =
         , displayGrid
         , placeContentCenter
         , aspectRatio "1"
-        , notifyClick msg
+        , maybeAttr notifyClick mbMsg
         ]
         [ text txt ]
 
