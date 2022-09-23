@@ -190,40 +190,40 @@ type alias ExeDict =
 
 update : Msg -> Model -> Model
 update msg model =
-    case msg of
-        SimMsg simMsg ->
-            case model.state of
-                SIM stepMode sim ->
-                    updateWhenSimulating simMsg stepMode sim model
+    case model.dialog of
+        Just _ ->
+            Debug.todo "todo"
 
-                _ ->
-                    model
+        Nothing ->
+            case msg of
+                SimMsg simMsg ->
+                    case model.state of
+                        SIM stepMode sim ->
+                            updateWhenSimulating simMsg stepMode sim model
 
-        EditMsg editMsg ->
-            case model.state of
-                Edit ->
-                    updateWhenEditing editMsg model
+                        _ ->
+                            model
 
-                _ ->
-                    model
+                EditMsg editMsg ->
+                    case model.state of
+                        Edit ->
+                            updateWhenEditing editMsg model
 
-        DialogMsg dialogMsg ->
-            case model.dialog of
-                Just _ ->
-                    Debug.todo "todo"
+                        _ ->
+                            model
 
-                Nothing ->
+                DialogMsg OnContinueEditing ->
                     case model.state of
                         TestPassed _ ->
-                            case dialogMsg of
-                                OnContinueEditing ->
-                                    { model | state = Edit }
+                            { model | state = Edit }
 
-                        Edit ->
+                        _ ->
                             model
 
-                        SIM _ _ ->
-                            model
+
+
+--DialogMsg _ ->
+--    model
 
 
 updateWhenEditing : EditMsg -> Model -> Model
