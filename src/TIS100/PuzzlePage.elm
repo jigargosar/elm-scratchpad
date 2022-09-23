@@ -137,9 +137,7 @@ init : Puzzle -> List ( Addr, String ) -> Model
 init puzzle sourceEntries =
     { puzzle = puzzle
     , dialog = Nothing
-    , editors =
-        initEditors puzzle
-            |> replaceEntries sourceEntries
+    , editors = initEditors puzzle |> replaceEntries sourceEntries
     , state = Edit
     }
 
