@@ -248,7 +248,12 @@ updateWhenEditing msg model =
             }
 
         StartDebugging stepMode ->
-            startDebugging stepMode model
+            case maybeMapValues Exe.compile model.editors of
+                Just exs ->
+                    { model | state = initSim model.puzzle exs stepMode }
+
+                Nothing ->
+                    model
 
 
 updateWhenSimulating : SimMsg -> StepMode -> Sim -> Model -> Model
