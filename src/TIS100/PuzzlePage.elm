@@ -169,13 +169,13 @@ subscriptions model =
         SIM stepMode _ ->
             Sub.map SimMsg <|
                 case stepMode of
-                    ManualStep ->
+                    Manual ->
                         Sub.none
 
-                    AutoStep Normal ->
+                    Auto Normal ->
                         Time.every 20 (\_ -> AutoStepTriggered)
 
-                    AutoStep Fast ->
+                    Auto Fast ->
                         Time.every 0 (\_ -> AutoStepTriggered)
 
         _ ->
@@ -245,21 +245,21 @@ updateWhenSimulating msg stepMode sim =
 
         StepOrPauseClicked ->
             case stepMode of
-                ManualStep ->
+                Manual ->
                     step sim |> stepResToState stepMode
 
-                AutoStep _ ->
-                    SIM ManualStep sim
+                Auto _ ->
+                    SIM Manual sim
 
         RunClicked speed ->
-            SIM (AutoStep speed) sim
+            SIM (Auto speed) sim
 
         AutoStepTriggered ->
             case stepMode of
-                ManualStep ->
+                Manual ->
                     SIM stepMode sim
 
-                AutoStep speed ->
+                Auto speed ->
                     autoStep speed sim |> stepResToState stepMode
 
 
@@ -452,9 +452,9 @@ viewLeftBar { puzzle, state } =
         Edit ->
             LB.view
                 { stop = Nothing
-                , step = Just (StartDebugging ManualStep)
-                , run = Just (StartDebugging (AutoStep Normal))
-                , fast = Just (StartDebugging (AutoStep Fast))
+                , step = Just (StartDebugging Manual)
+                , run = Just (StartDebugging (Auto Normal))
+                , fast = Just (StartDebugging (Auto Fast))
                 }
                 (Puzzle.leftBarViewModel puzzle)
                 |> Html.map EditMsg
@@ -779,8 +779,8 @@ type alias Sim =
 
 
 type StepMode
-    = ManualStep
-    | AutoStep Speed
+    = Manual
+    | Auto Speed
 
 
 type Speed
