@@ -223,11 +223,6 @@ update msg model =
                                     model
 
 
-
---DialogMsg _ ->
---    model
-
-
 updateWhenEditing : EditMsg -> Model -> Model
 updateWhenEditing msg model =
     case msg of
