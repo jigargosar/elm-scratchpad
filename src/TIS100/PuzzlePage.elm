@@ -124,6 +124,12 @@ type State
     = Edit
     | SIM StepMode Sim
     | TestPassed Sim
+    | Dialog Dialog DialogBG
+
+
+type DialogBG
+    = EditBG
+    | SIM_BG StepMode Sim
 
 
 init : Puzzle -> List ( Addr, String ) -> Model
@@ -183,7 +189,24 @@ type alias ExeDict =
 
 update : Msg -> Model -> Model
 update msg model =
-    case ( msg, model.state ) of
+    case Debug.log "( msg, model.state )" ( msg, model.state ) of
+        ( CloseDialog, Dialog _ bg ) ->
+            case bg of
+                EditBG ->
+                    { model | state = Edit }
+
+                SIM_BG stepMode sim ->
+                    { model | state = SIM stepMode sim }
+
+        ( CloseDialog, TestPassed _ ) ->
+            { model | state = Edit }
+
+        ( OpenQuickRef, Edit ) ->
+            { model | state = Dialog QuickRefDialog EditBG }
+
+        ( OpenQuickRef, SIM stepMode sim ) ->
+            { model | state = Dialog QuickRefDialog (SIM_BG stepMode sim) }
+
         ( EditMsg editMsg, Edit ) ->
             updateWhenEditing editMsg model
 
@@ -263,7 +286,10 @@ type Dialog
 viewDialog : Model -> Html Msg
 viewDialog model =
     case model.state of
-        TestPassed sim ->
+        Dialog QuickRefDialog _ ->
+            viewQuickRefDialog
+
+        TestPassed _ ->
             viewTestPassedDialog
 
         _ ->
@@ -357,6 +383,12 @@ viewCycle model =
 
                 TestPassed sim ->
                     fromInt sim.cycle
+
+                Dialog _ EditBG ->
+                    "NA"
+
+                Dialog _ (SIM_BG _ sim) ->
+                    fromInt sim.cycle
     in
     div [] [ text "Cycle: ", text cycleText ]
 
@@ -393,6 +425,26 @@ viewLeftBar { puzzle, state } =
                 }
                 (SimStore.leftBarViewModel sim.store)
 
+        Dialog _ bg ->
+            case bg of
+                EditBG ->
+                    LB.view
+                        { stop = Nothing
+                        , step = Nothing
+                        , run = Nothing
+                        , fast = Nothing
+                        }
+                        (Puzzle.leftBarViewModel puzzle)
+
+                SIM_BG _ sim ->
+                    LB.view
+                        { stop = Nothing
+                        , step = Nothing
+                        , run = Nothing
+                        , fast = Nothing
+                        }
+                        (SimStore.leftBarViewModel sim.store)
+
 
 viewGrid : Model -> Html Msg
 viewGrid { puzzle, state, editors } =
@@ -412,6 +464,12 @@ viewGrid { puzzle, state, editors } =
                 viewSimGridItems puzzle sim
 
             TestPassed sim ->
+                viewSimGridItems puzzle sim
+
+            Dialog _ EditBG ->
+                viewEditModeGridItems puzzle editors
+
+            Dialog _ (SIM_BG _ sim) ->
                 viewSimGridItems puzzle sim
         )
 
