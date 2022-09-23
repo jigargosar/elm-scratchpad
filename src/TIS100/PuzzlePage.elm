@@ -130,7 +130,7 @@ type State
 
 type DialogBG
     = EditBG
-    | Sim_BG StepMode Sim
+    | SimBG StepMode Sim
 
 
 init : Puzzle -> List ( Addr, String ) -> Model
@@ -197,7 +197,7 @@ update msg model =
                     { model | state = Edit }
                         |> withoutEff
 
-                Sim_BG stepMode sim ->
+                SimBG stepMode sim ->
                     { model | state = SIM stepMode sim }
                         |> withoutEff
 
@@ -210,7 +210,7 @@ update msg model =
                 |> withEff autoFocus
 
         ( Open dialog, SIM stepMode sim ) ->
-            { model | state = Dialog dialog (Sim_BG stepMode sim) }
+            { model | state = Dialog dialog (SimBG stepMode sim) }
                 |> withEff autoFocus
 
         ( EditMsg editMsg, Edit ) ->
@@ -431,7 +431,7 @@ viewCycle model =
                 Dialog _ EditBG ->
                     "NA"
 
-                Dialog _ (Sim_BG _ sim) ->
+                Dialog _ (SimBG _ sim) ->
                     fromInt sim.cycle
     in
     div [] [ text "Cycle: ", text cycleText ]
@@ -480,7 +480,7 @@ viewLeftBar { puzzle, state } =
                         }
                         (Puzzle.leftBarViewModel puzzle)
 
-                Sim_BG _ sim ->
+                SimBG _ sim ->
                     LB.view
                         { stop = Nothing
                         , step = Nothing
@@ -513,7 +513,7 @@ viewGrid { puzzle, state, editors } =
             Dialog _ EditBG ->
                 viewEditModeGridItems puzzle editors
 
-            Dialog _ (Sim_BG _ sim) ->
+            Dialog _ (SimBG _ sim) ->
                 viewSimGridItems puzzle sim
         )
 
