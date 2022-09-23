@@ -223,6 +223,7 @@ update msg model =
                                     model
 
 
+updateHelp : Msg -> Model -> Model
 updateHelp msg model =
     case msg of
         SimMsg simMsg ->
