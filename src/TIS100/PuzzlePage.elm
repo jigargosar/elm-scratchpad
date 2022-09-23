@@ -211,7 +211,7 @@ update msg model =
             updateWhenEditing editMsg model
 
         ( SimMsg simMsg, SIM stepMode sim ) ->
-            { model | state = updateWhenSimulatingHelp simMsg stepMode sim }
+            { model | state = updateWhenSimulating simMsg stepMode sim }
 
         _ ->
             model
@@ -235,8 +235,8 @@ updateWhenEditing msg model =
                     model
 
 
-updateWhenSimulatingHelp : SimMsg -> StepMode -> Sim -> State
-updateWhenSimulatingHelp msg stepMode sim =
+updateWhenSimulating : SimMsg -> StepMode -> Sim -> State
+updateWhenSimulating msg stepMode sim =
     case msg of
         STOP ->
             Edit
