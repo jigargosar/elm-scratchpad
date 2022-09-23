@@ -151,9 +151,7 @@ type SimMsg
 
 
 type EditMsg
-    = StartStepping
-    | StartRunning
-    | StartRunningFast
+    = StartDebugging StepMode
     | OnEditorInput Addr String
 
 
@@ -243,20 +241,14 @@ update msg model =
 updateWhenEditing : EditMsg -> Model -> Model
 updateWhenEditing msg model =
     case msg of
-        StartStepping ->
-            startDebugging Manual model
-
-        StartRunning ->
-            startDebugging Auto model
-
-        StartRunningFast ->
-            startDebugging AutoFast model
-
         OnEditorInput addr string ->
             { model
                 | editors =
                     replaceEntry ( addr, string ) model.editors
             }
+
+        StartDebugging stepMode ->
+            startDebugging stepMode model
 
 
 updateWhenSimulating : SimMsg -> StepMode -> Sim -> Model -> Model
@@ -426,9 +418,9 @@ viewLeftBar { puzzle, state } =
         Edit _ ->
             LB.view
                 { stop = Nothing
-                , step = Just StartStepping
-                , run = Just StartRunning
-                , fast = Just StartRunningFast
+                , step = Just (StartDebugging Manual)
+                , run = Just (StartDebugging Auto)
+                , fast = Just (StartDebugging AutoFast)
                 }
                 (Puzzle.leftBarViewModel puzzle)
                 |> Html.map EditMsg
