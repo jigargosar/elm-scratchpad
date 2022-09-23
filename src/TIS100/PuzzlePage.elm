@@ -155,7 +155,6 @@ type EditMsg
     | StartRunning
     | StartRunningFast
     | OnEditorInput2 Addr String
-    | EditMsgNop
 
 
 type DialogMsg
@@ -244,9 +243,6 @@ update msg model =
 updateWhenEditing : EditMsg -> Model -> Model
 updateWhenEditing msg model =
     case msg of
-        EditMsgNop ->
-            model
-
         StartStepping ->
             startDebugging Manual model
 
