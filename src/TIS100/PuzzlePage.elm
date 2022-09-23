@@ -269,7 +269,7 @@ stepResToState stepMode stepRes =
         Completed sim2 ->
             TestPassed sim2
 
-        Running sim2 ->
+        Pending sim2 ->
             SIM stepMode sim2
 
 
@@ -812,7 +812,7 @@ autoStepFast =
     let
         autoStepFastHelp n sim =
             case step sim of
-                Running sim2 ->
+                Pending sim2 ->
                     autoStepFastHelp (n - 1) sim2
 
                 Completed sim2 ->
@@ -823,7 +823,7 @@ autoStepFast =
 
 type StepRes
     = Completed Sim
-    | Running Sim
+    | Pending Sim
 
 
 step : Sim -> StepRes
@@ -832,7 +832,7 @@ step sim =
         Completed sim
 
     else
-        Running
+        Pending
             { sim
                 | store = SimStore.step sim.store
                 , cycle = sim.cycle + 1
