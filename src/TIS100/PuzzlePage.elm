@@ -162,7 +162,6 @@ type SimMsg
     | RUN
     | FAST
     | AutoStep
-    | AutoStepFast
 
 
 subscriptions : Model -> Sub Msg
@@ -178,7 +177,7 @@ subscriptions model =
                         Time.every 20 (\_ -> AutoStep)
 
                     Auto Fast ->
-                        Time.every 0 (\_ -> AutoStepFast)
+                        Time.every 0 (\_ -> AutoStep)
 
         _ ->
             Sub.none
@@ -260,10 +259,7 @@ updateWhenSimulating msg stepMode sim =
             SIM (Auto Fast) sim
 
         AutoStep ->
-            step stepMode sim
-
-        AutoStepFast ->
-            autoStepFast stepMode sim
+            autoStep stepMode sim
 
 
 view : Model -> Html Msg
@@ -788,6 +784,19 @@ initSim puzzle exd stepMode =
         { store = SimStore.init puzzle exd
         , cycle = 0
         }
+
+
+autoStep : StepMode -> Sim -> State
+autoStep stepMode =
+    case stepMode of
+        Auto Fast ->
+            autoStepFast stepMode
+
+        Auto Normal ->
+            step stepMode
+
+        Manual ->
+            SIM stepMode
 
 
 autoStepFast : StepMode -> Sim -> State
