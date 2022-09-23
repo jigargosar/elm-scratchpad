@@ -163,24 +163,20 @@ type TestPassedMsg
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    case model.state of
-        Edit ->
-            Sub.none
+    case ( model.dialog, model.state ) of
+        ( Nothing, SIM stepMode _ ) ->
+            Sub.map SimMsg <|
+                case stepMode of
+                    Manual ->
+                        Sub.none
 
-        SIM stepMode _ ->
-            (case stepMode of
-                Manual ->
-                    Sub.none
+                    Auto ->
+                        Time.every 20 (\_ -> AutoStep)
 
-                Auto ->
-                    Time.every 20 (\_ -> AutoStep)
+                    AutoFast ->
+                        Time.every 0 (\_ -> AutoStepFast)
 
-                AutoFast ->
-                    Time.every 0 (\_ -> AutoStepFast)
-            )
-                |> Sub.map SimMsg
-
-        TestPassed _ ->
+        _ ->
             Sub.none
 
 
