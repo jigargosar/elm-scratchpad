@@ -210,8 +210,8 @@ update msg model =
             updateWhenEditing editMsg model |> withoutEff
 
         ( SimMsg simMsg, SIM stepMode sim ) ->
-            { model | state = updateWhenSimulating simMsg stepMode sim }
-                |> withoutEff
+            updateWhenSimulating simMsg stepMode sim
+                |> mapFirst (\state -> { model | state = state })
 
         _ ->
             withoutEff model
@@ -235,40 +235,40 @@ updateWhenEditing msg model =
                     model
 
 
-updateWhenSimulating : SimMsg -> StepMode -> Sim -> State
+updateWhenSimulating : SimMsg -> StepMode -> Sim -> ( State, Effect )
 updateWhenSimulating msg stepMode sim =
     case msg of
         StopClicked ->
-            Edit
+            Edit |> withoutEff
 
         StepOrPauseClicked ->
             case stepMode of
                 Manual ->
-                    step sim |> stepResponseToState stepMode
+                    step sim |> updateOnStepResponse stepMode
 
                 Auto _ ->
-                    SIM Manual sim
+                    SIM Manual sim |> withoutEff
 
         RunClicked speed ->
-            SIM (Auto speed) sim
+            SIM (Auto speed) sim |> withoutEff
 
         AutoStepTriggered ->
             case stepMode of
                 Manual ->
-                    SIM stepMode sim
+                    SIM stepMode sim |> withoutEff
 
                 Auto speed ->
-                    autoStep speed sim |> stepResponseToState stepMode
+                    autoStep speed sim |> updateOnStepResponse stepMode
 
 
-stepResponseToState : StepMode -> StepResponse -> State
-stepResponseToState stepMode stepRes =
+updateOnStepResponse : StepMode -> StepResponse -> ( State, Effect )
+updateOnStepResponse stepMode stepRes =
     case stepRes of
         Completed sim2 ->
-            TestPassed sim2
+            TestPassed sim2 |> withEff autoFocus
 
         Pending sim2 ->
-            SIM stepMode sim2
+            SIM stepMode sim2 |> withoutEff
 
 
 view : Model -> Html Msg
