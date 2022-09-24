@@ -207,7 +207,10 @@ keyEventToMsgDecoder model ke =
                 JD.fail ""
 
         Edit ->
-            if
+            if matchesAlt [ "F1" ] ke then
+                JD.succeed (OpenDialogClicked QuickRefDialog)
+
+            else if
                 matchesNoModifiers [ "Escape" ] ke
                     || matchesAlt [ "`" ] ke
             then
