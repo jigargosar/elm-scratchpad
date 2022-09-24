@@ -182,49 +182,61 @@ subscriptions model =
         _ ->
             Sub.none
     , Browser.Events.onKeyDown
-        (keyEventDecoder
-            |> JD.andThen
-                (\ke ->
-                    let
-                        _ =
-                            Debug.log "Debug: " ke
-                    in
-                    case model.state of
-                        Dialog _ _ ->
-                            if matchesNoModifiers [ "Escape" ] ke then
-                                JD.succeed CloseClicked
-
-                            else
-                                JD.fail ""
-
-                        TestPassed _ ->
-                            if matchesNoModifiers [ "Escape" ] ke then
-                                JD.succeed CloseClicked
-
-                            else
-                                JD.fail ""
-
-                        Edit ->
-                            (if matchesCtrlAlt [ "w" ] ke then
-                                JD.succeed (StartDebugging Manual)
-
-                             else if matchesCtrlAlt [ "e" ] ke then
-                                JD.succeed (StartDebugging (Auto Normal))
-
-                             else if matchesCtrlAlt [ "r" ] ke then
-                                JD.succeed (StartDebugging (Auto Fast))
-
-                             else
-                                JD.fail ""
-                            )
-                                |> JD.map EditMsg
-
-                        _ ->
-                            JD.fail ""
-                )
-        )
+        (keyEventDecoder |> JD.andThen (keyEventToMsgDecoder model))
     ]
         |> Sub.batch
+
+
+keyEventToMsgDecoder : Model -> KeyEvent -> JD.Decoder Msg
+keyEventToMsgDecoder model ke =
+    let
+        _ =
+            Debug.log "Debug: " ke
+    in
+    case model.state of
+        Dialog _ _ ->
+            if matchesNoModifiers [ "Escape" ] ke then
+                JD.succeed CloseClicked
+
+            else
+                JD.fail ""
+
+        TestPassed _ ->
+            if matchesNoModifiers [ "Escape" ] ke then
+                JD.succeed CloseClicked
+
+            else
+                JD.fail ""
+
+        Edit ->
+            (if matchesCtrlAlt [ "w" ] ke then
+                JD.succeed (StartDebugging Manual)
+
+             else if matchesCtrlAlt [ "e" ] ke then
+                JD.succeed (StartDebugging (Auto Normal))
+
+             else if matchesCtrlAlt [ "r" ] ke then
+                JD.succeed (StartDebugging (Auto Fast))
+
+             else
+                JD.fail ""
+            )
+                |> JD.map EditMsg
+
+        SIM _ _ ->
+            (if matchesCtrlAlt [ "w" ] ke then
+                JD.succeed StepOrPauseClicked
+
+             else if matchesCtrlAlt [ "e" ] ke then
+                JD.succeed (RunClicked Normal)
+
+             else if matchesCtrlAlt [ "r" ] ke then
+                JD.succeed (RunClicked Fast)
+
+             else
+                JD.fail ""
+            )
+                |> JD.map SimMsg
 
 
 type alias ExeDict =
