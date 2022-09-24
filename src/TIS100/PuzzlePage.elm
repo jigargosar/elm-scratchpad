@@ -615,7 +615,7 @@ viewInputNode c =
         , positionRelative
         , style "bottom" UI.gapSize
         ]
-        [ div [ tac, fg UI.lightGray ]
+        [ div [ tac, UI.fgNormal ]
             [ div [] [ text <| Puzzle.inTitle c ]
             , div [] [ text "(IDLE 0%)" ]
             ]
@@ -633,7 +633,7 @@ viewOutputNode { x, title } =
         , positionRelative
         , top100
         ]
-        [ div [ tac, fg UI.lightGray ]
+        [ div [ tac, UI.fgNormal ]
             [ div [] [ text title ]
             ]
         ]
@@ -786,8 +786,8 @@ viewExeBox a b =
         , placeContentCenter
         , UI.outlineNormal
         ]
-        [ div [ fg UI.lightGray ] [ text a ]
-        , div [] [ text b ]
+        [ div [ UI.fgNormal ] [ text a ]
+        , div [ UI.fgBright ] [ text b ]
         ]
 
 
