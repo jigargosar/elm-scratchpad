@@ -27,8 +27,16 @@ coloredBorder c =
     style "border" ("1px solid " ++ c)
 
 
-lightBorder =
+coloredBorderThin c =
+    style "border" ("0.5px solid " ++ c)
+
+
+borderLight =
     coloredBorder lightGray
+
+
+borderLightThin =
+    coloredBorderThin lightGray
 
 
 errorBOrder =

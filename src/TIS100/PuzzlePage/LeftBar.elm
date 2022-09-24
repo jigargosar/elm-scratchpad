@@ -64,7 +64,7 @@ btn txt onClick =
 
         --, UI.lightOutline
         --, borderNone
-        , UI.lightBorder
+        , UI.borderLight
         , displayGrid
         , placeContentCenter
         , aspectRatio "1"

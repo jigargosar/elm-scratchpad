@@ -655,7 +655,7 @@ viewEditor addr editor =
     in
     div
         [ Addr.toGridArea addr
-        , UI.lightOutline
+        , UI.borderLightThin
         , displayGrid
         , gridTemplateColumns "18ch auto"
         , positionRelative
@@ -781,7 +781,7 @@ viewExeBox a b =
         [ displayGrid
         , tac
         , placeContentCenter
-        , UI.lightOutline
+        , UI.borderLightThin
         ]
         [ div [ fg UI.lightGray ] [ text a ]
         , div [] [ text b ]
