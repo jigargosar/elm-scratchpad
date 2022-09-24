@@ -155,6 +155,7 @@ leftBarViewModel puzzle simStore =
                         vm
             )
             { title = Puzzle.title puzzle
+            , description = Puzzle.description puzzle
             , inputs = []
             , outputs = []
             }

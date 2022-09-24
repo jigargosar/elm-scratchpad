@@ -2,6 +2,7 @@ module TIS100.Puzzle exposing
     ( InConfig
     , OutConfig
     , Puzzle
+    , description
     , getExeAddr
     , inNums
     , inTitle
@@ -157,6 +158,7 @@ toLayout lss =
 leftBarViewModel : Puzzle -> LB.ViewModel
 leftBarViewModel (Puzzle puzzle) =
     { title = puzzle.title
+    , description = puzzle.description
     , inputs = List.map toLBInput puzzle.inputs
     , outputs = List.map toLBOutput puzzle.outputs
     }
@@ -164,6 +166,10 @@ leftBarViewModel (Puzzle puzzle) =
 
 title (Puzzle puzzle) =
     puzzle.title
+
+
+description (Puzzle puzzle) =
+    puzzle.description
 
 
 toLBInput : InConfig -> LB.Input

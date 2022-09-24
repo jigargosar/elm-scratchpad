@@ -8,6 +8,7 @@ import Utils exposing (..)
 
 type alias ViewModel =
     { title : String
+    , description : List String
     , inputs : List Input
     , outputs : List Output
     }
