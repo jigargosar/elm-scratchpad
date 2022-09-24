@@ -163,7 +163,7 @@ type SimMsg
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    case model.state of
+    [ case model.state of
         SIM stepMode _ ->
             Sub.map SimMsg <|
                 case stepMode of
@@ -178,6 +178,8 @@ subscriptions model =
 
         _ ->
             Sub.none
+    ]
+        |> Sub.batch
 
 
 type alias ExeDict =
