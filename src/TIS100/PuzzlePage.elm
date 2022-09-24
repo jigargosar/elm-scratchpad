@@ -7,9 +7,11 @@ module TIS100.PuzzlePage exposing
     , view
     )
 
+import Browser.Events
 import Dict exposing (Dict)
 import Html exposing (pre)
 import Html.Attributes as HA
+import Json.Decode as JD
 import TIS100.Addr as Addr exposing (Addr)
 import TIS100.Effect as Eff exposing (Effect, autoFocus, withEff, withoutEff)
 import TIS100.ExeNode as ExeNode exposing (ExeNode)
@@ -147,6 +149,7 @@ type Msg
     | SimMsg SimMsg
     | OpenDialogClicked Dialog
     | CloseClicked
+    | OnKeyDown KeyEvent
 
 
 type EditMsg
@@ -178,6 +181,7 @@ subscriptions model =
 
         _ ->
             Sub.none
+    , Browser.Events.onKeyDown (JD.map OnKeyDown keyEventDecoder)
     ]
         |> Sub.batch
 
