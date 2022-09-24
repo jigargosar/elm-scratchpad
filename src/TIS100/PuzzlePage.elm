@@ -229,25 +229,29 @@ keyEventToMsgDecoder model ke =
                     |> JD.map EditMsg
 
         SIM _ _ ->
-            (if
-                matchesNoModifiers [ "Escape" ] ke
-                    || matchesAlt [ "`" ] ke
-             then
-                JD.succeed StopClicked
+            if matchesAlt [ "F1" ] ke then
+                JD.succeed (OpenDialogClicked QuickRefDialog)
 
-             else if matchesAlt [ "1" ] ke then
-                JD.succeed StepOrPauseClicked
+            else
+                (if
+                    matchesNoModifiers [ "Escape" ] ke
+                        || matchesAlt [ "`" ] ke
+                 then
+                    JD.succeed StopClicked
 
-             else if matchesAlt [ "2" ] ke then
-                JD.succeed (RunClicked Normal)
+                 else if matchesAlt [ "1" ] ke then
+                    JD.succeed StepOrPauseClicked
 
-             else if matchesAlt [ "3" ] ke then
-                JD.succeed (RunClicked Fast)
+                 else if matchesAlt [ "2" ] ke then
+                    JD.succeed (RunClicked Normal)
 
-             else
-                JD.fail ""
-            )
-                |> JD.map SimMsg
+                 else if matchesAlt [ "3" ] ke then
+                    JD.succeed (RunClicked Fast)
+
+                 else
+                    JD.fail ""
+                )
+                    |> JD.map SimMsg
 
 
 type alias ExeDict =
