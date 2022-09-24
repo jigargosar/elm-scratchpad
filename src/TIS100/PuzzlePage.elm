@@ -189,10 +189,6 @@ subscriptions model =
 
 keyEventToMsgDecoder : Model -> KeyEvent -> JD.Decoder Msg
 keyEventToMsgDecoder model ke =
-    let
-        _ =
-            Debug.log "Debug: " ke
-    in
     case model.state of
         Dialog _ _ ->
             if matchesNoModifiers [ "Escape" ] ke || matchesCtrlAlt [ "q" ] ke then
