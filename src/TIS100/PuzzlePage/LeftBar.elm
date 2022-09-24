@@ -57,11 +57,11 @@ viewButtons { stop, step, run, fast } =
 btn : String -> Maybe msg -> Html msg
 btn txt mbMsg =
     button
-        [ UI.lightOutline
-        , bgcInherit
+        [ bgcInherit
         , fgInherit
         , ttInherit
         , fontInherit
+        , UI.lightOutline
         , borderNone
         , displayGrid
         , placeContentCenter
