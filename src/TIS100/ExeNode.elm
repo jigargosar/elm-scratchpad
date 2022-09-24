@@ -3,6 +3,7 @@ module TIS100.ExeNode exposing
     , ViewModel
     , compile
     , empty
+    , instructionCount
     , intents
     , toState
     , viewModel
@@ -227,6 +228,18 @@ intents exe =
 
         Runnable _ nts _ ->
             nts
+
+
+instructionCount : ExeNode -> Int
+instructionCount exeNode =
+    case exeNode of
+        Runnable _ _ state ->
+            ctxFromState state
+                |> .prg
+                |> Prg.instructionCount
+
+        NotRunnable _ ->
+            0
 
 
 type alias ViewModel =

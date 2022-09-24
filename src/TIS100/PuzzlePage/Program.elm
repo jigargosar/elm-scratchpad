@@ -1,4 +1,14 @@
-module TIS100.PuzzlePage.Program exposing (Prg, PrgLine, allInst, fromList, inst, jumpTo, next, row)
+module TIS100.PuzzlePage.Program exposing
+    ( Prg
+    , PrgLine
+    , allInst
+    , fromList
+    , inst
+    , instructionCount
+    , jumpTo
+    , next
+    , row
+    )
 
 import Pivot exposing (Pivot)
 import Set exposing (Set)
@@ -74,3 +84,8 @@ row =
 allInst : Prg -> List Inst
 allInst (Prg prg) =
     Pivot.toList prg |> List.map .inst
+
+
+instructionCount : Prg -> Int
+instructionCount (Prg prg) =
+    Pivot.lengthA prg

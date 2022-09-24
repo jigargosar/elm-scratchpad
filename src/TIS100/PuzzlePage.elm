@@ -473,6 +473,10 @@ viewTestPassedDialog puzzle sim =
                 [ text "Cycle Count : "
                 , text (fromInt sim.cycle)
                 ]
+            , div [ tac ]
+                [ text "Instruction count: "
+                , text (fromInt (SimStore.instructionCount sim.store))
+                ]
             , fRow [ gap "2ch" ]
                 [ btnAutoFocus "continue editing this segment" CloseClicked
                 , btn "return to segment list" CloseClicked

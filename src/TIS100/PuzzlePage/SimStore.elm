@@ -2,6 +2,7 @@ module TIS100.PuzzlePage.SimStore exposing
     ( Model
     , Node(..)
     , init
+    , instructionCount
     , isCompleted
     , leftBarViewModel
     , portsViewModel
@@ -137,6 +138,21 @@ nodeActions node =
 
                 Idle ->
                     []
+
+
+instructionCount : Model -> Int
+instructionCount =
+    Dict.values
+        >> List.map
+            (\n ->
+                case n of
+                    EXE e ->
+                        ExeNode.instructionCount e
+
+                    _ ->
+                        0
+            )
+        >> List.sum
 
 
 leftBarViewModel : Puzzle -> Model -> LB.ViewModel
