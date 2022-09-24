@@ -5,6 +5,7 @@ module TIS100.UI exposing
     , fgNormal
     , gapSize
     , highlightError
+    , highlightNormal
     , lightGray
     , nodeSize
     , outlineError
@@ -93,3 +94,7 @@ fgError =
 highlightError : List (Attribute msg)
 highlightError =
     [ bgc errorRed, fg black ]
+
+
+highlightNormal =
+    [ bgc lightGray, fg black ]

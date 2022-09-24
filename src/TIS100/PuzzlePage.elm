@@ -756,7 +756,7 @@ viewSrcCodeWithSelection srcCode currentRow =
                     let
                         styles =
                             if Just (i + 1) == currentRow then
-                                [ fg black, bgc UI.lightGray ]
+                                UI.highlightNormal
 
                             else
                                 []
