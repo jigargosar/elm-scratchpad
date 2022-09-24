@@ -58,10 +58,10 @@ btn : String -> Maybe msg -> Html msg
 btn txt mbMsg =
     button
         [ UI.lightOutline
-        , bgc "inherit"
-        , fg "inherit"
-        , style "text-transform" "inherit"
-        , style "font" "inherit"
+        , bgcInherit
+        , fgInherit
+        , ttInherit
+        , fontInherit
         , borderNone
         , displayGrid
         , placeContentCenter
