@@ -363,7 +363,7 @@ view model =
         , positionRelative
         ]
         [ styleNode """
-:is(textarea, button):focus{
+:is(textarea, button, input):focus{
     outline: 1px auto white!important;
 }
 """
