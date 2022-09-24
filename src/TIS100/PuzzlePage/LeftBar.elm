@@ -1,6 +1,5 @@
 module TIS100.PuzzlePage.LeftBar exposing (..)
 
-import Html.Attributes exposing (accesskey)
 import TIS100.Num as Num exposing (Num)
 import TIS100.SelectionList as SelectionList exposing (SelectionList)
 import TIS100.UI as UI
@@ -8,7 +7,8 @@ import Utils exposing (..)
 
 
 type alias ViewModel =
-    { inputs : List Input
+    { title : String
+    , inputs : List Input
     , outputs : List Output
     }
 

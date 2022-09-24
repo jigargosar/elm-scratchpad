@@ -139,8 +139,8 @@ nodeActions node =
                     []
 
 
-leftBarViewModel : Model -> LB.ViewModel
-leftBarViewModel simStore =
+leftBarViewModel : Puzzle -> Model -> LB.ViewModel
+leftBarViewModel puzzle simStore =
     Dict.values simStore
         |> List.foldr
             (\n vm ->
@@ -154,7 +154,8 @@ leftBarViewModel simStore =
                     _ ->
                         vm
             )
-            { inputs = []
+            { title = Puzzle.title puzzle
+            , inputs = []
             , outputs = []
             }
 

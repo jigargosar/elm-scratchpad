@@ -544,7 +544,7 @@ viewLeftBar { puzzle, state } =
                 , run = Just (RunClicked Normal)
                 , fast = Just (RunClicked Fast)
                 }
-                (SimStore.leftBarViewModel sim.store)
+                (SimStore.leftBarViewModel puzzle sim.store)
                 |> Html.map SimMsg
 
         TestPassed sim ->
@@ -554,7 +554,7 @@ viewLeftBar { puzzle, state } =
                 , run = Nothing
                 , fast = Nothing
                 }
-                (SimStore.leftBarViewModel sim.store)
+                (SimStore.leftBarViewModel puzzle sim.store)
 
         Dialog _ bg ->
             case bg of
@@ -574,7 +574,7 @@ viewLeftBar { puzzle, state } =
                         , run = Nothing
                         , fast = Nothing
                         }
-                        (SimStore.leftBarViewModel sim.store)
+                        (SimStore.leftBarViewModel puzzle sim.store)
 
 
 viewGrid : Model -> Html Msg

@@ -9,19 +9,19 @@ module TIS100.Puzzle exposing
     , leftBarViewModel
     , samplePuzzle1
     , samplePuzzle2
+    , title
     , toDictBy
     , toListBy
     , validWrites
     )
 
 import Dict exposing (Dict)
-import List.Extra
 import Random
 import TIS100.Addr exposing (Addr)
 import TIS100.Num as Num exposing (Num)
 import TIS100.PuzzlePage.LeftBar as LB
 import TIS100.SelectionList as SelectionList
-import Utils as U exposing (Dir4(..), cons, pair, unzip3)
+import Utils as U exposing (Dir4(..), pair, unzip3)
 
 
 type Puzzle
@@ -156,9 +156,14 @@ toLayout lss =
 
 leftBarViewModel : Puzzle -> LB.ViewModel
 leftBarViewModel (Puzzle puzzle) =
-    { inputs = List.map toLBInput puzzle.inputs
+    { title = puzzle.title
+    , inputs = List.map toLBInput puzzle.inputs
     , outputs = List.map toLBOutput puzzle.outputs
     }
+
+
+title (Puzzle puzzle) =
+    puzzle.title
 
 
 toLBInput : InConfig -> LB.Input
@@ -257,8 +262,8 @@ inNums (InConfig { nums }) =
 
 
 inTitle : InConfig -> String
-inTitle (InConfig { title }) =
-    title
+inTitle (InConfig inConfig) =
+    inConfig.title
 
 
 inputAddr : InConfig -> Addr
