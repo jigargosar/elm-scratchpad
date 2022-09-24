@@ -190,7 +190,7 @@ keyEventToMsgDecoder : Model -> KeyEvent -> JD.Decoder Msg
 keyEventToMsgDecoder model ke =
     case model.state of
         Dialog _ _ ->
-            if matchesNoModifiers [ "Escape" ] ke || matchesCtrlAlt [ "q" ] ke then
+            if matchesNoModifiers [ "Escape" ] ke || matchesAlt [ "`" ] ke then
                 JD.succeed CloseClicked
 
             else
@@ -199,7 +199,7 @@ keyEventToMsgDecoder model ke =
         TestPassed _ ->
             if
                 matchesNoModifiers [ "Escape" ] ke
-                    || matchesCtrlAlt [ "q" ] ke
+                    || matchesAlt [ "`" ] ke
             then
                 JD.succeed CloseClicked
 
@@ -211,13 +211,13 @@ keyEventToMsgDecoder model ke =
                 JD.succeed (OpenDialogClicked SystemDialog)
 
             else
-                (if matchesCtrlAlt [ "w" ] ke then
+                (if matchesAlt [ "1" ] ke then
                     JD.succeed (StartDebugging Manual)
 
-                 else if matchesCtrlAlt [ "e" ] ke then
+                 else if matchesAlt [ "2" ] ke then
                     JD.succeed (StartDebugging (Auto Normal))
 
-                 else if matchesCtrlAlt [ "r" ] ke then
+                 else if matchesAlt [ "3" ] ke then
                     JD.succeed (StartDebugging (Auto Fast))
 
                  else
@@ -228,17 +228,17 @@ keyEventToMsgDecoder model ke =
         SIM _ _ ->
             (if
                 matchesNoModifiers [ "Escape" ] ke
-                    || matchesCtrlAlt [ "q" ] ke
+                    || matchesAlt [ "q" ] ke
              then
                 JD.succeed StopClicked
 
-             else if matchesCtrlAlt [ "w" ] ke then
+             else if matchesAlt [ "1" ] ke then
                 JD.succeed StepOrPauseClicked
 
-             else if matchesCtrlAlt [ "e" ] ke then
+             else if matchesAlt [ "2" ] ke then
                 JD.succeed (RunClicked Normal)
 
-             else if matchesCtrlAlt [ "r" ] ke then
+             else if matchesAlt [ "3" ] ke then
                 JD.succeed (RunClicked Fast)
 
              else
