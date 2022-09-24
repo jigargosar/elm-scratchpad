@@ -286,7 +286,7 @@ viewArrow dir4 val =
         , placeContentCenter
         , case val of
             Empty ->
-                UI.fgDark
+                UI.fgDull
 
             _ ->
                 UI.fgBright

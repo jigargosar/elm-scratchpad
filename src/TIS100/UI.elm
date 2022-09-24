@@ -1,6 +1,6 @@
 module TIS100.UI exposing
     ( fgBright
-    , fgDark
+    , fgDull
     , fgError
     , fgNormal
     , gapSize
@@ -77,8 +77,8 @@ fgBright =
     fg white
 
 
-fgDark : Attribute msg
-fgDark =
+fgDull : Attribute msg
+fgDull =
     fg darkGray
 
 
