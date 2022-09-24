@@ -1,7 +1,5 @@
 module TIS100.UI exposing (..)
 
--- UI HELPERS
-
 import Utils exposing (..)
 
 
@@ -23,6 +21,18 @@ lightOutline =
 
 errorOutline =
     coloredOutline errorRed
+
+
+coloredBorder c =
+    style "border" ("1px solid " ++ c)
+
+
+lightBorder =
+    coloredBorder lightGray
+
+
+errorBOrder =
+    coloredBorder errorRed
 
 
 gapSize =
