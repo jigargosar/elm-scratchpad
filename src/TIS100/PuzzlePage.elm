@@ -195,14 +195,17 @@ keyEventToMsgDecoder model ke =
     in
     case model.state of
         Dialog _ _ ->
-            if matchesNoModifiers [ "Escape" ] ke then
+            if matchesNoModifiers [ "Escape" ] ke || matchesCtrlAlt [ "q" ] ke then
                 JD.succeed CloseClicked
 
             else
                 JD.fail ""
 
         TestPassed _ ->
-            if matchesNoModifiers [ "Escape" ] ke then
+            if
+                matchesNoModifiers [ "Escape" ] ke
+                    || matchesCtrlAlt [ "q" ] ke
+            then
                 JD.succeed CloseClicked
 
             else
