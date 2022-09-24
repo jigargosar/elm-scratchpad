@@ -35,7 +35,7 @@ type alias Output =
 view : Config msg -> ViewModel -> Html msg
 view conf model =
     fCol [ sWidth "40ch", gap "2ch", UI.fgNormal ]
-        [ div [] [ viewTitle, viewDesc ]
+        [ div [] [ viewTitle model.title, viewDesc ]
         , fRow [ tac, gap "2ch" ]
             (List.map viewInputColumn model.inputs
                 ++ List.map viewOutputColumn model.outputs
@@ -71,9 +71,13 @@ btn txt onClick =
         [ text txt ]
 
 
-viewTitle : Html msg
-viewTitle =
-    div [ tac, styleLineHeight "2" ] [ text "-- Title --" ]
+viewTitle : String -> Html msg
+viewTitle title =
+    div [ tac, styleLineHeight "2" ]
+        [ text "-- "
+        , text title
+        , text " --"
+        ]
 
 
 viewDesc : Html msg
