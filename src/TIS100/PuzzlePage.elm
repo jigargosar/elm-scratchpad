@@ -207,19 +207,23 @@ keyEventToMsgDecoder model ke =
                 JD.fail ""
 
         Edit ->
-            (if matchesCtrlAlt [ "w" ] ke then
-                JD.succeed (StartDebugging Manual)
+            if matchesNoModifiers [ "Escape" ] ke then
+                JD.succeed (OpenDialogClicked SystemDialog)
 
-             else if matchesCtrlAlt [ "e" ] ke then
-                JD.succeed (StartDebugging (Auto Normal))
+            else
+                (if matchesCtrlAlt [ "w" ] ke then
+                    JD.succeed (StartDebugging Manual)
 
-             else if matchesCtrlAlt [ "r" ] ke then
-                JD.succeed (StartDebugging (Auto Fast))
+                 else if matchesCtrlAlt [ "e" ] ke then
+                    JD.succeed (StartDebugging (Auto Normal))
 
-             else
-                JD.fail ""
-            )
-                |> JD.map EditMsg
+                 else if matchesCtrlAlt [ "r" ] ke then
+                    JD.succeed (StartDebugging (Auto Fast))
+
+                 else
+                    JD.fail ""
+                )
+                    |> JD.map EditMsg
 
         SIM _ _ ->
             (if matchesCtrlAlt [ "q" ] ke then
