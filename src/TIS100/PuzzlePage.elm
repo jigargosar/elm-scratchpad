@@ -759,7 +759,7 @@ viewSrcCodeWithSelection srcCode currentRow =
                                 UI.highlightBright
 
                             else
-                                []
+                                [ UI.fgNormal ]
                     in
                     div (pl "0.5ch" :: styles) [ text (l ++ "\n") ]
                 )
