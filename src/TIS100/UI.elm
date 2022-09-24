@@ -57,3 +57,11 @@ errorRed =
 
 fgError =
     fg errorRed
+
+
+fgDim =
+    fg lightGray
+
+
+fgBright =
+    fg white

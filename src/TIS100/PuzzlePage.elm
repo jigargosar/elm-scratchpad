@@ -358,6 +358,7 @@ view model =
         , pa "2ch"
         , bold
         , ffMonospace
+        , UI.fgDim
         , gap "2ch"
         , ttu
         , positionRelative
@@ -783,8 +784,8 @@ viewExeBox a b =
         , placeContentCenter
         , UI.borderLightThin
         ]
-        [ div [ fg UI.lightGray ] [ text a ]
-        , div [] [ text b ]
+        [ div [] [ text a ]
+        , div [ UI.fgBright ] [ text b ]
         ]
 
 
