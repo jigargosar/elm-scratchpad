@@ -7,7 +7,6 @@ module TIS100.UI exposing
     , highlightBright
     , highlightError
     , highlightNormal
-    , lightGray
     , nodeSize
     , outlineError
     , outlineNormal
