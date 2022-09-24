@@ -364,7 +364,7 @@ view model =
         ]
         [ styleNode """
 :is(textarea, button, input):focus{
-    outline: 1px auto white!important;
+    outline:revert!important;
 }
 """
         , viewCycle model
