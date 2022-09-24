@@ -708,6 +708,7 @@ viewEditorTextArea onInputMsg editor =
         , onInput onInputMsg
         , UI.outlineNormal
         , pa "0.5ch"
+        , UI.fgNormal
 
         -- new
         , HA.spellcheck False

@@ -41,7 +41,7 @@ lightGray =
 
 
 white =
-    Utils.white
+    grayN 0.95
 
 
 black =
