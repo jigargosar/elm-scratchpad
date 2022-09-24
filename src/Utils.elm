@@ -2502,6 +2502,11 @@ notifyClick =
     Html.Events.onClick
 
 
+mbNotifyClick : Maybe msg -> Attribute msg
+mbNotifyClick =
+    maybeAttr notifyClick
+
+
 notifyPointerDown : msg -> Attribute msg
 notifyPointerDown msg =
     Html.Events.on "pointerdown" (JD.succeed msg)

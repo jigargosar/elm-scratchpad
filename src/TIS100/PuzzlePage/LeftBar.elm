@@ -55,7 +55,7 @@ viewButtons { stop, step, run, fast } =
 
 
 btn : String -> Maybe msg -> Html msg
-btn txt mbMsg =
+btn txt onClick =
     button
         [ bgcInherit
         , fgInherit
@@ -66,7 +66,7 @@ btn txt mbMsg =
         , displayGrid
         , placeContentCenter
         , aspectRatio "1"
-        , maybeAttr notifyClick mbMsg
+        , mbNotifyClick onClick
         ]
         [ text txt ]
 
