@@ -39,15 +39,15 @@ offWhite =
     grayN 0.7
 
 
-white =
+bright =
     grayN 0.95
 
 
-black =
+dark =
     Utils.black
 
 
-errorRed =
+error =
     "red"
 
 
@@ -60,7 +60,7 @@ outlineNormal =
 
 
 outlineError =
-    sOutline ("1px solid " ++ errorRed)
+    sOutline ("1px solid " ++ error)
 
 
 
@@ -74,7 +74,7 @@ fgNormal =
 
 fgBright : Attribute msg
 fgBright =
-    fg white
+    fg bright
 
 
 fgDark : Attribute msg
@@ -84,7 +84,7 @@ fgDark =
 
 fgError : Attribute msg
 fgError =
-    fg errorRed
+    fg error
 
 
 
@@ -93,12 +93,12 @@ fgError =
 
 highlightError : List (Attribute msg)
 highlightError =
-    [ bgc errorRed, fg black ]
+    [ bgc error, fg dark ]
 
 
 highlightNormal =
-    [ bgc offWhite, fg black ]
+    [ bgc offWhite, fg dark ]
 
 
 highlightBright =
-    [ bgc white, fg black ]
+    [ bgc bright, fg dark ]
