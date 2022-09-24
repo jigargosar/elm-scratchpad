@@ -36,7 +36,7 @@ type alias Output =
 view : Config msg -> ViewModel -> Html msg
 view conf model =
     fCol [ sWidth "40ch", gap "2ch", UI.fgNormal ]
-        [ div [] [ viewTitle model.title, viewDesc ]
+        [ div [] [ viewTitle model.title, viewDesc model.description ]
         , fRow [ tac, gap "2ch" ]
             (List.map viewInputColumn model.inputs
                 ++ List.map viewOutputColumn model.outputs
@@ -81,14 +81,22 @@ viewTitle title =
         ]
 
 
-viewDesc : Html msg
-viewDesc =
+viewDesc ls =
     fCol
         [ UI.outlineNormal
         , pa "0.5ch"
-        , placeContentCenter
         ]
-        (List.repeat 6 (div [] [ text "> desc" ]))
+        (ls
+            |> List.take 6
+            |> List.map viewDescLine
+        )
+
+
+viewDescLine l =
+    fRow []
+        [ div [] [ text ">", text nbsp ]
+        , div [] [ text l ]
+        ]
 
 
 viewInputColumn : Input -> Html msg
