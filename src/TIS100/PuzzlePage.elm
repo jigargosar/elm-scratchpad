@@ -207,7 +207,10 @@ keyEventToMsgDecoder model ke =
                 JD.fail ""
 
         Edit ->
-            if matchesNoModifiers [ "Escape" ] ke then
+            if
+                matchesNoModifiers [ "Escape" ] ke
+                    || matchesAlt [ "`" ] ke
+            then
                 JD.succeed (OpenDialogClicked SystemDialog)
 
             else
@@ -228,7 +231,7 @@ keyEventToMsgDecoder model ke =
         SIM _ _ ->
             (if
                 matchesNoModifiers [ "Escape" ] ke
-                    || matchesAlt [ "q" ] ke
+                    || matchesAlt [ "`" ] ke
              then
                 JD.succeed StopClicked
 
