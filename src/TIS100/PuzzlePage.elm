@@ -388,8 +388,8 @@ viewDialog model =
         Dialog SystemDialog _ ->
             viewSystemDialog
 
-        TestPassed _ ->
-            viewTestPassedDialog (Puzzle.title model.puzzle)
+        TestPassed sim ->
+            viewTestPassedDialog model.puzzle sim
 
         _ ->
             noView
@@ -445,8 +445,7 @@ viewQuickRefDialog =
         ]
 
 
-viewTestPassedDialog : String -> Html Msg
-viewTestPassedDialog title =
+viewTestPassedDialog puzzle sim =
     div
         [ positionAbsolute
         , top0
@@ -466,7 +465,7 @@ viewTestPassedDialog title =
             ]
             [ div [ tac ]
                 [ text "- "
-                , text title
+                , text (Puzzle.title puzzle)
                 , text " - Test Passed -"
                 ]
             , fRow [ gap "2ch" ]
