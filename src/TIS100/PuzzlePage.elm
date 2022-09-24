@@ -389,7 +389,7 @@ viewDialog model =
             viewSystemDialog
 
         TestPassed _ ->
-            viewTestPassedDialog
+            viewTestPassedDialog (Puzzle.title model.puzzle)
 
         _ ->
             noView
@@ -445,8 +445,8 @@ viewQuickRefDialog =
         ]
 
 
-viewTestPassedDialog : Html Msg
-viewTestPassedDialog =
+viewTestPassedDialog : String -> Html Msg
+viewTestPassedDialog title =
     div
         [ positionAbsolute
         , top0
@@ -464,7 +464,11 @@ viewTestPassedDialog =
             , gap "2ch"
             , bgc black
             ]
-            [ div [ tac ] [ text "- signal comparator - Test Passed -" ]
+            [ div [ tac ]
+                [ text "- "
+                , text title
+                , text " - Test Passed -"
+                ]
             , fRow [ gap "2ch" ]
                 [ btnAutoFocus "continue editing this segment" CloseClicked
                 , btn "return to segment list" CloseClicked
