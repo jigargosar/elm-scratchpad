@@ -1203,6 +1203,10 @@ tac =
     style "text-align" "center"
 
 
+tar =
+    style "text-align" "right"
+
+
 bold =
     fontWeight "bold"
 

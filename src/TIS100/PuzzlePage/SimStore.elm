@@ -2,14 +2,15 @@ module TIS100.PuzzlePage.SimStore exposing
     ( Model
     , Node(..)
     , init
-    , instructionCount
     , isCompleted
     , leftBarViewModel
     , portsViewModel
+    , stats
     , step
     )
 
 import Dict exposing (Dict)
+import List.Extra
 import TIS100.Addr exposing (Addr)
 import TIS100.ExeNode as ExeNode exposing (ExeNode)
 import TIS100.InNode as In exposing (InNode)
@@ -140,8 +141,8 @@ nodeActions node =
                     []
 
 
-instructionCount : Model -> Int
-instructionCount =
+stats : Model -> { instructionCount : Int, exeNodesUsed : Int }
+stats =
     Dict.values
         >> List.map
             (\n ->
@@ -152,7 +153,11 @@ instructionCount =
                     _ ->
                         0
             )
-        >> List.sum
+        >> (\ls ->
+                { instructionCount = List.sum ls
+                , exeNodesUsed = List.Extra.count (U.neq 0) ls
+                }
+           )
 
 
 leftBarViewModel : Puzzle -> Model -> LB.ViewModel

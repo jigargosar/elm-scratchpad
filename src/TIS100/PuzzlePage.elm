@@ -447,6 +447,10 @@ viewQuickRefDialog =
 
 viewTestPassedDialog : Puzzle -> Sim -> Html Msg
 viewTestPassedDialog puzzle sim =
+    let
+        stats =
+            SimStore.stats sim.store
+    in
     div
         [ positionAbsolute
         , top0
@@ -469,13 +473,18 @@ viewTestPassedDialog puzzle sim =
                 , text (Puzzle.title puzzle)
                 , text " - Test Passed -"
                 ]
-            , div [ tac ]
-                [ text "Cycle Count : "
-                , text (fromInt sim.cycle)
+            , div
+                [ gap "1ch"
+                , displayGrid
+                , placeContentCenter
+                , gridTemplateColumns "1fr 1fr"
                 ]
-            , div [ tac ]
-                [ text "Instruction count: "
-                , text (fromInt (SimStore.instructionCount sim.store))
+                [ div [ tar ] [ text "Cycles :" ]
+                , div [] [ text (fromInt sim.cycle) ]
+                , div [ tar ] [ text "Nodes :" ]
+                , div [] [ text (fromInt stats.exeNodesUsed) ]
+                , div [ tar ] [ text "instr :" ]
+                , div [] [ text (fromInt stats.instructionCount) ]
                 ]
             , fRow [ gap "2ch" ]
                 [ btnAutoFocus "continue editing this segment" CloseClicked
