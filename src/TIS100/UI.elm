@@ -31,23 +31,23 @@ nodeSize =
 -- COLORS
 
 
-gray =
+darkGray =
     grayN 0.5
 
 
-offWhite =
+lightGray =
     grayN 0.7
 
 
-bright =
+white =
     grayN 0.95
 
 
-dark =
+black =
     Utils.black
 
 
-error =
+errorRed =
     "red"
 
 
@@ -56,11 +56,11 @@ error =
 
 
 outlineNormal =
-    sOutline ("1px solid " ++ offWhite)
+    sOutline ("1px solid " ++ lightGray)
 
 
 outlineError =
-    sOutline ("1px solid " ++ error)
+    sOutline ("1px solid " ++ errorRed)
 
 
 
@@ -69,22 +69,22 @@ outlineError =
 
 fgNormal : Attribute msg
 fgNormal =
-    fg offWhite
+    fg lightGray
 
 
 fgBright : Attribute msg
 fgBright =
-    fg bright
+    fg white
 
 
 fgDark : Attribute msg
 fgDark =
-    fg gray
+    fg darkGray
 
 
 fgError : Attribute msg
 fgError =
-    fg error
+    fg errorRed
 
 
 
@@ -93,12 +93,12 @@ fgError =
 
 highlightError : List (Attribute msg)
 highlightError =
-    [ bgc error, fg dark ]
+    [ bgc errorRed, fg black ]
 
 
 highlightNormal =
-    [ bgc offWhite, fg dark ]
+    [ bgc lightGray, fg black ]
 
 
 highlightBright =
-    [ bgc bright, fg dark ]
+    [ bgc white, fg black ]
