@@ -280,20 +280,16 @@ viewValue val =
 
 
 viewArrow : Dir4 -> Value -> Html msg
-viewArrow dir4 pv =
-    let
-        color =
-            case pv of
-                Empty ->
-                    UI.darkGray
-
-                _ ->
-                    "inherit"
-    in
+viewArrow dir4 val =
     div
         [ displayGrid
         , placeContentCenter
-        , fg color
+        , case val of
+            Empty ->
+                UI.fgDark
+
+            _ ->
+                UI.fgBright
         , fontSize "2em"
         , fontWeight "100"
         ]
