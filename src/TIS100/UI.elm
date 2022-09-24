@@ -1,6 +1,5 @@
 module TIS100.UI exposing
     ( errorOutline
-    , errorRed
     , fgBright
     , fgDark
     , fgError
