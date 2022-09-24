@@ -219,19 +219,40 @@ type alias Modifiers =
     }
 
 
+noModifiers =
+    Modifiers False False False
+
+
+onlyCtrl =
+    Modifiers False True False
+
+
+onlyAlt =
+    Modifiers False False True
+
+
+onlyCtrlAlt =
+    Modifiers False True True
+
+
 matchesNoModifiers : List String -> KeyEvent -> Bool
 matchesNoModifiers keys e =
-    List.member e.key keys && (e.modifiers == Modifiers False False False)
+    List.member e.key keys && (e.modifiers == noModifiers)
 
 
 matchesCtrl : List String -> KeyEvent -> Bool
 matchesCtrl keys e =
-    List.member e.key keys && (e.modifiers == Modifiers False True False)
+    List.member e.key keys && (e.modifiers == onlyCtrl)
+
+
+matchesAlt : List String -> KeyEvent -> Bool
+matchesAlt keys e =
+    List.member e.key keys && (e.modifiers == onlyAlt)
 
 
 matchesCtrlAlt : List String -> KeyEvent -> Bool
 matchesCtrlAlt keys e =
-    List.member e.key keys && (e.modifiers == Modifiers False True True)
+    List.member e.key keys && (e.modifiers == onlyCtrlAlt)
 
 
 modifiersDecoder : Decoder Modifiers
