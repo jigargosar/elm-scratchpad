@@ -109,4 +109,4 @@ viewSelectionList =
 
 viewError : Num -> Html msg
 viewError num =
-    div [ fg wBlack, bgc UI.errorRed ] [ text (toString num) ]
+    div UI.highlightError [ text (toString num) ]
