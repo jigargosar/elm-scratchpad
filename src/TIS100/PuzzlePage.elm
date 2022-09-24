@@ -224,7 +224,10 @@ keyEventToMsgDecoder model ke =
                 |> JD.map EditMsg
 
         SIM _ _ ->
-            (if matchesCtrlAlt [ "w" ] ke then
+            (if matchesCtrlAlt [ "q" ] ke then
+                JD.succeed StopClicked
+
+             else if matchesCtrlAlt [ "w" ] ke then
                 JD.succeed StepOrPauseClicked
 
              else if matchesCtrlAlt [ "e" ] ke then
