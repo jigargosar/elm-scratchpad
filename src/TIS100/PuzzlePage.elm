@@ -480,7 +480,7 @@ btn =
 btnHelp : List (Attribute msg) -> String -> msg -> Html msg
 btnHelp attrs txt msg =
     button
-        ([ UI.lightOutline
+        ([ UI.outlineNormal
          , bgc "inherit"
          , fg "inherit"
          , style "text-transform" "inherit"
@@ -655,7 +655,7 @@ viewEditor addr editor =
     in
     div
         [ Addr.toGridArea addr
-        , UI.lightOutline
+        , UI.outlineNormal
         , displayGrid
         , gridTemplateColumns "18ch auto"
         , positionRelative
@@ -706,7 +706,7 @@ viewEditorTextArea onInputMsg editor =
 
         -- actual
         , onInput onInputMsg
-        , UI.lightOutline
+        , UI.outlineNormal
         , pa "0.5ch"
 
         -- new
@@ -738,7 +738,7 @@ viewExeNode : Addr -> ExeNode.ViewModel -> Html msg
 viewExeNode addr vm =
     div
         [ Addr.toGridArea addr
-        , UI.lightOutline
+        , UI.outlineNormal
         , displayGrid
         , gridTemplateColumns "18ch auto"
         ]
@@ -781,7 +781,7 @@ viewExeBox a b =
         [ displayGrid
         , tac
         , placeContentCenter
-        , UI.lightOutline
+        , UI.outlineNormal
         ]
         [ div [ fg UI.lightGray ] [ text a ]
         , div [] [ text b ]
@@ -794,7 +794,7 @@ viewFaultyNode addr =
         [ displayGrid
         , Addr.toGridArea addr
         , placeContentCenter
-        , UI.errorOutline
+        , UI.outlineError
         , UI.fgError
         ]
         [ text "ERROR" ]

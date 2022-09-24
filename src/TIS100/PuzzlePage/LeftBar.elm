@@ -61,7 +61,7 @@ btn txt onClick =
         , fgInherit
         , ttInherit
         , fontInherit
-        , UI.lightOutline
+        , UI.outlineNormal
         , borderNone
         , displayGrid
         , placeContentCenter
@@ -79,7 +79,7 @@ viewTitle =
 viewDesc : Html msg
 viewDesc =
     fCol
-        [ UI.lightOutline
+        [ UI.outlineNormal
         , pa "0.5ch"
         , placeContentCenter
         ]
@@ -119,7 +119,7 @@ viewOutputColumn { title, expected, actual } =
 viewNumColumn : List (Html msg) -> Html msg
 viewNumColumn numViews =
     div
-        [ UI.lightOutline
+        [ UI.outlineNormal
         , sWidth "4ch"
         , pa "0.5ch 0"
         , styleLineHeight "0.8"

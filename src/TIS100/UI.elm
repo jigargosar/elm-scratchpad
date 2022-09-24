@@ -1,14 +1,14 @@
 module TIS100.UI exposing
-    ( errorOutline
-    , fgBright
+    ( fgBright
     , fgDark
     , fgError
     , fgNormal
     , gapSize
     , highlightError
     , lightGray
-    , lightOutline
     , nodeSize
+    , outlineError
+    , outlineNormal
     )
 
 import Utils exposing (..)
@@ -54,11 +54,11 @@ errorRed =
 -- OUTLINE
 
 
-lightOutline =
+outlineNormal =
     sOutline ("1px solid " ++ lightGray)
 
 
-errorOutline =
+outlineError =
     sOutline ("1px solid " ++ errorRed)
 
 
