@@ -363,10 +363,10 @@ view model =
         , positionRelative
         ]
         [ styleNode """
-        textarea:focus{
-            outline: 1px auto white!important;
-        }
-        """
+textarea:focus{
+    outline: 1px auto white!important;
+}
+"""
         , viewCycle model
         , fRow [ gap "2ch" ] [ viewLeftBar model, viewGrid model ]
         , viewDialog model
