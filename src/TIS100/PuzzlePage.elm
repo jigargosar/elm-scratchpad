@@ -445,6 +445,7 @@ viewQuickRefDialog =
         ]
 
 
+viewTestPassedDialog : Puzzle -> Sim -> Html Msg
 viewTestPassedDialog puzzle sim =
     div
         [ positionAbsolute
@@ -467,6 +468,10 @@ viewTestPassedDialog puzzle sim =
                 [ text "- "
                 , text (Puzzle.title puzzle)
                 , text " - Test Passed -"
+                ]
+            , div [ tac ]
+                [ text "Cycle Count : "
+                , text (fromInt sim.cycle)
                 ]
             , fRow [ gap "2ch" ]
                 [ btnAutoFocus "continue editing this segment" CloseClicked
