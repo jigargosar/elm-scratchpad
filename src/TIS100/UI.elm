@@ -13,12 +13,16 @@ lightGray =
     grayN 0.7
 
 
+coloredOutline c =
+    sOutline ("1px solid " ++ c)
+
+
 lightOutline =
-    sOutline ("1px solid " ++ lightGray)
+    coloredOutline lightGray
 
 
 errorOutline =
-    sOutline ("1px solid " ++ errorRed)
+    coloredOutline errorRed
 
 
 gapSize =
