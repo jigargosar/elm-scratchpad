@@ -742,13 +742,13 @@ viewExeNode addr vm =
         , displayGrid
         , gridTemplateColumns "18ch auto"
         ]
-        [ viewSrc vm.srcCode vm.mbCurrentRow
+        [ viewSrcCodeWithSelection vm.srcCode vm.mbCurrentRow
         , viewExeBoxes vm
         ]
 
 
-viewSrc : String -> Maybe Int -> Html.Html msg
-viewSrc srcCode currentRow =
+viewSrcCodeWithSelection : String -> Maybe Int -> Html.Html msg
+viewSrcCodeWithSelection srcCode currentRow =
     Html.pre [ pa "0.5ch 0" ]
         (String.lines srcCode
             |> List.indexedMap
