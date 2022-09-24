@@ -706,7 +706,7 @@ viewEditorTextArea onInputMsg editor =
 
         -- actual
         , onInput onInputMsg
-        , UI.lightOutline
+        , UI.borderLightThin
         , pa "0.5ch"
 
         -- new
