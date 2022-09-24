@@ -149,7 +149,6 @@ type Msg
     | SimMsg SimMsg
     | OpenDialogClicked Dialog
     | CloseClicked
-    | OnKeyDown KeyEvent
 
 
 type EditMsg
