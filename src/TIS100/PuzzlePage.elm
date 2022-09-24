@@ -181,7 +181,33 @@ subscriptions model =
 
         _ ->
             Sub.none
-    , Browser.Events.onKeyDown (JD.map OnKeyDown keyEventDecoder)
+    , Browser.Events.onKeyDown
+        (keyEventDecoder
+            |> JD.andThen
+                (\ke ->
+                    let
+                        _ =
+                            Debug.log "Debug: " ke
+                    in
+                    case model.state of
+                        Dialog _ _ ->
+                            if matchesNoModifiers [ "Escape" ] ke then
+                                JD.succeed CloseClicked
+
+                            else
+                                JD.fail ""
+
+                        TestPassed _ ->
+                            if matchesNoModifiers [ "Escape" ] ke then
+                                JD.succeed CloseClicked
+
+                            else
+                                JD.fail ""
+
+                        _ ->
+                            JD.fail ""
+                )
+        )
     ]
         |> Sub.batch
 
