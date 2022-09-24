@@ -363,8 +363,6 @@ view model =
         , positionRelative
         ]
         [ viewCycle model
-        , button [ notifyClick (OpenDialogClicked QuickRefDialog) ] [ text "quick ref" ]
-        , button [ notifyClick (OpenDialogClicked SystemDialog) ] [ text "system" ]
         , fRow [ gap "2ch" ] [ viewLeftBar model, viewGrid model ]
         , viewDialog model
         ]
