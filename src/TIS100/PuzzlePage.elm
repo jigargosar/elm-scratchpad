@@ -2,6 +2,7 @@ module TIS100.PuzzlePage exposing
     ( Model
     , Msg
     , sampleModel
+    , sampleModel1
     , subscriptions
     , update
     , view

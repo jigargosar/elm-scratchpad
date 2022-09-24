@@ -82,14 +82,13 @@ viewTitle title =
 
 
 viewDesc ls =
-    fCol
-        [ UI.outlineNormal
-        , pa "0.5ch"
+    div [ UI.outlineNormal, pa "0.5ch" ]
+        [ fCol [ sHeight "6em" ]
+            (ls
+                |> List.take 6
+                |> List.map viewDescLine
+            )
         ]
-        (ls
-            |> List.take 6
-            |> List.map viewDescLine
-        )
 
 
 viewDescLine l =
