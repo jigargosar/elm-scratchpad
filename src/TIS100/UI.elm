@@ -4,6 +4,7 @@ module TIS100.UI exposing
     , fgError
     , fgNormal
     , gapSize
+    , highlightBright
     , highlightError
     , highlightNormal
     , lightGray
@@ -98,3 +99,7 @@ highlightError =
 
 highlightNormal =
     [ bgc lightGray, fg black ]
+
+
+highlightBright =
+    [ bgc white, fg black ]

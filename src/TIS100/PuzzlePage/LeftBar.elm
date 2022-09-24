@@ -34,7 +34,7 @@ type alias Output =
 
 view : Config msg -> ViewModel -> Html msg
 view conf model =
-    fCol [ sWidth "40ch", gap "2ch", fg UI.lightGray ]
+    fCol [ sWidth "40ch", gap "2ch", UI.fgNormal ]
         [ div [] [ viewTitle, viewDesc ]
         , fRow [ tac, gap "2ch" ]
             (List.map viewInputColumn model.inputs
