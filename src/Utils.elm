@@ -229,6 +229,11 @@ matchesCtrl keys e =
     List.member e.key keys && (e.modifiers == Modifiers False True False)
 
 
+matchesCtrlAlt : List String -> KeyEvent -> Bool
+matchesCtrlAlt keys e =
+    List.member e.key keys && (e.modifiers == Modifiers False True True)
+
+
 modifiersDecoder : Decoder Modifiers
 modifiersDecoder =
     let

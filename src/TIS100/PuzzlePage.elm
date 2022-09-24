@@ -204,6 +204,21 @@ subscriptions model =
                             else
                                 JD.fail ""
 
+                        Edit ->
+                            (if matchesCtrlAlt [ "w" ] ke then
+                                JD.succeed (StartDebugging Manual)
+
+                             else if matchesCtrlAlt [ "e" ] ke then
+                                JD.succeed (StartDebugging (Auto Normal))
+
+                             else if matchesCtrlAlt [ "r" ] ke then
+                                JD.succeed (StartDebugging (Auto Fast))
+
+                             else
+                                JD.fail ""
+                            )
+                                |> JD.map EditMsg
+
                         _ ->
                             JD.fail ""
                 )
