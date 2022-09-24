@@ -11,36 +11,12 @@ lightGray =
     grayN 0.7
 
 
-coloredOutline c =
-    sOutline ("1px solid " ++ c)
-
-
 lightOutline =
-    coloredOutline lightGray
+    sOutline ("1px solid " ++ lightGray)
 
 
 errorOutline =
-    coloredOutline errorRed
-
-
-coloredBorder c =
-    style "border" ("1px solid " ++ c)
-
-
-coloredBorderThin c =
-    style "border" ("0.5px solid " ++ c)
-
-
-borderLight =
-    coloredBorder lightGray
-
-
-borderLightThin =
-    coloredBorderThin lightGray
-
-
-errorBOrder =
-    coloredBorder errorRed
+    sOutline ("1px solid " ++ errorRed)
 
 
 gapSize =
@@ -57,11 +33,3 @@ errorRed =
 
 fgError =
     fg errorRed
-
-
-fgDim =
-    fg lightGray
-
-
-fgBright =
-    fg white

@@ -358,7 +358,6 @@ view model =
         , pa "2ch"
         , bold
         , ffMonospace
-        , UI.fgDim
         , gap "2ch"
         , ttu
         , positionRelative
@@ -656,7 +655,7 @@ viewEditor addr editor =
     in
     div
         [ Addr.toGridArea addr
-        , UI.borderLightThin
+        , UI.lightOutline
         , displayGrid
         , gridTemplateColumns "18ch auto"
         , positionRelative
@@ -707,7 +706,7 @@ viewEditorTextArea onInputMsg editor =
 
         -- actual
         , onInput onInputMsg
-        , UI.borderLightThin
+        , UI.lightOutline
         , pa "0.5ch"
 
         -- new
@@ -782,10 +781,10 @@ viewExeBox a b =
         [ displayGrid
         , tac
         , placeContentCenter
-        , UI.borderLightThin
+        , UI.lightOutline
         ]
-        [ div [] [ text a ]
-        , div [ UI.fgBright ] [ text b ]
+        [ div [ fg UI.lightGray ] [ text a ]
+        , div [] [ text b ]
         ]
 
 
