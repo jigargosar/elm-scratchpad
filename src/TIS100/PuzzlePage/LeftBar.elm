@@ -61,8 +61,10 @@ btn txt onClick =
         , fgInherit
         , ttInherit
         , fontInherit
-        , UI.lightOutline
-        , borderNone
+
+        --, UI.lightOutline
+        --, borderNone
+        , UI.lightBorder
         , displayGrid
         , placeContentCenter
         , aspectRatio "1"
