@@ -753,12 +753,15 @@ viewSrcCodeWithSelection srcCode currentRow =
         (String.lines srcCode
             |> List.indexedMap
                 (\i l ->
-                    if Just (i + 1) == currentRow then
-                        div [ pl "0.5ch", fg black, bgc UI.lightGray ]
-                            [ text (l ++ "\n") ]
+                    let
+                        styles =
+                            if Just (i + 1) == currentRow then
+                                [ fg black, bgc UI.lightGray ]
 
-                    else
-                        div [ pl "0.5ch" ] [ text (l ++ "\n") ]
+                            else
+                                []
+                    in
+                    div (pl "0.5ch" :: styles) [ text (l ++ "\n") ]
                 )
         )
 
