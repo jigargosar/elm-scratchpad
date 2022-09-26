@@ -83,7 +83,7 @@ sampleModel =
               )
             ]
     in
-    init Puzzle.samplePuzzle2 sourceEntries
+    init Puzzle.signalComparator sourceEntries
 
 
 

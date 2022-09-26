@@ -9,7 +9,7 @@ module TIS100.Puzzle exposing
     , inX
     , leftBarViewModel
     , samplePuzzle1
-    , samplePuzzle2
+    , signalComparator
     , title
     , toDictBy
     , toListBy
@@ -85,8 +85,8 @@ samplePuzzle1 =
         }
 
 
-samplePuzzle2 : Puzzle
-samplePuzzle2 =
+signalComparator : Puzzle
+signalComparator =
     let
         rIn =
             Random.int -2 2
