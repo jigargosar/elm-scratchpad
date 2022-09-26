@@ -1,8 +1,7 @@
 module TIS100 exposing (main)
 
 import Browser.Dom
-import Html exposing (node)
-import Html.Attributes exposing (attribute)
+import Html
 import TIS100.Effect as Eff exposing (Effect(..), withEff, withoutEff)
 import TIS100.PuzzlePage as PuzzlePage
 import Task
@@ -110,14 +109,15 @@ runEffect ( model, effect ) =
             ( model, Cmd.none )
 
         ReturnToSegmentList ->
-            { model | page = SegmentListPage }
-                |> withCmd autoFocusCmd
+            ( { model | page = SegmentListPage }, autoFocusCmd )
 
 
+autoFocusCmd : Cmd Msg
 autoFocusCmd =
     focusCmd Eff.autoFocusId
 
 
+focusCmd : String -> Cmd Msg
 focusCmd hid =
     Browser.Dom.focus hid |> Task.attempt OnFocus
 
