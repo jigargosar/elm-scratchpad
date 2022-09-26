@@ -436,8 +436,8 @@ viewSystemDialog =
             , bgc black
             ]
             [ text "system dialog"
-            , btn "return to segment list" ReturnToSegmentList
-            , btnAutoFocus "close" CloseClicked
+            , btnAutoFocus "return to segment list" ReturnToSegmentList
+            , btn "close" CloseClicked
             ]
         ]
 
@@ -509,8 +509,8 @@ viewTestPassedDialog puzzle sim =
                 , div [] [ text (fromInt stats.instructionCount) ]
                 ]
             , fRow [ gap "2ch" ]
-                [ btnAutoFocus "continue editing this segment" CloseClicked
-                , btn "return to segment list" ReturnToSegmentList
+                [ btn "continue editing this segment" CloseClicked
+                , btnAutoFocus "return to segment list" ReturnToSegmentList
                 ]
             ]
         ]

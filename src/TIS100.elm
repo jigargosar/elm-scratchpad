@@ -3,7 +3,7 @@ module TIS100 exposing (main)
 import Browser.Dom
 import Html exposing (node)
 import Html.Attributes exposing (attribute)
-import TIS100.Effect exposing (Effect(..))
+import TIS100.Effect as Eff exposing (Effect(..))
 import TIS100.PuzzlePage as PuzzlePage
 import Task
 import Utils exposing (..)
@@ -38,12 +38,11 @@ type alias Model =
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { page =
-            PuzzlePage PuzzlePage.signalComparatorModel
-                |> always SegmentListPage
-      }
-    , Cmd.none
-    )
+    { page =
+        PuzzlePage PuzzlePage.signalComparatorModel
+            |> always SegmentListPage
+    }
+        |> runEffect Eff.autoFocus
 
 
 type Msg
@@ -80,9 +79,8 @@ update msg model =
                     ( model, Cmd.none )
 
         GotoPuzzle ->
-            ( { model | page = PuzzlePage PuzzlePage.signalComparatorModel }
-            , Cmd.none
-            )
+            { model | page = PuzzlePage PuzzlePage.signalComparatorModel }
+                |> runEffect Eff.autoFocus
 
         OnFocus (Ok ()) ->
             ( model, Cmd.none )
@@ -105,7 +103,8 @@ runEffect effect model =
             ( model, Cmd.none )
 
         ReturnToSegmentList ->
-            ( { model | page = SegmentListPage }, Cmd.none )
+            { model | page = SegmentListPage }
+                |> runEffect Eff.autoFocus
 
 
 viewDocument : Model -> Document Msg
@@ -120,6 +119,10 @@ viewDocument model =
 
             SegmentListPage ->
                 div [ displayGrid, placeContentCenter ]
-                    [ button [ notifyClick GotoPuzzle ] [ text "go to puzzle" ]
+                    [ button
+                        [ Eff.attrAutoFocusId
+                        , notifyClick GotoPuzzle
+                        ]
+                        [ text "go to puzzle" ]
                     ]
         ]
