@@ -97,7 +97,7 @@ type NodeType
 samplePuzzle1 : Puzzle
 samplePuzzle1 =
     Puzzle
-        { title = "Sample Differential Converter"
+        { title = "T: Differential Converter"
         , id = Sample
         , description =
             [ "READ VALUES FROM IN.A AND IN.B"

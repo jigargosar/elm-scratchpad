@@ -117,12 +117,13 @@ highlightBright =
 btn : List (Attribute msg) -> Maybe msg -> String -> Html msg
 btn attrs mbMsg txt =
     button
-        ([ bgcInherit
+        ([ borderNone
+         , bgcInherit
          , fgInherit
-         , ttInherit
-         , fontInherit
+         , ttu
+         , bold
+         , ffMonospace
          , outlineNormal
-         , borderNone
          , displayGrid
          , placeContentCenter
          , mbNotifyClick mbMsg
