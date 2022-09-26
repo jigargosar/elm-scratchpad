@@ -2,6 +2,7 @@ module TIS100 exposing (main)
 
 import Browser.Dom
 import Html
+import List.Extra
 import TIS100.Addr exposing (Addr)
 import TIS100.Effect as Eff exposing (Effect(..), withEff, withoutEff)
 import TIS100.Puzzle as Puzzle
@@ -147,15 +148,35 @@ viewDocument model =
             SegmentListPage ->
                 div [ displayGrid, placeContentCenter ]
                     (Puzzle.allIds
-                        |> List.map segmentBtn
+                        |> listMapHeadAndRest segmentBtnAutoFocus segmentBtn
                     )
         ]
 
 
+listMapHeadAndRest : (a -> b) -> (a -> b) -> List a -> List b
+listMapHeadAndRest fh fr ls =
+    case ls of
+        [] ->
+            []
+
+        h :: r ->
+            fh h :: List.map fr r
+
+
+segmentBtnAutoFocus : Puzzle.Id -> Html Msg
+segmentBtnAutoFocus =
+    segmentBtnHelp [ Eff.attrAutoFocusId ]
+
+
 segmentBtn : Puzzle.Id -> Html Msg
-segmentBtn id =
+segmentBtn =
+    segmentBtnHelp []
+
+
+segmentBtnHelp : List (Attribute Msg) -> Puzzle.Id -> Html Msg
+segmentBtnHelp attrs id =
     button
-        [ Eff.attrAutoFocusId
-        , notifyClick (GotoPuzzle id)
-        ]
+        (notifyClick (GotoPuzzle id)
+            :: attrs
+        )
         [ text (Puzzle.titleFromId id) ]
