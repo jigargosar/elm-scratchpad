@@ -7,9 +7,16 @@
 </head>
 <body>
 <script type="module">
-  import {Elm} from "./TIS100.elm"
+  // noinspection ES6CheckImport
+  import {Elm} from './TIS100.elm'
 
-  Elm.TIS100.init()
+  // noinspection JSUnresolvedVariable
+  const app = Elm.TIS100.init()
+
+  // noinspection JSUnresolvedVariable
+  app.ports.toJSSave.subscribe((x) => {
+    console.log('saveCalled', x)
+  })
 </script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-module TIS100 exposing (main)
+port module TIS100 exposing (main)
 
 import Browser.Dom
 import Html
@@ -18,6 +18,9 @@ import Utils exposing (..)
 
 
 -}
+
+
+port toJSSave : () -> Cmd msg
 
 
 type alias Flags =
@@ -118,7 +121,7 @@ runEffect ( model, effect ) =
             ( model, autoFocusCmd )
 
         None ->
-            ( model, Cmd.none )
+            ( model, toJSSave () )
 
         ReturnToSegmentList ->
             ( { model | page = SegmentListPage }, autoFocusCmd )
