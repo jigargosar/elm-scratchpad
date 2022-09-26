@@ -41,15 +41,15 @@ type Page
 
 
 type alias Model =
-    { page : Page }
+    { page : Page
+    , saves : List ( Addr, String )
+    }
 
 
 init : () -> ( Model, Effect )
 init () =
-    { page =
-        PuzzlePage
-            initialPuzzlePage
-            |> always SegmentListPage
+    { page = SegmentListPage
+    , saves = signalComparatorSourceEntries
     }
         |> withEff Eff.autoFocus
 
@@ -104,10 +104,10 @@ signalComparatorSourceEntries =
     ]
 
 
-initialPuzzlePage =
+initPuzzlePage saves =
     PuzzlePage.init
         Puzzle.signalComparator
-        signalComparatorSourceEntries
+        saves
 
 
 type Msg
@@ -144,7 +144,7 @@ update msg model =
                     model |> withoutEff
 
         GotoPuzzle ->
-            { model | page = PuzzlePage initialPuzzlePage }
+            { model | page = PuzzlePage (initPuzzlePage model.saves) }
                 |> withoutEff
 
         OnFocus (Ok ()) ->
