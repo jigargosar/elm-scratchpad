@@ -80,7 +80,7 @@ update msg model =
 
         GotoPuzzle ->
             { model | page = PuzzlePage PuzzlePage.signalComparatorModel }
-                |> runEffect Eff.autoFocus
+                |> runEffect Eff.none
 
         OnFocus (Ok ()) ->
             ( model, Cmd.none )

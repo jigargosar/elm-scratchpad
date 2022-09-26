@@ -10,6 +10,10 @@ type Effect
     | None
 
 
+none =
+    None
+
+
 returnToSegmentList =
     ReturnToSegmentList
 
