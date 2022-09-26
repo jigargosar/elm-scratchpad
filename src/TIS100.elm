@@ -170,6 +170,9 @@ runEffect ( model, effect ) =
         ReturnToSegmentList ->
             ( { model | page = SegmentListPage }, autoFocusCmd )
 
+        SavePuzzleSrc puzzleSrc ->
+            ( { model | saves = puzzleSrc }, Cmd.none )
+
 
 autoFocusCmd : Cmd Msg
 autoFocusCmd =
