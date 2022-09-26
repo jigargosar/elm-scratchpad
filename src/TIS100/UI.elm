@@ -18,10 +18,12 @@ import Utils exposing (..)
 -- SIZES
 
 
+gapSize : String
 gapSize =
     "5ch"
 
 
+nodeSize : String
 nodeSize =
     "24ch"
 
@@ -30,22 +32,27 @@ nodeSize =
 -- COLORS
 
 
+darkGray : String
 darkGray =
     grayN 0.5
 
 
+lightGray : String
 lightGray =
     grayN 0.7
 
 
+white : String
 white =
     grayN 0.95
 
 
+black : String
 black =
     Utils.black
 
 
+errorRed : String
 errorRed =
     "red"
 
@@ -54,10 +61,12 @@ errorRed =
 -- OUTLINE
 
 
+outlineNormal : Attribute msg
 outlineNormal =
     sOutline ("1px solid " ++ lightGray)
 
 
+outlineError : Attribute msg
 outlineError =
     sOutline ("1px solid " ++ errorRed)
 
@@ -95,5 +104,6 @@ highlightError =
     [ bgc errorRed, fg black ]
 
 
+highlightBright : List (Attribute msg)
 highlightBright =
     [ bgc white, fg black ]
