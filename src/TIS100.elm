@@ -20,6 +20,11 @@ import Utils exposing (..)
 -}
 
 
+type alias Flags =
+    {}
+
+
+main : Program Flags Model Msg
 main =
     let
         init_ flags =
@@ -47,8 +52,8 @@ type alias Model =
     }
 
 
-init : () -> ( Model, Effect )
-init () =
+init : Flags -> ( Model, Effect )
+init _ =
     { page = SegmentListPage
     , saves = Saves.initial
     }
