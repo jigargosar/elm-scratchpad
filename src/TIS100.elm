@@ -50,62 +50,9 @@ type alias Model =
 init : () -> ( Model, Effect )
 init () =
     { page = SegmentListPage
-    , saves =
-        Saves.fromList
-            [ ( Puzzle.SignalComparator, signalComparatorSourceEntries )
-            ]
+    , saves = Saves.initial
     }
         |> withEff Eff.autoFocus
-
-
-signalComparatorSourceEntries : List ( Addr, String )
-signalComparatorSourceEntries =
-    [ ( ( 0, 1 ), "MOV UP DOWN" )
-    , ( ( 0, 2 ), "MOV UP DOWN" )
-    , ( ( 0, 3 ), "MOV UP right" )
-    , ( ( 1, 1 ), "" )
-    , ( ( 1, 2 ), "" )
-    , ( ( 1, 3 )
-      , [ "S: MOV LEFT ACC"
-        , "MOV ACC RIGHT"
-        , ""
-        , "JGZ 1"
-        , "MOV 0 DOWN"
-        , "JMP S"
-        , ""
-        , "1: MOV 1 DOWN"
-        ]
-            |> String.join "\n"
-      )
-    , ( ( 2, 1 ), "" )
-    , ( ( 2, 2 ), "" )
-    , ( ( 2, 3 )
-      , [ "S: MOV LEFT ACC"
-        , "MOV ACC RIGHT"
-        , ""
-        , "JEZ 1"
-        , "MOV 0 DOWN"
-        , "JMP S"
-        , ""
-        , "1: MOV 1 DOWN"
-        ]
-            |> String.join "\n"
-      )
-    , ( ( 3, 1 ), "" )
-    , ( ( 3, 2 ), "" )
-    , ( ( 3, 3 )
-      , [ "S: MOV LEFT ACC"
-        , "# MOV ACC RIGHT"
-        , ""
-        , "JLZ 1"
-        , "MOV 0 DOWN"
-        , "JMP S"
-        , ""
-        , "1: MOV 1 DOWN"
-        ]
-            |> String.join "\n"
-      )
-    ]
 
 
 type Msg
