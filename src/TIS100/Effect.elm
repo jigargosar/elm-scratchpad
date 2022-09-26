@@ -1,11 +1,11 @@
 module TIS100.Effect exposing (..)
 
 import Html.Attributes as HA
-import Utils exposing (pair, pairTo, swap)
+import Utils exposing (pairTo)
 
 
 type Effect
-    = Focus String
+    = AutoFocus
     | ReturnToSegmentList
     | None
 
@@ -27,7 +27,7 @@ withEff eff =
 
 
 autoFocus =
-    Focus autoFocusId
+    AutoFocus
 
 
 autoFocusId =

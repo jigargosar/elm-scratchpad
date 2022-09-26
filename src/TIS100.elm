@@ -103,8 +103,8 @@ update msg model =
 runEffect : ( Model, Effect ) -> ( Model, Cmd Msg )
 runEffect ( model, effect ) =
     case effect of
-        Focus hid ->
-            ( model, focusCmd hid )
+        AutoFocus ->
+            ( model, autoFocusCmd )
 
         None ->
             ( model, Cmd.none )
