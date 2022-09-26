@@ -14,7 +14,7 @@ import Html exposing (pre)
 import Html.Attributes as HA
 import Json.Decode as JD
 import TIS100.Addr as Addr exposing (Addr)
-import TIS100.Effect as Eff exposing (Effect, autoFocus, returnToSegmentList, withEff, withoutEff)
+import TIS100.Effect as Eff exposing (Effect, autoFocus, returnToSegmentList, save, withEff, withEffBy, withoutEff)
 import TIS100.ExeNode as ExeNode exposing (ExeNode)
 import TIS100.Num as Num exposing (Num)
 import TIS100.Ports as Ports exposing (Action(..), Intent(..))
@@ -242,7 +242,7 @@ update msg model =
         EditMsg editMsg ->
             case model.state of
                 Edit ->
-                    updateWhenEditing editMsg model |> withoutEff
+                    updateWhenEditing editMsg model
 
                 _ ->
                     model |> withoutEff
@@ -257,7 +257,7 @@ update msg model =
                     model |> withoutEff
 
 
-updateWhenEditing : EditMsg -> Model -> Model
+updateWhenEditing : EditMsg -> Model -> ( Model, Effect )
 updateWhenEditing msg model =
     case msg of
         OnEditorInput addr string ->
@@ -265,14 +265,16 @@ updateWhenEditing msg model =
                 | editors =
                     replaceEntry ( addr, string ) model.editors
             }
+                |> withEffBy (.editors >> Dict.toList >> save)
 
         StartDebugging stepMode ->
             case maybeTraverseValues ExeNode.compile model.editors of
                 Just exd ->
                     { model | state = initSim model.puzzle exd stepMode }
+                        |> withoutEff
 
                 Nothing ->
-                    model
+                    model |> withoutEff
 
 
 updateWhenSimulating : SimMsg -> StepMode -> Sim -> ( State, Effect )

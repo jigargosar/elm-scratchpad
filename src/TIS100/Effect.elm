@@ -12,6 +12,10 @@ type Effect
     | None
 
 
+save =
+    SavePuzzleSrc
+
+
 none =
     None
 
@@ -26,6 +30,10 @@ withoutEff =
 
 withEff eff =
     pairTo eff
+
+
+withEffBy fn m =
+    ( m, fn m )
 
 
 autoFocus =
