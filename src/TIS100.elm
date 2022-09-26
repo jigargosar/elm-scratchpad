@@ -203,9 +203,10 @@ viewDocument model =
         ]
 
 
+segmentBtn : Puzzle.Id -> Html Msg
 segmentBtn id =
     button
         [ Eff.attrAutoFocusId
         , notifyClick (GotoPuzzle id)
         ]
-        [ text "go to puzzle" ]
+        [ text (Puzzle.titleFromId id) ]

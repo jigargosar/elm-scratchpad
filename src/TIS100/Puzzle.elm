@@ -13,6 +13,7 @@ module TIS100.Puzzle exposing
     , leftBarViewModel
     , signalComparator
     , title
+    , titleFromId
     , toDictBy
     , toListBy
     , validWrites
@@ -41,6 +42,11 @@ fromId puzzleName =
 id : Puzzle -> Id
 id (Puzzle puzzle) =
     puzzle.id
+
+
+titleFromId : Id -> String
+titleFromId =
+    fromId >> title
 
 
 type Puzzle
