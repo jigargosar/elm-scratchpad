@@ -3,7 +3,7 @@ module TIS100 exposing (main)
 import Browser.Dom
 import Html exposing (node)
 import Html.Attributes exposing (attribute)
-import TIS100.Effect as Eff exposing (Effect(..))
+import TIS100.Effect as Eff exposing (Effect(..), withEff, withoutEff)
 import TIS100.PuzzlePage as PuzzlePage
 import Task
 import Utils exposing (..)
@@ -19,10 +19,17 @@ import Utils exposing (..)
 
 
 main =
+    let
+        init_ flags =
+            init flags |> runEffect
+
+        update_ msg model =
+            update msg model |> runEffect
+    in
     browserDocument
-        { init = init
+        { init = init_
         , subscriptions = subscriptions
-        , update = update
+        , update = update_
         , view = viewDocument
         }
 
@@ -36,13 +43,13 @@ type alias Model =
     { page : Page }
 
 
-init : () -> ( Model, Cmd Msg )
+init : () -> ( Model, Effect )
 init () =
     { page =
         PuzzlePage PuzzlePage.signalComparatorModel
             |> always SegmentListPage
     }
-        |> runEffect Eff.autoFocus
+        |> withEff Eff.autoFocus
 
 
 type Msg
@@ -62,7 +69,7 @@ subscriptions model =
             Sub.none
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
+update : Msg -> Model -> ( Model, Effect )
 update msg model =
     case msg of
         PuzzlePageMsg sm ->
@@ -73,28 +80,28 @@ update msg model =
                             PuzzlePage.update sm ppm
                     in
                     { model | page = PuzzlePage page }
-                        |> runEffect effect
+                        |> withEff effect
 
                 SegmentListPage ->
-                    ( model, Cmd.none )
+                    model |> withoutEff
 
         GotoPuzzle ->
             { model | page = PuzzlePage PuzzlePage.signalComparatorModel }
-                |> runEffect Eff.none
+                |> withoutEff
 
         OnFocus (Ok ()) ->
-            ( model, Cmd.none )
+            model |> withoutEff
 
         OnFocus (Err err) ->
             let
                 _ =
                     Debug.log "Focus Error: " err
             in
-            ( model, Cmd.none )
+            model |> withoutEff
 
 
-runEffect : Effect -> Model -> ( Model, Cmd Msg )
-runEffect effect model =
+runEffect : ( Model, Effect ) -> ( Model, Cmd Msg )
+runEffect ( model, effect ) =
     case effect of
         Focus hid ->
             ( model, Browser.Dom.focus hid |> Task.attempt OnFocus )
@@ -104,7 +111,8 @@ runEffect effect model =
 
         ReturnToSegmentList ->
             { model | page = SegmentListPage }
-                |> runEffect Eff.autoFocus
+                |> withEff Eff.autoFocus
+                |> runEffect
 
 
 viewDocument : Model -> Document Msg
