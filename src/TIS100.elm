@@ -1,10 +1,7 @@
 port module TIS100 exposing (main)
 
 import Browser.Dom
-import Dict exposing (Dict)
 import Html
-import Json.Decode exposing (Value)
-import Json.Encode as JE
 import TIS100.Addr exposing (Addr)
 import TIS100.Effect as Eff exposing (Effect(..), withEff, withoutEff)
 import TIS100.Puzzle as Puzzle
