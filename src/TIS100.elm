@@ -141,10 +141,10 @@ update msg model =
                 SegmentListPage ->
                     model |> withoutEff
 
-        GotoPuzzle name ->
+        GotoPuzzle id ->
             let
                 page =
-                    PuzzlePage.init name (Saves.get name model.saves)
+                    PuzzlePage.init id (Saves.get id model.saves)
             in
             { model | page = PuzzlePage page } |> withoutEff
 
@@ -171,8 +171,8 @@ runEffect ( model, effect ) =
         ReturnToSegmentList ->
             ( { model | page = SegmentListPage }, autoFocusCmd )
 
-        SavePuzzleSrc name puzzleSrc ->
-            ( { model | saves = Saves.set name puzzleSrc model.saves }
+        SavePuzzleSrc id puzzleSrc ->
+            ( { model | saves = Saves.set id puzzleSrc model.saves }
             , Cmd.none
             )
 
@@ -203,9 +203,9 @@ viewDocument model =
         ]
 
 
-segmentBtn name =
+segmentBtn id =
     button
         [ Eff.attrAutoFocusId
-        , notifyClick (GotoPuzzle name)
+        , notifyClick (GotoPuzzle id)
         ]
         [ text "go to puzzle" ]
