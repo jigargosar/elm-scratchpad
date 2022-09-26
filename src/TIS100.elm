@@ -107,7 +107,7 @@ signalComparatorSourceEntries =
 initialPuzzlePage =
     PuzzlePage.init
         Puzzle.signalComparator
-        PuzzlePage.signalComparatorSourceEntries
+        signalComparatorSourceEntries
 
 
 type Msg
