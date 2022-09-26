@@ -146,7 +146,9 @@ viewDocument model =
 
             SegmentListPage ->
                 div [ displayGrid, placeContentCenter ]
-                    [ segmentBtn Puzzle.SignalComparator ]
+                    (Puzzle.allIds
+                        |> List.map segmentBtn
+                    )
         ]
 
 

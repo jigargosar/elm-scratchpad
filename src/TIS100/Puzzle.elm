@@ -3,6 +3,7 @@ module TIS100.Puzzle exposing
     , InConfig
     , OutConfig
     , Puzzle
+    , allIds
     , description
     , fromId
     , getExeAddr
@@ -46,6 +47,11 @@ fromId puzzleName =
 id : Puzzle -> Id
 id (Puzzle puzzle) =
     puzzle.id
+
+
+allIds : List Id
+allIds =
+    [ Sample, SignalComparator ]
 
 
 titleFromId : Id -> String
