@@ -106,7 +106,7 @@ signalComparatorSourceEntries =
 
 type Msg
     = PuzzlePageMsg PuzzlePage.Msg
-    | GotoPuzzle
+    | GotoPuzzle Puzzle.Name
     | OnFocus (Result Browser.Dom.Error ())
 
 
@@ -137,11 +137,9 @@ update msg model =
                 SegmentListPage ->
                     model |> withoutEff
 
-        GotoPuzzle ->
+        GotoPuzzle name ->
             { model
-                | page =
-                    PuzzlePage
-                        (PuzzlePage.init Puzzle.SignalComparator model.saves)
+                | page = PuzzlePage (PuzzlePage.init name model.saves)
             }
                 |> withoutEff
 
@@ -194,10 +192,13 @@ viewDocument model =
 
             SegmentListPage ->
                 div [ displayGrid, placeContentCenter ]
-                    [ button
-                        [ Eff.attrAutoFocusId
-                        , notifyClick GotoPuzzle
-                        ]
-                        [ text "go to puzzle" ]
-                    ]
+                    [ segmentBtn Puzzle.SignalComparator ]
         ]
+
+
+segmentBtn name =
+    button
+        [ Eff.attrAutoFocusId
+        , notifyClick (GotoPuzzle name)
+        ]
+        [ text "go to puzzle" ]
