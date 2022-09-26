@@ -2478,6 +2478,17 @@ bDocument =
     Browser.document
 
 
+browserDocument :
+    { init : flags -> ( model, Cmd msg )
+    , view : model -> Document msg
+    , update : msg -> model -> ( model, Cmd msg )
+    , subscriptions : model -> Sub msg
+    }
+    -> Program flags model msg
+browserDocument =
+    bDocument
+
+
 browserApplication :
     { init : flags -> Url -> Key -> ( model, Cmd msg )
     , view : model -> Browser.Document msg

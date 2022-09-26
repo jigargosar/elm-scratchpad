@@ -19,7 +19,7 @@ import Utils exposing (..)
 
 
 main =
-    bDocument
+    browserApplication
         { init = init
         , subscriptions = subscriptions
         , update = update
