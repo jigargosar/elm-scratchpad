@@ -27,13 +27,23 @@ main =
         }
 
 
+type Page
+    = PuzzlePage PuzzlePage.Model
+    | SegmentListPage
+
+
 type alias Model =
-    { page : PuzzlePage.Model }
+    { page : Page }
 
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { page = PuzzlePage.signalComparatorModel }, Cmd.none )
+    ( { page =
+            PuzzlePage PuzzlePage.signalComparatorModel
+                |> always SegmentListPage
+      }
+    , Cmd.none
+    )
 
 
 type Msg
@@ -43,20 +53,30 @@ type Msg
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    PuzzlePage.subscriptions model.page
-        |> Sub.map PuzzlePageMsg
+    case model.page of
+        PuzzlePage ppm ->
+            PuzzlePage.subscriptions ppm
+                |> Sub.map PuzzlePageMsg
+
+        SegmentListPage ->
+            Sub.none
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         PuzzlePageMsg sm ->
-            let
-                ( page, effect ) =
-                    PuzzlePage.update sm model.page
-            in
-            { model | page = page }
-                |> runEffect effect
+            case model.page of
+                PuzzlePage ppm ->
+                    let
+                        ( page, effect ) =
+                            PuzzlePage.update sm ppm
+                    in
+                    { model | page = PuzzlePage page }
+                        |> runEffect effect
+
+                SegmentListPage ->
+                    ( model, Cmd.none )
 
         OnFocus (Ok ()) ->
             ( model, Cmd.none )
@@ -79,7 +99,7 @@ runEffect effect model =
             ( model, Cmd.none )
 
         ReturnToSegmentList ->
-            ( model, Cmd.none )
+            ( { model | page = SegmentListPage }, Cmd.none )
 
 
 viewDocument : Model -> Document Msg
@@ -88,5 +108,12 @@ viewDocument model =
         [ basicStylesNode
 
         --, node "SCRIPT" [ attribute "src" "https://livejs.com/live.js" ] []
-        , PuzzlePage.view model.page |> Html.map PuzzlePageMsg
+        , case model.page of
+            PuzzlePage page ->
+                PuzzlePage.view page |> Html.map PuzzlePageMsg
+
+            SegmentListPage ->
+                div [ displayGrid, placeContentCenter ]
+                    [ button [] [ text "go to puzzle" ]
+                    ]
         ]

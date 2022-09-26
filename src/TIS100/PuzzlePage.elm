@@ -265,39 +265,6 @@ type alias ExeDict =
 
 update : Msg -> Model -> ( Model, Effect )
 update msg model =
-    case ( msg, model.state ) of
-        ( CloseClicked, Dialog _ bg ) ->
-            case bg of
-                EditBG ->
-                    { model | state = Edit } |> withoutEff
-
-                SimBG stepMode sim ->
-                    { model | state = SIM stepMode sim } |> withoutEff
-
-        ( CloseClicked, TestPassed _ ) ->
-            { model | state = Edit } |> withoutEff
-
-        ( OpenDialogClicked dialog, Edit ) ->
-            { model | state = Dialog dialog EditBG }
-                |> withEff autoFocus
-
-        ( OpenDialogClicked dialog, SIM stepMode sim ) ->
-            { model | state = Dialog dialog (SimBG stepMode sim) }
-                |> withEff autoFocus
-
-        ( EditMsg editMsg, Edit ) ->
-            updateWhenEditing editMsg model |> withoutEff
-
-        ( SimMsg simMsg, SIM stepMode sim ) ->
-            updateWhenSimulating simMsg stepMode sim
-                |> mapFirst (\state -> { model | state = state })
-
-        _ ->
-            withoutEff model
-
-
-update2 : Msg -> Model -> ( Model, Effect )
-update2 msg model =
     case msg of
         CloseClicked ->
             case model.state of
