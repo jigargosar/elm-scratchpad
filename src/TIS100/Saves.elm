@@ -78,6 +78,9 @@ idToString name =
         Puzzle.SignalComparator ->
             "SignalComparator"
 
+        Puzzle.Sample ->
+            "Sample"
+
 
 set : Puzzle.Id -> List ( Addr, String ) -> Saves -> Saves
 set name srcEntries (Saves dict) =

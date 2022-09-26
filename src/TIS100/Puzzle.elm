@@ -30,6 +30,7 @@ import Utils as U exposing (Dir4(..), pair, unzip3)
 
 type Id
     = SignalComparator
+    | Sample
 
 
 fromId : Id -> Puzzle
@@ -37,6 +38,9 @@ fromId puzzleName =
     case puzzleName of
         SignalComparator ->
             signalComparator
+
+        Sample ->
+            samplePuzzle1
 
 
 id : Puzzle -> Id
@@ -84,31 +88,31 @@ type NodeType
     | Flt
 
 
-
---samplePuzzle1 : Puzzle
---samplePuzzle1 =
---    Puzzle
---        { title = "Differential Converter"
---        , description =
---            [ "READ VALUES FROM IN.A AND IN.B"
---            , "WRITE IN.A - IN.B TO OUT.P"
---            , "WRITE IN.B - IN.A TO OUT.N"
---            ]
---        , inputs =
---            [ InConfig { x = 0, title = "IN.A", nums = Num.range 1 20 }
---            , InConfig { x = 1, title = "IN.B", nums = Num.range 1 20 }
---            ]
---        , outputs =
---            [ { x = 0, title = "OUT.P", nums = Num.range 1 20 }
---            , { x = 1, title = "OUT.N", nums = Num.range 1 20 }
---            ]
---        , layout =
---            [ [ Exe, Exe, Exe, Exe ]
---            , [ Exe, Exe, Flt, Exe ]
---            , [ Exe, Exe, Exe, Exe ]
---            ]
---                |> toLayout
---        }
+samplePuzzle1 : Puzzle
+samplePuzzle1 =
+    Puzzle
+        { title = "Sample Differential Converter"
+        , id = Sample
+        , description =
+            [ "READ VALUES FROM IN.A AND IN.B"
+            , "WRITE IN.A - IN.B TO OUT.P"
+            , "WRITE IN.B - IN.A TO OUT.N"
+            ]
+        , inputs =
+            [ InConfig { x = 0, title = "IN.A", nums = Num.range 1 20 }
+            , InConfig { x = 1, title = "IN.B", nums = Num.range 1 20 }
+            ]
+        , outputs =
+            [ { x = 0, title = "OUT.P", nums = Num.range 1 20 }
+            , { x = 1, title = "OUT.N", nums = Num.range 1 20 }
+            ]
+        , layout =
+            [ [ Exe, Exe, Exe, Exe ]
+            , [ Exe, Exe, Flt, Exe ]
+            , [ Exe, Exe, Exe, Exe ]
+            ]
+                |> toLayout
+        }
 
 
 signalComparator : Puzzle
