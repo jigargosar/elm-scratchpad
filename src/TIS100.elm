@@ -2,8 +2,6 @@ module TIS100 exposing (main)
 
 import Browser.Dom
 import Html
-import List.Extra
-import TIS100.Addr exposing (Addr)
 import TIS100.Effect as Eff exposing (Effect(..), withEff, withoutEff)
 import TIS100.Puzzle as Puzzle
 import TIS100.PuzzlePage as PuzzlePage
