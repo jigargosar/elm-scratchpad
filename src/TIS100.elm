@@ -104,12 +104,6 @@ signalComparatorSourceEntries =
     ]
 
 
-initPuzzlePage saves =
-    PuzzlePage.init
-        Puzzle.signalComparator
-        saves
-
-
 type Msg
     = PuzzlePageMsg PuzzlePage.Msg
     | GotoPuzzle
@@ -144,7 +138,11 @@ update msg model =
                     model |> withoutEff
 
         GotoPuzzle ->
-            { model | page = PuzzlePage (initPuzzlePage model.saves) }
+            { model
+                | page =
+                    PuzzlePage
+                        (PuzzlePage.init Puzzle.SignalComparator model.saves)
+            }
                 |> withoutEff
 
         OnFocus (Ok ()) ->

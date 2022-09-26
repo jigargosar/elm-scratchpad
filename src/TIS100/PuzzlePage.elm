@@ -2,7 +2,6 @@ module TIS100.PuzzlePage exposing
     ( Model
     , Msg
     , init
-    , sampleModel1
     , subscriptions
     , update
     , view
@@ -28,32 +27,26 @@ import Utils exposing (..)
 
 
 
---noinspection ElmUnusedSymbol
-
-
-sampleModel1 : Model
-sampleModel1 =
-    let
-        sourceEntries : List ( Addr, String )
-        sourceEntries =
-            [ ( ( 0, 1 ), "mov up acc\n\n\nmov acc down" )
-            , ( ( 0, 2 ), "Mov up down\nmov 1 acc" )
-            , ( ( 0, 3 ), "Mov up down\nnop" )
-            , ( ( 1, 1 ), "Mov up down" )
-            , ( ( 1, 2 ), "Mov up down" )
-            , ( ( 1, 3 ), "Mov up down" )
-            , ( ( 2, 1 ), "lbl:Jmp lbl\n jmp : \na : Jmp : " )
-            , ( ( 2, 2 ), "Mov up down" )
-            , ( ( 2, 3 ), "Mov up down" )
-            , ( ( 3, 1 ), "Mov up down" )
-            , ( ( 3, 2 ), "Mov up down" )
-            , ( ( 3, 3 ), "Mov up down" )
-            ]
-    in
-    init Puzzle.samplePuzzle1 sourceEntries
-
-
-
+--sampleModel1 : Model
+--sampleModel1 =
+--let
+--    sourceEntries : List ( Addr, String )
+--    sourceEntries =
+--        [ ( ( 0, 1 ), "mov up acc\n\n\nmov acc down" )
+--        , ( ( 0, 2 ), "Mov up down\nmov 1 acc" )
+--        , ( ( 0, 3 ), "Mov up down\nnop" )
+--        , ( ( 1, 1 ), "Mov up down" )
+--        , ( ( 1, 2 ), "Mov up down" )
+--        , ( ( 1, 3 ), "Mov up down" )
+--        , ( ( 2, 1 ), "lbl:Jmp lbl\n jmp : \na : Jmp : " )
+--        , ( ( 2, 2 ), "Mov up down" )
+--        , ( ( 2, 3 ), "Mov up down" )
+--        , ( ( 3, 1 ), "Mov up down" )
+--        , ( ( 3, 2 ), "Mov up down" )
+--        , ( ( 3, 3 ), "Mov up down" )
+--        ]
+--in
+--init Puzzle.samplePuzzle1 sourceEntries
 -- MODEL
 
 
@@ -77,8 +70,13 @@ type DialogBG
     | SimBG StepMode Sim
 
 
-init : Puzzle -> List ( Addr, String ) -> Model
-init puzzle sourceEntries =
+init : Puzzle.Name -> List ( Addr, String ) -> Model
+init name =
+    initHelp (Puzzle.fromName name)
+
+
+initHelp : Puzzle -> List ( Addr, String ) -> Model
+initHelp puzzle sourceEntries =
     { puzzle = puzzle
     , dialog = Nothing
     , editors = initEditors puzzle |> replaceEntries sourceEntries

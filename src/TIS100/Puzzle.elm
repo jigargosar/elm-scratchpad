@@ -1,8 +1,10 @@
 module TIS100.Puzzle exposing
     ( InConfig
+    , Name(..)
     , OutConfig
     , Puzzle
     , description
+    , fromName
     , getExeAddr
     , inNums
     , inTitle
@@ -23,6 +25,17 @@ import TIS100.Num as Num exposing (Num)
 import TIS100.PuzzlePage.LeftBar as LB
 import TIS100.SelectionList as SelectionList
 import Utils as U exposing (Dir4(..), pair, unzip3)
+
+
+type Name
+    = SignalComparator
+
+
+fromName : Name -> Puzzle
+fromName puzzleName =
+    case puzzleName of
+        SignalComparator ->
+            signalComparator
 
 
 type Puzzle
