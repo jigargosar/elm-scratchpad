@@ -14,7 +14,25 @@ initial : Saves
 initial =
     fromList
         [ ( Puzzle.SignalComparator, signalComparatorSourceEntries )
+        , ( Puzzle.Sample, sampleSourceEntries )
         ]
+
+
+sampleSourceEntries : List ( Addr, String )
+sampleSourceEntries =
+    [ ( ( 0, 1 ), "mov up acc\n\n\nmov acc down" )
+    , ( ( 0, 2 ), "Mov up down\nmov 1 acc" )
+    , ( ( 0, 3 ), "Mov up down\nnop" )
+    , ( ( 1, 1 ), "Mov up down" )
+    , ( ( 1, 2 ), "Mov up down" )
+    , ( ( 1, 3 ), "Mov up down" )
+    , ( ( 2, 1 ), "lbl:Jmp lbl\n jmp : \na : Jmp : " )
+    , ( ( 2, 2 ), "Mov up down" )
+    , ( ( 2, 3 ), "Mov up down" )
+    , ( ( 3, 1 ), "Mov up down" )
+    , ( ( 3, 2 ), "Mov up down" )
+    , ( ( 3, 3 ), "Mov up down" )
+    ]
 
 
 signalComparatorSourceEntries : List ( Addr, String )
