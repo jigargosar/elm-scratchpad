@@ -70,9 +70,9 @@ type DialogBG
     | SimBG StepMode Sim
 
 
-init : Puzzle.Name -> List ( Addr, String ) -> Model
-init name =
-    initHelp (Puzzle.fromName name)
+init : Puzzle.Id -> List ( Addr, String ) -> Model
+init id =
+    initHelp (Puzzle.fromId id)
 
 
 initHelp : Puzzle -> List ( Addr, String ) -> Model
@@ -263,7 +263,11 @@ updateWhenEditing msg model =
                 | editors =
                     replaceEntry ( addr, string ) model.editors
             }
-                |> withEffBy (.editors >> Dict.toList >> save)
+                |> withEffBy
+                    (.editors
+                        >> Dict.toList
+                        >> save (Puzzle.id model.puzzle)
+                    )
 
         StartDebugging stepMode ->
             case maybeTraverseValues ExeNode.compile model.editors of

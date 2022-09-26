@@ -1,16 +1,16 @@
 module TIS100.Puzzle exposing
-    ( InConfig
-    , Name(..)
+    ( Id(..)
+    , InConfig
     , OutConfig
     , Puzzle
     , description
-    , fromName
+    , fromId
     , getExeAddr
+    , id
     , inNums
     , inTitle
     , inX
     , leftBarViewModel
-    , samplePuzzle1
     , signalComparator
     , title
     , toDictBy
@@ -27,20 +27,26 @@ import TIS100.SelectionList as SelectionList
 import Utils as U exposing (Dir4(..), pair, unzip3)
 
 
-type Name
+type Id
     = SignalComparator
 
 
-fromName : Name -> Puzzle
-fromName puzzleName =
+fromId : Id -> Puzzle
+fromId puzzleName =
     case puzzleName of
         SignalComparator ->
             signalComparator
 
 
+id : Puzzle -> Id
+id (Puzzle puzzle) =
+    puzzle.id
+
+
 type Puzzle
     = Puzzle
         { title : String
+        , id : Id
         , description : List String
         , inputs : List InConfig
         , outputs : List OutConfig
@@ -72,30 +78,31 @@ type NodeType
     | Flt
 
 
-samplePuzzle1 : Puzzle
-samplePuzzle1 =
-    Puzzle
-        { title = "Differential Converter"
-        , description =
-            [ "READ VALUES FROM IN.A AND IN.B"
-            , "WRITE IN.A - IN.B TO OUT.P"
-            , "WRITE IN.B - IN.A TO OUT.N"
-            ]
-        , inputs =
-            [ InConfig { x = 0, title = "IN.A", nums = Num.range 1 20 }
-            , InConfig { x = 1, title = "IN.B", nums = Num.range 1 20 }
-            ]
-        , outputs =
-            [ { x = 0, title = "OUT.P", nums = Num.range 1 20 }
-            , { x = 1, title = "OUT.N", nums = Num.range 1 20 }
-            ]
-        , layout =
-            [ [ Exe, Exe, Exe, Exe ]
-            , [ Exe, Exe, Flt, Exe ]
-            , [ Exe, Exe, Exe, Exe ]
-            ]
-                |> toLayout
-        }
+
+--samplePuzzle1 : Puzzle
+--samplePuzzle1 =
+--    Puzzle
+--        { title = "Differential Converter"
+--        , description =
+--            [ "READ VALUES FROM IN.A AND IN.B"
+--            , "WRITE IN.A - IN.B TO OUT.P"
+--            , "WRITE IN.B - IN.A TO OUT.N"
+--            ]
+--        , inputs =
+--            [ InConfig { x = 0, title = "IN.A", nums = Num.range 1 20 }
+--            , InConfig { x = 1, title = "IN.B", nums = Num.range 1 20 }
+--            ]
+--        , outputs =
+--            [ { x = 0, title = "OUT.P", nums = Num.range 1 20 }
+--            , { x = 1, title = "OUT.N", nums = Num.range 1 20 }
+--            ]
+--        , layout =
+--            [ [ Exe, Exe, Exe, Exe ]
+--            , [ Exe, Exe, Flt, Exe ]
+--            , [ Exe, Exe, Exe, Exe ]
+--            ]
+--                |> toLayout
+--        }
 
 
 signalComparator : Puzzle
@@ -130,6 +137,7 @@ signalComparator =
     in
     Puzzle
         { title = "signal comparator"
+        , id = SignalComparator
         , description =
             [ "READ VALUES FROM IN"
             , "WRITE 1 TO OUT.G IF IN > 0"

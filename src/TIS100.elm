@@ -6,6 +6,7 @@ import TIS100.Addr exposing (Addr)
 import TIS100.Effect as Eff exposing (Effect(..), withEff, withoutEff)
 import TIS100.Puzzle as Puzzle
 import TIS100.PuzzlePage as PuzzlePage
+import TIS100.Saves as Saves exposing (Saves)
 import Task
 import Utils exposing (..)
 
@@ -42,14 +43,17 @@ type Page
 
 type alias Model =
     { page : Page
-    , saves : List ( Addr, String )
+    , saves : Saves
     }
 
 
 init : () -> ( Model, Effect )
 init () =
     { page = SegmentListPage
-    , saves = signalComparatorSourceEntries
+    , saves =
+        Saves.fromList
+            [ ( Puzzle.SignalComparator, signalComparatorSourceEntries )
+            ]
     }
         |> withEff Eff.autoFocus
 
@@ -106,7 +110,7 @@ signalComparatorSourceEntries =
 
 type Msg
     = PuzzlePageMsg PuzzlePage.Msg
-    | GotoPuzzle Puzzle.Name
+    | GotoPuzzle Puzzle.Id
     | OnFocus (Result Browser.Dom.Error ())
 
 
@@ -138,10 +142,11 @@ update msg model =
                     model |> withoutEff
 
         GotoPuzzle name ->
-            { model
-                | page = PuzzlePage (PuzzlePage.init name model.saves)
-            }
-                |> withoutEff
+            let
+                page =
+                    PuzzlePage.init name (Saves.get name model.saves)
+            in
+            { model | page = PuzzlePage page } |> withoutEff
 
         OnFocus (Ok ()) ->
             model |> withoutEff
@@ -166,8 +171,10 @@ runEffect ( model, effect ) =
         ReturnToSegmentList ->
             ( { model | page = SegmentListPage }, autoFocusCmd )
 
-        SavePuzzleSrc puzzleSrc ->
-            ( { model | saves = puzzleSrc }, Cmd.none )
+        SavePuzzleSrc name puzzleSrc ->
+            ( { model | saves = Saves.set name puzzleSrc model.saves }
+            , Cmd.none
+            )
 
 
 autoFocusCmd : Cmd Msg
