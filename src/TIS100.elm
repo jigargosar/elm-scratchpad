@@ -1,7 +1,9 @@
 port module TIS100 exposing (main)
 
 import Browser.Dom
+import Dict exposing (Dict)
 import Html
+import Json.Decode exposing (Value)
 import TIS100.Effect as Eff exposing (Effect(..), withEff, withoutEff)
 import TIS100.Puzzle as Puzzle
 import TIS100.PuzzlePage as PuzzlePage
@@ -20,7 +22,7 @@ import Utils exposing (..)
 -}
 
 
-port toJSSave : () -> Cmd msg
+port toJSSave : List ( String, Value ) -> Cmd msg
 
 
 type alias Flags =
@@ -121,7 +123,7 @@ runEffect ( model, effect ) =
             ( model, autoFocusCmd )
 
         None ->
-            ( model, toJSSave () )
+            ( model, toJSSave [] )
 
         ReturnToSegmentList ->
             ( { model | page = SegmentListPage }, autoFocusCmd )
