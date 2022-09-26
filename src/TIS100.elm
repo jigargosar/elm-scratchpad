@@ -176,6 +176,6 @@ segmentBtn =
 
 segmentBtnHelp : List (Attribute Msg) -> Puzzle.Id -> Html Msg
 segmentBtnHelp attrs id =
-    UI.btn attrs
+    UI.btn (aspectRatio "1" :: attrs)
         (Just (GotoPuzzle id))
         (Puzzle.titleFromId id)
