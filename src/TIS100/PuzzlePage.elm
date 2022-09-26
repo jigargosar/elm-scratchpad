@@ -1,8 +1,8 @@
 module TIS100.PuzzlePage exposing
     ( Model
     , Msg
-    , sampleModel
     , sampleModel1
+    , signalComparatorModel
     , subscriptions
     , update
     , view
@@ -31,8 +31,8 @@ import Utils exposing (..)
 -- MAIN
 
 
-sampleModel : Model
-sampleModel =
+signalComparatorModel : Model
+signalComparatorModel =
     let
         sourceEntries : List ( Addr, String )
         sourceEntries =

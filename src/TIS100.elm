@@ -33,7 +33,7 @@ type alias Model =
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    ( { page = PuzzlePage.sampleModel }, Cmd.none )
+    ( { page = PuzzlePage.signalComparatorModel }, Cmd.none )
 
 
 type Msg
