@@ -55,7 +55,8 @@ update msg model =
                 ( page, effect ) =
                     PuzzlePage.update sm model.page
             in
-            ( { model | page = page }, runEffect effect )
+            { model | page = page }
+                |> runEffect effect
 
         OnFocus (Ok ()) ->
             ( model, Cmd.none )
@@ -68,14 +69,17 @@ update msg model =
             ( model, Cmd.none )
 
 
-runEffect : Effect -> Cmd Msg
-runEffect effect =
+runEffect : Effect -> Model -> ( Model, Cmd Msg )
+runEffect effect model =
     case effect of
         Focus hid ->
-            Browser.Dom.focus hid |> Task.attempt OnFocus
+            ( model, Browser.Dom.focus hid |> Task.attempt OnFocus )
 
         None ->
-            Cmd.none
+            ( model, Cmd.none )
+
+        ReturnToSegmentList ->
+            ( model, Cmd.none )
 
 
 viewDocument : Model -> Document Msg

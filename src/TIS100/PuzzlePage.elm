@@ -14,7 +14,7 @@ import Html exposing (pre)
 import Html.Attributes as HA
 import Json.Decode as JD
 import TIS100.Addr as Addr exposing (Addr)
-import TIS100.Effect as Eff exposing (Effect, autoFocus, withEff, withoutEff)
+import TIS100.Effect as Eff exposing (Effect, autoFocus, returnToSegmentList, withEff, withoutEff)
 import TIS100.ExeNode as ExeNode exposing (ExeNode)
 import TIS100.Num as Num exposing (Num)
 import TIS100.Ports as Ports exposing (Action(..), Intent(..))
@@ -150,6 +150,7 @@ type Msg
     | SimMsg SimMsg
     | OpenDialogClicked Dialog
     | CloseClicked
+    | ReturnToSegmentList
 
 
 type EditMsg
@@ -295,6 +296,59 @@ update msg model =
             withoutEff model
 
 
+update2 : Msg -> Model -> ( Model, Effect )
+update2 msg model =
+    case msg of
+        CloseClicked ->
+            case model.state of
+                TestPassed _ ->
+                    { model | state = Edit } |> withoutEff
+
+                Dialog _ dialogBG ->
+                    case dialogBG of
+                        EditBG ->
+                            { model | state = Edit } |> withoutEff
+
+                        SimBG stepMode sim ->
+                            { model | state = SIM stepMode sim } |> withoutEff
+
+                _ ->
+                    model |> withoutEff
+
+        OpenDialogClicked dialog ->
+            case model.state of
+                Edit ->
+                    { model | state = Dialog dialog EditBG }
+                        |> withEff autoFocus
+
+                SIM stepMode sim ->
+                    { model | state = Dialog dialog (SimBG stepMode sim) }
+                        |> withEff autoFocus
+
+                _ ->
+                    model |> withoutEff
+
+        ReturnToSegmentList ->
+            model |> withEff returnToSegmentList
+
+        EditMsg editMsg ->
+            case model.state of
+                Edit ->
+                    updateWhenEditing editMsg model |> withoutEff
+
+                _ ->
+                    model |> withoutEff
+
+        SimMsg simMsg ->
+            case model.state of
+                SIM stepMode sim ->
+                    updateWhenSimulating simMsg stepMode sim
+                        |> mapFirst (\state -> { model | state = state })
+
+                _ ->
+                    model |> withoutEff
+
+
 updateWhenEditing : EditMsg -> Model -> Model
 updateWhenEditing msg model =
     case msg of
@@ -415,6 +469,7 @@ viewSystemDialog =
             , bgc black
             ]
             [ text "system dialog"
+            , btn "return to segment list" ReturnToSegmentList
             , btnAutoFocus "close" CloseClicked
             ]
         ]
@@ -488,7 +543,7 @@ viewTestPassedDialog puzzle sim =
                 ]
             , fRow [ gap "2ch" ]
                 [ btnAutoFocus "continue editing this segment" CloseClicked
-                , btn "return to segment list" CloseClicked
+                , btn "return to segment list" ReturnToSegmentList
                 ]
             ]
         ]

@@ -6,7 +6,12 @@ import Utils exposing (pair, pairTo, swap)
 
 type Effect
     = Focus String
+    | ReturnToSegmentList
     | None
+
+
+returnToSegmentList =
+    ReturnToSegmentList
 
 
 withoutEff =
