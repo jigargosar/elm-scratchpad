@@ -129,6 +129,7 @@ runEffect ( model, effect ) =
             , toJSSave
                 [ ( "tis100.saves.SamplePuzzle.0", [ ( ( 0, 0 ), "" ) ] )
                 ]
+                |> always Cmd.none
             )
 
         ReturnToSegmentList ->
