@@ -151,7 +151,9 @@ viewDocument model =
                     [ displayGrid
                     , pa "2ch"
                     , gap "2ch"
-                    , gridTemplateColumns "repeat(4, 1fr)"
+                    , gridTemplateColumns "repeat(5, 1fr)"
+                    , gridTemplateRows "repeat(5, 1fr)"
+                    , sMaxHeight "100vh"
                     ]
                     (Puzzle.allIds
                         |> listMapHeadAndRest segmentBtnAutoFocus segmentBtn
@@ -181,6 +183,6 @@ segmentBtn =
 
 segmentBtnHelp : List (Attribute Msg) -> Puzzle.Id -> Html Msg
 segmentBtnHelp attrs id =
-    UI.btn (pa "1ch" :: aspectRatio "1" :: attrs)
+    UI.btn (pa "0.5ch" :: attrs)
         (Just (GotoPuzzle id))
         (Puzzle.titleFromId id)
