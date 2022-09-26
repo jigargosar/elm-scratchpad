@@ -11,11 +11,18 @@
   import {Elm} from './TIS100.elm'
 
   // noinspection JSUnresolvedVariable
-  const app = Elm.TIS100.init()
+  const app = Elm.TIS100.init({
+    flags: {
+      saves: Object
+      .entries(localStorage)
+      .filter(([k]) => k.startsWith('tis100.saves.')),
+    },
+  })
 
   // noinspection JSUnresolvedVariable
-  app.ports.toJSSave.subscribe((x) => {
-    console.log('saveCalled', x)
+  app.ports.toJSSave.subscribe((entries) => {
+    console.log(entries)
+    entries.forEach(([k,v])=> localStorage.setItem(k,v))
   })
 </script>
 </body>

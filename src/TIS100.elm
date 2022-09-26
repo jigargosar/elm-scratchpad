@@ -4,6 +4,7 @@ import Browser.Dom
 import Dict exposing (Dict)
 import Html
 import Json.Decode exposing (Value)
+import Json.Encode as JE
 import TIS100.Effect as Eff exposing (Effect(..), withEff, withoutEff)
 import TIS100.Puzzle as Puzzle
 import TIS100.PuzzlePage as PuzzlePage
@@ -123,7 +124,11 @@ runEffect ( model, effect ) =
             ( model, autoFocusCmd )
 
         None ->
-            ( model, toJSSave [] )
+            ( model
+            , toJSSave
+                [ ( "tis100.saves.SamplePuzzle.0", JE.string "bar" )
+                ]
+            )
 
         ReturnToSegmentList ->
             ( { model | page = SegmentListPage }, autoFocusCmd )
