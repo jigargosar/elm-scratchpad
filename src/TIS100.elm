@@ -146,18 +146,23 @@ viewDocument model =
                 PuzzlePage.view page |> Html.map PuzzlePageMsg
 
             SegmentListPage ->
-                div
-                    [ displayGrid
-                    , pa "2ch"
-                    , gap "1ch"
-                    , gridTemplateColumns "repeat(5, 1fr)"
-                    , gridTemplateRows "repeat(5, 1fr)"
-                    , sMaxHeight "100vh"
-                    ]
-                    (Puzzle.allIds
-                        |> listMapHeadAndRest segmentBtnAutoFocus segmentBtn
-                    )
+                viewSegmentListPage
         ]
+
+
+viewSegmentListPage : Html Msg
+viewSegmentListPage =
+    div
+        [ displayGrid
+        , pa "2ch"
+        , gap "1ch"
+        , gridTemplateColumns "repeat(5, 1fr)"
+        , gridTemplateRows "repeat(5, 1fr)"
+        , sMaxHeight "100vh"
+        ]
+        (Puzzle.allIds
+            |> listMapHeadAndRest segmentBtnAutoFocus segmentBtn
+        )
 
 
 listMapHeadAndRest : (a -> b) -> (a -> b) -> List a -> List b
