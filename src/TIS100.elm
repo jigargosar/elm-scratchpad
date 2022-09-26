@@ -2,7 +2,9 @@ module TIS100 exposing (main)
 
 import Browser.Dom
 import Html
+import TIS100.Addr exposing (Addr)
 import TIS100.Effect as Eff exposing (Effect(..), withEff, withoutEff)
+import TIS100.Puzzle as Puzzle
 import TIS100.PuzzlePage as PuzzlePage
 import Task
 import Utils exposing (..)
@@ -45,10 +47,67 @@ type alias Model =
 init : () -> ( Model, Effect )
 init () =
     { page =
-        PuzzlePage PuzzlePage.signalComparatorModel
+        PuzzlePage
+            initialPuzzlePage
             |> always SegmentListPage
     }
         |> withEff Eff.autoFocus
+
+
+signalComparatorSourceEntries : List ( Addr, String )
+signalComparatorSourceEntries =
+    [ ( ( 0, 1 ), "MOV UP DOWN" )
+    , ( ( 0, 2 ), "MOV UP DOWN" )
+    , ( ( 0, 3 ), "MOV UP right" )
+    , ( ( 1, 1 ), "" )
+    , ( ( 1, 2 ), "" )
+    , ( ( 1, 3 )
+      , [ "S: MOV LEFT ACC"
+        , "MOV ACC RIGHT"
+        , ""
+        , "JGZ 1"
+        , "MOV 0 DOWN"
+        , "JMP S"
+        , ""
+        , "1: MOV 1 DOWN"
+        ]
+            |> String.join "\n"
+      )
+    , ( ( 2, 1 ), "" )
+    , ( ( 2, 2 ), "" )
+    , ( ( 2, 3 )
+      , [ "S: MOV LEFT ACC"
+        , "MOV ACC RIGHT"
+        , ""
+        , "JEZ 1"
+        , "MOV 0 DOWN"
+        , "JMP S"
+        , ""
+        , "1: MOV 1 DOWN"
+        ]
+            |> String.join "\n"
+      )
+    , ( ( 3, 1 ), "" )
+    , ( ( 3, 2 ), "" )
+    , ( ( 3, 3 )
+      , [ "S: MOV LEFT ACC"
+        , "# MOV ACC RIGHT"
+        , ""
+        , "JLZ 1"
+        , "MOV 0 DOWN"
+        , "JMP S"
+        , ""
+        , "1: MOV 1 DOWN"
+        ]
+            |> String.join "\n"
+      )
+    ]
+
+
+initialPuzzlePage =
+    PuzzlePage.init
+        Puzzle.signalComparator
+        PuzzlePage.signalComparatorSourceEntries
 
 
 type Msg
@@ -85,7 +144,7 @@ update msg model =
                     model |> withoutEff
 
         GotoPuzzle ->
-            { model | page = PuzzlePage PuzzlePage.signalComparatorModel }
+            { model | page = PuzzlePage initialPuzzlePage }
                 |> withoutEff
 
         OnFocus (Ok ()) ->
