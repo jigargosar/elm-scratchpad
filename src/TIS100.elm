@@ -48,6 +48,7 @@ init () =
 
 type Msg
     = PuzzlePageMsg PuzzlePage.Msg
+    | GotoPuzzle
     | OnFocus (Result Browser.Dom.Error ())
 
 
@@ -77,6 +78,11 @@ update msg model =
 
                 SegmentListPage ->
                     ( model, Cmd.none )
+
+        GotoPuzzle ->
+            ( { model | page = PuzzlePage PuzzlePage.signalComparatorModel }
+            , Cmd.none
+            )
 
         OnFocus (Ok ()) ->
             ( model, Cmd.none )
@@ -114,6 +120,6 @@ viewDocument model =
 
             SegmentListPage ->
                 div [ displayGrid, placeContentCenter ]
-                    [ button [] [ text "go to puzzle" ]
+                    [ button [ notifyClick GotoPuzzle ] [ text "go to puzzle" ]
                     ]
         ]
