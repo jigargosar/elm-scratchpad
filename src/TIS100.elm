@@ -61,10 +61,6 @@ type alias Model =
 
 init : Flags -> ( Model, Effect )
 init { saves } =
-    let
-        _ =
-            Debug.log "Debug: " saves
-    in
     { page = SegmentListPage
     , saves = Saves.initial
     }
