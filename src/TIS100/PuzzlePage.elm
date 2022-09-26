@@ -231,19 +231,22 @@ update msg model =
                     model |> withoutEff
 
 
+saveEff : Model -> Effect
+saveEff model =
+    model.editors
+        |> Dict.toList
+        |> save (Puzzle.id model.puzzle)
+
+
 updateWhenEditing : EditMsg -> Model -> ( Model, Effect )
 updateWhenEditing msg model =
     case msg of
         OnEditorInput addr string ->
-            { model
-                | editors =
+            let
+                editors =
                     replaceEntry ( addr, string ) model.editors
-            }
-                |> withEffBy
-                    (.editors
-                        >> Dict.toList
-                        >> save (Puzzle.id model.puzzle)
-                    )
+            in
+            { model | editors = editors } |> withEffBy saveEff
 
         StartDebugging stepMode ->
             case maybeTraverseValues ExeNode.compile model.editors of
