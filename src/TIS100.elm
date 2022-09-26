@@ -147,7 +147,12 @@ viewDocument model =
                 PuzzlePage.view page |> Html.map PuzzlePageMsg
 
             SegmentListPage ->
-                div [ displayGrid, placeContentCenter ]
+                div
+                    [ displayGrid
+                    , pa "2ch"
+                    , gap "2ch"
+                    , gridTemplateColumns "repeat(4, 1fr)"
+                    ]
                     (Puzzle.allIds
                         |> listMapHeadAndRest segmentBtnAutoFocus segmentBtn
                     )
