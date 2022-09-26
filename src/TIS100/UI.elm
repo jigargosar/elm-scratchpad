@@ -1,5 +1,6 @@
 module TIS100.UI exposing
-    ( fgBright
+    ( btn
+    , fgBright
     , fgDull
     , fgError
     , fgNormal
@@ -107,3 +108,25 @@ highlightError =
 highlightBright : List (Attribute msg)
 highlightBright =
     [ bgc white, fg black ]
+
+
+
+-- BUTTONS
+
+
+btn : List (Attribute msg) -> Maybe msg -> String -> Html msg
+btn attrs mbMsg txt =
+    button
+        ([ bgcInherit
+         , fgInherit
+         , ttInherit
+         , fontInherit
+         , outlineNormal
+         , borderNone
+         , displayGrid
+         , placeContentCenter
+         , mbNotifyClick mbMsg
+         ]
+            ++ attrs
+        )
+        [ text txt ]

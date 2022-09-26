@@ -8,6 +8,7 @@ import TIS100.Effect as Eff exposing (Effect(..), withEff, withoutEff)
 import TIS100.Puzzle as Puzzle
 import TIS100.PuzzlePage as PuzzlePage
 import TIS100.Saves as Saves exposing (Saves)
+import TIS100.UI as UI
 import Task
 import Utils exposing (..)
 
@@ -175,8 +176,6 @@ segmentBtn =
 
 segmentBtnHelp : List (Attribute Msg) -> Puzzle.Id -> Html Msg
 segmentBtnHelp attrs id =
-    button
-        (notifyClick (GotoPuzzle id)
-            :: attrs
-        )
-        [ text (Puzzle.titleFromId id) ]
+    UI.btn attrs
+        (Just (GotoPuzzle id))
+        (Puzzle.titleFromId id)
