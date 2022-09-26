@@ -306,12 +306,7 @@ view model =
         , ttu
         , positionRelative
         ]
-        [ styleNode """
-:is(textarea, button, input):focus{
-    outline:revert!important;
-}
-"""
-        , viewCycle model
+        [ viewCycle model
         , fRow [ gap "2ch" ] [ viewLeftBar model, viewGrid model ]
         , viewDialog model
         ]

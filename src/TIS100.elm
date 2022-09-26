@@ -140,6 +140,11 @@ viewDocument : Model -> Document Msg
 viewDocument model =
     Document "ELM TIS 100 CLONE"
         [ basicStylesNode
+        , styleNode """
+         :is(textarea, button, input):focus{
+             outline:revert!important;
+         }
+         """
 
         --, node "SCRIPT" [ attribute "src" "https://livejs.com/live.js" ] []
         , case model.page of
