@@ -104,15 +104,22 @@ runEffect : ( Model, Effect ) -> ( Model, Cmd Msg )
 runEffect ( model, effect ) =
     case effect of
         Focus hid ->
-            ( model, Browser.Dom.focus hid |> Task.attempt OnFocus )
+            ( model, focusCmd hid )
 
         None ->
             ( model, Cmd.none )
 
         ReturnToSegmentList ->
             { model | page = SegmentListPage }
-                |> withEff Eff.autoFocus
-                |> runEffect
+                |> withCmd autoFocusCmd
+
+
+autoFocusCmd =
+    focusCmd Eff.autoFocusId
+
+
+focusCmd hid =
+    Browser.Dom.focus hid |> Task.attempt OnFocus
 
 
 viewDocument : Model -> Document Msg
