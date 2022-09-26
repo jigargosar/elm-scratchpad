@@ -155,7 +155,7 @@ viewDocument model =
                 div
                     [ displayGrid
                     , pa "2ch"
-                    , gap "2ch"
+                    , gap "1ch"
                     , gridTemplateColumns "repeat(5, 1fr)"
                     , gridTemplateRows "repeat(5, 1fr)"
                     , sMaxHeight "100vh"
