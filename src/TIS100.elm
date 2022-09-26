@@ -5,6 +5,7 @@ import Dict exposing (Dict)
 import Html
 import Json.Decode exposing (Value)
 import Json.Encode as JE
+import TIS100.Addr exposing (Addr)
 import TIS100.Effect as Eff exposing (Effect(..), withEff, withoutEff)
 import TIS100.Puzzle as Puzzle
 import TIS100.PuzzlePage as PuzzlePage
@@ -23,11 +24,11 @@ import Utils exposing (..)
 -}
 
 
-port toJSSave : List ( String, Value ) -> Cmd msg
+port toJSSave : List ( String, List ( Addr, String ) ) -> Cmd msg
 
 
 type alias Flags =
-    {}
+    { saves : List ( String, List ( Addr, String ) ) }
 
 
 main : Program Flags Model Msg
@@ -59,7 +60,11 @@ type alias Model =
 
 
 init : Flags -> ( Model, Effect )
-init _ =
+init { saves } =
+    let
+        _ =
+            Debug.log "Debug: " saves
+    in
     { page = SegmentListPage
     , saves = Saves.initial
     }
@@ -126,7 +131,7 @@ runEffect ( model, effect ) =
         None ->
             ( model
             , toJSSave
-                [ ( "tis100.saves.SamplePuzzle.0", JE.string "bar" )
+                [ ( "tis100.saves.SamplePuzzle.0", [ ( ( 0, 0 ), "" ) ] )
                 ]
             )
 
