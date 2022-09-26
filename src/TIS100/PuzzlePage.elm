@@ -28,15 +28,6 @@ import Utils exposing (..)
 
 
 
--- MAIN
-
-
-signalComparatorModel : Model
-signalComparatorModel =
-    init Puzzle.signalComparator signalComparatorSourceEntries
-
-
-
 --noinspection ElmUnusedSymbol
 
 
