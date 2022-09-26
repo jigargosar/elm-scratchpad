@@ -233,9 +233,7 @@ update msg model =
 
 saveEff : Model -> Effect
 saveEff model =
-    model.editors
-        |> Dict.toList
-        |> save (Puzzle.id model.puzzle)
+    save (Puzzle.id model.puzzle) (Dict.toList model.editors)
 
 
 updateWhenEditing : EditMsg -> Model -> ( Model, Effect )
