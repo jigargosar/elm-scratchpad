@@ -1,5 +1,6 @@
 module TIS100.UI exposing
     ( btn
+    , commonStyles
     , fgBright
     , fgDull
     , fgError
@@ -13,6 +14,19 @@ module TIS100.UI exposing
     )
 
 import Utils exposing (..)
+
+
+
+-- COMMON STYLE NODE
+
+
+commonStyles : Html msg
+commonStyles =
+    styleNode """
+         :is(textarea, button, input):focus{
+             outline:revert!important;
+         }
+         """
 
 
 
