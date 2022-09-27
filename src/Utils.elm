@@ -2161,6 +2161,20 @@ filterKey fn =
     Dict.filter (\k _ -> fn k)
 
 
+filterMapKey : (a -> Maybe comparable) -> Dict a v -> Dict comparable v
+filterMapKey fn =
+    Dict.foldl
+        (\k v ->
+            case fn k of
+                Nothing ->
+                    identity
+
+                Just nk ->
+                    Dict.insert nk v
+        )
+        Dict.empty
+
+
 renameKey : (a -> comparable) -> Dict a v -> Dict comparable v
 renameKey fn =
     Dict.toList >> List.map (Tuple.mapFirst fn) >> Dict.fromList
