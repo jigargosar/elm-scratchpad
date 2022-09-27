@@ -3,6 +3,8 @@ module TIS100.Saves exposing (Saves, decoder, encode, get, set)
 import Dict exposing (Dict)
 import Json.Decode as JD exposing (Decoder, Value)
 import Json.Encode as JE
+import Maybe.Extra
+import Result.Extra
 import TIS100.Addr exposing (Addr)
 import TIS100.Puzzle as Puzzle
 import Utils exposing (mapFirst, pair, pairTo)
@@ -84,15 +86,21 @@ decoder =
         parseKeys dict =
             dict
                 |> Dict.toList
-                |> List.filterMap
-                    (\( k, v ) ->
-                        puzzleIdFromString k
-                            |> Maybe.map (pairTo v)
-                    )
+                |> List.filterMap (maybeCombineMapFirst puzzleIdFromString)
                 |> fromList
     in
     JD.dict srcEntriesDecoder
         |> JD.map parseKeys
+
+
+maybeCombineFirst : ( Maybe b, a ) -> Maybe ( b, a )
+maybeCombineFirst ( mba, b ) =
+    mba |> Maybe.map (pairTo b)
+
+
+maybeCombineMapFirst : (a -> Maybe b) -> ( a, c ) -> Maybe ( b, c )
+maybeCombineMapFirst fn =
+    mapFirst fn >> maybeCombineFirst
 
 
 sampleSourceEntries : List ( Addr, String )
