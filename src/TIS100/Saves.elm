@@ -16,8 +16,8 @@ type Saves
     = Saves (Dict String Solution)
 
 
-fromDict : Dict String Solution -> Saves
-fromDict unverifiedDict =
+fromList : List ( String, Solution ) -> Saves
+fromList unverifiedEntries =
     let
         initialDict : Dict String Solution
         initialDict =
@@ -31,7 +31,7 @@ fromDict unverifiedDict =
         parseKey key =
             puzzleIdFromString key |> Maybe.map (always key)
 
-        step unverifiedKey solution =
+        step ( unverifiedKey, solution ) =
             case parseKey unverifiedKey of
                 Just key ->
                     Dict.insert key solution
@@ -39,7 +39,7 @@ fromDict unverifiedDict =
                 Nothing ->
                     identity
     in
-    Dict.foldl step initialDict unverifiedDict
+    List.foldl step initialDict unverifiedEntries
         |> Saves
 
 
@@ -70,9 +70,7 @@ addrDecoder =
 
 decoder : Decoder Saves
 decoder =
-    JD.dict solutionDecoder
-        |> JD.map
-            fromDict
+    JD.list (pairDecoder JD.string solutionDecoder) |> JD.map fromList
 
 
 sampleSolution : Solution
