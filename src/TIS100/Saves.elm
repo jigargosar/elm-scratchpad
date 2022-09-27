@@ -3,11 +3,9 @@ module TIS100.Saves exposing (Saves, decoder, encode, get, set)
 import Dict exposing (Dict)
 import Json.Decode as JD exposing (Decoder, Value)
 import Json.Encode as JE
-import Maybe.Extra
-import Result.Extra
 import TIS100.Addr exposing (Addr)
 import TIS100.Puzzle as Puzzle
-import Utils exposing (filterMapFirst, mapFirst, maybeCombineMapFirst, pair, pairTo)
+import Utils exposing (filterMapFirst, mapFirst, pair)
 
 
 type Saves
