@@ -2,6 +2,7 @@ port module TIS100 exposing (main)
 
 import Browser.Dom
 import Html
+import Json.Encode exposing (Value)
 import TIS100.Addr exposing (Addr)
 import TIS100.Effect as Eff exposing (Effect(..), withEff, withoutEff)
 import TIS100.Puzzle as Puzzle
@@ -21,7 +22,7 @@ import Utils exposing (..)
 -}
 
 
-port toJSSave : List ( String, List ( Addr, String ) ) -> Cmd msg
+port toJSSave : Value -> Cmd msg
 
 
 type alias Flags =
@@ -126,19 +127,18 @@ runEffect ( model, effect ) =
             ( model, autoFocusCmd )
 
         None ->
-            ( model
-            , toJSSave
-                [ ( "tis100.saves.SamplePuzzle.0", [ ( ( 0, 0 ), "" ) ] )
-                ]
-                |> always Cmd.none
-            )
+            ( model, Cmd.none )
 
         ReturnToSegmentList ->
             ( { model | page = SegmentListPage }, autoFocusCmd )
 
         SavePuzzleSrc id puzzleSrc ->
-            ( { model | saves = Saves.set id puzzleSrc model.saves }
-            , Cmd.none
+            let
+                saves =
+                    Saves.set id puzzleSrc model.saves
+            in
+            ( { model | saves = saves }
+            , toJSSave (Saves.encode saves)
             )
 
 
