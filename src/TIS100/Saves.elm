@@ -79,16 +79,13 @@ decoder =
         addrDecoder : Decoder Addr
         addrDecoder =
             pairDecoder JD.int JD.int
-
-        parseKeys : Dict String (List ( Addr, String )) -> Saves
-        parseKeys dict =
-            dict
-                |> Dict.toList
-                |> List.filterMap (filterMapFirst puzzleIdFromString)
-                |> fromList
     in
     JD.dict srcEntriesDecoder
-        |> JD.map parseKeys
+        |> JD.map
+            (Dict.toList
+                >> List.filterMap (filterMapFirst puzzleIdFromString)
+                >> fromList
+            )
 
 
 sampleSourceEntries : List ( Addr, String )
