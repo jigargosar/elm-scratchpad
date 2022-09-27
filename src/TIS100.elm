@@ -174,6 +174,10 @@ viewDocument model =
 
 viewSegmentListPage : Html Msg
 viewSegmentListPage =
+    viewSegmentGrid
+
+
+viewSegmentGrid =
     div
         [ displayGrid
         , pa "2ch"
