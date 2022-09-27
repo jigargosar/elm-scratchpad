@@ -10,10 +10,7 @@
   // noinspection ES6CheckImport
   import {Elm} from './TIS100.elm'
 
-  const saves = Object.fromEntries(Object
-  .entries(localStorage)
-  .filter(([k]) => k.startsWith('tis100.saves.'))
-  .map(([k, v]) => [k, JSON.parse(v)]))
+  const saves = JSON.parse(localStorage.getItem('saves') || '{}')
 
 
   console.log('js: loaded saves', saves)
@@ -26,11 +23,7 @@
   // noinspection JSUnresolvedVariable
   app.ports.toJSSave.subscribe((savesObj) => {
     console.log('js: saving:', savesObj)
-
-    Object
-    .entries(savesObj)
-    .forEach(([k, v]) => localStorage.setItem(k, JSON.stringify(v)))
-
+    localStorage.setItem('saves', JSON.stringify(savesObj))
   })
 </script>
 </body>
