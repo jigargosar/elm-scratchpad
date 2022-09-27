@@ -12,8 +12,7 @@
 
   const saves = JSON.parse(localStorage.getItem('saves') || '{}')
 
-
-  console.log('js: loaded saves', saves)
+  // console.log('js: loaded saves', saves)
 
   // noinspection JSUnresolvedVariable
   const app = Elm.TIS100.init({
@@ -22,7 +21,7 @@
 
   // noinspection JSUnresolvedVariable
   app.ports.toJSSave.subscribe((savesObj) => {
-    console.log('js: saving:', savesObj)
+    // console.log('js: saving:', savesObj)
     localStorage.setItem('saves', JSON.stringify(savesObj))
   })
 </script>
