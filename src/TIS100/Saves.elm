@@ -70,7 +70,10 @@ addrDecoder =
 
 decoder : Decoder Saves
 decoder =
-    JD.list (pairDecoder JD.string solutionDecoder) |> JD.map fromList
+    JD.oneOf
+        [ JD.list (pairDecoder JD.string solutionDecoder) |> JD.map fromList
+        , JD.null (fromList [])
+        ]
 
 
 sampleSolution : Solution
