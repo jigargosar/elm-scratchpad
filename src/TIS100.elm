@@ -183,7 +183,7 @@ viewSegmentListPage =
         , sMaxHeight "100vh"
         ]
         (Puzzle.allIds
-            |> listMapHeadAndRest segmentBtnAutoFocus segmentBtn
+            |> listMapHeadAndRest viewSegmentAutoFocus viewSegment
         )
 
 
@@ -197,18 +197,18 @@ listMapHeadAndRest fh fr ls =
             fh h :: List.map fr r
 
 
-segmentBtnAutoFocus : Puzzle.Id -> Html Msg
-segmentBtnAutoFocus =
-    segmentBtnHelp [ Eff.attrAutoFocusId ]
+viewSegmentAutoFocus : Puzzle.Id -> Html Msg
+viewSegmentAutoFocus =
+    viewSegmentHelp [ Eff.attrAutoFocusId ]
 
 
-segmentBtn : Puzzle.Id -> Html Msg
-segmentBtn =
-    segmentBtnHelp []
+viewSegment : Puzzle.Id -> Html Msg
+viewSegment =
+    viewSegmentHelp []
 
 
-segmentBtnHelp : List (Attribute Msg) -> Puzzle.Id -> Html Msg
-segmentBtnHelp attrs id =
+viewSegmentHelp : List (Attribute Msg) -> Puzzle.Id -> Html Msg
+viewSegmentHelp attrs id =
     UI.btn (pa "0.5ch" :: attrs)
         (Just (GotoPuzzle id))
         (Puzzle.titleFromId id)

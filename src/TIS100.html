@@ -10,9 +10,9 @@
   // noinspection ES6CheckImport
   import {Elm} from './TIS100.elm'
 
-  const saves = JSON.parse(localStorage.getItem('saves') ?? '[]')
+  const saves = JSON.parse(localStorage.getItem('saves'))
 
-  // console.log('js: loaded saves', saves)
+  console.log('js: loaded saves', saves)
 
   // noinspection JSUnresolvedVariable
   const app = Elm.TIS100.init({
