@@ -21,8 +21,8 @@ fromList newList =
     let
         initialDict : Dict String Solution
         initialDict =
-            [ ( Puzzle.SignalComparator, signalComparatorSourceEntries )
-            , ( Puzzle.Sample, sampleSourceEntries )
+            [ ( Puzzle.SignalComparator, signalComparatorSolution )
+            , ( Puzzle.Sample, sampleSolution )
             ]
                 |> List.map (mapFirst puzzleIdToString)
                 |> Dict.fromList
@@ -49,42 +49,32 @@ pairDecoder da db =
 
 encode : Saves -> Value
 encode (Saves dict) =
-    let
-        encodeSrcEntries : Solution -> JE.Value
-        encodeSrcEntries =
-            JE.list encodeSrcEntry
+    JE.list (encodePair JE.string encodeSolution) (Dict.toList dict)
 
-        encodeSrcEntry : ( Addr, String ) -> Value
-        encodeSrcEntry =
-            encodePair encodeAddr JE.string
 
-        encodeAddr : Addr -> Value
-        encodeAddr =
-            encodePair JE.int JE.int
+solutionDecoder : Decoder Solution
+solutionDecoder =
+    JD.list (pairDecoder addrDecoder JD.string)
 
-        encodeSaveEntry : ( String, Solution ) -> Value
-        encodeSaveEntry =
-            encodePair JE.string encodeSrcEntries
-    in
-    JE.list encodeSaveEntry (Dict.toList dict)
+
+encodeSolution : Solution -> JE.Value
+encodeSolution =
+    JE.list (encodePair encodeAddr JE.string)
+
+
+encodeAddr : Addr -> Value
+encodeAddr =
+    encodePair JE.int JE.int
+
+
+addrDecoder : Decoder Addr
+addrDecoder =
+    pairDecoder JD.int JD.int
 
 
 decoder : Decoder Saves
 decoder =
-    let
-        srcEntriesDecoder : Decoder Solution
-        srcEntriesDecoder =
-            JD.list srcEntryDecoder
-
-        srcEntryDecoder : Decoder ( Addr, String )
-        srcEntryDecoder =
-            pairDecoder addrDecoder JD.string
-
-        addrDecoder : Decoder Addr
-        addrDecoder =
-            pairDecoder JD.int JD.int
-    in
-    JD.dict srcEntriesDecoder
+    JD.dict solutionDecoder
         |> JD.map
             (Dict.toList
                 >> List.filterMap (filterMapFirst puzzleIdFromString)
@@ -92,8 +82,8 @@ decoder =
             )
 
 
-sampleSourceEntries : Solution
-sampleSourceEntries =
+sampleSolution : Solution
+sampleSolution =
     [ ( ( 0, 1 ), "mov up acc\n\n\nmov acc down" )
     , ( ( 0, 2 ), "Mov up down\nmov 1 acc" )
     , ( ( 0, 3 ), "Mov up down\nnop" )
@@ -109,8 +99,8 @@ sampleSourceEntries =
     ]
 
 
-signalComparatorSourceEntries : Solution
-signalComparatorSourceEntries =
+signalComparatorSolution : Solution
+signalComparatorSolution =
     [ ( ( 0, 1 ), "MOV UP DOWN" )
     , ( ( 0, 2 ), "MOV UP DOWN" )
     , ( ( 0, 3 ), "MOV UP right" )
@@ -160,8 +150,8 @@ signalComparatorSourceEntries =
 
 
 puzzleIdToString : Puzzle.Id -> String
-puzzleIdToString name =
-    case name of
+puzzleIdToString id =
+    case id of
         Puzzle.SignalComparator ->
             "SignalComparator"
 
@@ -183,11 +173,11 @@ puzzleIdFromString str =
 
 
 set : Puzzle.Id -> Solution -> Saves -> Saves
-set name srcEntries (Saves dict) =
-    Saves (Dict.insert (puzzleIdToString name) srcEntries dict)
+set id solution (Saves dict) =
+    Saves (Dict.insert (puzzleIdToString id) solution dict)
 
 
 get : Puzzle.Id -> Saves -> Solution
-get name (Saves dict) =
-    Dict.get (puzzleIdToString name) dict
+get id (Saves dict) =
+    Dict.get (puzzleIdToString id) dict
         |> Maybe.withDefault []
