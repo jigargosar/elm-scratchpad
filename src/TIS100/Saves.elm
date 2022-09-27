@@ -1,11 +1,11 @@
-module TIS100.Saves exposing (Saves, fromList, get, initial, set)
+module TIS100.Saves exposing (Saves, decoder, encodeSaves, fromList, get, initial, set)
 
 import Dict exposing (Dict)
-import Json.Decode exposing (Decoder, Value)
+import Json.Decode as JD exposing (Decoder, Value)
 import Json.Encode as JE
 import TIS100.Addr exposing (Addr)
 import TIS100.Puzzle as Puzzle
-import Utils exposing (mapFirst)
+import Utils exposing (mapFirst, pair)
 
 
 type Saves
@@ -25,6 +25,13 @@ encodePair fa fb ( a, b ) =
     JE.list identity [ fa a, fb b ]
 
 
+pairDecoder : Decoder a -> Decoder b -> Decoder ( a, b )
+pairDecoder da db =
+    JD.map2 pair
+        (JD.index 0 da)
+        (JD.index 1 db)
+
+
 encodeSaves : Saves -> Value
 encodeSaves (Saves dict) =
     let
@@ -41,6 +48,25 @@ encodeSaves (Saves dict) =
             encodePair JE.int JE.int
     in
     JE.dict identity encodeSrcEntries dict
+
+
+decoder : Decoder Saves
+decoder =
+    let
+        srcEntriesDecoder : Decoder (List ( Addr, String ))
+        srcEntriesDecoder =
+            JD.list srcEntryDecoder
+
+        srcEntryDecoder : Decoder ( Addr, String )
+        srcEntryDecoder =
+            pairDecoder addrDecoder JD.string
+
+        addrDecoder : Decoder Addr
+        addrDecoder =
+            pairDecoder JD.int JD.int
+    in
+    JD.dict srcEntriesDecoder
+        |> JD.map Saves
 
 
 sampleSourceEntries : List ( Addr, String )
