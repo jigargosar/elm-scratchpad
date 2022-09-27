@@ -24,12 +24,12 @@ fromList unverifiedEntries =
             [ ( Puzzle.SignalComparator, signalComparatorSolution )
             , ( Puzzle.Sample, sampleSolution )
             ]
-                |> List.map (mapFirst puzzleIdToString)
+                |> List.map (mapFirst idToString)
                 |> Dict.fromList
 
         parseKey : String -> Maybe String
         parseKey key =
-            puzzleIdFromString key |> Maybe.map (always key)
+            idFromString key |> Maybe.map (always key)
 
         step ( unverifiedKey, solution ) =
             case parseKey unverifiedKey of
@@ -140,8 +140,8 @@ signalComparatorSolution =
     ]
 
 
-puzzleIdToString : Puzzle.Id -> String
-puzzleIdToString id =
+idToString : Puzzle.Id -> String
+idToString id =
     case id of
         Puzzle.SignalComparator ->
             "SignalComparator"
@@ -150,8 +150,8 @@ puzzleIdToString id =
             "Sample"
 
 
-puzzleIdFromString : String -> Maybe Puzzle.Id
-puzzleIdFromString str =
+idFromString : String -> Maybe Puzzle.Id
+idFromString str =
     case str of
         "SignalComparator" ->
             Just Puzzle.SignalComparator
@@ -165,10 +165,10 @@ puzzleIdFromString str =
 
 set : Puzzle.Id -> Solution -> Saves -> Saves
 set id solution (Saves dict) =
-    Saves (Dict.insert (puzzleIdToString id) solution dict)
+    Saves (Dict.insert (idToString id) solution dict)
 
 
 get : Puzzle.Id -> Saves -> Solution
 get id (Saves dict) =
-    Dict.get (puzzleIdToString id) dict
+    Dict.get (idToString id) dict
         |> Maybe.withDefault []
