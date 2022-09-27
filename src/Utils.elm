@@ -1781,6 +1781,11 @@ filterMapSecond fn ( a, b ) =
     fn b |> Maybe.map (pair a)
 
 
+filterMapFirst : (a -> Maybe b) -> ( a, c ) -> Maybe ( b, c )
+filterMapFirst =
+    maybeCombineMapFirst
+
+
 toFloat2 : Int2 -> Float2
 toFloat2 =
     mapEach toFloat
@@ -2377,6 +2382,16 @@ resultConcat =
 
 
 -- MAYBE HELPERS
+
+
+maybeCombineFirst : ( Maybe b, a ) -> Maybe ( b, a )
+maybeCombineFirst ( mba, b ) =
+    mba |> Maybe.map (pairTo b)
+
+
+maybeCombineMapFirst : (a -> Maybe b) -> ( a, c ) -> Maybe ( b, c )
+maybeCombineMapFirst fn =
+    mapFirst fn >> maybeCombineFirst
 
 
 orElseLazy : (() -> Maybe a) -> Maybe a -> Maybe a

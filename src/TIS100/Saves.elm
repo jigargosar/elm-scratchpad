@@ -7,7 +7,7 @@ import Maybe.Extra
 import Result.Extra
 import TIS100.Addr exposing (Addr)
 import TIS100.Puzzle as Puzzle
-import Utils exposing (mapFirst, pair, pairTo)
+import Utils exposing (filterMapFirst, mapFirst, maybeCombineMapFirst, pair, pairTo)
 
 
 type Saves
@@ -86,21 +86,11 @@ decoder =
         parseKeys dict =
             dict
                 |> Dict.toList
-                |> List.filterMap (maybeCombineMapFirst puzzleIdFromString)
+                |> List.filterMap (filterMapFirst puzzleIdFromString)
                 |> fromList
     in
     JD.dict srcEntriesDecoder
         |> JD.map parseKeys
-
-
-maybeCombineFirst : ( Maybe b, a ) -> Maybe ( b, a )
-maybeCombineFirst ( mba, b ) =
-    mba |> Maybe.map (pairTo b)
-
-
-maybeCombineMapFirst : (a -> Maybe b) -> ( a, c ) -> Maybe ( b, c )
-maybeCombineMapFirst fn =
-    mapFirst fn >> maybeCombineFirst
 
 
 sampleSourceEntries : List ( Addr, String )
