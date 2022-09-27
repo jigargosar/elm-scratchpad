@@ -5,7 +5,7 @@ import Json.Decode as JD exposing (Decoder, Value)
 import Json.Encode as JE
 import TIS100.Addr exposing (Addr)
 import TIS100.Puzzle as Puzzle
-import Utils exposing (encodePair, filterMapFirst, mapFirst, pair, pairDecoder)
+import Utils exposing (encodePair, mapFirst, pairDecoder)
 
 
 type alias Solution =
@@ -16,8 +16,8 @@ type Saves
     = Saves (Dict String Solution)
 
 
-fromList : List ( Puzzle.Id, Solution ) -> Saves
-fromList newList =
+fromDict : Dict String Solution -> Saves
+fromDict unverifiedDict =
     let
         initialDict : Dict String Solution
         initialDict =
@@ -27,12 +27,20 @@ fromList newList =
                 |> List.map (mapFirst puzzleIdToString)
                 |> Dict.fromList
 
-        newDict =
-            newList
-                |> List.map (mapFirst puzzleIdToString)
-                |> Dict.fromList
+        parseKey : String -> Maybe String
+        parseKey key =
+            puzzleIdFromString key |> Maybe.map (always key)
+
+        step unverifiedKey solution =
+            case parseKey unverifiedKey of
+                Just key ->
+                    Dict.insert key solution
+
+                Nothing ->
+                    identity
     in
-    Saves (Dict.union newDict initialDict)
+    Dict.foldl step initialDict unverifiedDict
+        |> Saves
 
 
 encode : Saves -> Value
@@ -64,10 +72,7 @@ decoder : Decoder Saves
 decoder =
     JD.dict solutionDecoder
         |> JD.map
-            (Dict.toList
-                >> List.filterMap (filterMapFirst puzzleIdFromString)
-                >> fromList
-            )
+            fromDict
 
 
 sampleSolution : Solution
