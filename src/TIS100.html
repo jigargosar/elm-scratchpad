@@ -13,7 +13,8 @@
   const saves = Object
   .entries(localStorage)
   .filter(([k]) => k.startsWith('tis100.saves.'))
-  .map(([k, v]) => [k, JSON.parse(v)]);
+  .map(([k, v]) => [k, JSON.parse(v)])
+
   console.log(saves)
   // noinspection JSUnresolvedVariable
   const app = Elm.TIS100.init({
