@@ -174,13 +174,18 @@ viewDocument model =
 
 viewSegmentListPage : Html Msg
 viewSegmentListPage =
-    viewSegmentGrid
+    fRow
+        [ pa "2ch"
+        , gap "1ch"
+        ]
+        [ div [] [ text "left bar" ]
+        , viewSegmentGrid
+        ]
 
 
 viewSegmentGrid =
     div
         [ displayGrid
-        , pa "2ch"
         , gap "1ch"
         , gridTemplateColumns "repeat(5, 10ch)"
         , gridTemplateRows "repeat(5, 10ch)"
