@@ -42,9 +42,7 @@ encodePair fa fb ( a, b ) =
 
 pairDecoder : Decoder a -> Decoder b -> Decoder ( a, b )
 pairDecoder da db =
-    JD.map2 pair
-        (JD.index 0 da)
-        (JD.index 1 db)
+    JD.map2 pair (JD.index 0 da) (JD.index 1 db)
 
 
 encode : Saves -> Value
