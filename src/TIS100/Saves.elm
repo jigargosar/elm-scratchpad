@@ -1,4 +1,4 @@
-module TIS100.Saves exposing (Saves, decoder, encodeSaves, fromList, get, initial, set)
+module TIS100.Saves exposing (Saves, decoder, encode, fromList, get, initial, set)
 
 import Dict exposing (Dict)
 import Json.Decode as JD exposing (Decoder, Value)
@@ -32,8 +32,8 @@ pairDecoder da db =
         (JD.index 1 db)
 
 
-encodeSaves : Saves -> Value
-encodeSaves (Saves dict) =
+encode : Saves -> Value
+encode (Saves dict) =
     let
         encodeSrcEntries : List ( Addr, String ) -> JE.Value
         encodeSrcEntries =
@@ -46,8 +46,12 @@ encodeSaves (Saves dict) =
         encodeAddr : Addr -> Value
         encodeAddr =
             encodePair JE.int JE.int
+
+        encodeKey : String -> String
+        encodeKey key =
+            "tis100.saves." ++ key
     in
-    JE.dict identity encodeSrcEntries dict
+    JE.dict encodeKey encodeSrcEntries dict
 
 
 decoder : Decoder Saves
@@ -64,9 +68,24 @@ decoder =
         addrDecoder : Decoder Addr
         addrDecoder =
             pairDecoder JD.int JD.int
+
+        fromDict : Dict String (List ( Addr, String )) -> Saves
+        fromDict dict =
+            dict
+                |> Dict.toList
+                |> List.filterMap
+                    (\( k, v ) ->
+                        if String.startsWith "tis100.saves." k then
+                            Just ( String.replace "tis100.saves." "" k, v )
+
+                        else
+                            Nothing
+                    )
+                |> Dict.fromList
+                |> Saves
     in
     JD.dict srcEntriesDecoder
-        |> JD.map Saves
+        |> JD.map fromDict
 
 
 sampleSourceEntries : List ( Addr, String )
