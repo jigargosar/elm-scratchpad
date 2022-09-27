@@ -16,7 +16,7 @@
     .filter(([k]) => k.startsWith('tis100.saves.'))
     .map(([k, v]) => [k, JSON.parse(v)])
 
-  console.log('saves', saves)
+  console.log('js: loaded saves', saves)
 
   // noinspection JSUnresolvedVariable
   const app = Elm.TIS100.init({
@@ -25,7 +25,7 @@
 
   // noinspection JSUnresolvedVariable
   app.ports.toJSSave.subscribe((entries) => {
-    console.log(entries)
+    console.log("js: saving:", entries)
 
     entries.forEach(([k, v]) => localStorage.setItem(k, JSON.stringify(v)))
   })
