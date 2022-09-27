@@ -20,12 +20,12 @@ fromList newList =
             [ ( Puzzle.SignalComparator, signalComparatorSourceEntries )
             , ( Puzzle.Sample, sampleSourceEntries )
             ]
-                |> List.map (mapFirst encodePuzzleId)
+                |> List.map (mapFirst puzzleIdToString)
                 |> Dict.fromList
 
         newDict =
             newList
-                |> List.map (mapFirst encodePuzzleId)
+                |> List.map (mapFirst puzzleIdToString)
                 |> Dict.fromList
     in
     Saves (Dict.union newDict initialDict)
@@ -57,8 +57,12 @@ encode (Saves dict) =
         encodeAddr : Addr -> Value
         encodeAddr =
             encodePair JE.int JE.int
+
+        encodeSaveEntry : ( String, List ( Addr, String ) ) -> Value
+        encodeSaveEntry =
+            encodePair JE.string encodeSrcEntries
     in
-    JE.dict identity encodeSrcEntries dict
+    JE.list encodeSaveEntry (Dict.toList dict)
 
 
 decoder : Decoder Saves
@@ -82,8 +86,7 @@ decoder =
                 |> Dict.toList
                 |> List.filterMap
                     (\( k, v ) ->
-                        JD.decodeValue puzzleIdDecoder (JE.string k)
-                            |> Result.toMaybe
+                        puzzleIdFromString k
                             |> Maybe.map (pairTo v)
                     )
                 |> fromList
@@ -159,8 +162,8 @@ signalComparatorSourceEntries =
     ]
 
 
-encodePuzzleId : Puzzle.Id -> String
-encodePuzzleId name =
+puzzleIdToString : Puzzle.Id -> String
+puzzleIdToString name =
     case name of
         Puzzle.SignalComparator ->
             "SignalComparator"
@@ -169,29 +172,25 @@ encodePuzzleId name =
             "Sample"
 
 
-puzzleIdDecoder : Decoder Puzzle.Id
-puzzleIdDecoder =
-    JD.andThen
-        (\str ->
-            case str of
-                "SignalComparator" ->
-                    JD.succeed Puzzle.SignalComparator
+puzzleIdFromString : String -> Maybe Puzzle.Id
+puzzleIdFromString str =
+    case str of
+        "SignalComparator" ->
+            Just Puzzle.SignalComparator
 
-                "Sample" ->
-                    JD.succeed Puzzle.Sample
+        "Sample" ->
+            Just Puzzle.Sample
 
-                _ ->
-                    JD.fail ("Invalid Puzzle Id: " ++ str)
-        )
-        JD.string
+        _ ->
+            Nothing
 
 
 set : Puzzle.Id -> List ( Addr, String ) -> Saves -> Saves
 set name srcEntries (Saves dict) =
-    Saves (Dict.insert (encodePuzzleId name) srcEntries dict)
+    Saves (Dict.insert (puzzleIdToString name) srcEntries dict)
 
 
 get : Puzzle.Id -> Saves -> List ( Addr, String )
 get name (Saves dict) =
-    Dict.get (encodePuzzleId name) dict
+    Dict.get (puzzleIdToString name) dict
         |> Maybe.withDefault []
