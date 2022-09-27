@@ -15,7 +15,7 @@
   .filter(([k]) => k.startsWith('tis100.saves.'))
   .map(([k, v]) => [k, JSON.parse(v)])
 
-  console.log(saves)
+  console.log("saves",saves)
   // noinspection JSUnresolvedVariable
   const app = Elm.TIS100.init({
     flags: {

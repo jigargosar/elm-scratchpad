@@ -61,7 +61,7 @@ init : Flags -> ( Model, Effect )
 init flags =
     let
         _ =
-            Debug.log "Debug: " flags
+            Debug.log "Debug: " flags.saves
     in
     { page = SegmentListPage
     , saves = Saves.initial
