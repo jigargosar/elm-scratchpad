@@ -1,6 +1,8 @@
 module TIS100.Saves exposing (Saves, fromList, get, initial, set)
 
 import Dict exposing (Dict)
+import Json.Decode exposing (Decoder, Value)
+import Json.Encode as JE
 import TIS100.Addr exposing (Addr)
 import TIS100.Puzzle as Puzzle
 import Utils exposing (mapFirst)
@@ -16,6 +18,29 @@ initial =
         [ ( Puzzle.SignalComparator, signalComparatorSourceEntries )
         , ( Puzzle.Sample, sampleSourceEntries )
         ]
+
+
+encodePair : (a -> Value) -> (b -> Value) -> ( a, b ) -> Value
+encodePair fa fb ( a, b ) =
+    JE.list identity [ fa a, fb b ]
+
+
+encodeSaves : Saves -> Value
+encodeSaves (Saves dict) =
+    let
+        encodeSrcEntries : List ( Addr, String ) -> JE.Value
+        encodeSrcEntries =
+            JE.list encodeSrcEntry
+
+        encodeSrcEntry : ( Addr, String ) -> Value
+        encodeSrcEntry =
+            encodePair encodeAddr JE.string
+
+        encodeAddr : Addr -> Value
+        encodeAddr =
+            encodePair JE.int JE.int
+    in
+    JE.dict identity encodeSrcEntries dict
 
 
 sampleSourceEntries : List ( Addr, String )
