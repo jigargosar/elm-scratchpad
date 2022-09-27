@@ -47,11 +47,11 @@ encode (Saves dict) =
         encodeAddr =
             encodePair JE.int JE.int
 
-        encodeKey : String -> String
-        encodeKey key =
+        prependKeyPrefix : String -> String
+        prependKeyPrefix key =
             "tis100.saves." ++ key
     in
-    JE.dict encodeKey encodeSrcEntries dict
+    JE.dict prependKeyPrefix encodeSrcEntries dict
 
 
 decoder : Decoder Saves
@@ -69,8 +69,8 @@ decoder =
         addrDecoder =
             pairDecoder JD.int JD.int
 
-        fromDict : Dict String (List ( Addr, String )) -> Saves
-        fromDict dict =
+        stripKeyPrefix : Dict String (List ( Addr, String )) -> Saves
+        stripKeyPrefix dict =
             dict
                 |> Dict.toList
                 |> List.filterMap
@@ -85,7 +85,7 @@ decoder =
                 |> Saves
     in
     JD.dict srcEntriesDecoder
-        |> JD.map fromDict
+        |> JD.map stripKeyPrefix
 
 
 sampleSourceEntries : List ( Addr, String )
