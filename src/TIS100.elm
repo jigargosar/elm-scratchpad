@@ -57,7 +57,11 @@ type alias Model =
 
 
 init : Flags -> ( Model, Effect )
-init { saves } =
+init flags =
+    let
+        _ =
+            Debug.log "Debug: " flags
+    in
     { page = SegmentListPage
     , saves = Saves.initial
     }
