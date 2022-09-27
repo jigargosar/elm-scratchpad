@@ -8,14 +8,18 @@ import TIS100.Puzzle as Puzzle
 import Utils exposing (filterMapFirst, mapFirst, pair)
 
 
+type alias Solution =
+    List ( Addr, String )
+
+
 type Saves
-    = Saves (Dict String (List ( Addr, String )))
+    = Saves (Dict String Solution)
 
 
-fromList : List ( Puzzle.Id, List ( Addr, String ) ) -> Saves
+fromList : List ( Puzzle.Id, Solution ) -> Saves
 fromList newList =
     let
-        initialDict : Dict String (List ( Addr, String ))
+        initialDict : Dict String Solution
         initialDict =
             [ ( Puzzle.SignalComparator, signalComparatorSourceEntries )
             , ( Puzzle.Sample, sampleSourceEntries )
@@ -46,7 +50,7 @@ pairDecoder da db =
 encode : Saves -> Value
 encode (Saves dict) =
     let
-        encodeSrcEntries : List ( Addr, String ) -> JE.Value
+        encodeSrcEntries : Solution -> JE.Value
         encodeSrcEntries =
             JE.list encodeSrcEntry
 
@@ -58,7 +62,7 @@ encode (Saves dict) =
         encodeAddr =
             encodePair JE.int JE.int
 
-        encodeSaveEntry : ( String, List ( Addr, String ) ) -> Value
+        encodeSaveEntry : ( String, Solution ) -> Value
         encodeSaveEntry =
             encodePair JE.string encodeSrcEntries
     in
@@ -68,7 +72,7 @@ encode (Saves dict) =
 decoder : Decoder Saves
 decoder =
     let
-        srcEntriesDecoder : Decoder (List ( Addr, String ))
+        srcEntriesDecoder : Decoder Solution
         srcEntriesDecoder =
             JD.list srcEntryDecoder
 
@@ -88,7 +92,7 @@ decoder =
             )
 
 
-sampleSourceEntries : List ( Addr, String )
+sampleSourceEntries : Solution
 sampleSourceEntries =
     [ ( ( 0, 1 ), "mov up acc\n\n\nmov acc down" )
     , ( ( 0, 2 ), "Mov up down\nmov 1 acc" )
@@ -105,7 +109,7 @@ sampleSourceEntries =
     ]
 
 
-signalComparatorSourceEntries : List ( Addr, String )
+signalComparatorSourceEntries : Solution
 signalComparatorSourceEntries =
     [ ( ( 0, 1 ), "MOV UP DOWN" )
     , ( ( 0, 2 ), "MOV UP DOWN" )
@@ -178,12 +182,12 @@ puzzleIdFromString str =
             Nothing
 
 
-set : Puzzle.Id -> List ( Addr, String ) -> Saves -> Saves
+set : Puzzle.Id -> Solution -> Saves -> Saves
 set name srcEntries (Saves dict) =
     Saves (Dict.insert (puzzleIdToString name) srcEntries dict)
 
 
-get : Puzzle.Id -> Saves -> List ( Addr, String )
+get : Puzzle.Id -> Saves -> Solution
 get name (Saves dict) =
     Dict.get (puzzleIdToString name) dict
         |> Maybe.withDefault []
