@@ -27,12 +27,12 @@ fromList unverifiedEntries =
                 |> List.map (mapFirst puzzleIdToString)
                 |> Dict.fromList
 
-        parseKey : String -> Maybe String
-        parseKey key =
+        parseId : String -> Maybe String
+        parseId key =
             puzzleIdFromString key |> Maybe.map (always key)
 
         step ( unverifiedKey, solution ) =
-            case parseKey unverifiedKey of
+            case parseId unverifiedKey of
                 Just key ->
                     Dict.insert key solution
 
