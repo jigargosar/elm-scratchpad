@@ -1,23 +1,34 @@
-module TIS100.Saves exposing (Saves, decoder, encode, fromList, get, initial, set)
+module TIS100.Saves exposing (Saves, decoder, encode, get, set)
 
 import Dict exposing (Dict)
 import Json.Decode as JD exposing (Decoder, Value)
 import Json.Encode as JE
 import TIS100.Addr exposing (Addr)
 import TIS100.Puzzle as Puzzle
-import Utils exposing (mapFirst, pair)
+import Utils exposing (mapFirst, pair, pairTo)
 
 
 type Saves
     = Saves (Dict String (List ( Addr, String )))
 
 
-initial : Saves
-initial =
-    fromList
-        [ ( Puzzle.SignalComparator, signalComparatorSourceEntries )
-        , ( Puzzle.Sample, sampleSourceEntries )
-        ]
+fromList : List ( Puzzle.Id, List ( Addr, String ) ) -> Saves
+fromList newList =
+    let
+        initialDict : Dict String (List ( Addr, String ))
+        initialDict =
+            [ ( Puzzle.SignalComparator, signalComparatorSourceEntries )
+            , ( Puzzle.Sample, sampleSourceEntries )
+            ]
+                |> List.map (mapFirst encodePuzzleId)
+                |> Dict.fromList
+
+        newDict =
+            newList
+                |> List.map (mapFirst encodePuzzleId)
+                |> Dict.fromList
+    in
+    Saves (Dict.union newDict initialDict)
 
 
 encodePair : (a -> Value) -> (b -> Value) -> ( a, b ) -> Value
@@ -46,12 +57,8 @@ encode (Saves dict) =
         encodeAddr : Addr -> Value
         encodeAddr =
             encodePair JE.int JE.int
-
-        prependKeyPrefix : String -> String
-        prependKeyPrefix key =
-            "tis100.saves." ++ key
     in
-    JE.dict prependKeyPrefix encodeSrcEntries dict
+    JE.dict identity encodeSrcEntries dict
 
 
 decoder : Decoder Saves
@@ -69,23 +76,20 @@ decoder =
         addrDecoder =
             pairDecoder JD.int JD.int
 
-        stripKeyPrefix : Dict String (List ( Addr, String )) -> Saves
-        stripKeyPrefix dict =
+        parseKeys : Dict String (List ( Addr, String )) -> Saves
+        parseKeys dict =
             dict
                 |> Dict.toList
                 |> List.filterMap
                     (\( k, v ) ->
-                        if String.startsWith "tis100.saves." k then
-                            Just ( String.replace "tis100.saves." "" k, v )
-
-                        else
-                            Nothing
+                        JD.decodeString puzzleIdDecoder k
+                            |> Result.toMaybe
+                            |> Maybe.map (pairTo v)
                     )
-                |> Dict.fromList
-                |> Saves
+                |> fromList
     in
     JD.dict srcEntriesDecoder
-        |> JD.map stripKeyPrefix
+        |> JD.map parseKeys
 
 
 sampleSourceEntries : List ( Addr, String )
@@ -155,13 +159,8 @@ signalComparatorSourceEntries =
     ]
 
 
-fromList : List ( Puzzle.Id, List ( Addr, String ) ) -> Saves
-fromList ls =
-    Saves (ls |> List.map (mapFirst idToString) |> Dict.fromList)
-
-
-idToString : Puzzle.Id -> String
-idToString name =
+encodePuzzleId : Puzzle.Id -> String
+encodePuzzleId name =
     case name of
         Puzzle.SignalComparator ->
             "SignalComparator"
@@ -170,12 +169,29 @@ idToString name =
             "Sample"
 
 
+puzzleIdDecoder : Decoder Puzzle.Id
+puzzleIdDecoder =
+    JD.andThen
+        (\str ->
+            case str of
+                "SignalComparator" ->
+                    JD.succeed Puzzle.SignalComparator
+
+                "Sample" ->
+                    JD.succeed Puzzle.Sample
+
+                _ ->
+                    JD.fail ("Invalid Puzzle Id: " ++ str)
+        )
+        JD.string
+
+
 set : Puzzle.Id -> List ( Addr, String ) -> Saves -> Saves
 set name srcEntries (Saves dict) =
-    Saves (Dict.insert (idToString name) srcEntries dict)
+    Saves (Dict.insert (encodePuzzleId name) srcEntries dict)
 
 
 get : Puzzle.Id -> Saves -> List ( Addr, String )
 get name (Saves dict) =
-    Dict.get (idToString name) dict
+    Dict.get (encodePuzzleId name) dict
         |> Maybe.withDefault []
