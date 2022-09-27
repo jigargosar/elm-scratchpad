@@ -182,9 +182,8 @@ viewSegmentGrid =
         [ displayGrid
         , pa "2ch"
         , gap "1ch"
-        , gridTemplateColumns "repeat(5, 1fr)"
-        , gridTemplateRows "repeat(5, 1fr)"
-        , sMaxHeight "100vh"
+        , gridTemplateColumns "repeat(5, 10ch)"
+        , gridTemplateRows "repeat(5, 10ch)"
         ]
         (Puzzle.allIds
             |> listMapHeadAndRest viewSegmentAutoFocus viewSegment
