@@ -24,10 +24,13 @@
   })
 
   // noinspection JSUnresolvedVariable
-  app.ports.toJSSave.subscribe((entries) => {
-    console.log("js: saving:", entries)
+  app.ports.toJSSave.subscribe((savesObj) => {
+    console.log('js: saving:', savesObj)
 
-    entries.forEach(([k, v]) => localStorage.setItem(k, JSON.stringify(v)))
+    Object
+    .entries(savesObj)
+    .forEach(([k, v]) => localStorage.setItem(k, JSON.stringify(v)))
+    
   })
 </script>
 </body>
