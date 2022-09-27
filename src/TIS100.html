@@ -10,11 +10,11 @@
   // noinspection ES6CheckImport
   import {Elm} from './TIS100.elm'
 
-  const saves = //
-    Object
-    .entries(localStorage)
-    .filter(([k]) => k.startsWith('tis100.saves.'))
-    .map(([k, v]) => [k, JSON.parse(v)])
+  const saves = Object.fromEntries(Object
+  .entries(localStorage)
+  .filter(([k]) => k.startsWith('tis100.saves.'))
+  .map(([k, v]) => [k, JSON.parse(v)]))
+
 
   console.log('js: loaded saves', saves)
 
@@ -30,7 +30,7 @@
     Object
     .entries(savesObj)
     .forEach(([k, v]) => localStorage.setItem(k, JSON.stringify(v)))
-    
+
   })
 </script>
 </body>

@@ -2,8 +2,8 @@ port module TIS100 exposing (main)
 
 import Browser.Dom
 import Html
+import Json.Decode as JD
 import Json.Encode exposing (Value)
-import TIS100.Addr exposing (Addr)
 import TIS100.Effect as Eff exposing (Effect(..), withEff, withoutEff)
 import TIS100.Puzzle as Puzzle
 import TIS100.PuzzlePage as PuzzlePage
@@ -26,7 +26,7 @@ port toJSSave : Value -> Cmd msg
 
 
 type alias Flags =
-    { saves : List ( String, List ( Addr, String ) ) }
+    { saves : Value }
 
 
 main : Program Flags Model Msg
@@ -60,11 +60,17 @@ type alias Model =
 init : Flags -> ( Model, Effect )
 init flags =
     let
-        _ =
-            Debug.log "Debug: " flags.saves
+        saves =
+            case JD.decodeValue Saves.decoder flags.saves of
+                Err e ->
+                    Debug.log "Debug: " e
+                        |> Debug.todo "err"
+
+                Ok s ->
+                    s
     in
     { page = SegmentListPage
-    , saves = Saves.initial
+    , saves = saves
     }
         |> withEff Eff.autoFocus
 
