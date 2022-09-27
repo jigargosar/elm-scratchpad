@@ -82,7 +82,7 @@ decoder =
                 |> Dict.toList
                 |> List.filterMap
                     (\( k, v ) ->
-                        JD.decodeString puzzleIdDecoder k
+                        JD.decodeValue puzzleIdDecoder (JE.string k)
                             |> Result.toMaybe
                             |> Maybe.map (pairTo v)
                     )
