@@ -13,6 +13,7 @@ import Html.Attributes as HA
 import Html.Events
 import Html.Keyed
 import Json.Decode as JD exposing (Decoder)
+import Json.Encode as JE exposing (Value)
 import List.Extra
 import Maybe.Extra
 import Pivot exposing (Pivot)
@@ -2900,6 +2901,20 @@ setToggleMember e s =
 
     else
         Set.insert e s
+
+
+
+-- JSON
+
+
+encodePair : (a -> Value) -> (b -> Value) -> ( a, b ) -> Value
+encodePair fa fb ( a, b ) =
+    JE.list identity [ fa a, fb b ]
+
+
+pairDecoder : Decoder a -> Decoder b -> Decoder ( a, b )
+pairDecoder da db =
+    JD.map2 pair (JD.index 0 da) (JD.index 1 db)
 
 
 

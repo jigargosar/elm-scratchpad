@@ -5,7 +5,7 @@ import Json.Decode as JD exposing (Decoder, Value)
 import Json.Encode as JE
 import TIS100.Addr exposing (Addr)
 import TIS100.Puzzle as Puzzle
-import Utils exposing (filterMapFirst, mapFirst, pair)
+import Utils exposing (encodePair, filterMapFirst, mapFirst, pair, pairDecoder)
 
 
 type alias Solution =
@@ -33,16 +33,6 @@ fromList newList =
                 |> Dict.fromList
     in
     Saves (Dict.union newDict initialDict)
-
-
-encodePair : (a -> Value) -> (b -> Value) -> ( a, b ) -> Value
-encodePair fa fb ( a, b ) =
-    JE.list identity [ fa a, fb b ]
-
-
-pairDecoder : Decoder a -> Decoder b -> Decoder ( a, b )
-pairDecoder da db =
-    JD.map2 pair (JD.index 0 da) (JD.index 1 db)
 
 
 encode : Saves -> Value
