@@ -142,6 +142,7 @@ btn attrs mbMsg txt =
          , displayGrid
          , placeContentCenter
          , mbNotifyClick mbMsg
+         , pa "0.5ch"
          ]
             ++ attrs
         )

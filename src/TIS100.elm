@@ -184,7 +184,7 @@ viewSegmentListPage =
         , ttu
         , bold
         , pa "2ch"
-        , gap "1ch"
+        , gap "3ch"
         ]
         [ viewLeftBar
         , viewSegmentGrid
@@ -194,15 +194,16 @@ viewSegmentListPage =
 viewLeftBar =
     fCol [ gap "1ch" ]
         [ div [ tac ] [ text "- Selected Puzzle -" ]
-        , fCol [ gap "1ch" ]
-            [ fRow [ gap "1ch" ]
-                [ UI.btn [ pa "0.5ch", whiteSpace "pre" ] Nothing "Untitled program"
-                , UI.btn [ pa "0.5ch" ] Nothing "Copy"
-                ]
-            , fRow [ gap "1ch" ]
-                [ UI.btn [ pa "0.5ch" ] Nothing "Untitled program"
-                , UI.btn [ pa "0.5ch" ] Nothing "Copy"
-                ]
+        , div
+            [ displayGrid
+            , gap "1ch"
+            , gridTemplateColumns "40ch 8ch"
+            , gridTemplateRows "repeat(3, 3em)"
+            ]
+            [ UI.btn [] Nothing "Untitled program"
+            , UI.btn [] Nothing "Copy"
+            , UI.btn [] Nothing "Untitled program"
+            , UI.btn [] Nothing "Copy"
             ]
         ]
 
@@ -210,7 +211,7 @@ viewLeftBar =
 viewSegmentGrid =
     div
         [ displayGrid
-        , gap "2ch"
+        , gap "3ch"
         , gridTemplateColumns "repeat(5, 16ch)"
         , gridTemplateRows "repeat(5, 16ch)"
         ]
