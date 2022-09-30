@@ -57,7 +57,7 @@ nodeSize =
 
 darkGray : String
 darkGray =
-    grayN 0.6
+    grayN 0.55
 
 
 veryDarkGray =
@@ -66,7 +66,7 @@ veryDarkGray =
 
 lightGray : String
 lightGray =
-    grayN 0.8
+    grayN 0.75
 
 
 white : String

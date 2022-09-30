@@ -197,7 +197,7 @@ viewLeftBar =
         [ div [ tac ] [ text "- Selected Puzzle -" ]
         , div
             [ displayGrid
-            , gap "1ch"
+            , gap "1.5ch"
             , gridTemplateColumns "40ch 8ch"
             , gridTemplateRows "repeat(3, 3em)"
             ]
