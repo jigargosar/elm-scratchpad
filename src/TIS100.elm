@@ -175,10 +175,20 @@ viewDocument model =
 viewSegmentListPage : Html Msg
 viewSegmentListPage =
     fRow
-        [ pa "2ch"
+        [ noAttr
+        , sWidth "fit-content"
+        , sHeight "fit-content"
+        , fontSize "12px"
+        , styleLineHeight "1"
+        , ffMonospace
+        , ttu
+        , bold
+        , pa "2ch"
         , gap "1ch"
         ]
-        [ div [] [ text "left bar" ]
+        [ div [ sWidth "20ch" ]
+            [ div [] [ text "- Selected Puzzle -" ]
+            ]
         , viewSegmentGrid
         ]
 
@@ -187,8 +197,8 @@ viewSegmentGrid =
     div
         [ displayGrid
         , gap "1ch"
-        , gridTemplateColumns "repeat(5, 10ch)"
-        , gridTemplateRows "repeat(5, 10ch)"
+        , gridTemplateColumns "repeat(5, 16ch)"
+        , gridTemplateRows "repeat(5, 16ch)"
         ]
         (Puzzle.allIds
             |> listMapHeadAndRest viewSegmentAutoFocus viewSegment

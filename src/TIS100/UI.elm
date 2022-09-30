@@ -137,6 +137,7 @@ btn attrs mbMsg txt =
          , ttu
          , bold
          , ffMonospace
+         , fontSizeInherit
          , outlineNormal
          , displayGrid
          , placeContentCenter

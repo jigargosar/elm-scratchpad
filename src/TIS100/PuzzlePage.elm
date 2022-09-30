@@ -299,11 +299,11 @@ view model =
         , sHeight "fit-content"
         , fontSize "12px"
         , styleLineHeight "1"
-        , pa "2ch"
-        , bold
         , ffMonospace
-        , gap "2ch"
         , ttu
+        , bold
+        , pa "2ch"
+        , gap "2ch"
         , positionRelative
         ]
         [ viewCycle model
