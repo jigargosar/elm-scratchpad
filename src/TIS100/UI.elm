@@ -1,5 +1,6 @@
 module TIS100.UI exposing
     ( btn
+    , btn2
     , commonStyles
     , fgBright
     , fgDull
@@ -128,8 +129,8 @@ highlightBright =
 -- BUTTONS
 
 
-btn : List (Attribute msg) -> Maybe msg -> String -> Html msg
-btn attrs mbMsg txt =
+btn2 : List (Attribute msg) -> Maybe msg -> List (Html msg) -> Html msg
+btn2 attrs mbMsg =
     button
         ([ borderNone
          , bgcInherit
@@ -146,4 +147,8 @@ btn attrs mbMsg txt =
          ]
             ++ attrs
         )
-        [ text txt ]
+
+
+btn : List (Attribute msg) -> Maybe msg -> String -> Html msg
+btn attrs mbMsg txt =
+    btn2 attrs mbMsg [ text txt ]

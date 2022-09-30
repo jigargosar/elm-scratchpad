@@ -182,6 +182,7 @@ viewSegmentListPage =
         , styleLineHeight "1"
         , ffMonospace
         , ttu
+        , UI.fgNormal
         , bold
         , pa "2ch"
         , gap "3ch"
@@ -200,9 +201,15 @@ viewLeftBar =
             , gridTemplateColumns "40ch 8ch"
             , gridTemplateRows "repeat(3, 3em)"
             ]
-            [ UI.btn [] Nothing "Untitled program"
+            [ UI.btn2 []
+                Nothing
+                [ div [] [ text "Untitled program" ]
+                , div [ UI.fgDull ] [ text "160 cycles / 4 nodes / 6 instr" ]
+                ]
             , UI.btn [] Nothing "Copy"
-            , UI.btn [] Nothing "Untitled program"
+            , UI.btn [] Nothing "Create new Program"
+            , UI.btn [] Nothing "Copy"
+            , UI.btn [] Nothing "Create new Program"
             , UI.btn [] Nothing "Copy"
             ]
         ]
