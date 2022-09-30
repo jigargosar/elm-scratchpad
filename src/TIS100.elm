@@ -186,17 +186,31 @@ viewSegmentListPage =
         , pa "2ch"
         , gap "1ch"
         ]
-        [ div [ sWidth "20ch" ]
-            [ div [] [ text "- Selected Puzzle -" ]
-            ]
+        [ viewLeftBar
         , viewSegmentGrid
+        ]
+
+
+viewLeftBar =
+    div [ sMinWidth "20ch" ]
+        [ div [] [ text "- Selected Puzzle -" ]
+        , fCol [ gap "1ch" ]
+            [ fRow [ gap "1ch" ]
+                [ UI.btn [] Nothing "Untitled program"
+                , UI.btn [ pa "0.5ch" ] Nothing "Copy"
+                ]
+            , fRow [ gap "1ch" ]
+                [ UI.btn [] Nothing "Untitled program"
+                , UI.btn [ pa "0.5ch" ] Nothing "Copy"
+                ]
+            ]
         ]
 
 
 viewSegmentGrid =
     div
         [ displayGrid
-        , gap "1ch"
+        , gap "2ch"
         , gridTemplateColumns "repeat(5, 16ch)"
         , gridTemplateRows "repeat(5, 16ch)"
         ]
