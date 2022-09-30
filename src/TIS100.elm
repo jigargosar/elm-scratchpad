@@ -192,15 +192,15 @@ viewSegmentListPage =
 
 
 viewLeftBar =
-    div [ sMinWidth "20ch" ]
-        [ div [] [ text "- Selected Puzzle -" ]
+    fCol [ gap "1ch" ]
+        [ div [ tac ] [ text "- Selected Puzzle -" ]
         , fCol [ gap "1ch" ]
             [ fRow [ gap "1ch" ]
-                [ UI.btn [] Nothing "Untitled program"
+                [ UI.btn [ pa "0.5ch", whiteSpace "pre" ] Nothing "Untitled program"
                 , UI.btn [ pa "0.5ch" ] Nothing "Copy"
                 ]
             , fRow [ gap "1ch" ]
-                [ UI.btn [] Nothing "Untitled program"
+                [ UI.btn [ pa "0.5ch" ] Nothing "Untitled program"
                 , UI.btn [ pa "0.5ch" ] Nothing "Copy"
                 ]
             ]
