@@ -28,7 +28,8 @@ commonStyles : Html msg
 commonStyles =
     styleNode """
          :is(textarea, button, input):focus{
-             outline:revert!important;
+             outline:auto!important;
+             outline:-webkit-focus-ring-color auto 1px!important;
          }
          body{
             background: black;
@@ -56,16 +57,16 @@ nodeSize =
 
 darkGray : String
 darkGray =
-    grayN 0.5
+    grayN 0.6
 
 
 veryDarkGray =
-    grayN 0.3
+    grayN 0.4
 
 
 lightGray : String
 lightGray =
-    grayN 0.7
+    grayN 0.8
 
 
 white : String
