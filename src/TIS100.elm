@@ -206,7 +206,7 @@ viewLeftBar =
                 [ div [] [ text "Untitled program" ]
                 , div [ UI.fgDull ] [ text "160 cycles / 4 nodes / 6 instr" ]
                 ]
-            , UI.btn [] Nothing "Copy"
+            , UI.btn [ UI.outlineDisabled, UI.fgDisabled ] Nothing "Copy"
             , UI.btn [] Nothing "Create new Program"
             , UI.btn [] Nothing "Copy"
             , UI.btn [] Nothing "Create new Program"

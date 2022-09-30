@@ -3,6 +3,7 @@ module TIS100.UI exposing
     , btn2
     , commonStyles
     , fgBright
+    , fgDisabled
     , fgDull
     , fgError
     , fgNormal
@@ -10,6 +11,8 @@ module TIS100.UI exposing
     , highlightBright
     , highlightError
     , nodeSize
+    , outlineDisabled
+    , outlineDull
     , outlineError
     , outlineNormal
     )
@@ -26,6 +29,9 @@ commonStyles =
     styleNode """
          :is(textarea, button, input):focus{
              outline:revert!important;
+         }
+         body{
+            background: black;
          }
          """
 
@@ -51,6 +57,10 @@ nodeSize =
 darkGray : String
 darkGray =
     grayN 0.5
+
+
+veryDarkGray =
+    grayN 0.3
 
 
 lightGray : String
@@ -79,12 +89,22 @@ errorRed =
 
 outlineNormal : Attribute msg
 outlineNormal =
-    sOutline ("1px solid " ++ lightGray)
+    sOutline ("2px solid " ++ lightGray)
+
+
+outlineDull : Attribute msg
+outlineDull =
+    sOutline ("2px solid " ++ darkGray)
+
+
+outlineDisabled : Attribute msg
+outlineDisabled =
+    sOutline ("2px solid " ++ veryDarkGray)
 
 
 outlineError : Attribute msg
 outlineError =
-    sOutline ("1px solid " ++ errorRed)
+    sOutline ("2px solid " ++ errorRed)
 
 
 
@@ -104,6 +124,11 @@ fgBright =
 fgDull : Attribute msg
 fgDull =
     fg darkGray
+
+
+fgDisabled : Attribute msg
+fgDisabled =
+    fg veryDarkGray
 
 
 fgError : Attribute msg
